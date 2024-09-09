@@ -31,11 +31,13 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
 export function AdditionalFindings({ domain }) {
+  const { i18n } = useLingui()
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
   const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
+
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
   const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
@@ -85,6 +87,67 @@ export function AdditionalFindings({ domain }) {
           <Trans>What are these additional findings?</Trans>
         </Button>
         <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
+          <AccordionItem>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2" id="vulnerabilities">
+                <Trans>Vulnerabilities</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
+            <AccordionPanel pb={4}>
+              <Link
+                colour="blue.500"
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/spin/improving-gc-cyber-security-health.html'
+                    : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/amops/renforcement-cybersecurite-gouvernement-canada.html'
+                }
+                isExternal
+              >
+                <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
+              </Link>
+              {Object.keys(vulnerabilitySeverities).map((severity) => {
+                return (
+                  vulnerabilities[severity].length > 0 && (
+                    <Box key={severity} px="2" mb="2">
+                      <Text>
+                        <b>{vulnerabilitySeverities[severity]}</b>
+                      </Text>
+                      <SimpleGrid columns={8}>
+                        {vulnerabilities[severity].map(({ cve }) => {
+                          return (
+                            <Button
+                              key={cve}
+                              borderRadius="full"
+                              m="1"
+                              borderColor="black"
+                              borderWidth="1px"
+                              bg={severity}
+                              fontWeight="normal"
+                              size="sm"
+                              _hover={{ bg: cveSeverityOnHover[severity] }}
+                              onClick={() => {
+                                setActiveCve({
+                                  cve,
+                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
+                                    webComponentCves.some((x) => x.cve === cve),
+                                  ),
+                                })
+                                cveOnOpen()
+                              }}
+                            >
+                              {cve}
+                            </Button>
+                          )
+                        })}
+                      </SimpleGrid>
+                    </Box>
+                  )
+                )
+              })}
+            </AccordionPanel>
+          </AccordionItem>
+
           <AccordionItem>
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2">
@@ -255,56 +318,6 @@ export function AdditionalFindings({ domain }) {
                     </Flex>
                     <Divider borderBottomColor="gray.900" />
                   </Box>
-                )
-              })}
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Vulnerabilities</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              {Object.keys(vulnerabilitySeverities).map((severity) => {
-                return (
-                  vulnerabilities[severity].length > 0 && (
-                    <Box key={severity} px="2" mb="2">
-                      <Text>
-                        <b>{vulnerabilitySeverities[severity]}</b>
-                      </Text>
-                      <SimpleGrid columns={8}>
-                        {vulnerabilities[severity].map(({ cve }) => {
-                          return (
-                            <Button
-                              key={cve}
-                              borderRadius="full"
-                              m="1"
-                              borderColor="black"
-                              borderWidth="1px"
-                              bg={severity}
-                              fontWeight="normal"
-                              size="sm"
-                              _hover={{ bg: cveSeverityOnHover[severity] }}
-                              onClick={() => {
-                                setActiveCve({
-                                  cve,
-                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
-                                    webComponentCves.some((x) => x.cve === cve),
-                                  ),
-                                })
-                                cveOnOpen()
-                              }}
-                            >
-                              {cve}
-                            </Button>
-                          )
-                        })}
-                      </SimpleGrid>
-                    </Box>
-                  )
                 )
               })}
             </AccordionPanel>
