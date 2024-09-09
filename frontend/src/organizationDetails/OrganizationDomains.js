@@ -98,7 +98,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
@@ -162,6 +161,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             webScanPending,
             hasEntrustCertificate,
             userHasPermission,
+            cveDetected,
           },
           index,
         ) => (
@@ -180,6 +180,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               webScanPending={webScanPending}
               hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
+              cveDetected={cveDetected}
               mb="3"
             />
           </ErrorBoundary>
@@ -239,6 +240,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+        <InfoBox title={t`Vulnerability`} info={t`Top 25 vulnerability detected in additional findings.`} />
         <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
         <InfoBox
           title={t`Dependency`}

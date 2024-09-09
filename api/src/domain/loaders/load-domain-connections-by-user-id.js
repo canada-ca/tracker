@@ -411,6 +411,11 @@ export const loadDomainConnectionsByUserId =
             ${domainFilters}
             FILTER domain.hasEntrustCertificate ${comparison} true
           `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.cveDetected ${comparison} true
+          `
           }
         }
       })

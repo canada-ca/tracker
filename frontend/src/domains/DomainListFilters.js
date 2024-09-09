@@ -4,6 +4,7 @@ import { Formik } from 'formik'
 import React from 'react'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { array, func } from 'prop-types'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function DomainListFilters({ filters, setFilters, statusOptions, filterTagOptions, assetStateOptions = [] }) {
   const validationSchema = schemaToValidation({
@@ -126,6 +127,13 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                       <Trans>Status/Tag/State</Trans>
                     </option>
                     {filterValues(values)}
+                    <ABTestWrapper insiderVariantName="B">
+                      <ABTestVariant name="B">
+                        <option value="CVE_DETECTED">
+                          <Trans>Vulnerability</Trans>
+                        </option>
+                      </ABTestVariant>
+                    </ABTestWrapper>
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterValue}
