@@ -84,6 +84,8 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`${domainFilters}`
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -119,6 +121,17 @@ export const loadOrganizationDomainStatuses =
                 FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
                     RETURN webScan.ipAddress
             )
+            LET vulnerabilities = (
+              FOR finding IN additionalFindings
+                FILTER finding.domain == v._id
+                LIMIT 1
+                RETURN UNIQUE(
+                  FOR wc IN finding.webComponents
+                      FILTER LENGTH(wc.WebComponentCves) > 0
+                      FOR vuln IN wc.WebComponentCves
+                          RETURN vuln.Cve
+                )
+            )[0]
             RETURN {
               domain: v.domain,
               ipAddresses: ipAddresses,
@@ -129,7 +142,7 @@ export const loadOrganizationDomainStatuses =
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
               hasEntrustCertificate: v.hasEntrustCertificate,
-              cveDetected: v.cveDetected
+              top25Vulnerabilities: vulnerabilities
             }
           `
       ).all()
