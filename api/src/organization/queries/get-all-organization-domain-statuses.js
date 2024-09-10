@@ -54,7 +54,7 @@ export const getAllOrganizationDomainStatuses = {
       const csvLine = headers
         .map((header) => {
           if (['ipAddresses', 'top25Vulnerabilities'].includes(header)) {
-            return domainStatus[header].join('|')
+            return domainStatus[header]?.join('|') || []
           }
           return `"${domainStatus[header]}"`
         })
