@@ -31,6 +31,7 @@ def get_web_components_by_asset(asset):
     EasmAssetWebComponent
     | where AssetName == asset_name
     | where TimeGeneratedValue > ago(24h)
+    | where WebComponentLastSeen > ago(30d)
     | summarize arg_max(TimeGeneratedValue, WebComponentCves, WebComponentPorts) by WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentFirstSeen, WebComponentLastSeen
     | project WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentFirstSeen, WebComponentLastSeen, WebComponentCves, WebComponentPorts
     """
