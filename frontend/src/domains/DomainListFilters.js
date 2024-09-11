@@ -131,7 +131,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                       <ABTestVariant name="B">
                         {values.filterCategory === 'TAGS' && (
                           <option value="CVE_DETECTED">
-                            <Trans>Vulnerability</Trans>
+                            <Trans>SPIN Top 25</Trans>
                           </option>
                         )}
                       </ABTestVariant>

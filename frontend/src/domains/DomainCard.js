@@ -205,7 +205,7 @@ export function DomainCard({
                       to={`/domains/${url}/additional-findings#vulnerabilities`}
                     >
                       <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                        <Trans>Vulnerability</Trans> <LinkIcon />
+                        <Trans>SPIN Top 25</Trans> <LinkIcon />
                       </TagLabel>
                     </Tag>
                   )}
