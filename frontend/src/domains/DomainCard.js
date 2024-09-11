@@ -29,7 +29,7 @@ export function DomainCard({
   url,
   status,
   hasDMARCReport,
-  // tags,
+  tags,
   assetState,
   isArchived,
   rcode,
@@ -94,8 +94,6 @@ export function DomainCard({
     },
   })
 
-  const tags = ['NEW', 'PROD', 'WEB', 'INACTIVE', 'TEST', 'MAIL']
-
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -136,61 +134,54 @@ export function DomainCard({
           flexShrink={{ md: '0.5' }}
           minWidth={{ md: '3em' }}
         >
-          <Flex flexDirection="row" justifyContent="space-around">
-            {/* <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B"> */}
-            {assetState && (
-              <Badge colorScheme="blue" variant="subtle" alignSelf="center">
-                {assetStateLabels[assetState]}
+          <Flex flexDirection="row">
+            {rcode === 'NXDOMAIN' && (
+              <Badge colorScheme="red" variant="subtle" alignSelf="center">
+                NXDOMAIN
               </Badge>
             )}
-            {/* </ABTestVariant>
-            </ABTestWrapper> */}
-            {/* {rcode === 'NXDOMAIN' && ( */}
-            <Badge colorScheme="red" variant="subtle" alignSelf="center">
-              NXDOMAIN
-            </Badge>
-            {/* )} */}
-            {/* {isArchived && ( */}
-            <Badge ml="2" colorScheme="red" variant="subtle" alignSelf="center">
-              <Trans>Archived</Trans>
-            </Badge>
-            {/* )} */}
-            {/* {blocked && ( */}
-            <Badge ml="2" colorScheme="red" variant="outline" alignSelf="center">
-              <Trans>Blocked</Trans>
-            </Badge>
-            {/* )} */}
-            {/* {wildcardSibling && (
+            {isArchived && (
+              <Badge ml="2" colorScheme="red" variant="subtle" alignSelf="center">
+                <Trans>Archived</Trans>
+              </Badge>
+            )}
+            {blocked && (
+              <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
+                <Trans>Blocked</Trans>
+              </Badge>
+            )}
+            {wildcardSibling && (
               <ABTestWrapper insiderVariantName="B">
-                <ABTestVariant name="B"> */}
-            <Badge ml="2" colorScheme="red" variant="outline" alignSelf="center">
-              <Trans>Wildcard</Trans>*
-            </Badge>
-            {/* </ABTestVariant>
+                <ABTestVariant name="B">
+                  <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
+                    <Trans>Wildcard</Trans>*
+                  </Badge>
+                </ABTestVariant>
               </ABTestWrapper>
-            )} */}
-            {/* {hasEntrustCertificate && (
+            )}
+            {hasEntrustCertificate && (
               <ABTestWrapper insiderVariantName="B">
-                <ABTestVariant name="B"> */}
-            <Badge ml="2" colorScheme="red" variant="outline" alignSelf="center">
-              <Trans>Entrust Certificate</Trans>
-            </Badge>
-            {/* </ABTestVariant>
+                <ABTestVariant name="B">
+                  <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
+                    <Trans>Entrust Certificate</Trans>
+                  </Badge>
+                </ABTestVariant>
               </ABTestWrapper>
-            )} */}
-            {/* {webScanPending && ( */}
-            <Badge color="info" variant="outline" alignSelf="center" ml="auto">
-              <Trans>Scan Pending</Trans>
-            </Badge>
-            {/* )} */}
+            )}
+            {webScanPending && (
+              <Badge colorScheme="blue" variant="outline" alignSelf="center" ml="auto">
+                <Trans>Scan Pending</Trans>
+              </Badge>
+            )}
           </Flex>
 
           <Flex align="center" my="2">
-            <Box>
-              <Text my="1" fontSize="lg" fontWeight="bold" isTruncated>
-                {url}
-              </Text>
+            <Box w="auto">
+              <Flex w="auto">
+                <Text my="1" fontSize="lg" fontWeight="bold" isTruncated>
+                  {url}
+                </Text>
+              </Flex>
               <Flex flexWrap="wrap">
                 {tags?.map((tag, idx) => {
                   return (
@@ -202,26 +193,35 @@ export function DomainCard({
                   )
                 })}
               </Flex>
-              {/* <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B"> */}
-              {/* {userHasPermission && cveDetected && ( */}
-              <Tag
-                m="0.5"
-                bg="gray.50"
-                borderWidth="1px"
-                borderColor="gray.900"
-                as={RouteLink}
-                to={`/domains/${url}/additional-findings#vulnerabilities`}
-              >
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  <Trans>Vulnerability</Trans> <LinkIcon />
-                </TagLabel>
-              </Tag>
-              {/* )} */}
-              {/* </ABTestVariant>
-            </ABTestWrapper> */}
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  {userHasPermission && cveDetected && (
+                    <Tag
+                      m="0.5"
+                      bg="gray.50"
+                      borderWidth="1px"
+                      borderColor="gray.900"
+                      as={RouteLink}
+                      to={`/domains/${url}/additional-findings#vulnerabilities`}
+                    >
+                      <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                        <Trans>Vulnerability</Trans> <LinkIcon />
+                      </TagLabel>
+                    </Tag>
+                  )}
+                </ABTestVariant>
+              </ABTestWrapper>
             </Box>
             <Flex ml="auto">
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  {assetState && (
+                    <Badge mr="1" colorScheme="green" variant="subtle" alignSelf="center">
+                      {assetStateLabels[assetState]}
+                    </Badge>
+                  )}
+                </ABTestVariant>
+              </ABTestWrapper>
               <Box {...statusGroupingProps} px="1">
                 <Text textAlign="center" color="gray.600">
                   <Trans>Web (HTTPS/TLS)</Trans>
@@ -246,7 +246,6 @@ export function DomainCard({
                 </Flex>
               </Box>
               <Divider variant="card" display={{ md: 'none' }} />
-
               <Stack
                 fontSize="sm"
                 justifySelf="flex-end"
@@ -267,22 +266,22 @@ export function DomainCard({
                     <Trans>View Results</Trans>
                   </Text>
                 </Button>
-                {/* {hasDMARCReport && ( */}
-                <Button
-                  variant="primary"
-                  as={RouteLink}
-                  to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
-                >
-                  <Text whiteSpace="noWrap">
-                    <Trans>DMARC Report</Trans>
-                  </Text>
-                </Button>
-                {/* )} */}
+                {hasDMARCReport && (
+                  <Button
+                    variant="primary"
+                    as={RouteLink}
+                    to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+                  >
+                    <Text whiteSpace="noWrap">
+                      <Trans>DMARC Report</Trans>
+                    </Text>
+                  </Button>
+                )}
               </Stack>
-              <Stack ml={4}>
-                <ScanDomainButton domainUrl={url} />
-                {/* {isLoggedIn() &&
-                  (location.pathname.match('my-tracker') ? (
+              {isLoggedIn() && (
+                <Stack ml={4}>
+                  {isEmailValidated() && userHasPermission && <ScanDomainButton domainUrl={url} />}
+                  {location.pathname.match('my-tracker') ? (
                     <IconButton
                       onClick={async () => {
                         await unfavouriteDomain({ variables: { domainId: id } })
@@ -291,17 +290,18 @@ export function DomainCard({
                       aria-label={`unfavourite ${url}`}
                       icon={<StarIcon color="moderate" />}
                     />
-                  ) : ( */}
-                <IconButton
-                  onClick={async () => {
-                    await favouriteDomain({ variables: { domainId: id } })
-                  }}
-                  variant="primary"
-                  aria-label={`favourite ${url}`}
-                  icon={<StarIcon />}
-                />
-                {/* ))} */}
-              </Stack>
+                  ) : (
+                    <IconButton
+                      onClick={async () => {
+                        await favouriteDomain({ variables: { domainId: id } })
+                      }}
+                      variant="primary"
+                      aria-label={`favourite ${url}`}
+                      icon={<StarIcon />}
+                    />
+                  )}
+                </Stack>
+              )}
             </Flex>
           </Flex>
         </Box>
