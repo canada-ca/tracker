@@ -7,7 +7,7 @@ import { useUserVar } from '../../utilities/userState'
 import PropTypes from 'prop-types'
 
 export const TourComponent = ({ page }) => {
-  const { isLoggedIn, isEmailValidated } = useUserVar()
+  const { isEmailValidated } = useUserVar()
   const { isTourOpen, endTour, startTour } = useTour()
   const [tourKey, setTourKey] = useState(0)
 
@@ -15,17 +15,14 @@ export const TourComponent = ({ page }) => {
   useEffect(() => {
     const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
     if (
-      (!hasSeenTour && mainTourSteps[page]['requiresAuth'] && isLoggedIn() && isEmailValidated()) ||
-      (!hasSeenTour && !mainTourSteps[page]['requiresAuth'])
-    ) {
+      !hasSeenTour &&
+      (!mainTourSteps[page]['requiresAuth'] || (mainTourSteps[page]['requiresAuth'] && isEmailValidated()))
+    )
       startTour()
-    }
   }, [page, startTour])
 
   useEffect(() => {
-    if (isTourOpen) {
-      setTourKey((prev) => prev + 1)
-    }
+    if (isTourOpen) setTourKey((prev) => prev + 1)
   }, [isTourOpen])
 
   // handles the finishing and skipping/closing of tour
