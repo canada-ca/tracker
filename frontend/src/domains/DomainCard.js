@@ -18,7 +18,7 @@ import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
-import { StarIcon } from '@chakra-ui/icons'
+import { LinkIcon, StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
@@ -36,7 +36,9 @@ export function DomainCard({
   blocked,
   wildcardSibling,
   webScanPending,
+  hasEntrustCertificate,
   userHasPermission,
+  cveDetected,
   ...rest
 }) {
   const location = useLocation()
@@ -155,6 +157,15 @@ export function DomainCard({
                 </ABTestVariant>
               </ABTestWrapper>
             )}
+            {hasEntrustCertificate && (
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  <Badge colorScheme="red" mr="auto" alignSelf="center">
+                    <Trans>Entrust Certificate</Trans>
+                  </Badge>
+                </ABTestVariant>
+              </ABTestWrapper>
+            )}
             {webScanPending && (
               <Badge color="info" mr="auto" alignSelf="center">
                 <Trans>Scan Pending</Trans>
@@ -189,6 +200,24 @@ export function DomainCard({
                 </TagLabel>
               </Tag>
             )}
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                {userHasPermission && cveDetected && (
+                  <Tag
+                    m="0.5"
+                    bg="gray.50"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                    as={RouteLink}
+                    to={`/domains/${url}/additional-findings#vulnerabilities`}
+                  >
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>Vulnerability</Trans> <LinkIcon />
+                    </TagLabel>
+                  </Tag>
+                )}
+              </ABTestVariant>
+            </ABTestWrapper>
           </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
@@ -289,6 +318,8 @@ DomainCard.propTypes = {
   blocked: bool,
   wildcardSibling: bool,
   webScanPending: bool,
+  hasEntrustCertificate: bool,
   userHasPermission: bool,
   assetState: string,
+  cveDetected: bool,
 }

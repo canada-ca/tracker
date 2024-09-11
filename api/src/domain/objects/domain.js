@@ -389,6 +389,11 @@ export const domainType = new GraphQLObjectType({
       description: `Whether or not the certificate chain contains an Entrust certificate.`,
       resolve: ({ hasEntrustCertificate }) => hasEntrustCertificate,
     },
+    cveDetected: {
+      type: GraphQLBoolean,
+      description: `Whether or not a CVE has been detected in the domain's additional findings.`,
+      resolve: ({ cveDetected }) => cveDetected,
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

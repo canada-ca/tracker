@@ -306,16 +306,6 @@ export const loadDomainConnectionsByOrgId =
           )
           RETURN { assetState: e.assetState, claimTags: translatedTags }
       )[0]
-      LET cveDetected =  (
-        FOR finding IN additionalFindings
-          FILTER finding.domain == domain._id
-          LET vulnerableWebComponents = (
-            FOR wc IN finding.webComponents
-              FILTER LENGTH(wc.WebComponentCves) > 0
-              RETURN wc
-          )
-          RETURN LENGTH(vulnerableWebComponents) > 0
-      )[0]
       `
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
@@ -408,7 +398,7 @@ export const loadDomainConnectionsByOrgId =
           } else if (filterValue === 'cve-detected') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER cveDetected ${comparison} true
+            FILTER domain.cveDetected ${comparison} true
           `
           } else {
             domainFilters = aql`
