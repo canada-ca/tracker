@@ -18,6 +18,7 @@ import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
 import { bool } from 'prop-types'
+// import { TourButton } from '../userOnboarding/components/TourButton'
 
 export const TopBanner = ({ initialLoading, ...props }) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -113,16 +114,19 @@ export const TopBanner = ({ initialLoading, ...props }) => {
               </Skeleton>
             </>
           ) : isLoggedIn() ? (
-            <Button
-              variant="primaryWhite"
-              as={RouteLink}
-              to="/"
-              px="3"
-              display={{ base: 'none', md: 'inline' }}
-              onClick={signOut}
-            >
-              <Trans>Sign Out</Trans>
-            </Button>
+            <>
+              <Button
+                variant="primaryWhite"
+                as={RouteLink}
+                to="/"
+                px="3"
+                display={{ base: 'none', md: 'inline' }}
+                onClick={signOut}
+              >
+                <Trans>Sign Out</Trans>
+              </Button>
+              {/* <TourButton /> */}
+            </>
           ) : (
             <>
               <Button
@@ -136,6 +140,7 @@ export const TopBanner = ({ initialLoading, ...props }) => {
                 <Trans>Sign In</Trans>
               </Button>
               <Button
+                className="create-account-button"
                 variant="primaryWhite"
                 as={RouteLink}
                 to="/create-user"

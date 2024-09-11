@@ -18,6 +18,7 @@ import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+// import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -64,8 +65,6 @@ export default function Organizations() {
     { value: 'VERIFIED', text: t`Verified` },
   ]
 
-  // Set the list contents only to loading message when loading
-  // Prevents select active option from resetting when loading
   let orgList
   if (loading) {
     orgList = (
@@ -88,6 +87,7 @@ export default function Organizations() {
           <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
               <OrganizationCard
+                className="organization-card"
                 slug={slug}
                 name={name}
                 acronym={acronym}
@@ -126,6 +126,7 @@ export default function Organizations() {
 
   return (
     <Box w="100%" px="4">
+      {/* <TourComponent page="organizationsPage" /> */}
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>Organizations</Trans>
       </Heading>
@@ -150,6 +151,7 @@ export default function Organizations() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
+          className="search-box"
           selectedDisplayLimit={orgsPerPage}
           setSelectedDisplayLimit={setOrgsPerPage}
           hasNextPage={hasNextPage}
@@ -166,12 +168,13 @@ export default function Organizations() {
           placeholder={t`Search for an organization`}
           onToggle={onToggle}
         />
+
         <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold" fontSize="lg">
+          <Text mr="2" fontWeight="bold" fontSize="lg" className="filter">
             <Trans>Filters:</Trans>
           </Text>
           <Tooltip label={t`Filter list to verified organizations only.`}>
-            <Flex align="center" mr="2">
+            <Flex align="center" mr="2" className="filter-verified">
               <Switch
                 isFocusable={true}
                 aria-label="Show only verified organizations"
