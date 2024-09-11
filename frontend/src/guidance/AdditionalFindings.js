@@ -90,7 +90,7 @@ export function AdditionalFindings({ domain }) {
           <AccordionItem>
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2" id="vulnerabilities">
-                <Trans>Vulnerabilities</Trans>
+                <Trans>SPIN Top 25 Vulnerabilities</Trans>
               </Text>
               <AccordionIcon boxSize="icons.xl" />
             </Flex>

@@ -496,7 +496,7 @@ msgstr "Any products or related services provided to you by TBS are and will rem
 #~ msgstr "Application Portfolio Management (APM) systems; and"
 
 #: src/admin/AdminDomains.js:296
-#: src/domains/DomainListFilters.js:143
+#: src/domains/DomainListFilters.js:145
 msgid "Apply"
 msgstr "Apply"
 
@@ -525,12 +525,12 @@ msgid "Archive domain"
 msgstr "Archive domain"
 
 #: src/admin/AdminDomains.js:173
+#: src/domains/DomainCard.js:145
 #: src/organizationDetails/OrganizationDomains.js:101
 msgid "Archived"
 msgstr "Archived"
 
 #: src/admin/AdminDomainCard.js:51
-#: src/domains/DomainCard.js:199
 msgid "ARCHIVED"
 msgstr "ARCHIVED"
 
@@ -601,7 +601,7 @@ msgid "Blank fields will not be included when updating the organization."
 msgstr "Blank fields will not be included when updating the organization."
 
 #: src/admin/AdminDomains.js:170
-#: src/domains/DomainCard.js:148
+#: src/domains/DomainCard.js:150
 #: src/domains/DomainsPage.js:103
 #: src/guidance/WebGuidance.js:84
 #: src/organizationDetails/OrganizationDomains.js:98
@@ -1185,7 +1185,7 @@ msgstr "DMARC policy of quarantine or reject, and all messages from non-mail dom
 #~ msgstr "DMARC record could not be found during the scan."
 
 #: src/dmarc/DmarcReportPage.js:94
-#: src/domains/DomainCard.js:277
+#: src/domains/DomainCard.js:276
 #: src/guidance/GuidancePage.js:341
 msgid "DMARC Report"
 msgstr "DMARC Report"
@@ -1287,7 +1287,6 @@ msgstr "Domain url field must not be empty"
 msgid "Domain URL:"
 msgstr "Domain URL:"
 
-#: src/domains/DomainCard.js:139
 #: src/domains/ScanDomain.js:211
 msgid "Domain:"
 msgstr "Domain:"
@@ -1512,7 +1511,7 @@ msgstr "Entrust"
 msgid "ENTRUST"
 msgstr "ENTRUST"
 
-#: src/domains/DomainCard.js:164
+#: src/domains/DomainCard.js:166
 #: src/domains/FilterList.js:34
 #: src/guidance/WebTLSResults.js:368
 msgid "Entrust Certificate"
@@ -3486,7 +3485,7 @@ msgid "Scan of domain successfully requested"
 msgstr "Scan of domain successfully requested"
 
 #: src/admin/AdminDomains.js:172
-#: src/domains/DomainCard.js:171
+#: src/domains/DomainCard.js:173
 #: src/domains/DomainsPage.js:105
 #: src/guidance/GuidancePage.js:309
 #: src/organizationDetails/OrganizationDomains.js:100
@@ -3927,6 +3926,23 @@ msgstr "SPF Status"
 #: src/summaries/TierTwoSummaries.js:52
 msgid "SPF Summary"
 msgstr "SPF Summary"
+
+#: src/domains/DomainCard.js:208
+#: src/domains/DomainListFilters.js:134
+#: src/domains/DomainsPage.js:243
+#: src/domains/FilterList.js:32
+#: src/organizationDetails/OrganizationDomains.js:243
+msgid "SPIN Top 25"
+msgstr "SPIN Top 25"
+
+#: src/guidance/AdditionalFindings.js:93
+msgid "SPIN Top 25 Vulnerabilities"
+msgstr "SPIN Top 25 Vulnerabilities"
+
+#: src/domains/DomainsPage.js:243
+#: src/organizationDetails/OrganizationDomains.js:243
+msgid "SPIN Top 25 vulnerability detected in additional findings."
+msgstr "SPIN Top 25 vulnerability detected in additional findings."
 
 #: src/new-guidance/NewEmailGuidance.js:287
 #~ msgid "spPolicy:"
@@ -4397,8 +4413,8 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 
 #: src/domains/DomainsPage.js:243
 #: src/organizationDetails/OrganizationDomains.js:243
-msgid "Top 25 vulnerability detected in additional findings."
-msgstr "Top 25 vulnerability detected in additional findings."
+#~ msgid "Top 25 vulnerability detected in additional findings."
+#~ msgstr "Top 25 vulnerability detected in additional findings."
 
 #: src/dmarc/DmarcByDomainPage.js:127
 #: src/dmarc/DmarcByDomainPage.js:289
@@ -4776,7 +4792,7 @@ msgstr "Vertical View"
 #~ msgid "View Details"
 #~ msgstr "View Details"
 
-#: src/domains/DomainCard.js:267
+#: src/domains/DomainCard.js:266
 msgid "View Results"
 msgstr "View Results"
 
@@ -4789,16 +4805,16 @@ msgid "Volume of messages spoofing domain (reject + quarantine + none):"
 msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 
 #: src/guidance/AdditionalFindings.js:93
-msgid "Vulnerabilities"
-msgstr "Vulnerabilities"
+#~ msgid "Vulnerabilities"
+#~ msgstr "Vulnerabilities"
 
 #: src/domains/DomainCard.js:215
 #: src/domains/DomainListFilters.js:133
 #: src/domains/DomainsPage.js:243
 #: src/domains/FilterList.js:32
 #: src/organizationDetails/OrganizationDomains.js:243
-msgid "Vulnerability"
-msgstr "Vulnerability"
+#~ msgid "Vulnerability"
+#~ msgstr "Vulnerability"
 
 #: src/guidance/EmailGuidance.js:338
 #~ msgid "Warnings"
@@ -4964,7 +4980,7 @@ msgid "Wiki"
 msgstr "Wiki"
 
 #: src/admin/AdminDomains.js:171
-#: src/domains/DomainCard.js:155
+#: src/domains/DomainCard.js:157
 #: src/domains/DomainsPage.js:104
 #: src/guidance/GuidancePage.js:316
 #: src/organizationDetails/OrganizationDomains.js:99
