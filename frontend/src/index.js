@@ -14,6 +14,7 @@ import { UserVarProvider, useUserVar } from './utilities/userState'
 import { REFRESH_TOKENS } from './graphql/mutations'
 import { activate, defaultLocale } from './utilities/i18n.config'
 import { IS_LOGIN_REQUIRED } from './graphql/queries'
+import { TourProvider } from './userOnboarding/contexts/TourContext'
 
 const I18nApp = () => {
   const { currentUser, login } = useUserVar()
@@ -105,7 +106,9 @@ const setUpApp = async () => {
       <UserVarProvider userVar={currentUserVar}>
         <ChakraProvider theme={canada}>
           <Router>
-            <I18nApp />
+            <TourProvider>
+              <I18nApp />
+            </TourProvider>
           </Router>
         </ChakraProvider>
       </UserVarProvider>

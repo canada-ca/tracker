@@ -20,7 +20,6 @@ import { lazyWithRetry } from '../utilities/lazyWithRetry'
 
 import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
-import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 import { bool } from 'prop-types'
@@ -131,7 +130,7 @@ export function App({ initialLoading, isLoginRequired }) {
           <>
             {((isLoggedIn() && isEmailValidated()) || !isLoginRequired) && (
               <>
-                <RouteLink to="/organizations">
+                <RouteLink to="/organizations" className="organizations-page-button">
                   <Trans>Organizations</Trans>
                 </RouteLink>
                 <RouteLink to="/domains">
@@ -372,7 +371,7 @@ export function App({ initialLoading, isLoginRequired }) {
           <Trans>Terms & conditions</Trans>
         </Link>
 
-        <Link as={RouteLink} to="/contact-us" ml="4">
+        <Link as={RouteLink} to="/contact-us" ml="4" className="contact-us-button">
           <Trans>Contact Us</Trans>
         </Link>
 
