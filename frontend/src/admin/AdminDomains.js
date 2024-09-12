@@ -86,15 +86,25 @@ export function AdminDomains({ orgSlug, orgId }) {
     filters,
   }
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      variables: fetchVariables,
-      relayRoot: 'findOrganizationBySlug.domains',
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    variables: fetchVariables,
+    relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(newDomainUrl)
@@ -434,6 +444,7 @@ export function AdminDomains({ orgSlug, orgId }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </Box>
       <Flex align="center" mb="2">
@@ -451,6 +462,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
       <AdminDomainModal
         isOpen={updateIsOpen}

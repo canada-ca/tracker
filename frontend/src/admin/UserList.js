@@ -47,20 +47,30 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage, resetToFirstPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: usersPerPage,
-      variables: {
-        orgSlug,
-        search: debouncedSearchUser,
-        includePending,
-        orderBy: { field: 'PERMISSION', direction: 'ASC' },
-      },
-      relayRoot: 'findOrganizationBySlug.affiliations',
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+    resetToFirstPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: usersPerPage,
+    variables: {
+      orgSlug,
+      search: debouncedSearchUser,
+      includePending,
+      orderBy: { field: 'PERMISSION', direction: 'ASC' },
+    },
+    relayRoot: 'findOrganizationBySlug.affiliations',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -171,6 +181,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </Box>
 
@@ -187,6 +198,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
 
       <UserListModal

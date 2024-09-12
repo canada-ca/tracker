@@ -27,19 +27,29 @@ export function OrganizationAffiliations({ orgSlug }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage, resetToFirstPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      variables: {
-        slug: orgSlug,
-        orderBy: { direction: orderDirection, field: orderField },
-        search: debouncedSearchTerm,
-      },
-      recordsPerPage: usersPerPage,
-      relayRoot: 'findOrganizationBySlug.affiliations',
-      fetchPolicy: 'network-only',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+    resetToFirstPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    variables: {
+      slug: orgSlug,
+      orderBy: { direction: orderDirection, field: orderField },
+      search: debouncedSearchTerm,
+    },
+    recordsPerPage: usersPerPage,
+    relayRoot: 'findOrganizationBySlug.affiliations',
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const orderByOptions = [
     { value: 'PERMISSION', text: t`Role` },
@@ -88,6 +98,7 @@ export function OrganizationAffiliations({ orgSlug }) {
           resetToFirstPage={resetToFirstPage}
           orderByOptions={orderByOptions}
           placeholder={t`Search for a user by email`}
+          totalRecords={totalCount}
         />
         {userlist}
         <RelayPaginationControls
@@ -101,6 +112,7 @@ export function OrganizationAffiliations({ orgSlug }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </Box>
     </ErrorBoundary>
