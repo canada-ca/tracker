@@ -24,6 +24,7 @@ import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { DomainCard2 } from '../domains/DomainCard2'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -166,7 +167,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           index,
         ) => (
           <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
-            <DomainCard
+            <DomainCard2
               id={id}
               url={domain}
               status={status}
