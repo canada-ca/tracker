@@ -68,20 +68,30 @@ export default function DomainsPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      relayRoot: 'findMyDomains',
-      variables: {
-        orderBy: { field: orderField, direction: orderDirection },
-        search: debouncedSearchTerm,
-        isAffiliated,
-        filters,
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    relayRoot: 'findMyDomains',
+    variables: {
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+      isAffiliated,
+      filters,
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -266,6 +276,7 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
           searchTip={domainSearchTip}
+          totalRecords={totalCount}
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">
@@ -291,6 +302,7 @@ export default function DomainsPage() {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </ErrorBoundary>
     </Box>
