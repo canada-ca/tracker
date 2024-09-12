@@ -4267,8 +4267,12 @@ msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
 
 #: src/guidance/AdditionalFindings.js:357
-msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
-msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
+msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
+msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
+
+#: src/guidance/AdditionalFindings.js:357
+#~ msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
+#~ msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
 
 #: src/app/ReadGuidancePage.js:154
 msgid "These metrics are an important first step in securing your services and should be treated as minimum requirements. Further metrics are available in your organization's domain list."
