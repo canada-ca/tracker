@@ -74,6 +74,8 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`${domainFilters}`
           } else if (filterValue === 'has-entrust-certificate') {
             domainFilters = aql`
             ${domainFilters}
@@ -102,6 +104,17 @@ export const loadAllOrganizationDomainStatuses =
                 FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
                     RETURN webScan.ipAddress
             )
+            LET vulnerabilities = (
+              FOR finding IN additionalFindings
+                FILTER finding.domain == d._id
+                LIMIT 1
+                RETURN UNIQUE(
+                  FOR wc IN finding.webComponents
+                      FILTER LENGTH(wc.WebComponentCves) > 0
+                      FOR vuln IN wc.WebComponentCves
+                          RETURN vuln.Cve
+                )
+            )[0]
             RETURN {
               "domain": d.domain,
               "ipAddresses": ipAddresses,
@@ -118,7 +131,7 @@ export const loadAllOrganizationDomainStatuses =
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
               "hasEntrustCertificate": d.hasEntrustCertificate,
-              "hasTop25Vulnerability": d.cveDetected
+              "top25Vulnerabilities": vulnerabilities
             }
           `
       ).all()
