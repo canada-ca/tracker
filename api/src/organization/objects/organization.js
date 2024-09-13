@@ -175,7 +175,7 @@ export const organizationType = new GraphQLObjectType({
           'blocked',
           'wildcardSibling',
           'hasEntrustCertificate',
-          'top25VulnerabilityDetected',
+          'top25Vulnerabilities',
         ]
         let csvOutput = headers.join(',')
         domains.forEach(
@@ -189,8 +189,9 @@ export const organizationType = new GraphQLObjectType({
             blocked,
             wildcardSibling,
             hasEntrustCertificate,
-            cveDetected,
+            ...rest
           }) => {
+            const vulns = rest?.top25Vulnerabilities || []
             let csvLine = `${domain}`
             csvLine += `,${ipAddresses.join('|')}`
             csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
@@ -198,7 +199,7 @@ export const organizationType = new GraphQLObjectType({
             }, '')
             csvLine += `,${tags.join(
               '|',
-            )},${assetState},${rcode},${blocked},${wildcardSibling},${hasEntrustCertificate},${cveDetected}`
+            )},${assetState},${rcode},${blocked},${wildcardSibling},${hasEntrustCertificate},${vulns.join('|')}`
             csvOutput += `\n${csvLine}`
           },
         )

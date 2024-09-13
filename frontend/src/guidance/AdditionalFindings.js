@@ -363,7 +363,7 @@ export function AdditionalFindings({ domain }) {
               >
                 External Attack Surface Management
               </Link>{' '}
-              tool. Updates to these findings occur weekly.
+              tool. Updates to these findings occur daily.
             </Trans>
           </ModalBody>
           <ModalFooter />

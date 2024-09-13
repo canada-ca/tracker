@@ -54,15 +54,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           filters,
         }
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
-      recordsPerPage: domainsPerPage,
-      relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
-      variables: queryVariables,
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    totalCount,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
+    recordsPerPage: domainsPerPage,
+    relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
+    variables: queryVariables,
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -277,6 +287,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
         searchTip={domainSearchTip}
+        totalRecords={totalCount}
       />
 
       {orgSlug !== 'my-tracker' && (
@@ -301,6 +312,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
     </Box>
   )

@@ -32,6 +32,7 @@ import { useUserVar } from '../utilities/userState'
 import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import withSuperAdmin from '../app/withSuperAdmin'
+// import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -67,20 +68,30 @@ export default function DomainsPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      relayRoot: 'findMyDomains',
-      variables: {
-        orderBy: { field: orderField, direction: orderDirection },
-        search: debouncedSearchTerm,
-        isAffiliated,
-        filters,
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    relayRoot: 'findMyDomains',
+    variables: {
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+      isAffiliated,
+      filters,
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -181,6 +192,7 @@ export default function DomainsPage() {
         ) => (
           <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
+              className="domain-card"
               id={id}
               url={domain}
               status={status}
@@ -203,6 +215,7 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
+      {/* <TourComponent page="domainPage" /> */}
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
@@ -246,6 +259,7 @@ export default function DomainsPage() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
+          className="filter-box"
           selectedDisplayLimit={domainsPerPage}
           setSelectedDisplayLimit={setDomainsPerPage}
           hasNextPage={hasNextPage}
@@ -262,10 +276,11 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
           searchTip={domainSearchTip}
+          totalRecords={totalCount}
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Text mr="2" fontWeight="bold" fontSize="lg" className="filters">
               <Trans>Filters:</Trans>
             </Text>
             <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
@@ -287,6 +302,7 @@ export default function DomainsPage() {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </ErrorBoundary>
     </Box>

@@ -18,6 +18,7 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
+// import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -100,6 +101,7 @@ export default function AdminPage({ isLoginRequired }) {
     })
     dropdown = (
       <Dropdown
+        className="dropdown"
         label={i18n._(t`Organization: `)}
         labelDirection="row"
         options={options}
@@ -126,6 +128,7 @@ export default function AdminPage({ isLoginRequired }) {
       <Flex direction={{ base: 'column', md: 'row' }} align="center" justifyContent="space-between">
         {dropdown}
         <Button
+          className="create-organization-button"
           variant="primary"
           ml={{ base: '0', md: 'auto' }}
           w={{ base: '100%', md: 'auto' }}
@@ -155,7 +158,7 @@ export default function AdminPage({ isLoginRequired }) {
           />
         </>
       ) : (
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center" className="super-admin">
           <Trans>Select an organization to view admin options</Trans>
         </Text>
       )}
@@ -187,6 +190,7 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
     <label>
       <Flex align="center">
+        {/* <TourComponent page="adminProfilePage" /> */}
         <Text fontSize="lg" fontWeight="bold" mr="2">
           <Trans>Super Admin Menu:</Trans>
         </Text>

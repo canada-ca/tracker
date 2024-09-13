@@ -57,6 +57,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
         hasPreviousPage
         startCursor
       }
+      totalCount
     }
   }
 `
@@ -663,6 +664,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
     findOrganizationBySlug(orgSlug: $slug) {
       id
       domains(first: $first, after: $after, orderBy: $orderBy, search: $search, filters: $filters) {
+        totalCount
         pageInfo {
           hasNextPage
           endCursor
@@ -769,6 +771,7 @@ export const PAGINATED_DOMAINS = gql`
         startCursor
         __typename
       }
+      totalCount
       __typename
     }
   }
@@ -1086,6 +1089,7 @@ export const FIND_MY_USERS = gql`
         startCursor
         __typename
       }
+      totalCount
     }
   }
 `
@@ -1132,6 +1136,7 @@ export const AUDIT_LOGS = gql`
         startCursor
         endCursor
       }
+      totalCount
     }
   }
 `
