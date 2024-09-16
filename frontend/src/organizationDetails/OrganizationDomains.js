@@ -250,7 +250,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
-        <InfoBox title={t`Vulnerability`} info={t`Top 25 vulnerability detected in additional findings.`} />
+        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
         <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
         <InfoBox
           title={t`Dependency`}

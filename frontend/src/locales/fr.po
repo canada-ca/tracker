@@ -487,8 +487,8 @@ msgstr "Tous les produits ou services connexes qui vous sont fournis par le SCT 
 #~ msgid "Application Portfolio Management (APM) systems; and"
 #~ msgstr "les systèmes de gestion du portefeuille d’applications (GPA);"
 
-#: src/admin/AdminDomains.js:306
-#: src/domains/DomainListFilters.js:143
+#: src/admin/AdminDomains.js:296
+#: src/domains/DomainListFilters.js:145
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -516,13 +516,13 @@ msgstr "Avril"
 msgid "Archive domain"
 msgstr "Archiver ce domaine"
 
-#: src/admin/AdminDomains.js:183
-#: src/organizationDetails/OrganizationDomains.js:111
+#: src/admin/AdminDomains.js:173
+#: src/domains/DomainCard.js:145
+#: src/organizationDetails/OrganizationDomains.js:101
 msgid "Archived"
 msgstr "Archivé"
 
 #: src/admin/AdminDomainCard.js:51
-#: src/domains/DomainCard.js:199
 msgid "ARCHIVED"
 msgstr "ARCHIVES"
 
@@ -592,9 +592,9 @@ msgstr "BETA"
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de l'organisation."
 
-#: src/admin/AdminDomains.js:180
-#: src/domains/DomainCard.js:148
-#: src/domains/DomainsPage.js:113
+#: src/admin/AdminDomains.js:170
+#: src/domains/DomainCard.js:150
+#: src/domains/DomainsPage.js:103
 #: src/guidance/WebGuidance.js:84
 #: src/organizationDetails/OrganizationDomains.js:108
 msgid "Blocked"
@@ -1177,7 +1177,7 @@ msgstr "Politique DMARC de mise en quarantaine ou de rejet, et rejet de tous les
 #~ msgstr "L'enregistrement DMARC n'a pas pu être trouvé pendant le scan."
 
 #: src/dmarc/DmarcReportPage.js:94
-#: src/domains/DomainCard.js:277
+#: src/domains/DomainCard.js:276
 #: src/guidance/GuidancePage.js:341
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
@@ -1279,7 +1279,6 @@ msgstr "Le champ de l'url du domaine ne doit pas être vide"
 msgid "Domain URL:"
 msgstr "URL du domaine:"
 
-#: src/domains/DomainCard.js:139
 #: src/domains/ScanDomain.js:211
 msgid "Domain:"
 msgstr "Domaine:"
@@ -1488,7 +1487,7 @@ msgstr "Entrust"
 msgid "ENTRUST"
 msgstr "ENTRUST"
 
-#: src/domains/DomainCard.js:164
+#: src/domains/DomainCard.js:166
 #: src/domains/FilterList.js:34
 #: src/guidance/WebTLSResults.js:368
 msgid "Entrust Certificate"
@@ -3437,9 +3436,9 @@ msgstr "Domaine de balayage"
 msgid "Scan of domain successfully requested"
 msgstr "Scan du domaine demandé avec succès"
 
-#: src/admin/AdminDomains.js:182
-#: src/domains/DomainCard.js:171
-#: src/domains/DomainsPage.js:115
+#: src/admin/AdminDomains.js:172
+#: src/domains/DomainCard.js:173
+#: src/domains/DomainsPage.js:105
 #: src/guidance/GuidancePage.js:309
 #: src/organizationDetails/OrganizationDomains.js:110
 msgid "Scan Pending"
@@ -3881,6 +3880,23 @@ msgstr "Statut SPF"
 #: src/summaries/TierTwoSummaries.js:52
 msgid "SPF Summary"
 msgstr "Résumé du SPF"
+
+#: src/domains/DomainCard.js:208
+#: src/domains/DomainListFilters.js:134
+#: src/domains/DomainsPage.js:243
+#: src/domains/FilterList.js:32
+#: src/organizationDetails/OrganizationDomains.js:243
+msgid "SPIN Top 25"
+msgstr "AMOPS 25 principales"
+
+#: src/guidance/AdditionalFindings.js:93
+msgid "SPIN Top 25 Vulnerabilities"
+msgstr "AMOPS 25 principales vulnérabilités"
+
+#: src/domains/DomainsPage.js:243
+#: src/organizationDetails/OrganizationDomains.js:243
+msgid "SPIN Top 25 vulnerability detected in additional findings."
+msgstr "La vulnérabilité AMOPS 25 principales a été détectée dans d'autres résultats."
 
 #: src/new-guidance/NewEmailGuidance.js:287
 #~ msgid "spPolicy:"
@@ -4325,10 +4341,10 @@ msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une 
 msgid "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonctionnalités, <0>vous devez vous affilier à une organisation</0>."
 
-#: src/domains/DomainsPage.js:253
-#: src/organizationDetails/OrganizationDomains.js:253
-msgid "Top 25 vulnerability detected in additional findings."
-msgstr "Las 25 principales vulnerabilidades detectadas en hallazgos adicionales."
+#: src/domains/DomainsPage.js:243
+#: src/organizationDetails/OrganizationDomains.js:243
+#~ msgid "Top 25 vulnerability detected in additional findings."
+#~ msgstr "Las 25 principales vulnerabilidades detectadas en hallazgos adicionales."
 
 #: src/dmarc/DmarcByDomainPage.js:127
 #: src/dmarc/DmarcByDomainPage.js:289
@@ -4702,7 +4718,7 @@ msgstr "Vue verticale"
 #~ msgid "View Details"
 #~ msgstr "Voir les détails"
 
-#: src/domains/DomainCard.js:267
+#: src/domains/DomainCard.js:266
 msgid "View Results"
 msgstr "Voir les résultats"
 
@@ -4715,16 +4731,16 @@ msgid "Volume of messages spoofing domain (reject + quarantine + none):"
 msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
 
 #: src/guidance/AdditionalFindings.js:93
-msgid "Vulnerabilities"
-msgstr "Vulnérabilités"
+#~ msgid "Vulnerabilities"
+#~ msgstr "Vulnérabilités"
 
 #: src/domains/DomainCard.js:215
 #: src/domains/DomainListFilters.js:133
 #: src/domains/DomainsPage.js:253
 #: src/domains/FilterList.js:32
-#: src/organizationDetails/OrganizationDomains.js:253
-msgid "Vulnerability"
-msgstr "Vulnerabilidad"
+#: src/organizationDetails/OrganizationDomains.js:243
+#~ msgid "Vulnerability"
+#~ msgstr "Vulnerabilidad"
 
 #: src/guidance/EmailGuidance.js:338
 #~ msgid "Warnings"
@@ -4877,9 +4893,9 @@ msgstr "Pourquoi la page d'orientation n'affiche-t-elle pas les sélecteurs DKIM
 msgid "Wiki"
 msgstr "Wiki"
 
-#: src/admin/AdminDomains.js:181
-#: src/domains/DomainCard.js:155
-#: src/domains/DomainsPage.js:114
+#: src/admin/AdminDomains.js:171
+#: src/domains/DomainCard.js:157
+#: src/domains/DomainsPage.js:104
 #: src/guidance/GuidancePage.js:316
 #: src/organizationDetails/OrganizationDomains.js:109
 msgid "Wildcard"
