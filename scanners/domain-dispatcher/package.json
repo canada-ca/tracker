@@ -15,7 +15,7 @@
   "dependencies": {
     "arangojs": "^8.0.0",
     "async-wait-until": "^2.0.7",
-    "dotenv-safe": "^8.2.0",
+    "dotenv-safe": "^9.1.0",
     "nats": "^2.7.0"
   },
   "devDependencies": {
