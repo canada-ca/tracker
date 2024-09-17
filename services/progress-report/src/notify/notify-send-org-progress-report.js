@@ -16,7 +16,7 @@ const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient, vulner
         dmarc_score_diff: dmarcScoreDiff >= 0 ? `+${dmarcScoreDiff}%` : `${dmarcScoreDiff}%`,
         domain_count: domainCount,
         domain_count_diff: domainCountDiff >= 0 ? `+${domainCountDiff}` : domainCountDiff,
-        vulnerable_domain_count: vulnerableAssets.length || 0,
+        vulnerable_domain_count: vulnerableAssets,
       },
     })
     log(`Successfully sent ${orgDetails.en.name} progress report via email to user:, ${user._key}`)
