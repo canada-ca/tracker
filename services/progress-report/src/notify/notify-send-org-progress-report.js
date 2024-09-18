@@ -1,6 +1,6 @@
 const { NOTIFICATION_ORG_PROGRESS_REPORT } = process.env
 
-const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient }) => {
+const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient, vulnerableAssets }) => {
   const templateId = NOTIFICATION_ORG_PROGRESS_REPORT
   const { httpsScore, dmarcScore, domainCount, httpsScoreDiff, dmarcScoreDiff, domainCountDiff, orgDetails } = orgStats
 
@@ -16,6 +16,7 @@ const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient }) => {
         dmarc_score_diff: dmarcScoreDiff >= 0 ? `+${dmarcScoreDiff}%` : `${dmarcScoreDiff}%`,
         domain_count: domainCount,
         domain_count_diff: domainCountDiff >= 0 ? `+${domainCountDiff}` : domainCountDiff,
+        vulnerable_domain_count: vulnerableAssets,
       },
     })
     log(`Successfully sent ${orgDetails.en.name} progress report via email to user:, ${user._key}`)
