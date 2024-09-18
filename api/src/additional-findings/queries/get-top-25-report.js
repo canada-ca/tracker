@@ -10,6 +10,7 @@ export const getTop25Reports = {
       userKey,
       auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
       loaders: { loadTop25Reports },
+      language,
     },
   ) => {
     const user = await userRequired()
@@ -36,7 +37,8 @@ export const getTop25Reports = {
       csvOutput += `\n${csvLine}`
       totalAssetCount += domainStatus.assetCount
     })
-    csvOutput += `\nGovernment of Canada,GC,${totalAssetCount}`
+    const govName = language === 'en' ? 'Government of Canada' : 'Gouvernement du Canada'
+    csvOutput += `\n${govName},GC,${totalAssetCount}`
 
     return csvOutput
   },
