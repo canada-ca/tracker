@@ -2702,7 +2702,7 @@ msgstr "Aucune autre conclusion n'est disponible pour l'instant."
 
 #: src/guidance/AdditionalFindings.js:340
 msgid "No additional web components found"
-msgstr ""
+msgstr "Aucun autre composant web n'a été trouvé"
 
 #: src/guidance/AdditionalFindings.js:293
 msgid "No CDN found"
@@ -2812,7 +2812,7 @@ msgstr "Aucune donnée de balayage n'est actuellement disponible pour ce service
 
 #: src/guidance/AdditionalFindings.js:154
 msgid "No Top 25 Vulnerabilites Detected"
-msgstr ""
+msgstr "Aucune des 25 principales vulnérabilités détectées"
 
 #: src/admin/SuperAdminUserList.js:154
 #: src/admin/UserList.js:83
@@ -4899,7 +4899,7 @@ msgstr "Web (HTTPS/TLS)"
 
 #: src/guidance/AdditionalFindings.js:302
 msgid "Web Components"
-msgstr ""
+msgstr "Composants Web"
 
 #: src/summaries/HistoricalSummariesGraph.js:61
 msgid "Web Connections"
