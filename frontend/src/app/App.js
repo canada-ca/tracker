@@ -602,8 +602,32 @@ export function App({ initialLoading, isLoginRequired }) {
           </Suspense>
         )}
       </Main>
-      <Footer />
       <FloatingMenu />
+      <Footer display={{ base: 'none', md: 'inline' }}>
+        <Link
+          isExternal={true}
+          href={
+            i18n.locale === 'en'
+              ? 'https://www.canada.ca/en/transparency/privacy.html'
+              : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+          }
+          ml="4"
+        >
+          <Trans>Privacy</Trans>
+        </Link>
+
+        <Link as={RouteLink} to="/terms-and-conditions" ml="4">
+          <Trans>Terms & conditions</Trans>
+        </Link>
+
+        <Link as={RouteLink} to="/contact-us" ml="4" className="contact-us-button">
+          <Trans>Contact Us</Trans>
+        </Link>
+
+        <Link as={RouteLink} to="/guidance" ml="4">
+          <Trans>Guidance</Trans>
+        </Link>
+      </Footer>
     </Flex>
   )
 }
