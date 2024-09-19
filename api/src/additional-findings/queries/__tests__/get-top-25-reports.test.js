@@ -219,6 +219,7 @@ describe('given getTop25Reports', () => {
           contextValue: {
             i18n,
             userKey: user._key,
+            language: 'en',
             auth: {
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
@@ -277,6 +278,7 @@ describe('given getTop25Reports', () => {
           rootValue: null,
           contextValue: {
             i18n,
+            language: 'en',
             userKey: user._key,
             auth: {
               checkSuperAdmin: checkSuperAdmin({
@@ -338,6 +340,7 @@ Government of Canada,GC,2`,
           rootValue: null,
           contextValue: {
             i18n,
+            language: 'en',
             userKey: user._key,
             auth: {
               checkSuperAdmin: checkSuperAdmin({
@@ -398,6 +401,7 @@ Government of Canada,GC,2`,
           rootValue: null,
           contextValue: {
             i18n,
+            language: 'en',
             userKey: user._key,
             auth: {
               checkSuperAdmin: checkSuperAdmin({
