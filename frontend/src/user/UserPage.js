@@ -18,7 +18,7 @@ import {
 import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
@@ -43,7 +43,7 @@ import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
 
 export default function UserPage() {
   const toast = useToast()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
   const { logout } = useUserVar()
@@ -93,7 +93,7 @@ export default function UserPage() {
           position: 'top-left',
         })
         closeAccountOnClose()
-        history.push('/')
+        navigate('/')
       } else if (closeAccount.result.__typename === 'CloseAccountError') {
         toast({
           title: i18n._(t`Unable to close the account.`),
