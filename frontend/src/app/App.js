@@ -388,10 +388,8 @@
 //   isLoginRequired: bool,
 // }
 
-
-
 import React, { Suspense } from 'react'
-import { Routes, Route, Link as RouteLink, useLocation } from 'react-router-dom'
+import { Routes, Route, Link as RouteLink, Navigate, useLocation } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -403,7 +401,7 @@ import { Navigation } from './Navigation'
 import { SkipLink } from './SkipLink'
 import { FloatingMenu } from './FloatingMenu'
 import { PrivatePage } from './PrivatePage'
-// import { Page } from './Page'
+import { Page } from './Page'
 
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
@@ -438,7 +436,6 @@ const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App({ initialLoading, isLoginRequired }) {
-  // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, hasAffiliation } = useUserVar()
   const { i18n } = useLingui()
   const location = useLocation()
@@ -495,7 +492,7 @@ export function App({ initialLoading, isLoginRequired }) {
   }
 
   return (
-    <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50"> 
+    <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
       <ScrollToAnchor />
       <header>
         <CSSReset />
@@ -585,157 +582,28 @@ export function App({ initialLoading, isLoginRequired }) {
         ) : (
           <Suspense fallback={<LoadingMessage />}>
             <Routes>
-              <Route path="/" element={<LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} />} />
-              <Route path="/create-user/:userOrgToken?" element={<CreateUserPage />} />
-              <Route
-                path="/sign-in"
-                element={
-                  isLoggedIn() ? (
-                    <Navigate to="/" />
-                  ) : (
-                    <SignInPage />
-                  )
-                }
-              />
-              <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/reset-password/:resetToken" element={<ResetPasswordPage />} />
-              <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
-              <Route path="/contact-us" element={<ContactUsPage />} />
-              <Route path="/guidance" element={<ReadGuidancePage />} />
-              <Route
-                path="/organizations"
-                element={
-                  <PrivatePage isLoginRequired={isLoginRequired}>
-                    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                      <Organizations />
-                    </ErrorBoundary>
-                  </PrivatePage>
-                }
-              />
-              <Route
-                path="/organizations/:orgSlug/:activeTab?"
-                element={
-                  <PrivatePage isLoginRequired={isLoginRequired}>
-                    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                      <OrganizationDetails />
-                    </ErrorBoundary>
-                  </PrivatePage>
-                }
-              />
-              <Route
-                path="/admin/:activeMenu?"
-                element={
-                  isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                    <AdminPage isLoginRequired={isLoginRequired} />
-                  ) : (
-                    <Navigate to="/sign-in" state={{ from: location }} />
-                  )
-                }
-              />
-              <Route
-                path="/domains"
-                element={
-                  <PrivatePage isLoginRequired={isLoginRequired}>
-                    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                      <DomainsPage />
-                    </ErrorBoundary>
-                  </PrivatePage>
-                }
-              />
-              <Route
-                path="/domains/:domainSlug/:activeTab?"
-                element={
-                  <PrivatePage isLoginRequired={true}>
-                    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                      <GuidancePage />
-                    </ErrorBoundary>
-                  </PrivatePage>
-                }
-              />
-              <Route
-                path="/domains/:domainSlug/dmarc-report/:period?/:year?"
-                element={
-                  <PrivatePage isLoginRequired={true}>
-                    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                      <DmarcReportPage />
-                    </ErrorBoundary>
-                  </PrivatePage>
-                }
-              />
-              <Route
-                path="/dmarc-summaries"
-                element={
-                  <PrivatePage isLoginRequired={true}>
-                    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                      <DmarcByDomainPage />
-                    </ErrorBoundary>
-                  </PrivatePage>
-                }
-              />
-              <Route
-                path="/user"
-                element={
-                  isLoggedIn() ? (
-                    <UserPage username={currentUser.userName} />
-                  ) : (
-                    <Navigate to="/sign-in" state={{ from: location }} />
-                  )
-                }
-              />
-              <Route
-                path="/my-tracker/:activeTab?"
-                element={
-                  isLoggedIn() ? (
-                    <MyTrackerPage />
-                  ) : (
-                    <Navigate to="/sign-in" state={{ from: location }} />
-                  )
-                }
-              />
-              <Route path="/validate/:verifyToken" element={<EmailValidationPage />} />
-              <Route
-                path="/create-organization"
-                element={
-                  isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                    <CreateOrganizationPage />
-                  ) : (
-                    <Navigate to="/sign-in" state={{ from: location }} />
-                  )
-                }
-              />
+              <Route path="/" element={<Page title={t`Home`}><LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} /></Page>} />
+              <Route path="/create-user/:userOrgToken?" element={<Page title={t`Create an Account`}><CreateUserPage /></Page>} />
+              <Route path="/sign-in" element={isLoggedIn() ? <Navigate to="/" /> : <SignInPage />} />
+              <Route path="/authenticate/:sendMethod/:authenticateToken" element={<Page title={t`Authenticate`}><TwoFactorAuthenticatePage /></Page>} />
+              <Route path="/forgot-password" element={<Page title={t`Forgot Password`}><ForgotPasswordPage /></Page>} />
+              <Route path="/reset-password/:resetToken" element={<Page title={t`Reset Password`}><ResetPasswordPage /></Page>} />
+              <Route path="/terms-and-conditions" element={<Page title={t`Terms & Conditions`}><TermsConditionsPage /></Page>} />
+              <Route path="/contact-us" element={<Page title={t`Contact Us`}><ContactUsPage /></Page>} />
+              <Route path="/guidance" element={<Page title={t`Read guidance`}><ReadGuidancePage /></Page>} />
+              <Route path="/organizations" element={<PrivatePage isLoginRequired={isLoginRequired} title={t`Organizations`}><Organizations /></PrivatePage>} />
+              <Route path="/organizations/:orgSlug/:activeTab?" element={<PrivatePage isLoginRequired={isLoginRequired}><OrganizationDetails /></PrivatePage>} />
+              <Route path="/admin/:activeMenu?" element={isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? <AdminPage /> : <Navigate to="/" />} />
+              <Route path="/dmarc-summaries" element={<PrivatePage isLoginRequired={isLoginRequired}><DmarcReportPage /></PrivatePage>} />
+              <Route path="/dmarc-by-domain/:domainSlug" element={<PrivatePage isLoginRequired={isLoginRequired}><DmarcByDomainPage /></PrivatePage>} />
+              <Route path="/my-tracker" element={<PrivatePage isLoginRequired={isLoginRequired}><MyTrackerPage /></PrivatePage>} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Suspense>
         )}
       </Main>
+      <Footer />
       <FloatingMenu />
-
-      <Footer display={{ base: 'none', md: 'inline' }}>
-        <Link
-          isExternal
-          href={
-            i18n.locale === 'en'
-              ? 'https://www.canada.ca/en/transparency/privacy.html'
-              : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-          }
-          ml="4"
-        >
-          <Trans>Privacy</Trans>
-        </Link>
-
-        <Link as={RouteLink} to="/terms-and-conditions" ml="4">
-          <Trans>Terms & conditions</Trans>
-        </Link>
-
-        <Link as={RouteLink} to="/contact-us" ml="4" className="contact-us-button">
-          <Trans>Contact Us</Trans>
-        </Link>
-
-        <Link as={RouteLink} to="/guidance" ml="4">
-          <Trans>Guidance</Trans>
-        </Link>
-      </Footer>
     </Flex>
   )
 }
