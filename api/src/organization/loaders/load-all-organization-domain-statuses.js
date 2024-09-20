@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { aql } from 'arangojs'
 
 export const loadAllOrganizationDomainStatuses =
-  ({ query, userKey, i18n }) =>
+  ({ query, userKey, i18n, language }) =>
   async ({ filters }) => {
     let domains
     let domainFilters = aql`FILTER d.archived != true`
@@ -114,8 +114,16 @@ export const loadAllOrganizationDomainStatuses =
                           RETURN vuln.Cve
                 )
             )[0]
+            LET verifiedOrg = (
+              FOR v,e IN 1..1 INBOUND d._id claims
+                FILTER v.verified == true
+                LIMIT 1
+                RETURN TRANSLATE(${language}, v.orgDetails)
+            )[0]
             RETURN {
               "domain": d.domain,
+              "orgName": verifiedOrg.name,
+              "orgAcronym": verifiedOrg.acronym,
               "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,
