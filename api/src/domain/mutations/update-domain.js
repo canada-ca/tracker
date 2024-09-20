@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
