@@ -161,8 +161,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     // Update domain
     const domainToInsert = {
-      domain: domain.domain.toLowerCase(),
-      lastRan: domain.lastRan,
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
     }
