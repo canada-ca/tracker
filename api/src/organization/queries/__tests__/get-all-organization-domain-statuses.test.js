@@ -16,7 +16,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given getAllOrganizationDomainStatuses', () => {
   // eslint-disable-next-line no-unused-vars
-  let query, drop, truncate, schema, collections, superAdminOrg, domainOne, domainTwo, i18n, user
+  let query, drop, truncate, schema, collections, superAdminOrg, domainOne, domainTwo, i18n, user, orgOne
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -133,6 +133,25 @@ describe('given getAllOrganizationDomainStatuses', () => {
       hasEntrustCertificate: false,
       cveDetected: false,
     })
+
+    orgOne = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          name: 'Org One',
+          acronym: 'OO',
+        },
+      },
+      verified: true,
+    })
+
+    await collections.claims.save({
+      _to: domainOne._id,
+      _from: orgOne._id,
+    })
+    await collections.claims.save({
+      _to: domainTwo._id,
+      _from: orgOne._id,
+    })
   })
   afterEach(async () => {
     await truncate()
@@ -240,6 +259,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
                 query,
                 userKey: user._key,
                 i18n,
+                language: 'en',
               }),
             },
           },
@@ -247,9 +267,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate,top25Vulnerabilities
-"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false",
-"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false",`,
+            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate,top25Vulnerabilities
+"domain.one","Org One","OO",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false",
+"domain.two","Org One","OO",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false",`,
           },
         }
 
@@ -358,15 +378,16 @@ describe('given getAllOrganizationDomainStatuses', () => {
                 query,
                 userKey: user._key,
                 i18n,
+                language: 'en',
               }),
             },
           },
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate,top25Vulnerabilities
-"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false",
-"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false",`,
+            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate,top25Vulnerabilities
+"domain.one","Org One","OO",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false",
+"domain.two","Org One","OO",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false",`,
           },
         }
         expect(response).toEqual(expectedResponse)
