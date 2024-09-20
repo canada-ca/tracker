@@ -263,7 +263,6 @@ export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!
     $orgId: ID!
-    $domain: DomainScalar
     $tags: [InputTag]
     $archived: Boolean
     $assetState: AssetStateEnums
@@ -273,7 +272,6 @@ export const UPDATE_DOMAIN = gql`
       input: {
         domainId: $domainId
         orgId: $orgId
-        domain: $domain
         tags: $tags
         archived: $archived
         assetState: $assetState
