@@ -20,15 +20,17 @@ import {
   ModalCloseButton,
   Link,
   SimpleGrid,
+  useToast,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
 import { any, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { IGNORE_CVE, UNIGNORE_CVE } from '../graphql/mutations'
 
 export function AdditionalFindings({ domain }) {
   const { i18n } = useLingui()
@@ -37,11 +39,111 @@ export function AdditionalFindings({ domain }) {
   const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
+  const [showConfirm, setShowConfirm] = useState(false)
+  const toast = useToast()
 
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
   const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
     variables: { domain },
+  })
+
+  const [ignoreCve] = useMutation(IGNORE_CVE, {
+    refetchQueries: ['GuidanceAdditionalFindings'],
+    onError(error) {
+      toast({
+        title: i18n._(t`An error occurred.`),
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ ignoreCve }) {
+      if (ignoreCve.result.__typename === 'Domain') {
+        toast({
+          title: i18n._(t`CVE ignored`),
+          description: i18n._(
+            t`Successfully ignored CVE for domain ${ignoreCve.result.domain}. New ignored CVEs: "${
+              ignoreCve.result.ignoredCves && JSON.stringify(ignoreCve.result.ignoredCves)
+            }".`,
+          ),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (ignoreCve.result.__typename === 'DomainError') {
+        toast({
+          title: i18n._(t`Unable to ignore CVE.`),
+          description: ignoreCve.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect ignoreCve.result typename.`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect ignoreCve.result typename.')
+      }
+    },
+  })
+
+  const [unignoreCve] = useMutation(UNIGNORE_CVE, {
+    refetchQueries: ['GuidanceAdditionalFindings'],
+    onError(error) {
+      toast({
+        title: i18n._(t`An error occurred.`),
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ unignoreCve }) {
+      if (unignoreCve.result.__typename === 'Domain') {
+        toast({
+          title: i18n._(t`CVE ignored`),
+          description: i18n._(
+            t`Successfully unignored CVE for domain "${unignoreCve.result.domain}". New ignored CVEs: "${
+              unignoreCve.result.ignoredCves && JSON.stringify(unignoreCve.result.ignoredCves)
+            }".`,
+          ),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (unignoreCve.result.__typename === 'DomainError') {
+        toast({
+          title: i18n._(t`Unable to unignore CVE.`),
+          description: unignoreCve.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect unignoreCve.result typename.`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect unignoreCve.result typename.')
+      }
+    },
   })
 
   if (loading) {
@@ -66,6 +168,7 @@ export function AdditionalFindings({ domain }) {
     )
   }
 
+  const { id: domainId, ignoredCves } = data.findDomainByDomain
   const { timestamp, headers, webComponents, vulnerabilities, ports } = data.findDomainByDomain.additionalFindings
   const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
   const ddosProtectionComponent = webComponents.find(
@@ -73,6 +176,16 @@ export function AdditionalFindings({ domain }) {
   )
   const cdnComponent = webComponents.find(({ webComponentCategory }) => webComponentCategory === 'CDN')
   const sortedPorts = ports.slice().sort((a, b) => Number(a.port) - Number(b.port))
+
+  const handleCveOnClose = () => {
+    setShowConfirm(false)
+    setActiveCve('')
+    cveOnClose()
+  }
+
+  const isCveIgnored = (cve) => {
+    return ignoredCves?.includes(cve)
+  }
 
   return (
     <>
@@ -145,6 +258,49 @@ export function AdditionalFindings({ domain }) {
                   )
                 )
               })}
+              <Divider borderBottomColor="gray.900" />
+              <Flex flexDirection="column">
+                <Box px="2" mb="2">
+                  <Text fontWeight="bold">
+                    <Trans>Ignored CVEs:</Trans>
+                  </Text>
+                  {!ignoredCves || ignoredCves.length === 0 ? (
+                    <Text>
+                      <Trans>None</Trans>
+                    </Text>
+                  ) : (
+                    <SimpleGrid columns={8}>
+                      {ignoredCves &&
+                        ignoredCves.map((cve) => {
+                          return (
+                            <Button
+                              key={`ignored-${cve}`}
+                              borderRadius="full"
+                              m="1"
+                              borderColor="black"
+                              borderWidth="1px"
+                              bg="gray.100"
+                              fontWeight="normal"
+                              size="sm"
+                              _hover={{ bg: 'gray.200' }}
+                              onClick={() => {
+                                setActiveCve({
+                                  cve,
+                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
+                                    webComponentCves.some((x) => x.cve === cve),
+                                  ),
+                                })
+                                cveOnOpen()
+                              }}
+                            >
+                              {cve}
+                            </Button>
+                          )
+                        })}
+                    </SimpleGrid>
+                  )}
+                </Box>
+              </Flex>
             </AccordionPanel>
           </AccordionItem>
 
@@ -325,7 +481,7 @@ export function AdditionalFindings({ domain }) {
         </Accordion>
       </Box>
 
-      <Modal isOpen={cveIsOpen} onClose={cveOnClose}>
+      <Modal isOpen={cveIsOpen} onClose={handleCveOnClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{activeCve?.cve}</ModalHeader>
@@ -337,6 +493,62 @@ export function AdditionalFindings({ domain }) {
                 {webComponentName} {webComponentCategory} {webComponentVersion}
               </Text>
             ))}
+            <Divider borderBottomColor="gray.900" />
+            <Box>
+              <Button
+                variant="primary"
+                mr="4"
+                type="submit"
+                isLoading={false}
+                px={8}
+                onClick={() => setShowConfirm(true)}
+              >
+                {isCveIgnored(activeCve.cve) ? <Trans>Unignore CVE</Trans> : <Trans>Ignore CVE</Trans>}
+              </Button>
+              {showConfirm && (
+                <Box mt="4">
+                  <Text mb="4">
+                    {isCveIgnored(activeCve.cve) ? (
+                      <Trans>Are you sure you want to unignore this CVE?</Trans>
+                    ) : (
+                      <Trans>Are you sure you want to ignore this CVE?</Trans>
+                    )}
+                  </Text>
+
+                  <Button variant="primaryOutline" mr="4" onClick={() => setShowConfirm(false)}>
+                    <Trans>Back</Trans>
+                  </Button>
+
+                  <Button
+                    variant="primary"
+                    mr="4"
+                    type="submit"
+                    isLoading={false}
+                    px={8}
+                    onClick={async () => {
+                      if (isCveIgnored(activeCve.cve)) {
+                        await unignoreCve({
+                          variables: {
+                            domainId,
+                            ignoredCve: activeCve.cve,
+                          },
+                        })
+                      } else {
+                        await ignoreCve({
+                          variables: {
+                            domainId,
+                            ignoredCve: activeCve.cve,
+                          },
+                        })
+                      }
+                      setShowConfirm(false)
+                    }}
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </Box>
+              )}
+            </Box>
           </ModalBody>
           <ModalFooter>
             <Link color="blue.500" href={`https://www.cve.org/CVERecord?id=${activeCve?.cve}`} isExternal>

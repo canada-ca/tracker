@@ -685,4 +685,40 @@ export const REQUEST_DISCOVERY = gql`
   }
 `
 
+export const IGNORE_CVE = gql`
+  mutation IgnoreCve($domainId: ID!, $ignoredCve: CveID!) {
+    ignoreCve(input: { domainId: $domainId, ignoredCve: $ignoredCve }) {
+      result {
+        ... on Domain {
+          id
+          domain
+          ignoredCves
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UNIGNORE_CVE = gql`
+  mutation UnignoreCve($domainId: ID!, $ignoredCve: CveID!) {
+    unignoreCve(input: { domainId: $domainId, ignoredCve: $ignoredCve }) {
+      result {
+        ... on Domain {
+          id
+          domain
+          ignoredCves
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''

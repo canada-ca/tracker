@@ -278,6 +278,11 @@ export const domainType = new GraphQLObjectType({
         })
       },
     },
+    ignoredCves: {
+      type: new GraphQLList(GraphQLString),
+      description: 'List of CVEs that have been ignored by the user.',
+      resolve: ({ ignoredCves }) => ignoredCves,
+    },
     dmarcSummaryByPeriod: {
       description: 'Summarized DMARC aggregate reports.',
       args: {
