@@ -1,4 +1,4 @@
-import { loadAdditionalFindingsByDomainId } from './additional-findings/loaders'
+import { loadAdditionalFindingsByDomainId, loadTop25Reports } from './additional-findings/loaders'
 import {
   loadAffiliationByKey,
   loadAffiliationConnectionsByUserId,
@@ -72,6 +72,12 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       query,
       userKey,
       i18n,
+    }),
+    loadTop25Reports: loadTop25Reports({
+      query,
+      userKey,
+      i18n,
+      language,
     }),
     loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
     loadChartSummaryConnectionsByPeriod: loadChartSummaryConnectionsByPeriod({

@@ -91,7 +91,7 @@ msgstr "<0>Nom d'hôte:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
-#: src/guidance/AdditionalFindings.js:81
+#: src/guidance/AdditionalFindings.js:84
 #: src/guidance/EmailGuidance.js:156
 #: src/guidance/WebGuidance.js:130
 msgid "<0>Last Scanned:</0> {0}"
@@ -129,11 +129,11 @@ msgstr "1. Évaluez"
 msgid "2. Deploy"
 msgstr "2. Déployer"
 
-#: src/guidance/AdditionalFindings.js:160
+#: src/guidance/AdditionalFindings.js:169
 msgid "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 msgstr "2.1 Des cadres d’application Web robustes sont utilisés pour faciliter le développement d’applications Web sécurisées."
 
-#: src/guidance/AdditionalFindings.js:207
+#: src/guidance/AdditionalFindings.js:216
 msgid "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 msgstr "2.4 Les applications Web mettent en œuvre les mécanismes Content Security Policy et HSTS ainsi que l’en-tête de réponse X-Frame-Options."
 
@@ -141,11 +141,11 @@ msgstr "2.4 Les applications Web mettent en œuvre les mécanismes Content Secur
 msgid "3. Enforce"
 msgstr "3. Appliquer"
 
-#: src/guidance/AdditionalFindings.js:235
+#: src/guidance/AdditionalFindings.js:244
 msgid "3.1.2 Use a denial-of-service mitigation service"
 msgstr "3.1.2 utilisent un service d’atténuation des dénis de service;"
 
-#: src/guidance/AdditionalFindings.js:266
+#: src/guidance/AdditionalFindings.js:275
 msgid "3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the origin server."
 msgstr "3.1.3 utilisent des réseaux de diffusion de contenu approuvés par le GC qui stockent temporairement les sites Web et protègent l’accès au serveur d’origine."
 
@@ -169,7 +169,7 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
-#: src/guidance/GuidancePage.js:210
+#: src/guidance/GuidancePage.js:211
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
@@ -283,8 +283,8 @@ msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
 #: src/guidance/AdditionalFindings.js:50
-#: src/guidance/AdditionalFindings.js:353
-#: src/guidance/GuidancePage.js:256
+#: src/guidance/AdditionalFindings.js:409
+#: src/guidance/GuidancePage.js:257
 msgid "Additional Findings"
 msgstr "Constatations supplémentaires"
 
@@ -320,7 +320,7 @@ msgstr "Profil de l'administrateur"
 msgid "Admins of an organization can add domains to their list."
 msgstr "Les administrateurs d'une organisation peuvent ajouter des domaines à leur liste."
 
-#: src/guidance/AdditionalFindings.js:334
+#: src/guidance/AdditionalFindings.js:390
 msgid "Affected Components:"
 msgstr "Composants concernés :"
 
@@ -876,7 +876,7 @@ msgstr "contactez-nous"
 msgid "Contact Us"
 msgstr "Nous contacter"
 
-#: src/guidance/AdditionalFindings.js:260
+#: src/guidance/AdditionalFindings.js:269
 msgid "Content Delivery Network"
 msgstr "Réseau de diffusion de contenu"
 
@@ -993,7 +993,7 @@ msgstr "Sécurité et utilisation des données"
 msgid "Data:"
 msgstr "Données:"
 
-#: src/guidance/AdditionalFindings.js:229
+#: src/guidance/AdditionalFindings.js:238
 msgid "DDOS Protection"
 msgstr "Protection DDOS"
 
@@ -1394,7 +1394,7 @@ msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:251
+#: src/guidance/GuidancePage.js:252
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
@@ -1544,7 +1544,7 @@ msgstr "Erreur lors de la récupération des données DMARC pour {domainSlug}. <
 #~ msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 #~ msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système."
 
-#: src/guidance/GuidancePage.js:185
+#: src/guidance/GuidancePage.js:186
 msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
 msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <0/>Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système. Vous pouvez demander l'accès à une organisation ci-dessous pour voir les résultats du domaine."
 
@@ -1651,10 +1651,11 @@ msgstr "Filtré"
 msgid "Filters:"
 msgstr "Filtres :"
 
-#: src/guidance/AdditionalFindings.js:179
-#: src/guidance/AdditionalFindings.js:243
-#: src/guidance/AdditionalFindings.js:276
-#: src/guidance/AdditionalFindings.js:313
+#: src/guidance/AdditionalFindings.js:188
+#: src/guidance/AdditionalFindings.js:252
+#: src/guidance/AdditionalFindings.js:285
+#: src/guidance/AdditionalFindings.js:327
+#: src/guidance/AdditionalFindings.js:369
 msgid "First Seen: {0}"
 msgstr "Première vue : {0}"
 
@@ -1703,7 +1704,7 @@ msgstr "Mot de passe oublié"
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
-#: src/guidance/AdditionalFindings.js:154
+#: src/guidance/AdditionalFindings.js:163
 msgid "Frameworks"
 msgstr "Cadres"
 
@@ -1790,7 +1791,7 @@ msgstr "Direction du graphique :"
 msgid "Guidance"
 msgstr "Orientation"
 
-#: src/guidance/GuidancePage.js:120
+#: src/guidance/GuidancePage.js:121
 msgid "Guidance results"
 msgstr "Résultats de l'orientation"
 
@@ -2042,7 +2043,7 @@ msgstr "Si, à tout moment, vous ou vos représentants souhaitez ajuster ou annu
 msgid "If available, please use a managed device provided by your organization."
 msgstr "Si disponible, veuillez utiliser un dispositif géré fourni par votre organisation."
 
-#: src/guidance/GuidancePage.js:215
+#: src/guidance/GuidancePage.js:216
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
 
@@ -2091,7 +2092,7 @@ msgstr "Mise en œuvre : <0>Conseils de mise en œuvre : protection du domaine d
 msgid "Implemented"
 msgstr "Mis en œuvre"
 
-#: src/guidance/AdditionalFindings.js:107
+#: src/guidance/AdditionalFindings.js:110
 msgid "Improving GC Cyber Security Health SPIN"
 msgstr "Renforcement de la cybersécurité au gouvernement du Canada AMOPS"
 
@@ -2416,10 +2417,11 @@ msgstr "Données des 365 derniers jours"
 #~ msgid "Last Scanned"
 #~ msgstr "Dernière numérisation"
 
-#: src/guidance/AdditionalFindings.js:182
-#: src/guidance/AdditionalFindings.js:246
-#: src/guidance/AdditionalFindings.js:279
-#: src/guidance/AdditionalFindings.js:316
+#: src/guidance/AdditionalFindings.js:191
+#: src/guidance/AdditionalFindings.js:255
+#: src/guidance/AdditionalFindings.js:288
+#: src/guidance/AdditionalFindings.js:330
+#: src/guidance/AdditionalFindings.js:372
 msgid "Last Seen: {0}"
 msgstr "Dernière visite : {0}"
 
@@ -2550,7 +2552,7 @@ msgstr "MONITOR_ONLY"
 msgid "More details"
 msgstr "Plus de détails"
 
-#: src/guidance/AdditionalFindings.js:343
+#: src/guidance/AdditionalFindings.js:399
 msgid "More info"
 msgstr "Plus d'informations"
 
@@ -2698,7 +2700,11 @@ msgstr "Aucun journal d'activité"
 msgid "No additional findings available at this time."
 msgstr "Aucune autre conclusion n'est disponible pour l'instant."
 
-#: src/guidance/AdditionalFindings.js:284
+#: src/guidance/AdditionalFindings.js:340
+msgid "No additional web components found"
+msgstr "Aucun autre composant web n'a été trouvé"
+
+#: src/guidance/AdditionalFindings.js:293
 msgid "No CDN found"
 msgstr "Pas de RDC trouvé"
 
@@ -2741,7 +2747,7 @@ msgstr "Aucune donnée n'a été trouvée lors de la récupération de tous les 
 msgid "No data was found to export."
 msgstr "Aucune donnée n'a été trouvée pour l'exportation."
 
-#: src/guidance/AdditionalFindings.js:251
+#: src/guidance/AdditionalFindings.js:260
 msgid "No DDOS Protection found"
 msgstr "Aucune protection DDOS trouvée"
 
@@ -2759,7 +2765,7 @@ msgstr "Aucune protection DDOS trouvée"
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/guidance/AdditionalFindings.js:192
+#: src/guidance/AdditionalFindings.js:201
 msgid "No frameworks found"
 msgstr "Aucun cadre trouvé"
 
@@ -2788,7 +2794,7 @@ msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
-#: src/guidance/AdditionalFindings.js:220
+#: src/guidance/AdditionalFindings.js:229
 msgid "No response headers found"
 msgstr "Aucun en-tête de réponse n'a été trouvé"
 
@@ -2800,9 +2806,13 @@ msgstr "Aucun en-tête de réponse n'a été trouvé"
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
-#: src/guidance/GuidancePage.js:230
+#: src/guidance/GuidancePage.js:231
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "Aucune donnée de balayage n'est actuellement disponible pour ce service. Vous pouvez demander un scan en utilisant le bouton d'actualisation, ou attendre jusqu'à 24 heures pour que les données soient actualisées."
+
+#: src/guidance/AdditionalFindings.js:154
+msgid "No Top 25 Vulnerabilites Detected"
+msgstr "Aucune des 25 principales vulnérabilités détectées"
 
 #: src/admin/SuperAdminUserList.js:154
 #: src/admin/UserList.js:83
@@ -2908,7 +2918,7 @@ msgstr "Une fois que l’équipe responsable de la cybersécurité du SCT a donn
 msgid "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 msgstr "Seul l’<0>équipe responsable de la cybersécurité du SCT</0> peut supprimer des domaines de votre organisation. Les domaines ne peuvent être supprimés de votre liste que 1) s'ils n'existent plus, c'est-à-dire s'ils sont supprimés du DNS et renvoient un code d'erreur NX DOMAIN (le nom de domaine n'existe pas) ; ou 2) si vous avez constaté qu'ils n'appartiennent pas à votre organisation."
 
-#: src/guidance/AdditionalFindings.js:301
+#: src/guidance/AdditionalFindings.js:357
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -2965,7 +2975,7 @@ msgstr "L'organisation possède ce domaine, mais il est en dehors du champ d'app
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/guidance/GuidancePage.js:348
+#: src/guidance/GuidancePage.js:349
 msgid "Organization(s):"
 msgstr "Organisation(s) :"
 
@@ -3158,7 +3168,7 @@ msgstr "Pointeur vers un enregistrement de clé publique DKIM dans le DNS."
 msgid "Policy guidance:"
 msgstr "Orientation politique :"
 
-#: src/guidance/AdditionalFindings.js:293
+#: src/guidance/AdditionalFindings.js:349
 msgid "Ports"
 msgstr "Ports"
 
@@ -3349,7 +3359,7 @@ msgstr "Signaler un problème"
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/guidance/GuidancePage.js:158
+#: src/guidance/GuidancePage.js:159
 #: src/organizationDetails/OrganizationDetails.js:107
 #: src/organizations/Organizations.js:114
 #: src/organizations/RequestOrgInviteModal.js:62
@@ -3418,7 +3428,7 @@ msgstr "Type de ressource"
 msgid "Resource:"
 msgstr "Ressource :"
 
-#: src/guidance/AdditionalFindings.js:201
+#: src/guidance/AdditionalFindings.js:210
 msgid "Response Headers"
 msgstr "En-têtes de réponse"
 
@@ -3951,7 +3961,7 @@ msgstr "Résumé du SPF"
 msgid "SPIN Top 25"
 msgstr "AMOPS 25 principales"
 
-#: src/guidance/AdditionalFindings.js:93
+#: src/guidance/AdditionalFindings.js:96
 msgid "SPIN Top 25 Vulnerabilities"
 msgstr "AMOPS 25 principales vulnérabilités"
 
@@ -3992,7 +4002,7 @@ msgstr "DÉV"
 #~ msgid "State: {lastPortState}"
 #~ msgstr "État : {lastPortState}"
 
-#: src/guidance/AdditionalFindings.js:310
+#: src/guidance/AdditionalFindings.js:366
 msgid "State: {lastPortStateTranslated}"
 msgstr "État : {lastPortStateTranslated}"
 
@@ -4290,7 +4300,7 @@ msgstr "Total des messages de cet expéditeur."
 msgid "The user's role has been successfully updated"
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 
-#: src/guidance/AdditionalFindings.js:357
+#: src/guidance/AdditionalFindings.js:413
 msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
 msgstr "Ces résultats sont importés de l'outil <0>External Attack Surface Management</0> de Microsoft. Ces résultats sont mis à jour quotidiennement."
 
@@ -4887,6 +4897,10 @@ msgstr "WEB"
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
 
+#: src/guidance/AdditionalFindings.js:302
+msgid "Web Components"
+msgstr "Composants Web"
+
 #: src/summaries/HistoricalSummariesGraph.js:61
 msgid "Web Connections"
 msgstr "Connexions web"
@@ -4896,7 +4910,7 @@ msgid "Web Connections Summary"
 msgstr "Résumé des connexions web"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:248
+#: src/guidance/GuidancePage.js:249
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
@@ -4941,7 +4955,7 @@ msgstr "Bienvenue dans votre vision personnelle de Suivi. Modérez la posture de
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
-#: src/guidance/AdditionalFindings.js:87
+#: src/guidance/AdditionalFindings.js:90
 msgid "What are these additional findings?"
 msgstr "Quels sont ces résultats supplémentaires ?"
 
