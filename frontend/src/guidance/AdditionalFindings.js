@@ -112,9 +112,9 @@ export function AdditionalFindings({ domain }) {
     onCompleted({ unignoreCve }) {
       if (unignoreCve.result.__typename === 'Domain') {
         toast({
-          title: i18n._(t`CVE ignored`),
+          title: i18n._(t`Stopped ignoring CVE`),
           description: i18n._(
-            t`Successfully unignored CVE for domain "${unignoreCve.result.domain}". New ignored CVEs: "${
+            t`Successfully stopped ignoring CVE for domain "${unignoreCve.result.domain}". New ignored CVEs: "${
               unignoreCve.result.ignoredCves && JSON.stringify(unignoreCve.result.ignoredCves)
             }".`,
           ),
@@ -125,7 +125,7 @@ export function AdditionalFindings({ domain }) {
         })
       } else if (unignoreCve.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to unignore CVE.`),
+          title: i18n._(t`Unable to stop ignoring CVE.`),
           description: unignoreCve.result.description,
           status: 'error',
           duration: 9000,
@@ -503,13 +503,13 @@ export function AdditionalFindings({ domain }) {
                 px={8}
                 onClick={() => setShowConfirm(true)}
               >
-                {isCveIgnored(activeCve.cve) ? <Trans>Unignore CVE</Trans> : <Trans>Ignore CVE</Trans>}
+                {isCveIgnored(activeCve.cve) ? <Trans>Stop Ignoring CVE</Trans> : <Trans>Ignore CVE</Trans>}
               </Button>
               {showConfirm && (
                 <Box mt="4">
                   <Text mb="4">
                     {isCveIgnored(activeCve.cve) ? (
-                      <Trans>Are you sure you want to unignore this CVE?</Trans>
+                      <Trans>Are you sure you want to stop ignoring this CVE?</Trans>
                     ) : (
                       <Trans>Are you sure you want to ignore this CVE?</Trans>
                     )}
