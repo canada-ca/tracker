@@ -71,6 +71,7 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
+    cveDetected,
     userHasPermission,
     webScanPending,
     wildcardSibling,
@@ -281,7 +282,7 @@ function GuidancePage() {
           <ABTestWrapper>
             <ABTestVariant name="B">
               <TabPanel>
-                <AdditionalFindings domain={domainName} />
+                <AdditionalFindings domain={domainName} cveDetected={cveDetected} />
               </TabPanel>
             </ABTestVariant>
           </ABTestWrapper>
