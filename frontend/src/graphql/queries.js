@@ -222,6 +222,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       blocked
       wildcardSibling
       webScanPending
+      cveDetected
       status {
         ...RequiredDomainStatusFields
       }
