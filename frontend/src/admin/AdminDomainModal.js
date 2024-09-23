@@ -207,7 +207,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   domainId: editingDomainId,
                   orgId: orgId,
-                  domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
                   assetState: values.assetState,
@@ -235,7 +234,14 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
               <ModalCloseButton />
               <ModalBody>
                 <Stack spacing={4} p={25}>
-                  <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
+                  {mutation === 'create' ? (
+                    <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
+                  ) : (
+                    <Box>
+                      <Text fontWeight="bold">Domain:</Text>
+                      <Text flexWrap="wrap">{editingDomainUrl}</Text>
+                    </Box>
+                  )}
                   <FieldArray
                     name="tags"
                     render={(arrayHelpers) => (
