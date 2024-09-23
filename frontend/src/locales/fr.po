@@ -91,7 +91,7 @@ msgstr "<0>Nom d'hôte:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
-#: src/guidance/AdditionalFindings.js:84
+#: src/guidance/AdditionalFindings.js:197
 #: src/guidance/EmailGuidance.js:156
 #: src/guidance/WebGuidance.js:130
 msgid "<0>Last Scanned:</0> {0}"
@@ -129,11 +129,11 @@ msgstr "1. Évaluez"
 msgid "2. Deploy"
 msgstr "2. Déployer"
 
-#: src/guidance/AdditionalFindings.js:169
+#: src/guidance/AdditionalFindings.js:325
 msgid "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 msgstr "2.1 Des cadres d’application Web robustes sont utilisés pour faciliter le développement d’applications Web sécurisées."
 
-#: src/guidance/AdditionalFindings.js:216
+#: src/guidance/AdditionalFindings.js:372
 msgid "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 msgstr "2.4 Les applications Web mettent en œuvre les mécanismes Content Security Policy et HSTS ainsi que l’en-tête de réponse X-Frame-Options."
 
@@ -141,11 +141,11 @@ msgstr "2.4 Les applications Web mettent en œuvre les mécanismes Content Secur
 msgid "3. Enforce"
 msgstr "3. Appliquer"
 
-#: src/guidance/AdditionalFindings.js:244
+#: src/guidance/AdditionalFindings.js:400
 msgid "3.1.2 Use a denial-of-service mitigation service"
 msgstr "3.1.2 utilisent un service d’atténuation des dénis de service;"
 
-#: src/guidance/AdditionalFindings.js:275
+#: src/guidance/AdditionalFindings.js:431
 msgid "3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the origin server."
 msgstr "3.1.3 utilisent des réseaux de diffusion de contenu approuvés par le GC qui stockent temporairement les sites Web et protègent l’accès au serveur d’origine."
 
@@ -282,8 +282,8 @@ msgstr "Ajouter les détails du domaine"
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
-#: src/guidance/AdditionalFindings.js:50
-#: src/guidance/AdditionalFindings.js:409
+#: src/guidance/AdditionalFindings.js:152
+#: src/guidance/AdditionalFindings.js:621
 #: src/guidance/GuidancePage.js:257
 msgid "Additional Findings"
 msgstr "Constatations supplémentaires"
@@ -320,7 +320,7 @@ msgstr "Profil de l'administrateur"
 msgid "Admins of an organization can add domains to their list."
 msgstr "Les administrateurs d'une organisation peuvent ajouter des domaines à leur liste."
 
-#: src/guidance/AdditionalFindings.js:390
+#: src/guidance/AdditionalFindings.js:546
 msgid "Affected Components:"
 msgstr "Composants concernés :"
 
@@ -463,6 +463,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/UserListModal.js:140
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:56
+#: src/guidance/AdditionalFindings.js:55
+#: src/guidance/AdditionalFindings.js:104
 #: src/user/UserPage.js:77
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
@@ -526,9 +528,17 @@ msgstr "Archivé"
 msgid "ARCHIVED"
 msgstr "ARCHIVES"
 
+#: src/guidance/AdditionalFindings.js:570
+msgid "Are you sure you want to ignore this CVE?"
+msgstr "Êtes-vous sûr de vouloir ignorer ce CVE ?"
+
 #: src/admin/OrganizationInformation.js:423
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0}\" ?"
+
+#: src/guidance/AdditionalFindings.js:568
+msgid "Are you sure you want to stop ignoring this CVE?"
+msgstr "Êtes-vous sûr de vouloir cesser d'ignorer ce CVE ?"
 
 #: src/admin/OrganizationInformation.js:619
 #~ msgid "Are you sure you wish to leave {0}? You will have to be invited back in to access it."
@@ -569,6 +579,7 @@ msgstr "Authentifier"
 
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
+#: src/guidance/AdditionalFindings.js:575
 #: src/userOnboarding/components/TourComponent.js:61
 msgid "Back"
 msgstr "Retour"
@@ -819,6 +830,7 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/admin/SuperAdminUserList.js:387
 #: src/admin/UserListModal.js:277
 #: src/domains/SubdomainDiscoveryButton.js:92
+#: src/guidance/AdditionalFindings.js:603
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
@@ -876,7 +888,7 @@ msgstr "contactez-nous"
 msgid "Contact Us"
 msgstr "Nous contacter"
 
-#: src/guidance/AdditionalFindings.js:269
+#: src/guidance/AdditionalFindings.js:425
 msgid "Content Delivery Network"
 msgstr "Réseau de diffusion de contenu"
 
@@ -943,7 +955,7 @@ msgstr "Créer une organisation"
 msgid "Create your free account to unlock visibility into your organization's digital footprint. Upon signing up, you'll gain access to a dynamic inventory of web infrastructure under your management."
 msgstr ""
 
-#: src/guidance/AdditionalFindings.js:35
+#: src/guidance/AdditionalFindings.js:37
 msgid "Critical"
 msgstr "Critique"
 
@@ -980,6 +992,10 @@ msgstr "État des courbes"
 #~ msgid "CVE Detected"
 #~ msgstr "CVE détecté"
 
+#: src/guidance/AdditionalFindings.js:66
+msgid "CVE ignored"
+msgstr "CVE ignoré"
+
 #: src/termsConditions/TermsConditionsPage.js:202
 msgid "Data Handling"
 msgstr "Traitement des données"
@@ -993,7 +1009,7 @@ msgstr "Sécurité et utilisation des données"
 msgid "Data:"
 msgstr "Données:"
 
-#: src/guidance/AdditionalFindings.js:238
+#: src/guidance/AdditionalFindings.js:394
 msgid "DDOS Protection"
 msgstr "Protection DDOS"
 
@@ -1635,7 +1651,7 @@ msgstr "Filtrer la liste aux seules organisations vérifiées."
 msgid "Filter the data to view"
 msgstr ""
 
-#: src/guidance/AdditionalFindings.js:359
+#: src/guidance/AdditionalFindings.js:515
 msgid "Filtered"
 msgstr "Filtré"
 
@@ -1651,11 +1667,11 @@ msgstr "Filtré"
 msgid "Filters:"
 msgstr "Filtres :"
 
-#: src/guidance/AdditionalFindings.js:188
-#: src/guidance/AdditionalFindings.js:252
-#: src/guidance/AdditionalFindings.js:285
-#: src/guidance/AdditionalFindings.js:327
-#: src/guidance/AdditionalFindings.js:369
+#: src/guidance/AdditionalFindings.js:344
+#: src/guidance/AdditionalFindings.js:408
+#: src/guidance/AdditionalFindings.js:441
+#: src/guidance/AdditionalFindings.js:483
+#: src/guidance/AdditionalFindings.js:525
 msgid "First Seen: {0}"
 msgstr "Première vue : {0}"
 
@@ -1704,7 +1720,7 @@ msgstr "Mot de passe oublié"
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
-#: src/guidance/AdditionalFindings.js:163
+#: src/guidance/AdditionalFindings.js:319
 msgid "Frameworks"
 msgstr "Cadres"
 
@@ -1860,7 +1876,7 @@ msgstr ""
 msgid "Hide password"
 msgstr "Cacher le mot de passe"
 
-#: src/guidance/AdditionalFindings.js:35
+#: src/guidance/AdditionalFindings.js:37
 msgid "High"
 msgstr "Haut"
 
@@ -2059,9 +2075,17 @@ msgstr "Si vous pensez que cela a été causé par un problème avec Tracker, ve
 msgid "If your organization has no affiliated users within Tracker, contact the <0>TBS Cyber Security</0> to assist in onboarding."
 msgstr "Si votre organisation n'a pas d'utilisateurs affiliés à Suivi, contactez l’<0>équipe responsable de la cybersécurité du SCT</0> pour vous aider à l'intégrer."
 
+#: src/guidance/AdditionalFindings.js:562
+msgid "Ignore CVE"
+msgstr "Ignorer le CVE"
+
 #: src/admin/AdminDomainModal.js:377
 msgid "Ignore RUA"
 msgstr "Ignorer la RUA"
+
+#: src/guidance/AdditionalFindings.js:274
+msgid "Ignored CVEs:"
+msgstr "CVE ignorés :"
 
 #: src/guidance/WebConnectionResults.js:141
 #: src/guidance/WebConnectionResults.js:184
@@ -2092,7 +2116,7 @@ msgstr "Mise en œuvre : <0>Conseils de mise en œuvre : protection du domaine d
 msgid "Implemented"
 msgstr "Mis en œuvre"
 
-#: src/guidance/AdditionalFindings.js:110
+#: src/guidance/AdditionalFindings.js:223
 msgid "Improving GC Cyber Security Health SPIN"
 msgstr "Renforcement de la cybersécurité au gouvernement du Canada AMOPS"
 
@@ -2131,6 +2155,10 @@ msgstr "Incorrect createDomain.result typename."
 msgid "Incorrect createOrganization.result typename."
 msgstr "createOrganization.result incorrecte typename."
 
+#: src/guidance/AdditionalFindings.js:89
+msgid "Incorrect ignoreCve.result typename."
+msgstr "Incorrect ignoreCve.result typename."
+
 #: src/admin/UserListModal.js:81
 msgid "Incorrect inviteUserToOrg.result typename."
 msgstr "Incorrect inviteUserToOrg.result typename."
@@ -2163,6 +2191,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/auth/SignInPage.js:86
 #: src/auth/TwoFactorAuthenticatePage.js:76
 #: src/createOrganization/CreateOrganizationPage.js:86
+#: src/guidance/AdditionalFindings.js:88
+#: src/guidance/AdditionalFindings.js:137
 #: src/user/EditableUserDisplayName.js:72
 #: src/user/EditableUserEmail.js:72
 #: src/user/EditableUserLanguage.js:51
@@ -2190,6 +2220,10 @@ msgstr "Incorrect signUp.result typename."
 #: src/admin/OrganizationInformation.js:147
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
+
+#: src/guidance/AdditionalFindings.js:138
+msgid "Incorrect unignoreCve.result typename."
+msgstr "Incorrect unignoreCve.result typename."
 
 #: src/user/EmailUpdatesSwitch.js:50
 #: src/user/InsideUserSwitch.js:54
@@ -2417,11 +2451,11 @@ msgstr "Données des 365 derniers jours"
 #~ msgid "Last Scanned"
 #~ msgstr "Dernière numérisation"
 
-#: src/guidance/AdditionalFindings.js:191
-#: src/guidance/AdditionalFindings.js:255
-#: src/guidance/AdditionalFindings.js:288
-#: src/guidance/AdditionalFindings.js:330
-#: src/guidance/AdditionalFindings.js:372
+#: src/guidance/AdditionalFindings.js:347
+#: src/guidance/AdditionalFindings.js:411
+#: src/guidance/AdditionalFindings.js:444
+#: src/guidance/AdditionalFindings.js:486
+#: src/guidance/AdditionalFindings.js:528
 msgid "Last Seen: {0}"
 msgstr "Dernière visite : {0}"
 
@@ -2476,7 +2510,7 @@ msgstr "Connectez-vous à votre compte"
 msgid "Lookups:"
 msgstr "Les recherches :"
 
-#: src/guidance/AdditionalFindings.js:35
+#: src/guidance/AdditionalFindings.js:37
 msgid "Low"
 msgstr "Faible"
 
@@ -2510,7 +2544,7 @@ msgstr "Mars"
 msgid "May"
 msgstr "Mai"
 
-#: src/guidance/AdditionalFindings.js:35
+#: src/guidance/AdditionalFindings.js:37
 msgid "Medium"
 msgstr "Moyen"
 
@@ -2552,7 +2586,7 @@ msgstr "MONITOR_ONLY"
 msgid "More details"
 msgstr "Plus de détails"
 
-#: src/guidance/AdditionalFindings.js:399
+#: src/guidance/AdditionalFindings.js:611
 msgid "More info"
 msgstr "Plus d'informations"
 
@@ -2696,15 +2730,15 @@ msgstr "Non"
 msgid "No activity logs"
 msgstr "Aucun journal d'activité"
 
-#: src/guidance/AdditionalFindings.js:63
+#: src/guidance/AdditionalFindings.js:165
 msgid "No additional findings available at this time."
 msgstr "Aucune autre conclusion n'est disponible pour l'instant."
 
-#: src/guidance/AdditionalFindings.js:340
+#: src/guidance/AdditionalFindings.js:496
 msgid "No additional web components found"
 msgstr "Aucun autre composant web n'a été trouvé"
 
-#: src/guidance/AdditionalFindings.js:293
+#: src/guidance/AdditionalFindings.js:449
 msgid "No CDN found"
 msgstr "Pas de RDC trouvé"
 
@@ -2747,7 +2781,7 @@ msgstr "Aucune donnée n'a été trouvée lors de la récupération de tous les 
 msgid "No data was found to export."
 msgstr "Aucune donnée n'a été trouvée pour l'exportation."
 
-#: src/guidance/AdditionalFindings.js:260
+#: src/guidance/AdditionalFindings.js:416
 msgid "No DDOS Protection found"
 msgstr "Aucune protection DDOS trouvée"
 
@@ -2765,7 +2799,7 @@ msgstr "Aucune protection DDOS trouvée"
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/guidance/AdditionalFindings.js:201
+#: src/guidance/AdditionalFindings.js:357
 msgid "No frameworks found"
 msgstr "Aucun cadre trouvé"
 
@@ -2794,7 +2828,7 @@ msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
-#: src/guidance/AdditionalFindings.js:229
+#: src/guidance/AdditionalFindings.js:385
 msgid "No response headers found"
 msgstr "Aucun en-tête de réponse n'a été trouvé"
 
@@ -2810,7 +2844,7 @@ msgstr "Aucune donnée d'analyse pour cette organisation."
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "Aucune donnée de balayage n'est actuellement disponible pour ce service. Vous pouvez demander un scan en utilisant le bouton d'actualisation, ou attendre jusqu'à 24 heures pour que les données soient actualisées."
 
-#: src/guidance/AdditionalFindings.js:154
+#: src/guidance/AdditionalFindings.js:267
 msgid "No Top 25 Vulnerabilites Detected"
 msgstr "Aucune des 25 principales vulnérabilités détectées"
 
@@ -2831,6 +2865,7 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 msgid "Non-compliant"
 msgstr "Non conforme"
 
+#: src/guidance/AdditionalFindings.js:278
 #: src/guidance/EmailGuidance.js:325
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
@@ -2918,7 +2953,7 @@ msgstr "Une fois que l’équipe responsable de la cybersécurité du SCT a donn
 msgid "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 msgstr "Seul l’<0>équipe responsable de la cybersécurité du SCT</0> peut supprimer des domaines de votre organisation. Les domaines ne peuvent être supprimés de votre liste que 1) s'ils n'existent plus, c'est-à-dire s'ils sont supprimés du DNS et renvoient un code d'erreur NX DOMAIN (le nom de domaine n'existe pas) ; ou 2) si vous avez constaté qu'ils n'appartiennent pas à votre organisation."
 
-#: src/guidance/AdditionalFindings.js:357
+#: src/guidance/AdditionalFindings.js:513
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -3168,7 +3203,7 @@ msgstr "Pointeur vers un enregistrement de clé publique DKIM dans le DNS."
 msgid "Policy guidance:"
 msgstr "Orientation politique :"
 
-#: src/guidance/AdditionalFindings.js:349
+#: src/guidance/AdditionalFindings.js:505
 msgid "Ports"
 msgstr "Ports"
 
@@ -3428,7 +3463,7 @@ msgstr "Type de ressource"
 msgid "Resource:"
 msgstr "Ressource :"
 
-#: src/guidance/AdditionalFindings.js:210
+#: src/guidance/AdditionalFindings.js:366
 msgid "Response Headers"
 msgstr "En-têtes de réponse"
 
@@ -3961,7 +3996,7 @@ msgstr "Résumé du SPF"
 msgid "SPIN Top 25"
 msgstr "AMOPS 25 principales"
 
-#: src/guidance/AdditionalFindings.js:96
+#: src/guidance/AdditionalFindings.js:209
 msgid "SPIN Top 25 Vulnerabilities"
 msgstr "AMOPS 25 principales vulnérabilités"
 
@@ -4002,7 +4037,7 @@ msgstr "DÉV"
 #~ msgid "State: {lastPortState}"
 #~ msgstr "État : {lastPortState}"
 
-#: src/guidance/AdditionalFindings.js:366
+#: src/guidance/AdditionalFindings.js:522
 msgid "State: {lastPortStateTranslated}"
 msgstr "État : {lastPortStateTranslated}"
 
@@ -4022,6 +4057,14 @@ msgstr "Statut :"
 #: src/domains/DomainListFilters.js:127
 msgid "Status/Tag/State"
 msgstr "Statut/étiquette/état"
+
+#: src/guidance/AdditionalFindings.js:562
+msgid "Stop Ignoring CVE"
+msgstr "Cessez d'ignorer CVE"
+
+#: src/guidance/AdditionalFindings.js:115
+msgid "Stopped ignoring CVE"
+msgstr "Cesser d'ignorer CVE"
 
 #: src/guidance/WebTLSResults.js:35
 msgid "strong"
@@ -4048,9 +4091,17 @@ msgstr "Soumettre"
 msgid "Submit bug reports and feature requests through our <0>GitHub page</0>."
 msgstr "Soumettez des rapports de bogues et des demandes de fonctionnalités via notre page <0>GitHub</0>."
 
+#: src/guidance/AdditionalFindings.js:68
+msgid "Successfully ignored CVE for domain {0}. New ignored CVEs: \"{1}\"."
+msgstr "CVE ignoré avec succès pour le domaine {0}. Nouvelles CVE ignorées : « {1} »."
+
 #: src/admin/UserListModal.js:153
 msgid "Successfully removed user {0}."
 msgstr "L'utilisateur {0} a été supprimé."
+
+#: src/guidance/AdditionalFindings.js:117
+msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
+msgstr "Arrêt réussi de l'ignorance des CVE pour le domaine « {0} ». Nouvelles CVE ignorées : « {1} »."
 
 #: src/organizationDetails/OrganizationDetails.js:127
 msgid "Summaries"
@@ -4300,7 +4351,7 @@ msgstr "Total des messages de cet expéditeur."
 msgid "The user's role has been successfully updated"
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 
-#: src/guidance/AdditionalFindings.js:413
+#: src/guidance/AdditionalFindings.js:625
 msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
 msgstr "Ces résultats sont importés de l'outil <0>External Attack Surface Management</0> de Microsoft. Ces résultats sont mis à jour quotidiennement."
 
@@ -4550,6 +4601,10 @@ msgstr "Impossible de créer une nouvelle organisation."
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
+#: src/guidance/AdditionalFindings.js:79
+msgid "Unable to ignore CVE."
+msgstr "Impossible d'ignorer le CVE."
+
 #: src/admin/UserListModal.js:71
 msgid "Unable to invite user."
 msgstr "Impossible d'inviter un utilisateur."
@@ -4598,6 +4653,10 @@ msgstr "Impossible d'envoyer l'e-mail de vérification"
 #: src/auth/TwoFactorAuthenticatePage.js:66
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
+
+#: src/guidance/AdditionalFindings.js:128
+msgid "Unable to stop ignoring CVE."
+msgstr "Impossible de cesser d'ignorer le CVE."
 
 #: src/admin/AdminDomainModal.js:119
 msgid "Unable to update domain."
@@ -4897,7 +4956,7 @@ msgstr "WEB"
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
 
-#: src/guidance/AdditionalFindings.js:302
+#: src/guidance/AdditionalFindings.js:458
 msgid "Web Components"
 msgstr "Composants Web"
 
@@ -4955,7 +5014,7 @@ msgstr "Bienvenue dans votre vision personnelle de Suivi. Modérez la posture de
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
-#: src/guidance/AdditionalFindings.js:90
+#: src/guidance/AdditionalFindings.js:203
 msgid "What are these additional findings?"
 msgstr "Quels sont ces résultats supplémentaires ?"
 
@@ -5170,7 +5229,3 @@ msgstr "Votre compte sera entièrement activé lors de votre prochaine connexion
 #: src/organizations/RequestOrgInviteModal.js:37
 msgid "Your request has been sent to the organization administrators."
 msgstr "Votre demande a été envoyée aux administrateurs de l'organisation."
-
-#: src/admin/OrganizationInformation.js:421
-#~ msgid "Zone:"
-#~ msgstr "Zone:"
