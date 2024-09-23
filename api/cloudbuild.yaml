@@ -40,7 +40,7 @@ steps:
     args:
       - '-c'
       - |
-        output=$( awk -F '│' '/fr/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' lingui-extract-output.txt )
+        output=$( awk -F '│' '/fr/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' /workspace/lingui-extract-output.txt )
 
         # Check if there are any missed french translations
         if [ "$output" -eq 0 ]; then
