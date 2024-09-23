@@ -13,7 +13,7 @@ steps:
 
   - name: node:16.3.0-alpine
     id: lingui-extract
-    dir: api
+    dir: frontend
     entrypoint: ash
     args:
       - '-c'
@@ -22,7 +22,7 @@ steps:
 
   - name: node:16.3.0-alpine
     id: lingui-translation-check
-    dir: api
+    dir: frontend
     entrypoint: ash
     args:
       - '-c'
@@ -36,16 +36,6 @@ steps:
           echo "There are $output missed translations, please update them before proceeding."
           exit 1
         fi
-
-  - name: 'gcr.io/cloud-builders/docker'
-    id: check
-    entrypoint: 'bash'
-    dir: api-js
-    args:
-      - '-c'
-      - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
-
 
   - name: node:16.3.0-alpine
     id: lingui-compile
@@ -68,7 +58,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: api-js
+    dir: frontend
     args:
       - '-c'
       - |
