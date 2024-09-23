@@ -18,7 +18,16 @@ steps:
     args:
       - '-c'
       - |
-        output=$(npm run extract | awk -F '│' '/fr/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }')
+        npm run extract | tee /workspace/lingui-extract-output.txt
+
+  - name: node:alpine
+    id: lingui-translation-check
+    dir: api
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        output=$( awk -F '│' '/fr/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' lingui-extract-output.txt )
 
         # Check if there are any missed french translations
         if [ "$output" -eq 0 ]; then
