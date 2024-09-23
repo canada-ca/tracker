@@ -20,7 +20,7 @@ steps:
       - |
         npm run extract | tee /workspace/lingui-extract-output.txt
 
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: lingui-translation-check
     dir: api
     entrypoint: ash
