@@ -1,7 +1,7 @@
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { createMutationSchema } from '../../../mutation'
-import { ensureDatabase as ensure } from '../../../testUtilities'
+import { createUserContextGenerator, ensureDatabase as ensure } from '../../../testUtilities'
 import { dbNameFromFile } from 'arango-tools'
 import dbschema from '../../../../../database-migration/database.json'
 import { createContext } from '../../../create-context'
@@ -52,24 +52,15 @@ describe('ignoreCve mutation', () => {
       schema: dbschema,
     }))
 
-    createUserContext = async ({ userKey }) => {
-      const signedToken = tokenize({
-        expiresIn: '60m',
-        parameters: { userKey: userKey },
-        secret: AUTHENTICATED_KEY,
-      })
-      return await createContext({
-        query,
-        db,
-        transaction,
-        collections: collectionNames,
-        req: { headers: { authorization: signedToken } },
-        i18n,
-        language: 'en',
-        loginRequiredBool: true,
-        salt: HASHING_SALT,
-      })
-    }
+    createUserContext = createUserContextGenerator({
+      db,
+      query,
+      transaction,
+      collectionNames,
+      i18n,
+      secret: AUTHENTICATED_KEY,
+      salt: HASHING_SALT,
+    })
   })
 
   beforeEach(async () => {
