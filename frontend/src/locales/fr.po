@@ -13,9 +13,7 @@ msgstr ""
 "Plural-Forms: \n"
 "Report-Msgid-Bugs-To: \n"
 
-#: src/termsConditions/TermsConditionsPage.js:170
-msgid ", and"
-msgstr ", et"
+
 
 #: src/termsConditions/TermsConditionsPage.js:63
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"

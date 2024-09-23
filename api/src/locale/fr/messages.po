@@ -19,9 +19,7 @@ msgstr ""
 msgid "Authentication error. Please sign in."
 msgstr "Erreur d'authentification. Veuillez vous connecter."
 
-#: src/domain/mutations/ignore-cve.js:75
-msgid "CVE is already ignored for this domain."
-msgstr "CVE est déjà ignoré pour ce domaine."
+
 
 #: src/domain/mutations/unignore-cve.js:75
 msgid "CVE is not ignored for this domain."
