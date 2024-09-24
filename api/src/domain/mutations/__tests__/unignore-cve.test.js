@@ -185,7 +185,7 @@ describe('unignore mutation', () => {
 
       const expectedError = {
         code: 400,
-        description: 'Unable to unignore CVE. Please try again.',
+        description: 'Unable to stop ignoring CVE. Please try again.',
       }
       expect(response.data.unignoreCve.result).toEqual(expectedError)
 
@@ -258,7 +258,7 @@ describe('unignore mutation', () => {
         contextValue: superAdminContext,
       })
 
-      const error = [new GraphQLError('Unable to unignore CVE. Please try again.')]
+      const error = [new GraphQLError('Unable to stop ignoring CVE. Please try again.')]
       expect(response.errors).toEqual(error)
 
       const expectConsoleOutput = [
@@ -290,7 +290,7 @@ describe('unignore mutation', () => {
         contextValue: superAdminContext,
       })
 
-      const error = [new GraphQLError('Unable to unignore CVE. Please try again.')]
+      const error = [new GraphQLError('Unable to stop ignoring CVE. Please try again.')]
       expect(response.errors).toEqual(error)
 
       const expectConsoleOutput = [
