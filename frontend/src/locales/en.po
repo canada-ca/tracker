@@ -404,7 +404,7 @@ msgid "An error occurred when you attempted to sign out"
 msgstr "An error occurred when you attempted to sign out"
 
 #: src/domains/DomainCard.js:38
-#: src/guidance/GuidancePage.js:97
+#: src/guidance/GuidancePage.js:98
 msgid "An error occurred while favouriting a domain."
 msgstr "An error occurred while favouriting a domain."
 
@@ -1212,7 +1212,7 @@ msgstr "DMARC policy of quarantine or reject, and all messages from non-mail dom
 
 #: src/dmarc/DmarcReportPage.js:94
 #: src/domains/DomainCard.js:244
-#: src/guidance/GuidancePage.js:341
+#: src/guidance/GuidancePage.js:342
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -1638,7 +1638,7 @@ msgstr "Fake email domain blocks (reject + quarantine):"
 #~ msgstr "FAQ"
 
 #: src/domains/DomainCard.js:48
-#: src/guidance/GuidancePage.js:107
+#: src/guidance/GuidancePage.js:108
 msgid "Favourited Domain"
 msgstr "Favourited Domain"
 
@@ -1667,7 +1667,7 @@ msgstr "Filter list to verified organizations only."
 msgid "Filter the data to view"
 msgstr "Filter the data to view"
 
-#: src/guidance/AdditionalFindings.js:303
+#: src/guidance/AdditionalFindings.js:359
 msgid "Filtered"
 msgstr "Filtered"
 
@@ -2837,7 +2837,7 @@ msgstr "No known weak protocols used."
 msgid "No MX records found. Is the domain parked?"
 msgstr "No MX records found. Is the domain parked?"
 
-#: src/guidance/GuidancePage.js:134
+#: src/guidance/GuidancePage.js:135
 #: src/organizations/Organizations.js:91
 msgid "No Organizations"
 msgstr "No Organizations"
@@ -3031,7 +3031,7 @@ msgstr "Organization(s):"
 #: src/app/App.js:134
 #: src/app/App.js:236
 #: src/app/FloatingMenu.js:103
-#: src/guidance/GuidancePage.js:193
+#: src/guidance/GuidancePage.js:194
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:141
 msgid "Organizations"
@@ -3555,7 +3555,7 @@ msgstr "Scan of domain successfully requested"
 #: src/admin/AdminDomains.js:182
 #: src/domains/DomainCard.js:161
 #: src/domains/DomainsPage.js:116
-#: src/guidance/GuidancePage.js:309
+#: src/guidance/GuidancePage.js:310
 #: src/organizationDetails/OrganizationDomains.js:110
 msgid "Scan Pending"
 msgstr "Scan Pending"
@@ -5092,7 +5092,7 @@ msgstr "Wiki"
 #: src/admin/AdminDomains.js:181
 #: src/domains/DomainCard.js:149
 #: src/domains/DomainsPage.js:115
-#: src/guidance/GuidancePage.js:316
+#: src/guidance/GuidancePage.js:317
 #: src/organizationDetails/OrganizationDomains.js:109
 msgid "Wildcard"
 msgstr "Wildcard"
@@ -5163,7 +5163,7 @@ msgstr "You can modify the results of the domain list using these filters"
 msgid "You can search for an organization here"
 msgstr "You can search for an organization here"
 
-#: src/guidance/GuidancePage.js:108
+#: src/guidance/GuidancePage.js:109
 msgid "You have successfully added {domainName} to myTracker."
 msgstr "You have successfully added {domainName} to myTracker."
 
