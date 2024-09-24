@@ -392,7 +392,7 @@ msgid "An error occurred when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter"
 
 #: src/domains/DomainCard.js:38
-#: src/guidance/GuidancePage.js:97
+#: src/guidance/GuidancePage.js:98
 msgid "An error occurred while favouriting a domain."
 msgstr "Une erreur s'est produite lors de la mise en favori d'un domaine."
 
@@ -612,7 +612,7 @@ msgstr "BLOQUÉ"
 
 #: src/userOnboarding/config/tourSteps.js:121
 msgid "Button to export the data"
-msgstr ""
+msgstr "Bouton pour exporter les données"
 
 #: src/termsConditions/TermsConditionsPage.js:26
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
@@ -724,7 +724,7 @@ msgstr "Changements :"
 
 #: src/userOnboarding/config/tourSteps.js:183
 msgid "Check if your organization is already included in our monitored list. If not, you can create a free account to access an overview of your organization's digital footprint and potential vulnerabilities."
-msgstr ""
+msgstr "Vérifiez si votre organisation figure déjà dans notre liste de surveillance. Si ce n'est pas le cas, vous pouvez créer un compte gratuit pour obtenir une vue d'ensemble de l'empreinte numérique de votre organisation et de ses vulnérabilités potentielles."
 
 #: src/user/UserPage.js:64
 msgid "Check your associated Tracker email for the verification link"
@@ -732,7 +732,7 @@ msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé
 
 #: src/userOnboarding/config/tourSteps.js:111
 msgid "Choose the period of data to view"
-msgstr ""
+msgstr "Choisissez la période de données à visualiser"
 
 #: src/guidance/WebTLSResults.js:110
 msgid "Cipher Suites"
@@ -941,7 +941,7 @@ msgstr "Créer une organisation"
 
 #: src/userOnboarding/config/tourSteps.js:173
 msgid "Create your free account to unlock visibility into your organization's digital footprint. Upon signing up, you'll gain access to a dynamic inventory of web infrastructure under your management."
-msgstr ""
+msgstr "Créez votre compte gratuit pour bénéficier d'une visibilité sur l'empreinte numérique de votre organisation. En vous inscrivant, vous aurez accès à un inventaire dynamique de l'infrastructure web dont vous avez la charge."
 
 #: src/guidance/AdditionalFindings.js:35
 msgid "Critical"
@@ -1187,7 +1187,7 @@ msgstr "Phases DMARC"
 #: src/userOnboarding/config/tourSteps.js:86
 #: src/userOnboarding/config/tourSteps.js:101
 msgid "dmarc phases information"
-msgstr ""
+msgstr "informations sur les phases du dmarc"
 
 #: src/summaries/TierTwoSummaries.js:57
 msgid "DMARC policy of quarantine or reject, and all messages from non-mail domain is rejected"
@@ -1200,7 +1200,7 @@ msgstr "Politique DMARC de mise en quarantaine ou de rejet, et rejet de tous les
 
 #: src/dmarc/DmarcReportPage.js:94
 #: src/domains/DomainCard.js:244
-#: src/guidance/GuidancePage.js:341
+#: src/guidance/GuidancePage.js:342
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -1330,7 +1330,7 @@ msgstr "Les domaines trouvés grâce à cette méthode seront automatiquement aj
 
 #: src/userOnboarding/config/tourSteps.js:91
 msgid "domains information"
-msgstr ""
+msgstr "Informations sur les domaines"
 
 #: src/dmarc/DmarcReportPage.js:257
 msgid "Domains used for SPF validation."
@@ -1610,7 +1610,7 @@ msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 #~ msgstr "FAQ"
 
 #: src/domains/DomainCard.js:48
-#: src/guidance/GuidancePage.js:107
+#: src/guidance/GuidancePage.js:108
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
@@ -1633,9 +1633,9 @@ msgstr "Filtrer la liste aux seules organisations vérifiées."
 
 #: src/userOnboarding/config/tourSteps.js:116
 msgid "Filter the data to view"
-msgstr ""
+msgstr "Filtrer les données à afficher"
 
-#: src/guidance/AdditionalFindings.js:303
+#: src/guidance/AdditionalFindings.js:359
 msgid "Filtered"
 msgstr "Filtré"
 
@@ -1826,19 +1826,19 @@ msgstr "Vulnérabilité Heartbleed"
 
 #: src/userOnboarding/config/tourSteps.js:61
 msgid "Here is the information for each domain"
-msgstr ""
+msgstr "Voici les informations pour chaque domaine"
 
 #: src/userOnboarding/config/tourSteps.js:26
 msgid "Here is the information for each organization"
-msgstr ""
+msgstr "Voici les informations pour chaque organisation"
 
 #: src/userOnboarding/config/tourSteps.js:16
 msgid "Here you can filter the list of organizations"
-msgstr ""
+msgstr "Vous pouvez filtrer la liste des organisations"
 
 #: src/userOnboarding/config/tourSteps.js:21
 msgid "Here you can filter the list of organizations to only show verified organizations"
-msgstr ""
+msgstr "Vous pouvez filtrer la liste des organisations pour n'afficher que les organisations vérifiées."
 
 #: src/admin/AdminDomains.js:174
 #: src/organizationDetails/OrganizationDomains.js:101
@@ -1953,7 +1953,7 @@ msgstr "Chaîne HTTPS (443)"
 
 #: src/userOnboarding/config/tourSteps.js:96
 msgid "https configuration summary"
-msgstr ""
+msgstr "Résumé de la configuration https"
 
 #: src/summaries/TierOneSummaries.js:11
 msgid "HTTPS Configuration Summary"
@@ -2789,7 +2789,7 @@ msgstr "Aucun protocole faible connu n'a été utilisé."
 msgid "No MX records found. Is the domain parked?"
 msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 
-#: src/guidance/GuidancePage.js:134
+#: src/guidance/GuidancePage.js:135
 #: src/organizations/Organizations.js:91
 msgid "No Organizations"
 msgstr "Aucune organisation"
@@ -2983,7 +2983,7 @@ msgstr "Organisation(s) :"
 #: src/app/App.js:134
 #: src/app/App.js:236
 #: src/app/FloatingMenu.js:103
-#: src/guidance/GuidancePage.js:193
+#: src/guidance/GuidancePage.js:194
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:141
 msgid "Organizations"
@@ -3283,7 +3283,7 @@ msgstr "Gamme :"
 
 #: src/userOnboarding/config/tourSteps.js:192
 msgid "Reach out to us if you have any questions."
-msgstr ""
+msgstr "N'hésitez pas à nous contacter si vous avez des questions."
 
 #: src/app/App.js:234
 msgid "Read guidance"
@@ -3503,7 +3503,7 @@ msgstr "Scan du domaine demandé avec succès"
 #: src/admin/AdminDomains.js:182
 #: src/domains/DomainCard.js:161
 #: src/domains/DomainsPage.js:116
-#: src/guidance/GuidancePage.js:309
+#: src/guidance/GuidancePage.js:310
 #: src/organizationDetails/OrganizationDomains.js:110
 msgid "Scan Pending"
 msgstr "Scan en attente"
@@ -3542,7 +3542,7 @@ msgstr "Rechercher un domaine"
 
 #: src/userOnboarding/config/tourSteps.js:126
 msgid "Search for a specific domain"
-msgstr ""
+msgstr "Recherche d'un domaine spécifique"
 
 #: src/admin/SuperAdminUserList.js:416
 msgid "Search for a user (email)"
@@ -3887,7 +3887,7 @@ msgstr "Signature Hash :"
 
 #: src/userOnboarding/components/TourComponent.js:63
 msgid "Skip"
-msgstr ""
+msgstr "Sauter"
 
 #: src/app/App.js:111
 msgid "Skip to main content"
@@ -4062,7 +4062,7 @@ msgstr "Résumé"
 
 #: src/userOnboarding/config/tourSteps.js:81
 msgid "Summary of your tracker"
-msgstr ""
+msgstr "Résumé de votre tracker"
 
 #: src/summaries/HistoricalSummariesGraph.js:177
 msgid "Summary Tier:"
@@ -4348,7 +4348,7 @@ msgstr "Ce champ ne peut pas être vide"
 
 #: src/userOnboarding/config/tourSteps.js:56
 msgid "This filter will show only domains affiliated with your account"
-msgstr ""
+msgstr "Ce filtre n'affichera que les domaines affiliés à votre compte."
 
 #: src/app/TopBanner.js:95
 msgid "This is a new service, we are constantly improving."
@@ -4358,15 +4358,15 @@ msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 #: src/userOnboarding/config/tourSteps.js:154
 #: src/userOnboarding/config/tourSteps.js:161
 msgid "This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs."
-msgstr ""
+msgstr "Il s'agit du menu Super Admin. Vous pouvez passer d'une organisation à l'autre, d'un utilisateur à l'autre et d'un journal d'audit à l'autre."
 
 #: src/userOnboarding/config/tourSteps.js:37
 msgid "This page is dedicated to everything domains"
-msgstr ""
+msgstr "Cette page est consacrée à tous les domaines"
 
 #: src/userOnboarding/config/tourSteps.js:72
 msgid "This page is dedicated to your personal view of tracker"
-msgstr ""
+msgstr "Cette page est dédiée à votre avis personnel sur le tracker."
 
 #: src/guidance/WebGuidance.js:146
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
@@ -4936,7 +4936,7 @@ msgstr "d'hébergement web"
 
 #: src/userOnboarding/config/tourSteps.js:137
 msgid "Welcome to the Admin Profile page!"
-msgstr ""
+msgstr "Bienvenue sur la page du profil de l'administrateur !"
 
 #: src/auth/CreateUserPage.js:117
 msgid "Welcome to Tracker, please enter your details."
@@ -4998,7 +4998,7 @@ msgstr "Wiki"
 #: src/admin/AdminDomains.js:181
 #: src/domains/DomainCard.js:149
 #: src/domains/DomainsPage.js:115
-#: src/guidance/GuidancePage.js:316
+#: src/guidance/GuidancePage.js:317
 #: src/organizationDetails/OrganizationDomains.js:109
 msgid "Wildcard"
 msgstr "Wildcard"
@@ -5055,17 +5055,17 @@ msgstr "Vous acceptez d'utiliser notre site Web, nos produits et nos services un
 
 #: src/userOnboarding/config/tourSteps.js:51
 msgid "You can filter the list of domains here"
-msgstr ""
+msgstr "Vous pouvez filtrer la liste des domaines ici"
 
 #: src/userOnboarding/config/tourSteps.js:46
 msgid "You can modify the results of the domain list using these filters"
-msgstr ""
+msgstr "Vous pouvez modifier les résultats de la liste des domaines à l'aide des filtres suivants"
 
 #: src/userOnboarding/config/tourSteps.js:11
 msgid "You can search for an organization here"
-msgstr ""
+msgstr "Vous pouvez rechercher une organisation ici"
 
-#: src/guidance/GuidancePage.js:108
+#: src/guidance/GuidancePage.js:109
 msgid "You have successfully added {domainName} to myTracker."
 msgstr "Vous avez ajouté avec succès {domainName} à myTracker."
 
