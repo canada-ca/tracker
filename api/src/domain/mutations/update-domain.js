@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { CveID, Domain } from '../../scalars'
+import { CveID } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { AssetStateEnums } from '../../enums'
@@ -19,10 +19,6 @@ export const updateDomain = new mutationWithClientMutationId({
     orgId: {
       type: new GraphQLNonNull(GraphQLID),
       description: 'The global ID of the organization used for permission checks.',
-    },
-    domain: {
-      type: Domain,
-      description: 'The new url of the of the old domain.',
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
@@ -74,7 +70,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    const updatedDomain = cleanseInput(args.domain)
 
     let tags
     if (typeof args.tags !== 'undefined') {
@@ -178,8 +173,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     // Update domain
     const domainToInsert = {
-      domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
-      lastRan: domain.lastRan,
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
       ignoredCves: ignoredCves || domain?.ignoredCves,
@@ -262,14 +255,6 @@ export const updateDomain = new mutationWithClientMutationId({
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
 
     const updatedProperties = []
-    if (domainToInsert.domain.toLowerCase() !== domain.domain.toLowerCase()) {
-      updatedProperties.push({
-        name: 'domain',
-        oldValue: domain.domain,
-        newValue: domainToInsert.domain,
-      })
-    }
-
     if (typeof assetState !== 'undefined') {
       updatedProperties.push({
         name: 'assetState',
