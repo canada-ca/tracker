@@ -112,6 +112,12 @@ export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   }
 `
 
+export const GET_TOP_25_REPORT = gql`
+  query GetTop25Reports {
+    getTop25Reports
+  }
+`
+
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client
