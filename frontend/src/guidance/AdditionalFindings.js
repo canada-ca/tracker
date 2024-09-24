@@ -159,13 +159,7 @@ export function AdditionalFindings({ domain, cveDetected }) {
                   <Trans>No Top 25 Vulnerabilites Detected</Trans>
                 </Text>
               )}
-              <IgnoredCves
-                ignoredCves={ignoredCves}
-                setActiveCve={setActiveCve}
-                webComponents={webComponents}
-                cveOnOpen={cveOnOpen}
-                setActiveCveHandler={setActiveCveHandler}
-              />
+              <IgnoredCves ignoredCves={ignoredCves} setActiveCveHandler={setActiveCveHandler} />
             </AccordionPanel>
           </AccordionItem>
 
