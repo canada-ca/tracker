@@ -91,7 +91,7 @@ msgstr "<0>Hostname:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
-#: src/guidance/AdditionalFindings.js:197
+#: src/guidance/AdditionalFindings.js:95
 #: src/guidance/EmailGuidance.js:156
 #: src/guidance/WebGuidance.js:130
 msgid "<0>Last Scanned:</0> {0}"
@@ -133,11 +133,11 @@ msgstr "1. Assess"
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
-#: src/guidance/AdditionalFindings.js:325
+#: src/guidance/AdditionalFindings.js:175
 msgid "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 msgstr "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 
-#: src/guidance/AdditionalFindings.js:372
+#: src/guidance/AdditionalFindings.js:222
 msgid "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 
@@ -145,11 +145,11 @@ msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame
 msgid "3. Enforce"
 msgstr "3. Enforce"
 
-#: src/guidance/AdditionalFindings.js:400
+#: src/guidance/AdditionalFindings.js:250
 msgid "3.1.2 Use a denial-of-service mitigation service"
 msgstr "3.1.2 Use a denial-of-service mitigation service"
 
-#: src/guidance/AdditionalFindings.js:431
+#: src/guidance/AdditionalFindings.js:281
 msgid "3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the origin server."
 msgstr "3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the origin server."
 
@@ -290,8 +290,8 @@ msgstr "Add User"
 #~ msgid "Additional findings"
 #~ msgstr "Additional findings"
 
-#: src/guidance/AdditionalFindings.js:152
-#: src/guidance/AdditionalFindings.js:621
+#: src/guidance/AdditionalFindings.js:52
+#: src/guidance/AdditionalFindings.js:416
 #: src/guidance/GuidancePage.js:257
 msgid "Additional Findings"
 msgstr "Additional Findings"
@@ -332,7 +332,7 @@ msgstr "Admin Profile"
 msgid "Admins of an organization can add domains to their list."
 msgstr "Admins of an organization can add domains to their list."
 
-#: src/guidance/AdditionalFindings.js:546
+#: src/guidance/AdditionalFindings.js:396
 msgid "Affected Components:"
 msgstr "Affected Components:"
 
@@ -475,8 +475,8 @@ msgstr "An error occurred while verifying your phone number."
 #: src/admin/UserListModal.js:140
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:56
-#: src/guidance/AdditionalFindings.js:55
-#: src/guidance/AdditionalFindings.js:104
+#: src/guidance/CveIgnorer.js:19
+#: src/guidance/CveIgnorer.js:68
 #: src/user/UserPage.js:77
 msgid "An error occurred."
 msgstr "An error occurred."
@@ -540,7 +540,7 @@ msgstr "Archived"
 msgid "ARCHIVED"
 msgstr "ARCHIVED"
 
-#: src/guidance/AdditionalFindings.js:570
+#: src/guidance/CveIgnorer.js:126
 msgid "Are you sure you want to ignore this CVE?"
 msgstr "Are you sure you want to ignore this CVE?"
 
@@ -548,7 +548,7 @@ msgstr "Are you sure you want to ignore this CVE?"
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 
-#: src/guidance/AdditionalFindings.js:568
+#: src/guidance/CveIgnorer.js:124
 msgid "Are you sure you want to stop ignoring this CVE?"
 msgstr "Are you sure you want to stop ignoring this CVE?"
 
@@ -591,7 +591,7 @@ msgstr "Authenticate"
 
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
-#: src/guidance/AdditionalFindings.js:575
+#: src/guidance/CveIgnorer.js:131
 #: src/userOnboarding/components/TourComponent.js:61
 msgid "Back"
 msgstr "Back"
@@ -842,7 +842,7 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/admin/SuperAdminUserList.js:387
 #: src/admin/UserListModal.js:277
 #: src/domains/SubdomainDiscoveryButton.js:92
-#: src/guidance/AdditionalFindings.js:603
+#: src/guidance/CveIgnorer.js:159
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
@@ -900,7 +900,7 @@ msgstr "contact us"
 msgid "Contact Us"
 msgstr "Contact Us"
 
-#: src/guidance/AdditionalFindings.js:425
+#: src/guidance/AdditionalFindings.js:275
 msgid "Content Delivery Network"
 msgstr "Content Delivery Network"
 
@@ -1004,7 +1004,7 @@ msgstr "Curves Status"
 #~ msgid "CVE Detected"
 #~ msgstr "CVE Detected"
 
-#: src/guidance/AdditionalFindings.js:66
+#: src/guidance/CveIgnorer.js:30
 msgid "CVE ignored"
 msgstr "CVE ignored"
 
@@ -1021,7 +1021,7 @@ msgstr "Data Security and Use"
 msgid "Data:"
 msgstr "Data:"
 
-#: src/guidance/AdditionalFindings.js:394
+#: src/guidance/AdditionalFindings.js:244
 msgid "DDOS Protection"
 msgstr "DDOS Protection"
 
@@ -1683,7 +1683,7 @@ msgstr "Filter list to verified organizations only."
 msgid "Filter the data to view"
 msgstr "Filter the data to view"
 
-#: src/guidance/AdditionalFindings.js:515
+#: src/guidance/AdditionalFindings.js:365
 msgid "Filtered"
 msgstr "Filtered"
 
@@ -1699,11 +1699,11 @@ msgstr "Filtered"
 msgid "Filters:"
 msgstr "Filters:"
 
-#: src/guidance/AdditionalFindings.js:344
-#: src/guidance/AdditionalFindings.js:408
-#: src/guidance/AdditionalFindings.js:441
-#: src/guidance/AdditionalFindings.js:483
-#: src/guidance/AdditionalFindings.js:525
+#: src/guidance/AdditionalFindings.js:194
+#: src/guidance/AdditionalFindings.js:258
+#: src/guidance/AdditionalFindings.js:291
+#: src/guidance/AdditionalFindings.js:333
+#: src/guidance/AdditionalFindings.js:375
 msgid "First Seen: {0}"
 msgstr "First Seen: {0}"
 
@@ -1760,7 +1760,7 @@ msgstr "Forgot Password"
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/guidance/AdditionalFindings.js:319
+#: src/guidance/AdditionalFindings.js:169
 msgid "Frameworks"
 msgstr "Frameworks"
 
@@ -2115,7 +2115,7 @@ msgstr "If you believe this was caused by a problem with Tracker, please <0>Repo
 msgid "If your organization has no affiliated users within Tracker, contact the <0>TBS Cyber Security</0> to assist in onboarding."
 msgstr "If your organization has no affiliated users within Tracker, contact the <0>TBS Cyber Security</0> to assist in onboarding."
 
-#: src/guidance/AdditionalFindings.js:562
+#: src/guidance/CveIgnorer.js:118
 msgid "Ignore CVE"
 msgstr "Ignore CVE"
 
@@ -2123,7 +2123,7 @@ msgstr "Ignore CVE"
 msgid "Ignore RUA"
 msgstr "Ignore RUA"
 
-#: src/guidance/AdditionalFindings.js:274
+#: src/guidance/IgnoredCves.js:14
 msgid "Ignored CVEs:"
 msgstr "Ignored CVEs:"
 
@@ -2156,7 +2156,7 @@ msgstr "Implementation: <0>Implementation guidance: email domain protection (ITS
 msgid "Implemented"
 msgstr "Implemented"
 
-#: src/guidance/AdditionalFindings.js:223
+#: src/guidance/AdditionalFindings.js:121
 msgid "Improving GC Cyber Security Health SPIN"
 msgstr "Improving GC Cyber Security Health SPIN"
 
@@ -2195,7 +2195,7 @@ msgstr "Incorrect createDomain.result typename."
 msgid "Incorrect createOrganization.result typename."
 msgstr "Incorrect createOrganization.result typename."
 
-#: src/guidance/AdditionalFindings.js:89
+#: src/guidance/CveIgnorer.js:53
 msgid "Incorrect ignoreCve.result typename."
 msgstr "Incorrect ignoreCve.result typename."
 
@@ -2231,8 +2231,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/auth/SignInPage.js:86
 #: src/auth/TwoFactorAuthenticatePage.js:76
 #: src/createOrganization/CreateOrganizationPage.js:86
-#: src/guidance/AdditionalFindings.js:88
-#: src/guidance/AdditionalFindings.js:137
+#: src/guidance/CveIgnorer.js:52
+#: src/guidance/CveIgnorer.js:101
 #: src/user/EditableUserDisplayName.js:72
 #: src/user/EditableUserEmail.js:72
 #: src/user/EditableUserLanguage.js:51
@@ -2261,7 +2261,7 @@ msgstr "Incorrect signUp.result typename."
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
-#: src/guidance/AdditionalFindings.js:138
+#: src/guidance/CveIgnorer.js:102
 msgid "Incorrect unignoreCve.result typename."
 msgstr "Incorrect unignoreCve.result typename."
 
@@ -2491,11 +2491,11 @@ msgstr "Last 365 Days of Data"
 #~ msgid "Last Scanned"
 #~ msgstr "Last Scanned"
 
-#: src/guidance/AdditionalFindings.js:347
-#: src/guidance/AdditionalFindings.js:411
-#: src/guidance/AdditionalFindings.js:444
-#: src/guidance/AdditionalFindings.js:486
-#: src/guidance/AdditionalFindings.js:528
+#: src/guidance/AdditionalFindings.js:197
+#: src/guidance/AdditionalFindings.js:261
+#: src/guidance/AdditionalFindings.js:294
+#: src/guidance/AdditionalFindings.js:336
+#: src/guidance/AdditionalFindings.js:378
 msgid "Last Seen: {0}"
 msgstr "Last Seen: {0}"
 
@@ -2626,7 +2626,7 @@ msgstr "MONITOR_ONLY"
 msgid "More details"
 msgstr "More details"
 
-#: src/guidance/AdditionalFindings.js:611
+#: src/guidance/AdditionalFindings.js:406
 msgid "More info"
 msgstr "More info"
 
@@ -2778,15 +2778,15 @@ msgstr "No"
 msgid "No activity logs"
 msgstr "No activity logs"
 
-#: src/guidance/AdditionalFindings.js:165
+#: src/guidance/AdditionalFindings.js:65
 msgid "No additional findings available at this time."
 msgstr "No additional findings available at this time."
 
-#: src/guidance/AdditionalFindings.js:496
+#: src/guidance/AdditionalFindings.js:346
 msgid "No additional web components found"
 msgstr "No additional web components found"
 
-#: src/guidance/AdditionalFindings.js:449
+#: src/guidance/AdditionalFindings.js:299
 msgid "No CDN found"
 msgstr "No CDN found"
 
@@ -2829,7 +2829,7 @@ msgstr "No data found when retrieving all domain statuses."
 msgid "No data was found to export."
 msgstr "No data was found to export."
 
-#: src/guidance/AdditionalFindings.js:416
+#: src/guidance/AdditionalFindings.js:266
 msgid "No DDOS Protection found"
 msgstr "No DDOS Protection found"
 
@@ -2847,7 +2847,7 @@ msgstr "No DDOS Protection found"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/guidance/AdditionalFindings.js:357
+#: src/guidance/AdditionalFindings.js:207
 msgid "No frameworks found"
 msgstr "No frameworks found"
 
@@ -2876,7 +2876,7 @@ msgstr "No MX records found. Is the domain parked?"
 msgid "No Organizations"
 msgstr "No Organizations"
 
-#: src/guidance/AdditionalFindings.js:385
+#: src/guidance/AdditionalFindings.js:235
 msgid "No response headers found"
 msgstr "No response headers found"
 
@@ -2892,7 +2892,7 @@ msgstr "No scan data for this organization."
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
-#: src/guidance/AdditionalFindings.js:267
+#: src/guidance/AdditionalFindings.js:159
 msgid "No Top 25 Vulnerabilites Detected"
 msgstr "No Top 25 Vulnerabilites Detected"
 
@@ -2913,8 +2913,8 @@ msgstr "No values were supplied when attempting to update organization details."
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
-#: src/guidance/AdditionalFindings.js:278
 #: src/guidance/EmailGuidance.js:325
+#: src/guidance/IgnoredCves.js:18
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
 msgstr "None"
@@ -3001,7 +3001,7 @@ msgstr "Once access is given to your department by the TBS Cyber team, they will
 msgid "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 msgstr "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 
-#: src/guidance/AdditionalFindings.js:513
+#: src/guidance/AdditionalFindings.js:363
 msgid "Open"
 msgstr "Open"
 
@@ -3251,7 +3251,7 @@ msgstr "Pointer to a DKIM public key record in DNS."
 msgid "Policy guidance:"
 msgstr "Policy guidance:"
 
-#: src/guidance/AdditionalFindings.js:505
+#: src/guidance/AdditionalFindings.js:355
 msgid "Ports"
 msgstr "Ports"
 
@@ -3515,7 +3515,7 @@ msgstr "Resource Type"
 msgid "Resource:"
 msgstr "Resource:"
 
-#: src/guidance/AdditionalFindings.js:366
+#: src/guidance/AdditionalFindings.js:216
 msgid "Response Headers"
 msgstr "Response Headers"
 
@@ -4046,7 +4046,7 @@ msgstr "SPF Summary"
 msgid "SPIN Top 25"
 msgstr "SPIN Top 25"
 
-#: src/guidance/AdditionalFindings.js:209
+#: src/guidance/AdditionalFindings.js:107
 msgid "SPIN Top 25 Vulnerabilities"
 msgstr "SPIN Top 25 Vulnerabilities"
 
@@ -4087,7 +4087,7 @@ msgstr "STAGING"
 #~ msgid "State: {lastPortState}"
 #~ msgstr "State: {lastPortState}"
 
-#: src/guidance/AdditionalFindings.js:522
+#: src/guidance/AdditionalFindings.js:372
 msgid "State: {lastPortStateTranslated}"
 msgstr "State: {lastPortStateTranslated}"
 
@@ -4112,11 +4112,11 @@ msgstr "Status:"
 msgid "Status/Tag/State"
 msgstr "Status/Tag/State"
 
-#: src/guidance/AdditionalFindings.js:562
+#: src/guidance/CveIgnorer.js:118
 msgid "Stop Ignoring CVE"
 msgstr "Stop Ignoring CVE"
 
-#: src/guidance/AdditionalFindings.js:115
+#: src/guidance/CveIgnorer.js:79
 msgid "Stopped ignoring CVE"
 msgstr "Stopped ignoring CVE"
 
@@ -4149,7 +4149,7 @@ msgstr "Submit"
 msgid "Submit bug reports and feature requests through our <0>GitHub page</0>."
 msgstr "Submit bug reports and feature requests through our <0>GitHub page</0>."
 
-#: src/guidance/AdditionalFindings.js:68
+#: src/guidance/CveIgnorer.js:32
 msgid "Successfully ignored CVE for domain {0}. New ignored CVEs: \"{1}\"."
 msgstr "Successfully ignored CVE for domain {0}. New ignored CVEs: \"{1}\"."
 
@@ -4157,7 +4157,7 @@ msgstr "Successfully ignored CVE for domain {0}. New ignored CVEs: \"{1}\"."
 msgid "Successfully removed user {0}."
 msgstr "Successfully removed user {0}."
 
-#: src/guidance/AdditionalFindings.js:117
+#: src/guidance/CveIgnorer.js:81
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 
@@ -4409,7 +4409,7 @@ msgstr "The Total Messages from this sender."
 msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
 
-#: src/guidance/AdditionalFindings.js:625
+#: src/guidance/AdditionalFindings.js:420
 msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
 msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
 
@@ -4683,7 +4683,7 @@ msgstr "Unable to create new organization."
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
 
-#: src/guidance/AdditionalFindings.js:79
+#: src/guidance/CveIgnorer.js:43
 msgid "Unable to ignore CVE."
 msgstr "Unable to ignore CVE."
 
@@ -4736,7 +4736,7 @@ msgstr "Unable to send verification email"
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
-#: src/guidance/AdditionalFindings.js:128
+#: src/guidance/CveIgnorer.js:92
 msgid "Unable to stop ignoring CVE."
 msgstr "Unable to stop ignoring CVE."
 
@@ -5042,7 +5042,7 @@ msgstr "WEB"
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
 
-#: src/guidance/AdditionalFindings.js:458
+#: src/guidance/AdditionalFindings.js:308
 msgid "Web Components"
 msgstr "Web Components"
 
@@ -5108,7 +5108,7 @@ msgstr "Welcome to your personal view of Tracker. Moderate the security posture 
 msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 
-#: src/guidance/AdditionalFindings.js:203
+#: src/guidance/AdditionalFindings.js:101
 msgid "What are these additional findings?"
 msgstr "What are these additional findings?"
 

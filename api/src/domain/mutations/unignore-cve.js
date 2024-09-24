@@ -59,7 +59,7 @@ export const unignoreCve = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to unignore CVE. Please try again.`),
+        description: i18n._(t`Unable to stop ignoring CVE. Please try again.`),
       }
     }
 
@@ -95,7 +95,7 @@ export const unignoreCve = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}", error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to unignore CVE. Please try again.`))
+      throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
     }
 
     // Commit transaction
@@ -105,7 +105,7 @@ export const unignoreCve = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}", error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to unignore CVE. Please try again.`))
+      throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
     }
 
     // Clear dataloader and load updated domain
