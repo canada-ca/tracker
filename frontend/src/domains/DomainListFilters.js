@@ -127,15 +127,11 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                       <Trans>Status/Tag/State</Trans>
                     </option>
                     {filterValues(values)}
-                    <ABTestWrapper insiderVariantName="B">
-                      <ABTestVariant name="B">
-                        {values.filterCategory === 'TAGS' && (
-                          <option value="CVE_DETECTED">
-                            <Trans>SPIN Top 25</Trans>
-                          </option>
-                        )}
-                      </ABTestVariant>
-                    </ABTestWrapper>
+                    {values.filterCategory === 'TAGS' && (
+                      <option value="CVE_DETECTED">
+                        <Trans>SPIN Top 25</Trans>
+                      </option>
+                    )}
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterValue}

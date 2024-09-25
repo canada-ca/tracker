@@ -175,24 +175,21 @@ export function DomainCard({
                   </Tag>
                 )
               })}
-              <ABTestWrapper insiderVariantName="B">
-                <ABTestVariant name="B">
-                  {userHasPermission && cveDetected && (
-                    <Tag
-                      my="1"
-                      bg="gray.50"
-                      borderWidth="1px"
-                      borderColor="gray.900"
-                      as={RouteLink}
-                      to={`/domains/${url}/additional-findings#vulnerabilities`}
-                    >
-                      <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                        <Trans>SPIN Top 25</Trans> <LinkIcon />
-                      </TagLabel>
-                    </Tag>
-                  )}
-                </ABTestVariant>
-              </ABTestWrapper>
+
+              {userHasPermission && cveDetected && (
+                <Tag
+                  my="1"
+                  bg="gray.50"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                  as={RouteLink}
+                  to={`/domains/${url}/additional-findings#vulnerabilities`}
+                >
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    <Trans>SPIN Top 25</Trans> <LinkIcon />
+                  </TagLabel>
+                </Tag>
+              )}
             </Flex>
           </Box>
 
