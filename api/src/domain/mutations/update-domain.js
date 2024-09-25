@@ -3,6 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
+import { CveID } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { AssetStateEnums } from '../../enums'
@@ -34,6 +35,10 @@ export const updateDomain = new mutationWithClientMutationId({
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
+    },
+    ignoredCves: {
+      description: 'List of CVEs that the user has chosen to ignore.',
+      type: new GraphQLList(CveID),
     },
   }),
   outputFields: () => ({
@@ -85,6 +90,13 @@ export const updateDomain = new mutationWithClientMutationId({
       assetState = cleanseInput(args.assetState)
     } else {
       assetState = ''
+    }
+
+    let ignoredCves
+    if (typeof args.ignoredCves !== 'undefined') {
+      ignoredCves = args.ignoredCves
+    } else {
+      ignoredCves = null
     }
 
     // Check to see if domain exists
@@ -163,6 +175,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
+      ignoredCves: ignoredCves || domain?.ignoredCves,
     }
 
     try {
@@ -255,6 +268,14 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'tags',
         oldValue: claim.tags,
         newValue: tags,
+      })
+    }
+
+    if (typeof ignoredCves !== 'undefined' && JSON.stringify(domain.ignoredCves) !== JSON.stringify(ignoredCves)) {
+      updatedProperties.push({
+        name: 'ignoredCves',
+        oldValue: domain.ignoredCves,
+        newValue: ignoredCves,
       })
     }
 

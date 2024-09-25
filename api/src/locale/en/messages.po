@@ -20,12 +20,12 @@ msgid "Authentication error. Please sign in."
 msgstr "Authentication error. Please sign in."
 
 #: src/domain/mutations/ignore-cve.js:75
-#~ msgid "CVE is already ignored for this domain."
-#~ msgstr "CVE is already ignored for this domain."
+msgid "CVE is already ignored for this domain."
+msgstr "CVE is already ignored for this domain."
 
 #: src/domain/mutations/unignore-cve.js:75
-#~ msgid "CVE is not ignored for this domain."
-#~ msgstr "CVE is not ignored for this domain."
+msgid "CVE is not ignored for this domain."
+msgstr "CVE is not ignored for this domain."
 
 #: src/domain/objects/domain.js:273
 msgid "Cannot query additional findings without permission."
@@ -301,7 +301,7 @@ msgstr "Permission Denied: Please contact organization user for help with retrie
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission Denied: Please contact organization user for help with scanning this domain."
 
-#: src/domain/mutations/update-domain.js:128
+#: src/domain/mutations/update-domain.js:140
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Permission Denied: Please contact organization user for help with updating this domain."
 
@@ -751,8 +751,8 @@ msgstr "Unable to find verified organization(s). Please try again."
 #: src/domain/mutations/ignore-cve.js:62
 #: src/domain/mutations/ignore-cve.js:98
 #: src/domain/mutations/ignore-cve.js:108
-#~ msgid "Unable to ignore CVE. Please try again."
-#~ msgstr "Unable to ignore CVE. Please try again."
+msgid "Unable to ignore CVE. Please try again."
+msgstr "Unable to ignore CVE. Please try again."
 
 #: src/affiliation/mutations/invite-user-to-org.js:119
 #: src/affiliation/mutations/invite-user-to-org.js:129
@@ -1207,8 +1207,8 @@ msgstr "Unable to request invite. Please try again."
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
-#: src/domain/objects/domain.js:313
-#: src/domain/objects/domain.js:348
+#: src/domain/objects/domain.js:318
+#: src/domain/objects/domain.js:353
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Unable to retrieve DMARC report information for: {domain}"
 
@@ -1273,6 +1273,12 @@ msgstr "Unable to sign up, please contact org admin for a new invite."
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
+#: src/domain/mutations/unignore-cve.js:62
+#: src/domain/mutations/unignore-cve.js:98
+#: src/domain/mutations/unignore-cve.js:108
+msgid "Unable to stop ignoring CVE. Please try again."
+msgstr "Unable to stop ignoring CVE. Please try again."
+
 #: src/affiliation/mutations/transfer-org-ownership.js:106
 #: src/affiliation/mutations/transfer-org-ownership.js:145
 #: src/affiliation/mutations/transfer-org-ownership.js:167
@@ -1320,21 +1326,21 @@ msgstr "Unable to unfavourite unknown domain."
 #~ msgid "Unable to unignore CVE. Please try again."
 #~ msgstr "Unable to unignore CVE. Please try again."
 
-#: src/domain/mutations/update-domain.js:225
+#: src/domain/mutations/update-domain.js:238
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
-#: src/domain/mutations/update-domain.js:114
+#: src/domain/mutations/update-domain.js:126
 msgid "Unable to update domain in an unknown org."
 msgstr "Unable to update domain in an unknown org."
 
-#: src/domain/mutations/update-domain.js:155
+#: src/domain/mutations/update-domain.js:167
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Unable to update domain that does not belong to the given organization."
 
-#: src/domain/mutations/update-domain.js:145
-#: src/domain/mutations/update-domain.js:183
-#: src/domain/mutations/update-domain.js:235
+#: src/domain/mutations/update-domain.js:157
+#: src/domain/mutations/update-domain.js:196
+#: src/domain/mutations/update-domain.js:248
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
@@ -1380,7 +1386,7 @@ msgstr "Unable to update role: user does not belong to organization."
 msgid "Unable to update role: user unknown."
 msgstr "Unable to update role: user unknown."
 
-#: src/domain/mutations/update-domain.js:100
+#: src/domain/mutations/update-domain.js:112
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
 
