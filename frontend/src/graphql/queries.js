@@ -532,8 +532,10 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
 `
 
 export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
-  query ($domain: DomainScalar!) {
+  query GuidanceAdditionalFindings($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
+      ignoredCves
       additionalFindings {
         timestamp
         headers

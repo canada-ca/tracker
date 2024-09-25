@@ -29,6 +29,8 @@ import { useQuery } from '@apollo/client'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import CveIgnorer from './CveIgnorer'
+import IgnoredCves from './IgnoredCves'
 
 export function AdditionalFindings({ domain, cveDetected }) {
   const { i18n } = useLingui()
@@ -66,6 +68,7 @@ export function AdditionalFindings({ domain, cveDetected }) {
     )
   }
 
+  const { id: domainId, ignoredCves } = data.findDomainByDomain
   const { timestamp, headers, webComponents, vulnerabilities, ports } = data.findDomainByDomain.additionalFindings
   const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
   const ddosProtectionComponent = webComponents.find(
@@ -76,6 +79,14 @@ export function AdditionalFindings({ domain, cveDetected }) {
   const otherComponents = webComponents.filter(
     ({ webComponentCategory }) => !['Framework', 'DDOS Protection', 'CDN'].includes(webComponentCategory),
   )
+
+  const setActiveCveHandler = (cve) => {
+    setActiveCve({
+      cve,
+      affectedWebComps: webComponents.filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve)),
+    })
+    cveOnOpen()
+  }
 
   return (
     <>
@@ -131,13 +142,7 @@ export function AdditionalFindings({ domain, cveDetected }) {
                                 size="sm"
                                 _hover={{ bg: cveSeverityOnHover[severity] }}
                                 onClick={() => {
-                                  setActiveCve({
-                                    cve,
-                                    affectedWebComps: webComponents.filter(({ webComponentCves }) =>
-                                      webComponentCves.some((x) => x.cve === cve),
-                                    ),
-                                  })
-                                  cveOnOpen()
+                                  setActiveCveHandler(cve)
                                 }}
                               >
                                 {cve}
@@ -154,6 +159,7 @@ export function AdditionalFindings({ domain, cveDetected }) {
                   <Trans>No Top 25 Vulnerabilites Detected</Trans>
                 </Text>
               )}
+              <IgnoredCves ignoredCves={ignoredCves} setActiveCveHandler={setActiveCveHandler} />
             </AccordionPanel>
           </AccordionItem>
 
@@ -393,6 +399,7 @@ export function AdditionalFindings({ domain, cveDetected }) {
                 {webComponentName} {webComponentCategory} {webComponentVersion}
               </Text>
             ))}
+            <CveIgnorer cve={activeCve?.cve} isCveIgnored={ignoredCves?.includes(activeCve?.cve)} domainId={domainId} />
           </ModalBody>
           <ModalFooter>
             <Link color="blue.500" href={`https://www.cve.org/CVERecord?id=${activeCve?.cve}`} isExternal>
