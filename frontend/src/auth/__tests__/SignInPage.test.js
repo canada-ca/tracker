@@ -122,32 +122,36 @@ describe('<SignInPage />', () => {
           },
         ]
 
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
+          // create a history object and inject it so we can inspect it afterwards
+          // for the side effects of our form submission (a redirect to /!).
+          // const history = createMemoryHistory({
+          //   initialEntries: ['/sign-in'],
+          //   initialIndex: 0,
+          // })
+          < MemoryRouter initialEntries = { ['/sign-in']} >
+            {/* Your component */ }
+          </MemoryRouter >
+
 
         const { container, getByRole } = render(
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <UserVarProvider
-              userVar={makeVar({
-                jwt: null,
-                tfaSendMethod: null,
-                userName: null,
-              })}
-            >
-              <ChakraProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <SignInPage />
-                  </Router>
-                </I18nProvider>
-              </ChakraProvider>
-            </UserVarProvider>
-          </MockedProvider>,
-        )
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <UserVarProvider
+                  userVar={makeVar({
+                    jwt: null,
+                    tfaSendMethod: null,
+                    userName: null,
+                  })}
+                >
+                  <ChakraProvider theme={theme}>
+                    <I18nProvider i18n={i18n}>
+                      <Router history={history}>
+                        <SignInPage />
+                      </Router>
+                    </I18nProvider>
+                  </ChakraProvider>
+                </UserVarProvider>
+              </MockedProvider>,
+            )
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')

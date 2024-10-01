@@ -1,9 +1,10 @@
 import React from 'react'
 import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
+import { Link as RouteLink, useMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
+
 
 export function OrganizationCard({
   name,
@@ -15,7 +16,7 @@ export function OrganizationCard({
   disableLink = false,
   ...rest
 }) {
-  const { path, _url } = useRouteMatch()
+  const { path, _url } = useMatch()
   let httpsValue = 0
   let dmarcValue = 0
   const httpsSummary =

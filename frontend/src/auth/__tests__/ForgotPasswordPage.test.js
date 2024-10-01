@@ -5,7 +5,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { createMemoryHistory } from 'history'
+// import { createMemoryHistory } from 'history'
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
@@ -83,11 +84,19 @@ describe('<ForgotPasswordPage />', () => {
     })
   })
 
+  // describe('when given correct input', () => {
+  //   const history = createMemoryHistory({
+  //     initialEntries: ['/forgot-password'],
+  //     initialIndex: 0,
+  //   })
   describe('when given correct input', () => {
-    const history = createMemoryHistory({
-      initialEntries: ['/forgot-password'],
-      initialIndex: 0,
-    })
+    render(
+      <MemoryRouter initialEntries={['/forgot-password']}>
+        <Routes>
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
     it('successfully submits', async () => {
       const { container, queryByText, getByText } = render(
