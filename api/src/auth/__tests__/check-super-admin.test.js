@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../testUtilities'
+import { setupI18n } from '@lingui/core'
 
-import {checkSuperAdmin} from '../check-super-admin'
+import { checkSuperAdmin } from '../check-super-admin'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check super admin function', () => {
   let query, drop, truncate, collections, i18n, user, org
@@ -22,7 +23,7 @@ describe('given the check super admin function', () => {
 
   describe('given a successful call', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -155,8 +156,8 @@ describe('given the check super admin function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -167,9 +168,7 @@ describe('given the check super admin function', () => {
       })
       describe('given a database error', () => {
         it('raises an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
           try {
             const testSuperAdmin = checkSuperAdmin({
@@ -179,9 +178,7 @@ describe('given the check super admin function', () => {
             })
             await testSuperAdmin()
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to check permission. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to check permission. Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -206,9 +203,7 @@ describe('given the check super admin function', () => {
             })
             await testSuperAdmin()
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to check permission. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to check permission. Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -222,8 +217,8 @@ describe('given the check super admin function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -234,9 +229,7 @@ describe('given the check super admin function', () => {
       })
       describe('given a database error', () => {
         it('raises an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
           try {
             const testSuperAdmin = checkSuperAdmin({
@@ -246,11 +239,7 @@ describe('given the check super admin function', () => {
             })
             await testSuperAdmin()
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible de vérifier l'autorisation. Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible de vérifier l'autorisation. Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([
@@ -275,11 +264,7 @@ describe('given the check super admin function', () => {
             })
             await testSuperAdmin()
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible de vérifier l'autorisation. Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible de vérifier l'autorisation. Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([

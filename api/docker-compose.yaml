@@ -2,14 +2,14 @@ version: '3'
 
 services:
   nats:
-    image: nats:2.9.11-scratch
+    image: nats:2.10.16-scratch
     container_name: nats
     network_mode: "host"
     command: -js
     restart: always
 
   arangodb:
-    image: arangodb:3.10.5
+    image: arangodb:3.12.1
     container_name: arangodb
     environment:
       - ARANGO_ROOT_PASSWORD=test

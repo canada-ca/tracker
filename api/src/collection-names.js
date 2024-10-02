@@ -2,6 +2,7 @@ export const collectionNames = [
   'users',
   'organizations',
   'domains',
+  'guidanceTags',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',

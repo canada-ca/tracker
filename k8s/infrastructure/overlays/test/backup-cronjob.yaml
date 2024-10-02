@@ -15,6 +15,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            job: backup
         spec:
           containers:
             - args:
@@ -52,7 +55,7 @@ spec:
                     secretKeyRef:
                       key: password
                       name: arangodb
-              image: arangodb:3.7.11
+              image: arangodb:3.12.1
               name: dump
               volumeMounts:
                 - mountPath: /tmp/dump

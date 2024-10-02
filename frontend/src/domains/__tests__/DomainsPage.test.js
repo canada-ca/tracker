@@ -14,6 +14,7 @@ import DomainsPage from '../DomainsPage'
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { PAGINATED_DOMAINS } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -245,7 +246,9 @@ describe('<DomainsPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <DomainsPage />
+                  <TourProvider>
+                    <DomainsPage />
+                  </TourProvider>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
@@ -269,7 +272,9 @@ describe('<DomainsPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <DomainsPage />
+                  <TourProvider>
+                    <DomainsPage />
+                  </TourProvider>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
@@ -299,9 +304,11 @@ describe('<DomainsPage />', () => {
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                     <Router history={history}>
-                      <Switch>
-                        <Route path="/domains" render={() => <DomainsPage />} />
-                      </Switch>
+                      <TourProvider>
+                        <Switch>
+                          <Route path="/domains" render={() => <DomainsPage />} />
+                        </Switch>
+                      </TourProvider>
                     </Router>
                   </MemoryRouter>
                 </I18nProvider>
@@ -332,9 +339,11 @@ describe('<DomainsPage />', () => {
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                     <Router history={history}>
-                      <Switch>
-                        <Route path="/domains" render={() => <DomainsPage />} />
-                      </Switch>
+                      <TourProvider>
+                        <Switch>
+                          <Route path="/domains" render={() => <DomainsPage />} />
+                        </Switch>
+                      </TourProvider>
                     </Router>
                   </MemoryRouter>
                 </I18nProvider>
@@ -366,7 +375,9 @@ describe('<DomainsPage />', () => {
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                      <DomainsPage />
+                      <TourProvider>
+                        <DomainsPage />
+                      </TourProvider>
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
@@ -405,7 +416,9 @@ describe('<DomainsPage />', () => {
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                      <DomainsPage />
+                      <TourProvider>
+                        <DomainsPage />
+                      </TourProvider>
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>

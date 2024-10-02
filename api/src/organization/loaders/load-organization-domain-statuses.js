@@ -59,12 +59,7 @@ export const loadOrganizationDomainStatuses =
           FILTER v.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
-          if (filterValue === 'hidden') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER e.hidden ${comparison} true
-          `
-          } else if (filterValue === 'nxdomain') {
+          if (filterValue === 'nxdomain') {
             domainFilters = aql`
             ${domainFilters}
             FILTER v.rcode ${comparison} "NXDOMAIN"
@@ -79,12 +74,29 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.cveDetected ${comparison} true
+          `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`${domainFilters}`
           } else {
             domainFilters = aql`
             ${domainFilters}
             FILTER POSITION(claimTags, ${filterValue}) ${comparison} true
           `
           }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+            ${domainFilters}
+            FILTER e.assetState ${comparison} ${filterValue}
+          `
         }
       })
     }
@@ -102,14 +114,34 @@ export const loadOrganizationDomainStatuses =
                 RETURN translatedTags
             )[0]
             ${domainFilters}
+            LET ipAddresses = FIRST(
+              FILTER v.latestDnsScan
+              LET latestDnsScan = DOCUMENT(v.latestDnsScan)
+              FILTER latestDnsScan.resolveIps
+              RETURN latestDnsScan.resolveIps
+            )
+            LET vulnerabilities = (
+              FOR finding IN additionalFindings
+                FILTER finding.domain == v._id
+                LIMIT 1
+                RETURN UNIQUE(
+                  FOR wc IN finding.webComponents
+                      FILTER LENGTH(wc.WebComponentCves) > 0
+                      FOR vuln IN wc.WebComponentCves
+                          RETURN vuln.Cve
+                )
+            )[0]
             RETURN {
               domain: v.domain,
+              ipAddresses: ipAddresses,
               status: v.status,
               tags: claimTags,
-              hidden: e.hidden,
+              assetState: e.assetState,
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
+              hasEntrustCertificate: v.hasEntrustCertificate,
+              top25Vulnerabilities: vulnerabilities
             }
           `
       ).all()

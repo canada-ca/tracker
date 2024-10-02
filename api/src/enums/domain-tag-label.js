@@ -39,10 +39,6 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'INACTIF',
       description: 'French label for tagging domains that are not active.',
     },
-    HIDDEN: {
-      value: 'hidden',
-      description: 'English label for tagging domains that are hidden.',
-    },
     ARCHIVED: {
       value: 'archived',
       description: 'English label for tagging domains that are archived.',
@@ -63,13 +59,13 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'scan-pending',
       description: 'Label for tagging domains that have a pending web scan.',
     },
-    OUTSIDE: {
-      value: 'OUTSIDE',
-      description: 'English label for tagging domains that are outside the scope of the project.',
+    HAS_ENTRUST_CERTIFICATE: {
+      value: 'has-entrust-certificate',
+      description: 'Label for tagging domains that have an Entrust certificate.',
     },
-    EXTERIEUR: {
-      value: 'EXTÉRIEUR',
-      description: 'French label for tagging domains that are outside the scope of the project.',
+    CVE_DETECTED: {
+      value: 'cve-detected',
+      description: 'Label for tagging domains that have vulnerabilities.',
     },
   },
   description: 'An enum used to assign and test user-generated domain tags',

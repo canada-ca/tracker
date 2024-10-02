@@ -6,7 +6,7 @@ import { createDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
-import { OutsideDomainCommentEnum } from '../../enums'
+import { AssetStateEnums } from '../../enums'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -24,17 +24,13 @@ export const createDomain = new mutationWithClientMutationId({
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
-    hidden: {
-      description: "Value that determines if the domain is excluded from an organization's score.",
-      type: GraphQLBoolean,
-    },
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
     },
-    outsideComment: {
-      description: 'Comment describing reason for adding out-of-scope domain.',
-      type: OutsideDomainCommentEnum,
+    assetState: {
+      description: 'Value that determines how the domain relates to the organization.',
+      type: new GraphQLNonNull(AssetStateEnums),
     },
   }),
   outputFields: () => ({
@@ -84,29 +80,11 @@ export const createDomain = new mutationWithClientMutationId({
       archived = false
     }
 
-    let hidden
-    if (typeof args.hidden !== 'undefined') {
-      hidden = args.hidden
+    let assetState
+    if (typeof args.assetState !== 'undefined') {
+      assetState = cleanseInput(args.assetState)
     } else {
-      hidden = false
-    }
-
-    let outsideComment
-    if (typeof args.outsideComment !== 'undefined') {
-      outsideComment = cleanseInput(args.outsideComment)
-    } else {
-      outsideComment = ''
-    }
-
-    if (tags?.find(({ en }) => en === 'OUTSIDE')) {
-      if (outsideComment === '') {
-        console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
-        return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(t`Please provide a comment when adding an outside domain.`),
-        }
-      }
+      assetState = ''
     }
 
     // Check to see if org exists
@@ -229,8 +207,7 @@ export const createDomain = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${insertedDomain._id},
               tags: ${tags},
-              hidden: ${hidden},
-              outsideComment: ${outsideComment},
+              assetState: ${assetState},
               firstSeen: ${new Date().toISOString()},
             } INTO claims
           `,
@@ -262,11 +239,11 @@ export const createDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof hidden !== 'undefined') {
+    if (typeof assetState !== 'undefined') {
       updatedProperties.push({
-        name: 'hidden',
+        name: 'assetState',
         oldValue: null,
-        newValue: hidden,
+        newValue: assetState,
       })
     }
 
@@ -289,12 +266,11 @@ export const createDomain = new mutationWithClientMutationId({
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
-      reason: outsideComment !== '' ? outsideComment : null,
     })
 
     try {
       await publish({
-        channel: `domains.${returnDomain._key}`,
+        channel: 'scans.requests',
         msg: {
           domain: returnDomain.domain,
           domain_key: returnDomain._key,
@@ -309,7 +285,7 @@ export const createDomain = new mutationWithClientMutationId({
 
     try {
       await publish({
-        channel: `domains.${returnDomain._key}.easm`,
+        channel: 'scans.add_domain_to_easm',
         msg: {
           domain: returnDomain.domain,
           domain_key: returnDomain._key,
@@ -327,7 +303,6 @@ export const createDomain = new mutationWithClientMutationId({
       claimTags: tags.map((tag) => {
         return tag[language]
       }),
-      hidden,
     }
   },
 })

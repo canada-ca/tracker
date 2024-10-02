@@ -16,10 +16,18 @@ spec:
       labels:
         app: web-processor
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-be01350-1718796526 # {"$imagepolicy": "flux-system:web-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-1568715-1725886949 # {"$imagepolicy": "flux-system:web-processor"}
           env:
+            - name: LOGGER_LEVEL
+              value: INFO
+            - name: SCAN_THREAD_COUNT
+              value: "2"
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
@@ -37,13 +45,18 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*.web.results
-            - name: QUEUE_GROUP
-              value: web_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           resources: {}
+          imagePullPolicy: Always
 status: {}

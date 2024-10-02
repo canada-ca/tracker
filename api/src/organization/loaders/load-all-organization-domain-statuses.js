@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { aql } from 'arangojs'
 
 export const loadAllOrganizationDomainStatuses =
-  ({ query, userKey, i18n }) =>
+  ({ query, userKey, i18n, language }) =>
   async ({ filters }) => {
     let domains
     let domainFilters = aql`FILTER d.archived != true`
@@ -74,6 +74,18 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`${domainFilters}`
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.cveDetected ${comparison} true
+          `
           }
         }
       })
@@ -85,8 +97,34 @@ export const loadAllOrganizationDomainStatuses =
           WITH domains
           FOR d IN domains
             ${domainFilters}
+            LET ipAddresses = FIRST(
+              FILTER d.latestDnsScan
+              LET latestDnsScan = DOCUMENT(d.latestDnsScan)
+              FILTER latestDnsScan.resolveIps
+              RETURN latestDnsScan.resolveIps
+            )
+            LET vulnerabilities = (
+              FOR finding IN additionalFindings
+                FILTER finding.domain == d._id
+                LIMIT 1
+                RETURN UNIQUE(
+                  FOR wc IN finding.webComponents
+                      FILTER LENGTH(wc.WebComponentCves) > 0
+                      FOR vuln IN wc.WebComponentCves
+                          RETURN vuln.Cve
+                )
+            )[0]
+            LET verifiedOrg = (
+              FOR v,e IN 1..1 INBOUND d._id claims
+                FILTER v.verified == true
+                LIMIT 1
+                RETURN TRANSLATE(${language}, v.orgDetails)
+            )[0]
             RETURN {
               "domain": d.domain,
+              "orgName": verifiedOrg.name,
+              "orgAcronym": verifiedOrg.acronym,
+              "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,
               "certificates": d.status.certificates,
@@ -98,7 +136,9 @@ export const loadAllOrganizationDomainStatuses =
               "dmarc": d.status.dmarc,
               "rcode": d.rcode,
               "blocked": d.blocked,
-              "wildcardSibling": d.wildcardSibling
+              "wildcardSibling": d.wildcardSibling,
+              "hasEntrustCertificate": d.hasEntrustCertificate,
+              "top25Vulnerabilities": vulnerabilities
             }
           `
       ).all()

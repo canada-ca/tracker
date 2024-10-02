@@ -153,7 +153,9 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
       <Text fontsize="lg">
-        <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        <Trans>
+          <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        </Trans>
       </Text>
       {emailSummary}
       <Box mb={4} ml="4">
@@ -362,10 +364,14 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                   <Trans>Warnings:</Trans>
                 </Text>
                 {mxRecords.warnings.map((warning, idx) => {
+                  const warningTranslated =
+                    warning.toLowerCase() === 'no mx records found. is the domain parked?'
+                      ? t`No MX records found. Is the domain parked?`
+                      : warning
                   return (
                     <Box key={idx} px="2">
                       <Text fontsize="lg">
-                        <b>{idx + 1}.</b> {warning}
+                        <b>{idx + 1}.</b> {warningTranslated}
                       </Text>
                     </Box>
                   )

@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {loadDomainByDomain} from '../index'
+import { loadDomainByDomain } from '../index'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a loadDomainByDomain dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -20,7 +21,7 @@ describe('given a loadDomainByDomain dataloader', () => {
   })
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -56,7 +57,7 @@ describe('given a loadDomainByDomain dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        const loader = loadDomainByDomain({query})
+        const loader = loadDomainByDomain({ query })
         const domain = await loader.load(expectedDomain.domain)
 
         expect(domain).toEqual(expectedDomain)
@@ -77,7 +78,7 @@ describe('given a loadDomainByDomain dataloader', () => {
           expectedDomains.push(tempDomain)
         }
 
-        const loader = loadDomainByDomain({query})
+        const loader = loadDomainByDomain({ query })
         const domains = await loader.loadMany(domainDomains)
         expect(domains).toEqual(expectedDomains)
       })
@@ -100,9 +101,7 @@ describe('given a loadDomainByDomain dataloader', () => {
     })
     describe('database error is raised', () => {
       it('returns an error', async () => {
-        const mockedQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         const loader = loadDomainByDomain({
           query: mockedQuery,
           userKey: '1234',
@@ -112,9 +111,7 @@ describe('given a loadDomainByDomain dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domain. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to load domain. Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -139,9 +136,7 @@ describe('given a loadDomainByDomain dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domain. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to load domain. Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -167,9 +162,7 @@ describe('given a loadDomainByDomain dataloader', () => {
     })
     describe('database error is raised', () => {
       it('returns an error', async () => {
-        const mockedQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         const loader = loadDomainByDomain({
           query: mockedQuery,
           userKey: '1234',
@@ -179,9 +172,7 @@ describe('given a loadDomainByDomain dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Impossible de charger le domaine. Veuillez réessayer.'),
-          )
+          expect(err).toEqual(new Error('Impossible de charger le domaine. Veuillez réessayer.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -206,9 +197,7 @@ describe('given a loadDomainByDomain dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Impossible de charger le domaine. Veuillez réessayer.'),
-          )
+          expect(err).toEqual(new Error('Impossible de charger le domaine. Veuillez réessayer.'))
         }
 
         expect(consoleOutput).toEqual([

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { ArrowLeftIcon } from '@chakra-ui/icons'
+import React, { useEffect, useState } from 'react'
+import { ArrowLeftIcon, StarIcon } from '@chakra-ui/icons'
 
 import {
   Badge,
@@ -16,6 +16,7 @@ import {
   Tabs,
   Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
@@ -23,8 +24,9 @@ import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-rou
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
 import { t, Trans } from '@lingui/macro'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
+import { FAVOURITE_DOMAIN } from '../graphql/mutations'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
@@ -36,12 +38,19 @@ import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { OrganizationCard } from '../organizations/OrganizationCard'
 import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
+import { useDocumentTitle } from '../utilities/useDocumentTitle'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { domainSlug: domain } = useParams()
+  const { domainSlug: domain, activeTab } = useParams()
+  const toast = useToast()
+  const tabNames = ['web-guidance', 'email-guidance', 'additional-findings']
+  const defaultActiveTab = tabNames[0]
+
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-only',
     errorPolicy: 'all',
   })
 
@@ -52,17 +61,59 @@ function GuidancePage() {
   const [orgInfo, setOrgInfo] = useState({})
 
   const {
+    id: domainId,
     domain: domainName,
     web: webScan,
-    additionalFindings,
+    hasDMARCReport,
     dnsScan,
     mxRecordDiff,
     organizations,
     dmarcPhase,
     rcode,
     status,
+    cveDetected,
     userHasPermission,
+    webScanPending,
+    wildcardSibling,
   } = data?.findDomainByDomain || {}
+
+  useDocumentTitle(`${domainName}`)
+
+  const changeActiveTab = (index) => {
+    const tab = tabNames[index]
+    if (activeTab !== tab) {
+      history.replace(`/domains/${domain}/${tab}`)
+    }
+  }
+
+  useEffect(() => {
+    if (!activeTab) {
+      history.replace(`/domains/${domain}/${defaultActiveTab}`)
+    }
+  }, [activeTab, history, domainName, defaultActiveTab])
+
+  const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while favouriting a domain.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      toast({
+        title: t`Favourited Domain`,
+        description: t`You have successfully added ${domainName} to myTracker.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   if (loading) {
     return (
@@ -186,7 +237,13 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <Tabs isFitted variant="enclosed-colored" defaultIndex={0}>
+      <Tabs
+        isFitted
+        variant="enclosed-colored"
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        onChange={(i) => changeActiveTab(i)}
+        isLazy
+      >
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
             <Trans>Web Guidance</Trans>
@@ -194,15 +251,9 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {additionalFindings && (
-                <Tab borderTopWidth="0.25">
-                  <Trans>Additional Findings</Trans>
-                </Tab>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          <Tab borderTopWidth="0.25">
+            <Trans>Additional Findings</Trans>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -224,15 +275,9 @@ function GuidancePage() {
               />
             )}
           </TabPanel>
-          <ABTestWrapper>
-            <ABTestVariant name="B">
-              {additionalFindings && (
-                <TabPanel>
-                  <AdditionalFindings data={additionalFindings} />
-                </TabPanel>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          <TabPanel>
+            <AdditionalFindings domain={domainName} cveDetected={cveDetected} />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     )
@@ -252,12 +297,12 @@ function GuidancePage() {
         <Heading textAlign={{ base: 'center', md: 'left' }} mr="auto">
           {domainName.toUpperCase()}
         </Heading>
-        {data.findDomainByDomain.webScanPending && (
+        {webScanPending && (
           <Badge color="info" alignSelf="center" fontSize="md">
             <Trans>Scan Pending</Trans>
           </Badge>
         )}
-        {data.findDomainByDomain.wildcardSibling && (
+        {wildcardSibling && (
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               <Badge colorScheme="red" alignSelf="center" fontSize="md">
@@ -266,8 +311,19 @@ function GuidancePage() {
             </ABTestVariant>
           </ABTestWrapper>
         )}
+        {isLoggedIn() && (
+          <IconButton
+            onClick={async () => {
+              await favouriteDomain({ variables: { domainId } })
+            }}
+            variant="primary"
+            aria-label={`favourite ${domainName}`}
+            icon={<StarIcon />}
+            ml="2"
+          />
+        )}
         {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domainName} ml="2" />}
-        {data.findDomainByDomain.hasDMARCReport && (
+        {hasDMARCReport && (
           <Button
             ml="2"
             variant="primary"

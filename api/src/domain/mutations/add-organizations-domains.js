@@ -18,10 +18,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       type: new GraphQLNonNull(new GraphQLList(Domain)),
       description: 'Url that you would like to be added to the database.',
     },
-    hideNewDomains: {
-      type: GraphQLBoolean,
-      description: 'New domains will be hidden.',
-    },
     tagNewDomains: {
       type: GraphQLBoolean,
       description: 'New domains will be tagged with NEW.',
@@ -70,13 +66,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       domains = args.domains.map((domain) => cleanseInput(domain))
     } else {
       domains = []
-    }
-
-    let hideNewDomains
-    if (typeof args.hideNewDomains !== 'undefined') {
-      hideNewDomains = args.hideNewDomains
-    } else {
-      hideNewDomains = false
     }
 
     let tagNewDomains
@@ -140,13 +129,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
         name: 'tags',
         oldValue: [],
         newValue: tags,
-      })
-    }
-    if (hideNewDomains) {
-      updatedProperties.push({
-        name: 'hidden',
-        oldValue: null,
-        newValue: hideNewDomains,
       })
     }
 
@@ -248,7 +230,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${insertedDomain._id},
               tags: ${tags},
-              hidden: ${hideNewDomains}
             } INTO claims
           `,
           )
@@ -266,7 +247,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${checkDomain._id},
               tags: ${tags},
-              hidden: ${hideNewDomains}
             } INTO claims
           `,
           )

@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { graphql, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
@@ -120,7 +121,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 input: {
                   orgId: "${toGlobalId('organizations', org._key)}"
                   domains: ["test.domain.gov", "test.domain2.gov"]
-                  hideNewDomains: false
                   tagNewDomains: false
                   tagStagingDomains: false
                   audit: false
@@ -190,7 +190,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 input: {
                   orgId: "${toGlobalId('organizations', org._key)}"
                   domains: ["test.domain.gov", "test.domain2.gov"]
-                  hideNewDomains: false
                   tagNewDomains: false
                   tagStagingDomains: false
                   audit: true
@@ -337,7 +336,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 input: {
                   orgId: "${toGlobalId('organizations', org._key)}"
                   domains: ["test.domain.gov", "test.domain2.gov"]
-                  hideNewDomains: false
                   tagNewDomains: false
                   tagStagingDomains: false
                   audit: false

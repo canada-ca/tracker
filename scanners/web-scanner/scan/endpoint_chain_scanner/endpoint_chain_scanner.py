@@ -7,7 +7,7 @@ import logging
 import requests
 from requests.adapters import HTTPAdapter
 from requests import Response, PreparedRequest
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,9 @@ READ_TIMEOUT_ERROR = "READ_TIMEOUT_ERROR"
 TIMEOUT_ERROR = "TIMEOUT_ERROR"
 UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
-DEFAULT_REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"}
+DEFAULT_REQUEST_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"
+}
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -38,7 +40,10 @@ class HTTPConnection:
         self.headers = dict(http_response.headers)
         if http_response.status_code == 403:
             content = http_response.text
-            category_search = re.search("ATTENTION: Access Denied[\s\S]+Category: (.*)[\s\S]+Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat", content)
+            category_search = re.search(
+                "ATTENTION: Access Denied[\s\S]+Category: (.*)[\s\S]+Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat",
+                content,
+            )
             if category_search:
                 self.blocked_category = category_search.group(1)
 
@@ -59,9 +64,12 @@ class HTTPConnectionRequest:
     error: Optional[str]
     scheme: str = "http"
 
-    def __init__(self, uri: str,
-                 http_response: Optional[Response] = None,
-                 error: Optional[str] = None):
+    def __init__(
+        self,
+        uri: str,
+        http_response: Optional[Response] = None,
+        error: Optional[str] = None,
+    ):
         self.uri = uri
         self.error = str(error) if error else error
         if error:
@@ -101,15 +109,21 @@ class HostHeaderSSLAdapter(HTTPAdapter):
         return super(HostHeaderSSLAdapter, self).send(request, **kwargs)
 
 
-def request_connection(uri: Optional[str] = None,
-                       ip_address: Optional[str] = None,
-                       prepared_request: Optional[PreparedRequest] = None):
+def request_connection(
+    uri: Optional[str] = None,
+    ip_address: Optional[str] = None,
+    prepared_request: Optional[PreparedRequest] = None,
+):
     uri = uri or prepared_request.url
     split_uri = urlsplit(uri)
     scheme = split_uri.scheme
     host = split_uri.hostname
     response = None
-    context = f"while requesting {uri}" if not prepared_request else f"while requesting {uri} during redirect"
+    context = (
+        f"while requesting {uri}"
+        if not prepared_request
+        else f"while requesting {uri} during redirect"
+    )
 
     with requests.Session() as session:
         session.verify = False
@@ -121,10 +135,17 @@ def request_connection(uri: Optional[str] = None,
                     session.mount("https://", HostHeaderSSLAdapter())
 
                 if ip_address:
-                    req = session.prepare_request(requests.Request("GET", f"{scheme.lower()}://{ip_address}",
-                                                               headers={"Host": host}))
+                    req = session.prepare_request(
+                        requests.Request(
+                            "GET",
+                            f"{scheme.lower()}://{ip_address}",
+                            headers={"Host": host},
+                        )
+                    )
                 else:
-                    req = session.prepare_request(requests.Request("GET", f"{scheme.lower()}://{host}"))
+                    req = session.prepare_request(
+                        requests.Request("GET", f"{scheme.lower()}://{host}")
+                    )
 
             response = session.send(req, allow_redirects=False, timeout=TIMEOUT)
 
@@ -135,21 +156,25 @@ def request_connection(uri: Optional[str] = None,
             return {"connection": connection, "response": response}
 
         except requests.exceptions.ConnectTimeout as e:
-            logger.error(f"Connection timeout error {context}: {str(e)}")
+            logger.info(f"Connection timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
+                connection = HTTPConnectionRequest(
+                    uri=uri, error=CONNECTION_TIMEOUT_ERROR
+                )
             elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
+                connection = HTTPSConnectionRequest(
+                    uri=uri, error=CONNECTION_TIMEOUT_ERROR
+                )
             return {"connection": connection, "response": response}
         except requests.exceptions.ReadTimeout as e:
-            logger.error(f"Read timeout error {context}: {str(e)}")
+            logger.info(f"Read timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
             elif scheme.lower() == "https":
                 connection = HTTPSConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
             return {"connection": connection, "response": response}
         except requests.exceptions.Timeout as e:
-            logger.error(f"Timeout error {context}: {str(e)}")
+            logger.info(f"Timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
             elif scheme.lower() == "https":
@@ -157,7 +182,7 @@ def request_connection(uri: Optional[str] = None,
             return {"connection": connection, "response": response}
 
         except requests.exceptions.ConnectionError as e:
-            logger.error(f"Connection error {context}: {str(e)}")
+            logger.info(f"Connection error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_ERROR)
             elif scheme.lower() == "https":
@@ -199,7 +224,8 @@ class ChainResult:
     uri: str = field(init=False)
     has_redirect_loop: bool = field(init=False, default=False)
     connections: list[Union[HTTPConnectionRequest, HTTPSConnectionRequest]] = field(
-        init=False)
+        init=False
+    )
 
     def __init__(self, ip_address: str, scheme: str, domain: str):
         self.scheme = scheme
@@ -210,7 +236,7 @@ class ChainResult:
         for i in range(len(self.connections) - 1):
             cur_conn = self.connections[i]
 
-            for next_conn in self.connections[i + 1:]:
+            for next_conn in self.connections[i + 1 :]:
                 if cur_conn.uri == next_conn.uri:
                     self.has_redirection_loop = True
                     break
@@ -225,16 +251,15 @@ class EndpointChainScanResult:
     https_chain_result: Optional[ChainResult] = field(init=False)
 
     def __post_init__(self):
-        self.http_chain_result = ChainResult(scheme="http",
-                                             domain=self.domain,
-                                             ip_address=self.ip_address)
-        self.https_chain_result = ChainResult(scheme="https",
-                                              domain=self.domain,
-                                              ip_address=self.ip_address)
+        self.http_chain_result = ChainResult(
+            scheme="http", domain=self.domain, ip_address=self.ip_address
+        )
+        self.https_chain_result = ChainResult(
+            scheme="https", domain=self.domain, ip_address=self.ip_address
+        )
 
 
 def scan_chain(domain, ip_address) -> EndpointChainScanResult:
-    endpoint_scan_result = EndpointChainScanResult(domain=domain,
-                                                   ip_address=ip_address)
+    endpoint_scan_result = EndpointChainScanResult(domain=domain, ip_address=ip_address)
 
     return endpoint_scan_result

@@ -63,14 +63,14 @@ spec:
                     secretKeyRef:
                       key: password
                       name: arangodb
-              image: arangodb:3.9.9
+              image: arangodb:3.12.1
               name: dump
               volumeMounts:
                 - mountPath: /tmp/dump
                   name: dump
               resources:
                 requests:
-                  cpu: 500m
+                  cpu: 100m
           restartPolicy: Never
           volumes:
             - emptyDir: {}

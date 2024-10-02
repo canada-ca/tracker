@@ -126,11 +126,10 @@ export const requestScan = new mutationWithClientMutationId({
     }
 
     await publish({
-      channel: `domains.${domain._key}`,
+      channel: 'scans.requests',
       msg: {
         domain: domain.domain,
         domain_key: domain._key,
-        selectors: domain.selectors ? domain.selectors : [],
         hash: domain.hash,
         user_key: null, // only used for One Time Scans
         shared_id: null, // only used for One Time Scans

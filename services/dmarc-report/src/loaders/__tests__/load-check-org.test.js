@@ -1,4 +1,5 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
+const { ensureDatabase: ensure } = require('../testUtilities')
 
 const { loadCheckOrg } = require('../load-check-org')
 const { databaseOptions } = require('../../../database-options')

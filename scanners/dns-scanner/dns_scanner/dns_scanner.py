@@ -85,7 +85,7 @@ def scan_domain(domain, dkim_selectors=None):
         elif rtype == "SERVFAIL":
             dns_answer_return_types.append(rtype)
         else:
-            logging.error(
+            logger.error(
                 f"Unknown return type '{rtype}' when checking if domain '{domain}' exists"
             )
             dns_answer_return_types.append(rtype)

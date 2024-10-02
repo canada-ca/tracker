@@ -1,33 +1,53 @@
 import asyncio
 import datetime
-import functools
 import json
 import logging
+import time
+from dataclasses import dataclass
+
+from concurrent.futures import ThreadPoolExecutor
+
 import nats
 import os
 import re
 import signal
 import sys
 import traceback
-from arango import ArangoClient
+from arango import ArangoClient, DocumentUpdateError
 from dotenv import load_dotenv
+from nats.js import JetStreamContext
+from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
+from nats.errors import TimeoutError as NatsTimeoutError
 
 from dns_processor.dns_processor import process_results
 from notify.send_mx_diff_email_alerts import send_mx_diff_email_alerts
 
 load_dotenv()
 
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
+
+logger_level = logging.getLevelName(LOGGER_LEVEL)
+if not isinstance(logger_level, int):
+    print(f"Invalid logger level: {LOGGER_LEVEL}")
+    sys.exit(1)
+
+# Split logging to stdout and stderr
+# DEBUG and INFO to stdout
+# WARNING and above to stderr
+h1 = logging.StreamHandler(sys.stdout)
+h1.setLevel(logging.DEBUG)
+h1.addFilter(lambda record: record.levelno <= logging.INFO)
+h2 = logging.StreamHandler(sys.stderr)
+h2.setLevel(logging.WARNING)
+
 logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.INFO,
+    level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+    handlers=[h1, h2],
 )
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 NAME = os.getenv("NAME", "dns-processor")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
-PUBLISH_TO = os.getenv("PUBLISH_TO")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP")
 SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
@@ -35,6 +55,8 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
+
+SCAN_THREAD_COUNT = int(os.getenv("SCAN_THREAD_COUNT", 1))
 
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
@@ -142,214 +164,360 @@ def check_mx_diff(processed_results, domain_id):
             org=domain_org,
             prev_val=prev_val,
             current_val=current_val,
-            logger=logger,
         )
 
     return mx_record_diff
 
-async def run(loop):
-    async def error_cb(error):
-        logger.error(error)
 
-    async def closed_cb():
-        logger.info("Connection to NATS is closed.")
-        await asyncio.sleep(0.1)
-        loop.stop()
+def process_msg(msg):
+    subject = msg.subject
+    reply = msg.reply
+    data = msg.data.decode()
+    logger.info(f"Received a message on '{subject} {reply}': {data}")
+    payload = json.loads(msg.data)
+
+    scan_results = payload.get("results")
+    domain_key = payload.get("domain_key")
+    user_key = payload.get("user_key")
+    shared_id = payload.get("shared_id")
+
+    try:
+        domain = db.collection("domains").get({"_key": domain_key})
+    except Exception as e:
+        logger.error(
+            f"Error while fetching domain for received message: {msg}: {str(e)}"
+        )
+        return
+
+    scan_results["sends_email"] = domain.get("sendsEmail", "unknown")
+
+    processed_results = process_results(scan_results)
+    try:
+        if processed_results.get("mx_records") is not None:
+            mx_record_diff = check_mx_diff(
+                processed_results=processed_results,
+                domain_id=f"domains/{domain_key}",
+            )
+            processed_results["mx_records"].update({"diff": mx_record_diff})
+    except Exception as e:
+        logger.error(f"Checking MX diff for received message {msg}: {str(e)}")
+
+    dmarc_location = processed_results.get("dmarc").get("location")
+    dmarc_status = processed_results.get("dmarc").get("status")
+    spf_status = processed_results.get("spf").get("status")
+    dkim_status = processed_results.get("dkim").get("status")
+
+    rcode = processed_results.get("rcode", None)
+
+    formatted_scan_data_array = []
+
+    if user_key is None:
+        try:
+            dns_entry = db.collection("dns").insert(snake_to_camel(processed_results))
+            domain.update({"latestDnsScan": dns_entry["_id"]})
+
+            db.collection("domainsDNS").insert(
+                {
+                    "_from": domain["_id"],
+                    "timestamp": processed_results["timestamp"],
+                    "_to": dns_entry["_id"],
+                }
+            )
+
+            web_entry = db.collection("web").insert(
+                {
+                    "timestamp": str(datetime.datetime.now().astimezone()),
+                    "domain": processed_results["domain"],
+                }
+            )
+            db.collection("domainsWeb").insert(
+                {
+                    "_from": domain["_id"],
+                    "timestamp": processed_results["timestamp"],
+                    "_to": web_entry["_id"],
+                }
+            )
+
+            if domain.get("status", None) is None:
+                domain.update(
+                    {
+                        "status": {
+                            "certificates": "info",
+                            "ciphers": "info",
+                            "curves": "info",
+                            "dkim": "info",
+                            "dmarc": "info",
+                            "hsts": "info",
+                            "https": "info",
+                            "protocols": "info",
+                            "spf": "info",
+                            "ssl": "info",
+                        }
+                    }
+                )
+
+            if "dmarcLocation" not in domain.keys():
+                domain.update({"dmarcLocation": dmarc_location})
+            elif domain.get("dmarcLocation", None) != dmarc_location:
+                domain.update({"dmarcLocation": dmarc_location})
+
+            for key, val in {
+                "dmarc": dmarc_status,
+                "spf": spf_status,
+                "dkim": dkim_status,
+            }.items():
+                domain["status"][key] = val
+
+            dmarc_phase = processed_results.get("dmarc").get("phase")
+            wildcard_sibling = processed_results.get("wildcard_sibling")
+
+            domain.update({"phase": dmarc_phase})
+            domain.update({"wildcardSibling": wildcard_sibling})
+            domain.update({"rcode": rcode})
+            domain.update(
+                {"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")}
+            )
+            domain.update({"webScanPending": True})
+
+            # If we have no IPs, we can't do web scans. Set all web statuses to info
+            if not scan_results.get("resolve_ips", None):
+                domain.update({"webScanPending": False})
+                domain["status"].update(
+                    {
+                        "https": "info",
+                        "ssl": "info",
+                        "certificates": "info",
+                        "ciphers": "info",
+                        "curves": "info",
+                        "hsts": "info",
+                        "policy": "info",
+                        "protocols": "info",
+                    }
+                )
+
+            del domain["_rev"]
+            try:
+                db.collection("domains").update(domain)
+            except DocumentUpdateError as e:
+                error_str = str(e)
+                start_retry = time.time()
+                document_updated = False
+                # Retry for 5 seconds in case another process is updating the same document
+                while time.time() - start_retry < 5:
+                    try:
+                        db.collection("domains").update(domain)
+                        document_updated = True
+                        break
+                    except DocumentUpdateError as while_e:
+                        time.sleep(0.1)
+                        error_str = str(while_e)
+                        continue
+                if not document_updated:
+                    logger.error(
+                        f"Error while updating domain after retrying for received message: {msg}: {error_str}"
+                    )
+
+            for ip in scan_results.get("resolve_ips", None) or []:
+                web_scan = db.collection("webScan").insert(
+                    {"status": "pending", "ipAddress": ip}
+                )
+                db.collection("webToWebScans").insert(
+                    {
+                        "_from": web_entry["_id"],
+                        "_to": web_scan["_id"],
+                    }
+                )
+                formatted_scan_data_array.append(
+                    {
+                        "user_key": user_key,
+                        "domain": domain["domain"],
+                        "domain_key": domain_key,
+                        "shared_id": shared_id,
+                        "ip_address": ip,
+                        "web_scan_key": web_scan["_key"],
+                    }
+                )
+
+        except Exception as e:
+            logger.error(
+                f"Error while inserting processed results for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            return
+
+        logger.info(
+            f"DNS Scans inserted into database: {json.dumps(processed_results)}"
+        )
+
+        return formatted_scan_data_array
+
+
+async def run():
+    loop = asyncio.get_running_loop()
+
+    @dataclass
+    class Context:
+        should_exit: bool = False
+        sub: JetStreamContext.PullSubscription = None
+
+    context = Context()
+
+    async def error_cb(error):
+        logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
-        logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
+        logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
+        # Ensure jetstream stream and consumer are still present
+        await js.add_stream(**add_stream_options)
+        context.sub = await js.pull_subscribe(**pull_subscribe_options)
+        logger.info("Re-subscribed to NATS...")
 
     nc = await nats.connect(
         error_cb=error_cb,
-        closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
     )
-
+    js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    async def subscribe_handler(msg):
-        await asyncio.sleep(0.01)
-        subject = msg.subject
-        reply = msg.reply
-        data = msg.data.decode()
-        logger.info(f"Received a message on '{subject} {reply}': {data}")
-        payload = json.loads(msg.data)
+    add_stream_options = {
+        "name": "SCANS",
+        "subjects": [
+            "scans.requests",
+            "scans.discovery",
+            "scans.add_domain_to_easm",
+            "scans.dns_scanner_results",
+            "scans.dns_processor_results",
+            "scans.web_scanner_results",
+            "scans.web_processor_results",
+        ],
+        "retention": RetentionPolicy.WORK_QUEUE,
+    }
 
-        results = payload.get("results")
-        domain_key = payload.get("domain_key")
-        user_key = payload.get("user_key")
-        shared_id = payload.get("shared_id")
+    await js.add_stream(**add_stream_options)
 
-        try:
-            domain = db.collection("domains").get({"_key": domain_key})
-        except Exception as e:
-            logger.error(f"Error while fetching domain: {str(e)}")
+    pull_subscribe_options = {
+        "stream": "SCANS",
+        "subject": "scans.dns_scanner_results",
+        "durable": "dns_processor",
+        "config": ConsumerConfig(
+            ack_policy=AckPolicy.EXPLICIT,
+            max_deliver=1,
+            max_waiting=100_000,
+            ack_wait=90,
+        ),
+    }
+
+    context.sub = await js.pull_subscribe(**pull_subscribe_options)
+
+    async def ask_exit(sig_name):
+        if context.should_exit is True:
             return
-
-        results["sends_email"] = domain.get("sendsEmail", "unknown")
-
-        processed_results = process_results(results)
-        try:
-            if processed_results.get("mx_records") is not None:
-                mx_record_diff = check_mx_diff(
-                    processed_results=processed_results,
-                    domain_id=f"domains/{domain_key}",
-                )
-                processed_results["mx_records"].update({"diff": mx_record_diff})
-        except Exception as e:
-            logger.error(f"Checking MX diff: {str(e)}")
-
-        dmarc_location = processed_results.get("dmarc").get("location")
-        dmarc_status = processed_results.get("dmarc").get("status")
-        spf_status = processed_results.get("spf").get("status")
-        dkim_status = processed_results.get("dkim").get("status")
-
-        rcode = processed_results.get("rcode", None)
-
-        if user_key is None:
-            try:
-                dns_entry = db.collection("dns").insert(
-                    snake_to_camel(processed_results)
-                )
-
-                db.collection("domainsDNS").insert(
-                    {
-                        "_from": domain["_id"],
-                        "timestamp": processed_results["timestamp"],
-                        "_to": dns_entry["_id"],
-                    }
-                )
-
-                web_entry = db.collection("web").insert(
-                    {
-                        "timestamp": str(datetime.datetime.now().astimezone()),
-                        "domain": processed_results["domain"],
-                    }
-                )
-                db.collection("domainsWeb").insert(
-                    {
-                        "_from": domain["_id"],
-                        "timestamp": processed_results["timestamp"],
-                        "_to": web_entry["_id"],
-                    }
-                )
-
-                if domain.get("status", None) is None:
-                    domain.update(
-                        {
-                            "status": {
-                                "certificates": "info",
-                                "ciphers": "info",
-                                "curves": "info",
-                                "dkim": "info",
-                                "dmarc": "info",
-                                "hsts": "info",
-                                "https": "info",
-                                "protocols": "info",
-                                "spf": "info",
-                                "ssl": "info",
-                            }
-                        }
-                    )
-
-                if "dmarcLocation" not in domain.keys():
-                    domain.update({"dmarcLocation": dmarc_location})
-                elif domain.get("dmarcLocation", None) != dmarc_location:
-                    domain.update({"dmarcLocation": dmarc_location})
-
-                for key, val in {
-                    "dmarc": dmarc_status,
-                    "spf": spf_status,
-                    "dkim": dkim_status,
-                }.items():
-                    domain["status"][key] = val
-
-                dmarc_phase = processed_results.get("dmarc").get("phase")
-                wildcard_sibling = processed_results.get("wildcard_sibling")
-
-                domain.update({"phase": dmarc_phase})
-                domain.update({"wildcardSibling": wildcard_sibling})
-                domain.update({"rcode": rcode})
-                domain.update({"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")})
-                domain.update({"webScanPending": True})
-
-                # If we have no IPs, we can't do web scans. Set all web statuses to info
-                if not results.get("resolve_ips", None):
-                    domain.update({"webScanPending": False})
-                    domain["status"].update(
-                        {
-                            "https": "info",
-                            "ssl": "info",
-                            "certificates": "info",
-                            "ciphers": "info",
-                            "curves": "info",
-                            "hsts": "info",
-                            "policy": "info",
-                            "protocols": "info",
-                        }
-                    )
-
-                db.collection("domains").update(domain)
-
-                for ip in results.get("resolve_ips", None) or []:
-                    web_scan = db.collection("webScan").insert(
-                        {"status": "pending", "ipAddress": ip}
-                    )
-                    db.collection("webToWebScans").insert(
-                        {
-                            "_from": web_entry["_id"],
-                            "_to": web_scan["_id"],
-                        }
-                    )
-
-                    await nc.publish(
-                        f"{PUBLISH_TO}.{domain_key}.web",
-                        json.dumps(
-                            {
-                                "user_key": user_key,
-                                "domain": domain["domain"],
-                                "domain_key": domain_key,
-                                "shared_id": shared_id,
-                                "ip_address": ip,
-                                "web_scan_key": web_scan["_key"],
-                            }
-                        ).encode(),
-                    )
-
-            except Exception as e:
-                logging.error(
-                    f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-                )
-                return
-
-            logging.info(
-                f"DNS Scans inserted into database: {json.dumps(processed_results)}"
-            )
-
-    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
-
-    def ask_exit(sig_name):
         logger.error(f"Got signal {sig_name}: exit")
-        if nc.is_closed:
-            return
-        loop.create_task(nc.close())
+        context.should_exit = True
 
     for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
-            getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
+            getattr(signal, signal_name),
+            lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
+    async def handle_finished_scan(fut, original_msg, semaphore):
+        try:
+            await fut
+            res = fut.result()
+            if isinstance(res, Exception):
+                logger.error(
+                    f"Uncaught scan error for received message: {original_msg}: {res}"
+                )
+                return
 
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+            scan_data_array = res
+            logger.debug(f"Scan data array: {scan_data_array}")
+            for scan_data in scan_data_array:
+                logger.debug(f"Publishing results: {scan_data}")
+                try:
+                    await js.publish(
+                        stream="SCANS",
+                        subject="scans.dns_processor_results",
+                        payload=json.dumps(scan_data).encode(),
+                    )
+                except TimeoutError as e:
+                    logger.error(
+                        f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
+                    )
+                    return
+
+            try:
+                logger.debug(f"Acknowledging message: {original_msg}")
+                await original_msg.ack()
+            except Exception as e:
+                logger.error(
+                    f"Error while acknowledging message for received message: {original_msg}: {e}"
+                )
+        finally:
+            logger.debug("Releasing semaphore...")
+            try:
+                semaphore.release()
+            except Exception as e:
+                logger.error(
+                    f"Error while releasing semaphore for received message: {original_msg}: {e}"
+                )
+
+    sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
+
+    with ThreadPoolExecutor() as executor:
+        while True:
+            if context.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            await sem.acquire()
+
+            if context.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            try:
+                logger.debug("Fetching message...")
+                msgs = await context.sub.fetch(batch=1, timeout=1)
+                msg = msgs[0]
+                logger.debug(f"Received message: {msg}")
+            except NatsTimeoutError:
+                logger.debug("No messages available...")
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
+                continue
+
+            try:
+                future = loop.run_in_executor(executor, process_msg, msg)
+                loop.create_task(
+                    handle_finished_scan(fut=future, original_msg=msg, semaphore=sem)
+                )
+            except Exception as e:
+                logger.error(f"Error while queueing scan, releasing semaphore: {e}")
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
+
+    logger.info("Service is shutting down...")
+
+    await nc.flush()
+    logger.info("Flushed NATS connection")
+    await nc.close()
+    logger.info("Closed NATS connection...")
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())

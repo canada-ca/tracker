@@ -1,24 +1,28 @@
 import subprocess
 import logging
 import os
+from dataclasses import dataclass
+
 from arango import ArangoClient
 from dotenv import load_dotenv
 
 import asyncio
 import nats
-import functools
 import json
 import signal
 import traceback
 
 import dns.resolver
+from nats.js import JetStreamContext
+from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
+from nats.errors import TimeoutError
 
 load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -26,9 +30,6 @@ DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
 NAME = os.getenv("NAME", "domain-discovery")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.discovery")
-PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "domain-discovery")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
@@ -47,7 +48,7 @@ def process_subdomains(results, orgId):
             and subdomain.strip()
             and check_live(subdomain)
         ):
-            logging.info(
+            logger.info(
                 "Adding {subdomain} to org: {orgId}".format(
                     subdomain=subdomain, orgId=orgId
                 )
@@ -80,7 +81,7 @@ def process_subdomains(results, orgId):
                     domainInsert["domain"] = subdomain
                     domains_to_scan.append(domainInsert)
                 except Exception as e:
-                    logging.error(
+                    logger.error(
                         f"Inserting new domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                     )
                     continue
@@ -92,12 +93,11 @@ def process_subdomains(results, orgId):
                     {
                         "_from": orgId,
                         "_to": domainInsert["_id"],
-                        "hidden": False,
                         "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
                     }
                 )
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"Claiming domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 continue
@@ -114,7 +114,7 @@ def get_claimed_domains(orgId):
         )
         return [document for document in cursor]
     except Exception as e:
-        logging.error(
+        logger.error(
             f"Getting claimed domains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
         return []
@@ -151,7 +151,7 @@ def domain_discovery(domain, orgId):
         )
         subdomain_list = findomain_output.stdout.split("\n")
     except Exception as e:
-        logging.error(
+        logger.error(
             f"Running findomain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
         return []
@@ -160,30 +160,92 @@ def domain_discovery(domain, orgId):
     return results
 
 
-async def run(loop):
-    async def error_cb(error):
-        logger.error(error)
+async def run():
+    loop = asyncio.get_running_loop()
 
-    async def closed_cb():
-        logger.info("Connection to NATS is closed.")
-        await asyncio.sleep(0.1)
-        loop.stop()
+    @dataclass
+    class Context:
+        should_exit: bool = False
+        sub: JetStreamContext.PullSubscription = None
+
+    context = Context()
+
+    async def error_cb(error):
+        logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
-        logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
+        logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
+        # Ensure jetstream stream and consumer are still present
+        await js.add_stream(**add_stream_options)
+        context.sub = await js.pull_subscribe(**pull_subscribe_options)
+        logger.info("Re-subscribed to NATS...")
 
     nc = await nats.connect(
         error_cb=error_cb,
-        closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
     )
 
+    js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    async def subscribe_handler(msg):
-        await asyncio.sleep(0.01)
+    add_stream_options = {
+        "name": "SCANS",
+        "subjects": [
+            "scans.requests",
+            "scans.discovery",
+            "scans.add_domain_to_easm",
+            "scans.dns_scanner_results",
+            "scans.dns_processor_results",
+            "scans.web_scanner_results",
+            "scans.web_processor_results",
+        ],
+        "retention": RetentionPolicy.WORK_QUEUE,
+    }
+
+    await js.add_stream(**add_stream_options)
+
+    pull_subscribe_options = {
+        "stream": "SCANS",
+        "subject": "scans.discovery",
+        "durable": "domain_discovery",
+        "config": ConsumerConfig(
+            ack_policy=AckPolicy.EXPLICIT,
+            max_deliver=1,
+            max_waiting=100_000,
+            ack_wait=90,
+        ),
+    }
+
+    context.sub = await js.pull_subscribe(**pull_subscribe_options)
+
+    async def ask_exit(sig_name):
+        if context.should_exit is True:
+            return
+        logger.error(f"Got signal {sig_name}: exit")
+        context.should_exit = True
+
+    for signal_name in {"SIGINT", "SIGTERM"}:
+        loop.add_signal_handler(
+            getattr(signal, signal_name),
+            lambda: asyncio.create_task(ask_exit(signal_name)),
+        )
+
+    while True:
+        if context.should_exit:
+            break
+        if nc.is_closed:
+            logger.error("Connection to NATS is closed")
+
+        try:
+            logger.debug("Fetching message...")
+            msgs = await context.sub.fetch(batch=1, timeout=1)
+            msg = msgs[0]
+        except nats.errors.TimeoutError:
+            logger.debug("No messages available...")
+            continue
+
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
@@ -191,17 +253,17 @@ async def run(loop):
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
-        orgId = payload.get("orgId")
+        org_id = payload.get("orgId")
 
         logger.info(f"Starting subdomain scan on '{domain}'")
-        results = domain_discovery(domain, orgId)
-        logging.info(f"{len(results)} new subdomains found for {domain}")
+        results = domain_discovery(domain, org_id)
+        logger.info(f"{len(results)} new subdomains found for {domain}")
 
         for newDomain in results:
             domain_key = newDomain["_key"]
             try:
                 await nc.publish(
-                    f"{PUBLISH_TO}.{domain_key}",
+                    "scans.requests",
                     json.dumps(
                         {
                             "domain": newDomain["domain"],
@@ -212,33 +274,11 @@ async def run(loop):
                 )
 
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return
 
-    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
-
-    def ask_exit(sig_name):
-        logger.error(f"Got signal {sig_name}: exit")
-        if nc.is_closed:
-            return
-        loop.create_task(nc.close())
-
-    for signal_name in {"SIGINT", "SIGTERM"}:
-        loop.add_signal_handler(
-            getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
-        )
-
-
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
-
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())

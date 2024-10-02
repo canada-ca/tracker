@@ -12,22 +12,42 @@ steps:
     args: ['run', 'lint']
 
   - name: node:16.3.0-alpine
-    id: test
-    dir: frontend
-    entrypoint: npm
-    args: ['test']
-
-  - name: node:16.3.0-alpine
     id: lingui-extract
     dir: frontend
-    entrypoint: npm
-    args: ['run', 'extract']
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        npm run extract | tee /workspace/lingui-extract-output.txt
+
+  - name: node:16.3.0-alpine
+    id: lingui-translation-check
+    dir: frontend
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        output=$( awk -F '│' '/fr/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' /workspace/lingui-extract-output.txt )
+
+        # Check if there are any missed french translations
+        if [ "$output" -eq 0 ]; then
+          echo "All translations are up to date, proceeding."
+        else
+          echo "There are $output missed translations, please update them before proceeding."
+          exit 1
+        fi
 
   - name: node:16.3.0-alpine
     id: lingui-compile
     dir: frontend
     entrypoint: npm
     args: ['run', 'compile']
+
+  - name: node:16.3.0-alpine
+    id: test
+    dir: frontend
+    entrypoint: npm
+    args: ['test']
 
   - name: node:16.3.0-alpine
     id: build-production-bundle
@@ -38,7 +58,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: api-js
+    dir: frontend
     args:
       - '-c'
       - |

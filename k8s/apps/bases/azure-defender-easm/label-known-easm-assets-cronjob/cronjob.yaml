@@ -14,9 +14,13 @@ spec:
           labels:
             app: label-known-easm-assets
         spec:
+          securityContext:
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: label-known-easm-assets
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-60c74e8-1718377338 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-a889f10-1724779894 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -77,5 +81,15 @@ spec:
                     secretKeyRef:
                       name: azure-defender-easm
                       key: KUSTO_DATABASE
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: Never
       backoffLimit: 4

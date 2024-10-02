@@ -11,6 +11,8 @@ import { en } from 'make-plural/plurals'
 import userEvent from '@testing-library/user-event'
 
 import { UserVarProvider } from '../../utilities/userState'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
+
 import {
   ADMIN_PAGE,
   ORGANIZATION_INFORMATION,
@@ -36,7 +38,9 @@ describe('<AdminPage />', () => {
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin/organizations']} initialIndex={0}>
-                <AdminPage />
+                <TourProvider>
+                  <AdminPage />
+                </TourProvider>
               </MemoryRouter>
             </ChakraProvider>
           </I18nProvider>
@@ -63,7 +67,9 @@ describe('<AdminPage />', () => {
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin/organizations']} initialIndex={0}>
-                <AdminPage />
+                <TourProvider>
+                  <AdminPage />
+                </TourProvider>
               </MemoryRouter>
             </ChakraProvider>
           </I18nProvider>
@@ -100,7 +106,9 @@ describe('<AdminPage />', () => {
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin/organizations']} initialIndex={0}>
-                <AdminPage />
+                <TourProvider>
+                  <AdminPage />
+                </TourProvider>
               </MemoryRouter>
             </ChakraProvider>
           </I18nProvider>

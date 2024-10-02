@@ -296,22 +296,7 @@ export const loadDomainConnectionsByOrgId =
       sortString = aql`ASC`
     }
 
-    let domainFilters = aql`
-      LET hidden = (
-        FOR v, e IN 1..1 ANY domain._id claims
-          FILTER e._from == ${orgId}
-          RETURN e.hidden
-      )[0]
-      LET claimTags = (
-        FOR v, e IN 1..1 ANY domain._id claims
-          FILTER e._from == ${orgId}
-          LET translatedTags = (
-            FOR tag IN e.tags || []
-              RETURN TRANSLATE(${language}, tag)
-          )
-          RETURN translatedTags
-      )[0]
-      `
+    let domainFilters = aql``
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -322,90 +307,100 @@ export const loadDomainConnectionsByOrgId =
         if (filterCategory === 'dmarc-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.dmarc ${comparison} ${filterValue}
+          FILTER v.status.dmarc ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'dkim-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.dkim ${comparison} ${filterValue}
+          FILTER v.status.dkim ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'https-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.https ${comparison} ${filterValue}
+          FILTER v.status.https ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'spf-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.spf ${comparison} ${filterValue}
+          FILTER v.status.spf ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'ciphers-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.ciphers ${comparison} ${filterValue}
+          FILTER v.status.ciphers ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'curves-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.curves ${comparison} ${filterValue}
+          FILTER v.status.curves ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'hsts-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.hsts ${comparison} ${filterValue}
+          FILTER v.status.hsts ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'policy-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.policy ${comparison} ${filterValue}
+          FILTER v.status.policy ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'protocols-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.protocols ${comparison} ${filterValue}
+          FILTER v.status.protocols ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'certificates-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.certificates ${comparison} ${filterValue}
+          FILTER v.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
-          if (filterValue === 'hidden') {
+          if (filterValue === 'archived') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER hidden ${comparison} true
-          `
-          } else if (filterValue === 'archived') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER domain.archived ${comparison} true
+            FILTER v.archived ${comparison} true
           `
           } else if (filterValue === 'nxdomain') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.rcode ${comparison} "NXDOMAIN"
+            FILTER v.rcode ${comparison} "NXDOMAIN"
           `
           } else if (filterValue === 'blocked') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.blocked ${comparison} true
+            FILTER v.blocked ${comparison} true
           `
           } else if (filterValue === 'wildcard-sibling') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.wildcardSibling ${comparison} true
+            FILTER v.wildcardSibling ${comparison} true
           `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.webScanPending ${comparison} true
+            FILTER v.webScanPending ${comparison} true
+          `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.cveDetected ${comparison} true
           `
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION( claimTags, ${filterValue}) ${comparison} true
+            FILTER POSITION( e.tags, ${filterValue}) ${comparison} true
           `
           }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER e.assetState ${comparison} ${filterValue}
+        `
         }
       })
     }
@@ -416,34 +411,26 @@ export const loadDomainConnectionsByOrgId =
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
-      LET searchedDomains = (
-        FOR tokenItem IN tokenArr
-          LET token = LOWER(tokenItem)
-          FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+        LET searchedDomains = (
+          FOR domain IN domains
+            FILTER LOWER(domain.domain) LIKE LOWER(${search})
             FILTER domain._key IN domainKeys
             RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-      )
-    `
+        )
+      `
       loopString = aql`FOR domain IN searchedDomains`
       totalCount = aql`LENGTH(searchedDomains)`
     }
 
-    let showArchivedDomains = aql`FILTER domain.archived != true`
+    let showArchivedDomains = aql`FILTER v.archived != true`
     if (permission === 'super_admin') {
       showArchivedDomains = aql``
-    }
-    let showHiddenDomains = aql`FILTER e.hidden != true`
-    if (['super_admin', 'owner', 'admin', 'user'].includes(permission)) {
-      showHiddenDomains = aql``
     }
 
     let ownershipOrgsOnly = aql`
       LET claimKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
           OPTIONS {order: "bfs"}
-          ${showHiddenDomains}
           RETURN v._key
       )
     `
@@ -453,7 +440,6 @@ export const loadDomainConnectionsByOrgId =
           LET claimKeys = (
             FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
               OPTIONS {order: "bfs"}
-              ${showHiddenDomains}
               RETURN v._key
           )
         `
@@ -468,7 +454,8 @@ export const loadDomainConnectionsByOrgId =
         LET domainKeys = (
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             OPTIONS {order: "bfs"}
-            ${showHiddenDomains}
+            ${showArchivedDomains}
+            ${domainFilters}
             RETURN v._key
         )`
       } else {
@@ -507,22 +494,26 @@ export const loadDomainConnectionsByOrgId =
       LET retrievedDomains = (
         ${loopString}
           FILTER domain._key IN domainKeys
-          ${showArchivedDomains}
-          ${domainFilters}
-
+          LET claimVals = (
+              FOR v, e IN 1..1 ANY domain._id claims
+                FILTER e._from == ${orgId}
+                LET translatedTags = (
+                  FOR tag IN e.tags || []
+                    RETURN TRANSLATE(${language}, tag)
+                )
+                RETURN { assetState: e.assetState, claimTags: translatedTags }
+          )[0]
           ${afterTemplate}
           ${beforeTemplate}
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, DOCUMENT(domain._id))
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimVals.claimTags, "assetState": claimVals.assetState }, DOCUMENT(domain._id))
       )
 
       LET hasNextPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
-          ${showArchivedDomains}
-          ${domainFilters}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -531,8 +522,6 @@ export const loadDomainConnectionsByOrgId =
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
-          ${showArchivedDomains}
-          ${domainFilters}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain

@@ -35,9 +35,10 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
-  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, hidden, mutation, orgCount } = props
+  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -143,7 +144,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     { en: 'TEST', fr: 'TEST' },
     { en: 'WEB', fr: 'WEB' },
     { en: 'INACTIVE', fr: 'INACTIF' },
-    { en: 'OUTSIDE', fr: 'EXTERIEUR' },
   ]
 
   const addableTags = (values, helper) => {
@@ -194,8 +194,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             // convert initial tags to input type
             tags: getInitTags(),
             archiveDomain: archived,
-            hideDomain: hidden,
-            outsideComment: null,
+            assetState: assetState || 'APPROVED',
           }}
           initialTouched={{
             domainUrl: true,
@@ -208,11 +207,9 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   domainId: editingDomainId,
                   orgId: orgId,
-                  domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
-                  hidden: values.hideDomain,
-                  outsideComment: values.outsideComment,
+                  assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
                 },
               })
@@ -223,8 +220,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
-                  hidden: values.hideDomain,
-                  outsideComment: values.outsideComment,
+                  assetState: values.assetState,
                 },
               })
             }
@@ -238,7 +234,14 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
               <ModalCloseButton />
               <ModalBody>
                 <Stack spacing={4} p={25}>
-                  <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
+                  {mutation === 'create' ? (
+                    <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
+                  ) : (
+                    <Box>
+                      <Text fontWeight="bold">Domain:</Text>
+                      <Text flexWrap="wrap">{editingDomainUrl}</Text>
+                    </Box>
+                  )}
                   <FieldArray
                     name="tags"
                     render={(arrayHelpers) => (
@@ -265,50 +268,46 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       </Box>
                     )}
                   />
-                  {values.tags?.find(({ en }) => en === 'OUTSIDE') && (
-                    <FormControl>
-                      <FormLabel htmlFor="outsideComment" fontWeight="bold">
-                        <Trans>Reason</Trans>
-                      </FormLabel>
-                      <Select name="outsideComment" id="outsideComment" borderColor="black" onChange={handleChange}>
-                        <option hidden value="">
-                          <Trans>Select a reason for adding this outside domain</Trans>
-                        </option>
-                        <option value="OWNERSHIP">
-                          <Trans>Organization owns this domain, but it is outside the allowed scope</Trans>
-                        </option>
-                        <option value="INVESTMENT">
-                          <Trans>Organization is invested in the outside domain</Trans>
-                        </option>
-                        <option value="OTHER">
-                          <Trans>Other</Trans>
-                        </option>
-                      </Select>
-                      <Text mt="1">
-                        <Trans>
-                          <b>Note: </b>Domains from outside the GC scope may not be scanned right away
-                        </Trans>
-                      </Text>
-                    </FormControl>
-                  )}
+                  <ABTestWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
+                      <FormControl>
+                        <FormLabel htmlFor="assetState" fontWeight="bold">
+                          <Tooltip
+                            label={t`Select a state that best describes the asset in relation to your organization.`}
+                          >
+                            <Flex align="center">
+                              <Trans>Asset State</Trans>{' '}
+                              <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
+                            </Flex>
+                          </Tooltip>
+                        </FormLabel>
+                        <Select
+                          name="assetState"
+                          id="assetState"
+                          borderColor="black"
+                          onChange={handleChange}
+                          defaultValue={assetState}
+                        >
+                          <option value="APPROVED">
+                            <Trans>Approved</Trans>
+                          </option>
+                          <option value="DEPENDENCY">
+                            <Trans>Dependency</Trans>
+                          </option>
+                          <option value="MONITOR_ONLY">
+                            <Trans>Monitor Only</Trans>
+                          </option>
+                          <option value="CANDIDATE">
+                            <Trans>Candidate</Trans>
+                          </option>
+                          <option value="REQUIRES_INVESTIGATION">
+                            <Trans>Requires Investigation</Trans>
+                          </option>
+                        </Select>
+                      </FormControl>
+                    </ABTestVariant>
+                  </ABTestWrapper>
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
-                  <Flex align="center">
-                    <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>
-                      <QuestionOutlineIcon tabIndex={0} />
-                    </Tooltip>
-                    <label>
-                      <Switch
-                        isFocusable={true}
-                        name="hideDomain"
-                        mx="2"
-                        defaultChecked={values.hideDomain}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <Badge variant="outline" color="gray.900" p="1.5">
-                      <Trans>Hide domain</Trans>
-                    </Badge>
-                  </Flex>
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
                     handleChange={handleChange}
@@ -397,10 +396,10 @@ AdminDomainModal.propTypes = {
   editingDomainUrl: string,
   tagInputList: array,
   archived: bool,
-  hidden: bool,
   orgSlug: string,
   mutation: string,
   orgCount: number,
   refetchQueries: array,
   myOrg: object,
+  assetState: string,
 }

@@ -14,7 +14,7 @@ import {
 import { Trans } from '@lingui/macro'
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { RelayPaginationControls } from './RelayPaginationControls'
-import { array, bool, func, number, string } from 'prop-types'
+import { array, bool, element, func, number, string } from 'prop-types'
 import { InfoButton } from './InfoPanel'
 
 export function SearchBox({
@@ -33,12 +33,14 @@ export function SearchBox({
   orderByOptions,
   placeholder,
   onToggle,
+  searchTip,
+  totalRecords,
   ...props
 }) {
   const orderIconName = orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
   return (
     <Box {...props} bg="gray.100" p="2" mb="4" borderColor="gray.300" borderWidth="1px">
-      <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'stretch', md: 'center' }}>
+      <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'stretch', md: 'center' }} mb={2}>
         <Flex direction="row" minW={{ base: '100%', md: '50%' }} alignItems="center" flexGrow={1}>
           <Text as="label" htmlFor="Search-for-field" fontSize="md" fontWeight="bold" textAlign="center" mr={2}>
             <Trans>Search: </Trans>
@@ -100,6 +102,11 @@ export function SearchBox({
           />
         </Stack>
       </Flex>
+      {searchTip && (
+        <Box backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
+          {searchTip}
+        </Box>
+      )}
       <Divider borderBottomWidth="1px" borderBottomColor="black" />
       <RelayPaginationControls
         onlyPagination={false}
@@ -112,6 +119,7 @@ export function SearchBox({
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalRecords}
       />
     </Box>
   )
@@ -134,4 +142,6 @@ SearchBox.propTypes = {
   placeholder: string,
   inputAriaLabel: string,
   onToggle: func,
+  searchTip: element,
+  totalRecords: number,
 }

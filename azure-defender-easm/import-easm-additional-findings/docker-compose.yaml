@@ -1,0 +1,7 @@
+services:
+  import-easm-additional-findings:
+    image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/import-easm-additional-findings:dirty-${TAG}
+    build: ./
+    env_file:
+      - .env
+    network_mode: "host"

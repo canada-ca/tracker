@@ -5,12 +5,46 @@ import React from 'react'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { array, func } from 'prop-types'
 
-export function DomainListFilters({ filters, setFilters, statusOptions, filterTagOptions }) {
+export function DomainListFilters({ filters, setFilters, statusOptions, filterTagOptions, assetStateOptions = [] }) {
   const validationSchema = schemaToValidation({
     filterCategory: getRequirement('field'),
     comparison: getRequirement('field'),
     filterValue: getRequirement('field'),
   })
+
+  const filterValues = (values) => {
+    if (values.filterCategory === 'TAGS') {
+      return filterTagOptions.map(({ value, text }, idx) => {
+        return (
+          <option key={idx} value={value}>
+            {text}
+          </option>
+        )
+      })
+    } else if (values.filterCategory === 'ASSET_STATE') {
+      return assetStateOptions.map(({ value, text }, idx) => {
+        return (
+          <option key={idx} value={value}>
+            {text}
+          </option>
+        )
+      })
+    } else {
+      return (
+        <>
+          <option value="PASS">
+            <Trans>Pass</Trans>
+          </option>
+          <option value="INFO">
+            <Trans>Info</Trans>
+          </option>
+          <option value="FAIL">
+            <Trans>Fail</Trans>
+          </option>
+        </>
+      )
+    }
+  }
 
   return (
     <Box py="2">
@@ -43,12 +77,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                     name="filterCategory"
                     borderColor="black"
                     onChange={(e) => {
-                      if (
-                        (values.filterCategory === 'TAGS' && e.target.value !== 'TAGS') ||
-                        (values.filterCategory !== 'TAGS' && e.target.value === 'TAGS')
-                      ) {
-                        values.filterValue = ''
-                      }
+                      if (values.filterCategory !== e.target.value) values.filterValue = ''
                       handleChange(e)
                     }}
                   >
@@ -65,6 +94,11 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                     <option value="TAGS">
                       <Trans>Tag</Trans>
                     </option>
+                    {assetStateOptions.length > 0 && (
+                      <option value="ASSET_STATE">
+                        <Trans>Asset State</Trans>
+                      </option>
+                    )}
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterCategory}
@@ -89,28 +123,13 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                 <Box maxW="25%" mx="1">
                   <Select aria-label="filterValue" name="filterValue" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
-                      <Trans>Status or tag</Trans>
+                      <Trans>Status/Tag/State</Trans>
                     </option>
-                    {values.filterCategory === 'TAGS' ? (
-                      filterTagOptions.map(({ value, text }, idx) => {
-                        return (
-                          <option key={idx} value={value}>
-                            {text}
-                          </option>
-                        )
-                      })
-                    ) : (
-                      <>
-                        <option value="PASS">
-                          <Trans>Pass</Trans>
-                        </option>
-                        <option value="INFO">
-                          <Trans>Info</Trans>
-                        </option>
-                        <option value="FAIL">
-                          <Trans>Fail</Trans>
-                        </option>
-                      </>
+                    {filterValues(values)}
+                    {values.filterCategory === 'TAGS' && (
+                      <option value="CVE_DETECTED">
+                        <Trans>SPIN Top 25</Trans>
+                      </option>
                     )}
                   </Select>
                   <Text color="red.500" mt={0}>
@@ -134,4 +153,5 @@ DomainListFilters.propTypes = {
   setFilters: func,
   statusOptions: array,
   filterTagOptions: array,
+  assetStateOptions: array,
 }

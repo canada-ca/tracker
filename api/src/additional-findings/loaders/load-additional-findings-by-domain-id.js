@@ -14,6 +14,7 @@ export const loadAdditionalFindingsByDomainId =
         WITH additionalFindings, domains
         FOR finding IN additionalFindings
             FILTER finding.domain == ${domainId}
+            LIMIT 1
             RETURN finding
     `
     } catch (err) {

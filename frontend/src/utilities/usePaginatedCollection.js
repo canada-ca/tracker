@@ -25,11 +25,13 @@ export function usePaginatedCollection({
 
   let currentEdges = []
   let currentPageInfo = {}
+  let totalCount = 0
 
   if (data) {
     currentEdges = relayRoot.split('.').reduce((acc, cur) => {
       return acc[cur]
     }, data)
+    totalCount = currentEdges?.totalCount || 0
     currentPageInfo = currentEdges?.pageInfo
     currentEdges = currentEdges?.edges || []
   }
@@ -51,7 +53,7 @@ export function usePaginatedCollection({
     error,
     edges: currentEdges,
     nodes: currentEdges?.map((e) => e.node),
-    currentPage,
+    totalCount,
     setCurrentPage,
     next: async () => {
       if (currentPage === totalPages) {

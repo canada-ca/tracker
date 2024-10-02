@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { AdditionalFindings } from '../AdditionalFindings'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserVarProvider } from '../../utilities/userState'
@@ -9,6 +9,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural'
+import { GUIDANCE_ADDITIONAL_FINDINGS } from '../../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -20,61 +21,77 @@ const i18n = setupI18n({
   },
 })
 
-const data = {
-  timestamp: '2021-05-24 09:51:49.819Z',
-  headers: [],
-  locations: [
-    {
-      city: 'Hello World',
-      region: 'Hello World',
-      firstSeen: 'Hello World',
-      lastSeen: 'Hello World',
-    },
-  ],
-  ports: [
-    {
-      port: 443,
-      lastPortState: 'OPEN',
-      portStateFirstSeen: 'Hello World',
-      portStateLastSeen: 'Hello World',
-    },
-  ],
-  webComponents: [
-    {
-      webComponentCategory: 'DDOS Protection',
-      webComponentName: 'Hello World',
-      webComponentVersion: 'Hello World',
-      webComponentFirstSeen: 'Hello World',
-      webComponentLastSeen: 'Hello World',
-    },
-  ],
-  vulnerabilities: {
-    critical: [
-      {
-        cve: '2024-11-10',
-        cvss3Score: 9.3,
+const mocks = [
+  {
+    request: {
+      query: GUIDANCE_ADDITIONAL_FINDINGS,
+      variables: {
+        domain: 'test.domain',
       },
-    ],
-    high: [],
-    medium: [
-      {
-        cve: '2021-11-10',
-        cvss3Score: 5.3,
+    },
+    result: {
+      data: {
+        findDomainByDomain: {
+          additionalFindings: {
+            timestamp: '2021-05-24 09:51:49.819Z',
+            headers: [],
+            locations: [
+              {
+                city: 'Hello World',
+                region: 'Hello World',
+                firstSeen: 'Hello World',
+                lastSeen: 'Hello World',
+              },
+            ],
+            ports: [
+              {
+                port: 443,
+                lastPortState: 'OPEN',
+                portStateFirstSeen: 'Hello World',
+                portStateLastSeen: 'Hello World',
+              },
+            ],
+            webComponents: [
+              {
+                webComponentCategory: 'DDOS Protection',
+                webComponentName: 'Hello World',
+                webComponentVersion: 'Hello World',
+                webComponentFirstSeen: 'Hello World',
+                webComponentLastSeen: 'Hello World',
+              },
+            ],
+            vulnerabilities: {
+              critical: [
+                {
+                  cve: 'CVE-2024-12345',
+                  cvss3Score: 9.3,
+                },
+              ],
+              high: [],
+              medium: [
+                {
+                  cve: 'CVE-2021-12345',
+                  cvss3Score: 5.3,
+                },
+              ],
+              low: [],
+            },
+          },
+        },
       },
-    ],
-    low: [],
+    },
   },
-}
+]
 
 describe('<AdditonalFindings />', () => {
   it('renders AdditionalFindings without crashing', () => {
     render(
-      <MockedProvider>
+      <MockedProvider mocks={mocks}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
-                <AdditionalFindings data={data} />
+                <AdditionalFindings domain="test.domain" />
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
@@ -83,21 +100,26 @@ describe('<AdditonalFindings />', () => {
     )
   })
 
-  it('renders correct number of AccordionItem components', () => {
-    render(
-      <MockedProvider>
+  it('renders correct number of AccordionItem components', async () => {
+    const { getByText, getAllByRole } = render(
+      <MockedProvider mocks={mocks}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
-                <AdditionalFindings data={data} />
+                <AdditionalFindings domain="test.domain" />
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
-    const accordionItems = screen.getAllByRole('button')
+
+    await waitFor(() => {
+      expect(getByText(/Last Scanned/i)).toBeInTheDocument()
+    })
+
+    const accordionItems = getAllByRole('button', { expanded: true })
     expect(accordionItems).toHaveLength(7)
   })
 })

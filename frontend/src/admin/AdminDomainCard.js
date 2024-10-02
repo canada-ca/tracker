@@ -1,9 +1,18 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text } from '@chakra-ui/react'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
-export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...rest }) {
+export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...rest }) {
+  const assetStateLabels = {
+    APPROVED: t`Approved`,
+    DEPENDENCY: t`Dependency`,
+    MONITOR_ONLY: t`Monitor Only`,
+    CANDIDATE: t`Candidate`,
+    REQUIRES_INVESTIGATION: t`Requires Investigation`,
+  }
+
   return (
     <ListItem {...rest}>
       <Flex align="center">
@@ -22,16 +31,18 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...res
           })}
         </Flex>
         <Flex ml="auto">
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              {assetState && (
+                <Tag colorScheme="blue" mx="1">
+                  <TagLabel fontWeight="bold">{assetStateLabels[assetState]}</TagLabel>
+                </Tag>
+              )}
+            </ABTestVariant>
+          </ABTestWrapper>
           {rcode === 'NXDOMAIN' && (
             <Tag colorScheme="red" mr="auto" alignSelf="center">
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
-            </Tag>
-          )}
-          {isHidden && (
-            <Tag colorScheme="blue" mx="1">
-              <TagLabel fontWeight="bold">
-                <Trans>HIDDEN</Trans>
-              </TagLabel>
             </Tag>
           )}
           {isArchived && (
@@ -49,7 +60,7 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...res
 AdminDomainCard.propTypes = {
   url: string,
   tags: array,
-  isHidden: bool,
   isArchived: bool,
   rcode: string,
+  assetState: string,
 }

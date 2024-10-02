@@ -11,6 +11,7 @@ import { TopBanner } from '../TopBanner'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { SIGN_OUT } from '../../graphql/mutations'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -34,7 +35,9 @@ describe('<TopBanner />', () => {
           <ChakraProvider theme={theme}>
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
-                <TopBanner />
+                <TourProvider>
+                  <TopBanner />
+                </TourProvider>
               </I18nProvider>
             </MemoryRouter>
           </ChakraProvider>
@@ -74,7 +77,9 @@ describe('<TopBanner />', () => {
               <ChakraProvider theme={theme}>
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
-                    <TopBanner />
+                    <TourProvider>
+                      <TopBanner />
+                    </TourProvider>
                   </I18nProvider>
                 </MemoryRouter>
               </ChakraProvider>
@@ -114,7 +119,9 @@ describe('<TopBanner />', () => {
               <ChakraProvider theme={theme}>
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
-                    <TopBanner />
+                    <TourProvider>
+                      <TopBanner />
+                    </TourProvider>
                   </I18nProvider>
                 </MemoryRouter>
               </ChakraProvider>

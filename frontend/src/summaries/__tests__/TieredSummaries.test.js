@@ -20,36 +20,6 @@ const i18n = setupI18n({
 })
 
 const data = {
-  httpsIncludeHidden: {
-    total: 8200,
-    categories: [
-      {
-        name: 'pass',
-        count: 372,
-        percentage: 4.536585365853658,
-      },
-      {
-        name: 'fail',
-        count: 7828,
-        percentage: 95.46341463414635,
-      },
-    ],
-  },
-  dmarcIncludeHidden: {
-    total: 7465,
-    categories: [
-      {
-        name: 'pass',
-        count: 1143,
-        percentage: 15.311453449430676,
-      },
-      {
-        name: 'fail',
-        count: 6322,
-        percentage: 84.68854655056933,
-      },
-    ],
-  },
   https: {
     total: 8992,
     categories: [

@@ -39,22 +39,22 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
     positiveTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({ positiveTags }, _, { loaders: { loadDmarcGuidanceTagByTagId } }) => {
-        return await loadDmarcGuidanceTagByTagId({ tags: positiveTags })
+      resolve: async ({ positiveTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
+        return await loadGuidanceTagByTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({ neutralTags }, _, { loaders: { loadDmarcGuidanceTagByTagId } }) => {
-        return await loadDmarcGuidanceTagByTagId({ tags: neutralTags })
+      resolve: async ({ neutralTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
+        return await loadGuidanceTagByTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({ negativeTags }, _, { loaders: { loadDmarcGuidanceTagByTagId } }) => {
-        return await loadDmarcGuidanceTagByTagId({ tags: negativeTags })
+      resolve: async ({ negativeTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
+        return await loadGuidanceTagByTagId({ tags: negativeTags })
       },
     },
   }),

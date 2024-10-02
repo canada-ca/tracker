@@ -22,6 +22,8 @@ import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
+import { domainSearchTip } from '../domains/DomainsPage'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -52,15 +54,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           filters,
         }
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
-      recordsPerPage: domainsPerPage,
-      relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
-      variables: queryVariables,
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    totalCount,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
+    recordsPerPage: domainsPerPage,
+    relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
+    variables: queryVariables,
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -92,13 +104,20 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
-    { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
+  ]
+
+  const assetStateOptions = [
+    { value: t`APPROVED`, text: t`Approved` },
+    { value: t`DEPENDENCY`, text: t`Dependency` },
+    { value: t`MONITOR_ONLY`, text: t`Monitor Only` },
+    { value: t`CANDIDATE`, text: t`Candidate` },
+    { value: t`REQUIRES_INVESTIGATION`, text: t`Requires Investigation` },
   ]
 
   const domainList = loading ? (
@@ -108,12 +127,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   ) : (
     <Box>
       {orgSlug !== 'my-tracker' && (
-        <DomainListFilters
-          filters={filters}
-          setFilters={setFilters}
-          statusOptions={orderByOptions}
-          filterTagOptions={filterTagOptions}
-        />
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="A">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+            />
+          </ABTestVariant>
+          <ABTestVariant name="B">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+              assetStateOptions={assetStateOptions}
+            />
+          </ABTestVariant>
+        </ABTestWrapper>
       )}
       <ListOf
         elements={nodes}
@@ -131,13 +163,15 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             status,
             hasDMARCReport,
             claimTags,
-            hidden,
+            assetState,
             archived,
             rcode,
             blocked,
             wildcardSibling,
             webScanPending,
+            hasEntrustCertificate,
             userHasPermission,
+            cveDetected,
           },
           index,
         ) => (
@@ -148,13 +182,15 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               status={status}
               hasDMARCReport={hasDMARCReport}
               tags={claimTags}
-              isHidden={hidden}
+              assetState={assetState}
               rcode={rcode}
               isArchived={archived}
               blocked={blocked}
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
+              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
+              cveDetected={cveDetected}
               mb="3"
             />
           </ErrorBoundary>
@@ -207,11 +243,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
         <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
         <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
-        <InfoBox title={t`OUTSIDE`} info={t`Tag used to show domains that are out of the organization's scope.`} />
-        <InfoBox
-          title={t`HIDDEN`}
-          info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}
-        />
         <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
         <InfoBox
@@ -219,6 +250,24 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
+        <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
+        <InfoBox
+          title={t`Dependency`}
+          info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
+        />
+        <InfoBox
+          title={t`Monitor Only`}
+          info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
+        />
+        <InfoBox
+          title={t`Candidate`}
+          info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
+        />
+        <InfoBox
+          title={t`Requires Investigation`}
+          info={t`An asset that requires further investigation to determine its relationship to the organization.`}
+        />
       </InfoPanel>
 
       <SearchBox
@@ -237,6 +286,8 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
+        searchTip={domainSearchTip}
+        totalRecords={totalCount}
       />
 
       {orgSlug !== 'my-tracker' && (
@@ -261,6 +312,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
     </Box>
   )

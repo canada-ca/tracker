@@ -20,9 +20,6 @@ import {
   ModalOverlay,
   Select,
   Stack,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
   useDisclosure,
   useToast,
@@ -47,6 +44,8 @@ import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
+import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
+import { FilterList } from '../domains/FilterList'
 
 export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
@@ -61,10 +60,10 @@ export function AdminDomains({ orgSlug, orgId }) {
   })
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [modalProps, setModalProps] = useState({
-    hidden: false,
     archived: false,
     mutation: '',
     tagInputList: [],
+    assetState: '',
     editingDomainId: '',
     editingDomainUrl: '',
   })
@@ -72,6 +71,7 @@ export function AdminDomains({ orgSlug, orgId }) {
 
   const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
   const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()
+  const { isOpen: infoIsOpen, onToggle } = useDisclosure()
 
   const validationSchema = schemaToValidation({
     filterCategory: getRequirement('field'),
@@ -86,15 +86,25 @@ export function AdminDomains({ orgSlug, orgId }) {
     filters,
   }
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      variables: fetchVariables,
-      relayRoot: 'findOrganizationBySlug.domains',
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    variables: fetchVariables,
+    relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(newDomainUrl)
@@ -166,12 +176,10 @@ export function AdminDomains({ orgSlug, orgId }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
-    { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
 
@@ -184,7 +192,7 @@ export function AdminDomains({ orgSlug, orgId }) {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          filterCategory: 'TAGS',
+          filterCategory: '',
           comparison: '',
           filterValue: '',
         }}
@@ -192,14 +200,15 @@ export function AdminDomains({ orgSlug, orgId }) {
           setFilters([
             ...new Map(
               [...filters, values].map((item) => {
-                return [item['filterValue'], item]
+                if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
+                else return [item['filterValue'], item]
               }),
             ).values(),
           ])
           resetForm()
         }}
       >
-        {({ handleChange, handleSubmit, errors }) => {
+        {({ handleChange, handleSubmit, errors, values }) => {
           return (
             <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
               <Flex align="center">
@@ -207,6 +216,34 @@ export function AdminDomains({ orgSlug, orgId }) {
                   <Trans>Filters:</Trans>
                 </Text>
 
+                <Box maxW="25%" mx="1">
+                  <Select
+                    aria-label="filterCategory"
+                    name="filterCategory"
+                    borderColor="black"
+                    onChange={(e) => {
+                      if (values.filterCategory !== e.target.value) values.filterValue = ''
+                      handleChange(e)
+                    }}
+                  >
+                    <option hidden value="">
+                      <Trans>Value</Trans>
+                    </option>
+                    <option value="TAGS">
+                      <Trans>Tag</Trans>
+                    </option>
+                    <ABTestWrapper insiderVariantName="B">
+                      <ABTestVariant name="B">
+                        <option value="ASSET_STATE">
+                          <Trans>Asset State</Trans>
+                        </option>
+                      </ABTestVariant>
+                    </ABTestWrapper>
+                  </Select>
+                  <Text color="red.500" mt={0}>
+                    {errors.comparison}
+                  </Text>
+                </Box>
                 <Box maxW="25%" mx="1">
                   <Select name="comparison" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
@@ -226,20 +263,45 @@ export function AdminDomains({ orgSlug, orgId }) {
                 <Box maxW="25%" mx="1">
                   <Select name="filterValue" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
-                      <Trans>Status/Tag</Trans>
+                      <Trans>Status/Tag/State</Trans>
                     </option>
-                    {filterTagOptions.map(({ value, text }, idx) => {
-                      return (
-                        <option key={idx} value={value}>
-                          {text}
-                        </option>
-                      )
-                    })}
+                    {values.filterCategory === 'TAGS' ? (
+                      filterTagOptions.map(({ value, text }, idx) => {
+                        return (
+                          <option key={idx} value={value}>
+                            {text}
+                          </option>
+                        )
+                      })
+                    ) : (
+                      <>
+                        <ABTestWrapper insiderVariantName="B">
+                          <ABTestVariant name="B">
+                            <option value="APPROVED">
+                              <Trans>Approved</Trans>
+                            </option>
+                            <option value="DEPENDENCY">
+                              <Trans>Dependency</Trans>
+                            </option>
+                            <option value="MONITOR_ONLY">
+                              <Trans>Monitor Only</Trans>
+                            </option>
+                            <option value="CANDIDATE">
+                              <Trans>Candidate</Trans>
+                            </option>
+                            <option value="REQUIRES_INVESTIGATION">
+                              <Trans>Requires Investigation</Trans>
+                            </option>
+                          </ABTestVariant>
+                        </ABTestWrapper>
+                      </>
+                    )}
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterValue}
                   </Text>
                 </Box>
+
                 <Button ml="auto" variant="primary" type="submit">
                   <Trans>Apply</Trans>
                 </Button>
@@ -256,7 +318,7 @@ export function AdminDomains({ orgSlug, orgId }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, claimTags, hidden, archived, rcode, organizations }, index) => (
+        {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
           <>
             {index === 0 && <Divider borderBottomColor="gray.400" />}
             <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
@@ -278,9 +340,9 @@ export function AdminDomains({ orgSlug, orgId }) {
                   px="2"
                   onClick={() => {
                     setModalProps({
-                      hidden,
                       archived,
                       mutation: 'update',
+                      assetState,
                       tagInputList: claimTags,
                       editingDomainId: domainId,
                       editingDomainUrl: domain,
@@ -295,7 +357,7 @@ export function AdminDomains({ orgSlug, orgId }) {
               <AdminDomainCard
                 url={domain}
                 tags={claimTags}
-                isHidden={hidden}
+                assetState={assetState}
                 isArchived={archived}
                 rcode={rcode}
                 locale={i18n.locale}
@@ -323,7 +385,6 @@ export function AdminDomains({ orgSlug, orgId }) {
           onSubmit={async (e) => {
             e.preventDefault() // prevents page from refreshing
             setModalProps({
-              hidden: false,
               archived: false,
               mutation: 'create',
               tagInputList: [],
@@ -345,7 +406,7 @@ export function AdminDomains({ orgSlug, orgId }) {
             >
               <Trans>Search: </Trans>
             </Text>
-            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }}>
               <InputLeftElement aria-hidden="true">
                 <PlusSquareIcon color="gray.300" />
               </InputLeftElement>
@@ -360,7 +421,12 @@ export function AdminDomains({ orgSlug, orgId }) {
                 }}
               />
             </InputGroup>
-            <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit">
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <InfoButton bg="gray.50" onToggle={onToggle} />
+              </ABTestVariant>
+            </ABTestWrapper>
+            <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit" ml="auto">
               <AddIcon mr={2} aria-hidden="true" />
               <Trans>Add Domain</Trans>
             </Button>
@@ -378,18 +444,11 @@ export function AdminDomains({ orgSlug, orgId }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </Box>
       <Flex align="center" mb="2">
-        {filters.map(({ comparison, filterValue }, idx) => {
-          return (
-            <Tag fontSize="lg" borderWidth="1px" borderColor="gray.300" key={idx} mx="1" my="1" bg="gray.100">
-              {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
-              <TagLabel>{filterValue}</TagLabel>
-              <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
-            </Tag>
-          )
-        })}
+        <FilterList filters={filters} setFilters={setFilters} />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls
@@ -403,6 +462,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
       <AdminDomainModal
         isOpen={updateIsOpen}
@@ -496,6 +556,30 @@ export function AdminDomains({ orgSlug, orgId }) {
           </Formik>
         </ModalContent>
       </Modal>
+      <InfoPanel title={t`Asset States`} isOpen={infoIsOpen} onToggle={onToggle}>
+        <Trans>
+          The "Asset State" describes how the domain relates to your organization. These states are used by Tracker to
+          give you a more accurate summary of your attack surface.
+        </Trans>
+        <Divider borderColor="gray.500" mb={4} />
+        <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
+        <InfoBox
+          title={t`Dependency`}
+          info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
+        />
+        <InfoBox
+          title={t`Monitor Only`}
+          info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
+        />
+        <InfoBox
+          title={t`Candidate`}
+          info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
+        />
+        <InfoBox
+          title={t`Requires Investigation`}
+          info={t`An asset that requires further investigation to determine its relationship to the organization.`}
+        />
+      </InfoPanel>
     </Stack>
   )
 }

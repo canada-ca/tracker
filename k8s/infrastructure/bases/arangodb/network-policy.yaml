@@ -20,7 +20,7 @@ spec:
         # and need to listen to the operator
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: kube-arangod
+              app.kubernetes.io/name: kube-arangodb
         - podSelector:
             matchLabels:
               job: backup
@@ -66,6 +66,12 @@ spec:
           podSelector:
             matchLabels:
               app: domain-discovery
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              run: arangosh
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: scanners

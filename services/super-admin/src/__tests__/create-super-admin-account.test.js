@@ -1,7 +1,8 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const bcrypt = require('bcryptjs')
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
+const { ensureDatabase: ensure } = require('../testUtilities')
 
 const { databaseOptions } = require('../../database-options')
 const { createSuperAdminAccount } = require('../database')

@@ -111,19 +111,29 @@ export function SuperAdminUserList() {
     },
   })
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FIND_MY_USERS,
-      recordsPerPage: usersPerPage,
-      relayRoot: 'findMyUsers',
-      variables: {
-        orderBy: { field: orderField, direction: orderDirection },
-        search: debouncedSearchTerm,
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-      errorPolicy: 'ignore', // allow partial success
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FIND_MY_USERS,
+    recordsPerPage: usersPerPage,
+    relayRoot: 'findMyUsers',
+    variables: {
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore', // allow partial success
+  })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -404,6 +414,7 @@ export function SuperAdminUserList() {
         resetToFirstPage={resetToFirstPage}
         orderByOptions={orderByOptions}
         placeholder={t`Search for a user (email)`}
+        totalRecords={totalCount}
       />
       <Accordion defaultIndex={[]}>{userList}</Accordion>
       <RelayPaginationControls
@@ -417,6 +428,7 @@ export function SuperAdminUserList() {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
     </Box>
   )

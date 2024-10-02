@@ -15,10 +15,18 @@ spec:
       labels:
         app: dns-scanner
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: dns-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-6bd7a27-1718710353 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-8587e9d-1725463441 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
+            - name: LOGGER_LEVEL
+              value: INFO
+            - name: SCAN_THREAD_COUNT
+              value: "2"
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
@@ -35,12 +43,6 @@ spec:
                   key: DB_USER
             - name: PYTHONWARNINGS
               value: ignore
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*
-            - name: QUEUE_GROUP
-              value: dns_scanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: SCAN_TIMEOUT
@@ -65,4 +67,21 @@ spec:
                   name: dmarc
                   key: SUMMARIES_CONTAINER
           resources: {}
+          imagePullPolicy: Always
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
 status: {}

@@ -152,7 +152,9 @@ export function WebGuidance({ webResults, timestamp }) {
       </NotificationBanner>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
         <Text fontsize="lg">
-          <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+          <Trans>
+            <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+          </Trans>
         </Text>
         {!isWebHosting && (
           <Flex
