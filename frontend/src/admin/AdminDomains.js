@@ -433,7 +433,7 @@ export function AdminDomains({ orgSlug, orgId }) {
             </Button>
           </Flex>
         </form>
-        <Box backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
+        <Box mt="1" backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
           {domainSearchTip}
         </Box>
         <Divider borderBottomWidth="1px" borderBottomColor="black" />
