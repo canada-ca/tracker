@@ -33,25 +33,24 @@ export const loadChartSummaryConnectionsByPeriod =
 
     let startDate
     let requestedSummaryInfo
-    try {
-      if (period === 'thirtyDays') {
+
+    switch (period) {
+      case period === 'thirtyDays':
         startDate = new Date(new Date().setDate(new Date().getDate() - 30))
-        requestedSummaryInfo = await query`
-          LET retrievedSummaries = (
-            FOR summary IN chartSummaries
-              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
-              SORT summary.date ASC
-              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
-          )
-
-          RETURN {
-            "summaries": retrievedSummaries,
-            "totalCount": LENGTH(retrievedSummaries),
-          }
-        `
-      } else if (period === 'lastYear') {
+        break
+      case period === 'lastYear':
         startDate = new Date(new Date().setDate(new Date().getDate() - 365))
-        requestedSummaryInfo = await query`
+        break
+      case period === 'yearToDate':
+        startDate = new Date(`${periodYear}-01-01`)
+        break
+      default:
+        startDate = new Date(`${periodYear}-${periodMonth}-01`)
+        break
+    }
+
+    try {
+      requestedSummaryInfo = await query`
           LET retrievedSummaries = (
             FOR summary IN chartSummaries
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
@@ -64,37 +63,6 @@ export const loadChartSummaryConnectionsByPeriod =
             "totalCount": LENGTH(retrievedSummaries),
           }
         `
-      } else if (period === 'yearToDate') {
-        startDate = new Date(`${periodYear}-01-01`)
-        requestedSummaryInfo = await query`
-          LET retrievedSummaries = (
-            FOR summary IN chartSummaries
-              FILTER DATE_FORMAT(summary.date, '%yyyy') == DATE_FORMAT(${startDate}, '%yyyy')
-              SORT summary.date ASC
-              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
-          )
-
-          RETURN {
-            "summaries": retrievedSummaries,
-            "totalCount": LENGTH(retrievedSummaries),
-          }
-        `
-      } else {
-        startDate = new Date(`${periodYear}-${periodMonth}-01`)
-        requestedSummaryInfo = await query`
-          LET retrievedSummaries = (
-            FOR summary IN chartSummaries
-              FILTER DATE_FORMAT(summary.date, "%yyyy-%mm") == DATE_FORMAT(${startDate}, "%yyyy-%mm")
-              SORT summary.date ASC
-              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
-          )
-
-          RETURN {
-            "summaries": retrievedSummaries,
-            "totalCount": LENGTH(retrievedSummaries),
-          }
-        `
-      }
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather chart summaries in loadChartSummaryConnectionsByPeriod, error: ${err}`,
