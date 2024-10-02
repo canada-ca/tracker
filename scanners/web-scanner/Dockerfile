@@ -4,7 +4,7 @@ RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --re
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.12.5-slim-bookworm AS python-builder
+FROM python:3.12.7-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -26,7 +26,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.12.5-slim-bookworm
+FROM python:3.12.7-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
