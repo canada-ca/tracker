@@ -14,6 +14,7 @@
     "compile": "lingui compile",
     "mocker": "nodemon --watch mocking/ --exec 'babel mocking/ -d ./dist/mocking && node dist/mocking/mocker.js'"
   },
+  
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@babel/runtime": "^7.18.6",
@@ -143,4 +144,5 @@
       "last 1 safari version"
     ]
   }
+  
 }
