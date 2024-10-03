@@ -35,13 +35,13 @@ export const loadChartSummaryConnectionsByPeriod =
     let requestedSummaryInfo
 
     switch (period) {
-      case period === 'thirtyDays':
+      case 'thirtyDays':
         startDate = new Date(new Date().setDate(new Date().getDate() - 30))
         break
-      case period === 'lastYear':
+      case 'lastYear':
         startDate = new Date(new Date().setDate(new Date().getDate() - 365))
         break
-      case period === 'yearToDate':
+      case 'yearToDate':
         startDate = new Date(`${periodYear}-01-01`)
         break
       default:
