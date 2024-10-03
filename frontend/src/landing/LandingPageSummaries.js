@@ -8,6 +8,7 @@ import { TieredSummaries } from '../summaries/TieredSummaries'
 import { Box } from '@chakra-ui/react'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ErrorBoundary } from 'react-error-boundary'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function LandingPageSummaries() {
   const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
@@ -34,18 +35,22 @@ export function LandingPageSummaries() {
   return (
     <Box>
       <TieredSummaries summaries={summaries} />
-      {histSumLoading ? (
-        <LoadingMessage height={500} />
-      ) : (
-        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-          <HistoricalSummariesGraph
-            data={historicalSummaries?.findChartSummaries}
-            setRange={setProgressChartRange}
-            width={1200}
-            height={500}
-          />
-        </ErrorBoundary>
-      )}
+      <ABTestWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          {histSumLoading ? (
+            <LoadingMessage height={500} />
+          ) : (
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <HistoricalSummariesGraph
+                data={historicalSummaries?.findChartSummaries}
+                setRange={setProgressChartRange}
+                width={1200}
+                height={500}
+              />
+            </ErrorBoundary>
+          )}
+        </ABTestVariant>
+      </ABTestWrapper>
     </Box>
   )
 }
