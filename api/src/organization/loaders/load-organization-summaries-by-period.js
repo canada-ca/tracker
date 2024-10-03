@@ -67,7 +67,7 @@ export const loadOrganizationSummariesByPeriod =
             LET historicalSummaries = (
               FOR summary IN organizationSummaries
                 FILTER summary.organization == ${orgId}
-                FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+                FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate.toISOString()}, '%yyyy-%mm-%dd')
                 RETURN summary
             )
             FOR summary IN APPEND(latestSummary, historicalSummaries)

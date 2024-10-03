@@ -53,7 +53,7 @@ export const loadChartSummaryConnectionsByPeriod =
       requestedSummaryInfo = await query`
           LET retrievedSummaries = (
             FOR summary IN chartSummaries
-              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate.toISOString()}, '%yyyy-%mm-%dd')
               SORT summary.date ASC
               RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
           )
