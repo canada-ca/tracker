@@ -21,10 +21,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       type: GraphQLEmailAddress,
       description: 'The updated user name the user wishes to change to.',
     },
-    preferredLang: {
-      type: LanguageEnums,
-      description: 'The updated preferred language the user wishes to change to.',
-    },
     tfaSendMethod: {
       type: TfaSendMethodEnum,
       description: 'The method in which the user wishes to have their TFA code sent via.',
@@ -64,7 +60,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
     // Cleanse Input
     const displayName = cleanseInput(args.displayName)
     const userName = cleanseInput(args.userName).toLowerCase()
-    const preferredLang = cleanseInput(args.preferredLang)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
     const insideUserBool = args.insideUser
     const receiveUpdateEmailsBool = args.receiveUpdateEmails
@@ -136,7 +131,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const updatedUser = {
       displayName: displayName || user.displayName,
       userName: userName || user.userName,
-      preferredLang: preferredLang || user.preferredLang,
       tfaSendMethod: tfaSendMethod,
       emailValidated,
       insideUser: typeof insideUserBool !== 'undefined' ? insideUserBool : user?.insideUser,

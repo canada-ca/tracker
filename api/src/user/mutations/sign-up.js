@@ -30,10 +30,6 @@ export const signUp = new mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString),
       description: 'A secondary password field used to confirm the user entered the correct password.',
     },
-    preferredLang: {
-      type: new GraphQLNonNull(LanguageEnums),
-      description: 'The users preferred language.',
-    },
     signUpToken: {
       type: GraphQLString,
       description: 'A token sent by email, that will assign a user to an organization with a pre-determined role.',
@@ -70,7 +66,6 @@ export const signUp = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const password = cleanseInput(args.password)
     const confirmPassword = cleanseInput(args.confirmPassword)
-    const preferredLang = cleanseInput(args.preferredLang)
     const signUpToken = cleanseInput(args.signUpToken)
     const rememberMe = args.rememberMe
 
@@ -117,7 +112,6 @@ export const signUp = new mutationWithClientMutationId({
       displayName: displayName,
       userName: userName,
       password: hashedPassword,
-      preferredLang: preferredLang,
       phoneValidated: false,
       emailValidated: false,
       insideUser: false,

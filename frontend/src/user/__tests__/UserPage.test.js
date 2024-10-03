@@ -29,7 +29,6 @@ const i18n = setupI18n({
 describe('<UserPage />', () => {
   const userName = 'testuser@testemail.gc.ca'
   const displayName = 'Test User'
-  const preferredLang = 'ENGLISH'
   const phoneNumber = '19025551234'
   const tfaSendMethod = 'PHONE'
   const phoneValidated = true
@@ -46,7 +45,6 @@ describe('<UserPage />', () => {
             id: 'ODk3MDg5MzI2MA==',
             userName: userName,
             displayName: displayName,
-            preferredLang: preferredLang,
             phoneNumber: phoneNumber,
             tfaSendMethod: tfaSendMethod,
             phoneValidated: phoneValidated,
@@ -69,7 +67,6 @@ describe('<UserPage />', () => {
             id: 'ODk3MDg5MzI2MA==',
             userName: userName,
             displayName: displayName,
-            preferredLang: preferredLang,
             phoneNumber: phoneNumber,
             tfaSendMethod: tfaSendMethod,
             phoneValidated: !phoneValidated,
@@ -92,7 +89,6 @@ describe('<UserPage />', () => {
             id: 'ODk3MDg5MzI2MA==',
             userName: userName,
             displayName: displayName,
-            preferredLang: preferredLang,
             phoneNumber: phoneNumber,
             tfaSendMethod: 'NONE',
             phoneValidated: phoneValidated,
@@ -107,9 +103,7 @@ describe('<UserPage />', () => {
   it('renders without error', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -126,9 +120,7 @@ describe('<UserPage />', () => {
   it('displays MFA notification banner when admin user lacks a TFA method', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={adminMFABannerMocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -141,20 +133,14 @@ describe('<UserPage />', () => {
     )
 
     await waitFor(() => {
-      expect(
-        queryByText(
-          /Admin accounts must activate a multi-factor authentication option/,
-        ),
-      ).toBeInTheDocument()
+      expect(queryByText(/Admin accounts must activate a multi-factor authentication option/)).toBeInTheDocument()
     })
   })
 
   it('can update display name', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -190,9 +176,7 @@ describe('<UserPage />', () => {
   it('can update email', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -228,9 +212,7 @@ describe('<UserPage />', () => {
   it('can update password', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -258,9 +240,7 @@ describe('<UserPage />', () => {
   it('can update preferred language', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -288,9 +268,7 @@ describe('<UserPage />', () => {
   it('can update phone number', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -324,9 +302,7 @@ describe('<UserPage />', () => {
   it('can update MFA method', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -356,9 +332,7 @@ describe('<UserPage />', () => {
   it('can validate email', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={notValidatedMocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -386,9 +360,7 @@ describe('<UserPage />', () => {
   it('can close account', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>

@@ -327,7 +327,6 @@ describe('<TwoFactorAuthenticatePage />', () => {
                     id: '1234asdf',
                     userName: 'Thalia.Rosenbaum@gmail.com',
                     tfaSendMethod: 'PHONE',
-                    preferredLang: 'en',
                     emailValidated: true,
                   },
                   authToken: 'test123stringJWT',

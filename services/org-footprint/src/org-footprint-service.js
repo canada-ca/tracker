@@ -24,7 +24,6 @@ const orgFootprintService = async ({ query, log, notifyClient }) => {
         orgAdmins.push({
           userName: SERVICE_ACCOUNT_EMAIL,
           displayName: 'Service Account',
-          preferredLang: 'en',
           _key: 'service-account',
         })
       }

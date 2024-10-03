@@ -31,11 +31,6 @@ export const userPersonalType = new GraphQLObjectType({
         return decryptPhoneNumber(phoneDetails)
       },
     },
-    preferredLang: {
-      type: LanguageEnums,
-      description: 'Users preferred language.',
-      resolve: ({ preferredLang }) => preferredLang,
-    },
     phoneValidated: {
       type: GraphQLBoolean,
       description: 'Has the user completed phone validation.',

@@ -112,7 +112,6 @@ describe('update a users role', () => {
         secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
-          preferredLang: 'english',
         })
       })
       describe('requesting user is a super admin', () => {
@@ -590,7 +589,6 @@ describe('update a users role', () => {
         secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
-          preferredLang: 'english',
         })
       })
       describe('requesting user is a super admin', () => {

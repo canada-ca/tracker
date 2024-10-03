@@ -74,7 +74,6 @@ describe('authenticate user account', () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'french',
           phoneValidated: false,
           emailValidated: false,
           tfaCode: 123456,
@@ -119,7 +118,6 @@ describe('authenticate user account', () => {
                       id
                       userName
                       displayName
-                      preferredLang
                       phoneValidated
                       emailValidated
                     }
@@ -162,7 +160,6 @@ describe('authenticate user account', () => {
                   id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
-                  preferredLang: 'FRENCH',
                   phoneValidated: false,
                   emailValidated: true,
                 },
@@ -197,7 +194,6 @@ describe('authenticate user account', () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'french',
           phoneValidated: false,
           emailValidated: false,
           tfaCode: 123456,
@@ -255,7 +251,6 @@ describe('authenticate user account', () => {
                       id
                       userName
                       displayName
-                      preferredLang
                       phoneValidated
                       emailValidated
                     }
@@ -299,7 +294,6 @@ describe('authenticate user account', () => {
                   id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
-                  preferredLang: 'FRENCH',
                   phoneValidated: false,
                   emailValidated: true,
                 },
@@ -371,7 +365,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -444,7 +437,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -517,7 +509,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -612,7 +603,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -684,7 +674,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -763,7 +752,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -857,7 +845,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -930,7 +917,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -1003,7 +989,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -1098,7 +1083,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -1170,7 +1154,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }
@@ -1249,7 +1232,6 @@ describe('authenticate user account', () => {
                         id
                         userName
                         displayName
-                        preferredLang
                         phoneValidated
                         emailValidated
                       }

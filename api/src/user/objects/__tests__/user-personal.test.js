@@ -36,12 +36,6 @@ describe('given the user object', () => {
       expect(demoType).toHaveProperty('phoneNumber')
       expect(demoType.phoneNumber.type).toMatchObject(GraphQLPhoneNumber)
     })
-    it('has a preferredLang field', () => {
-      const demoType = userPersonalType.getFields()
-
-      expect(demoType).toHaveProperty('preferredLang')
-      expect(demoType.preferredLang.type).toMatchObject(LanguageEnums)
-    })
     it('has a phoneValidated field', () => {
       const demoType = userPersonalType.getFields()
 
@@ -153,13 +147,6 @@ describe('given the user object', () => {
             ),
           ).toEqual(phoneDetails.phoneNumber)
         })
-      })
-    })
-    describe('testing the preferredLang field', () => {
-      it('returns the resolved value', () => {
-        const demoType = userPersonalType.getFields()
-
-        expect(demoType.preferredLang.resolve({ preferredLang: 'english' })).toEqual('english')
       })
     })
     describe('testing the phoneValidated field', () => {

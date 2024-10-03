@@ -50,8 +50,6 @@ export default function SignInPage() {
           insideUser: signIn.result.user.insideUser,
           affiliations: signIn.result.user.affiliations,
         })
-        if (signIn.result.user.preferredLang === 'ENGLISH') activate('en')
-        else if (signIn.result.user.preferredLang === 'FRENCH') activate('fr')
         // redirect to the home page.
         history.push(from)
         // Display a welcome message

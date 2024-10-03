@@ -234,66 +234,6 @@ describe('<CreateUserPage />', () => {
           )
         })
       })
-
-      describe('language selection', () => {
-        it('displays required message', async () => {
-          const { container, queryByText } = render(
-            <MockedProvider mocks={mocks}>
-              <UserVarProvider
-                userVar={makeVar({
-                  jwt: null,
-                  tfaSendMethod: null,
-                  userName: null,
-                })}
-              >
-                <ChakraProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ChakraProvider>
-              </UserVarProvider>
-            </MockedProvider>,
-          )
-
-          const languageSelect = container.querySelector('#lang')
-
-          await waitFor(() => fireEvent.blur(languageSelect))
-
-          await waitFor(() => expect(queryByText(/Select Preferred Language/)).toBeInTheDocument())
-        })
-
-        it('displays error message', async () => {
-          const { container, queryByText } = render(
-            <MockedProvider mocks={mocks}>
-              <UserVarProvider
-                userVar={makeVar({
-                  jwt: null,
-                  tfaSendMethod: null,
-                  userName: null,
-                })}
-              >
-                <ChakraProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ChakraProvider>
-              </UserVarProvider>
-            </MockedProvider>,
-          )
-
-          const languageSelect = container.querySelector('#lang')
-
-          await waitFor(() => {
-            fireEvent.blur(languageSelect)
-          })
-
-          await waitFor(() => expect(queryByText(/Please choose your preferred language/i)).toBeInTheDocument())
-        })
-      })
     })
   })
   describe('given incorrect input', () => {
@@ -389,7 +329,6 @@ describe('<CreateUserPage />', () => {
               displayName: 'Test User',
               password: 'SuperSecretPassword',
               confirmPassword: 'SuperSecretPassword',
-              preferredLang: 'ENGLISH',
               signUpToken: '',
             },
           },
@@ -462,7 +401,6 @@ describe('<CreateUserPage />', () => {
               displayName: 'Test User',
               password: 'SuperSecretPassword',
               confirmPassword: 'SuperSecretPassword',
-              preferredLang: 'ENGLISH',
               signUpToken: '',
             },
           },

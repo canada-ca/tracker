@@ -73,7 +73,6 @@ describe('given the findMyDmarcSummaries query', () => {
       user = await collections.users.save({
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
-        preferredLang: 'english',
         emailValidated: true,
       })
 

@@ -793,7 +793,6 @@ export const QUERY_CURRENT_USER = gql`
       id
       userName
       displayName
-      preferredLang
       phoneNumber
       tfaSendMethod
       phoneValidated

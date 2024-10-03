@@ -19,7 +19,6 @@ describe('given the sendOrgFootprintEmail function', () => {
       const user = {
         userName: 'test@email.ca',
         displayName: 'Test Account',
-        preferredLang: 'english',
       }
 
       const auditLogs = [
@@ -89,7 +88,6 @@ describe('given the sendOrgFootprintEmail function', () => {
       const user = {
         userName: 'test@email.ca',
         displayName: 'Test Account',
-        preferredLang: 'english',
       }
 
       await sendOrgFootprintEmail({

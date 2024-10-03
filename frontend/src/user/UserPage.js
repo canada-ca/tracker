@@ -24,7 +24,6 @@ import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
 import { string } from 'prop-types'
 
-import { EditableUserLanguage } from './EditableUserLanguage'
 import { EditableUserDisplayName } from './EditableUserDisplayName'
 import { EditableUserEmail } from './EditableUserEmail'
 import { EditableUserPassword } from './EditableUserPassword'
@@ -146,7 +145,6 @@ export default function UserPage() {
   const {
     displayName,
     userName,
-    preferredLang,
     phoneNumber,
     tfaSendMethod,
     emailValidated,
@@ -169,8 +167,6 @@ export default function UserPage() {
           <EditableUserEmail detailValue={userName} mb="8" />
 
           <EditableUserPassword mb="8" />
-
-          <EditableUserLanguage currentLang={preferredLang} />
         </Box>
 
         <Box mt={25} px="4">

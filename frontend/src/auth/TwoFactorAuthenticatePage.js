@@ -46,8 +46,6 @@ export default function TwoFactorAuthenticatePage() {
           insideUser: authenticate.result.user.insideUser,
           affiliations: authenticate.result.user.affiliations,
         })
-        if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
-        else if (authenticate.result.user.preferredLang === 'FRENCH') activate('fr')
         // redirect to the home page.
         history.replace(from)
         // Display a welcome message

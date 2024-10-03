@@ -31,8 +31,6 @@ import {
   sendOrgInviteCreateAccount,
   sendOrgInviteEmail,
   sendPasswordResetEmail,
-  sendTfaTextMsg,
-  sendVerificationEmail,
 } from './notify'
 
 export async function createContext({
@@ -125,8 +123,6 @@ export async function createContext({
       }),
       sendOrgInviteEmail: sendOrgInviteEmail({ notifyClient, i18n }),
       sendPasswordResetEmail: sendPasswordResetEmail({ notifyClient, i18n }),
-      sendTfaTextMsg: sendTfaTextMsg({ notifyClient, i18n }),
-      sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
     },
     loaders: initializeLoaders({
       query,
