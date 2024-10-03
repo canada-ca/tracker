@@ -51,7 +51,7 @@ describe('<OrganizationDetails />', () => {
       {
         request: {
           query: ORG_DETAILS_PAGE,
-          variables: { slug: 'tbs-sct-gc-ca', month: 'LAST30DAYS', year: new Date().getFullYear().toString() },
+          variables: { slug: 'tbs-sct-gc-ca' },
         },
         result: {
           data: {
@@ -224,8 +224,6 @@ describe('<OrganizationDetails />', () => {
           query: ORG_DETAILS_PAGE,
           variables: {
             slug: 'treasury-board-of-canada-secretariat',
-            month: 'LAST30DAYS',
-            year: new Date().getFullYear().toString(),
           },
         },
         result: {
