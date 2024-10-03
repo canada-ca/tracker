@@ -120,19 +120,15 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = user.tfaSendMethod
     }
 
-    let emailValidated = user.emailValidated
     let changedUserName = false
     if (userName !== user.userName && userName !== '') {
       changedUserName = true
-      emailValidated = false
     }
 
-    // Create object containing updated data
+    // Create object containing updated data expect username. Username is handled separately for verification.
     const updatedUser = {
       displayName: displayName || user.displayName,
-      userName: userName || user.userName,
       tfaSendMethod: tfaSendMethod,
-      emailValidated,
       insideUser: typeof insideUserBool !== 'undefined' ? insideUserBool : user?.insideUser,
       receiveUpdateEmails:
         typeof receiveUpdateEmailsBool !== 'undefined' ? receiveUpdateEmailsBool : user?.receiveUpdateEmails,
@@ -169,13 +165,18 @@ export const updateUserProfile = new mutationWithClientMutationId({
     if (changedUserName) {
       const token = tokenize({
         expiresIn: AUTH_TOKEN_EXPIRY,
-        parameters: { userKey: returnUser._key },
+        parameters: { userKey: returnUser._key, userName: userName },
         secret: String(AUTHENTICATED_KEY),
       })
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
-      await sendVerificationEmail({ user: returnUser, verifyUrl })
+      await sendVerificationEmail({
+        userName: userName,
+        displayName: returnUser.displayName,
+        verifyUrl: verifyUrl,
+        userKey: returnUser._key,
+      })
     }
 
     console.info(`User: ${userKey} successfully updated their profile.`)

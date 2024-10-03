@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   Button,
@@ -15,7 +15,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { useHistory } from 'react-router-dom'
@@ -35,7 +34,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'
-import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
+import { CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
 import { InsideUserSwitch } from './InsideUserSwitch'
 import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
@@ -44,31 +43,7 @@ export default function UserPage() {
   const toast = useToast()
   const history = useHistory()
   const { i18n } = useLingui()
-  const [emailSent, setEmailSent] = useState(false)
   const { logout } = useUserVar()
-  const [sendEmailVerification, { loading: loadEmailVerification }] = useMutation(SEND_EMAIL_VERIFICATION, {
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`Unable to send verification email`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted() {
-      toast({
-        title: t`Email successfully sent`,
-        description: t`Check your associated Tracker email for the verification link`,
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-      setEmailSent(true)
-    },
-  })
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_SELF, {
     onError(error) {
@@ -179,21 +154,6 @@ export default function UserPage() {
             phoneValidated={phoneValidated}
             mb="8"
           />
-
-          {!emailValidated && (
-            <Button
-              mb="4"
-              variant="primary"
-              onClick={() => {
-                sendEmailVerification({ variables: { userName: userName } })
-              }}
-              disabled={emailSent}
-              isLoading={loadEmailVerification}
-            >
-              <EmailIcon mr={2} aria-hidden="true" />
-              <Trans>Verify Account</Trans>
-            </Button>
-          )}
 
           <InsideUserSwitch insideUser={insideUser || false} />
           <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
