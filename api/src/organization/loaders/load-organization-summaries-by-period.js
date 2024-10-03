@@ -61,12 +61,18 @@ export const loadOrganizationSummariesByPeriod =
 
     try {
       requestedSummaryInfo = await query`
+          LET latestSummary = (RETURN MERGE(DOCUMENT(${orgId}).summaries))
           LET retrievedSummaries = (
-            FOR summary IN organizationSummaries
-              FILTER summary.organization == ${orgId}
-              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+            LET latestSummary = (RETURN DOCUMENT(${orgId}).summaries)
+            LET historicalSummaries = (
+              FOR summary IN organizationSummaries
+                FILTER summary.organization == ${orgId}
+                FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+                RETURN summary
+            )
+            FOR summary IN APPEND(latestSummary, historicalSummaries)
               SORT summary.date ${sortString}
-              RETURN summary
+              RETURN summary.date
           )
 
           RETURN {
