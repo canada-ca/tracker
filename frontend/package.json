@@ -73,6 +73,7 @@
     "@lingui/core": "^4.11.3",
     "@lingui/loader": "^4.11.3",
     "@lingui/macro": "^4.11.3",
+    "@playwright/test": "^1.47.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^7.0.2",
