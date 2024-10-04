@@ -372,13 +372,10 @@ describe('<CreateUserPage />', () => {
       const passwordInput = getByLabelText('Password:')
       const confirmPasswordInput = getByLabelText('Confirm Password:')
 
-      const langSelect = getByRole('combobox', { name: /Language:/ })
-
       userEvent.type(emailInput, 'user@test.email.ca')
       userEvent.type(displayNameInput, 'Test User')
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
-      userEvent.selectOptions(langSelect, 'ENGLISH')
 
       // fire mutation
       const createAccountButton = getByRole('button', {
@@ -446,13 +443,10 @@ describe('<CreateUserPage />', () => {
       const passwordInput = getByLabelText('Password:')
       const confirmPasswordInput = getByLabelText('Confirm Password:')
 
-      const langSelect = getByRole('combobox', { name: /Language:/ })
-
       userEvent.type(emailInput, 'user@test.email.ca')
       userEvent.type(displayNameInput, 'Test User')
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
-      userEvent.selectOptions(langSelect, 'ENGLISH')
 
       // fire mutation
       const createAccountButton = getByRole('button', {

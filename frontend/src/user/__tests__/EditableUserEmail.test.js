@@ -175,7 +175,11 @@ describe('<EditableUserEmail />', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(getByText(/You have successfully updated your email./i)).toBeInTheDocument()
+            expect(
+              getByText(
+                /A verification email has been sent to your new email address. Please verify your email address to complete the change./i,
+              ),
+            ).toBeInTheDocument()
           })
         })
 

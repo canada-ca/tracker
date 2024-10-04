@@ -237,34 +237,6 @@ describe('<UserPage />', () => {
     })
   })
 
-  it('can update preferred language', async () => {
-    const { queryByText, getByRole } = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
-          <MemoryRouter initialEntries={['/']}>
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <UserPage />
-              </I18nProvider>
-            </ChakraProvider>
-          </MemoryRouter>
-        </UserVarProvider>
-      </MockedProvider>,
-    )
-
-    await waitFor(() => {
-      expect(queryByText(/Language:/i)).toBeInTheDocument()
-    })
-
-    const userLang = getByRole('combobox', { name: /User Language Select/i })
-    const confirmBtn = getByRole('button', { name: 'Save User Language' })
-    userEvent.selectOptions(userLang, 'FRENCH')
-    fireEvent.click(confirmBtn)
-    await waitFor(() => {
-      expect(queryByText(/Changed User Language/i))
-    })
-  })
-
   it('can update phone number', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
@@ -326,34 +298,6 @@ describe('<UserPage />', () => {
     fireEvent.click(confirmBtn)
     await waitFor(() => {
       expect(queryByText(/Changed TFA Send Method/i))
-    })
-  })
-
-  it('can validate email', async () => {
-    const { queryByText, getByRole } = render(
-      <MockedProvider mocks={notValidatedMocks} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
-          <MemoryRouter initialEntries={['/']}>
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <UserPage />
-              </I18nProvider>
-            </ChakraProvider>
-          </MemoryRouter>
-        </UserVarProvider>
-      </MockedProvider>,
-    )
-
-    await waitFor(() => {
-      expect(queryByText(displayName)).toBeInTheDocument()
-    })
-
-    const validateEmailBtn = getByRole('button', {
-      name: 'Verify Account',
-    })
-    fireEvent.click(validateEmailBtn)
-    await waitFor(() => {
-      expect(queryByText(/Email successfully sent/i))
     })
   })
 

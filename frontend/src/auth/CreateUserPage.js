@@ -83,13 +83,12 @@ export default function CreateUserPage() {
   return (
     <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
-        validationSchema={createValidationSchema(['email', 'displayName', 'password', 'confirmPassword', 'lang'])}
+        validationSchema={createValidationSchema(['email', 'displayName', 'password', 'confirmPassword'])}
         initialValues={{
           email: '',
           displayName: '',
           password: '',
           confirmPassword: '',
-          lang: '',
         }}
         onSubmit={async (values) => {
           signUp({
