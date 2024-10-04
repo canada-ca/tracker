@@ -7,7 +7,7 @@ import { verifyAccountUnion } from '../unions'
 export const verifyAccount = new mutationWithClientMutationId({
   name: 'VerifyAccount',
   description:
-    'This mutation allows the user to switch usernames and verify their account through a token sent in an email.',
+    'This mutation allows the user to switch usernames/verify their account through a token sent in an email.',
   inputFields: () => ({
     verifyTokenString: {
       type: new GraphQLNonNull(GraphQLString),

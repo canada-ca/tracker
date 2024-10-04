@@ -15,7 +15,7 @@ import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
+const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY, AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 describe('authenticate user account', () => {
   let query, drop, truncate, collections, transaction, schema, i18n
@@ -155,7 +155,7 @@ describe('authenticate user account', () => {
         })
       })
       describe('user updates their user name', () => {
-        it('returns a successful status message, and the updated user info', async () => {
+        it('returns a successful status message and sends verify email link', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -163,12 +163,21 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
+          const sendVerificationEmail = jest.fn()
+          const newUsername = 'john.doe@istio.actually.works'
+
+          const verifyUrl = `https://domain.ca/validate/${tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key, userName: newUsername },
+            secret: String(AUTHENTICATED_KEY),
+          })}`
+
           const response = await graphql({
             schema,
             source: `
               mutation {
                 updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
+                  input: { userName: "${newUsername}" }
                 ) {
                   result {
                     ... on UpdateUserProfileResult {
@@ -210,174 +219,33 @@ describe('authenticate user account', () => {
                 loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: { sendVerificationEmail },
             },
           })
 
+          // Does not change userName
           const expectedResponse = {
             data: {
               updateUserProfile: {
                 result: {
                   user: {
-                    userName: 'john.doe@istio.actually.works',
+                    userName: 'test.account@istio.actually.exists',
                   },
                   status: 'Profile successfully updated.',
                 },
               },
             },
           }
-
           expect(response).toEqual(expectedResponse)
+
+          expect(sendVerificationEmail).toBeCalledWith({
+            verifyUrl: verifyUrl,
+            userKey: user._key,
+            displayName: user.displayName,
+            userName: newUsername,
+          })
+
           expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
-        })
-        it('sends new verify email link', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          const mockNotify = jest.fn()
-
-          await graphql({
-            schema,
-            source: `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        userName
-                      }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            rootValue: null,
-            contextValue: {
-              i18n,
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              request: {
-                get: jest.fn().mockReturnValue('domain.ca'),
-              },
-              auth: {
-                bcrypt,
-                tokenize: jest.fn().mockReturnValue('token'),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-              notify: { sendVerificationEmail: mockNotify },
-            },
-          })
-
-          const updatedCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.doe@istio.actually.works"
-              RETURN user
-          `
-          const updatedUser = await updatedCursor.next()
-
-          expect(mockNotify).toBeCalledWith({
-            verifyUrl: 'https://domain.ca/validate/token',
-            user: {
-              id: updatedUser._key,
-              _type: 'user',
-              ...updatedUser,
-            },
-          })
-        })
-        describe('user is email validated', () => {
-          it('sets emailValidated to false', async () => {
-            const cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                UPDATE user._key WITH {
-                  emailValidated: true,
-                } IN users
-                RETURN NEW
-            `
-            const user = await cursor.next()
-
-            await graphql({
-              schema,
-              source: `
-                mutation {
-                  updateUserProfile(
-                    input: { userName: "john.doe@istio.actually.works" }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          userName
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction,
-                userKey: user._key,
-                request: {
-                  get: jest.fn().mockReturnValue('domain.ca'),
-                },
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            })
-
-            const checkCursor = await query`
-              FOR user IN users
-                RETURN user
-            `
-            const checkUser = await checkCursor.next()
-
-            expect(checkUser.emailValidated).toBeFalsy()
-          })
         })
         describe('user is not email validated', () => {
           it('does not change emailValidated value', async () => {
@@ -987,36 +855,45 @@ describe('authenticate user account', () => {
       })
       describe('user updates their user name', () => {
         describe('user updates their user name', () => {
-          it('returns a successful status message, and the updated user info', async () => {
+          it('returns a successful status message and sends verify email link', async () => {
             const cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
             const user = await cursor.next()
+
+            const sendVerificationEmail = jest.fn()
+            const newUsername = 'john.doe@istio.actually.works'
+
+            const verifyUrl = `https://domain.ca/validate/${tokenize({
+              expiresIn: AUTH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key, userName: newUsername },
+              secret: String(AUTHENTICATED_KEY),
+            })}`
 
             const response = await graphql({
               schema,
               source: `
-                mutation {
-                  updateUserProfile(
-                    input: { userName: "john.doe@istio.actually.works" }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          userName
-                        }
+              mutation {
+                updateUserProfile(
+                  input: { userName: "${newUsername}" }
+                ) {
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        userName
                       }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
+              }
+            `,
               rootValue: null,
               contextValue: {
                 i18n,
@@ -1042,7 +919,7 @@ describe('authenticate user account', () => {
                   loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: { sendVerificationEmail },
               },
             })
 
@@ -1051,166 +928,25 @@ describe('authenticate user account', () => {
                 updateUserProfile: {
                   result: {
                     user: {
-                      userName: 'john.doe@istio.actually.works',
+                      userName: 'test.account@istio.actually.exists',
                     },
                     status: 'Le profil a été mis à jour avec succès.',
                   },
                 },
               },
             }
-
             expect(response).toEqual(expectedResponse)
+
+            expect(sendVerificationEmail).toBeCalledWith({
+              verifyUrl: verifyUrl,
+              userKey: user._key,
+              displayName: user.displayName,
+              userName: newUsername,
+            })
+
             expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
           })
-          it('sends new verify email link', async () => {
-            const cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await cursor.next()
 
-            const mockNotify = jest.fn()
-
-            await graphql({
-              schema,
-              source: `
-                mutation {
-                  updateUserProfile(
-                    input: { userName: "john.doe@istio.actually.works" }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          userName
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction,
-                userKey: user._key,
-                request: {
-                  get: jest.fn().mockReturnValue('domain.ca'),
-                },
-                auth: {
-                  bcrypt,
-                  tokenize: jest.fn().mockReturnValue('token'),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-                notify: { sendVerificationEmail: mockNotify },
-              },
-            })
-
-            const updatedCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "john.doe@istio.actually.works"
-                RETURN user
-            `
-            const updatedUser = await updatedCursor.next()
-
-            expect(mockNotify).toBeCalledWith({
-              verifyUrl: 'https://domain.ca/validate/token',
-              user: {
-                id: updatedUser._key,
-                _type: 'user',
-                ...updatedUser,
-              },
-            })
-          })
-          describe('user is email validated', () => {
-            it('sets emailValidated to false', async () => {
-              const cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  UPDATE user._key WITH {
-                    emailValidated: true,
-                  } IN users
-                  RETURN NEW
-              `
-              const user = await cursor.next()
-
-              await graphql({
-                schema,
-                source: `
-                  mutation {
-                    updateUserProfile(
-                      input: { userName: "john.doe@istio.actually.works" }
-                    ) {
-                      result {
-                        ... on UpdateUserProfileResult {
-                          status
-                          user {
-                            userName
-                          }
-                        }
-                        ... on UpdateUserProfileError {
-                          code
-                          description
-                        }
-                      }
-                    }
-                  }
-                `,
-                rootValue: null,
-                contextValue: {
-                  i18n,
-                  query,
-                  collections: collectionNames,
-                  transaction,
-                  request: {
-                    get: jest.fn().mockReturnValue('domain.ca'),
-                  },
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                  },
-                  notify: { sendVerificationEmail: jest.fn() },
-                },
-              })
-
-              const checkCursor = await query`
-                FOR user IN users
-                  RETURN user
-              `
-              const checkUser = await checkCursor.next()
-
-              expect(checkUser.emailValidated).toBeFalsy()
-            })
-          })
           describe('user is not email validated', () => {
             it('does not change emailValidated value', async () => {
               const cursor = await query`
