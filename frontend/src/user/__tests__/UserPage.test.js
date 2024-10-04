@@ -56,28 +56,6 @@ describe('<UserPage />', () => {
     },
   ]
 
-  const notValidatedMocks = [
-    {
-      request: {
-        query: QUERY_CURRENT_USER,
-      },
-      result: {
-        data: {
-          userPage: {
-            id: 'ODk3MDg5MzI2MA==',
-            userName: userName,
-            displayName: displayName,
-            phoneNumber: phoneNumber,
-            tfaSendMethod: tfaSendMethod,
-            phoneValidated: !phoneValidated,
-            emailValidated: !emailValidated,
-          },
-          isUserAdmin: false,
-        },
-      },
-    },
-  ]
-
   const adminMFABannerMocks = [
     {
       request: {
