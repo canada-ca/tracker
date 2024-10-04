@@ -185,6 +185,10 @@ msgstr "Une politique DMARC minimale de \"p=none\" avec au moins une adresse dé
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "Une ventilation plus détaillée de chaque domaine peut être trouvée en cliquant sur son adresse dans la première colonne."
 
+#: src/user/EditableUserEmail.js:50
+msgid "A verification email has been sent to your new email address. Please verify your email address to complete the change."
+msgstr "Un courriel de vérification a été envoyé à votre nouvelle adresse électronique. Veuillez vérifier votre adresse électronique pour terminer le changement."
+
 #: src/auth/CreateUserPage.js:90
 #~ msgid "A verification link has been sent to your email account"
 #~ msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
@@ -214,17 +218,17 @@ msgid "Account"
 msgstr "Compte"
 
 #: src/admin/SuperAdminUserList.js:84
-#: src/user/UserPage.js:88
+#: src/user/UserPage.js:62
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
-#: src/auth/CreateUserPage.js:45
+#: src/auth/CreateUserPage.js:43
 msgid "Account created."
 msgstr "Compte créé"
 
 #: src/app/App.js:155
 #: src/app/FloatingMenu.js:177
-#: src/user/UserPage.js:137
+#: src/user/UserPage.js:111
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
@@ -284,7 +288,7 @@ msgstr "Ajouter un utilisateur"
 
 #: src/guidance/AdditionalFindings.js:52
 #: src/guidance/AdditionalFindings.js:416
-#: src/guidance/GuidancePage.js:257
+#: src/guidance/GuidancePage.js:255
 msgid "Additional Findings"
 msgstr "Constatations supplémentaires"
 
@@ -304,7 +308,7 @@ msgstr "ADMIN"
 #~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 #~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle, <0>s'il vous plaît activer MFA</0>."
 
-#: src/user/UserPage.js:162
+#: src/user/UserPage.js:135
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
@@ -328,7 +332,7 @@ msgstr "Composants concernés :"
 msgid "Affiliations:"
 msgstr "Affiliations :"
 
-#: src/auth/CreateUserPage.js:160
+#: src/auth/CreateUserPage.js:154
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Vous avez déjà un compte ? <0>Connecter</0>"
 
@@ -421,7 +425,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de cette organisation.
 msgid "An error occurred while updating your display name."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre nom d'affichage."
 
-#: src/user/EditableUserEmail.js:40
+#: src/user/EditableUserEmail.js:38
 msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
@@ -438,8 +442,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d
 #~ msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'initié."
 
 #: src/user/EditableUserLanguage.js:20
-msgid "An error occurred while updating your language."
-msgstr "Une erreur s'est produite lors de la mise à jour de votre langue."
+#~ msgid "An error occurred while updating your language."
+#~ msgstr "Une erreur s'est produite lors de la mise à jour de votre langue."
 
 #: src/user/EditableUserPassword.js:40
 msgid "An error occurred while updating your password."
@@ -462,11 +466,11 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/AdminDomains.js:128
 #: src/admin/UserListModal.js:50
 #: src/admin/UserListModal.js:140
-#: src/auth/TwoFactorAuthenticatePage.js:29
+#: src/auth/TwoFactorAuthenticatePage.js:28
 #: src/createOrganization/CreateOrganizationPage.js:56
 #: src/guidance/CveIgnorer.js:19
 #: src/guidance/CveIgnorer.js:68
-#: src/user/UserPage.js:77
+#: src/user/UserPage.js:51
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -491,7 +495,7 @@ msgstr "Tous les produits ou services connexes qui vous sont fournis par le SCT 
 #~ msgstr "les systèmes de gestion du portefeuille d’applications (GPA);"
 
 #: src/admin/AdminDomains.js:306
-#: src/domains/DomainListFilters.js:145
+#: src/domains/DomainListFilters.js:140
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -556,7 +560,7 @@ msgstr "Évaluer l’état actuel."
 
 #: src/admin/AdminDomainModal.js:279
 #: src/admin/AdminDomains.js:238
-#: src/domains/DomainListFilters.js:100
+#: src/domains/DomainListFilters.js:99
 msgid "Asset State"
 msgstr "État des actifs"
 
@@ -647,7 +651,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les services <0>email<1/></0> et <2>web<3/></2>. Suivez l'évolution de la sécurité des sites gouvernementaux."
 
 #: src/admin/SuperAdminUserList.js:383
-#: src/user/UserPage.js:259
+#: src/user/UserPage.js:215
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -678,7 +682,7 @@ msgstr "Chaîne de certificats"
 msgid "Certificate chain info could not be found during the scan."
 msgstr "Les informations sur la chaîne de certificats n'ont pas pu être trouvées pendant l'analyse."
 
-#: src/domains/DomainCard.js:206
+#: src/domains/DomainCard.js:203
 #: src/domains/DomainsPage.js:285
 #: src/organizationDetails/OrganizationDomains.js:225
 msgid "Certificates"
@@ -707,12 +711,12 @@ msgid "Changed User Display Name"
 msgstr "Changement du nom d'affichage de l'utilisateur"
 
 #: src/user/EditableUserEmail.js:51
-msgid "Changed User Email"
-msgstr "Changement d'adresse électronique de l'utilisateur"
+#~ msgid "Changed User Email"
+#~ msgstr "Changement d'adresse électronique de l'utilisateur"
 
 #: src/user/EditableUserLanguage.js:31
-msgid "Changed User Language"
-msgstr "Changement de la langue de l'utilisateur"
+#~ msgid "Changed User Language"
+#~ msgstr "Changement de la langue de l'utilisateur"
 
 #: src/user/EditableUserPassword.js:54
 msgid "Changed User Password"
@@ -739,8 +743,8 @@ msgid "Check if your organization is already included in our monitored list. If 
 msgstr "Vérifiez si votre organisation figure déjà dans notre liste de surveillance. Si ce n'est pas le cas, vous pouvez créer un compte gratuit pour obtenir une vue d'ensemble de l'empreinte numérique de votre organisation et de ses vulnérabilités potentielles."
 
 #: src/user/UserPage.js:64
-msgid "Check your associated Tracker email for the verification link"
-msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
+#~ msgid "Check your associated Tracker email for the verification link"
+#~ msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
 #: src/userOnboarding/config/tourSteps.js:111
 msgid "Choose the period of data to view"
@@ -750,7 +754,7 @@ msgstr "Choisissez la période de données à visualiser"
 msgid "Cipher Suites"
 msgstr "Suites de chiffrement"
 
-#: src/domains/DomainCard.js:208
+#: src/domains/DomainCard.js:205
 #: src/domains/DomainsPage.js:287
 #: src/organizationDetails/OrganizationDomains.js:227
 msgid "Ciphers"
@@ -789,8 +793,8 @@ msgstr "Fermer"
 
 #: src/admin/SuperAdminUserList.js:334
 #: src/admin/SuperAdminUserList.js:363
-#: src/user/UserPage.js:215
-#: src/user/UserPage.js:242
+#: src/user/UserPage.js:171
+#: src/user/UserPage.js:198
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -808,7 +812,7 @@ msgid "Collect and analyze DMARC reports."
 msgstr "Recueillir et analyser les rapports DMARC."
 
 #: src/admin/AdminDomains.js:250
-#: src/domains/DomainListFilters.js:111
+#: src/domains/DomainListFilters.js:110
 msgid "Comparison"
 msgstr "Comparaison"
 
@@ -834,11 +838,11 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/guidance/CveIgnorer.js:159
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
-#: src/user/EditableUserEmail.js:168
+#: src/user/EditableUserEmail.js:136
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:186
 #: src/user/EditableUserPhoneNumber.js:244
-#: src/user/UserPage.js:263
+#: src/user/UserPage.js:219
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -930,7 +934,7 @@ msgstr "Créer"
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:112
 #: src/app/TopBanner.js:150
-#: src/auth/CreateUserPage.js:156
+#: src/auth/CreateUserPage.js:150
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -964,7 +968,7 @@ msgstr "Critique"
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel:"
 
-#: src/user/EditableUserEmail.js:148
+#: src/user/EditableUserEmail.js:125
 msgid "Current Email:"
 msgstr "Courriel actuel:"
 
@@ -976,7 +980,7 @@ msgstr "Mot de passe actuel:"
 #~ msgid "Current Phone Number:"
 #~ msgstr "Numéro de téléphone actuel:"
 
-#: src/domains/DomainCard.js:209
+#: src/domains/DomainCard.js:206
 #: src/domains/DomainsPage.js:288
 #: src/domains/FilterList.js:14
 #: src/guidance/WebTLSResults.js:160
@@ -1216,8 +1220,8 @@ msgstr "Politique DMARC de mise en quarantaine ou de rejet, et rejet de tous les
 #~ msgstr "L'enregistrement DMARC n'a pas pu être trouvé pendant le scan."
 
 #: src/dmarc/DmarcReportPage.js:94
-#: src/domains/DomainCard.js:244
-#: src/guidance/GuidancePage.js:342
+#: src/domains/DomainCard.js:241
+#: src/guidance/GuidancePage.js:334
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -1259,7 +1263,7 @@ msgid "DNS scan for domain \"{0}\" has completed."
 msgstr "Le scan DNS du domaine \"{0}\" est terminé."
 
 #: src/admin/AdminDomains.js:256
-#: src/domains/DomainListFilters.js:117
+#: src/domains/DomainListFilters.js:116
 msgid "DOES NOT EQUAL"
 msgstr "N'EST PAS ÉGAL"
 
@@ -1353,7 +1357,7 @@ msgstr "Informations sur les domaines"
 msgid "Domains used for SPF validation."
 msgstr "Domaines utilisés pour la validation SPF."
 
-#: src/auth/SignInPage.js:151
+#: src/auth/SignInPage.js:148
 msgid "Don't have an account? <0>Sign up</0>"
 msgstr "Vous n'avez pas de compte ? <0>S'inscrire</0>"
 
@@ -1366,7 +1370,7 @@ msgid "Each organization’s domain list should include every internet-facing se
 msgstr "La liste des domaines de chaque organisation doit inclure tous les services en contact avec l'internet. Il incombe aux administrateurs de l'organisation de gérer la liste actuelle et d'identifier les nouveaux domaines à ajouter."
 
 #: src/user/EditableUserDisplayName.js:109
-#: src/user/EditableUserEmail.js:109
+#: src/user/EditableUserEmail.js:91
 #: src/user/EditableUserPassword.js:112
 #: src/user/EditableUserPhoneNumber.js:284
 msgid "Edit"
@@ -1380,7 +1384,7 @@ msgstr "Modifier le nom d'affichage"
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
-#: src/user/EditableUserEmail.js:142
+#: src/user/EditableUserEmail.js:119
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
@@ -1398,7 +1402,7 @@ msgstr "Modifier l'utilisateur"
 
 #: src/admin/SuperAdminUserList.js:141
 #: src/components/fields/EmailField.js:15
-#: src/domains/DomainCard.js:214
+#: src/domains/DomainCard.js:211
 #: src/organizationDetails/OrganizationAffiliations.js:56
 #: src/user/EditableUserTFAMethod.js:166
 msgid "Email"
@@ -1436,8 +1440,8 @@ msgid "Email Sent"
 msgstr "Courriel envoyé"
 
 #: src/user/UserPage.js:63
-msgid "Email successfully sent"
-msgstr "Courriel envoyé avec succès"
+#~ msgid "Email successfully sent"
+#~ msgstr "Courriel envoyé avec succès"
 
 #: src/summaries/TierThreeSummaries.js:17
 msgid "Email Summary"
@@ -1459,12 +1463,16 @@ msgstr "Courriel validé"
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
+#: src/user/EditableUserEmail.js:49
+msgid "Email Verification Sent"
+msgstr "Envoi d'un courriel de vérification"
+
 #: src/summaries/Doughnut.js:32
 #~ msgid "Email-hosting"
 #~ msgstr "d'hébergement d'emails"
 
 #: src/components/fields/EmailField.js:12
-#: src/user/EditableUserEmail.js:88
+#: src/user/EditableUserEmail.js:83
 msgid "Email:"
 msgstr "Courrier électronique:"
 
@@ -1501,7 +1509,7 @@ msgstr "Anglais"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:251
+#: src/user/UserPage.js:207
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1549,7 +1557,7 @@ msgid "Envelope From"
 msgstr "Enveloppe De"
 
 #: src/admin/AdminDomains.js:253
-#: src/domains/DomainListFilters.js:114
+#: src/domains/DomainListFilters.js:113
 msgid "EQUALS"
 msgstr "ÉGAUX"
 
@@ -1594,7 +1602,7 @@ msgstr "Exportation vers CSV"
 #: src/dmarc/DmarcReportPage.js:142
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:43
+#: src/domains/DomainListFilters.js:42
 msgid "Fail"
 msgstr "Échec"
 
@@ -1721,7 +1729,7 @@ msgstr "Pour les utilisateurs intéressés par l'utilisation de nouvelles foncti
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
-#: src/auth/SignInPage.js:141
+#: src/auth/SignInPage.js:138
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -1919,7 +1927,7 @@ msgstr "Le nom d'hôte correspond : {0}"
 msgid "How can I edit my domain list?"
 msgstr "Comment puis-je modifier ma liste de domaines?"
 
-#: src/domains/DomainCard.js:205
+#: src/domains/DomainCard.js:202
 #: src/domains/DomainsPage.js:284
 #: src/organizationDetails/OrganizationDomains.js:224
 msgid "HSTS"
@@ -1966,7 +1974,7 @@ msgstr "HTTP Live"
 msgid "HTTP Upgrades"
 msgstr "Mises à jour HTTP"
 
-#: src/domains/DomainCard.js:204
+#: src/domains/DomainCard.js:201
 #: src/domains/DomainsPage.js:281
 #: src/organizationDetails/OrganizationDomains.js:221
 msgid "HTTPS"
@@ -2026,7 +2034,7 @@ msgstr "Statut HTTPS"
 #~ msgid "https://https-everywhere.canada.ca/en/help/"
 #~ msgstr "https://https-everywhere.canada.ca/en/help/"
 
-#: src/auth/CreateUserPage.js:136
+#: src/auth/CreateUserPage.js:130
 msgid "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/></0>"
 msgstr "J'accepte toutes les <0>Conditions générales, la politique de confidentialité et les directives du code de conduite<1/></0>."
 
@@ -2147,12 +2155,12 @@ msgstr "INACTIF"
 #~ msgid "Include hidden domains in summaries."
 #~ msgstr "Inclure les domaines cachés dans les résumés."
 
-#: src/auth/TwoFactorAuthenticatePage.js:77
+#: src/auth/TwoFactorAuthenticatePage.js:74
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
 #: src/admin/SuperAdminUserList.js:104
-#: src/user/UserPage.js:109
+#: src/user/UserPage.js:83
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
@@ -2195,21 +2203,20 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/SuperAdminUserList.js:103
 #: src/admin/UserListModal.js:80
 #: src/admin/UserListModal.js:125
-#: src/auth/CreateUserPage.js:63
+#: src/auth/CreateUserPage.js:61
 #: src/auth/ResetPasswordPage.js:60
-#: src/auth/SignInPage.js:86
-#: src/auth/TwoFactorAuthenticatePage.js:76
+#: src/auth/SignInPage.js:83
+#: src/auth/TwoFactorAuthenticatePage.js:73
 #: src/createOrganization/CreateOrganizationPage.js:86
 #: src/guidance/CveIgnorer.js:52
 #: src/guidance/CveIgnorer.js:101
 #: src/user/EditableUserDisplayName.js:72
-#: src/user/EditableUserEmail.js:72
-#: src/user/EditableUserLanguage.js:51
+#: src/user/EditableUserEmail.js:68
 #: src/user/EditableUserPassword.js:75
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/UserPage.js:108
+#: src/user/UserPage.js:82
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -2217,11 +2224,11 @@ msgstr "Méthode d'envoi incorrecte reçue."
 msgid "Incorrect setPhoneNumber.result typename."
 msgstr "Incorrect setPhoneNumber.result typename."
 
-#: src/auth/SignInPage.js:87
+#: src/auth/SignInPage.js:84
 msgid "Incorrect signIn.result typename."
 msgstr "Nom d'utilisateur incorrect signIn.result."
 
-#: src/auth/CreateUserPage.js:64
+#: src/auth/CreateUserPage.js:62
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
@@ -2252,8 +2259,7 @@ msgid "Incorrect updateUserPassword.result typename."
 msgstr "Incorrect updateUserPassword.result typename."
 
 #: src/user/EditableUserDisplayName.js:73
-#: src/user/EditableUserEmail.js:73
-#: src/user/EditableUserLanguage.js:52
+#: src/user/EditableUserEmail.js:69
 #: src/user/EditableUserTFAMethod.js:77
 #: src/user/EmailUpdatesSwitch.js:51
 #: src/user/InsideUserSwitch.js:55
@@ -2284,7 +2290,7 @@ msgstr "Les personnes d'un groupe ministériel de technologie de l'information p
 #~ msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 #~ msgstr "Les personnes ayant des questions sur l'exactitude des données de conformité de leur domaine peuvent contacter la boîte aux lettres de la cybersécurité du SCT."
 
-#: src/domains/DomainListFilters.js:40
+#: src/domains/DomainListFilters.js:39
 msgid "Info"
 msgstr "Info"
 
@@ -2433,7 +2439,6 @@ msgid "L-30-D"
 msgstr "30-D-J"
 
 #: src/auth/LanguageSelect.js:18
-#: src/user/EditableUserLanguage.js:67
 msgid "Language:"
 msgstr "La langue:"
 
@@ -2483,7 +2488,7 @@ msgstr "Le certificat Leaf est EV"
 #~ msgid "Leave Organization"
 #~ msgstr "Organisation des congés"
 
-#: src/auth/CreateUserPage.js:120
+#: src/auth/CreateUserPage.js:116
 msgid "Let's get you set up so you can verify your account information and begin using Tracker."
 msgstr "Nous allons vous configurer pour que vous puissiez vérifier les informations de votre compte et commencer à utiliser Suivi."
 
@@ -2507,11 +2512,11 @@ msgstr "Chargement {children}..."
 msgid "Loading Data..."
 msgstr "Chargement des données..."
 
-#: src/auth/SignInPage.js:118
+#: src/auth/SignInPage.js:115
 msgid "Login"
 msgstr "Connexion"
 
-#: src/auth/SignInPage.js:123
+#: src/auth/SignInPage.js:120
 msgid "Login to your account"
 msgstr "Connectez-vous à votre compte"
 
@@ -2603,7 +2608,7 @@ msgstr "Plus d'informations"
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Générateur de configuration SSL de Mozilla"
 
-#: src/auth/CreateUserPage.js:146
+#: src/auth/CreateUserPage.js:140
 msgid "Multifactor authentication (MFA) is active by default and used to verify account email"
 msgstr "L'authentification multifactorielle (MFA) est active par défaut et utilisée pour vérifier l'adresse électronique du compte."
 
@@ -2694,7 +2699,7 @@ msgstr "Nouvelle URL de domaine"
 msgid "New Domain URL:"
 msgstr "Nouvelle URL de domaine:"
 
-#: src/user/EditableUserEmail.js:155
+#: src/user/EditableUserEmail.js:130
 msgid "New Email Address:"
 msgstr "Nouvelle adresse électronique:"
 
@@ -3025,7 +3030,7 @@ msgstr "L'organisation possède ce domaine, mais il est en dehors du champ d'app
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/guidance/GuidancePage.js:349
+#: src/guidance/GuidancePage.js:341
 msgid "Organization(s):"
 msgstr "Organisation(s) :"
 
@@ -3074,7 +3079,7 @@ msgstr "Page {0} de {1}"
 #: src/dmarc/DmarcReportPage.js:133
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:37
+#: src/domains/DomainListFilters.js:36
 msgid "Pass"
 msgstr "Passez"
 
@@ -3192,7 +3197,7 @@ msgstr "Veuillez communiquer avec l’<0>équipe responsable de la cybersécurit
 msgid "Please enter your current password."
 msgstr "Veuillez entrer votre mot de passe actuel."
 
-#: src/auth/CreateUserPage.js:46
+#: src/auth/CreateUserPage.js:44
 msgid "Please enter your one-time code to continue to Tracker."
 msgstr "Veuillez saisir votre code à usage unique pour continuer à Tracker."
 
@@ -3289,7 +3294,7 @@ msgstr "PROD"
 msgid "Protect domains that do not send email - GOV.UK (www.gov.uk)"
 msgstr "Protéger les domaines qui n'envoient pas de courrier électronique - GOV.UK (www.gov.uk)"
 
-#: src/domains/DomainCard.js:207
+#: src/domains/DomainCard.js:204
 #: src/domains/DomainsPage.js:286
 #: src/domains/FilterList.js:15
 #: src/guidance/WebTLSResults.js:57
@@ -3366,7 +3371,7 @@ msgstr "Record :"
 msgid "References:"
 msgstr "Références :"
 
-#: src/auth/CreateUserPage.js:112
+#: src/auth/CreateUserPage.js:108
 msgid "Register"
 msgstr "Registre"
 
@@ -3375,7 +3380,7 @@ msgstr "Registre"
 msgid "Reject all messages from non-mail domains."
 msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
 
-#: src/auth/SignInPage.js:135
+#: src/auth/SignInPage.js:132
 msgid "Remember me"
 msgstr "Rappelle-toi de moi"
 
@@ -3533,7 +3538,6 @@ msgstr "Effectuer la rotation des clés DKIM annuellement."
 msgid "SAN List:"
 msgstr "Liste des SAN :"
 
-#: src/user/EditableUserLanguage.js:110
 #: src/user/EditableUserTFAMethod.js:176
 msgid "Save"
 msgstr "Sauvez"
@@ -3557,7 +3561,7 @@ msgstr "Scan du domaine demandé avec succès"
 #: src/admin/AdminDomains.js:182
 #: src/domains/DomainCard.js:161
 #: src/domains/DomainsPage.js:134
-#: src/guidance/GuidancePage.js:310
+#: src/guidance/GuidancePage.js:302
 #: src/organizationDetails/OrganizationDomains.js:110
 msgid "Scan Pending"
 msgstr "Scan en attente"
@@ -3912,7 +3916,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:107
 #: src/app/TopBanner.js:140
-#: src/auth/SignInPage.js:147
+#: src/auth/SignInPage.js:144
 msgid "Sign In"
 msgstr "Se connecter"
 
@@ -3920,8 +3924,8 @@ msgstr "Se connecter"
 #~ msgid "Sign in with your username and password."
 #~ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/auth/SignInPage.js:59
-#: src/auth/TwoFactorAuthenticatePage.js:55
+#: src/auth/SignInPage.js:56
+#: src/auth/TwoFactorAuthenticatePage.js:52
 msgid "Sign In."
 msgstr "Se connecter."
 
@@ -4007,8 +4011,8 @@ msgstr "Statut SPF"
 msgid "SPF Summary"
 msgstr "Résumé du SPF"
 
-#: src/domains/DomainCard.js:190
-#: src/domains/DomainListFilters.js:134
+#: src/domains/DomainCard.js:189
+#: src/domains/DomainListFilters.js:131
 #: src/domains/DomainsPage.js:307
 #: src/domains/FilterList.js:32
 #: src/organizationDetails/OrganizationDomains.js:253
@@ -4073,7 +4077,7 @@ msgstr "Statut :"
 #~ msgstr "Statut/étiquette"
 
 #: src/admin/AdminDomains.js:266
-#: src/domains/DomainListFilters.js:127
+#: src/domains/DomainListFilters.js:126
 msgid "Status/Tag/State"
 msgstr "Statut/étiquette/état"
 
@@ -4102,7 +4106,7 @@ msgid "Subject:"
 msgstr "Sujet :"
 
 #: src/auth/ForgotPasswordPage.js:97
-#: src/auth/TwoFactorAuthenticatePage.js:121
+#: src/auth/TwoFactorAuthenticatePage.js:118
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -4155,7 +4159,7 @@ msgid "Symbol of the Government of Canada"
 msgstr "Symbole du gouvernement du Canada"
 
 #: src/admin/AdminDomains.js:233
-#: src/domains/DomainListFilters.js:96
+#: src/domains/DomainListFilters.js:95
 msgid "Tag"
 msgstr "Tag"
 
@@ -4386,7 +4390,7 @@ msgstr "Les présentes conditions générales sont régies et interprétées en 
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {0} ?"
 
-#: src/user/UserPage.js:246
+#: src/user/UserPage.js:202
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -4527,7 +4531,7 @@ msgid "Track Digital Security"
 msgstr "Suivre la sécurité numérique"
 
 #: src/admin/SuperAdminUserList.js:85
-#: src/user/UserPage.js:89
+#: src/user/UserPage.js:63
 msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
@@ -4583,7 +4587,7 @@ msgstr "Suivi :"
 msgid "Trademarks Act"
 msgstr "Loi sur les marques de commerce"
 
-#: src/auth/TwoFactorAuthenticatePage.js:112
+#: src/auth/TwoFactorAuthenticatePage.js:109
 msgid "Two Factor Authentication"
 msgstr "Authentification à deux facteurs"
 
@@ -4596,7 +4600,7 @@ msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/admin/SuperAdminUserList.js:94
-#: src/user/UserPage.js:99
+#: src/user/UserPage.js:73
 msgid "Unable to close the account."
 msgstr "Impossible de fermer le compte."
 
@@ -4604,7 +4608,7 @@ msgstr "Impossible de fermer le compte."
 msgid "Unable to close this account."
 msgstr "Impossible de fermer ce compte."
 
-#: src/auth/CreateUserPage.js:54
+#: src/auth/CreateUserPage.js:52
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
@@ -4616,7 +4620,7 @@ msgstr "Impossible de créer un nouveau domaine."
 msgid "Unable to create new organization."
 msgstr "Impossible de créer une nouvelle organisation."
 
-#: src/auth/CreateUserPage.js:30
+#: src/auth/CreateUserPage.js:28
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
@@ -4663,13 +4667,13 @@ msgid "Unable to send password reset link to email."
 msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
 #: src/user/UserPage.js:54
-msgid "Unable to send verification email"
-msgstr "Impossible d'envoyer l'e-mail de vérification"
+#~ msgid "Unable to send verification email"
+#~ msgstr "Impossible d'envoyer l'e-mail de vérification"
 
-#: src/auth/SignInPage.js:35
-#: src/auth/SignInPage.js:77
-#: src/auth/TwoFactorAuthenticatePage.js:30
-#: src/auth/TwoFactorAuthenticatePage.js:66
+#: src/auth/SignInPage.js:34
+#: src/auth/SignInPage.js:74
+#: src/auth/TwoFactorAuthenticatePage.js:29
+#: src/auth/TwoFactorAuthenticatePage.js:63
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
@@ -4706,20 +4710,24 @@ msgstr "Impossible de mettre à jour votre statut d'utilisateur interne, veuille
 #~ msgstr "Impossible de mettre à jour votre statut d'initié, veuillez réessayer."
 
 #: src/user/EditableUserLanguage.js:42
-msgid "Unable to update to your preferred language, please try again."
-msgstr "Impossible de mettre à jour votre langue préférée, veuillez réessayer."
+#~ msgid "Unable to update to your preferred language, please try again."
+#~ msgstr "Impossible de mettre à jour votre langue préférée, veuillez réessayer."
 
 #: src/user/EditableUserTFAMethod.js:67
 msgid "Unable to update to your TFA send method, please try again."
 msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer."
 
 #: src/user/EditableUserEmail.js:63
-msgid "Unable to update to your username, please try again."
-msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer."
+#~ msgid "Unable to update to your username, please try again."
+#~ msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer."
 
 #: src/admin/UserListModal.js:116
 msgid "Unable to update user role."
 msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
+
+#: src/user/EditableUserEmail.js:59
+msgid "Unable to update your email address, please try again."
+msgstr "Impossible de mettre à jour votre adresse électronique, veuillez réessayer."
 
 #: src/user/EditableUserPassword.js:66
 msgid "Unable to update your password, please try again."
@@ -4816,7 +4824,7 @@ msgid "User email"
 msgstr "Courriel de l'utilisateur"
 
 #: src/admin/SuperAdminUserList.js:378
-#: src/user/UserPage.js:254
+#: src/user/UserPage.js:210
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -4852,7 +4860,7 @@ msgid "Users exercise due diligence in ensuring the accuracy of the materials re
 msgstr "Les utilisateurs font preuve de diligence raisonnable en s'assurant de l'exactitude des documents reproduits;"
 
 #: src/admin/AdminDomains.js:230
-#: src/domains/DomainListFilters.js:86
+#: src/domains/DomainListFilters.js:85
 msgid "Value"
 msgstr "Valeur"
 
@@ -4879,8 +4887,8 @@ msgid "Verify"
 msgstr "Vérifier"
 
 #: src/user/UserPage.js:198
-msgid "Verify Account"
-msgstr "Vérifier le compte"
+#~ msgid "Verify Account"
+#~ msgstr "Vérifier le compte"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:108
 msgid "Vertical View"
@@ -4890,7 +4898,7 @@ msgstr "Vue verticale"
 #~ msgid "View Details"
 #~ msgstr "Voir les détails"
 
-#: src/domains/DomainCard.js:234
+#: src/domains/DomainCard.js:231
 msgid "View Results"
 msgstr "Voir les résultats"
 
@@ -4971,7 +4979,7 @@ msgstr "Web"
 msgid "WEB"
 msgstr "WEB"
 
-#: src/domains/DomainCard.js:201
+#: src/domains/DomainCard.js:198
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
 
@@ -5016,7 +5024,7 @@ msgstr "d'hébergement web"
 msgid "Welcome to the Admin Profile page!"
 msgstr "Bienvenue sur la page du profil de l'administrateur !"
 
-#: src/auth/CreateUserPage.js:117
+#: src/auth/CreateUserPage.js:113
 msgid "Welcome to Tracker, please enter your details."
 msgstr "Bienvenue sur Suivi, veuillez entrer vos coordonnées."
 
@@ -5028,8 +5036,8 @@ msgstr "Bienvenue dans votre vision personnelle de Suivi. Modérez la posture de
 #~ msgid "Welcome, you are successfully signed in to your new account!"
 #~ msgstr "Veuillez choisir votre langue préférée"
 
-#: src/auth/SignInPage.js:60
-#: src/auth/TwoFactorAuthenticatePage.js:56
+#: src/auth/SignInPage.js:57
+#: src/auth/TwoFactorAuthenticatePage.js:53
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
@@ -5076,7 +5084,7 @@ msgstr "Wiki"
 #: src/admin/AdminDomains.js:181
 #: src/domains/DomainCard.js:149
 #: src/domains/DomainsPage.js:133
-#: src/guidance/GuidancePage.js:317
+#: src/guidance/GuidancePage.js:309
 #: src/organizationDetails/OrganizationDomains.js:109
 msgid "Wildcard"
 msgstr "Wildcard"
@@ -5190,8 +5198,8 @@ msgid "You have successfully updated your email update preference."
 msgstr "Vous avez mis à jour vos préférences de mise à jour de l'email avec succès."
 
 #: src/user/EditableUserEmail.js:52
-msgid "You have successfully updated your email."
-msgstr "Vous avez mis à jour votre courriel avec succès."
+#~ msgid "You have successfully updated your email."
+#~ msgstr "Vous avez mis à jour votre courriel avec succès."
 
 #: src/user/InsideUserSwitch.js:31
 msgid "You have successfully updated your inside user preference."
@@ -5210,8 +5218,8 @@ msgid "You have successfully updated your phone number."
 msgstr "Vous avez réussi à mettre à jour votre numéro de téléphone."
 
 #: src/user/EditableUserLanguage.js:32
-msgid "You have successfully updated your preferred language."
-msgstr "Vous avez réussi à mettre à jour votre langue préférée."
+#~ msgid "You have successfully updated your preferred language."
+#~ msgstr "Vous avez réussi à mettre à jour votre langue préférée."
 
 #: src/user/EditableUserTFAMethod.js:53
 msgid "You have successfully updated your TFA send method."
@@ -5237,7 +5245,7 @@ msgstr "L'email de votre compte n'a pas pu être vérifié pour le moment. Veuil
 msgid "Your account email was successfully verified"
 msgstr "L'email de votre compte a été vérifié avec succès"
 
-#: src/auth/CreateUserPage.js:79
+#: src/auth/CreateUserPage.js:77
 msgid "Your account will automatically be linked to the organization that invited you."
 msgstr "Votre compte sera automatiquement lié à l'organisation qui vous a invité."
 
