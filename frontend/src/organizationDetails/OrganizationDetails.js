@@ -164,7 +164,9 @@ export default function OrganizationDetails() {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box>
-                <Text fontSize="3xl">DMARC Phases</Text>
+                <Text fontSize="3xl">
+                  <Trans>DMARC Phases</Trans>
+                </Text>
                 <RadialBarChart height={600} width={600} data={data?.organization?.summaries?.dmarcPhase?.categories} />
               </Box>
             </ErrorBoundary>

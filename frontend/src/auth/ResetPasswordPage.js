@@ -90,19 +90,9 @@ export default function ResetPasswordPage() {
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
-          <form
-            onSubmit={handleSubmit}
-            role="form"
-            aria-label="form"
-            name="form"
-          >
-            <Heading
-              as="h1"
-              fontSize="3xl"
-              mb="8"
-              textAlign={{ lg: 'left', md: 'center' }}
-            >
-              Reset Password
+          <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
+            <Heading as="h1" fontSize="3xl" mb="8" textAlign={{ lg: 'left', md: 'center' }}>
+              <Trans>Reset Password</Trans>
             </Heading>
 
             <Box mb="8">
@@ -115,14 +105,7 @@ export default function ResetPasswordPage() {
               <PasswordConfirmation mb="4" />
             </Box>
 
-            <Button
-              w={['100%', '33%']}
-              type="submit"
-              isLoading={isSubmitting}
-              id="submitBtn"
-              variant="primary"
-              mb="4"
-            >
+            <Button w={['100%', '33%']} type="submit" isLoading={isSubmitting} id="submitBtn" variant="primary" mb="4">
               <Trans>Change Password</Trans>
             </Button>
           </form>

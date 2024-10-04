@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { Domain } from '../../scalars'
+import { CveID } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { AssetStateEnums } from '../../enums'
@@ -20,17 +20,9 @@ export const updateDomain = new mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLID),
       description: 'The global ID of the organization used for permission checks.',
     },
-    domain: {
-      type: Domain,
-      description: 'The new url of the of the old domain.',
-    },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
-    },
-    hidden: {
-      description: "Value that determines if the domain is excluded from an organization's score.",
-      type: GraphQLBoolean,
     },
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
@@ -43,6 +35,10 @@ export const updateDomain = new mutationWithClientMutationId({
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
+    },
+    ignoredCves: {
+      description: 'List of CVEs that the user has chosen to ignore.',
+      type: new GraphQLList(CveID),
     },
   }),
   outputFields: () => ({
@@ -74,7 +70,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    const updatedDomain = cleanseInput(args.domain)
 
     let tags
     if (typeof args.tags !== 'undefined') {
@@ -90,18 +85,18 @@ export const updateDomain = new mutationWithClientMutationId({
       archived = null
     }
 
-    let hidden
-    if (typeof args.hidden !== 'undefined') {
-      hidden = args.hidden
-    } else {
-      hidden = null
-    }
-
     let assetState
     if (typeof args.assetState !== 'undefined') {
       assetState = cleanseInput(args.assetState)
     } else {
       assetState = ''
+    }
+
+    let ignoredCves
+    if (typeof args.ignoredCves !== 'undefined') {
+      ignoredCves = args.ignoredCves
+    } else {
+      ignoredCves = null
     }
 
     // Check to see if domain exists
@@ -178,10 +173,9 @@ export const updateDomain = new mutationWithClientMutationId({
 
     // Update domain
     const domainToInsert = {
-      domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
-      lastRan: domain.lastRan,
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
+      ignoredCves: ignoredCves || domain?.ignoredCves,
     }
 
     try {
@@ -222,7 +216,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const claimToInsert = {
       tags: tags || claim?.tags,
-      hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
       firstSeen: typeof claim?.firstSeen === 'undefined' ? new Date().toISOString() : claim?.firstSeen,
       assetState: assetState || claim?.assetState,
     }
@@ -262,14 +255,6 @@ export const updateDomain = new mutationWithClientMutationId({
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
 
     const updatedProperties = []
-    if (domainToInsert.domain.toLowerCase() !== domain.domain.toLowerCase()) {
-      updatedProperties.push({
-        name: 'domain',
-        oldValue: domain.domain,
-        newValue: domainToInsert.domain,
-      })
-    }
-
     if (typeof assetState !== 'undefined') {
       updatedProperties.push({
         name: 'assetState',
@@ -286,11 +271,11 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof hidden !== 'undefined') {
+    if (typeof ignoredCves !== 'undefined' && JSON.stringify(domain.ignoredCves) !== JSON.stringify(ignoredCves)) {
       updatedProperties.push({
-        name: 'hidden',
-        oldValue: claim?.hidden,
-        newValue: hidden,
+        name: 'ignoredCves',
+        oldValue: domain.ignoredCves,
+        newValue: ignoredCves,
       })
     }
 
@@ -343,7 +328,6 @@ export const updateDomain = new mutationWithClientMutationId({
       claimTags: claimToInsert.tags.map((tag) => {
         return tag[language]
       }),
-      hidden,
       assetState,
     }
   },

@@ -170,22 +170,30 @@ export const organizationType = new GraphQLObjectType({
           'dkim',
           'dmarc',
           'tags',
-          'hidden',
+          'assetState',
           'rcode',
           'blocked',
           'wildcardSibling',
           'hasEntrustCertificate',
+          'top25Vulnerabilities',
         ]
         let csvOutput = headers.join(',')
-        domains.forEach((domain) => {
-          let csvLine = `${domain.domain}`
-          csvLine += `,${domain.ipAddresses.join('|')}`
-          csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
-            return `${previousValue},${domain.status[currentHeader]}`
-          }, '')
-          csvLine += `,${domain.tags.join('|')},${domain.hidden},${domain.rcode},${domain.blocked},${
-            domain.wildcardSibling
-          }`
+        domains.forEach((domainDoc) => {
+          const csvLine = headers
+            .map((header) => {
+              if (['ipAddresses', 'tags', 'top25Vulnerabilities'].includes(header)) {
+                return `"${domainDoc[header]?.join('|') || []}"`
+              }
+              if (
+                ['https', 'hsts', 'certificates', 'protocols', 'ciphers', 'curves', 'spf', 'dkim', 'dmarc'].includes(
+                  header,
+                )
+              ) {
+                return `"${domainDoc?.status[header]}"`
+              }
+              return `"${domainDoc[header]}"`
+            })
+            .join(',')
           csvOutput += `\n${csvLine}`
         })
 

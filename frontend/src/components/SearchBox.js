@@ -14,7 +14,7 @@ import {
 import { Trans } from '@lingui/macro'
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { RelayPaginationControls } from './RelayPaginationControls'
-import { array, bool, elementType, func, number, string } from 'prop-types'
+import { array, bool, element, func, number, string } from 'prop-types'
 import { InfoButton } from './InfoPanel'
 
 export function SearchBox({
@@ -34,6 +34,7 @@ export function SearchBox({
   placeholder,
   onToggle,
   searchTip,
+  totalRecords,
   ...props
 }) {
   const orderIconName = orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
@@ -118,6 +119,7 @@ export function SearchBox({
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalRecords}
       />
     </Box>
   )
@@ -140,5 +142,6 @@ SearchBox.propTypes = {
   placeholder: string,
   inputAriaLabel: string,
   onToggle: func,
-  searchTip: elementType,
+  searchTip: element,
+  totalRecords: number,
 }

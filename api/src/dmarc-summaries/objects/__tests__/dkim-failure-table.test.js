@@ -165,9 +165,7 @@ describe('given the dkimFailureTable gql object', () => {
               {},
               {
                 loaders: {
-                  loadGuidanceTagByTagId: {
-                    load: jest.fn().mockReturnValue(expectedResults),
-                  },
+                  loadGuidanceTagByTagId: jest.fn().mockReturnValue([expectedResults]),
                 },
               },
             ),
@@ -186,9 +184,7 @@ describe('given the dkimFailureTable gql object', () => {
               {},
               {
                 loaders: {
-                  loadAggregateGuidanceTagByTagId: {
-                    load: jest.fn().mockReturnValue(expectedResults),
-                  },
+                  loadGuidanceTagByTagId: jest.fn().mockReturnValue(expectedResults),
                 },
               },
             ),

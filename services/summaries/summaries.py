@@ -29,22 +29,6 @@ CHARTS = {
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def is_domain_hidden(domain, db):
-    """Check if a domain is hidden
-
-    :param domain: domain to check
-    :param db: active arangodb connection
-    :return: True if domain is hidden, False otherwise
-    """
-
-    claims = db.collection("claims").find({"_to": domain["_id"]})
-    for claim in claims:
-        hidden = claim.get("hidden")
-        if hidden is not None and hidden == True:
-            return True
-    return False
-
-
 def domain_has_verified_claim(domain, db):
     cursor = db.aql.execute(
         """
@@ -66,14 +50,12 @@ def ignore_domain(domain):
     :return: True if domain should be ignored, False otherwise
     """
 
-    if (
+    return (
         domain is None
         or domain.get("archived") is True
         or domain.get("blocked") is True
         or domain.get("rcode") == "NXDOMAIN"
-    ):
-        return True
-    return False
+    )
 
 
 def get_domain_negative_findings(db, domain_id):
@@ -237,7 +219,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
             domain_status = domain.get("status", {})
-            if ignore_domain(domain) is False:
+            if ignore_domain(domain) is False and claim.get("assetState") == "approved":
                 # tier 1
                 # https
                 https_status = domain_status.get("https")

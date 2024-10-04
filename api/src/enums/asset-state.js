@@ -9,7 +9,7 @@ export const AssetStateEnums = new GraphQLEnumType({
     },
     DEPENDENCY: {
       value: 'dependency',
-      description: 'An asset that is owned by a third party and supports the operation organization-owned assets.',
+      description: 'An asset that is owned by a third party and supports the operation of organization-owned assets.',
     },
     MONITOR_ONLY: {
       value: 'monitor-only',

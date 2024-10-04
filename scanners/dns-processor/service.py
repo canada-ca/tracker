@@ -214,6 +214,7 @@ def process_msg(msg):
     if user_key is None:
         try:
             dns_entry = db.collection("dns").insert(snake_to_camel(processed_results))
+            domain.update({"latestDnsScan": dns_entry["_id"]})
 
             db.collection("domainsDNS").insert(
                 {

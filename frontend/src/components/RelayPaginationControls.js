@@ -1,4 +1,4 @@
-import { Select, Flex, Text, IconButton } from '@chakra-ui/react'
+import { Select, Flex, Text, IconButton, Divider } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { array, bool, func, number } from 'prop-types'
@@ -15,6 +15,7 @@ export function RelayPaginationControls({
   displayLimitOptions,
   onlyPagination,
   isLoadingMore,
+  totalRecords,
   ...props
 }) {
   let displayLimitControls = ''
@@ -63,7 +64,6 @@ export function RelayPaginationControls({
         variant="primaryOutline"
         bgColor="gray.50"
       />
-
       <IconButton
         id="nextPageBtn"
         icon={<ChevronRightIcon boxSize="2rem" />}
@@ -75,6 +75,14 @@ export function RelayPaginationControls({
         variant="primaryOutline"
         bgColor="gray.50"
       />
+      {totalRecords > 0 && (
+        <>
+          <Divider mx="2" orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />
+          <Text>
+            <Trans>{totalRecords} total item(s)</Trans>
+          </Text>
+        </>
+      )}
       {displayLimitControls}
     </Flex>
   )
@@ -91,4 +99,5 @@ RelayPaginationControls.propTypes = {
   displayLimitOptions: array,
   onlyPagination: bool,
   isLoadingMore: bool,
+  totalRecords: number,
 }

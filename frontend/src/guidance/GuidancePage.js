@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArrowLeftIcon, StarIcon } from '@chakra-ui/icons'
 
 import {
@@ -38,13 +38,19 @@ import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { OrganizationCard } from '../organizations/OrganizationCard'
 import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
+import { useDocumentTitle } from '../utilities/useDocumentTitle'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { domainSlug: domain } = useParams()
+  const { domainSlug: domain, activeTab } = useParams()
   const toast = useToast()
+  const tabNames = ['web-guidance', 'email-guidance', 'additional-findings']
+  const defaultActiveTab = tabNames[0]
+
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-only',
     errorPolicy: 'all',
   })
 
@@ -58,7 +64,6 @@ function GuidancePage() {
     id: domainId,
     domain: domainName,
     web: webScan,
-    additionalFindings,
     hasDMARCReport,
     dnsScan,
     mxRecordDiff,
@@ -66,10 +71,26 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
+    cveDetected,
     userHasPermission,
     webScanPending,
     wildcardSibling,
   } = data?.findDomainByDomain || {}
+
+  useDocumentTitle(`${domainName}`)
+
+  const changeActiveTab = (index) => {
+    const tab = tabNames[index]
+    if (activeTab !== tab) {
+      history.replace(`/domains/${domain}/${tab}`)
+    }
+  }
+
+  useEffect(() => {
+    if (!activeTab) {
+      history.replace(`/domains/${domain}/${defaultActiveTab}`)
+    }
+  }, [activeTab, history, domainName, defaultActiveTab])
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
@@ -216,7 +237,13 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <Tabs isFitted variant="enclosed-colored" defaultIndex={0}>
+      <Tabs
+        isFitted
+        variant="enclosed-colored"
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        onChange={(i) => changeActiveTab(i)}
+        isLazy
+      >
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
             <Trans>Web Guidance</Trans>
@@ -224,15 +251,9 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {additionalFindings && (
-                <Tab borderTopWidth="0.25">
-                  <Trans>Additional Findings</Trans>
-                </Tab>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          <Tab borderTopWidth="0.25">
+            <Trans>Additional Findings</Trans>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -254,15 +275,9 @@ function GuidancePage() {
               />
             )}
           </TabPanel>
-          <ABTestWrapper>
-            <ABTestVariant name="B">
-              {additionalFindings && (
-                <TabPanel>
-                  <AdditionalFindings data={additionalFindings} />
-                </TabPanel>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          <TabPanel>
+            <AdditionalFindings domain={domainName} cveDetected={cveDetected} />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     )

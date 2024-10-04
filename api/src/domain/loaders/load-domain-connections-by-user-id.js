@@ -333,83 +333,88 @@ export const loadDomainConnectionsByUserId =
         if (filterCategory === 'dmarc-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.dmarc ${comparison} ${filterValue}
+          FILTER v.status.dmarc ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'dkim-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.dkim ${comparison} ${filterValue}
+          FILTER v.status.dkim ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'https-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.https ${comparison} ${filterValue}
+          FILTER v.status.https ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'spf-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.spf ${comparison} ${filterValue}
+          FILTER v.status.spf ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'ciphers-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.ciphers ${comparison} ${filterValue}
+          FILTER v.status.ciphers ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'curves-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.curves ${comparison} ${filterValue}
+          FILTER v.status.curves ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'hsts-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.hsts ${comparison} ${filterValue}
+          FILTER v.status.hsts ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'policy-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.policy ${comparison} ${filterValue}
+          FILTER v.status.policy ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'protocols-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.protocols ${comparison} ${filterValue}
+          FILTER v.status.protocols ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'certificates-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.certificates ${comparison} ${filterValue}
+          FILTER v.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
           if (filterValue === 'archived') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.archived ${comparison} true
+            FILTER v.archived ${comparison} true
           `
           } else if (filterValue === 'nxdomain') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.rcode ${comparison} "NXDOMAIN"
+            FILTER v.rcode ${comparison} "NXDOMAIN"
           `
           } else if (filterValue === 'blocked') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.blocked ${comparison} true
+            FILTER v.blocked ${comparison} true
           `
           } else if (filterValue === 'wildcard-sibling') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.wildcardSibling ${comparison} true
+            FILTER v.wildcardSibling ${comparison} true
           `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.webScanPending ${comparison} true
+            FILTER v.webScanPending ${comparison} true
           `
           } else if (filterValue === 'has-entrust-certificate') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.hasEntrustCertificate ${comparison} true
+            FILTER v.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.cveDetected ${comparison} true
           `
           }
         }
@@ -432,6 +437,7 @@ export const loadDomainConnectionsByUserId =
       LET collectedDomains = UNIQUE(
         FOR org IN organizations
           ${ownershipOrgsOnly}
+            ${domainFilters}
             RETURN v
       )
     `
@@ -448,6 +454,7 @@ export const loadDomainConnectionsByUserId =
           FILTER org._key IN userAffiliations[*]._key
           ${ownershipOrgsOnly}
           FILTER v.archived != true
+          ${domainFilters}
           RETURN v
       )
     `
@@ -464,6 +471,7 @@ export const loadDomainConnectionsByUserId =
           FILTER org._key IN userAffiliations[*]._key || org.verified == true
           ${ownershipOrgsOnly}
             FILTER v.archived != true
+            ${domainFilters}
             RETURN v
       )
     `
@@ -482,6 +490,7 @@ export const loadDomainConnectionsByUserId =
           FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
           ${ownershipOrgsOnly}
             FILTER v.archived != true
+            ${domainFilters}
             RETURN v
       )
     `
@@ -504,10 +513,6 @@ export const loadDomainConnectionsByUserId =
       totalCount = aql`LENGTH(searchedDomains)`
     }
 
-    let showArchivedDomains = aql`FILTER domain.archived != true`
-    if (isSuperAdmin) {
-      showArchivedDomains = aql``
-    }
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
@@ -520,8 +525,6 @@ export const loadDomainConnectionsByUserId =
 
       LET retrievedDomains = (
         ${loopString}
-          ${showArchivedDomains}
-          ${domainFilters}
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -532,8 +535,6 @@ export const loadDomainConnectionsByUserId =
 
       LET hasNextPage = (LENGTH(
         ${loopString}
-          ${showArchivedDomains}
-          ${domainFilters}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -541,8 +542,6 @@ export const loadDomainConnectionsByUserId =
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
-          ${showArchivedDomains}
-          ${domainFilters}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain

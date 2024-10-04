@@ -5,7 +5,7 @@ metadata:
   namespace: azure-defender-easm
 spec:
   timeZone: America/Toronto
-  schedule: "00 7 * * 0"
+  schedule: "0 22 * * *"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: import-easm-additional-findings
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-5b4b54d-1720014943 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-b0f4943-1726513503 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -66,6 +66,11 @@ spec:
                     secretKeyRef:
                       name: azure-defender-easm
                       key: KUSTO_DATABASE
+                - name: CVE_LIST
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: CVE_LIST
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000

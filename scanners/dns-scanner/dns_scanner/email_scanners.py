@@ -183,8 +183,8 @@ class DMARCScanner:
                         )
                         # Assert external reporting arrangement has been authorized if TXT containing version tag
                         # with value "DMARC1" is found.
-                        scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
-                            rua_txt_value == "v=DMARC1"
+                        rua_value["accepting"] = (
+                            rua_txt_value.strip().replace(";", "") == "v=DMARC1"
                         )
                     except (
                         DNSException,
@@ -197,6 +197,7 @@ class DMARCScanner:
                             f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}"
                         )
                         rua_value["accepting"] = "undetermined"
+
             except (TypeError, KeyError) as e:
                 logger.error(
                     f"Error `{e}` while validating rua for domain: {self.domain}. scan_result: {json.dumps(scan_result, indent=2)}"
@@ -252,8 +253,8 @@ class DMARCScanner:
                         )
                         # Assert external reporting arrangement has been authorized if TXT containing version tag
                         # with value "DMARC1" is found.
-                        scan_result["dmarc"]["tags"]["ruf"]["accepting"] = (
-                            ruf_txt_value == "v=DMARC1"
+                        ruf["accepting"] = (
+                            ruf_txt_value.strip().replace(";", "") == "v=DMARC1"
                         )
                     except (
                         DNSException,

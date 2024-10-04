@@ -57,6 +57,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
         hasPreviousPage
         startCursor
       }
+      totalCount
     }
   }
 `
@@ -108,6 +109,12 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
     getAllOrganizationDomainStatuses(filters: $filters)
+  }
+`
+
+export const GET_TOP_25_REPORT = gql`
+  query GetTop25Reports {
+    getTop25Reports
   }
 `
 
@@ -190,7 +197,6 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             domain
             lastRan
             claimTags
-            hidden
             assetState
             archived
             ignoreRua
@@ -222,6 +228,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       blocked
       wildcardSibling
       webScanPending
+      cveDetected
       status {
         ...RequiredDomainStatusFields
       }
@@ -518,6 +525,17 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
           }
         }
       }
+    }
+  }
+  ${Status.fragments.requiredFields}
+  ${Guidance.fragments.requiredFields}
+`
+
+export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
+  query GuidanceAdditionalFindings($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      id
+      ignoredCves
       additionalFindings {
         timestamp
         headers
@@ -564,8 +582,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       }
     }
   }
-  ${Status.fragments.requiredFields}
-  ${Guidance.fragments.requiredFields}
 `
 
 export const ORG_DETAILS_PAGE = gql`
@@ -692,6 +708,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
     findOrganizationBySlug(orgSlug: $slug) {
       id
       domains(first: $first, after: $after, orderBy: $orderBy, search: $search, filters: $filters) {
+        totalCount
         pageInfo {
           hasNextPage
           endCursor
@@ -708,7 +725,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
             }
             hasDMARCReport
             claimTags
-            hidden
             assetState
             archived
             rcode
@@ -717,6 +733,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             webScanPending
             userHasPermission
             hasEntrustCertificate
+            cveDetected
           }
         }
       }
@@ -786,6 +803,7 @@ export const PAGINATED_DOMAINS = gql`
           hasDMARCReport
           userHasPermission
           hasEntrustCertificate
+          cveDetected
           __typename
         }
         __typename
@@ -797,6 +815,7 @@ export const PAGINATED_DOMAINS = gql`
         startCursor
         __typename
       }
+      totalCount
       __typename
     }
   }
@@ -1114,6 +1133,7 @@ export const FIND_MY_USERS = gql`
         startCursor
         __typename
       }
+      totalCount
     }
   }
 `
@@ -1160,6 +1180,7 @@ export const AUDIT_LOGS = gql`
         startCursor
         endCursor
       }
+      totalCount
     }
   }
 `

@@ -183,26 +183,15 @@ export const CREATE_DOMAIN = gql`
     $domain: DomainScalar!
     $tags: [InputTag]
     $archived: Boolean
-    $hidden: Boolean
     $assetState: AssetStateEnums!
   ) {
-    createDomain(
-      input: {
-        orgId: $orgId
-        domain: $domain
-        tags: $tags
-        archived: $archived
-        hidden: $hidden
-        assetState: $assetState
-      }
-    ) {
+    createDomain(input: { orgId: $orgId, domain: $domain, tags: $tags, archived: $archived, assetState: $assetState }) {
       result {
         ... on Domain {
           id
           domain
           lastRan
           claimTags
-          hidden
           assetState
           archived
           rcode
@@ -274,10 +263,8 @@ export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!
     $orgId: ID!
-    $domain: DomainScalar
     $tags: [InputTag]
     $archived: Boolean
-    $hidden: Boolean
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
   ) {
@@ -285,10 +272,8 @@ export const UPDATE_DOMAIN = gql`
       input: {
         domainId: $domainId
         orgId: $orgId
-        domain: $domain
         tags: $tags
         archived: $archived
-        hidden: $hidden
         assetState: $assetState
         ignoreRua: $ignoreRua
       }
@@ -299,7 +284,6 @@ export const UPDATE_DOMAIN = gql`
           domain
           lastRan
           claimTags
-          hidden
           assetState
           archived
           rcode
@@ -694,6 +678,42 @@ export const REQUEST_DISCOVERY = gql`
     requestDiscovery(input: { domain: $domainUrl, orgId: $orgId }) {
       ... on RequestDiscoveryPayload {
         status
+      }
+    }
+  }
+`
+
+export const IGNORE_CVE = gql`
+  mutation IgnoreCve($domainId: ID!, $ignoredCve: CveID!) {
+    ignoreCve(input: { domainId: $domainId, ignoredCve: $ignoredCve }) {
+      result {
+        ... on Domain {
+          id
+          domain
+          ignoredCves
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UNIGNORE_CVE = gql`
+  mutation UnignoreCve($domainId: ID!, $ignoredCve: CveID!) {
+    unignoreCve(input: { domainId: $domainId, ignoredCve: $ignoredCve }) {
+      result {
+        ... on Domain {
+          id
+          domain
+          ignoredCves
+        }
+        ... on DomainError {
+          code
+          description
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-FROM node:17-alpine as build-env
+FROM node:20.16-alpine3.19 as build-env
 
 WORKDIR /app
 
@@ -7,9 +7,7 @@ COPY . .
 
 RUN npm ci && npm run build && npm prune --production
 
-# https://github.com/astefanutti/scratch-node
-FROM astefanutti/scratch-node:17
-LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
+FROM gcr.io/distroless/nodejs20-debian12
 
 ENV HOST 0.0.0.0
 ENV PORT 3000
@@ -22,8 +20,7 @@ ENV NODE_ENV production
 # https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
-USER node
+USER nonroot
 EXPOSE 3000
 
-ENTRYPOINT ["/bin/node"]
 CMD ["index.js"]

@@ -5,7 +5,7 @@ import { connectionArgs, globalIdField } from 'graphql-relay'
 import { domainStatus } from './domain-status'
 import { AssetStateEnums, DomainTagLabel, PeriodEnums } from '../../enums'
 import { nodeInterface } from '../../node'
-import { Domain, Selectors, Year } from '../../scalars'
+import { CveID, Domain, Selectors, Year } from '../../scalars'
 import { dmarcSummaryType } from '../../dmarc-summaries/objects'
 import { dnsScanConnection } from '../../dns-scan/objects/dns-scan-connection'
 import { webConnection } from '../../web-scan/objects'
@@ -278,6 +278,11 @@ export const domainType = new GraphQLObjectType({
         })
       },
     },
+    ignoredCves: {
+      type: new GraphQLList(CveID),
+      description: 'List of CVEs that have been ignored by the user.',
+      resolve: ({ ignoredCves }) => ignoredCves,
+    },
     dmarcSummaryByPeriod: {
       description: 'Summarized DMARC aggregate reports.',
       args: {
@@ -364,11 +369,6 @@ export const domainType = new GraphQLObjectType({
       type: new GraphQLList(DomainTagLabel),
       resolve: ({ claimTags }) => claimTags,
     },
-    hidden: {
-      description: "Value that determines if a domain is excluded from an organization's results.",
-      type: GraphQLBoolean,
-      resolve: ({ hidden }) => hidden,
-    },
     userHasPermission: {
       description:
         'Value that determines if a user is affiliated with a domain, whether through organization affiliation, verified organization network affiliation, or through super admin status.',
@@ -393,6 +393,11 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: `Whether or not the certificate chain contains an Entrust certificate.`,
       resolve: ({ hasEntrustCertificate }) => hasEntrustCertificate,
+    },
+    cveDetected: {
+      type: GraphQLBoolean,
+      description: `Whether or not a CVE has been detected in the domain's additional findings.`,
+      resolve: ({ cveDetected }) => cveDetected,
     },
   }),
   interfaces: [nodeInterface],
