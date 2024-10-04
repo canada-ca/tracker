@@ -5,7 +5,7 @@ import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 import { affiliationConnection } from '../../../affiliation/objects'
 import { userPersonalType } from '../index'
-import { LanguageEnums, TfaSendMethodEnum } from '../../../enums'
+import { TfaSendMethodEnum } from '../../../enums'
 import { decryptPhoneNumber } from '../../../validators'
 
 const { CIPHER_KEY } = process.env

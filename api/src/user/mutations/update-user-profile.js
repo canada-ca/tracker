@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
-import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
+import { TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
 
 const { AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env

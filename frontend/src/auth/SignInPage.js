@@ -10,7 +10,6 @@ import { EmailField } from '../components/fields/EmailField'
 import { PasswordField } from '../components/fields/PasswordField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useUserVar } from '../utilities/userState'
-import { activate } from '../utilities/i18n.config'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { SIGN_IN } from '../graphql/mutations'
 

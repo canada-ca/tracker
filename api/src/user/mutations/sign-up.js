@@ -3,7 +3,6 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
-import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ms from 'ms'
