@@ -61,7 +61,6 @@ export const loadOrganizationSummariesByPeriod =
 
     try {
       requestedSummaryInfo = await query`
-          LET latestSummary = (RETURN MERGE(DOCUMENT(${orgId}).summaries))
           LET retrievedSummaries = (
             LET latestSummary = (RETURN DOCUMENT(${orgId}).summaries)
             LET historicalSummaries = (
@@ -72,7 +71,7 @@ export const loadOrganizationSummariesByPeriod =
             )
             FOR summary IN APPEND(latestSummary, historicalSummaries)
               SORT summary.date ${sortString}
-              RETURN summary.date
+              RETURN summary
           )
 
           RETURN {
