@@ -31,7 +31,7 @@ msgstr "Le CVE n'est pas ignoré dans ce domaine."
 msgid "Cannot query additional findings without permission."
 msgstr "Il n'est pas possible de demander des résultats supplémentaires sans autorisation."
 
-#: src/organization/objects/organization.js:323
+#: src/organization/objects/organization.js:316
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus."
 
@@ -53,7 +53,7 @@ msgstr "Impossible d'interroger les sélecteurs de domaine sans autorisation."
 msgid "Cannot query web scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse web sans autorisation."
 
-#: src/user/mutations/sign-up.js:105
+#: src/user/mutations/sign-up.js:99
 msgid "Email already in use."
 msgstr "Courriel déjà utilisé."
 
@@ -67,8 +67,8 @@ msgid "If an account with this username is found, a password reset link will be 
 msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de réinitialisation du mot de passe se trouvera dans votre boîte de réception."
 
 #: src/user/mutations/send-email-verification.js:60
-msgid "If an account with this username is found, an email verification link will be found in your inbox."
-msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception."
+#~ msgid "If an account with this username is found, an email verification link will be found in your inbox."
+#~ msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception."
 
 #: src/user/mutations/authenticate.js:217
 #: src/user/mutations/authenticate.js:224
@@ -213,7 +213,7 @@ msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` co
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedOrganization` n'est pas supporté."
 
 #: src/user/mutations/reset-password.js:100
-#: src/user/mutations/sign-up.js:83
+#: src/user/mutations/sign-up.js:77
 msgid "Password does not meet requirements."
 msgstr "Le mot de passe ne répond pas aux exigences."
 
@@ -225,7 +225,7 @@ msgstr "Le mot de passe a été réinitialisé avec succès."
 msgid "Password was successfully updated."
 msgstr "Le mot de passe a été mis à jour avec succès."
 
-#: src/user/mutations/sign-up.js:93
+#: src/user/mutations/sign-up.js:87
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
@@ -234,7 +234,7 @@ msgstr "Les mots de passe ne correspondent pas."
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission refusée : Impossible de récupérer l'organisation spécifiée."
 
-#: src/user/mutations/update-user-profile.js:112
+#: src/user/mutations/update-user-profile.js:107
 msgid "Permission Denied: Multi-factor authentication is required for admin accounts"
 msgstr "Permission refusée : L'authentification multifactorielle est requise pour les comptes admin."
 
@@ -360,7 +360,7 @@ msgstr "Le numéro de téléphone a été configuré avec succès, vous recevrez
 #~ msgid "Please provide a comment when adding an outside domain."
 #~ msgstr "Veuillez fournir un commentaire lorsque vous ajoutez un domaine externe."
 
-#: src/user/mutations/update-user-profile.js:190
+#: src/user/mutations/update-user-profile.js:185
 msgid "Profile successfully updated."
 msgstr "Le profil a été mis à jour avec succès."
 
@@ -476,8 +476,12 @@ msgid "Successfully dispatched subdomain discovery scan."
 msgstr "L'analyse de découverte du sous-domaine a été effectuée avec succès."
 
 #: src/user/mutations/verify-account.js:97
-msgid "Successfully email verified account, and set TFA send method to email."
-msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
+#~ msgid "Successfully email verified account, and set TFA send method to email."
+#~ msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
+
+#: src/user/mutations/verify-account.js:141
+msgid "Successfully email verified account."
+msgstr "Envoi d'un courriel à un compte vérifié."
 
 #: src/affiliation/mutations/invite-user-to-org.js:283
 msgid "Successfully invited user to organization, and sent notification email."
@@ -511,7 +515,7 @@ msgstr "Supprimé avec succès le(s) domaine(s) {domainCount} de {0}."
 #~ msgid "Successfully removed {domainCount} domains from {0}."
 #~ msgstr "Suppression réussie des domaines {domainCount} de {0}."
 
-#: src/affiliation/mutations/request-org-affiliation.js:240
+#: src/affiliation/mutations/request-org-affiliation.js:239
 msgid "Successfully requested invite to organization, and sent notification email."
 msgstr "La demande d'invitation à l'organisation a été effectuée avec succès et un courriel de notification a été envoyé."
 
@@ -636,8 +640,8 @@ msgstr "Impossible de découvrir les domaines d'une organisation inconnue."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Impossible d'envoyer un scan unique. Veuillez réessayer."
 
-#: src/organization/objects/organization.js:221
-#: src/organization/objects/organization.js:231
+#: src/organization/objects/organization.js:214
+#: src/organization/objects/organization.js:224
 msgid "Unable to export organization. Please try again."
 msgstr "Impossible d'exporter l'organisation. Veuillez réessayer."
 
@@ -1193,7 +1197,7 @@ msgstr "Impossible de demander une invitation à une organisation inconnue."
 #: src/affiliation/mutations/request-org-affiliation.js:148
 #: src/affiliation/mutations/request-org-affiliation.js:168
 #: src/affiliation/mutations/request-org-affiliation.js:177
-#: src/affiliation/mutations/request-org-affiliation.js:208
+#: src/affiliation/mutations/request-org-affiliation.js:207
 msgid "Unable to request invite. Please try again."
 msgstr "Impossible de demander une invitation. Veuillez réessayer."
 
@@ -1239,10 +1243,15 @@ msgid "Unable to send password reset email. Please try again."
 msgstr "Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer."
 
 #: src/notify/notify-send-tfa-text-msg.js:30
-msgid "Unable to send two factor authentication message. Please try again."
-msgstr "Impossible d'envoyer le message d'authentification à deux facteurs. Veuillez réessayer."
+#~ msgid "Unable to send two factor authentication message. Please try again."
+#~ msgstr "Impossible d'envoyer le message d'authentification à deux facteurs. Veuillez réessayer."
 
-#: src/notify/notify-send-verification-email.js:30
+#: src/notify/notify-send-updated-username-email.js:18
+#: src/user/mutations/verify-account.js:102
+msgid "Unable to send updated username email. Please try again."
+msgstr "Impossible d'envoyer l'email de mise à jour du nom d'utilisateur. Veuillez réessayer."
+
+#: src/notify/notify-send-verification-email.js:18
 msgid "Unable to send verification email. Please try again."
 msgstr "Impossible d'envoyer l'email de vérification. Veuillez réessayer."
 
@@ -1261,15 +1270,15 @@ msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
-#: src/user/mutations/sign-up.js:184
-#: src/user/mutations/sign-up.js:194
+#: src/user/mutations/sign-up.js:177
+#: src/user/mutations/sign-up.js:187
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation."
 
-#: src/user/mutations/sign-up.js:157
-#: src/user/mutations/sign-up.js:165
-#: src/user/mutations/sign-up.js:214
-#: src/user/mutations/sign-up.js:222
+#: src/user/mutations/sign-up.js:150
+#: src/user/mutations/sign-up.js:158
+#: src/user/mutations/sign-up.js:207
+#: src/user/mutations/sign-up.js:215
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
@@ -1363,8 +1372,8 @@ msgstr "Impossible de mettre à jour le mot de passe, les mots de passe ne corre
 msgid "Unable to update password. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
 
-#: src/user/mutations/update-user-profile.js:162
-#: src/user/mutations/update-user-profile.js:169
+#: src/user/mutations/update-user-profile.js:152
+#: src/user/mutations/update-user-profile.js:159
 msgid "Unable to update profile. Please try again."
 msgstr "Impossible de mettre à jour le profil. Veuillez réessayer."
 
@@ -1399,13 +1408,14 @@ msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessa
 msgid "Unable to update your own role."
 msgstr "Impossible de mettre à jour votre propre rôle."
 
-#: src/user/mutations/verify-account.js:49
+#: src/user/mutations/verify-account.js:51
 #: src/user/mutations/verify-account.js:63
+#: src/user/mutations/verify-account.js:77
 msgid "Unable to verify account. Please request a new email."
 msgstr "Impossible de vérifier le compte. Veuillez demander un nouvel e-mail."
 
-#: src/user/mutations/verify-account.js:83
-#: src/user/mutations/verify-account.js:90
+#: src/user/mutations/verify-account.js:127
+#: src/user/mutations/verify-account.js:134
 msgid "Unable to verify account. Please try again."
 msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 
@@ -1413,7 +1423,7 @@ msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer."
 
-#: src/user/mutations/update-user-profile.js:102
+#: src/user/mutations/update-user-profile.js:97
 #: src/user/queries/is-user-admin.js:55
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer."
@@ -1436,7 +1446,8 @@ msgstr "L'utilisateur n'a pas pu être interrogé."
 msgid "User role was updated successfully."
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès."
 
-#: src/user/mutations/update-user-profile.js:83
+#: src/user/mutations/update-user-profile.js:78
+#: src/user/mutations/verify-account.js:88
 msgid "Username not available, please try another."
 msgstr "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre."
 
