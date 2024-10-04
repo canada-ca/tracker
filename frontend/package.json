@@ -2,7 +2,7 @@
   "name": "tracker-frontend",
   "version": "0.1.0",
   "scripts": {
-    "build": "webpack --env development --config webpack.config.js",
+    "build": "webpack --env production --config webpack.config.js",
     "dev": "webpack serve --hot --env development",
     "webpack": "webpack",
     "start": "NODE_OPTIONS=--openssl-legacy-provider node index.js",
