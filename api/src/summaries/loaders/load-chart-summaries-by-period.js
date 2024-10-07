@@ -1,7 +1,6 @@
-import { toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const loadChartSummaryConnectionsByPeriod =
+export const loadChartSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ period, year }) => {
     if (typeof period === 'undefined') {
@@ -57,11 +56,7 @@ export const loadChartSummaryConnectionsByPeriod =
               SORT summary.date ASC
               RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
           )
-
-          RETURN {
-            "summaries": retrievedSummaries,
-            "totalCount": LENGTH(retrievedSummaries),
-          }
+          RETURN retrievedSummaries
         `
     } catch (err) {
       console.error(
@@ -80,35 +75,5 @@ export const loadChartSummaryConnectionsByPeriod =
       throw new Error(i18n._(t`Unable to load chart summary data. Please try again.`))
     }
 
-    if (summariesInfo.summaries.length === 0) {
-      return {
-        edges: [],
-        totalCount: 0,
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-          startCursor: '',
-          endCursor: '',
-        },
-      }
-    }
-
-    const edges = summariesInfo.summaries.map((summary) => {
-      summary.startDate = startDate
-      return {
-        cursor: toGlobalId('chartSummary', summary.id),
-        node: summary,
-      }
-    })
-
-    return {
-      edges,
-      totalCount: summariesInfo.totalCount,
-      pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false,
-        startCursor: '',
-        endCursor: '',
-      },
-    }
+    return summariesInfo || []
   }

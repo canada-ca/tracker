@@ -1,4 +1,3 @@
-import { toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { aql } from 'arangojs'
 
@@ -62,7 +61,7 @@ export const loadOrganizationSummariesByPeriod =
     try {
       requestedSummaryInfo = await query`
           LET retrievedSummaries = (
-            LET latestSummary = (RETURN DOCUMENT("${orgId}").summaries)
+            LET latestSummary = (RETURN DOCUMENT(organizations, ${orgId}).summaries)
             LET historicalSummaries = (
               FOR summary IN organizationSummaries
                 FILTER summary.organization == ${orgId}
@@ -73,11 +72,7 @@ export const loadOrganizationSummariesByPeriod =
               SORT summary.date ${sortString}
               RETURN summary
           )
-
-          RETURN {
-            "summaries": retrievedSummaries,
-            "totalCount": LENGTH(retrievedSummaries),
-          }
+          RETURN retrievedSummaries
         `
     } catch (err) {
       console.error(
@@ -96,35 +91,5 @@ export const loadOrganizationSummariesByPeriod =
       throw new Error(i18n._(t`Unable to load organization summary data. Please try again.`))
     }
 
-    if (summariesInfo.summaries.length === 0) {
-      return {
-        edges: [],
-        totalCount: 0,
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-          startCursor: '',
-          endCursor: '',
-        },
-      }
-    }
-
-    const edges = summariesInfo.summaries.map((summary) => {
-      summary.startDate = startDate
-      return {
-        cursor: toGlobalId('organizationSummary', summary._key),
-        node: summary,
-      }
-    })
-
-    return {
-      edges,
-      totalCount: summariesInfo.totalCount,
-      pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false,
-        startCursor: '',
-        endCursor: '',
-      },
-    }
+    return summariesInfo || []
   }

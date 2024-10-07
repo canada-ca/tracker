@@ -1,11 +1,11 @@
-import { GraphQLNonNull } from 'graphql'
+import { GraphQLList, GraphQLNonNull } from 'graphql'
 
 import { Year } from '../../scalars'
 import { PeriodEnums } from '../../enums'
-import { chartSummaryConnection } from '../objects'
+import { chartSummaryType } from '../objects'
 
 export const findChartSummaries = {
-  type: chartSummaryConnection.connectionType,
+  type: new GraphQLList(chartSummaryType),
   description: 'Select domains a user has access to.',
   args: {
     month: {
@@ -20,18 +20,14 @@ export const findChartSummaries = {
   resolve: async (
     _,
     args,
-    {
-      userKey,
-      auth: { userRequired, loginRequiredBool, verifiedRequired },
-      loaders: { loadChartSummaryConnectionsByPeriod },
-    },
+    { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadChartSummariesByPeriod } },
   ) => {
     if (loginRequiredBool) {
       const user = await userRequired()
       verifiedRequired({ user })
     }
 
-    const summaryConnections = await loadChartSummaryConnectionsByPeriod({
+    const summaryConnections = await loadChartSummariesByPeriod({
       period: args.month,
       ...args,
     })
