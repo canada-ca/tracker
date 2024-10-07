@@ -98,7 +98,7 @@ const I18nApp = () => {
 }
 
 const setUpApp = async () => {
-  await activate(defaultLocale)
+  await activate(['en', 'fr'].includes(window.APP_DEFAULT_LANGUAGE) ? window.APP_DEFAULT_LANGUAGE : defaultLocale)
 
   const root = createRoot(document.getElementById('root'))
   root.render(
