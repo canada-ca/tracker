@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadChartSummaryConnectionsByPeriod } from '../../loaders'
+import { loadChartSummariesByPeriod } from '../../loaders'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -118,8 +118,6 @@ describe('given findMyOrganizationsQuery', () => {
                 source: `
                   query {
                     findChartSummaries(month: JANUARY, year: "2021") {
-                        edges {
-                        node {
                             date
                             dmarc {
                             categories {
@@ -138,9 +136,6 @@ describe('given findMyOrganizationsQuery', () => {
                             }
                             }
                             id
-                        }
-                        }
-                        totalCount
                     }
                     }
                 `,
@@ -161,7 +156,7 @@ describe('given findMyOrganizationsQuery', () => {
                     verifiedRequired: verifiedRequired({}),
                   },
                   loaders: {
-                    loadChartSummaryConnectionsByPeriod: loadChartSummaryConnectionsByPeriod({
+                    loadChartSummariesByPeriod: loadChartSummariesByPeriod({
                       query,
                       userKey: user._key,
                       cleanseInput,
@@ -174,83 +169,77 @@ describe('given findMyOrganizationsQuery', () => {
 
               const expectedResponse = {
                 data: {
-                  findChartSummaries: {
-                    edges: [
-                      {
-                        node: {
-                          id: toGlobalId('chartSummary', sum1._key),
-                          date: '2021-01-01',
-                          https: {
-                            total: 1,
-                            categories: [
-                              {
-                                count: 1,
-                                name: 'pass',
-                                percentage: 100,
-                              },
-                              {
-                                count: 0,
-                                name: 'fail',
-                                percentage: 0,
-                              },
-                            ],
+                  findChartSummaries: [
+                    {
+                      id: toGlobalId('chartSummary', sum1._key),
+                      date: '2021-01-01',
+                      https: {
+                        total: 1,
+                        categories: [
+                          {
+                            count: 1,
+                            name: 'pass',
+                            percentage: 100,
                           },
-                          dmarc: {
-                            total: 1,
-                            categories: [
-                              {
-                                count: 1,
-                                name: 'pass',
-                                percentage: 100,
-                              },
-                              {
-                                count: 0,
-                                name: 'fail',
-                                percentage: 0,
-                              },
-                            ],
+                          {
+                            count: 0,
+                            name: 'fail',
+                            percentage: 0,
                           },
-                        },
+                        ],
                       },
-                      {
-                        node: {
-                          id: toGlobalId('chartSummary', sum2._key),
-                          date: '2021-01-02',
-                          https: {
-                            total: 2,
-                            categories: [
-                              {
-                                count: 1,
-                                name: 'pass',
-                                percentage: 50,
-                              },
-                              {
-                                count: 1,
-                                name: 'fail',
-                                percentage: 50,
-                              },
-                            ],
+                      dmarc: {
+                        total: 1,
+                        categories: [
+                          {
+                            count: 1,
+                            name: 'pass',
+                            percentage: 100,
                           },
-                          dmarc: {
-                            total: 2,
-                            categories: [
-                              {
-                                count: 2,
-                                name: 'pass',
-                                percentage: 100,
-                              },
-                              {
-                                count: 0,
-                                name: 'fail',
-                                percentage: 0,
-                              },
-                            ],
+                          {
+                            count: 0,
+                            name: 'fail',
+                            percentage: 0,
                           },
-                        },
+                        ],
                       },
-                    ],
-                    totalCount: 2,
-                  },
+                    },
+
+                    {
+                      id: toGlobalId('chartSummary', sum2._key),
+                      date: '2021-01-02',
+                      https: {
+                        total: 2,
+                        categories: [
+                          {
+                            count: 1,
+                            name: 'pass',
+                            percentage: 50,
+                          },
+                          {
+                            count: 1,
+                            name: 'fail',
+                            percentage: 50,
+                          },
+                        ],
+                      },
+                      dmarc: {
+                        total: 2,
+                        categories: [
+                          {
+                            count: 2,
+                            name: 'pass',
+                            percentage: 100,
+                          },
+                          {
+                            count: 0,
+                            name: 'fail',
+                            percentage: 0,
+                          },
+                        ],
+                      },
+                    },
+                  ],
                 },
               }
               expect(response).toEqual(expectedResponse)
@@ -286,8 +275,6 @@ describe('given findMyOrganizationsQuery', () => {
             source: `
                   query {
                     findChartSummaries(month: JANUARY, year: "2021") {
-                        edges {
-                        node {
                             date
                             dmarc {
                             categories {
@@ -306,9 +293,6 @@ describe('given findMyOrganizationsQuery', () => {
                             }
                             }
                             id
-                        }
-                        }
-                        totalCount
                     }
                     }
                 `,
@@ -322,7 +306,7 @@ describe('given findMyOrganizationsQuery', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadChartSummaryConnectionsByPeriod: loadChartSummaryConnectionsByPeriod({
+                loadChartSummariesByPeriod: loadChartSummariesByPeriod({
                   query: mockedQuery,
                   userKey: user._key,
                   cleanseInput,

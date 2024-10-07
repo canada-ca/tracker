@@ -11,7 +11,6 @@ import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
 import { OrderDirection, PeriodEnums } from '../../enums'
-import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -73,7 +72,7 @@ export const organizationType = new GraphQLObjectType({
       resolve: ({ summaries }) => summaries,
     },
     historicalSummaries: {
-      type: orgSummaryConnection.connectionType,
+      type: new GraphQLList(organizationSummaryType),
       description: 'Historical summaries based on scan types that are preformed on the given organizations domains.',
       args: {
         month: {
