@@ -101,40 +101,37 @@ export const LANDING_PAGE_SUMMARIES = gql`
 export const GET_HISTORICAL_CHART_SUMMARIES = gql`
   query FindChartSummaries($month: PeriodEnums!, $year: Year!) {
     findChartSummaries(month: $month, year: $year) {
-      edges {
-        node {
-          date
-          https {
-            ...RequiredSummaryFields
-          }
-          dmarc {
-            ...RequiredSummaryFields
-          }
-          dkim {
-            ...RequiredSummaryFields
-          }
-          spf {
-            ...RequiredSummaryFields
-          }
-          ssl {
-            ...RequiredSummaryFields
-          }
-          webConnections {
-            ...RequiredSummaryFields
-          }
-          dmarcPhase {
-            ...RequiredSummaryFields
-          }
-          web {
-            ...RequiredSummaryFields
-          }
-          mail {
-            ...RequiredSummaryFields
-          }
-        }
+      date
+      https {
+        ...RequiredSummaryFields
+      }
+      dmarc {
+        ...RequiredSummaryFields
+      }
+      dkim {
+        ...RequiredSummaryFields
+      }
+      spf {
+        ...RequiredSummaryFields
+      }
+      ssl {
+        ...RequiredSummaryFields
+      }
+      webConnections {
+        ...RequiredSummaryFields
+      }
+      dmarcPhase {
+        ...RequiredSummaryFields
+      }
+      web {
+        ...RequiredSummaryFields
+      }
+      mail {
+        ...RequiredSummaryFields
       }
     }
   }
+
   ${Summary.fragments.requiredFields}
 `
 
@@ -670,42 +667,38 @@ export const GET_HISTORICAL_ORG_SUMMARIES = gql`
   query GetOrgSummaries($orgSlug: Slug!, $month: PeriodEnums!, $year: Year!) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
-        totalCount
-        edges {
-          node {
-            date
-            https {
-              ...RequiredSummaryFields
-            }
-            dmarc {
-              ...RequiredSummaryFields
-            }
-            dkim {
-              ...RequiredSummaryFields
-            }
-            spf {
-              ...RequiredSummaryFields
-            }
-            ssl {
-              ...RequiredSummaryFields
-            }
-            webConnections {
-              ...RequiredSummaryFields
-            }
-            dmarcPhase {
-              ...RequiredSummaryFields
-            }
-            web {
-              ...RequiredSummaryFields
-            }
-            mail {
-              ...RequiredSummaryFields
-            }
-          }
+        date
+        https {
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
+        }
+        dmarcPhase {
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
         }
       }
     }
   }
+
   ${Summary.fragments.requiredFields}
 `
 
