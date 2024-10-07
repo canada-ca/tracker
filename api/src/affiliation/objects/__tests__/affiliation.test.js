@@ -61,7 +61,6 @@ describe('given the user affiliation object', () => {
           id: '1',
           displayName: 'Test Account',
           emailValidated: false,
-          preferredLang: 'french',
           tfaValidated: false,
           userName: 'test.account@istio.actually.exists',
         }

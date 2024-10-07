@@ -55,7 +55,6 @@ describe('given findMyOrganizationsQuery', () => {
       user = await collections.users.save({
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
-        preferredLang: 'english',
         emailValidated: true,
       })
       sum1 = await collections.chartSummaries.save({

@@ -3,7 +3,6 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
-import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ms from 'ms'
@@ -29,10 +28,6 @@ export const signUp = new mutationWithClientMutationId({
     confirmPassword: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'A secondary password field used to confirm the user entered the correct password.',
-    },
-    preferredLang: {
-      type: new GraphQLNonNull(LanguageEnums),
-      description: 'The users preferred language.',
     },
     signUpToken: {
       type: GraphQLString,
@@ -70,7 +65,6 @@ export const signUp = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const password = cleanseInput(args.password)
     const confirmPassword = cleanseInput(args.confirmPassword)
-    const preferredLang = cleanseInput(args.preferredLang)
     const signUpToken = cleanseInput(args.signUpToken)
     const rememberMe = args.rememberMe
 
@@ -117,7 +111,6 @@ export const signUp = new mutationWithClientMutationId({
       displayName: displayName,
       userName: userName,
       password: hashedPassword,
-      preferredLang: preferredLang,
       phoneValidated: false,
       emailValidated: false,
       insideUser: false,

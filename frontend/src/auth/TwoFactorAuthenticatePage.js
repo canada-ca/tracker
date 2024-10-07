@@ -9,7 +9,6 @@ import { ErrorMessage, Formik } from 'formik'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { AuthenticateField } from '../components/fields/AuthenticateField'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { activate } from '../utilities/i18n.config'
 import { useUserVar } from '../utilities/userState'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { AUTHENTICATE } from '../graphql/mutations'
@@ -46,8 +45,6 @@ export default function TwoFactorAuthenticatePage() {
           insideUser: authenticate.result.user.insideUser,
           affiliations: authenticate.result.user.affiliations,
         })
-        if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
-        else if (authenticate.result.user.preferredLang === 'FRENCH') activate('fr')
         // redirect to the home page.
         history.replace(from)
         // Display a welcome message

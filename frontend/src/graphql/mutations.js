@@ -7,7 +7,6 @@ export const SIGN_UP = gql`
     $userName: EmailAddress!
     $password: String!
     $confirmPassword: String!
-    $preferredLang: LanguageEnums!
     $signUpToken: String!
   ) {
     signUp(
@@ -16,7 +15,6 @@ export const SIGN_UP = gql`
         userName: $userName
         password: $password
         confirmPassword: $confirmPassword
-        preferredLang: $preferredLang
         signUpToken: $signUpToken
       }
     ) {
@@ -118,7 +116,6 @@ export const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile(
     $displayName: String
     $userName: EmailAddress
-    $preferredLang: LanguageEnums
     $tfaSendMethod: TFASendMethodEnum
     $insideUser: Boolean
     $receiveUpdateEmails: Boolean
@@ -127,7 +124,6 @@ export const UPDATE_USER_PROFILE = gql`
       input: {
         displayName: $displayName
         userName: $userName
-        preferredLang: $preferredLang
         tfaSendMethod: $tfaSendMethod
         insideUser: $insideUser
         receiveUpdateEmails: $receiveUpdateEmails
@@ -140,7 +136,6 @@ export const UPDATE_USER_PROFILE = gql`
             id
             displayName
             userName
-            preferredLang
             tfaSendMethod
             insideUser
             receiveUpdateEmails
@@ -361,14 +356,6 @@ export const VERIFY_PHONE_NUMBER = gql`
           description
         }
       }
-    }
-  }
-`
-
-export const SEND_EMAIL_VERIFICATION = gql`
-  mutation SendEmailVerification($userName: EmailAddress!) {
-    sendEmailVerification(input: { userName: $userName }) {
-      status
     }
   }
 `

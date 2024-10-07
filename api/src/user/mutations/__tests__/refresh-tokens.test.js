@@ -71,7 +71,6 @@ describe('refresh users tokens', () => {
         user = await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'english',
           phoneValidated: false,
           emailValidated: false,
           tfaCode: null,
@@ -172,7 +171,6 @@ describe('refresh users tokens', () => {
         user = await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'english',
           phoneValidated: false,
           emailValidated: false,
           tfaCode: null,

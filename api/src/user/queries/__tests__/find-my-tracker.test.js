@@ -54,7 +54,6 @@ describe('given findMyTracker query', () => {
       user = await collections.users.save({
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
-        preferredLang: 'french',
         emailValidated: true,
       })
 

@@ -80,10 +80,7 @@ describe('<SignInPage />', () => {
 
       fireEvent.blur(password)
 
-      const errorElement = await waitFor(
-        () => getByText(container, /Password cannot be empty/i),
-        { container },
-      )
+      const errorElement = await waitFor(() => getByText(container, /Password cannot be empty/i), { container })
 
       expect(errorElement.innerHTML).toMatch(/Password cannot be empty/i)
     })
@@ -168,9 +165,7 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(history.location.pathname).toEqual(
-            `/authenticate/email/${values.authenticateToken}`,
-          )
+          expect(history.location.pathname).toEqual(`/authenticate/email/${values.authenticateToken}`)
         })
       })
     })
@@ -199,7 +194,6 @@ describe('<SignInPage />', () => {
                       id: '1234asdf',
                       userName: 'Thalia.Rosenbaum@gmail.com',
                       tfaSendMethod: false,
-                      preferredLang: 'en',
                       emailValidated: true,
                     },
                     authToken: 'test123stringJWT',
@@ -336,11 +330,7 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(
-            queryByText(
-              /Unable to sign in to your account, please try again./i,
-            ),
-          )
+          expect(queryByText(/Unable to sign in to your account, please try again./i))
         })
       })
     })
@@ -415,11 +405,7 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(
-            queryByText(
-              /Unable to sign in to your account, please try again./i,
-            ),
-          )
+          expect(queryByText(/Unable to sign in to your account, please try again./i))
           expect(queryByText(/foobar/i))
         })
       })

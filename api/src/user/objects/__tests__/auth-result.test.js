@@ -1,6 +1,6 @@
-import {GraphQLString} from 'graphql'
+import { GraphQLString } from 'graphql'
 
-import {authResultType, userPersonalType} from '../index'
+import { authResultType, userPersonalType } from '../index'
 
 describe('given the auth result gql object', () => {
   describe('testing field definitions', () => {
@@ -23,9 +23,7 @@ describe('given the auth result gql object', () => {
       it('returns the resolved field', () => {
         const demoType = authResultType.getFields()
 
-        expect(demoType.authToken.resolve({token: 'authToken'})).toEqual(
-          'authToken',
-        )
+        expect(demoType.authToken.resolve({ token: 'authToken' })).toEqual('authToken')
       })
     })
     describe('testing the user field', () => {
@@ -35,7 +33,6 @@ describe('given the auth result gql object', () => {
         const user = {
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'french',
           tfaValidated: false,
           emailValidated: false,
         }
@@ -43,12 +40,11 @@ describe('given the auth result gql object', () => {
         const expectedResult = {
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'french',
           tfaValidated: false,
           emailValidated: false,
         }
 
-        expect(demoType.user.resolve({user})).toEqual(expectedResult)
+        expect(demoType.user.resolve({ user })).toEqual(expectedResult)
       })
     })
   })
