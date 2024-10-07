@@ -62,7 +62,7 @@ export const loadOrganizationSummariesByPeriod =
     try {
       requestedSummaryInfo = await query`
           LET retrievedSummaries = (
-            LET latestSummary = (RETURN DOCUMENT(${orgId}).summaries)
+            LET latestSummary = (RETURN DOCUMENT("${orgId}").summaries)
             LET historicalSummaries = (
               FOR summary IN organizationSummaries
                 FILTER summary.organization == ${orgId}
