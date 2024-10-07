@@ -1,5 +1,4 @@
 import { loadOrganizationSummariesByPeriod } from '../load-organization-summaries-by-period'
-import { toGlobalId } from 'graphql-relay'
 
 describe('loadOrganizationSummariesByPeriod', () => {
   let query, userKey, cleanseInput, i18n
@@ -36,27 +35,12 @@ describe('loadOrganizationSummariesByPeriod', () => {
       { _key: '2', date: '2023-01-02' },
     ]
     query.mockResolvedValueOnce({
-      next: jest.fn().mockResolvedValueOnce({
-        summaries: mockSummaries,
-        totalCount: mockSummaries.length,
-      }),
+      next: jest.fn().mockResolvedValueOnce(mockSummaries),
     })
 
     const result = await loader({ orgId: 'org1', period: 'january', year: '2023', sortDirection: 'ASC' })
 
-    expect(result).toEqual({
-      edges: mockSummaries.map((summary) => ({
-        cursor: toGlobalId('organizationSummary', summary._key),
-        node: summary,
-      })),
-      totalCount: mockSummaries.length,
-      pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false,
-        startCursor: '',
-        endCursor: '',
-      },
-    })
+    expect(result).toEqual(mockSummaries)
   })
 
   it('handles database errors gracefully', async () => {
