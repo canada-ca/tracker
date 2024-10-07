@@ -35,7 +35,7 @@ const i18n = setupI18n({
   },
 })
 
-describe('<DmarcReportSummaryGraph />', () => {
+describe('<HistoricalSummariesGraph />', () => {
   it('renders correctly', async () => {
     const { queryByText } = render(
       <ChakraProvider theme={theme}>

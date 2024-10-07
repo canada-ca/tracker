@@ -341,183 +341,170 @@ export const formattedBarData = {
   strengths: strengths,
 }
 
-export const historicalSummariesData = {
-  totalCount: 5,
-  edges: [
-    {
-      node: {
-        date: '2019-10-14 05:50:24.205Z',
-        https: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 4.150168646429095,
-              count: 283,
-            },
-            {
-              name: 'fail',
-              percentage: 95.8498313535709,
-              count: 6536,
-            },
-          ],
-          total: 6819,
+export const historicalSummariesData = [
+  {
+    date: '2019-10-14 05:50:24.205Z',
+    https: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 4.150168646429095,
+          count: 283,
         },
-        dmarc: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 85.36470031918667,
-              count: 7221,
-            },
-            {
-              name: 'fail',
-              percentage: 14.635299680813333,
-              count: 1238,
-            },
-          ],
-          total: 8459,
+        {
+          name: 'fail',
+          percentage: 95.8498313535709,
+          count: 6536,
         },
-      },
+      ],
+      total: 6819,
     },
-    {
-      node: {
-        date: '2021-01-11 17:11:22.816Z',
-        https: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 28.764044943820227,
-              count: 2560,
-            },
-            {
-              name: 'fail',
-              percentage: 71.23595505617978,
-              count: 6340,
-            },
-          ],
-          total: 8900,
+    dmarc: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 85.36470031918667,
+          count: 7221,
         },
-        dmarc: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 50.34241976634887,
-              count: 3749,
-            },
-            {
-              name: 'fail',
-              percentage: 49.65758023365113,
-              count: 3698,
-            },
-          ],
-          total: 7447,
+        {
+          name: 'fail',
+          percentage: 14.635299680813333,
+          count: 1238,
         },
-      },
+      ],
+      total: 8459,
     },
-    {
-      node: {
-        date: '2020-08-13 02:50:46.016Z',
-        https: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 44.29810969941122,
-              count: 2859,
-            },
-            {
-              name: 'fail',
-              percentage: 55.70189030058878,
-              count: 3595,
-            },
-          ],
-          total: 6454,
+  },
+  {
+    date: '2021-01-11 17:11:22.816Z',
+    https: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 28.764044943820227,
+          count: 2560,
         },
-        dmarc: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 26.40058055152395,
-              count: 1819,
-            },
-            {
-              name: 'fail',
-              percentage: 73.59941944847606,
-              count: 5071,
-            },
-          ],
-          total: 6890,
+        {
+          name: 'fail',
+          percentage: 71.23595505617978,
+          count: 6340,
         },
-      },
+      ],
+      total: 8900,
     },
-    {
-      node: {
-        date: '2019-08-26 18:13:26.122Z',
-        https: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 75.69863626201654,
-              count: 3386,
-            },
-            {
-              name: 'fail',
-              percentage: 24.301363737983465,
-              count: 1087,
-            },
-          ],
-          total: 4473,
+    dmarc: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 50.34241976634887,
+          count: 3749,
         },
-        dmarc: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 64.32771462171696,
-              count: 4923,
-            },
-            {
-              name: 'fail',
-              percentage: 35.672285378283036,
-              count: 2730,
-            },
-          ],
-          total: 7653,
+        {
+          name: 'fail',
+          percentage: 49.65758023365113,
+          count: 3698,
         },
-      },
+      ],
+      total: 7447,
     },
-    {
-      node: {
-        date: '2019-11-11 16:07:35.754Z',
-        https: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 9.605457227138643,
-              count: 521,
-            },
-            {
-              name: 'fail',
-              percentage: 90.39454277286136,
-              count: 4903,
-            },
-          ],
-          total: 5424,
+  },
+  {
+    date: '2020-08-13 02:50:46.016Z',
+    https: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 44.29810969941122,
+          count: 2859,
         },
-        dmarc: {
-          categories: [
-            {
-              name: 'pass',
-              percentage: 15.824622531939605,
-              count: 1090,
-            },
-            {
-              name: 'fail',
-              percentage: 84.17537746806039,
-              count: 5798,
-            },
-          ],
-          total: 6888,
+        {
+          name: 'fail',
+          percentage: 55.70189030058878,
+          count: 3595,
         },
-      },
+      ],
+      total: 6454,
     },
-  ],
-}
+    dmarc: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 26.40058055152395,
+          count: 1819,
+        },
+        {
+          name: 'fail',
+          percentage: 73.59941944847606,
+          count: 5071,
+        },
+      ],
+      total: 6890,
+    },
+  },
+  {
+    date: '2019-08-26 18:13:26.122Z',
+    https: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 75.69863626201654,
+          count: 3386,
+        },
+        {
+          name: 'fail',
+          percentage: 24.301363737983465,
+          count: 1087,
+        },
+      ],
+      total: 4473,
+    },
+    dmarc: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 64.32771462171696,
+          count: 4923,
+        },
+        {
+          name: 'fail',
+          percentage: 35.672285378283036,
+          count: 2730,
+        },
+      ],
+      total: 7653,
+    },
+  },
+  {
+    date: '2019-11-11 16:07:35.754Z',
+    https: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 9.605457227138643,
+          count: 521,
+        },
+        {
+          name: 'fail',
+          percentage: 90.39454277286136,
+          count: 4903,
+        },
+      ],
+      total: 5424,
+    },
+    dmarc: {
+      categories: [
+        {
+          name: 'pass',
+          percentage: 15.824622531939605,
+          count: 1090,
+        },
+        {
+          name: 'fail',
+          percentage: 84.17537746806039,
+          count: 5798,
+        },
+      ],
+      total: 6888,
+    },
+  },
+]
