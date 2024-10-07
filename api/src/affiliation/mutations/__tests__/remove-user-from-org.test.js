@@ -97,7 +97,6 @@ const orgTwoData = {
 const adminData = {
   userName: 'admin.account@istio.actually.exists',
   displayName: 'Test Admin',
-  preferredLang: 'french',
   tfaValidated: false,
   emailValidated: true,
   tfaSendMethod: 'email',
@@ -106,7 +105,6 @@ const adminData = {
 const userData = {
   userName: 'test.account@istio.actually.exists',
   displayName: 'Test Account',
-  preferredLang: 'french',
   tfaValidated: false,
   emailValidated: true,
   tfaSendMethod: 'email',

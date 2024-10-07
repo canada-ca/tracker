@@ -56,14 +56,12 @@ describe('given the findUserByUsername query', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
       })
       userTwo = await collections.users.save({
         userName: 'test.accounttwo@istio.actually.exists',
         displayName: 'Test Account Two',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
       })

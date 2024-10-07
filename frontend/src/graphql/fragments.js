@@ -9,7 +9,6 @@ export const Authorization = {
           id
           userName
           tfaSendMethod
-          preferredLang
           emailValidated
           insideUser
           affiliations(first: 1) {

@@ -29,7 +29,6 @@ describe('given the checkUserBelongsToOrg function', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
       })

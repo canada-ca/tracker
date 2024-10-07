@@ -4,7 +4,7 @@ import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 import { affiliationOrgOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
-import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
+import { TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
 
 export const userPersonalType = new GraphQLObjectType({
@@ -30,11 +30,6 @@ export const userPersonalType = new GraphQLObjectType({
         }
         return decryptPhoneNumber(phoneDetails)
       },
-    },
-    preferredLang: {
-      type: LanguageEnums,
-      description: 'Users preferred language.',
-      resolve: ({ preferredLang }) => preferredLang,
     },
     phoneValidated: {
       type: GraphQLBoolean,

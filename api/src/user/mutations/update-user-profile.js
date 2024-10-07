@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
-import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
+import { TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
 
 const { AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
@@ -20,10 +20,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
     userName: {
       type: GraphQLEmailAddress,
       description: 'The updated user name the user wishes to change to.',
-    },
-    preferredLang: {
-      type: LanguageEnums,
-      description: 'The updated preferred language the user wishes to change to.',
     },
     tfaSendMethod: {
       type: TfaSendMethodEnum,
@@ -64,7 +60,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
     // Cleanse Input
     const displayName = cleanseInput(args.displayName)
     const userName = cleanseInput(args.userName).toLowerCase()
-    const preferredLang = cleanseInput(args.preferredLang)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
     const insideUserBool = args.insideUser
     const receiveUpdateEmailsBool = args.receiveUpdateEmails
@@ -125,20 +120,15 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = user.tfaSendMethod
     }
 
-    let emailValidated = user.emailValidated
     let changedUserName = false
     if (userName !== user.userName && userName !== '') {
       changedUserName = true
-      emailValidated = false
     }
 
-    // Create object containing updated data
+    // Create object containing updated data expect username. Username is handled separately for verification.
     const updatedUser = {
       displayName: displayName || user.displayName,
-      userName: userName || user.userName,
-      preferredLang: preferredLang || user.preferredLang,
       tfaSendMethod: tfaSendMethod,
-      emailValidated,
       insideUser: typeof insideUserBool !== 'undefined' ? insideUserBool : user?.insideUser,
       receiveUpdateEmails:
         typeof receiveUpdateEmailsBool !== 'undefined' ? receiveUpdateEmailsBool : user?.receiveUpdateEmails,
@@ -175,13 +165,18 @@ export const updateUserProfile = new mutationWithClientMutationId({
     if (changedUserName) {
       const token = tokenize({
         expiresIn: AUTH_TOKEN_EXPIRY,
-        parameters: { userKey: returnUser._key },
+        parameters: { userKey: returnUser._key, userName: userName },
         secret: String(AUTHENTICATED_KEY),
       })
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
-      await sendVerificationEmail({ user: returnUser, verifyUrl })
+      await sendVerificationEmail({
+        userName: userName,
+        displayName: returnUser.displayName,
+        verifyUrl: verifyUrl,
+        userKey: returnUser._key,
+      })
     }
 
     console.info(`User: ${userKey} successfully updated their profile.`)

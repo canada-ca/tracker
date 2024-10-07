@@ -81,7 +81,6 @@ const successMocks = [
         userName: 'newUser@test.ca',
         requestedRole: 'USER',
         orgId: rawOrgUserListData.findOrganizationBySlug.id,
-        preferredLang: 'ENGLISH',
       },
     },
     result: {

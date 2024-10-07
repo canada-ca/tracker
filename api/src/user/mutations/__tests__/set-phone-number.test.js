@@ -81,7 +81,6 @@ describe('user sets a new phone number', () => {
           user = await collections.users.save({
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
-            preferredLang: 'french',
             tfaValidated: false,
             emailValidated: false,
           })
@@ -132,7 +131,7 @@ describe('user sets a new phone number', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
               notify: {
-                sendTfaTextMsg: mockNotify,
+                sendAuthTextMsg: mockNotify,
               },
             },
           })
@@ -159,7 +158,6 @@ describe('user sets a new phone number', () => {
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
-            phoneNumber: newPhoneNumber,
             user,
           })
           expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -172,7 +170,6 @@ describe('user sets a new phone number', () => {
             user = await collections.users.save({
               userName: 'test.account@istio.actually.exists',
               displayName: 'Test Account',
-              preferredLang: 'french',
               phoneDetails: {},
               phoneValidated: true,
               tfaValidated: false,
@@ -226,7 +223,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -253,7 +250,6 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -305,7 +301,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -362,7 +358,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -379,7 +375,6 @@ describe('user sets a new phone number', () => {
             user = await collections.users.save({
               userName: 'test.account@istio.actually.exists',
               displayName: 'Test Account',
-              preferredLang: 'french',
               phoneDetails: {},
               phoneValidated: true,
               tfaValidated: false,
@@ -433,7 +428,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -460,7 +455,6 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -512,7 +506,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -569,7 +563,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -586,7 +580,6 @@ describe('user sets a new phone number', () => {
             user = await collections.users.save({
               userName: 'test.account@istio.actually.exists',
               displayName: 'Test Account',
-              preferredLang: 'french',
               phoneDetails: {},
               phoneValidated: true,
               tfaValidated: false,
@@ -640,7 +633,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -667,7 +660,6 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -719,7 +711,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -776,7 +768,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -810,7 +802,6 @@ describe('user sets a new phone number', () => {
           user = await collections.users.save({
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
-            preferredLang: 'french',
             tfaValidated: false,
             emailValidated: false,
           })
@@ -861,7 +852,7 @@ describe('user sets a new phone number', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
               notify: {
-                sendTfaTextMsg: mockNotify,
+                sendAuthTextMsg: mockNotify,
               },
             },
           })
@@ -888,7 +879,6 @@ describe('user sets a new phone number', () => {
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
-            phoneNumber: newPhoneNumber,
             user,
           })
           expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -901,7 +891,6 @@ describe('user sets a new phone number', () => {
             user = await collections.users.save({
               userName: 'test.account@istio.actually.exists',
               displayName: 'Test Account',
-              preferredLang: 'french',
               phoneDetails: {},
               phoneValidated: true,
               tfaValidated: false,
@@ -955,7 +944,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -982,7 +971,6 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -1034,7 +1022,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1091,7 +1079,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1108,7 +1096,6 @@ describe('user sets a new phone number', () => {
             user = await collections.users.save({
               userName: 'test.account@istio.actually.exists',
               displayName: 'Test Account',
-              preferredLang: 'french',
               phoneDetails: {},
               phoneValidated: true,
               tfaValidated: false,
@@ -1162,7 +1149,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1189,7 +1176,6 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -1241,7 +1227,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1298,7 +1284,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1315,7 +1301,6 @@ describe('user sets a new phone number', () => {
             user = await collections.users.save({
               userName: 'test.account@istio.actually.exists',
               displayName: 'Test Account',
-              preferredLang: 'french',
               phoneDetails: {},
               phoneValidated: true,
               tfaValidated: false,
@@ -1369,7 +1354,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1396,7 +1381,6 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
@@ -1448,7 +1432,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1505,7 +1489,7 @@ describe('user sets a new phone number', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1590,7 +1574,7 @@ describe('user sets a new phone number', () => {
                   },
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1657,7 +1641,7 @@ describe('user sets a new phone number', () => {
                   },
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1741,7 +1725,7 @@ describe('user sets a new phone number', () => {
                   },
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })
@@ -1808,7 +1792,7 @@ describe('user sets a new phone number', () => {
                   },
                 },
                 notify: {
-                  sendTfaTextMsg: mockNotify,
+                  sendAuthTextMsg: mockNotify,
                 },
               },
             })

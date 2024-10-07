@@ -55,7 +55,6 @@ describe('given the sendOrgInviteEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'english',
         }
 
         const mockedSendOrgInviteEmail = sendOrgInviteEmail({
@@ -87,7 +86,6 @@ describe('given the sendOrgInviteEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'english',
         }
 
         try {
@@ -135,7 +133,6 @@ describe('given the sendOrgInviteEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'french',
         }
 
         const mockedSendOrgInviteEmail = sendOrgInviteEmail({
@@ -167,7 +164,6 @@ describe('given the sendOrgInviteEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'french',
         }
 
         try {

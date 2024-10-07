@@ -1,7 +1,7 @@
-import {GraphQLString} from 'graphql'
+import { GraphQLString } from 'graphql'
 
-import {userSharedType} from '../../../user/objects'
-import {updateUserRoleResultType} from '../update-user-role-result'
+import { userSharedType } from '../../../user/objects'
+import { updateUserRoleResultType } from '../update-user-role-result'
 
 describe('given the updateUserRoleResultType object', () => {
   describe('testing the field definitions', () => {
@@ -24,7 +24,7 @@ describe('given the updateUserRoleResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = updateUserRoleResultType.getFields()
 
-        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
+        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
       })
     })
     describe('testing the user resolver', () => {
@@ -39,14 +39,11 @@ describe('given the updateUserRoleResultType object', () => {
           id: '1',
           displayName: 'Test Account',
           emailValidated: false,
-          preferredLang: 'french',
           tfaValidated: false,
           userName: 'test.account@istio.actually.exists',
         }
 
-        expect(demoType.user.resolve({user: expectedResult})).toEqual(
-          expectedResult,
-        )
+        expect(demoType.user.resolve({ user: expectedResult })).toEqual(expectedResult)
       })
     })
   })

@@ -129,7 +129,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'english',
               })
             })
             it('returns status message', async () => {
@@ -210,7 +209,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'english',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -225,7 +223,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'english',
               })
             })
             it('returns status message', async () => {
@@ -306,7 +303,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'english',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -321,7 +317,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'english',
               })
             })
             it('returns status message', async () => {
@@ -402,7 +397,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'english',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -713,7 +707,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'english',
               })
             })
             it('returns status message', async () => {
@@ -794,7 +787,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'english',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -809,7 +801,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'english',
               })
             })
             it('returns status message', async () => {
@@ -890,7 +881,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'english',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -1156,7 +1146,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'french',
               })
             })
             it('returns a status message', async () => {
@@ -1238,7 +1227,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'french',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -1253,7 +1241,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'french',
               })
             })
             it('returns a status message', async () => {
@@ -1335,7 +1322,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'french',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -1350,7 +1336,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'french',
               })
             })
             it('returns a status message', async () => {
@@ -1432,7 +1417,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'french',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -1739,7 +1723,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'french',
               })
             })
             it('returns a status message', async () => {
@@ -1821,7 +1804,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'french',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
@@ -1837,7 +1819,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'french',
               })
             })
             it('returns a status message', async () => {
@@ -1919,7 +1900,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'french',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },

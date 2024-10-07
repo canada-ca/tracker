@@ -32,55 +32,50 @@ export function EditableUserEmail({ detailValue, ...props }) {
   const toast = useToast()
   const initialFocusRef = useRef()
 
-  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
-    {
-      onError: ({ message }) => {
+  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(UPDATE_USER_PROFILE, {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while updating your email address.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ updateUserProfile }) {
+      if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
         toast({
-          title: t`An error occurred while updating your email address.`,
-          description: message,
+          title: t`Email Verification Sent`,
+          description: t`A verification email has been sent to your new email address. Please verify your email address to complete the change.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        onClose()
+      } else if (updateUserProfile.result.__typename === 'UpdateUserProfileError') {
+        toast({
+          title: t`Unable to update your email address, please try again.`,
+          description: updateUserProfile.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ updateUserProfile }) {
-        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
-          toast({
-            title: t`Changed User Email`,
-            description: t`You have successfully updated your email.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          onClose()
-        } else if (
-          updateUserProfile.result.__typename === 'UpdateUserProfileError'
-        ) {
-          toast({
-            title: t`Unable to update to your username, please try again.`,
-            description: updateUserProfile.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: t`Incorrect send method received.`,
-            description: t`Incorrect updateUserProfile.result typename.`,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect updateUserProfile.result typename.')
-        }
-      },
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect updateUserProfile.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect updateUserProfile.result typename.')
+      }
     },
-  )
+  })
 
   return (
     <Box {...props}>
@@ -88,34 +83,16 @@ export function EditableUserEmail({ detailValue, ...props }) {
         <Trans>Email:</Trans>
       </Heading>
 
-      <Flex
-        align="center"
-        borderWidth="1px"
-        borderColor="gray.500"
-        rounded="md"
-        p="1"
-      >
+      <Flex align="center" borderWidth="1px" borderColor="gray.500" rounded="md" p="1">
         <EmailIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         <Text>{detailValue}</Text>
-        <Button
-          aria-label="Edit User Email"
-          variant="primary"
-          ml="auto"
-          onClick={onOpen}
-          fontSize="sm"
-          px="3"
-        >
+        <Button aria-label="Edit User Email" variant="primary" ml="auto" onClick={onOpen} fontSize="sm" px="3">
           <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
       </Flex>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        initialFocusRef={initialFocusRef}
-        motionPreset="slideInBottom"
-      >
+      <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom">
         <ModalOverlay />
         <ModalContent pb="4">
           <Formik
@@ -150,21 +127,12 @@ export function EditableUserEmail({ detailValue, ...props }) {
 
                     <Text>{detailValue}</Text>
 
-                    <EmailField
-                      name="email"
-                      label={t`New Email Address:`}
-                      ref={initialFocusRef}
-                    />
+                    <EmailField name="email" label={t`New Email Address:`} ref={initialFocusRef} />
                   </Stack>
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button
-                    variant="primary"
-                    isLoading={isSubmitting}
-                    type="submit"
-                    mr="4"
-                  >
+                  <Button variant="primary" isLoading={isSubmitting} type="submit" mr="4">
                     <Trans>Confirm</Trans>
                   </Button>
                 </ModalFooter>

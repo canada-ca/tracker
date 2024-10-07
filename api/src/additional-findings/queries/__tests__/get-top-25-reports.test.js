@@ -67,7 +67,6 @@ describe('given getTop25Reports', () => {
     user = await collections.users.save({
       displayName: 'Test Account',
       userName: 'test.account@istio.actually.exists',
-      preferredLang: 'english',
       emailValidated: true,
     })
     superAdminOrg = await collections.organizations.save({
