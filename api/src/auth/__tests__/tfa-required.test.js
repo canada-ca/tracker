@@ -1,6 +1,6 @@
-import {setupI18n} from '@lingui/core'
+import { setupI18n } from '@lingui/core'
 
-import {tfaRequired} from '../index'
+import { tfaRequired } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 
@@ -23,7 +23,6 @@ describe('given the tfaRequired function', () => {
         user = {
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'french',
           tfaValidated: false,
           emailValidated: true,
           tfaSendMethod: 'email',
@@ -32,7 +31,7 @@ describe('given the tfaRequired function', () => {
       it('returns true', () => {
         const tfaFunc = tfaRequired({})
 
-        const verifiedUser = tfaFunc({user})
+        const verifiedUser = tfaFunc({ user })
 
         expect(verifiedUser).toBe(true)
       })
@@ -42,8 +41,8 @@ describe('given the tfaRequired function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -57,22 +56,19 @@ describe('given the tfaRequired function', () => {
           user = {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
-            preferredLang: 'french',
             tfaValidated: false,
             emailValidated: false,
             tfaSendMethod: 'none',
           }
         })
         it('throws an error', () => {
-          const tfaFunc = tfaRequired({i18n})
+          const tfaFunc = tfaRequired({ i18n })
 
           try {
-            tfaFunc({user})
+            tfaFunc({ user })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Verification error. Please activate multi-factor authentication to access content.',
-              ),
+              new Error('Verification error. Please activate multi-factor authentication to access content.'),
             )
           }
         })
@@ -83,8 +79,8 @@ describe('given the tfaRequired function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['fr'],
           messages: {
@@ -97,17 +93,16 @@ describe('given the tfaRequired function', () => {
           user = {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
-            preferredLang: 'french',
             tfaValidated: false,
             emailValidated: false,
             tfaSendMethod: 'none',
           }
         })
         it.skip('throws an error', () => {
-          const tfaFunc = tfaRequired({i18n})
+          const tfaFunc = tfaRequired({ i18n })
 
           try {
-            tfaFunc({user})
+            tfaFunc({ user })
           } catch (err) {
             expect(err).toEqual(
               new Error(

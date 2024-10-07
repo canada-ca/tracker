@@ -5,7 +5,7 @@ import { connectionArgs, globalIdField } from 'graphql-relay'
 import { domainStatus } from './domain-status'
 import { AssetStateEnums, DomainTagLabel, PeriodEnums } from '../../enums'
 import { nodeInterface } from '../../node'
-import { Domain, Selectors, Year } from '../../scalars'
+import { CveID, Domain, Selectors, Year } from '../../scalars'
 import { dmarcSummaryType } from '../../dmarc-summaries/objects'
 import { dnsScanConnection } from '../../dns-scan/objects/dns-scan-connection'
 import { webConnection } from '../../web-scan/objects'
@@ -277,6 +277,11 @@ export const domainType = new GraphQLObjectType({
           domainId: _id,
         })
       },
+    },
+    ignoredCves: {
+      type: new GraphQLList(CveID),
+      description: 'List of CVEs that have been ignored by the user.',
+      resolve: ({ ignoredCves }) => ignoredCves,
     },
     dmarcSummaryByPeriod: {
       description: 'Summarized DMARC aggregate reports.',

@@ -1,4 +1,4 @@
-const { findOrgSummaries, getOrgAdmins } = require('./database')
+const { findOrgSummaries, getOrgAdmins, findVulnerabilitiesByOrgId } = require('./database')
 const { sendOrgProgressReport } = require('./notify')
 
 const progressReportService = async ({ query, log, notifyClient }) => {
@@ -21,12 +21,14 @@ const progressReportService = async ({ query, log, notifyClient }) => {
 
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
+    const vulnerableAssets = await findVulnerabilitiesByOrgId({ query, orgId: value._id })
     const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
     for (const user of orgAdmins) {
       await sendOrgProgressReport({
         log,
         notifyClient,
         user,
+        vulnerableAssets,
         orgStats: value,
       })
     }

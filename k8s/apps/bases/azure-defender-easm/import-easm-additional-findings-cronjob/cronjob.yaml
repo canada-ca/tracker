@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: import-easm-additional-findings
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-c390b31-1726166380 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-b0f4943-1726513503 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
               env:
                 - name: DB_PASS
                   valueFrom:

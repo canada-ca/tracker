@@ -27,9 +27,7 @@ describe('<EditableUserDisplayName>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -105,9 +103,7 @@ describe('<EditableUserDisplayName>', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(
-              getByText(/Display name cannot be empty/i),
-            ).toBeInTheDocument()
+            expect(getByText(/Display name cannot be empty/i)).toBeInTheDocument()
           })
         })
       })
@@ -133,7 +129,6 @@ describe('<EditableUserDisplayName>', () => {
                         userName: 'elise.ortiz@gmail.com',
                         displayName: 'Elisa Ortiz',
                         tfaSendMethod: 'PHONE',
-                        preferredLang: 'en',
                         emailValidated: true,
                         __typename: 'PersonalUser',
                       },
@@ -178,9 +173,7 @@ describe('<EditableUserDisplayName>', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(
-              getByText(/You have successfully updated your display name./i),
-            ).toBeInTheDocument()
+            expect(getByText(/You have successfully updated your display name./i)).toBeInTheDocument()
           })
         })
 
@@ -239,11 +232,7 @@ describe('<EditableUserDisplayName>', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(
-              getByText(
-                /Unable to update to your display name, please try again./i,
-              ),
-            ).toBeInTheDocument()
+            expect(getByText(/Unable to update to your display name, please try again./i)).toBeInTheDocument()
           })
         })
       })

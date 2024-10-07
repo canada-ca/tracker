@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { aql } from 'arangojs'
 
 export const loadAllOrganizationDomainStatuses =
-  ({ query, userKey, i18n }) =>
+  ({ query, userKey, i18n, language }) =>
   async ({ filters }) => {
     let domains
     let domainFilters = aql`FILTER d.archived != true`
@@ -97,12 +97,11 @@ export const loadAllOrganizationDomainStatuses =
           WITH domains
           FOR d IN domains
             ${domainFilters}
-            LET ipAddresses = (
-              FOR web, webE IN 1 OUTBOUND d._id domainsWeb
-                SORT web.timestamp DESC
-                LIMIT 1
-                FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
-                    RETURN webScan.ipAddress
+            LET ipAddresses = FIRST(
+              FILTER d.latestDnsScan
+              LET latestDnsScan = DOCUMENT(d.latestDnsScan)
+              FILTER latestDnsScan.resolveIps
+              RETURN latestDnsScan.resolveIps
             )
             LET vulnerabilities = (
               FOR finding IN additionalFindings
@@ -115,8 +114,16 @@ export const loadAllOrganizationDomainStatuses =
                           RETURN vuln.Cve
                 )
             )[0]
+            LET verifiedOrg = (
+              FOR v,e IN 1..1 INBOUND d._id claims
+                FILTER v.verified == true
+                LIMIT 1
+                RETURN TRANSLATE(${language}, v.orgDetails)
+            )[0]
             RETURN {
               "domain": d.domain,
+              "orgName": verifiedOrg.name,
+              "orgAcronym": verifiedOrg.acronym,
               "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,

@@ -114,12 +114,11 @@ export const loadOrganizationDomainStatuses =
                 RETURN translatedTags
             )[0]
             ${domainFilters}
-            LET ipAddresses = (
-              FOR web, webE IN 1 OUTBOUND v._id domainsWeb
-                SORT web.timestamp DESC
-                LIMIT 1
-                FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
-                    RETURN webScan.ipAddress
+            LET ipAddresses = FIRST(
+              FILTER v.latestDnsScan
+              LET latestDnsScan = DOCUMENT(v.latestDnsScan)
+              FILTER latestDnsScan.resolveIps
+              RETURN latestDnsScan.resolveIps
             )
             LET vulnerabilities = (
               FOR finding IN additionalFindings

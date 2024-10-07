@@ -46,6 +46,7 @@ import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
+import { domainSearchTip } from '../domains/DomainsPage'
 
 export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
@@ -432,6 +433,9 @@ export function AdminDomains({ orgSlug, orgId }) {
             </Button>
           </Flex>
         </form>
+        <Box mt="1" backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
+          {domainSearchTip}
+        </Box>
         <Divider borderBottomWidth="1px" borderBottomColor="black" />
         <RelayPaginationControls
           onlyPagination={false}

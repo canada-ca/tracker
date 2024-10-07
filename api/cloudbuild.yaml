@@ -25,6 +25,38 @@ steps:
     args: ['run', lint]
 
   - name: node:alpine
+    id: lingui-extract
+    dir: api
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        npm run extract | tee /workspace/lingui-extract-output.txt
+
+  - name: node:alpine
+    id: lingui-translation-check
+    dir: api
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        output=$( awk -F '│' '/fr/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' /workspace/lingui-extract-output.txt )
+
+        # Check if there are any missed french translations
+        if [ "$output" -eq 0 ]; then
+          echo "All translations are up to date, proceeding."
+        else
+          echo "There are $output missed translations, please update them before proceeding."
+          exit 1
+        fi
+
+  - name: node:alpine
+    id: lingui-compile
+    dir: api
+    entrypoint: npm
+    args: ['run', 'compile']
+
+  - name: node:alpine
     id: test
     dir: api
     entrypoint: npm
@@ -47,8 +79,7 @@ steps:
       - NOTIFICATION_PASSWORD_RESET_BILINGUAL=$_NOTIFICATION_TEST_TEMPLATE_ID
       - NOTIFICATION_TWO_FACTOR_CODE_EN=$_NOTIFICATION_TEST_TEMPLATE_ID
       - NOTIFICATION_TWO_FACTOR_CODE_FR=$_NOTIFICATION_TEST_TEMPLATE_ID
-      - NOTIFICATION_VERIFICATION_EMAIL_EN=$_NOTIFICATION_TEST_TEMPLATE_ID
-      - NOTIFICATION_VERIFICATION_EMAIL_FR=$_NOTIFICATION_TEST_TEMPLATE_ID
+      - NOTIFICATION_VERIFICATION_EMAIL_BILINGUAL=$_NOTIFICATION_TEST_TEMPLATE_ID
       - NOTIFICATION_ORG_INVITE_BILINGUAL=$_NOTIFICATION_TEST_TEMPLATE_ID
       - DEPTH_LIMIT=$_DEPTH_LIMIT
       - COST_LIMIT=$_COST_LIMIT
@@ -62,18 +93,6 @@ steps:
       - NATS_URL=$_NATS_URL
       - NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL=$_NOTIFICATION_TEST_TEMPLATE_ID
       - SERVICE_ACCOUNT_EMAIL=$_SERVICE_ACCOUNT_EMAIL
-
-  - name: node:alpine
-    id: lingui-extract
-    dir: api
-    entrypoint: npm
-    args: ['run', 'extract']
-
-  - name: node:alpine
-    id: lingui-compile
-    dir: api
-    entrypoint: npm
-    args: ['run', 'compile']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name

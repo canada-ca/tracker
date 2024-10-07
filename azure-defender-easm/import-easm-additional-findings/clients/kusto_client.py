@@ -26,12 +26,18 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 
 def filter_recent_data(data_list, last_seen_key, start_date):
-    return [
-        x
-        for x in data_list
-        if datetime.strptime(x[last_seen_key].split("T")[0], "%Y-%m-%d").date()
-        >= start_date
-    ]
+    try:
+        return [
+            x
+            for x in data_list
+            if datetime.strptime(x[last_seen_key].split("T")[0], "%Y-%m-%d").date()
+            >= start_date
+        ]
+    except AttributeError:
+        logger.error(
+            f"Problem occured filtering list to recent entries. Returning full list..."
+        )
+        return data_list
 
 
 def get_web_components_by_asset(asset):

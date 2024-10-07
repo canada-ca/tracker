@@ -130,6 +130,43 @@ export const LANDING_PAGE_SUMMARIES = gql`
   ${Summary.fragments.requiredFields}
 `
 
+export const GET_HISTORICAL_CHART_SUMMARIES = gql`
+  query FindChartSummaries($month: PeriodEnums!, $year: Year!) {
+    findChartSummaries(month: $month, year: $year) {
+      date
+      https {
+        ...RequiredSummaryFields
+      }
+      dmarc {
+        ...RequiredSummaryFields
+      }
+      dkim {
+        ...RequiredSummaryFields
+      }
+      spf {
+        ...RequiredSummaryFields
+      }
+      ssl {
+        ...RequiredSummaryFields
+      }
+      webConnections {
+        ...RequiredSummaryFields
+      }
+      dmarcPhase {
+        ...RequiredSummaryFields
+      }
+      web {
+        ...RequiredSummaryFields
+      }
+      mail {
+        ...RequiredSummaryFields
+      }
+    }
+  }
+
+  ${Summary.fragments.requiredFields}
+`
+
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!, $filters: [DomainFilter]) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
@@ -141,6 +178,12 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
     getAllOrganizationDomainStatuses(filters: $filters)
+  }
+`
+
+export const GET_TOP_25_REPORT = gql`
+  query GetTop25Reports {
+    getTop25Reports
   }
 `
 
@@ -254,6 +297,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       blocked
       wildcardSibling
       webScanPending
+      cveDetected
       status {
         ...RequiredDomainStatusFields
       }
@@ -557,8 +601,10 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
 `
 
 export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
-  query ($domain: DomainScalar!) {
+  query GuidanceAdditionalFindings($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
+      ignoredCves
       additionalFindings {
         timestamp
         headers
@@ -608,7 +654,7 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
 `
 
 export const ORG_DETAILS_PAGE = gql`
-  query OrgDetails($slug: Slug!, $month: PeriodEnums!, $year: Year!) {
+  query OrgDetails($slug: Slug!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
@@ -644,43 +690,47 @@ export const ORG_DETAILS_PAGE = gql`
           ...RequiredSummaryFields
         }
       }
+    }
+  }
+  ${Summary.fragments.requiredFields}
+`
+
+export const GET_HISTORICAL_ORG_SUMMARIES = gql`
+  query GetOrgSummaries($orgSlug: Slug!, $month: PeriodEnums!, $year: Year!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
       historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
-        totalCount
-        edges {
-          node {
-            date
-            https {
-              ...RequiredSummaryFields
-            }
-            dmarc {
-              ...RequiredSummaryFields
-            }
-            dkim {
-              ...RequiredSummaryFields
-            }
-            spf {
-              ...RequiredSummaryFields
-            }
-            ssl {
-              ...RequiredSummaryFields
-            }
-            webConnections {
-              ...RequiredSummaryFields
-            }
-            dmarcPhase {
-              ...RequiredSummaryFields
-            }
-            web {
-              ...RequiredSummaryFields
-            }
-            mail {
-              ...RequiredSummaryFields
-            }
-          }
+        date
+        https {
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
+        }
+        dmarcPhase {
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
         }
       }
     }
   }
+
   ${Summary.fragments.requiredFields}
 `
 
@@ -816,7 +866,6 @@ export const QUERY_CURRENT_USER = gql`
       id
       userName
       displayName
-      preferredLang
       phoneNumber
       tfaSendMethod
       phoneValidated

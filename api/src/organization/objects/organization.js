@@ -11,7 +11,6 @@ import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
 import { OrderDirection, PeriodEnums } from '../../enums'
-import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -73,7 +72,7 @@ export const organizationType = new GraphQLObjectType({
       resolve: ({ summaries }) => summaries,
     },
     historicalSummaries: {
-      type: orgSummaryConnection.connectionType,
+      type: new GraphQLList(organizationSummaryType),
       description: 'Historical summaries based on scan types that are preformed on the given organizations domains.',
       args: {
         month: {
@@ -178,31 +177,24 @@ export const organizationType = new GraphQLObjectType({
           'top25Vulnerabilities',
         ]
         let csvOutput = headers.join(',')
-        domains.forEach(
-          ({
-            domain,
-            ipAddresses,
-            status,
-            tags,
-            assetState,
-            rcode,
-            blocked,
-            wildcardSibling,
-            hasEntrustCertificate,
-            ...rest
-          }) => {
-            const vulns = rest?.top25Vulnerabilities || []
-            let csvLine = `${domain}`
-            csvLine += `,${ipAddresses.join('|')}`
-            csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
-              return `${previousValue},${status[currentHeader]}`
-            }, '')
-            csvLine += `,${tags.join(
-              '|',
-            )},${assetState},${rcode},${blocked},${wildcardSibling},${hasEntrustCertificate},${vulns.join('|')}`
-            csvOutput += `\n${csvLine}`
-          },
-        )
+        domains.forEach((domainDoc) => {
+          const csvLine = headers
+            .map((header) => {
+              if (['ipAddresses', 'tags', 'top25Vulnerabilities'].includes(header)) {
+                return `"${domainDoc[header]?.join('|') || []}"`
+              }
+              if (
+                ['https', 'hsts', 'certificates', 'protocols', 'ciphers', 'curves', 'spf', 'dkim', 'dmarc'].includes(
+                  header,
+                )
+              ) {
+                return `"${domainDoc?.status[header]}"`
+              }
+              return `"${domainDoc[header]}"`
+            })
+            .join(',')
+          csvOutput += `\n${csvLine}`
+        })
 
         // Get org names to use in activity log
         let orgNamesCursor

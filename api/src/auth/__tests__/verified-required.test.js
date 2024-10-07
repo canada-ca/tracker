@@ -1,6 +1,6 @@
-import {setupI18n} from '@lingui/core'
+import { setupI18n } from '@lingui/core'
 
-import {verifiedRequired} from '../index'
+import { verifiedRequired } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 
@@ -23,7 +23,6 @@ describe('given the verifiedRequired function', () => {
         user = {
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'french',
           tfaValidated: false,
           emailValidated: true,
         }
@@ -31,7 +30,7 @@ describe('given the verifiedRequired function', () => {
       it('returns true', () => {
         const verifiedFunc = verifiedRequired({})
 
-        const verifiedUser = verifiedFunc({user})
+        const verifiedUser = verifiedFunc({ user })
 
         expect(verifiedUser).toBe(true)
       })
@@ -41,8 +40,8 @@ describe('given the verifiedRequired function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -56,21 +55,18 @@ describe('given the verifiedRequired function', () => {
           user = {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
-            preferredLang: 'french',
             tfaValidated: false,
             emailValidated: false,
           }
         })
         it('throws an error', () => {
-          const verifiedFunc = verifiedRequired({i18n})
+          const verifiedFunc = verifiedRequired({ i18n })
 
           try {
-            verifiedFunc({user})
+            verifiedFunc({ user })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Verification error. Please verify your account via email to access content.',
-              ),
+              new Error('Verification error. Please verify your account via email to access content.'),
             )
           }
         })
@@ -81,8 +77,8 @@ describe('given the verifiedRequired function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['fr'],
           messages: {
@@ -95,21 +91,18 @@ describe('given the verifiedRequired function', () => {
           user = {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
-            preferredLang: 'french',
             tfaValidated: false,
             emailValidated: false,
           }
         })
         it('throws an error', () => {
-          const verifiedFunc = verifiedRequired({i18n})
+          const verifiedFunc = verifiedRequired({ i18n })
 
           try {
-            verifiedFunc({user})
+            verifiedFunc({ user })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu.',
-              ),
+              new Error('Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu.'),
             )
           }
         })

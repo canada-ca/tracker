@@ -50,14 +50,12 @@ def ignore_domain(domain):
     :return: True if domain should be ignored, False otherwise
     """
 
-    if (
+    return (
         domain is None
         or domain.get("archived") is True
         or domain.get("blocked") is True
         or domain.get("rcode") == "NXDOMAIN"
-    ):
-        return True
-    return False
+    )
 
 
 def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
@@ -196,7 +194,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
             domain_status = domain.get("status", {})
-            if ignore_domain(domain) is False:
+            if ignore_domain(domain) is False and claim.get("assetState") == "approved":
                 # tier 1
                 # https
                 https_status = domain_status.get("https")

@@ -72,6 +72,7 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
+    cveDetected,
     userHasPermission,
     webScanPending,
     wildcardSibling,
@@ -250,13 +251,9 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <Tab borderTopWidth="0.25">
-                <Trans>Additional Findings</Trans>
-              </Tab>
-            </ABTestVariant>
-          </ABTestWrapper>
+          <Tab borderTopWidth="0.25">
+            <Trans>Additional Findings</Trans>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -278,13 +275,9 @@ function GuidancePage() {
               />
             )}
           </TabPanel>
-          <ABTestWrapper>
-            <ABTestVariant name="B">
-              <TabPanel>
-                <AdditionalFindings domain={domainName} />
-              </TabPanel>
-            </ABTestVariant>
-          </ABTestWrapper>
+          <TabPanel>
+            <AdditionalFindings domain={domainName} cveDetected={cveDetected} />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     )

@@ -92,7 +92,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -166,7 +165,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -228,7 +226,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         rememberMe: true
                       }
                     ) {
@@ -305,7 +302,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -403,7 +399,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -481,7 +476,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -556,7 +550,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -621,7 +614,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         signUpToken: "${token}"
                         rememberMe: true
                       }
@@ -700,7 +692,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -775,7 +766,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -860,7 +850,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
                       }
                     ) {
                       result {
@@ -934,7 +923,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -996,7 +984,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
                         rememberMe: true
                       }
                     ) {
@@ -1072,7 +1059,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -1170,7 +1156,6 @@ describe('testing user sign up', () => {
                           userName: "test.account@istio.actually.exists"
                           password: "testpassword123"
                           confirmPassword: "testpassword123"
-                          preferredLang: FRENCH
                           signUpToken: "${token}"
                         }
                       ) {
@@ -1248,7 +1233,6 @@ describe('testing user sign up', () => {
                           userName: "test.account@istio.actually.exists"
                           password: "testpassword123"
                           confirmPassword: "testpassword123"
-                          preferredLang: ENGLISH
                           signUpToken: "${token}"
                         }
                       ) {
@@ -1323,7 +1307,6 @@ describe('testing user sign up', () => {
                           userName: "test.account@istio.actually.exists"
                           password: "testpassword123"
                           confirmPassword: "testpassword123"
-                          preferredLang: ENGLISH
                           signUpToken: "${token}"
                         }
                       ) {
@@ -1388,7 +1371,6 @@ describe('testing user sign up', () => {
                           userName: "test.account@istio.actually.exists"
                           password: "testpassword123"
                           confirmPassword: "testpassword123"
-                          preferredLang: FRENCH
                           signUpToken: "${token}"
                           rememberMe: true
                         }
@@ -1467,7 +1449,6 @@ describe('testing user sign up', () => {
                           userName: "test.account@istio.actually.exists"
                           password: "testpassword123"
                           confirmPassword: "testpassword123"
-                          preferredLang: ENGLISH
                           signUpToken: "${token}"
                         }
                       ) {
@@ -1542,7 +1523,6 @@ describe('testing user sign up', () => {
                           userName: "test.account@istio.actually.exists"
                           password: "testpassword123"
                           confirmPassword: "testpassword123"
-                          preferredLang: ENGLISH
                           signUpToken: "${token}"
                         }
                       ) {
@@ -1627,7 +1607,6 @@ describe('testing user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "123"
                     confirmPassword: "123"
-                    preferredLang: FRENCH
                   }
                 ) {
                   result {
@@ -1700,7 +1679,6 @@ describe('testing user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "testpassword123"
                     confirmPassword: "321drowssaptset"
-                    preferredLang: FRENCH
                   }
                 ) {
                   result {
@@ -1773,7 +1751,6 @@ describe('testing user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "testpassword123"
                     confirmPassword: "testpassword123"
-                    preferredLang: FRENCH
                   }
                 ) {
                   result {
@@ -1808,7 +1785,6 @@ describe('testing user sign up', () => {
                   load: jest.fn().mockReturnValue({
                     userName: 'test.account@istio.actually.exists',
                     displayName: 'Test Account',
-                    preferredLang: 'french',
                     phoneValidated: false,
                     emailValidated: false,
                   }),
@@ -1863,7 +1839,6 @@ describe('testing user sign up', () => {
                         userName: "test@email.ca"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -1979,7 +1954,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -2063,7 +2037,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2162,7 +2135,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2267,7 +2239,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                       signUpToken: "${token}"
                     }
                   ) {
@@ -2363,7 +2334,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2476,7 +2446,6 @@ describe('testing user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "123"
                     confirmPassword: "123"
-                    preferredLang: FRENCH
                   }
                 ) {
                   result {
@@ -2549,7 +2518,6 @@ describe('testing user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "testpassword123"
                     confirmPassword: "321drowssaptset"
-                    preferredLang: FRENCH
                   }
                 ) {
                   result {
@@ -2622,7 +2590,6 @@ describe('testing user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "testpassword123"
                     confirmPassword: "testpassword123"
-                    preferredLang: FRENCH
                   }
                 ) {
                   result {
@@ -2657,7 +2624,6 @@ describe('testing user sign up', () => {
                   load: jest.fn().mockReturnValue({
                     userName: 'test.account@istio.actually.exists',
                     displayName: 'Test Account',
-                    preferredLang: 'french',
                     phoneValidated: false,
                     emailValidated: false,
                   }),
@@ -2712,7 +2678,6 @@ describe('testing user sign up', () => {
                         userName: "test@email.ca"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -2829,7 +2794,6 @@ describe('testing user sign up', () => {
                         userName: "test.account@istio.actually.exists"
                         password: "testpassword123"
                         confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
                         signUpToken: "${token}"
                       }
                     ) {
@@ -2914,7 +2878,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3013,7 +2976,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3118,7 +3080,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                       signUpToken: "${token}"
                     }
                   ) {
@@ -3214,7 +3175,6 @@ describe('testing user sign up', () => {
                       userName: "test.account@istio.actually.exists"
                       password: "testpassword123"
                       confirmPassword: "testpassword123"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
