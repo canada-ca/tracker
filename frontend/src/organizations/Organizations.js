@@ -30,6 +30,7 @@ import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useQuery } from '@apollo/client'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 // import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function Organizations() {
@@ -225,7 +226,9 @@ export default function Organizations() {
           totalRecords={totalCount}
         />
 
-        {unclaimedCard}
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="B">{unclaimedCard}</ABTestVariant>
+        </ABTestWrapper>
 
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg" className="filter">
