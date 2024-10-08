@@ -62,6 +62,38 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
+export const FIND_ORGANIZATION_BY_SLUG = gql`
+  query FindOrganizationBySlug($orgSlug: Slug!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      acronym
+      name
+      slug
+      domainCount
+      verified
+      userHasPermission
+      summaries {
+        dmarc {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+        https {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+      }
+    }
+  }
+`
+
 export const LANDING_PAGE_SUMMARIES = gql`
   query LandingPageSummaries {
     # Tier 1
