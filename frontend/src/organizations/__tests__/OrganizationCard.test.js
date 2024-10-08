@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { List, theme, ChakraProvider } from '@chakra-ui/react'
+import { List, theme, ChakraProvider, ListItem } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
@@ -64,14 +64,16 @@ describe('<OrganizationsCard />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <List>
-                <OrganizationCard
-                  slug="tbs-sct-gc-ca"
-                  name="Treasury Board Secretariat"
-                  acronym="TBS"
-                  domainCount={7}
-                  verified={false}
-                  summaries={summaries}
-                />
+                <ListItem>
+                  <OrganizationCard
+                    slug="tbs-sct-gc-ca"
+                    name="Treasury Board Secretariat"
+                    acronym="TBS"
+                    domainCount={7}
+                    verified={false}
+                    summaries={summaries}
+                  />
+                </ListItem>
               </List>
             </I18nProvider>
           </ChakraProvider>
