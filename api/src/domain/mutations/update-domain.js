@@ -57,6 +57,7 @@ export const updateDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      publish,
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
@@ -255,7 +256,7 @@ export const updateDomain = new mutationWithClientMutationId({
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
 
     const updatedProperties = []
-    if (typeof assetState !== 'undefined') {
+    if (typeof assetState !== 'undefined' && assetState !== claim.assetState) {
       updatedProperties.push({
         name: 'assetState',
         oldValue: claim.assetState,
@@ -319,6 +320,24 @@ export const updateDomain = new mutationWithClientMutationId({
           updatedProperties: [{ name: 'archived', oldValue: domain.archived, newValue: archived }],
         },
       })
+    }
+
+    if (typeof assetState !== 'undefined' && assetState !== claim.assetState) {
+      try {
+        await publish({
+          channel: 'scans.add_domain_to_easm',
+          msg: {
+            domain: returnDomain.domain,
+            assetState,
+            domain_key: returnDomain._key,
+            hash: returnDomain.hash,
+            user_key: null, // only used for One Time Scans
+            shared_id: null, // only used for One Time Scans
+          },
+        })
+      } catch (err) {
+        console.error(`Error publishing to NATS for domain ${returnDomain._key}: ${err}`)
+      }
     }
 
     returnDomain.id = returnDomain._key
