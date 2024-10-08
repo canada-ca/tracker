@@ -18,7 +18,7 @@ import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
 import { bool } from 'prop-types'
-// import { TourButton } from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 
 export const TopBanner = ({ initialLoading, ...props }) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -125,7 +125,7 @@ export const TopBanner = ({ initialLoading, ...props }) => {
               >
                 <Trans>Sign Out</Trans>
               </Button>
-              {/* <TourButton /> */}
+              <TourButton />
             </>
           ) : (
             <>
