@@ -3,7 +3,7 @@ import { Button, Flex, Stack, Text, useToast, Select } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useQuery } from '@apollo/client'
-import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 
 import { AdminPanel } from './AdminPanel'
@@ -29,7 +29,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   const { activeMenu } = useParams()
   const toast = useToast()
-  const history = useHistory()
+  const history = useNavigate()
   const { i18n } = useLingui()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {

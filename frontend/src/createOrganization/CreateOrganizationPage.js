@@ -12,7 +12,7 @@ import {
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
-import { Link as RouteLink, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useNavigate } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 
 import { CreateOrganizationField } from '../components/fields/CreateOrganizationField'
@@ -27,7 +27,7 @@ import { CREATE_ORGANIZATION } from '../graphql/mutations'
 
 export default function CreateOrganizationPage() {
   const toast = useToast()
-  const history = useHistory()
+  const history = useNavigate()
   const { i18n } = useLingui()
 
   const { isOpen, onToggle } = useDisclosure()
@@ -71,7 +71,7 @@ export default function CreateOrganizationPage() {
           isClosable: true,
           position: 'top-left',
         })
-        history.push('/admin')
+        navigate('/admin')
       } else if (createOrganization.result.__typename === 'OrganizationError') {
         toast({
           title: t`Unable to create new organization.`,

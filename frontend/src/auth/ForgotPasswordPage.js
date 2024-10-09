@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
-import { Link as RouteLink, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
 import { EmailField } from '../components/fields/EmailField'
@@ -12,7 +12,7 @@ import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 
 export default function ForgotPasswordPage() {
   const toast = useToast()
-  const history = useHistory()
+  const history = useNavigate()
   const validationSchema = object().shape({
     email: string()
       .required(t`Email cannot be empty`)
@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
         })
       },
       onCompleted() {
-        history.push('/')
+        navigate('/')
         toast({
           title: t`Email Sent`,
           description: t`An email was sent with a link to reset your password`,
