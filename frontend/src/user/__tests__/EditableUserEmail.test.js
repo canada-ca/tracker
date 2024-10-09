@@ -27,9 +27,7 @@ describe('<EditableUserEmail />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -131,7 +129,6 @@ describe('<EditableUserEmail />', () => {
                         userName: 'testUser@canada.gc.ca',
                         displayName: 'test user',
                         tfaSendMethod: 'PHONE',
-                        preferredLang: 'en',
                         emailValidated: true,
                         __typename: 'PersonalUser',
                       },
@@ -179,7 +176,9 @@ describe('<EditableUserEmail />', () => {
 
           await waitFor(() => {
             expect(
-              getByText(/You have successfully updated your email./i),
+              getByText(
+                /A verification email has been sent to your new email address. Please verify your email address to complete the change./i,
+              ),
             ).toBeInTheDocument()
           })
         })
@@ -241,11 +240,7 @@ describe('<EditableUserEmail />', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(
-              getByText(
-                /An error occurred while updating your email address./i,
-              ),
-            ).toBeInTheDocument()
+            expect(getByText(/An error occurred while updating your email address./i)).toBeInTheDocument()
           })
         })
       })

@@ -56,7 +56,6 @@ describe('given the sendPasswordResetEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'english',
         }
 
         const mockedSendPasswordResetEmail = sendPasswordResetEmail({
@@ -86,7 +85,6 @@ describe('given the sendPasswordResetEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'english',
         }
 
         try {
@@ -133,7 +131,6 @@ describe('given the sendPasswordResetEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'french',
         }
 
         const mockedSendPasswordResetEmail = sendPasswordResetEmail({
@@ -163,7 +160,6 @@ describe('given the sendPasswordResetEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
-          preferredLang: 'french',
         }
 
         try {

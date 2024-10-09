@@ -9,6 +9,7 @@ import {
   Heading,
   IconButton,
   Link,
+  ListItem,
   Tab,
   TabList,
   TabPanel,
@@ -140,19 +141,18 @@ function GuidancePage() {
         {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
           <ErrorBoundary key={`${slug}:${index}`} ErrorFallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
-              <OrganizationCard
-                disableLink={true}
-                id={id}
-                slug={slug}
-                name={name}
-                acronym={acronym}
-                domainCount={domainCount}
-                verified={verified}
-                summaries={summaries}
-                mb="3"
-                mr={userHasPermission ? '3rem' : '2'}
-                w="100%"
-              />
+              <ListItem mb="3" mr={userHasPermission ? '3rem' : '2'} w="100%">
+                <OrganizationCard
+                  disableLink={true}
+                  id={id}
+                  slug={slug}
+                  name={name}
+                  acronym={acronym}
+                  domainCount={domainCount}
+                  verified={verified}
+                  summaries={summaries}
+                />
+              </ListItem>
               {isLoggedIn() && !userHasPermission && (
                 <>
                   <IconButton

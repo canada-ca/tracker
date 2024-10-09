@@ -184,7 +184,6 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
           adminUser = {
             userName: SERVICE_ACCOUNT_EMAIL,
             displayName: 'Service Account',
-            preferredLang: 'en',
             _key: 'service-account',
           }
         } else adminUser = await loadUserByKey.load(userKey)

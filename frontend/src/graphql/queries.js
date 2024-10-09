@@ -62,6 +62,38 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
+export const FIND_ORGANIZATION_BY_SLUG = gql`
+  query FindOrganizationBySlug($orgSlug: Slug!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      acronym
+      name
+      slug
+      domainCount
+      verified
+      userHasPermission
+      summaries {
+        dmarc {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+        https {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+      }
+    }
+  }
+`
+
 export const LANDING_PAGE_SUMMARIES = gql`
   query LandingPageSummaries {
     # Tier 1
@@ -95,6 +127,43 @@ export const LANDING_PAGE_SUMMARIES = gql`
       ...RequiredSummaryFields
     }
   }
+  ${Summary.fragments.requiredFields}
+`
+
+export const GET_HISTORICAL_CHART_SUMMARIES = gql`
+  query FindChartSummaries($month: PeriodEnums!, $year: Year!) {
+    findChartSummaries(month: $month, year: $year) {
+      date
+      https {
+        ...RequiredSummaryFields
+      }
+      dmarc {
+        ...RequiredSummaryFields
+      }
+      dkim {
+        ...RequiredSummaryFields
+      }
+      spf {
+        ...RequiredSummaryFields
+      }
+      ssl {
+        ...RequiredSummaryFields
+      }
+      webConnections {
+        ...RequiredSummaryFields
+      }
+      dmarcPhase {
+        ...RequiredSummaryFields
+      }
+      web {
+        ...RequiredSummaryFields
+      }
+      mail {
+        ...RequiredSummaryFields
+      }
+    }
+  }
+
   ${Summary.fragments.requiredFields}
 `
 
@@ -585,7 +654,7 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
 `
 
 export const ORG_DETAILS_PAGE = gql`
-  query OrgDetails($slug: Slug!, $month: PeriodEnums!, $year: Year!) {
+  query OrgDetails($slug: Slug!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
@@ -621,43 +690,47 @@ export const ORG_DETAILS_PAGE = gql`
           ...RequiredSummaryFields
         }
       }
+    }
+  }
+  ${Summary.fragments.requiredFields}
+`
+
+export const GET_HISTORICAL_ORG_SUMMARIES = gql`
+  query GetOrgSummaries($orgSlug: Slug!, $month: PeriodEnums!, $year: Year!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
       historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
-        totalCount
-        edges {
-          node {
-            date
-            https {
-              ...RequiredSummaryFields
-            }
-            dmarc {
-              ...RequiredSummaryFields
-            }
-            dkim {
-              ...RequiredSummaryFields
-            }
-            spf {
-              ...RequiredSummaryFields
-            }
-            ssl {
-              ...RequiredSummaryFields
-            }
-            webConnections {
-              ...RequiredSummaryFields
-            }
-            dmarcPhase {
-              ...RequiredSummaryFields
-            }
-            web {
-              ...RequiredSummaryFields
-            }
-            mail {
-              ...RequiredSummaryFields
-            }
-          }
+        date
+        https {
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
+        }
+        dmarcPhase {
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
         }
       }
     }
   }
+
   ${Summary.fragments.requiredFields}
 `
 
@@ -828,7 +901,6 @@ export const QUERY_CURRENT_USER = gql`
       id
       userName
       displayName
-      preferredLang
       phoneNumber
       tfaSendMethod
       phoneValidated

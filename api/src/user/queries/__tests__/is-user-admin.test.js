@@ -56,7 +56,6 @@ describe('given the isUserAdmin query', () => {
       await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
       })

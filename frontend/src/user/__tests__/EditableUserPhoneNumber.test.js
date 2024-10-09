@@ -142,7 +142,6 @@ describe('<EditableUserPhoneNumber />', () => {
                         userName: 'testUser@canada.gc.ca',
                         displayName: 'test user',
                         tfaSendMethod: 'PHONE',
-                        preferredLang: 'en',
                         emailValidated: true,
                         phoneValidated: true,
                         phoneNumber: '+17895551234',

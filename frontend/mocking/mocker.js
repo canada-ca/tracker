@@ -55,7 +55,6 @@ const mockOverrides = {
         totalCount: affiliationCount,
       },
       emailValidated: true,
-      preferredLang: 'ENGLISH',
     }
   },
   SignInUnion: () => ({ __typename: 'AuthResult' }),

@@ -51,14 +51,12 @@ describe('given the checkUserIsAdminForUser', () => {
       user1 = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
       })
       user2 = await collections.users.save({
         userName: 'test.account2@istio.actually.exists',
         displayName: 'Test Account2',
-        preferredLang: 'english',
         tfaValidated: false,
         emailValidated: false,
       })

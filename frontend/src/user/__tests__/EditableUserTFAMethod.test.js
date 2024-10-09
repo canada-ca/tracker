@@ -26,9 +26,7 @@ describe('<EditableUserTFAMethod />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -58,7 +56,6 @@ describe('<EditableUserTFAMethod />', () => {
                   id: '1234asdf',
                   userName: 'testUser@canada.gc.ca',
                   displayName: 'test user',
-                  preferredLang: 'en',
                   tfaSendMethod: 'EMAIL',
                   __typename: 'PersonalUser',
                 },
@@ -73,17 +70,11 @@ describe('<EditableUserTFAMethod />', () => {
 
     const { getByText, getByTestId } = render(
       <MockedProvider addTypename={false} mocks={mocks}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <EditableUserTFAMethod
-                  currentTFAMethod="NONE"
-                  emailValidated={true}
-                  phoneValidated={true}
-                />
+                <EditableUserTFAMethod currentTFAMethod="NONE" emailValidated={true} phoneValidated={true} />
               </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
@@ -95,11 +86,7 @@ describe('<EditableUserTFAMethod />', () => {
     const languageSelect = getByTestId(/tfa-method-select/)
     fireEvent.change(languageSelect, { target: { value: 'EMAIL' } })
     fireEvent.click(saveBtn)
-    await waitFor(() =>
-      expect(
-        getByText(/You have successfully updated your TFA send method./i),
-      ).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(getByText(/You have successfully updated your TFA send method./i)).toBeInTheDocument())
   })
 
   it('fails at changing TFA send method', async () => {
@@ -126,17 +113,11 @@ describe('<EditableUserTFAMethod />', () => {
 
     const { getByText, getByTestId } = render(
       <MockedProvider addTypename={false} mocks={mocks}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <EditableUserTFAMethod
-                  currentTFAMethod="NONE"
-                  emailValidated={true}
-                  phoneValidated={true}
-                />
+                <EditableUserTFAMethod currentTFAMethod="NONE" emailValidated={true} phoneValidated={true} />
               </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
@@ -149,11 +130,7 @@ describe('<EditableUserTFAMethod />', () => {
     fireEvent.change(languageSelect, { target: { value: 'EMAIL' } })
     fireEvent.click(saveBtn)
     await waitFor(() =>
-      expect(
-        getByText(
-          /Unable to update to your TFA send method, please try again./i,
-        ),
-      ).toBeInTheDocument(),
+      expect(getByText(/Unable to update to your TFA send method, please try again./i)).toBeInTheDocument(),
     )
   })
 })

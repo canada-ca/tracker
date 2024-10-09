@@ -18,7 +18,7 @@ export function TieredSummaries({ summaries }) {
           <TierOneSummaries https={https} dmarc={dmarc} />
         </ABTestVariant>
         <ABTestVariant name="B">
-          <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+          <Accordion allowMultiple defaultIndex={[0]}>
             <AccordionItem>
               <AccordionButton>
                 <Box as="span" flex="1" textAlign="left" fontSize="xl">

@@ -27,7 +27,7 @@ import { TieredSummaries } from '../summaries/TieredSummaries'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { ORG_DETAILS_PAGE } from '../graphql/queries'
+import { ORG_DETAILS_PAGE, GET_HISTORICAL_ORG_SUMMARIES } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
@@ -47,7 +47,12 @@ export default function OrganizationDetails() {
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug, month: progressChartRange, year: new Date().getFullYear().toString() },
+    variables: { slug: orgSlug },
+    // errorPolicy: 'ignore', // allow partial success
+  })
+
+  const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
+    variables: { orgSlug, month: progressChartRange, year: new Date().getFullYear().toString() },
     // errorPolicy: 'ignore', // allow partial success
   })
 
@@ -147,14 +152,18 @@ export default function OrganizationDetails() {
             </ErrorBoundary>
             <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="B">
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <HistoricalSummariesGraph
-                    data={data?.organization?.historicalSummaries}
-                    setRange={setProgressChartRange}
-                    width={1200}
-                    height={500}
-                  />
-                </ErrorBoundary>
+                {orgSummariesLoading ? (
+                  <LoadingMessage height={500} />
+                ) : (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <HistoricalSummariesGraph
+                      data={orgSummariesData?.findOrganizationBySlug?.historicalSummaries}
+                      setRange={setProgressChartRange}
+                      width={1200}
+                      height={500}
+                    />
+                  </ErrorBoundary>
+                )}
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AggregatedGuidanceSummary orgSlug={orgSlug} />
                 </ErrorBoundary>

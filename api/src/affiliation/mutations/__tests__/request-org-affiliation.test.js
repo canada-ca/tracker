@@ -122,7 +122,6 @@ describe('invite user to org', () => {
               secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
-                preferredLang: 'english',
               })
               await collections.affiliations.save({
                 _from: org._id,
@@ -198,7 +197,6 @@ describe('invite user to org', () => {
                   _type: 'user',
                   displayName: 'Test Account',
                   id: secondaryUser._key,
-                  preferredLang: 'english',
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },

@@ -1,7 +1,18 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Flex, Heading, IconButton, Switch, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  IconButton,
+  ListItem,
+  Switch,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -12,12 +23,14 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
+import { FIND_ORGANIZATION_BY_SLUG, PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+import { useQuery } from '@apollo/client'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 // import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function Organizations() {
@@ -39,6 +52,14 @@ export default function Organizations() {
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const { isOpen, onToggle } = useDisclosure()
+
+  const {
+    loading: unclaimedLoading,
+    error: unclaimedError,
+    data: unclaimedData,
+  } = useQuery(FIND_ORGANIZATION_BY_SLUG, {
+    variables: { orgSlug: 'unclaimed' },
+  })
 
   const {
     loading,
@@ -96,18 +117,16 @@ export default function Organizations() {
         {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
           <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
-              <OrganizationCard
-                className="organization-card"
-                slug={slug}
-                name={name}
-                acronym={acronym}
-                domainCount={domainCount}
-                verified={verified}
-                summaries={summaries}
-                mb="3"
-                mr={userHasPermission ? '3rem' : '2'}
-                w="100%"
-              />
+              <ListItem mb="3" mr={userHasPermission ? '3rem' : '2'} w="100%" className="organization-card">
+                <OrganizationCard
+                  slug={slug}
+                  name={name}
+                  acronym={acronym}
+                  domainCount={domainCount}
+                  verified={verified}
+                  summaries={summaries}
+                />
+              </ListItem>
               {isLoggedIn() && !userHasPermission && (
                 <>
                   <IconButton
@@ -131,6 +150,33 @@ export default function Organizations() {
           </ErrorBoundary>
         )}
       </ListOf>
+    )
+  }
+
+  let unclaimedCard
+  if (unclaimedLoading) {
+    unclaimedCard = (
+      <LoadingMessage>
+        <Trans>Unclaimed</Trans>
+      </LoadingMessage>
+    )
+  } else if (unclaimedError) {
+    unclaimedCard = <ErrorFallbackMessage error={unclaimedError} />
+  } else if (unclaimedData?.findOrganizationBySlug) {
+    const { name, slug, acronym, domainCount, verified, summaries } = unclaimedData?.findOrganizationBySlug
+    unclaimedCard = (
+      <Box mr="3rem" mb="3">
+        <OrganizationCard
+          className="organization-card"
+          slug={slug}
+          name={name}
+          acronym={acronym}
+          domainCount={domainCount}
+          verified={verified}
+          summaries={summaries}
+          w="100%"
+        />
+      </Box>
     )
   }
 
@@ -179,6 +225,10 @@ export default function Organizations() {
           onToggle={onToggle}
           totalRecords={totalCount}
         />
+
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="B">{unclaimedCard}</ABTestVariant>
+        </ABTestWrapper>
 
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg" className="filter">

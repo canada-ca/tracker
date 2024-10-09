@@ -26,9 +26,7 @@ describe('<InsideUserSwitch />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -39,9 +37,7 @@ describe('<InsideUserSwitch />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() =>
-      expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(getByText(/Feature Preview/i)).toBeInTheDocument())
   })
 
   describe('When the user toggles their insider status', () => {
@@ -63,7 +59,6 @@ describe('<InsideUserSwitch />', () => {
                     userName: 'testUser@canada.gc.ca',
                     displayName: 'test user',
                     tfaSendMethod: 'PHONE',
-                    preferredLang: 'en',
                     emailValidated: true,
                     insideUser: true,
                     __typename: 'PersonalUser',
@@ -95,9 +90,7 @@ describe('<InsideUserSwitch />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() =>
-        expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Feature Preview/i)).toBeInTheDocument())
       const betaSwitch = getByLabelText(/Feature Preview/i)
       userEvent.click(betaSwitch)
       await waitFor(() => expect(getByText(/Inside user status changed/i)))
@@ -143,18 +136,10 @@ describe('<InsideUserSwitch />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() =>
-        expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Feature Preview/i)).toBeInTheDocument())
       const betaSwitch = getByLabelText(/Feature Preview/i)
       userEvent.click(betaSwitch)
-      await waitFor(() =>
-        expect(
-          getByText(
-            /Unable to update to your inside user status, please try again./i,
-          ),
-        ),
-      )
+      await waitFor(() => expect(getByText(/Unable to update to your inside user status, please try again./i)))
     })
   })
 })
