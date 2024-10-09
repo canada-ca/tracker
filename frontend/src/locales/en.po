@@ -597,7 +597,7 @@ msgstr "Authenticate"
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
 #: src/guidance/CveIgnorer.js:131
-#: src/userOnboarding/components/TourComponent.js:61
+#: src/userOnboarding/components/TourComponent.js:63
 msgid "Back"
 msgstr "Back"
 
@@ -1712,6 +1712,10 @@ msgstr "Filtered"
 msgid "Filters:"
 msgstr "Filters:"
 
+#: src/userOnboarding/components/TourComponent.js:66
+msgid "Finish"
+msgstr "Finish"
+
 #: src/guidance/AdditionalFindings.js:194
 #: src/guidance/AdditionalFindings.js:258
 #: src/guidance/AdditionalFindings.js:291
@@ -2763,7 +2767,7 @@ msgstr "New Phone Number:"
 msgid "New Value:"
 msgstr "New Value:"
 
-#: src/userOnboarding/components/TourComponent.js:62
+#: src/userOnboarding/components/TourComponent.js:64
 msgid "Next"
 msgstr "Next"
 
@@ -3993,7 +3997,7 @@ msgstr "Sign Out."
 msgid "Signature Hash:"
 msgstr "Signature Hash:"
 
-#: src/userOnboarding/components/TourComponent.js:63
+#: src/userOnboarding/components/TourComponent.js:65
 msgid "Skip"
 msgstr "Skip"
 

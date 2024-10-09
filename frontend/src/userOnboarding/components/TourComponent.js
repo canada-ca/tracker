@@ -4,12 +4,14 @@ import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
 import { Trans } from '@lingui/macro'
 import { useUserVar } from '../../utilities/userState'
+import theme from '../../theme/canada'
 import PropTypes from 'prop-types'
 
 export const TourComponent = ({ page }) => {
   const { isEmailValidated } = useUserVar()
   const { isTourOpen, endTour, startTour } = useTour()
   const [tourKey, setTourKey] = useState(0)
+  const { darkOrange } = theme.colors.tracker.logo
 
   //handles starting the tour based on the page and user state
   useEffect(() => {
@@ -45,22 +47,23 @@ export const TourComponent = ({ page }) => {
       steps={mainTourSteps[page]['steps']}
       run={isTourOpen}
       continuous={true}
-      showProgress={true}
+      showProgress={false}
       showSkipButton={true}
       disableCloseOnEsc={false}
       disableOverlayClose={false}
       styles={{
         buttonNext: {
-          backgroundColor: '#ff6600',
+          backgroundColor: darkOrange,
         },
         buttonBack: {
-          color: '#ff6600',
+          color: darkOrange,
         },
       }}
       locale={{
         back: <Trans>Back</Trans>,
         next: <Trans>Next</Trans>,
         skip: <Trans>Skip</Trans>,
+        last: <Trans>Finish</Trans>,
       }}
       callback={handleJoyrideCallback}
     />
