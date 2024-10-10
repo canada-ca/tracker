@@ -43,7 +43,7 @@ export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
         elements={nodes}
         ifEmpty={() => (
           <Text layerStyle="loadingMessage">
-            <Trans>No tags</Trans>
+            <Trans>No negative findings to show. </Trans>
           </Text>
         )}
         mb="4"

@@ -21,6 +21,10 @@ msgstr ", et"
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du"
 
+#: src/guidance/GuidanceTagDetails.js:84
+msgid "{0} Domains"
+msgstr "{0} Domaines"
+
 #: src/admin/AdminDomainModal.js:63
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
@@ -331,6 +335,10 @@ msgstr "Composants concernés :"
 #: src/admin/SuperAdminUserList.js:319
 msgid "Affiliations:"
 msgstr "Affiliations :"
+
+#: src/summaries/AggregatedGuidanceSummary.js:65
+msgid "Aggregated Guidance Summary"
+msgstr "Résumé des orientations agrégées"
 
 #: src/auth/CreateUserPage.js:154
 msgid "Already have an account? <0>Log in</0>"
@@ -1199,8 +1207,8 @@ msgstr "Phase de mise en œuvre de DMARC: {0}"
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
 
-#: src/organizationDetails/OrganizationDetails.js:135
-#: src/organizationDetails/OrganizationDetails.js:173
+#: src/organizationDetails/OrganizationDetails.js:136
+#: src/organizationDetails/OrganizationDetails.js:177
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -1332,7 +1340,7 @@ msgstr "Domaine:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:208
 #: src/domains/DomainsPage.js:272
-#: src/organizationDetails/OrganizationDetails.js:138
+#: src/organizationDetails/OrganizationDetails.js:139
 #: src/organizationDetails/OrganizationDomains.js:125
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -2307,7 +2315,7 @@ msgstr "Les renseignements partagés avec le SCT ou acquis par l'entremise de sy
 msgid "Informative"
 msgstr "Informatif"
 
-#: src/guidance/GuidanceTagDetails.js:93
+#: src/guidance/GuidanceTagDetails.js:98
 msgid "Informative tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 msgstr "Les balises informatives mettent en évidence des détails de configuration pertinents, mais ne sont pas traitées dans le cadre des exigences de la politique et n'ont aucun impact sur la notation."
 
@@ -2843,6 +2851,10 @@ msgstr "Aucun protocole faible connu n'a été utilisé."
 msgid "No MX records found. Is the domain parked?"
 msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 
+#: src/summaries/AggregatedGuidanceSummary.js:46
+msgid "No negative findings to show."
+msgstr "Aucun résultat négatif à signaler."
+
 #: src/guidance/GuidancePage.js:136
 #: src/organizations/Organizations.js:112
 msgid "No Organizations"
@@ -2990,7 +3002,7 @@ msgstr "Organisation"
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/organizationDetails/OrganizationDetails.js:67
+#: src/organizationDetails/OrganizationDetails.js:68
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
@@ -3219,7 +3231,7 @@ msgstr "Pointeur vers un enregistrement de clé publique DKIM dans le DNS."
 #~ msgid "Policy"
 #~ msgstr "Politique"
 
-#: src/guidance/GuidanceTagDetails.js:28
+#: src/guidance/GuidanceTagDetails.js:34
 msgid "Policy guidance:"
 msgstr "Orientation politique :"
 
@@ -3415,7 +3427,7 @@ msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
 #: src/guidance/GuidancePage.js:159
-#: src/organizationDetails/OrganizationDetails.js:112
+#: src/organizationDetails/OrganizationDetails.js:113
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
@@ -4126,7 +4138,7 @@ msgstr "L'utilisateur {0} a été supprimé."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Arrêt réussi de l'ignorance des CVE pour le domaine « {0} ». Nouvelles CVE ignorées : « {1} »."
 
-#: src/organizationDetails/OrganizationDetails.js:132
+#: src/organizationDetails/OrganizationDetails.js:133
 msgid "Summaries"
 msgstr "Résumés"
 
@@ -4235,7 +4247,7 @@ msgstr "le SCT soit identifié comme la source; et"
 msgid "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 msgstr "TBS se réserve le droit de refuser le service, de rejeter votre demande de compte ou d'annuler un compte existant, pour quelque raison que ce soit, à sa seule discrétion."
 
-#: src/guidance/GuidanceTagDetails.js:47
+#: src/guidance/GuidanceTagDetails.js:53
 msgid "Technical implementation guidance:"
 msgstr "Conseils techniques de mise en œuvre :"
 
@@ -4855,7 +4867,7 @@ msgstr "Utilisateur:"
 
 #: src/admin/AdminPage.js:199
 #: src/admin/AdminPanel.js:22
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:143
 msgid "Users"
 msgstr "Utilisateurs"
 
