@@ -4,7 +4,7 @@ from arango import ArangoClient
 from summaries import *
 from test_data import *
 
-arango_client = ArangoClient(hosts="http://testdb:8629")
+arango_client = ArangoClient(hosts="http://testdb:8529")
 # Connect to arango system DB and create test DB
 sys_db = arango_client.db("_system", username="", password="")
 sys_db.create_database("test")
