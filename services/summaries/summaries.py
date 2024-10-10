@@ -74,7 +74,9 @@ def get_domain_negative_findings(db, domain_id):
                     FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
                         RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
             )
-            RETURN FLATTEN([emailTags, webTags], 2)
+            FOR tag IN FLATTEN([emailTags, webTags], 2)
+                FILTER tag != null
+                RETURN tag
         """,
         bind_vars={"domain_id": domain_id},
     )
