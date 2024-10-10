@@ -62,7 +62,7 @@ export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
   return (
     <Box {...props}>
       <Heading size="md" mb="2">
-        <Trans>Aggregated Guidance Summary</Trans>
+        <Trans>Most Common Negative Findings</Trans>
       </Heading>
       {tagList}
       <RelayPaginationControls
