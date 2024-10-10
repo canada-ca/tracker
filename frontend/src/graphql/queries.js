@@ -737,6 +737,7 @@ export const GET_HISTORICAL_ORG_SUMMARIES = gql`
 export const ORG_NEGATIVE_FINDINGS = gql`
   query OrgAggregatedNegativeGuidance($orgSlug: Slug!, $first: Int!, $after: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
       summaries {
         negativeFindings(first: $first, after: $after, orderBy: { field: TAG_COUNT, direction: DESC }) {
           totalCount

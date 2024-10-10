@@ -13,17 +13,25 @@ import { GuidanceTagDetails } from '../guidance/GuidanceTagDetails'
 
 export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
   const [tagsPerPage, setTagsPerPage] = useState(5)
-  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage, resetToFirstPage } =
-    usePaginatedCollection({
-      fetchForward: ORG_NEGATIVE_FINDINGS,
-      variables: {
-        orgSlug,
-      },
-      recordsPerPage: tagsPerPage,
-      relayRoot: 'findOrganizationBySlug.summaries.negativeFindings',
-      fetchPolicy: 'network-only',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+    resetToFirstPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: ORG_NEGATIVE_FINDINGS,
+    variables: { orgSlug },
+    recordsPerPage: tagsPerPage,
+    relayRoot: 'findOrganizationBySlug.summaries.negativeFindings',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -68,6 +76,7 @@ export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
     </Box>
   )
