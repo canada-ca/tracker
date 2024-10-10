@@ -58,6 +58,29 @@ def ignore_domain(domain):
     )
 
 
+def get_domain_negative_findings(db, domain_id):
+    cursor = db.aql.execute(
+        """
+            LET emailTags = (
+                FOR dnsScan, dnsE IN 1 OUTBOUND @domain_id domainsDNS
+                    SORT dnsScan.timestamp DESC
+                    LIMIT 1
+                    RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
+            )[0]
+            LET webTags = (
+                FOR web, webE IN 1 OUTBOUND @domain_id domainsWeb
+                    SORT web.timestamp DESC
+                    LIMIT 1
+                    FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
+                        RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
+            )
+            RETURN FLATTEN([emailTags, webTags], 2)
+        """,
+        bind_vars={"domain_id": domain_id},
+    )
+    return cursor.next()
+
+
 def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
     logging.info(f"Updating chart summaries...")
 
@@ -190,6 +213,8 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         dmarc_phase_enforce = 0
         dmarc_phase_maintain = 0
 
+        negative_tags = {}
+
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
@@ -280,6 +305,14 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 elif phase == "maintain":
                     dmarc_phase_maintain = dmarc_phase_maintain + 1
 
+                # Negative tags
+                domain_negative_tags = get_domain_negative_findings(db, domain["_id"])
+                for tag in domain_negative_tags:
+                    if tag in negative_tags:
+                        negative_tags[tag] += 1
+                    else:
+                        negative_tags[tag] = 1
+
         dmarc_phase_total = (
             dmarc_phase_not_implemented
             + dmarc_phase_assess
@@ -342,6 +375,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "total": web_connections_pass + web_connections_fail,
                 # Don't count non web-hosting domains
             },
+            "negative_tags": negative_tags,
         }
 
         current_summary = org.get("summaries")
