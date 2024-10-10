@@ -165,7 +165,7 @@ export default function OrganizationDetails() {
                   </ErrorBoundary>
                 )}
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AggregatedGuidanceSummary orgSlug={orgSlug} />
+                  <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" />
                 </ErrorBoundary>
               </ABTestVariant>
             </ABTestWrapper>
