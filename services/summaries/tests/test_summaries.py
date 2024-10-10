@@ -4,7 +4,7 @@ from arango import ArangoClient
 from summaries import *
 from test_data import *
 
-arango_client = ArangoClient(hosts="http://testdb:8529")
+arango_client = ArangoClient(hosts="http://testdb:8629")
 # Connect to arango system DB and create test DB
 sys_db = arango_client.db("_system", username="", password="")
 sys_db.create_database("test")
@@ -14,6 +14,9 @@ db = arango_client.db("test", username="", password="")
 db.create_collection("scanSummaries")
 db.create_collection("chartSummaries")
 db.create_collection("organizationSummaries")
+db.create_collection("domainsDNS")
+db.create_collection("domainsWeb")
+db.create_collection("webToWebScans")
 graph = db.create_graph("compliance")
 domains = graph.create_vertex_collection("domains")
 orgs = graph.create_vertex_collection("organizations")
@@ -179,4 +182,5 @@ def test_update_org_summaries():
             "maintain": 2,
             "total": 3,
         },
+        "negative_tags": {},
     }
