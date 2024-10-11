@@ -80,6 +80,8 @@ def get_domain_negative_findings(db, domain_id):
         """,
         bind_vars={"domain_id": domain_id},
     )
+    if cursor.empty():
+        return []
     return cursor.next()
 
 
