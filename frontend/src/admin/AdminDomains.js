@@ -46,6 +46,7 @@ import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
+import { domainSearchTip } from '../domains/DomainsPage'
 
 export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
@@ -86,15 +87,25 @@ export function AdminDomains({ orgSlug, orgId }) {
     filters,
   }
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      variables: fetchVariables,
-      relayRoot: 'findOrganizationBySlug.domains',
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    variables: fetchVariables,
+    relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(newDomainUrl)
@@ -422,6 +433,9 @@ export function AdminDomains({ orgSlug, orgId }) {
             </Button>
           </Flex>
         </form>
+        <Box mt="1" backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
+          {domainSearchTip}
+        </Box>
         <Divider borderBottomWidth="1px" borderBottomColor="black" />
         <RelayPaginationControls
           onlyPagination={false}
@@ -434,6 +448,7 @@ export function AdminDomains({ orgSlug, orgId }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </Box>
       <Flex align="center" mb="2">
@@ -451,6 +466,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
       <AdminDomainModal
         isOpen={updateIsOpen}

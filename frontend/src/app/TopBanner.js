@@ -18,6 +18,7 @@ import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
 import { bool } from 'prop-types'
+import { TourButton } from '../userOnboarding/components/TourButton'
 
 export const TopBanner = ({ initialLoading, ...props }) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -95,10 +96,8 @@ export const TopBanner = ({ initialLoading, ...props }) => {
         </PhaseBanner>
 
         <Flex align="center" ml="auto">
-          <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
-            <LocaleSwitcher />
-          </Box>
-
+          <TourButton />
+          <LocaleSwitcher py="4" mx="2" ml={{ base: 'auto', md: '0' }} />
           {initialLoading ? (
             <>
               <Skeleton display={{ base: 'none', md: 'inline' }} mr="2">
@@ -113,16 +112,18 @@ export const TopBanner = ({ initialLoading, ...props }) => {
               </Skeleton>
             </>
           ) : isLoggedIn() ? (
-            <Button
-              variant="primaryWhite"
-              as={RouteLink}
-              to="/"
-              px="3"
-              display={{ base: 'none', md: 'inline' }}
-              onClick={signOut}
-            >
-              <Trans>Sign Out</Trans>
-            </Button>
+            <>
+              <Button
+                variant="primaryWhite"
+                as={RouteLink}
+                to="/"
+                px="3"
+                display={{ base: 'none', md: 'inline' }}
+                onClick={signOut}
+              >
+                <Trans>Sign Out</Trans>
+              </Button>
+            </>
           ) : (
             <>
               <Button
@@ -136,6 +137,7 @@ export const TopBanner = ({ initialLoading, ...props }) => {
                 <Trans>Sign In</Trans>
               </Button>
               <Button
+                className="create-account-button"
                 variant="primaryWhite"
                 as={RouteLink}
                 to="/create-user"

@@ -474,7 +474,7 @@ describe('<AdminDomains />', () => {
   })
 
   describe('editing a domain', () => {
-    it('successfully edits domain URL', async () => {
+    it('successfully edits domain details', async () => {
       const mocks = [
         {
           request: {
@@ -495,9 +495,7 @@ describe('<AdminDomains />', () => {
             variables: {
               domainId: 'testid2=',
               orgId: 'testid=',
-              domain: 'test.domain.ca',
               tags: [],
-
               archived: false,
               assetState: 'MONITOR_ONLY',
             },
@@ -516,7 +514,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, findByTestId, getByLabelText, queryByText, findByRole } = render(
+      const { getByText, findByTestId, queryByText, findByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -545,13 +543,6 @@ describe('<AdminDomains />', () => {
       userEvent.click(editDomainButton)
 
       await waitFor(() => expect(getByText(/Edit Domain Details/i)).toBeInTheDocument())
-
-      const editDomainInput = getByLabelText(/Domain URL:/)
-      fireEvent.change(editDomainInput, {
-        target: {
-          value: 'test.domain.ca',
-        },
-      })
 
       const assetStateSelect = await findByRole('combobox', { name: /Asset State/ })
 

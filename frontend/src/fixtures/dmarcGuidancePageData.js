@@ -4,6 +4,7 @@ export const rawDmarcGuidancePageData = {
       domain: 'amie.info',
       lastRan: '2019-01-03 20:06:12.437Z',
       rcode: 'Hello World',
+      userHasPermission: true,
       status: {
         dkim: 'INFO',
         dmarc: 'INFO',

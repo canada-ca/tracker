@@ -120,6 +120,6 @@ describe('<AdditonalFindings />', () => {
     })
 
     const accordionItems = getAllByRole('button', { expanded: true })
-    expect(accordionItems).toHaveLength(6)
+    expect(accordionItems).toHaveLength(7)
   })
 })

@@ -13,6 +13,7 @@ import { App } from '../App'
 import { UserVarProvider } from '../../utilities/userState'
 import { REFRESH_TOKENS } from '../../graphql/mutations'
 import { IS_LOGIN_REQUIRED } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -72,7 +73,9 @@ describe('<App/>', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <App />
+                    <TourProvider>
+                      <App />
+                    </TourProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -97,7 +100,9 @@ describe('<App/>', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
-                    <App />
+                    <TourProvider>
+                      <App />
+                    </TourProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -126,7 +131,9 @@ describe('<App/>', () => {
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
-                  <App />
+                  <TourProvider>
+                    <App />
+                  </TourProvider>
                 </I18nProvider>
               </MemoryRouter>
             </ChakraProvider>
@@ -154,7 +161,9 @@ describe('<App/>', () => {
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
-                  <App />
+                  <TourProvider>
+                    <App />
+                  </TourProvider>
                 </I18nProvider>
               </MemoryRouter>
             </ChakraProvider>
@@ -178,7 +187,9 @@ describe('<App/>', () => {
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
-                  <App />
+                  <TourProvider>
+                    <App />
+                  </TourProvider>
                 </I18nProvider>
               </MemoryRouter>
             </ChakraProvider>
@@ -205,7 +216,9 @@ describe('<App/>', () => {
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
-                  <App />
+                  <TourProvider>
+                    <App />
+                  </TourProvider>
                 </I18nProvider>
               </MemoryRouter>
             </ChakraProvider>

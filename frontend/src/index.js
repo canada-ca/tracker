@@ -14,6 +14,7 @@ import { UserVarProvider, useUserVar } from './utilities/userState'
 import { REFRESH_TOKENS } from './graphql/mutations'
 import { activate, defaultLocale } from './utilities/i18n.config'
 import { IS_LOGIN_REQUIRED } from './graphql/queries'
+import { TourProvider } from './userOnboarding/contexts/TourContext'
 
 const I18nApp = () => {
   const { currentUser, login } = useUserVar()
@@ -34,11 +35,7 @@ const I18nApp = () => {
       async onCompleted({ refreshTokens }) {
         try {
           if (refreshTokens.result.__typename === 'AuthResult') {
-            if (!currentUser.jwt) {
-              // User not logged in yet, set up environment (redirect and lang)
-              if (refreshTokens.result.user.preferredLang === 'ENGLISH') await activate('en')
-              else if (refreshTokens.result.user.preferredLang === 'FRENCH') await activate('fr')
-            }
+            // User not logged in yet, set up environment and redirect
             login({
               jwt: refreshTokens.result.authToken,
               tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
@@ -97,7 +94,7 @@ const I18nApp = () => {
 }
 
 const setUpApp = async () => {
-  await activate(defaultLocale)
+  await activate(['en', 'fr'].includes(window.APP_DEFAULT_LANGUAGE) ? window.APP_DEFAULT_LANGUAGE : defaultLocale)
 
   const root = createRoot(document.getElementById('root'))
   root.render(
@@ -105,7 +102,9 @@ const setUpApp = async () => {
       <UserVarProvider userVar={currentUserVar}>
         <ChakraProvider theme={canada}>
           <Router>
-            <I18nApp />
+            <TourProvider>
+              <I18nApp />
+            </TourProvider>
           </Router>
         </ChakraProvider>
       </UserVarProvider>

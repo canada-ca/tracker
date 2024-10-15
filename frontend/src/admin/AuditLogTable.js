@@ -37,21 +37,31 @@ export function AuditLogTable({ orgId = null }) {
     setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: AUDIT_LOGS,
-      recordsPerPage: logsPerPage,
-      relayRoot: 'findAuditLogs',
-      variables: {
-        orgId,
-        orderBy: { field: orderField, direction: orderDirection },
-        search: debouncedSearchTerm,
-        filters: { resource: activeResourceFilters, action: activeActionFilters },
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-      errorPolicy: 'ignore', // allow partial success
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: AUDIT_LOGS,
+    recordsPerPage: logsPerPage,
+    relayRoot: 'findAuditLogs',
+    variables: {
+      orgId,
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+      filters: { resource: activeResourceFilters, action: activeActionFilters },
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore', // allow partial success
+  })
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
@@ -195,6 +205,7 @@ export function AuditLogTable({ orgId = null }) {
         resetToFirstPage={resetToFirstPage}
         orderByOptions={orderByOptions}
         placeholder={t`Search by initiated by, resource name`}
+        totalRecords={totalCount}
       />
       <Box h="auto" borderColor="gray.900" borderWidth="1px" rounded="md">
         <Flex>
@@ -285,6 +296,7 @@ export function AuditLogTable({ orgId = null }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
     </Box>
   )

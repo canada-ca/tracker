@@ -16,6 +16,7 @@ import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { matchMediaSize } from '../../helpers/matchMedia'
 import { PAGINATED_ORGANIZATIONS } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -121,6 +122,7 @@ describe('<Organisations />', () => {
                   startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                   __typename: 'PageInfo',
                 },
+                totalCount: 2,
                 __typename: 'OrganizationsConnection',
               },
             },
@@ -141,7 +143,9 @@ describe('<Organisations />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/organizations']} initialIndex={0}>
-                  <Organizations />
+                  <TourProvider>
+                    <Organizations />
+                  </TourProvider>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
@@ -195,6 +199,7 @@ describe('<Organisations />', () => {
                   startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                   __typename: 'PageInfo',
                 },
+                totalCount: 1,
                 __typename: 'OrganizationsConnection',
               },
             },
@@ -238,6 +243,7 @@ describe('<Organisations />', () => {
                   startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                   __typename: 'PageInfo',
                 },
+                totalCount: 1,
                 __typename: 'OrganizationsConnection',
               },
             },
@@ -281,6 +287,7 @@ describe('<Organisations />', () => {
                   startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                   __typename: 'PageInfo',
                 },
+                totalCount: 1,
                 __typename: 'OrganizationsConnection',
               },
             },
@@ -324,9 +331,11 @@ describe('<Organisations />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <Router history={history}>
-                  <Switch>
-                    <Route path="/organizations" render={() => <Organizations />} />
-                  </Switch>
+                  <TourProvider>
+                    <Switch>
+                      <Route path="/organizations" render={() => <Organizations />} />
+                    </Switch>
+                  </TourProvider>
                 </Router>
               </I18nProvider>
             </ChakraProvider>
@@ -383,6 +392,7 @@ describe('<Organisations />', () => {
                     startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     __typename: 'PageInfo',
                   },
+                  totalCount: 1,
                   __typename: 'OrganizationsConnection',
                 },
               },
@@ -405,7 +415,9 @@ describe('<Organisations />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/organizations']} initialIndex={0}>
-                    <Organizations />
+                    <TourProvider>
+                      <Organizations />
+                    </TourProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -462,6 +474,7 @@ describe('<Organisations />', () => {
                     startCursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
                     __typename: 'PageInfo',
                   },
+                  totalCount: 1,
                   __typename: 'OrganizationsConnection',
                 },
               },
@@ -508,6 +521,7 @@ describe('<Organisations />', () => {
                     startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     __typename: 'PageInfo',
                   },
+                  totalCount: 1,
                   __typename: 'OrganizationsConnection',
                 },
               },
@@ -534,9 +548,11 @@ describe('<Organisations />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
-                    <Switch>
-                      <Route path="/organizations" render={() => <Organizations />} />
-                    </Switch>
+                    <TourProvider>
+                      <Switch>
+                        <Route path="/organizations" render={() => <Organizations />} />
+                      </Switch>
+                    </TourProvider>
                   </Router>
                 </I18nProvider>
               </ChakraProvider>
@@ -600,6 +616,7 @@ describe('<Organisations />', () => {
                 startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                 __typename: 'PageInfo',
               },
+              totalCount: 1,
               __typename: 'OrganizationsConnection',
             },
           },
@@ -646,6 +663,7 @@ describe('<Organisations />', () => {
                     startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     __typename: 'PageInfo',
                   },
+                  totalCount: 1,
                   __typename: 'OrganizationsConnection',
                 },
               },
@@ -692,6 +710,7 @@ describe('<Organisations />', () => {
                     startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     __typename: 'PageInfo',
                   },
+                  totalCount: 1,
                   __typename: 'OrganizationsConnection',
                 },
               },
@@ -738,6 +757,7 @@ describe('<Organisations />', () => {
                     startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     __typename: 'PageInfo',
                   },
+                  totalCount: 1,
                   __typename: 'OrganizationsConnection',
                 },
               },
@@ -762,9 +782,11 @@ describe('<Organisations />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
-                    <Switch>
-                      <Route path="/organizations" render={() => <Organizations />} />
-                    </Switch>
+                    <TourProvider>
+                      <Switch>
+                        <Route path="/organizations" render={() => <Organizations />} />
+                      </Switch>
+                    </TourProvider>
                   </Router>
                 </I18nProvider>
               </ChakraProvider>

@@ -42,6 +42,7 @@ describe('given the sendOrgProgressReport function', () => {
         notifyClient,
         user,
         orgStats,
+        vulnerableAssets: 0,
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_ORG_PROGRESS_REPORT, user.userName, {
@@ -55,6 +56,7 @@ describe('given the sendOrgProgressReport function', () => {
           dmarc_score_diff: '-8%',
           domain_count: 100,
           domain_count_diff: '+2',
+          vulnerable_domain_count: 0,
         },
       })
     })

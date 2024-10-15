@@ -92,8 +92,8 @@ describe('<GuidancePage />', () => {
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
-                <Route path="/domains/:domainSlug">
+              <MemoryRouter initialEntries={['/domains/forces.gc.ca/web-guidance']} initialIndex={0}>
+                <Route path="/domains/:domainSlug/:activeTab?">
                   <GuidancePage />
                 </Route>
               </MemoryRouter>
@@ -136,8 +136,8 @@ describe('<GuidancePage />', () => {
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: 'user' })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains/noaffiliations.gc.ca']} initialIndex={0}>
-                <Route path="/domains/:domainSlug">
+              <MemoryRouter initialEntries={['/domains/noaffiliations.gc.ca/web-guidance']} initialIndex={0}>
+                <Route path="/domains/:domainSlug/:activeTab?">
                   <GuidancePage />
                 </Route>
               </MemoryRouter>

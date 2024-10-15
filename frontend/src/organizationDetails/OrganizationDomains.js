@@ -60,15 +60,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           filters,
         }
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
-      recordsPerPage: domainsPerPage,
-      relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
-      variables: queryVariables,
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    totalCount,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
+    recordsPerPage: domainsPerPage,
+    relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
+    variables: queryVariables,
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -104,7 +114,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
@@ -166,7 +175,9 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             blocked,
             wildcardSibling,
             webScanPending,
+            hasEntrustCertificate,
             userHasPermission,
+            cveDetected,
           },
           index,
         ) => (
@@ -183,7 +194,9 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               blocked={blocked}
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
+              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
+              cveDetected={cveDetected}
               mb="3"
             />
           </ErrorBoundary>
@@ -243,6 +256,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
         <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
         <InfoBox
           title={t`Dependency`}
@@ -280,6 +294,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         onToggle={onToggle}
         searchTip={domainSearchTip}
         value={searchTerm}
+        totalRecords={totalCount}
       />
 
       {orgSlug !== 'my-tracker' && (
@@ -304,6 +319,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
       />
     </Box>
   )

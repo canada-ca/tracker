@@ -35,7 +35,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       auth: { userRequired },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
-      notify: { sendTfaTextMsg },
+      notify: { sendAuthTextMsg },
     },
   ) => {
     // Cleanse input
@@ -107,7 +107,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     await loadUserByKey.clear(user._key)
     user = await loadUserByKey.load(user._key)
 
-    await sendTfaTextMsg({ phoneNumber, user })
+    await sendAuthTextMsg({ user })
 
     console.info(`User: ${user._key} successfully set phone number.`)
     return {

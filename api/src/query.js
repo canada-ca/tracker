@@ -1,6 +1,6 @@
-import {GraphQLObjectType} from 'graphql'
+import { GraphQLObjectType } from 'graphql'
 
-import {nodeField, nodesField} from './node'
+import { nodeField, nodesField } from './node'
 import * as dmarcSummariesQueries from './dmarc-summaries/queries'
 import * as domainQueries from './domain/queries'
 import * as organizationQueries from './organization/queries'
@@ -9,6 +9,7 @@ import * as userQueries from './user/queries'
 import * as verifiedDomainQueries from './verified-domains/queries'
 import * as verifiedOrgQueries from './verified-organizations/queries'
 import * as auditLogQueries from './audit-logs/queries'
+import * as additionalFindingsQueries from './additional-findings/queries'
 
 export const createQuerySchema = () => {
   return new GraphQLObjectType({
@@ -32,6 +33,7 @@ export const createQuerySchema = () => {
       ...verifiedDomainQueries,
       // Verified Organization Queries
       ...verifiedOrgQueries,
+      ...additionalFindingsQueries,
     }),
   })
 }

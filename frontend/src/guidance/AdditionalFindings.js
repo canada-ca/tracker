@@ -23,19 +23,23 @@ import {
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
-import { any, string } from 'prop-types'
+import { any, bool, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { useQuery } from '@apollo/client'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import CveIgnorer from './CveIgnorer'
+import IgnoredCves from './IgnoredCves'
 
-export function AdditionalFindings({ domain }) {
+export function AdditionalFindings({ domain, cveDetected }) {
+  const { i18n } = useLingui()
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
   const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
+
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
   const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
@@ -64,6 +68,7 @@ export function AdditionalFindings({ domain }) {
     )
   }
 
+  const { id: domainId, ignoredCves } = data.findDomainByDomain
   const { timestamp, headers, webComponents, vulnerabilities, ports } = data.findDomainByDomain.additionalFindings
   const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
   const ddosProtectionComponent = webComponents.find(
@@ -71,6 +76,17 @@ export function AdditionalFindings({ domain }) {
   )
   const cdnComponent = webComponents.find(({ webComponentCategory }) => webComponentCategory === 'CDN')
   const sortedPorts = ports.slice().sort((a, b) => Number(a.port) - Number(b.port))
+  const otherComponents = webComponents.filter(
+    ({ webComponentCategory }) => !['Framework', 'DDOS Protection', 'CDN'].includes(webComponentCategory),
+  )
+
+  const setActiveCveHandler = (cve) => {
+    setActiveCve({
+      cve,
+      affectedWebComps: webComponents.filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve)),
+    })
+    cveOnOpen()
+  }
 
   return (
     <>
@@ -84,7 +100,69 @@ export function AdditionalFindings({ domain }) {
         <Button variant="link" my="4" onClick={onOpen} fontSize="lg">
           <Trans>What are these additional findings?</Trans>
         </Button>
-        <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
+        <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5, 6]} w="100%">
+          <AccordionItem>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2" id="vulnerabilities">
+                <Trans>SPIN Top 25 Vulnerabilities</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
+            <AccordionPanel pb={4}>
+              <Link
+                colour="blue.500"
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/spin/improving-gc-cyber-security-health.html'
+                    : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/amops/renforcement-cybersecurite-gouvernement-canada.html'
+                }
+                isExternal
+              >
+                <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
+              </Link>
+              {cveDetected ? (
+                Object.keys(vulnerabilitySeverities).map((severity) => {
+                  return (
+                    vulnerabilities[severity].length > 0 && (
+                      <Box key={severity} px="2" mb="2">
+                        <Text>
+                          <b>{vulnerabilitySeverities[severity]}</b>
+                        </Text>
+                        <SimpleGrid columns={8}>
+                          {vulnerabilities[severity].map(({ cve }) => {
+                            return (
+                              <Button
+                                key={cve}
+                                borderRadius="full"
+                                m="1"
+                                borderColor="black"
+                                borderWidth="1px"
+                                bg={severity}
+                                fontWeight="normal"
+                                size="sm"
+                                _hover={{ bg: cveSeverityOnHover[severity] }}
+                                onClick={() => {
+                                  setActiveCveHandler(cve)
+                                }}
+                              >
+                                {cve}
+                              </Button>
+                            )
+                          })}
+                        </SimpleGrid>
+                      </Box>
+                    )
+                  )
+                })
+              ) : (
+                <Text fontWeight="bold" fontSize="xl">
+                  <Trans>No Top 25 Vulnerabilites Detected</Trans>
+                </Text>
+              )}
+              <IgnoredCves ignoredCves={ignoredCves} setActiveCveHandler={setActiveCveHandler} />
+            </AccordionPanel>
+          </AccordionItem>
+
           <AccordionItem>
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2">
@@ -99,7 +177,7 @@ export function AdditionalFindings({ domain }) {
                 </Trans>
               </WebRequirementsLink>
               <Divider borderBottomColor="gray.900" />
-              {frameworkComponents ? (
+              {frameworkComponents.length > 0 ? (
                 frameworkComponents.map(
                   ({ webComponentName, webComponentVersion, webComponentFirstSeen, webComponentLastSeen }) => {
                     return (
@@ -227,6 +305,53 @@ export function AdditionalFindings({ domain }) {
           <AccordionItem>
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2">
+                <Trans>Web Components</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
+            <AccordionPanel pb={4}>
+              {otherComponents.length > 0 ? (
+                otherComponents.map(
+                  ({
+                    webComponentName,
+                    webComponentCategory,
+                    webComponentVersion,
+                    webComponentFirstSeen,
+                    webComponentLastSeen,
+                  }) => {
+                    return (
+                      <Box key={`${webComponentName}-${webComponentVersion}`}>
+                        <Flex justify="space-between" px="2">
+                          {webComponentVersion ? (
+                            <Text minW="50%">
+                              {webComponentName} {webComponentCategory} ({webComponentVersion})
+                            </Text>
+                          ) : (
+                            <Text minW="50%">{webComponentName}</Text>
+                          )}
+                          <Text minW="25%">
+                            <Trans>First Seen: {formatTimestamp(webComponentFirstSeen)}</Trans>
+                          </Text>
+                          <Text minW="25%">
+                            <Trans>Last Seen: {formatTimestamp(webComponentLastSeen)}</Trans>
+                          </Text>
+                        </Flex>
+                        <Divider borderBottomColor="gray.900" />
+                      </Box>
+                    )
+                  },
+                )
+              ) : (
+                <Text>
+                  <Trans>No additional web components found</Trans>
+                </Text>
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+
+          <AccordionItem>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
                 <Trans>Ports</Trans>
               </Text>
               <AccordionIcon boxSize="icons.xl" />
@@ -259,56 +384,6 @@ export function AdditionalFindings({ domain }) {
               })}
             </AccordionPanel>
           </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Vulnerabilities</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              {Object.keys(vulnerabilitySeverities).map((severity) => {
-                return (
-                  vulnerabilities[severity].length > 0 && (
-                    <Box key={severity} px="2" mb="2">
-                      <Text>
-                        <b>{vulnerabilitySeverities[severity]}</b>
-                      </Text>
-                      <SimpleGrid columns={8}>
-                        {vulnerabilities[severity].map(({ cve }) => {
-                          return (
-                            <Button
-                              key={cve}
-                              borderRadius="full"
-                              m="1"
-                              borderColor="black"
-                              borderWidth="1px"
-                              bg={severity}
-                              fontWeight="normal"
-                              size="sm"
-                              _hover={{ bg: cveSeverityOnHover[severity] }}
-                              onClick={() => {
-                                setActiveCve({
-                                  cve,
-                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
-                                    webComponentCves.some((x) => x.cve === cve),
-                                  ),
-                                })
-                                cveOnOpen()
-                              }}
-                            >
-                              {cve}
-                            </Button>
-                          )
-                        })}
-                      </SimpleGrid>
-                    </Box>
-                  )
-                )
-              })}
-            </AccordionPanel>
-          </AccordionItem>
         </Accordion>
       </Box>
 
@@ -324,6 +399,7 @@ export function AdditionalFindings({ domain }) {
                 {webComponentName} {webComponentCategory} {webComponentVersion}
               </Text>
             ))}
+            <CveIgnorer cve={activeCve?.cve} isCveIgnored={ignoredCves?.includes(activeCve?.cve)} domainId={domainId} />
           </ModalBody>
           <ModalFooter>
             <Link color="blue.500" href={`https://www.cve.org/CVERecord?id=${activeCve?.cve}`} isExternal>
@@ -350,7 +426,7 @@ export function AdditionalFindings({ domain }) {
               >
                 External Attack Surface Management
               </Link>{' '}
-              tool. Updates to these findings occur weekly.
+              tool. Updates to these findings occur daily.
             </Trans>
           </ModalBody>
           <ModalFooter />
@@ -378,6 +454,7 @@ function WebRequirementsLink({ children }) {
 
 AdditionalFindings.propTypes = {
   domain: string.isRequired,
+  cveDetected: bool,
 }
 
 WebRequirementsLink.propTypes = {

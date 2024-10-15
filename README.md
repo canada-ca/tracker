@@ -42,7 +42,7 @@ The scripts folder is a dumping ground for various utility scripts and codemods.
 
 ## Running it locally
 
-Running Tracker locally takes a few commands and a lot of RAM. See the instructions in the [app folder](app/README.md)
+Running Tracker locally takes a few commands and a lot of RAM. See the instructions in the [k8s folder](k8s/README.md)
 
 ## Deploying to the cloud
 

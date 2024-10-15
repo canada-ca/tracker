@@ -13,6 +13,7 @@ import MyTrackerPage from '../MyTrackerPage'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { MY_TRACKER_SUMMARY } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -122,7 +123,9 @@ describe('<MyTrackerPage />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MyTrackerPage />
+                  <TourProvider>
+                    <MyTrackerPage />
+                  </TourProvider>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>

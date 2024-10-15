@@ -15,7 +15,7 @@
   "dependencies": {
     "arango-tools": "^0.6.0",
     "dotenv-safe": "^8.2.0",
-    "notifications-node-client": "^7.0.4"
+    "notifications-node-client": "^8.2.1"
   },
   "devDependencies": {
     "eslint": "^8.40.0",

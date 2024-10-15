@@ -50,14 +50,39 @@ def ignore_domain(domain):
     :return: True if domain should be ignored, False otherwise
     """
 
-    if (
+    return (
         domain is None
         or domain.get("archived") is True
         or domain.get("blocked") is True
         or domain.get("rcode") == "NXDOMAIN"
-    ):
-        return True
-    return False
+    )
+
+
+def get_domain_negative_findings(db, domain_id):
+    cursor = db.aql.execute(
+        """
+            LET emailTags = (
+                FOR dnsScan, dnsE IN 1 OUTBOUND @domain_id domainsDNS
+                    SORT dnsScan.timestamp DESC
+                    LIMIT 1
+                    RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
+            )[0]
+            LET webTags = (
+                FOR web, webE IN 1 OUTBOUND @domain_id domainsWeb
+                    SORT web.timestamp DESC
+                    LIMIT 1
+                    FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
+                        RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
+            )
+            FOR tag IN FLATTEN([emailTags, webTags], 2)
+                FILTER tag != null
+                RETURN tag
+        """,
+        bind_vars={"domain_id": domain_id},
+    )
+    if cursor.empty():
+        return []
+    return [tag for tag in cursor]
 
 
 def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
@@ -192,11 +217,13 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         dmarc_phase_enforce = 0
         dmarc_phase_maintain = 0
 
+        negative_tags = {}
+
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
             domain_status = domain.get("status", {})
-            if ignore_domain(domain) is False:
+            if ignore_domain(domain) is False and claim.get("assetState") == "approved":
                 # tier 1
                 # https
                 https_status = domain_status.get("https")
@@ -282,6 +309,14 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 elif phase == "maintain":
                     dmarc_phase_maintain = dmarc_phase_maintain + 1
 
+                # Negative tags
+                domain_negative_tags = get_domain_negative_findings(db, domain["_id"])
+                for tag in domain_negative_tags:
+                    if tag in negative_tags:
+                        negative_tags[tag] += 1
+                    else:
+                        negative_tags[tag] = 1
+
         dmarc_phase_total = (
             dmarc_phase_not_implemented
             + dmarc_phase_assess
@@ -344,6 +379,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "total": web_connections_pass + web_connections_fail,
                 # Don't count non web-hosting domains
             },
+            "negative_tags": negative_tags,
         }
 
         current_summary = org.get("summaries")

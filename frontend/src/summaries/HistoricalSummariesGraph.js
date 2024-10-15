@@ -22,9 +22,9 @@ const getDate = ({ date }) => new Date(date)
 
 const getSummaries = (data, scanTypes, scoreType) => {
   let summaries = []
-  data.forEach(({ node }) => {
+  data.forEach((summary) => {
     for (const scanType of scanTypes) {
-      const { date, [scanType]: scanTypeData } = node
+      const { date, [scanType]: scanTypeData } = summary
       const scanTypeNode = { date, type: scanType, score: scanTypeData.categories[0][scoreType]?.toFixed(0) }
       summaries.push(scanTypeNode)
     }
@@ -107,7 +107,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange, width 
   //   invalidParams.length > 0 && setSearchParams(invalidParams.reduce((acc, key) => ({ ...acc, [key]: null }), {}))
   // }, [invalidParams, setSearchParams])
 
-  const summaries = getSummaries(data.edges, tieredSummaries[summaryTierParam], scoreTypeParam)
+  const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
 
   const summaryNames = {

@@ -82,8 +82,10 @@ export const loadOrganizationDomainStatuses =
           } else if (filterValue === 'cve-detected') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER cveDetected ${comparison} true
+            FILTER v.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`${domainFilters}`
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -111,24 +113,24 @@ export const loadOrganizationDomainStatuses =
                 )
                 RETURN translatedTags
             )[0]
-            LET cveDetected =  (
+            ${domainFilters}
+            LET ipAddresses = FIRST(
+              FILTER v.latestDnsScan
+              LET latestDnsScan = DOCUMENT(v.latestDnsScan)
+              FILTER latestDnsScan.resolveIps
+              RETURN latestDnsScan.resolveIps
+            )
+            LET vulnerabilities = (
               FOR finding IN additionalFindings
                 FILTER finding.domain == v._id
-                LET vulnerableWebComponents = (
-                  FOR wc IN finding.webComponents
-                    FILTER LENGTH(wc.WebComponentCves) > 0
-                    RETURN wc
-                )
-                RETURN LENGTH(vulnerableWebComponents) > 0
-            )[0]
-            ${domainFilters}
-            LET ipAddresses = (
-              FOR web, webE IN 1 OUTBOUND v._id domainsWeb
-                SORT web.timestamp DESC
                 LIMIT 1
-                FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
-                    RETURN webScan.ipAddress
-            )
+                RETURN UNIQUE(
+                  FOR wc IN finding.webComponents
+                      FILTER LENGTH(wc.WebComponentCves) > 0
+                      FOR vuln IN wc.WebComponentCves
+                          RETURN vuln.Cve
+                )
+            )[0]
             RETURN {
               domain: v.domain,
               ipAddresses: ipAddresses,
@@ -138,7 +140,8 @@ export const loadOrganizationDomainStatuses =
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
-              hasEntrustCertificate: v.hasEntrustCertificate
+              hasEntrustCertificate: v.hasEntrustCertificate,
+              top25Vulnerabilities: vulnerabilities
             }
           `
       ).all()

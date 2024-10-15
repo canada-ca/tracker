@@ -32,6 +32,8 @@ import { MonthSelect } from '../components/MonthSelect'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
+// import { TourComponent } from '../userOnboarding/components/TourComponent'
+
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
@@ -209,6 +211,7 @@ export default function DmarcByDomainPage() {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
+
     resetToFirstPage()
   }
 
@@ -218,6 +221,7 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%" px="2">
+      {/* <TourComponent page="dmarcSummariesPage" /> */}
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
       </Heading>
@@ -226,6 +230,7 @@ export default function DmarcByDomainPage() {
           <Trans>Showing data for period: </Trans>
         </Text>
         <MonthSelect
+          className="month-select"
           id="data-date-range"
           width="fit-content"
           handleChange={handleChange}
@@ -242,7 +247,7 @@ export default function DmarcByDomainPage() {
         )}
       </Flex>
       <Flex>
-        <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
+        <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }} className="search-bar">
           <InputLeftElement>
             <SearchIcon />
           </InputLeftElement>
@@ -257,11 +262,11 @@ export default function DmarcByDomainPage() {
           />
         </InputGroup>
 
-        <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" />
+        <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" className="export-button" />
         <RuaDomainsExportButton />
       </Flex>
       {isLoggedIn() && (
-        <Flex align="center" mb="2">
+        <Flex align="center" mb="2" className="filter-switch">
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>

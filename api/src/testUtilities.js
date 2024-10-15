@@ -1,5 +1,7 @@
 import { ensure } from 'arango-tools'
 import { Database } from 'arangojs'
+import { tokenize } from './auth'
+import { createContext } from './create-context'
 
 export async function ensureDatabase(options) {
   let variables
@@ -32,4 +34,25 @@ export async function ensureDatabase(options) {
   }
 
   return await ensure(ensureOptions)
+}
+
+export function createUserContextGenerator({ query, db, transaction, collectionNames, i18n, secret, salt }) {
+  return async function createUserContext({ userKey, expiry = '60m', language = 'en', loginRequiredBool = true }) {
+    const signedToken = tokenize({
+      expiresIn: expiry,
+      parameters: { userKey: userKey },
+      secret: secret,
+    })
+    return await createContext({
+      query,
+      db,
+      transaction,
+      collections: collectionNames,
+      req: { headers: { authorization: signedToken } },
+      i18n,
+      language: language,
+      loginRequiredBool: loginRequiredBool,
+      salt: salt,
+    })
+  }
 }

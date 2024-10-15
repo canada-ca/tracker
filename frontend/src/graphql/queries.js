@@ -57,6 +57,39 @@ export const PAGINATED_ORGANIZATIONS = gql`
         hasPreviousPage
         startCursor
       }
+      totalCount
+    }
+  }
+`
+
+export const FIND_ORGANIZATION_BY_SLUG = gql`
+  query FindOrganizationBySlug($orgSlug: Slug!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      acronym
+      name
+      slug
+      domainCount
+      verified
+      userHasPermission
+      summaries {
+        dmarc {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+        https {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+      }
     }
   }
 `
@@ -97,6 +130,43 @@ export const LANDING_PAGE_SUMMARIES = gql`
   ${Summary.fragments.requiredFields}
 `
 
+export const GET_HISTORICAL_CHART_SUMMARIES = gql`
+  query FindChartSummaries($month: PeriodEnums!, $year: Year!) {
+    findChartSummaries(month: $month, year: $year) {
+      date
+      https {
+        ...RequiredSummaryFields
+      }
+      dmarc {
+        ...RequiredSummaryFields
+      }
+      dkim {
+        ...RequiredSummaryFields
+      }
+      spf {
+        ...RequiredSummaryFields
+      }
+      ssl {
+        ...RequiredSummaryFields
+      }
+      webConnections {
+        ...RequiredSummaryFields
+      }
+      dmarcPhase {
+        ...RequiredSummaryFields
+      }
+      web {
+        ...RequiredSummaryFields
+      }
+      mail {
+        ...RequiredSummaryFields
+      }
+    }
+  }
+
+  ${Summary.fragments.requiredFields}
+`
+
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!, $filters: [DomainFilter]) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
@@ -108,6 +178,12 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
     getAllOrganizationDomainStatuses(filters: $filters)
+  }
+`
+
+export const GET_TOP_25_REPORT = gql`
+  query GetTop25Reports {
+    getTop25Reports
   }
 `
 
@@ -221,6 +297,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       blocked
       wildcardSibling
       webScanPending
+      cveDetected
       status {
         ...RequiredDomainStatusFields
       }
@@ -524,8 +601,10 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
 `
 
 export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
-  query ($domain: DomainScalar!) {
+  query GuidanceAdditionalFindings($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
+      ignoredCves
       additionalFindings {
         timestamp
         headers
@@ -575,7 +654,7 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
 `
 
 export const ORG_DETAILS_PAGE = gql`
-  query OrgDetails($slug: Slug!, $month: PeriodEnums!, $year: Year!) {
+  query OrgDetails($slug: Slug!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
@@ -611,43 +690,47 @@ export const ORG_DETAILS_PAGE = gql`
           ...RequiredSummaryFields
         }
       }
+    }
+  }
+  ${Summary.fragments.requiredFields}
+`
+
+export const GET_HISTORICAL_ORG_SUMMARIES = gql`
+  query GetOrgSummaries($orgSlug: Slug!, $month: PeriodEnums!, $year: Year!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
       historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
-        totalCount
-        edges {
-          node {
-            date
-            https {
-              ...RequiredSummaryFields
-            }
-            dmarc {
-              ...RequiredSummaryFields
-            }
-            dkim {
-              ...RequiredSummaryFields
-            }
-            spf {
-              ...RequiredSummaryFields
-            }
-            ssl {
-              ...RequiredSummaryFields
-            }
-            webConnections {
-              ...RequiredSummaryFields
-            }
-            dmarcPhase {
-              ...RequiredSummaryFields
-            }
-            web {
-              ...RequiredSummaryFields
-            }
-            mail {
-              ...RequiredSummaryFields
-            }
-          }
+        date
+        https {
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
+        }
+        dmarcPhase {
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
         }
       }
     }
   }
+
   ${Summary.fragments.requiredFields}
 `
 
@@ -663,6 +746,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
     findOrganizationBySlug(orgSlug: $slug) {
       id
       domains(first: $first, after: $after, orderBy: $orderBy, search: $search, filters: $filters) {
+        totalCount
         pageInfo {
           hasNextPage
           endCursor
@@ -687,6 +771,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             webScanPending
             userHasPermission
             hasEntrustCertificate
+            cveDetected
           }
         }
       }
@@ -756,6 +841,7 @@ export const PAGINATED_DOMAINS = gql`
           hasDMARCReport
           userHasPermission
           hasEntrustCertificate
+          cveDetected
           __typename
         }
         __typename
@@ -767,6 +853,7 @@ export const PAGINATED_DOMAINS = gql`
         startCursor
         __typename
       }
+      totalCount
       __typename
     }
   }
@@ -779,7 +866,6 @@ export const QUERY_CURRENT_USER = gql`
       id
       userName
       displayName
-      preferredLang
       phoneNumber
       tfaSendMethod
       phoneValidated
@@ -1084,6 +1170,7 @@ export const FIND_MY_USERS = gql`
         startCursor
         __typename
       }
+      totalCount
     }
   }
 `
@@ -1130,6 +1217,7 @@ export const AUDIT_LOGS = gql`
         startCursor
         endCursor
       }
+      totalCount
     }
   }
 `

@@ -32,7 +32,7 @@ def get_all_domains():
     FOR domain IN domains
         FILTER domain.archived != True
         FILTER domain.rcode != "NXDOMAIN"
-        RETURN { "domain": domain.domain, "id": domain._id }
+        RETURN { "domain": domain.domain, "id": domain._id, "key": domain._key }
     """
     cursor = db.aql.execute(query)
     return [domain for domain in cursor]
@@ -56,6 +56,19 @@ def remove_none_val_in_dict(dict):
             v = ""
         new_dict[k] = v
     return new_dict
+
+
+def update_domain_cve_detected(domain, web_components):
+    cve_detected = False
+    for wc in web_components:
+        if len(wc["WebComponentCves"]) > 0:
+            cve_detected = True
+            break
+    query = f"""
+        UPDATE {{ _key: "{domain["key"]}", cveDetected: {cve_detected} }} IN domains
+    """
+    cursor = db.aql.execute(query)
+    return [domain for domain in cursor]
 
 
 def main():
@@ -89,6 +102,7 @@ def main():
             # insert the findings into the DB
             logger.info(f"Upserting additional findings for domain {domain['domain']}")
             upsert_finding(insert_obj)
+            update_domain_cve_detected(domain, web_components)
         except Exception as e:
             logger.error(f"Failed to process domain {domain['domain']}: {e}")
             continue

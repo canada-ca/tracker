@@ -19,7 +19,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating a domain', () => {
-  let query, drop, truncate, schema, collections, transaction, user
+  let query, drop, truncate, schema, collections, transaction, publish, user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -66,6 +66,7 @@ describe('updating a domain', () => {
 
         schema: dbschema,
       }))
+      publish = jest.fn()
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -116,6 +117,7 @@ describe('updating a domain', () => {
         _to: domain._id,
         _from: org._id,
         tags: [],
+        assetState: 'monitor-only',
       })
     })
     afterEach(async () => {
@@ -142,7 +144,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', domain._key)}"
                   orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -151,6 +153,7 @@ describe('updating a domain', () => {
                     domain
                     lastRan
                     selectors
+                    assetState
                   }
                 }
               }
@@ -161,6 +164,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: user._key,
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -200,9 +204,10 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   id: toGlobalId('domain', domain._key),
-                  domain: 'test.canada.ca',
+                  domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1', 'selector2'],
+                  assetState: 'APPROVED',
                 },
               },
             },
@@ -231,7 +236,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', domain._key)}"
                   orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -240,6 +245,7 @@ describe('updating a domain', () => {
                     domain
                     lastRan
                     selectors
+                    assetState
                   }
                 }
               }
@@ -250,6 +256,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: user._key,
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -289,9 +296,10 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   id: toGlobalId('domain', domain._key),
-                  domain: 'test.canada.ca',
+                  domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1', 'selector2'],
+                  assetState: 'APPROVED',
                 },
               },
             },
@@ -320,7 +328,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', domain._key)}"
                   orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -329,6 +337,7 @@ describe('updating a domain', () => {
                     domain
                     lastRan
                     selectors
+                    assetState
                   }
                 }
               }
@@ -339,6 +348,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: user._key,
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -378,9 +388,10 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   id: toGlobalId('domain', domain._key),
-                  domain: 'test.canada.ca',
+                  domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1', 'selector2'],
+                  assetState: 'APPROVED',
                 },
               },
             },
@@ -408,6 +419,7 @@ describe('updating a domain', () => {
             fr: frenchMessages.messages,
           },
         })
+        publish = jest.fn()
       })
       describe('domain cannot be found', () => {
         it('returns an error message', async () => {
@@ -419,7 +431,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', 1)}"
                   orgId: "${toGlobalId('organization', 1)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -428,6 +440,7 @@ describe('updating a domain', () => {
                     domain
                     lastRan
                     selectors
+                    assetState
                   }
                   ... on DomainError {
                     code
@@ -443,6 +456,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -500,7 +514,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 1)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -509,6 +523,7 @@ describe('updating a domain', () => {
                     domain
                     lastRan
                     selectors
+                    assetState
                   }
                   ... on DomainError {
                     code
@@ -524,6 +539,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -581,7 +597,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -605,6 +621,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
@@ -663,7 +680,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 123)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -687,6 +704,7 @@ describe('updating a domain', () => {
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
@@ -745,7 +763,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -769,6 +787,7 @@ describe('updating a domain', () => {
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
                 transaction,
+                publish,
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -819,7 +838,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -894,7 +913,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -987,7 +1006,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', 1)}"
                   orgId: "${toGlobalId('organization', 1)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -1011,6 +1030,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -1068,7 +1088,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 1)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -1092,6 +1112,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -1149,7 +1170,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -1173,6 +1194,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
@@ -1231,7 +1253,7 @@ describe('updating a domain', () => {
                 input: {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 123)}"
-                  domain: "test.canada.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -1255,6 +1277,7 @@ describe('updating a domain', () => {
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
@@ -1313,7 +1336,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -1337,6 +1360,7 @@ describe('updating a domain', () => {
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
                 transaction,
+                publish,
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -1387,7 +1411,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -1462,7 +1486,7 @@ describe('updating a domain', () => {
                   input: {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
-                    domain: "test.canada.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {

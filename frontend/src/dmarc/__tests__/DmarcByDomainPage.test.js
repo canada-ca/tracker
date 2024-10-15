@@ -15,6 +15,7 @@ import DmarcByDomainPage from '../DmarcByDomainPage'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcReportSummaryTableData } from '../../fixtures/dmarcReportSummaryTable'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -121,7 +122,9 @@ describe('<DmarcByDomainPage />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <DmarcByDomainPage />
+                <TourProvider>
+                  <DmarcByDomainPage />
+                </TourProvider>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
@@ -140,7 +143,9 @@ describe('<DmarcByDomainPage />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <DmarcByDomainPage />
+                <TourProvider>
+                  <DmarcByDomainPage />
+                </TourProvider>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
@@ -158,7 +163,9 @@ describe('<DmarcByDomainPage />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <DmarcByDomainPage />
+                <TourProvider>
+                  <DmarcByDomainPage />
+                </TourProvider>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
@@ -177,7 +184,9 @@ describe('<DmarcByDomainPage />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <DmarcByDomainPage />
+                <TourProvider>
+                  <DmarcByDomainPage />
+                </TourProvider>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>

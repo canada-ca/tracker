@@ -23,7 +23,11 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import { GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, PAGINATED_DOMAINS as FORWARD } from '../graphql/queries'
+import {
+  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
+  PAGINATED_DOMAINS as FORWARD,
+  GET_TOP_25_REPORT,
+} from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
@@ -32,6 +36,7 @@ import { useUserVar } from '../utilities/userState'
 import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import withSuperAdmin from '../app/withSuperAdmin'
+// import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -44,7 +49,7 @@ export default function DomainsPage() {
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
   const [filters, setFilters] = useState([])
 
-  const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+  const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
       variables: { filters },
@@ -61,26 +66,50 @@ export default function DomainsPage() {
     },
   )
 
+  const [getTop25Report, { loading: top25ReportLoading }] = useLazyQuery(GET_TOP_25_REPORT, {
+    variables: { filters },
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`An error occurred when you attempted to download all domain statuses.`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      relayRoot: 'findMyDomains',
-      variables: {
-        orderBy: { field: orderField, direction: orderDirection },
-        search: debouncedSearchTerm,
-        isAffiliated,
-        filters,
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    relayRoot: 'findMyDomains',
+    variables: {
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+      isAffiliated,
+      filters,
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -108,36 +137,69 @@ export default function DomainsPage() {
 
   const StatusExportButton = withSuperAdmin(() => {
     return (
-      <ExportButton
-        order={{ base: 1, md: 2 }}
-        fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
-        dataFunction={async () => {
-          toast({
-            title: t`Getting domain statuses`,
-            description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
-            status: 'info',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          const result = await getAllOrgDomainStatuses()
-          if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+      <Flex>
+        <ExportButton
+          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+          dataFunction={async () => {
             toast({
-              title: t`No data found`,
-              description: t`No data found when retrieving all domain statuses.`,
-              status: 'error',
+              title: t`Getting domain statuses`,
+              description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+              status: 'info',
               duration: 9000,
               isClosable: true,
               position: 'top-left',
             })
+            const result = await getAllOrgDomainStatuses()
+            if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+              toast({
+                title: t`No data found`,
+                description: t`No data found when retrieving all domain statuses.`,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
 
-            throw t`No data found`
-          }
+              throw t`No data found`
+            }
 
-          return result.data?.getAllOrganizationDomainStatuses
-        }}
-        isLoading={allOrgDomainStatusesLoading}
-      />
+            return result.data?.getAllOrganizationDomainStatuses
+          }}
+          isLoading={allOrgDomainStatusesLoading}
+          mr="2"
+        />
+        <ExportButton
+          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString()}`}
+          dataFunction={async () => {
+            toast({
+              title: t`Getting top 25 report`,
+              description: t`Request successfully sent to get top 25 report.`,
+              status: 'info',
+              duration: 9000,
+              isClosable: true,
+              position: 'top-left',
+            })
+            const result = await getTop25Report()
+            if (result.data?.getTop25Reports === undefined) {
+              toast({
+                title: t`No data found`,
+                description: t`No data found when retrieving top 25 report.`,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
+
+              throw t`No data found`
+            }
+
+            return result.data?.getTop25Reports
+          }}
+          isLoading={top25ReportLoading}
+        >
+          <Trans>Export SPIN Top 25</Trans>
+        </ExportButton>
+      </Flex>
     )
   })
 
@@ -173,12 +235,15 @@ export default function DomainsPage() {
             blocked,
             wildcardSibling,
             webScanPending,
+            hasEntrustCertificate,
             userHasPermission,
+            cveDetected,
           },
           index,
         ) => (
           <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
+              className="domain-card"
               id={id}
               url={domain}
               status={status}
@@ -188,7 +253,9 @@ export default function DomainsPage() {
               blocked={blocked}
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
+              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
+              cveDetected={cveDetected}
               mb="3"
             />
           </ErrorBoundary>
@@ -199,6 +266,7 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
+      {/* <TourComponent page="domainPage" /> */}
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
@@ -236,10 +304,13 @@ export default function DomainsPage() {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
+        <InfoBox title={t`ENTRUST`} info={t`Tag used to show domains that have an Entrust certificate.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
+          className="filter-box"
           selectedDisplayLimit={domainsPerPage}
           setSelectedDisplayLimit={setDomainsPerPage}
           hasNextPage={hasNextPage}
@@ -256,10 +327,11 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
           searchTip={domainSearchTip}
+          totalRecords={totalCount}
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Text mr="2" fontWeight="bold" fontSize="lg" className="filters">
               <Trans>Filters:</Trans>
             </Text>
             <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
@@ -281,6 +353,7 @@ export default function DomainsPage() {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          totalRecords={totalCount}
         />
       </ErrorBoundary>
     </Box>

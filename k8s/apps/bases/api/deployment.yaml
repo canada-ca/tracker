@@ -53,7 +53,7 @@ spec:
                   name: api
                   key: DB_URL
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-0a420f7-1725366530 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-30f9918-1728493921 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -178,16 +178,16 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_TWO_FACTOR_CODE_FR
-            - name: NOTIFICATION_VERIFICATION_EMAIL_EN
+            - name: NOTIFICATION_USERNAME_UPDATED_BILINGUAL
               valueFrom:
                 secretKeyRef:
                   name: api
-                  key: NOTIFICATION_VERIFICATION_EMAIL_EN
-            - name: NOTIFICATION_VERIFICATION_EMAIL_FR
+                  key: NOTIFICATION_USERNAME_UPDATED_BILINGUAL
+            - name: NOTIFICATION_VERIFICATION_EMAIL_BILINGUAL
               valueFrom:
                 secretKeyRef:
                   name: api
-                  key: NOTIFICATION_VERIFICATION_EMAIL_FR
+                  key: NOTIFICATION_VERIFICATION_EMAIL_BILINGUAL
             - name: NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL
               valueFrom:
                 secretKeyRef:

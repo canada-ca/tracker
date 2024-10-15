@@ -67,7 +67,6 @@ describe('authenticate user account', () => {
                 userName: "test.account@istio.actually.exists"
                 password: "testpassword123"
                 confirmPassword: "testpassword123"
-                preferredLang: FRENCH
               }
             ) {
               result {
