@@ -14,6 +14,9 @@ db = arango_client.db("test", username="", password="")
 db.create_collection("scanSummaries")
 db.create_collection("chartSummaries")
 db.create_collection("organizationSummaries")
+db.create_collection("dns")
+db.create_collection("web")
+db.create_collection("webScan")
 graph = db.create_graph("compliance")
 domains = graph.create_vertex_collection("domains")
 orgs = graph.create_vertex_collection("organizations")
@@ -22,6 +25,21 @@ claims = graph.create_edge_definition(
     edge_collection="claims",
     from_vertex_collections=["organizations"],
     to_vertex_collections=["domains"],
+)
+domains_dns = graph.create_edge_definition(
+    edge_collection="domainsDNS",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["dns"],
+)
+domains_web = graph.create_edge_definition(
+    edge_collection="domainsWeb",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["web"],
+)
+web_to_web_scans = graph.create_edge_definition(
+    edge_collection="webToWebScans",
+    from_vertex_collections=["web"],
+    to_vertex_collections=["webScan"],
 )
 
 org = orgs.insert(
@@ -179,4 +197,5 @@ def test_update_org_summaries():
             "maintain": 2,
             "total": 3,
         },
+        "negative_tags": {},
     }
