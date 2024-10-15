@@ -21,6 +21,12 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
     negative: t`Negative`,
   }
 
+  const tagTypeColor = {
+    positive: 'strong',
+    informative: 'info',
+    negative: 'weak',
+  }
+
   const cccsGuidance =
     guidanceTag.refLinks[0]?.description !== null && guidanceTag.refLinks.length !== 0 ? (
       <Stack isInline={guidanceTag.refLinks.length <= 1}>
@@ -67,17 +73,16 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
 
   return (
     <AccordionItem>
-      <Flex
-        align="center"
-        color={tagType === 'negative' ? 'weak' : tagType === 'positive' ? 'strong' : 'info'}
-        fontWeight="bold"
-        as={AccordionButton}
-        fontSize="lg"
-      >
+      <Flex align="center" color={tagTypeColor[tagType]} fontWeight="bold" as={AccordionButton} fontSize="lg">
         {tagIcon()}
-        <Text ml="2">{guidanceTag.tagName}</Text>
+        <Text ml="2">
+          {guidanceTag?.count && `${guidanceTag.tagId}: `}
+          {guidanceTag.tagName}
+        </Text>
         <AccordionIcon />
-        <Text ml="auto">{tagTypeList[tagType]?.toUpperCase()}</Text>
+        <Text ml="auto">
+          {guidanceTag?.count ? <Trans>{guidanceTag?.count} Domains</Trans> : tagTypeList[tagType]?.toUpperCase()}
+        </Text>
       </Flex>
       <AccordionPanel>
         <Box>
