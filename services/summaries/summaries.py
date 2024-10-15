@@ -82,7 +82,7 @@ def get_domain_negative_findings(db, domain_id):
     )
     if cursor.empty():
         return []
-    return cursor.next()
+    return [tag for tag in cursor]
 
 
 def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
