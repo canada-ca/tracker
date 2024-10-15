@@ -4,6 +4,7 @@ import { useTour } from '../hooks/useTour'
 // import { QuestionOutlineIcon } from '@chakra-ui/icons'
 // import { IconButton } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 const toursConfig = {
   //list of pages with their paths
@@ -21,11 +22,7 @@ const toursConfig = {
 //   const { startTour } = useTour()
 //   const handleStartTour = () => {
 //     const tourName = toursConfig[pathname]
-//     if (tourName) {
-//       startTour(tourName)
-//     } else {
-//       console.warn('No Tour')
-//     }
+//     if (tourName) startTour(tourName)
 //   }
 
 //   return (
@@ -48,16 +45,12 @@ export const TourButton = () => {
 
   const handleStartTour = () => {
     const tourName = toursConfig[pathname]
-    if (tourName) {
-      startTour(tourName)
-    } else {
-      console.warn('No Tour')
-    }
+    if (tourName) startTour(tourName)
   }
 
   return (
     <Button onClick={handleStartTour} variant="primaryWhite" mx="2" display={{ base: 'none', md: 'inline' }}>
-      Start Tour
+      <Trans>Start Tour</Trans>
     </Button>
   )
 }
