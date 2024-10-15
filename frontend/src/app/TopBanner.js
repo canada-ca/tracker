@@ -18,7 +18,7 @@ import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
 import { bool } from 'prop-types'
-// import { TourButton } from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 
 export const TopBanner = ({ initialLoading, ...props }) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -96,10 +96,8 @@ export const TopBanner = ({ initialLoading, ...props }) => {
         </PhaseBanner>
 
         <Flex align="center" ml="auto">
-          <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
-            <LocaleSwitcher />
-          </Box>
-
+          <TourButton />
+          <LocaleSwitcher py="4" mx="2" ml={{ base: 'auto', md: '0' }} />
           {initialLoading ? (
             <>
               <Skeleton display={{ base: 'none', md: 'inline' }} mr="2">
@@ -125,7 +123,6 @@ export const TopBanner = ({ initialLoading, ...props }) => {
               >
                 <Trans>Sign Out</Trans>
               </Button>
-              {/* <TourButton /> */}
             </>
           ) : (
             <>

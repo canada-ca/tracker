@@ -597,7 +597,7 @@ msgstr "Authenticate"
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
 #: src/guidance/CveIgnorer.js:131
-#: src/userOnboarding/components/TourComponent.js:61
+#: src/userOnboarding/components/TourComponent.js:63
 msgid "Back"
 msgstr "Back"
 
@@ -944,8 +944,8 @@ msgid "Create"
 msgstr "Create"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:112
-#: src/app/TopBanner.js:150
+#: src/app/TopBanner.js:110
+#: src/app/TopBanner.js:147
 #: src/auth/CreateUserPage.js:150
 msgid "Create Account"
 msgstr "Create Account"
@@ -1711,6 +1711,10 @@ msgstr "Filtered"
 #: src/organizations/Organizations.js:235
 msgid "Filters:"
 msgstr "Filters:"
+
+#: src/userOnboarding/components/TourComponent.js:66
+msgid "Finish"
+msgstr "Finish"
 
 #: src/guidance/AdditionalFindings.js:194
 #: src/guidance/AdditionalFindings.js:258
@@ -2763,7 +2767,7 @@ msgstr "New Phone Number:"
 msgid "New Value:"
 msgstr "New Value:"
 
-#: src/userOnboarding/components/TourComponent.js:62
+#: src/userOnboarding/components/TourComponent.js:64
 msgid "Next"
 msgstr "Next"
 
@@ -3964,8 +3968,8 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 
 #: src/app/App.js:206
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:107
-#: src/app/TopBanner.js:140
+#: src/app/TopBanner.js:105
+#: src/app/TopBanner.js:137
 #: src/auth/SignInPage.js:144
 msgid "Sign In"
 msgstr "Sign In"
@@ -3980,7 +3984,7 @@ msgid "Sign In."
 msgstr "Sign In."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:126
+#: src/app/TopBanner.js:124
 msgid "Sign Out"
 msgstr "Sign Out"
 
@@ -3993,7 +3997,7 @@ msgstr "Sign Out."
 msgid "Signature Hash:"
 msgstr "Signature Hash:"
 
-#: src/userOnboarding/components/TourComponent.js:63
+#: src/userOnboarding/components/TourComponent.js:65
 msgid "Skip"
 msgstr "Skip"
 
@@ -4105,6 +4109,10 @@ msgstr "Staging"
 #: src/organizationDetails/OrganizationDomains.js:242
 msgid "STAGING"
 msgstr "STAGING"
+
+#: src/userOnboarding/components/TourButton.js:53
+msgid "Start Tour"
+msgstr "Start Tour"
 
 #: src/guidance/AdditionalFindings.js:239
 #~ msgid "State: {lastPortState}"

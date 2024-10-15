@@ -585,7 +585,7 @@ msgstr "Authentifier"
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
 #: src/guidance/CveIgnorer.js:131
-#: src/userOnboarding/components/TourComponent.js:61
+#: src/userOnboarding/components/TourComponent.js:63
 msgid "Back"
 msgstr "Retour"
 
@@ -932,8 +932,8 @@ msgid "Create"
 msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:112
-#: src/app/TopBanner.js:150
+#: src/app/TopBanner.js:110
+#: src/app/TopBanner.js:147
 #: src/auth/CreateUserPage.js:150
 msgid "Create Account"
 msgstr "Créer un compte"
@@ -1679,6 +1679,10 @@ msgstr "Filtré"
 #: src/organizations/Organizations.js:235
 msgid "Filters:"
 msgstr "Filtres :"
+
+#: src/userOnboarding/components/TourComponent.js:66
+msgid "Finish"
+msgstr "Terminer"
 
 #: src/guidance/AdditionalFindings.js:194
 #: src/guidance/AdditionalFindings.js:258
@@ -2715,7 +2719,7 @@ msgstr "Nouveau numéro de téléphone:"
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
-#: src/userOnboarding/components/TourComponent.js:62
+#: src/userOnboarding/components/TourComponent.js:64
 msgid "Next"
 msgstr "Suivant"
 
@@ -3914,8 +3918,8 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 
 #: src/app/App.js:206
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:107
-#: src/app/TopBanner.js:140
+#: src/app/TopBanner.js:105
+#: src/app/TopBanner.js:137
 #: src/auth/SignInPage.js:144
 msgid "Sign In"
 msgstr "Se connecter"
@@ -3930,7 +3934,7 @@ msgid "Sign In."
 msgstr "Se connecter."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:126
+#: src/app/TopBanner.js:124
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -3943,7 +3947,7 @@ msgstr "Déconnexion."
 msgid "Signature Hash:"
 msgstr "Signature Hash :"
 
-#: src/userOnboarding/components/TourComponent.js:63
+#: src/userOnboarding/components/TourComponent.js:65
 msgid "Skip"
 msgstr "Sauter"
 
@@ -4055,6 +4059,10 @@ msgstr "Dév"
 #: src/organizationDetails/OrganizationDomains.js:242
 msgid "STAGING"
 msgstr "DÉV"
+
+#: src/userOnboarding/components/TourButton.js:53
+msgid "Start Tour"
+msgstr "Début de la visite"
 
 #: src/guidance/AdditionalFindings.js:239
 #~ msgid "State: {lastPortState}"
