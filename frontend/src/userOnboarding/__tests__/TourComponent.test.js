@@ -1,83 +1,130 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { TourComponent } from '../components/TourComponent'
 import { useTour } from '../hooks/useTour'
+import { MockedProvider } from '@apollo/client/testing'
+import { UserVarProvider } from '../../utilities/userState'
+import { makeVar } from '@apollo/client'
+import { I18nProvider } from '@lingui/react'
+import { ChakraProvider, theme } from '@chakra-ui/react'
+import { MemoryRouter } from 'react-router-dom'
+import { TourProvider } from '../contexts/TourContext'
+import { setupI18n } from '@lingui/core'
+import { en } from 'make-plural'
+import { fireEvent, screen } from '@testing-library/dom'
 
-jest.mock('../hooks/useTour')
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: { plurals: en },
+  },
+})
 
 jest.mock('../config/tourSteps', () => ({
   mainTourSteps: {
-    home: {
+    landingPage: {
       requiresAuth: false,
       steps: [
         {
           target: '.step-1',
-          content: 'Home Step 1',
+          content: 'Landing Step 1',
+          disableBeacon: true,
         },
         {
           target: '.step-2',
-          content: 'Home Step 2',
+          content: 'Landing Step 2',
+          disableBeacon: true,
         },
       ],
     },
   },
 }))
 
-// Mock the Joyride component
-jest.mock('react-joyride', () => {
-  const tourSteps = require('../config/tourSteps').mainTourSteps['home']['steps']
-  const MockJoyride = () => <div data-testid="mockJoyride">Mocked Joyride with steps: {JSON.stringify(tourSteps)}</div>
-  MockJoyride.displayName = 'MockJoyride'
-  return MockJoyride
-})
-
-const mockLocalStorage = (() => {
-  let store = {}
-  return {
-    getItem(key) {
-      return store[key] || null
-    },
-    setItem(key, value) {
-      store[key] = value.toString()
-    },
-    removeItem(key) {
-      delete store[key]
-    },
-    clear() {
-      store = {}
-    },
-  }
-})()
-
 describe('TourComponent', () => {
-  beforeEach(() => {
-    useTour.mockReturnValue({
-      isTourOpen: false,
-      startTour: jest.fn(),
-      endTour: jest.fn(),
-    })
-    mockLocalStorage.clear()
-    // Replace the real localStorage with our mock
-    Object.defineProperty(window, 'localStorage', { value: mockLocalStorage })
-  })
-
   afterEach(() => {
-    jest.clearAllMocks()
+    localStorage.clear()
   })
 
-  test('TourComponent renders with mock Joyride', () => {
-    render(<TourComponent page="home" />)
-    expect(screen.getByTestId('mockJoyride')).toBeInTheDocument()
+  it('renders the mocked landing page tour for users who have not seen it', async () => {
+    expect(localStorage.getItem('hasSeenTour_landingPage')).toBe(null)
+
+    const { getByText, getByRole, queryByText } = render(
+      <MockedProvider mocks={[]} addTypename={false}>
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+          <I18nProvider i18n={i18n}>
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['']} initialIndex={0}>
+                <TourProvider>
+                  <TourComponent />
+                  <p className="step-1">Test 1</p>
+                  <p className="step-2">Test 2</p>
+                </TourProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </I18nProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    // Element will exist but not be visible
+    expect(getByText(/Landing Step 1/)).not.toBeNull()
+
+    await waitFor(() => {
+      expect(getByText(/Landing Step 1/)).toBeVisible()
+    })
+
+    let nextBtn = getByRole('button', { name: /Next/ })
+
+    expect(nextBtn).toBeInTheDocument()
+
+    fireEvent.click(nextBtn)
+
+    await waitFor(() => {
+      expect(getByText(/Landing Step 2/)).toBeVisible()
+    })
+
+    nextBtn = getByRole('button', { name: /Finish/ })
+
+    expect(nextBtn).toBeInTheDocument()
+
+    fireEvent.click(nextBtn)
+
+    await waitFor(() => {
+      expect(queryByText(/Landing Step 2/)).toBeNull()
+    })
+
+    // Ensure that the tour has been marked as seen
+    expect(localStorage.getItem('hasSeenTour_landingPage')).toBe('true')
   })
 
-  it('does not start the tour for users who have seen it', () => {
-    localStorage.setItem('hasSeenTour_home', 'true')
-    const mockStartTour = jest.fn()
-    useTour.mockReturnValue({ isTourOpen: false, startTour: mockStartTour, endTour: jest.fn() })
+  it('does not render the tour for users who have seen it', async () => {
+    localStorage.setItem('hasSeenTour_landingPage', 'true')
 
-    render(<TourComponent page="home" />)
+    expect(localStorage.getItem('hasSeenTour_landingPage')).toBe('true')
 
-    expect(mockStartTour).not.toHaveBeenCalled()
+    const { queryByText } = render(
+      <MockedProvider mocks={[]} addTypename={false}>
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+          <I18nProvider i18n={i18n}>
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['']} initialIndex={0}>
+                <TourProvider>
+                  <TourComponent />
+                  <p className="step-1">Test 1</p>
+                  <p className="step-2">Test 2</p>
+                </TourProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </I18nProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    // Element should not exist
+    expect(queryByText(/Landing Step 1/)).toBeNull()
   })
 })
 
