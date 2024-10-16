@@ -27,6 +27,20 @@ export const loadOrganizationSummariesByPeriod =
     }
     const periodMonth = monthMap[cleansedPeriod]
 
+    const filterUniqueDates = (array) => {
+      const filteredArray = []
+      const dateSet = new Set()
+
+      array.forEach((item) => {
+        if (!dateSet.has(item.date)) {
+          filteredArray.push(item)
+          dateSet.add(item.date)
+        }
+      })
+
+      return filteredArray
+    }
+
     if (typeof year === 'undefined') {
       console.warn(`User: ${userKey} did not have \`year\` argument set for: loadOrganizationSummariesByPeriod.`)
       throw new Error(i18n._(t`You must provide a \`year\` value to access the \`OrganizationSummaries\` connection.`))
@@ -83,7 +97,7 @@ export const loadOrganizationSummariesByPeriod =
 
     let summariesInfo
     try {
-      summariesInfo = await requestedSummaryInfo.next()
+      summariesInfo = filterUniqueDates(await requestedSummaryInfo.next())
     } catch (err) {
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to gather organization summaries in loadOrganizationSummariesByPeriod, error: ${err}`,
