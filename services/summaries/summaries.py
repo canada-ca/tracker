@@ -91,6 +91,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
+    chartSummariesCol = db.collection("chartSummaries")
 
     # Gather summaries from domain statuses
     chartSummaries = {}
@@ -170,13 +171,25 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     }
 
     # Update chart summaries in DB
-    db.collection("chartSummaries").insert(
-        {
-            "date": date.today().isoformat(),
-            **chartSummaries,
-            "dmarc_phase": dmarc_phase_summary,
-        }
-    )
+    todayISO = date.today().isoformat()
+    cursor = chartSummariesCol.find({"date": todayISO})
+    if cursor.empty():
+        chartSummariesCol.insert(
+            {
+                "date": todayISO,
+                **chartSummaries,
+                "dmarc_phase": dmarc_phase_summary,
+            }
+        )
+    else:
+        print("summary from today already in db. Updating doc...")
+        chartSummariesCol.update_match(
+            {"date": todayISO},
+            {
+                **chartSummaries,
+                "dmarc_phase": dmarc_phase_summary,
+            },
+        )
     logging.info(f"Chart summary update completed.")
 
 
@@ -186,6 +199,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
+    orgSummariesCol = db.collection("organizationSummaries")
 
     for org in db.collection("organizations"):
         try:
@@ -395,11 +409,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             }
 
             current_summary = org.get("summaries")
-            if current_summary is not None:
-                if current_summary.get("date") is None:
-                    current_summary.update(
-                        {"date": (date.today() - timedelta(days=1)).isoformat()}
-                    )
+            if current_summary.get("date", "") != date.today().isoformat():
                 db.collection("organizationSummaries").insert(
                     {"organization": org.get("_id"), **current_summary}
                 )
@@ -414,6 +424,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
 if __name__ == "__main__":
     logging.info("Summary service started")
-    update_chart_summaries()
+    # update_chart_summaries()
     update_org_summaries()
     logging.info(f"Summary service shutting down...")
