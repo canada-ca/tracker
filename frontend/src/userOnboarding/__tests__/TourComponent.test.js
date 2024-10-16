@@ -11,7 +11,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { TourProvider } from '../contexts/TourContext'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural'
-import { fireEvent, screen } from '@testing-library/dom'
+import { fireEvent } from '@testing-library/dom'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -70,16 +70,14 @@ describe('TourComponent', () => {
     )
 
     // Element will exist but not be visible
-    expect(getByText(/Landing Step 1/)).not.toBeNull()
+    expect(queryByText(/Landing Step 1/)).not.toBeNull()
 
     await waitFor(() => {
       expect(getByText(/Landing Step 1/)).toBeVisible()
     })
 
     let nextBtn = getByRole('button', { name: /Next/ })
-
     expect(nextBtn).toBeInTheDocument()
-
     fireEvent.click(nextBtn)
 
     await waitFor(() => {
@@ -87,9 +85,7 @@ describe('TourComponent', () => {
     })
 
     nextBtn = getByRole('button', { name: /Finish/ })
-
     expect(nextBtn).toBeInTheDocument()
-
     fireEvent.click(nextBtn)
 
     await waitFor(() => {
@@ -125,43 +121,5 @@ describe('TourComponent', () => {
 
     // Element should not exist
     expect(queryByText(/Landing Step 1/)).toBeNull()
-  })
-})
-
-describe('handleJoyrideCallback', () => {
-  const endTourMock = jest.fn()
-  const originalSetItem = localStorage.setItem
-
-  function createHandleJoyrideCallbackFunction() {
-    return function handleJoyrideCallback({ status }) {
-      if (status === 'finished' || status === 'skipped') {
-        localStorage.setItem(`hasSeenTour_home`, 'true')
-        endTourMock()
-      }
-    }
-  }
-
-  beforeEach(() => {
-    localStorage.setItem = jest.fn()
-    endTourMock.mockClear()
-    useTour.mockReturnValue({
-      isTourOpen: false,
-      startTour: jest.fn(),
-      endTour: jest.fn(),
-    })
-  })
-
-  afterEach(() => {
-    localStorage.setItem = originalSetItem
-  })
-
-  it.each(['finished', 'skipped'])('sets localStorage and ends tour when status is %s', (status) => {
-    const page = 'home'
-    const handleJoyrideCallback = createHandleJoyrideCallbackFunction({ endTour: jest.fn(), page })
-
-    handleJoyrideCallback({ status, type: 'any', action: 'any' })
-
-    expect(localStorage.setItem).toHaveBeenCalledWith(`hasSeenTour_${page}`, 'true')
-    expect(endTourMock).toHaveBeenCalled()
   })
 })
