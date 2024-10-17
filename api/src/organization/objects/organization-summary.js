@@ -4,7 +4,6 @@ import { categorizedSummaryType } from '../../summaries'
 import { GraphQLDate } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 import { guidanceTagOrder, guidanceTagConnection } from '../../guidance-tag'
-import { connectionArgs } from 'graphql-relay'
 
 const calculatePercentage = (numerator, denominator) => {
   if (denominator <= 0) {
@@ -161,14 +160,13 @@ export const organizationSummaryType = new GraphQLObjectType({
       },
     },
     negativeFindings: {
-      type: guidanceTagConnection.connectionType,
+      type: guidanceTagConnection,
       description: 'Aggregated negative findings for a given organization.',
       args: {
         orderBy: {
           type: guidanceTagOrder,
           description: 'Ordering options for guidance tag connections.',
         },
-        ...connectionArgs,
       },
       resolve: async (
         { _id, negative_tags },
