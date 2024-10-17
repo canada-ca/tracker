@@ -45,7 +45,7 @@ export default function DomainsPage() {
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
   const [filters, setFilters] = useState([])
 

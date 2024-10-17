@@ -56,7 +56,7 @@ describe('<OrganizationDomains />', () => {
             query: PAGINATED_ORG_DOMAINS,
             variables: {
               slug: 'tbs-sct-gc-ca',
-              first: 10,
+              first: 50,
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
               search: '',
               filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],

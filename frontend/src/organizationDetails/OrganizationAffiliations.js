@@ -15,7 +15,7 @@ import { SearchBox } from '../components/SearchBox'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 
 export function OrganizationAffiliations({ orgSlug }) {
-  const [usersPerPage, setUsersPerPage] = useState(10)
+  const [usersPerPage, setUsersPerPage] = useState(50)
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('PERMISSION')
   const [searchTerm, setSearchTerm] = useState('')

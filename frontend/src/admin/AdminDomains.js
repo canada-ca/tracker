@@ -53,7 +53,7 @@ export function AdminDomains({ orgSlug, orgId }) {
   const { i18n } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(20)
+  const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [selectedRemoveProps, setSelectedRemoveProps] = useState({
     domain: '',
     domainId: '',

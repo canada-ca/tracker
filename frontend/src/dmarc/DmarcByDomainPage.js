@@ -39,7 +39,7 @@ export default function DmarcByDomainPage() {
   const currentDate = new Date()
   const { isLoggedIn, hasAffiliation } = useUserVar()
 
-  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
+  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(50)
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')

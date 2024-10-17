@@ -54,7 +54,7 @@ describe('<OrganizationAffiliations />', () => {
           request: {
             query: PAGINATED_ORG_AFFILIATIONS,
             variables: {
-              first: 10,
+              first: 50,
               slug: orgSlug,
               orderBy: { direction: 'ASC', field: 'PERMISSION' },
               search: '',

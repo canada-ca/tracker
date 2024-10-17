@@ -27,15 +27,10 @@ describe('<AuditLogTable />', () => {
   it('shows a table displaying activity logs from organizations', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter
-                initialEntries={['/admin/audit-logs']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/admin/audit-logs']} initialIndex={0}>
                 <AuditLogTable />
               </MemoryRouter>
             </ChakraProvider>
@@ -66,10 +61,7 @@ describe('<AuditLogTable />', () => {
           >
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <MemoryRouter
-                  initialEntries={['/admin/audit-logs']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/admin/audit-logs']} initialIndex={0}>
                   <AuditLogTable />
                 </MemoryRouter>
               </ChakraProvider>
@@ -113,10 +105,7 @@ describe('<AuditLogTable />', () => {
           >
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <MemoryRouter
-                  initialEntries={['/admin/audit-logs']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/admin/audit-logs']} initialIndex={0}>
                   <AuditLogTable />
                 </MemoryRouter>
               </ChakraProvider>
@@ -161,10 +150,7 @@ describe('<AuditLogTable />', () => {
           >
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <MemoryRouter
-                  initialEntries={['/admin/audit-logs']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/admin/audit-logs']} initialIndex={0}>
                   <AuditLogTable />
                 </MemoryRouter>
               </ChakraProvider>
@@ -209,7 +195,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -310,7 +296,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -361,7 +347,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -412,7 +398,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',

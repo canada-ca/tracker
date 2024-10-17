@@ -32,7 +32,7 @@ const mocks = [
     request: {
       query: FORWARD,
       variables: {
-        first: 20,
+        first: 50,
         orgSlug: 'test-org.slug',
         search: '',
         orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -75,7 +75,7 @@ describe('<AdminDomains />', () => {
         request: {
           query: FORWARD,
           variables: {
-            first: 20,
+            first: 50,
             orgSlug: 'test-org.slug',
             search: '',
             orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -120,7 +120,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -197,7 +197,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -210,7 +210,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -292,7 +292,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -305,7 +305,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -402,7 +402,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -480,7 +480,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 20,
+              first: 50,
               orgSlug: 'test-org.slug',
               search: '',
               orderBy: { field: 'DOMAIN', direction: 'ASC' },

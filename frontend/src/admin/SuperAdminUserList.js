@@ -43,7 +43,7 @@ export function SuperAdminUserList() {
   const [orderField, setOrderField] = useState('USER_USERNAME')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [usersPerPage, setUsersPerPage] = useState(10)
+  const [usersPerPage, setUsersPerPage] = useState(50)
   const [editUserRole, setEditUserRole] = useState({
     mutation: '',
     userName: '',
