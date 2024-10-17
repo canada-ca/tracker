@@ -461,6 +461,5 @@ const AcronymFields = withSuperAdmin(() => {
 OrganizationInformation.propTypes = {
   orgSlug: string.isRequired,
   removeOrgCallback: func.isRequired,
-  isLoginRequired: bool,
   isUserSuperAdmin: bool,
 }
