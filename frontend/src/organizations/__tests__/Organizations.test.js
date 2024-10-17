@@ -71,7 +71,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 10,
+              first: 50,
               field: 'NAME',
               direction: 'ASC',
               search: '',
@@ -163,7 +163,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 10,
+              first: 50,
               field: 'NAME',
               direction: 'ASC',
               search: '',
@@ -209,7 +209,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 10,
+              first: 50,
               after: 'YXJyYXljb25uZWN0aW9uOjA=',
               field: 'NAME',
               direction: 'ASC',
@@ -253,7 +253,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 10,
+              first: 50,
               after: 'YXJyYXljb25uZWN0aW9uOjA=',
               field: 'NAME',
               direction: 'ASC',
@@ -356,7 +356,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 10,
+                first: 50,
                 field: 'NAME',
                 direction: 'ASC',
                 search: '',
@@ -438,7 +438,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 10,
+                first: 50,
                 field: 'NAME',
                 direction: 'ASC',
                 search: '',
@@ -484,7 +484,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 10,
+                first: 50,
                 after: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
                 field: 'NAME',
                 direction: 'ASC',
@@ -582,7 +582,7 @@ describe('<Organisations />', () => {
         cache.writeQuery({
           query: PAGINATED_ORGANIZATIONS,
           variables: {
-            first: 10,
+            first: 50,
             field: 'NAME',
             direction: 'ASC',
             search: '',
@@ -627,7 +627,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 10,
+                first: 50,
                 field: 'NAME',
                 direction: 'ASC',
                 search: '',
@@ -673,7 +673,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 10,
+                first: 50,
                 after: 'YXJyYXljb25uZWN0aW9uOjA=',
                 field: 'NAME',
                 direction: 'ASC',
@@ -720,7 +720,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 10,
+                first: 50,
                 after: 'YXJyYXljb25uZWN0aW9uOjA=',
                 field: 'NAME',
                 direction: 'ASC',
