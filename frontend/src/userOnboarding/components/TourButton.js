@@ -6,14 +6,15 @@ import { useTour } from '../hooks/useTour'
 import { Button } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
-const toursConfig = {
-  //list of pages with their paths
+export const toursConfig = {
+  // list of pages with their paths
+  // Start tour button will only appear on these pages
   '/': 'landingPage',
-  '/organizations': 'organizationsPage',
-  '/domains': 'domainPage',
-  '/my-tracker/summary': ' myTrackerPage',
-  '/dmarc-summaries': 'dmarcSummariesPage',
-  '/admin/organizations': 'adminProfilePage',
+  // '/organizations': 'organizationsPage',
+  // '/domains': 'domainPage',
+  // '/my-tracker/summary': ' myTrackerPage',
+  // '/dmarc-summaries': 'dmarcSummariesPage',
+  // '/admin/organizations': 'adminProfilePage',
 }
 //Tour button as an icon, made for the individual pages (not needed for top banner)
 
@@ -43,9 +44,14 @@ export const TourButton = () => {
   const { pathname } = useLocation()
   const { startTour } = useTour()
 
+  const tourName = toursConfig[pathname]
+
   const handleStartTour = () => {
-    const tourName = toursConfig[pathname]
     if (tourName) startTour(tourName)
+  }
+
+  if (!tourName) {
+    return null
   }
 
   return (
