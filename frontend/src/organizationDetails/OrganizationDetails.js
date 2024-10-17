@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { UserIcon } from '../theme/Icons'
-import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useParams, useNavigate } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'
@@ -37,7 +37,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
-  const history = useHistory()
+  const history = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']

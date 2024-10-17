@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from '../organizationDetails/OrganizationDomains'
@@ -16,7 +16,7 @@ import { TierOneSummaries } from '../summaries/TierOneSummaries'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
-  const history = useHistory()
+  const history = useNavigate()
   const tabNames = ['summary', 'dmarc_phases', 'domains']
   const defaultActiveTab = tabNames[0]
 

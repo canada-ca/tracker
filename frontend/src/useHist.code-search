@@ -1,0 +1,112 @@
+# Query: useHist
+# ContextLines: 1
+
+24 results - 12 files
+
+frontend/src/index.js:
+   3  import { createRoot } from 'react-dom/client'
+   4: import { BrowserRouter as Router, useNavigate, useLocation } from 'react-router-dom'
+   5  import { ApolloProvider, useMutation, useQuery } from '@apollo/client'
+
+  22    const { from } = location.state || { from: { pathname: '/' } }
+  23:   const history = useNavigate()
+  24    const {
+
+frontend/src/admin/AdminPage.js:
+   5  import { useQuery } from '@apollo/client'
+   6: import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
+   7  import { useLingui } from '@lingui/react'
+
+  31    const toast = useToast()
+  32:   const history = useNavigate()
+  33    const { i18n } = useLingui()
+
+frontend/src/auth/CreateUserPage.js:
+   3  import { useMutation } from '@apollo/client'
+   4: import { Link as RouteLink, useParams, useNavigate, useLocation } from 'react-router-dom'
+   5  import { Formik } from 'formik'
+
+  19    const toast = useToast()
+  20:   const history = useNavigate()
+  21    const location = useLocation()
+
+frontend/src/auth/ForgotPasswordPage.js:
+   5  import { Formik } from 'formik'
+   6: import { Link as RouteLink, useNavigate } from 'react-router-dom'
+   7  import { useMutation } from '@apollo/client'
+
+  14    const toast = useToast()
+  15:   const history = useNavigate()
+  16    const validationSchema = object().shape({
+
+frontend/src/auth/ResetPasswordPage.js:
+   5  import { Formik } from 'formik'
+   6: import { useNavigate, useParams } from 'react-router-dom'
+   7  import { useMutation } from '@apollo/client'
+
+  13  export default function ResetPasswordPage() {
+  14:   const history = useNavigate()
+  15    const toast = useToast()
+
+frontend/src/auth/SignInPage.js:
+   3  import { Box, Button, Checkbox, Flex, Heading, Link, Text, useToast } from '@chakra-ui/react'
+   4: import { Link as RouteLink, useNavigate, useLocation } from 'react-router-dom'
+   5  import { useMutation } from '@apollo/client'
+
+  19    const { i18n } = useLingui()
+  20:   const history = useNavigate()
+  21    const location = useLocation()
+
+frontend/src/auth/TwoFactorAuthenticatePage.js:
+   4  import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
+   5: import { useNavigate, useLocation, useParams } from 'react-router-dom'
+   6  import { useMutation } from '@apollo/client'
+
+  18    const { login } = useUserVar()
+  19:   const history = useNavigate()
+  20    const location = useLocation()
+
+frontend/src/createOrganization/CreateOrganizationPage.js:
+  14  import { Formik } from 'formik'
+  15: import { Link as RouteLink, useNavigate } from 'react-router-dom'
+  16  import { useLingui } from '@lingui/react'
+
+  29    const toast = useToast()
+  30:   const history = useNavigate()
+  31    const { i18n } = useLingui()
+
+frontend/src/dmarc/DmarcReportPage.js:
+  18  import { number } from 'prop-types'
+  19: import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
+  20  import { ErrorBoundary } from 'react-error-boundary'
+
+  36    const fileName = `${domainSlug}_${period}-${year}`
+  37:   const history = useNavigate()
+  38    const { i18n } = useLingui()
+
+frontend/src/guidance/GuidancePage.js:
+  22  import { ScanDomainButton } from '../domains/ScanDomainButton'
+  23: import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
+  24  import { WebGuidance } from './WebGuidance'
+
+  56  
+  57:   const history = useNavigate()
+  58    const location = useLocation()
+
+frontend/src/organizationDetails/OrganizationDetails.js:
+  19  import { UserIcon } from '../theme/Icons'
+  20: import { Link as RouteLink, useParams, useNavigate } from 'react-router-dom'
+  21  import { ErrorBoundary } from 'react-error-boundary'
+
+  39    const { orgSlug, activeTab } = useParams()
+  40:   const history = useNavigate()
+  41    const { isOpen, onOpen, onClose } = useDisclosure()
+
+frontend/src/user/MyTrackerPage.js:
+   4  import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+   5: import { useParams, useNavigate } from 'react-router-dom'
+   6  import { ErrorBoundary } from 'react-error-boundary'
+
+  18    const { activeTab } = useParams()
+  19:   const history = useNavigate()
+  20    const tabNames = ['summary', 'dmarc_phases', 'domains']

@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -110,17 +110,29 @@ describe('<GuidancePage />', () => {
 
   it('renders the loading message when the data is loading', async () => {
     window.resizeTo(1024, 768)
+    // const { getByText } = render(
+    //   <MockedProvider mocks={mocks}>
+    //     <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+    //       <ChakraProvider theme={theme}>
+    //         <I18nProvider i18n={i18n}>
+    //           <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
+    //             <Route path="/domains/:domainSlug">
+    //               <GuidancePage />
+    //             </Route>
+    //           </MemoryRouter>
+    //         </I18nProvider>
+    //       </ChakraProvider>
+    //     </UserVarProvider>
+    //   </MockedProvider>
     const { getByText } = render(
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
-                <Route path="/domains/:domainSlug">
-                  <GuidancePage />
-                </Route>
-              </MemoryRouter>
-            </I18nProvider>
+            <MemoryRouter initialEntries={['/guidance']}>
+              <Routes>
+                <Route path="/guidance" element={<GuidancePage />} />
+              </Routes>
+            </MemoryRouter>
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
@@ -131,17 +143,29 @@ describe('<GuidancePage />', () => {
 
   it('renders the user does not have permissions message when the user does not have permission', async () => {
     window.resizeTo(1024, 768)
+    // const { getByText, getAllByRole, getByRole } = render(
+    //   <MockedProvider mocks={mocks}>
+    //     <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: 'user' })}>
+    //       <ChakraProvider theme={theme}>
+    //         <I18nProvider i18n={i18n}>
+    //           <MemoryRouter initialEntries={['/domains/noaffiliations.gc.ca/web-guidance']} initialIndex={0}>
+    //             <Route path="/domains/:domainSlug/:activeTab?">
+    //               <GuidancePage />
+    //             </Route>
+    //           </MemoryRouter>
+    //         </I18nProvider>
+    //       </ChakraProvider>
+    //     </UserVarProvider>
+    //   </MockedProvider>
     const { getByText, getAllByRole, getByRole } = render(
       <MockedProvider mocks={mocks}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: 'user' })}>
           <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains/noaffiliations.gc.ca/web-guidance']} initialIndex={0}>
-                <Route path="/domains/:domainSlug/:activeTab?">
-                  <GuidancePage />
-                </Route>
-              </MemoryRouter>
-            </I18nProvider>
+            <MemoryRouter initialEntries={['/guidance']}>
+              <Routes>
+                <Route path="/guidance" element={<GuidancePage />} />
+              </Routes>
+            </MemoryRouter>
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
