@@ -182,7 +182,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
             }
         )
     else:
-        print("summary from today already in db. Updating doc...")
+        logging.info("Chart summary from today already present. Updating summary...")
         chartSummariesCol.update_match(
             {"date": todayISO},
             {
@@ -199,7 +199,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
-    orgSummariesCol = db.collection("organizationSummaries")
 
     for org in db.collection("organizations"):
         try:
@@ -408,8 +407,9 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "negative_tags": negative_tags,
             }
 
-            current_summary = org.get("summaries")
+            current_summary = org.get("summaries", {})
             if current_summary.get("date", "") != date.today().isoformat():
+                logging.info(f"Storing previous summary for org: {org["_key"]}")
                 db.collection("organizationSummaries").insert(
                     {"organization": org.get("_id"), **current_summary}
                 )
