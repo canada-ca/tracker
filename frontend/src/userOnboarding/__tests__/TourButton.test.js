@@ -32,7 +32,7 @@ describe('TourTextButton', () => {
     const mockStartTour = jest.fn()
     useTourModule.useTour.mockReturnValue({ startTour: mockStartTour })
     const mockUseLocation = require('react-router-dom').useLocation
-    mockUseLocation.mockReturnValue({ pathname: '/organizations' })
+    mockUseLocation.mockReturnValue({ pathname: '/' })
 
     const { getByRole } = render(
       <MemoryRouter>
@@ -45,6 +45,6 @@ describe('TourTextButton', () => {
     //Simulate button click
     fireEvent.click(getByRole('button', { name: /Start Tour/i }))
 
-    expect(mockStartTour).toHaveBeenCalledWith('organizationsPage')
+    expect(mockStartTour).toHaveBeenCalledWith('landingPage')
   })
 })
