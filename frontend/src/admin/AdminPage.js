@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
 // import { TourComponent } from '../userOnboarding/components/TourComponent'
 
-export default function AdminPage({ isLoginRequired }) {
+export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
@@ -147,7 +147,6 @@ export default function AdminPage({ isLoginRequired }) {
             mb="1rem"
             removeOrgCallback={setSelectedOrg}
             key={orgDetails.slug} // set key, this resets state when switching orgs (closes editing box)
-            isLoginRequired={isLoginRequired}
           />
           <AdminPanel
             activeMenu={activeMenu}
