@@ -409,7 +409,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
             current_summary = org.get("summaries", {})
             if current_summary.get("date", "") != date.today().isoformat():
-                logging.info(f"Storing previous summary for org: {org["_key"]}")
+                logging.info(f"Storing previous summary for org: {org['_key']}")
                 db.collection("organizationSummaries").insert(
                     {"organization": org.get("_id"), **current_summary}
                 )
