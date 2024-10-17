@@ -24,6 +24,20 @@ export const loadChartSummariesByPeriod =
     }
     const periodMonth = monthMap[cleansedPeriod]
 
+    const filterUniqueDates = (array) => {
+      const filteredArray = []
+      const dateSet = new Set()
+
+      array.forEach((item) => {
+        if (!dateSet.has(item.date)) {
+          filteredArray.push(item)
+          dateSet.add(item.date)
+        }
+      })
+
+      return filteredArray
+    }
+
     if (typeof year === 'undefined') {
       console.warn(`User: ${userKey} did not have \`year\` argument set for: loadChartSummaryConnectionsByPeriod.`)
       throw new Error(i18n._(t`You must provide a \`year\` value to access the \`ChartSummaries\` connection.`))
@@ -67,7 +81,7 @@ export const loadChartSummariesByPeriod =
 
     let summariesInfo
     try {
-      summariesInfo = await requestedSummaryInfo.next()
+      summariesInfo = filterUniqueDates(await requestedSummaryInfo.next())
     } catch (err) {
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to gather chart summaries in loadChartSummaryConnectionsByPeriod, error: ${err}`,

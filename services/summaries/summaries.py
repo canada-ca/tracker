@@ -91,6 +91,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
+    chartSummariesCol = db.collection("chartSummaries")
 
     # Gather summaries from domain statuses
     chartSummaries = {}
@@ -170,13 +171,25 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     }
 
     # Update chart summaries in DB
-    db.collection("chartSummaries").insert(
-        {
-            "date": date.today().isoformat(),
-            **chartSummaries,
-            "dmarc_phase": dmarc_phase_summary,
-        }
-    )
+    todayISO = date.today().isoformat()
+    cursor = chartSummariesCol.find({"date": todayISO})
+    if cursor.empty():
+        chartSummariesCol.insert(
+            {
+                "date": todayISO,
+                **chartSummaries,
+                "dmarc_phase": dmarc_phase_summary,
+            }
+        )
+    else:
+        logging.info("Chart summary from today already present. Updating summary...")
+        chartSummariesCol.update_match(
+            {"date": todayISO},
+            {
+                **chartSummaries,
+                "dmarc_phase": dmarc_phase_summary,
+            },
+        )
     logging.info(f"Chart summary update completed.")
 
 
@@ -394,12 +407,9 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "negative_tags": negative_tags,
             }
 
-            current_summary = org.get("summaries")
-            if current_summary is not None:
-                if current_summary.get("date") is None:
-                    current_summary.update(
-                        {"date": (date.today() - timedelta(days=1)).isoformat()}
-                    )
+            current_summary = org.get("summaries", {})
+            if current_summary.get("date", "") != date.today().isoformat():
+                logging.info(f"Storing previous summary for org: {org['_key']}")
                 db.collection("organizationSummaries").insert(
                     {"organization": org.get("_id"), **current_summary}
                 )
