@@ -51,7 +51,6 @@ function GuidancePage() {
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
     fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-only',
     errorPolicy: 'all',
   })
 
