@@ -1,7 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TourComponent } from '../components/TourComponent'
-import { useTour } from '../hooks/useTour'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserVarProvider } from '../../utilities/userState'
 import { makeVar } from '@apollo/client'
