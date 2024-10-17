@@ -31,7 +31,7 @@ msgstr "CVE is not ignored for this domain."
 msgid "Cannot query additional findings without permission."
 msgstr "Cannot query additional findings without permission."
 
-#: src/organization/objects/organization.js:316
+#: src/organization/objects/organization.js:315
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
@@ -167,6 +167,7 @@ msgstr "Passing both `first` and `last` to paginate the `FullPassTable` connecti
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:94
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:98
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:103
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:98
@@ -292,7 +293,8 @@ msgid "Permission Denied: Please contact organization user for help with creatin
 msgstr "Permission Denied: Please contact organization user for help with creating domains."
 
 #: src/domain/queries/find-domain-by-domain.js:51
-#: src/organization/objects/organization.js:153
+#: src/organization/objects/organization-summary.js:190
+#: src/organization/objects/organization.js:152
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission Denied: Please contact organization user for help with retrieving this domain."
 
@@ -301,7 +303,7 @@ msgstr "Permission Denied: Please contact organization user for help with retrie
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission Denied: Please contact organization user for help with scanning this domain."
 
-#: src/domain/mutations/update-domain.js:140
+#: src/domain/mutations/update-domain.js:141
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Permission Denied: Please contact organization user for help with updating this domain."
 
@@ -393,6 +395,7 @@ msgstr "Requesting `{amount}` records on the `FullPassTable` connection exceeds 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:117
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:121
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:121
@@ -640,8 +643,8 @@ msgstr "Unable to discover domains for unknown organization."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Unable to dispatch one time scan. Please try again."
 
-#: src/organization/objects/organization.js:214
-#: src/organization/objects/organization.js:224
+#: src/organization/objects/organization.js:213
+#: src/organization/objects/organization.js:223
 msgid "Unable to export organization. Please try again."
 msgstr "Unable to export organization. Please try again."
 
@@ -927,8 +930,8 @@ msgstr "Unable to load affiliation(s). Please try again."
 #~ msgid "Unable to load all organization domain statuses. Please try again."
 #~ msgstr "Unable to load all organization domain statuses. Please try again."
 
-#: src/summaries/loaders/load-chart-summary-connections-by-period.js:102
-#: src/summaries/loaders/load-chart-summary-connections-by-period.js:112
+#: src/summaries/loaders/load-chart-summaries-by-period.js:65
+#: src/summaries/loaders/load-chart-summaries-by-period.js:75
 msgid "Unable to load chart summary data. Please try again."
 msgstr "Unable to load chart summary data. Please try again."
 
@@ -958,6 +961,11 @@ msgstr "Unable to load domain. Please try again."
 msgid "Unable to load full pass data. Please try again."
 msgstr "Unable to load full pass data. Please try again."
 
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:261
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:271
+msgid "Unable to load guidance tag(s). Please try again."
+msgstr "Unable to load guidance tag(s). Please try again."
+
 #: src/audit-logs/loaders/load-audit-logs-by-org-id.js:318
 msgid "Unable to load log(s). Please try again."
 msgstr "Unable to load log(s). Please try again."
@@ -977,8 +985,8 @@ msgstr "Unable to load mail summary. Please try again."
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Unable to load organization domain statuses. Please try again."
 
-#: src/organization/loaders/load-organization-summaries-by-period.js:116
-#: src/organization/loaders/load-organization-summaries-by-period.js:126
+#: src/organization/loaders/load-organization-summaries-by-period.js:81
+#: src/organization/loaders/load-organization-summaries-by-period.js:91
 msgid "Unable to load organization summary data. Please try again."
 msgstr "Unable to load organization summary data. Please try again."
 
@@ -1335,21 +1343,21 @@ msgstr "Unable to unfavourite unknown domain."
 #~ msgid "Unable to unignore CVE. Please try again."
 #~ msgstr "Unable to unignore CVE. Please try again."
 
-#: src/domain/mutations/update-domain.js:238
+#: src/domain/mutations/update-domain.js:239
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
-#: src/domain/mutations/update-domain.js:126
+#: src/domain/mutations/update-domain.js:127
 msgid "Unable to update domain in an unknown org."
 msgstr "Unable to update domain in an unknown org."
 
-#: src/domain/mutations/update-domain.js:167
+#: src/domain/mutations/update-domain.js:168
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Unable to update domain that does not belong to the given organization."
 
-#: src/domain/mutations/update-domain.js:157
-#: src/domain/mutations/update-domain.js:196
-#: src/domain/mutations/update-domain.js:248
+#: src/domain/mutations/update-domain.js:158
+#: src/domain/mutations/update-domain.js:197
+#: src/domain/mutations/update-domain.js:249
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
@@ -1395,7 +1403,7 @@ msgstr "Unable to update role: user does not belong to organization."
 msgid "Unable to update role: user unknown."
 msgstr "Unable to update role: user unknown."
 
-#: src/domain/mutations/update-domain.js:112
+#: src/domain/mutations/update-domain.js:113
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
 
@@ -1510,6 +1518,7 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Ful
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:85
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:89
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:96
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:89
@@ -1579,7 +1588,7 @@ msgstr "You must provide a `limit` value to properly paginate the `MXRecord` con
 msgid "You must provide a `limit` value to properly paginate the `web` connection."
 msgstr "You must provide a `limit` value to properly paginate the `web` connection."
 
-#: src/summaries/loaders/load-chart-summary-connections-by-period.js:9
+#: src/summaries/loaders/load-chart-summaries-by-period.js:8
 msgid "You must provide a `period` value to access the `ChartSummaries` connection."
 msgstr "You must provide a `period` value to access the `ChartSummaries` connection."
 
@@ -1587,11 +1596,11 @@ msgstr "You must provide a `period` value to access the `ChartSummaries` connect
 msgid "You must provide a `period` value to access the `DmarcSummaries` connection."
 msgstr "You must provide a `period` value to access the `DmarcSummaries` connection."
 
-#: src/organization/loaders/load-organization-summaries-by-period.js:11
+#: src/organization/loaders/load-organization-summaries-by-period.js:10
 msgid "You must provide a `period` value to access the `OrganizationSummaries` connection."
 msgstr "You must provide a `period` value to access the `OrganizationSummaries` connection."
 
-#: src/summaries/loaders/load-chart-summary-connections-by-period.js:30
+#: src/summaries/loaders/load-chart-summaries-by-period.js:29
 msgid "You must provide a `year` value to access the `ChartSummaries` connection."
 msgstr "You must provide a `year` value to access the `ChartSummaries` connection."
 
@@ -1599,7 +1608,7 @@ msgstr "You must provide a `year` value to access the `ChartSummaries` connectio
 msgid "You must provide a `year` value to access the `DmarcSummaries` connection."
 msgstr "You must provide a `year` value to access the `DmarcSummaries` connection."
 
-#: src/organization/loaders/load-organization-summaries-by-period.js:33
+#: src/organization/loaders/load-organization-summaries-by-period.js:32
 msgid "You must provide a `year` value to access the `OrganizationSummaries` connection."
 msgstr "You must provide a `year` value to access the `OrganizationSummaries` connection."
 
@@ -1628,6 +1637,7 @@ msgstr "You must provide at most one pagination method (`before`, `after`, `offs
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:132
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:136
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:135
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:136
@@ -1682,6 +1692,7 @@ msgstr "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:106
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:110
+#: src/guidance-tag/loaders/load-guidance-tags-connections.js:112
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:110

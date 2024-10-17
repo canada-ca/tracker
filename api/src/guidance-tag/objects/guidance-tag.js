@@ -34,6 +34,11 @@ export const guidanceTagType = new GraphQLObjectType({
       description: 'Links to technical information for a given tag.',
       resolve: ({ refLinksTechnical }) => refLinksTechnical,
     },
+    count: {
+      type: GraphQLString,
+      description: 'Number of times the tag has been applied.',
+      resolve: ({ count }) => count,
+    },
   }),
   interfaces: [nodeInterface],
 })

@@ -39,6 +39,7 @@ import {
   loadSslGuidanceTagByTagId,
   loadSslGuidanceTagConnectionsByTagId,
   loadGuidanceTagByTagId,
+  loadGuidanceTagSummaryConnectionsByTagId,
 } from './guidance-tag/loaders'
 import {
   loadOrgByKey,
@@ -226,6 +227,13 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       language,
     }),
     loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+      language,
+    }),
+    loadGuidanceTagSummaryConnectionsByTagId: loadGuidanceTagSummaryConnectionsByTagId({
       query,
       userKey,
       cleanseInput,
