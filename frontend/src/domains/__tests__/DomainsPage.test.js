@@ -303,19 +303,18 @@ describe('<DomainsPage />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <Router history={history}>
-                      <TourProvider>
-                        <Switch>
-                          <Route path="/domains" render={() => <DomainsPage />} />
-                        </Switch>
-                      </TourProvider>
-                    </Router>
+                    <TourProvider>
+                      <Routes>
+                        <Route path="/domains" element={<DomainsPage />} />
+                      </Routes>
+                    </TourProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
+        
 
         const currentYear = new Date().getFullYear()
 
@@ -338,19 +337,18 @@ describe('<DomainsPage />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <Router history={history}>
-                      <TourProvider>
-                        <Switch>
-                          <Route path="/domains" render={() => <DomainsPage />} />
-                        </Switch>
-                      </TourProvider>
-                    </Router>
+                    <TourProvider>
+                      <Routes>
+                        <Route path="/domains" element={<DomainsPage />} />
+                      </Routes>
+                    </TourProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
+        
 
         await waitFor(() => {
           const guidanceLinks = getAllByRole('link', { name: /View Results/i })

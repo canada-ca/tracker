@@ -332,16 +332,17 @@ describe('<Organisations />', () => {
               <I18nProvider i18n={i18n}>
                 <Router history={history}>
                   <TourProvider>
-                    <Switch>
-                      <Route path="/organizations" render={() => <Organizations />} />
-                    </Switch>
+                    <Routes>
+                      <Route path="/organizations" element={<Organizations />} />
+                    </Routes>
                   </TourProvider>
                 </Router>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
 
       const cardLink = await findByRole('link', /organization one/i)
       userEvent.click(cardLink)
@@ -549,16 +550,17 @@ describe('<Organisations />', () => {
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <TourProvider>
-                      <Switch>
-                        <Route path="/organizations" render={() => <Organizations />} />
-                      </Switch>
+                      <Routes>
+                        <Route path="/organizations" element={<Organizations />} />
+                      </Routes>
                     </TourProvider>
                   </Router>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
+        
 
         await waitFor(() => expect(getByText(/organization one/)).toBeInTheDocument())
 
@@ -783,16 +785,17 @@ describe('<Organisations />', () => {
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <TourProvider>
-                      <Switch>
-                        <Route path="/organizations" render={() => <Organizations />} />
-                      </Switch>
+                      <Routes>
+                        <Route path="/organizations" element={<Organizations />} />
+                      </Routes>
                     </TourProvider>
                   </Router>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
+        
 
         await waitFor(() => expect(queryByText(/organization one/)).toBeInTheDocument())
 

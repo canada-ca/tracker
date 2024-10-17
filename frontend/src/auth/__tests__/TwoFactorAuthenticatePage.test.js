@@ -32,18 +32,19 @@ describe('<TwoFactorAuthenticatePage />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
-                <Route path="/authenticate/:sendMethod/:authenticateToken">
-                  <TwoFactorAuthenticatePage />
-                </Route>
+                <Routes>
+                  <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                </Routes>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
-      </MockedProvider>,
-    )
-
-    await waitFor(() => expect(getByText(/Two Factor Authentication/)).toBeInTheDocument())
-  })
+      </MockedProvider>
+    );
+  
+    await waitFor(() => expect(getByText(/Two Factor Authentication/)).toBeInTheDocument());
+  });
+  
 
   describe('given no input', () => {
     describe('when the form is submitted', () => {
@@ -61,15 +62,19 @@ describe('<TwoFactorAuthenticatePage />', () => {
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
-                      <Route path="/authenticate/:sendMethod/:authenticateToken">
-                        <TwoFactorAuthenticatePage />
-                      </Route>
+                      <Routes>
+                        <Route
+                          path="/authenticate/:sendMethod/:authenticateToken"
+                          element={<TwoFactorAuthenticatePage />}
+                        />
+                      </Routes>
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
-            </MockedProvider>,
-          )
+            </MockedProvider>
+          );
+          
           const submitButton = getByText('Submit')
           fireEvent.click(submitButton)
 
@@ -124,16 +129,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
+                  <Routes>
+                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                  </Routes>
+                </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
@@ -199,16 +205,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
+                  <Routes>
+                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                  </Routes>
+                </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
@@ -274,16 +281,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
+                  <Routes>
+                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                  </Routes>
+                </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
@@ -357,16 +365,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
+                  <Routes>
+                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                  </Routes>
+                </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')

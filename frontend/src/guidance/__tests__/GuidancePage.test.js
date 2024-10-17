@@ -93,15 +93,16 @@ describe('<GuidancePage />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains/forces.gc.ca/web-guidance']} initialIndex={0}>
-                <Route path="/domains/:domainSlug/:activeTab?">
-                  <GuidancePage />
-                </Route>
+                <Routes>
+                  <Route path="/domains/:domainSlug/:activeTab?" element={<GuidancePage />} />
+                </Routes>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
-      </MockedProvider>,
-    )
+      </MockedProvider>
+    );
+    
 
     await waitFor(() => {
       expect(getByText(/amie.info/i)).toBeInTheDocument()

@@ -137,15 +137,16 @@ describe('<OrganizationAffiliations />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organization/:orgSlug">
+                  <Routes>
                     <OrganizationAffiliations orgSlug={orgSlug} />
-                  </Route>
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
         </ChakraProvider>,
-      )
+      );
+      
 
       await waitFor(() => {
         expect(getByText('Jabari_Larson@hotmail.com')).toBeInTheDocument()

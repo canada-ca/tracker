@@ -82,24 +82,28 @@ describe('<EmailValidationPage />', () => {
                   ]}
                   initialIndex={0}
                 >
-                  <Route path="/validate/:verifyToken">
-                    <EmailValidationPage />
-                  </Route>
+                  <Routes>
+                    <Route
+                      path="/validate/:verifyToken"
+                      element={<EmailValidationPage />}
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
-      )
-
+      );
+    
       await waitFor(() =>
         expect(
           queryByText(
             /Your account email could not be verified at this time. Please try again./,
           ),
         ).toBeInTheDocument(),
-      )
-    })
+      );
+    });
+    
 
     it('displays a success message', async () => {
       const { queryByText } = render(
@@ -119,21 +123,25 @@ describe('<EmailValidationPage />', () => {
                   ]}
                   initialIndex={0}
                 >
-                  <Route path="/validate/:verifyToken">
-                    <EmailValidationPage />
-                  </Route>
+                  <Routes>
+                    <Route
+                      path="/validate/:verifyToken"
+                      element={<EmailValidationPage />}
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
-      )
-
+      );
+    
       await waitFor(() =>
         expect(
           queryByText(/Your account email was successfully verified/),
         ).toBeInTheDocument(),
-      )
-    })
+      );
+    });
+    
   })
 })

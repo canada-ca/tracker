@@ -142,15 +142,17 @@ describe('<OrganizationDetails />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
-                  </Route>
+                  <Routes>
+                    {/* Use the 'element' prop to render components */}
+                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
         </ChakraProvider>,
-      )
+      );
+      
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
@@ -171,15 +173,17 @@ describe('<OrganizationDetails />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
-                  </Route>
+                  <Routes>
+                    {/* Use the 'element' prop in v6 */}
+                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
         </ChakraProvider>,
-      )
+      );
+      
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
@@ -202,16 +206,17 @@ describe('<OrganizationDetails />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
-                  </Route>
+                  <Routes>
+                    {/* Use the 'element' prop in v6 */}
+                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
         </ChakraProvider>,
-      )
-
+      );
+      
       await waitFor(() => {
         expect(queryByRole('tab', { name: 'Users' })).not.toBeInTheDocument()
       })
@@ -319,15 +324,16 @@ describe('<OrganizationDetails />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
-                  </Route>
+                  <Routes>
+                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
         </ChakraProvider>,
-      )
+      );
+      
 
       await waitFor(() => {
         expect(queryByText(/Ottawa/)).not.toBeInTheDocument()
@@ -346,15 +352,16 @@ describe('<OrganizationDetails />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
-                  </Route>
+                  <Routes>
+                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
         </ChakraProvider>,
-      )
+      );
+      
 
       await waitFor(() => {
         expect(queryByText(/Request Invite/)).not.toBeInTheDocument()
@@ -373,15 +380,16 @@ describe('<OrganizationDetails />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
-                  </Route>
+                  <Routes>
+                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
-        </ChakraProvider>,
-      )
+        </ChakraProvider>
+      );
+      
 
       await waitFor(() => {
         expect(queryByRole('tab', { name: 'Users' })).toBeInTheDocument()

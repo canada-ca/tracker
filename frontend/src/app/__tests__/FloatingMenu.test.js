@@ -8,6 +8,10 @@ import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
+
+import { useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom'; // Import Routes and Route
+
 import { FloatingMenu } from '../FloatingMenu'
 
 import { UserVarProvider } from '../../utilities/userState'
@@ -115,7 +119,13 @@ describe('<FloatingMenu>', () => {
     describe("and the 'Sign In' button is clicked", () => {
       it('redirects to the sign in page', async () => {
         let wLocation
-
+        
+        const FloatingMenuWrapper = () => {
+          const location = useLocation();
+          wLocation = location; // capture location here
+          return null; // No rendering needed here
+        };
+        
         const { getByText } = render(
           <MockedProvider>
             <UserVarProvider
@@ -129,19 +139,18 @@ describe('<FloatingMenu>', () => {
                 <I18nProvider i18n={i18n}>
                   <ChakraProvider theme={theme}>
                     <FloatingMenu />
-                    <Route
-                      path="*"
-                      render={({ _history, location }) => {
-                        wLocation = location
-                        return null
-                      }}
-                    />
+                    <Routes>
+                      {/* Using the FloatingMenuWrapper as a direct child of <Routes> */}
+                      <Route path="*" element={<FloatingMenuWrapper />} />
+                    </Routes>
                   </ChakraProvider>
                 </I18nProvider>
               </MemoryRouter>
             </UserVarProvider>
           </MockedProvider>,
-        )
+        );
+        
+
         const menuButton = getByText(/Menu/i)
         fireEvent.click(menuButton)
 
@@ -262,3 +271,6 @@ describe('<FloatingMenu>', () => {
     })
   })
 })
+
+
+//i edited this page.

@@ -115,15 +115,16 @@ describe('<OrganizationDomains />', () => {
                 })}
               >
                 <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organization/:orgSlug">
-                    <OrganizationDomains orgSlug={orgSlug} />
-                  </Route>
+                  <Routes>
+                    <Route path="/organization/:orgSlug" element={<OrganizationDomains orgSlug={orgSlug} />} />
+                  </Routes>
                 </MemoryRouter>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
-        </ChakraProvider>,
-      )
+        </ChakraProvider>
+      );
+      
 
       await waitFor(() => {
         expect(getByText('dfo-mpo.gc.ca')).toBeInTheDocument()

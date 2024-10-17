@@ -123,15 +123,16 @@ describe('<DmarcReportPage />', () => {
                   initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
+                  <Routes>
+                    <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?" element={<DmarcReportPage />} />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
       await waitFor(() => getAllByText(/test-domain/i))
     })
 
@@ -151,15 +152,19 @@ describe('<DmarcReportPage />', () => {
                   initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
+                  <Routes>
+                    <Route 
+                      path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
+                      element={<DmarcReportPage />} 
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
       await waitFor(() => getAllByText(/Showing data for period:/i))
     })
 
@@ -179,15 +184,19 @@ describe('<DmarcReportPage />', () => {
                   initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
+                  <Routes>
+                    <Route 
+                      path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
+                      element={<DmarcReportPage />} 
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
       await waitFor(() => getByText(/Mar-20/))
     })
 
@@ -207,15 +216,19 @@ describe('<DmarcReportPage />', () => {
                   initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
+                  <Routes>
+                    <Route 
+                      path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
+                      element={<DmarcReportPage />} 
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
       await findByRole('button', { name: /DKIM Failures by IP Address/i })
       getByRole('button', { name: /SPF Failures by IP Address/i })
       getByRole('button', { name: /Fully Aligned by IP Address/i })
@@ -240,15 +253,19 @@ describe('<DmarcReportPage />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
-                    <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                      <DmarcReportPage />
-                    </Route>
+                    <Routes>
+                      <Route 
+                        path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
+                        element={<DmarcReportPage />} 
+                      />
+                    </Routes>
                   </Router>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
+        
         await findByRole('button', { name: /Fully Aligned by IP Address/i })
 
         const periodSelector = getByRole('combobox', {
@@ -279,15 +296,19 @@ describe('<DmarcReportPage />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
-                    <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                      <DmarcReportPage />
-                    </Route>
+                    <Routes>
+                      <Route 
+                        path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
+                        element={<DmarcReportPage />} 
+                      />
+                    </Routes>
                   </Router>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
+        
         // page is loaded
         await findByRole('button', { name: /Fully Aligned by IP Address/i })
 
@@ -380,15 +401,19 @@ describe('<DmarcReportPage />', () => {
                   initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
+                  <Routes>
+                    <Route 
+                      path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
+                      element={<DmarcReportPage />} 
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
-      )
+        </MockedProvider>
+      );
+      
 
       await findByText(/test-domain does not support aggregate data/)
     })

@@ -91,26 +91,30 @@ describe('<ResetPasswordPage />', () => {
                       ]}
                       initialIndex={0}
                     >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
+                      <Routes>
+                        <Route
+                          path="/reset-password/:resetToken"
+                          element={<ResetPasswordPage />}
+                        />
+                      </Routes>
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
-          )
-
-          const password = container.querySelector('#password')
-
+          );
+        
+          const password = container.querySelector('#password');
+        
           await waitFor(() => {
-            fireEvent.blur(password)
-          })
-
+            fireEvent.blur(password);
+          });
+        
           await waitFor(() =>
             expect(queryByText(/Password cannot be empty/)).toBeInTheDocument(),
-          )
-        })
+          );
+        });
+        
       })
 
       describe('confirm password field', () => {
@@ -132,24 +136,28 @@ describe('<ResetPasswordPage />', () => {
                       ]}
                       initialIndex={0}
                     >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
+                      <Routes>
+                        <Route
+                          path="/reset-password/:resetToken"
+                          element={<ResetPasswordPage />}
+                        />
+                      </Routes>
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
-          )
-
-          const confirmPassword = container.querySelector('#confirmPassword')
-
-          await waitFor(() => fireEvent.blur(confirmPassword))
-
+          );
+        
+          const confirmPassword = container.querySelector('#confirmPassword');
+        
+          await waitFor(() => fireEvent.blur(confirmPassword));
+        
           await waitFor(() =>
             expect(queryByText(/Password confirmation/)).toBeInTheDocument(),
-          )
-        })
+          );
+        });
+        
       })
     })
   })
@@ -158,29 +166,32 @@ describe('<ResetPasswordPage />', () => {
     it('succeeds in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={successMocks}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/reset-password/:resetToken">
-                    <ResetPasswordPage />
-                  </Route>
-                </MemoryRouter>
-              </I18nProvider>
-            </ChakraProvider>
-          </UserVarProvider>
-        </MockedProvider>,
+      <UserVarProvider
+        userVar={makeVar({
+          jwt: null,
+          tfaSendMethod: null,
+          userName: null,
+        })}
+      >
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter
+              initialEntries={[
+                '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+              ]}
+              initialIndex={0}
+            >
+              <Routes>
+                <Route
+                  path="/reset-password/:resetToken"
+                  element={<ResetPasswordPage />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </I18nProvider>
+        </ChakraProvider>
+      </UserVarProvider>
+    </MockedProvider>,
       )
 
       const password = container.querySelector('#password')
@@ -213,15 +224,19 @@ describe('<ResetPasswordPage />', () => {
                   ]}
                   initialIndex={0}
                 >
-                  <Route path="/reset-password/:resetToken">
-                    <ResetPasswordPage />
-                  </Route>
+                  <Routes>
+                    <Route
+                      path="/reset-password/:resetToken"
+                      element={<ResetPasswordPage />}
+                    />
+                  </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
-      )
+      );
+      
 
       const password = container.querySelector('#password')
       const confirmPassword = container.querySelector('#confirmPassword')

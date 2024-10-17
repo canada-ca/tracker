@@ -80,10 +80,7 @@ describe('<SignInPage />', () => {
 
       fireEvent.blur(password)
 
-      const errorElement = await waitFor(
-        () => getByText(container, /Password cannot be empty/i),
-        { container },
-      )
+      const errorElement = await waitFor(() => getByText(container, /Password cannot be empty/i), { container })
 
       expect(errorElement.innerHTML).toMatch(/Password cannot be empty/i)
     })
@@ -122,36 +119,33 @@ describe('<SignInPage />', () => {
           },
         ]
 
-          // create a history object and inject it so we can inspect it afterwards
-          // for the side effects of our form submission (a redirect to /!).
-          // const history = createMemoryHistory({
-          //   initialEntries: ['/sign-in'],
-          //   initialIndex: 0,
-          // })
-          < MemoryRouter initialEntries = { ['/sign-in']} >
-            {/* Your component */ }
-          </MemoryRouter >
-
+        // create a history object and inject it so we can inspect it afterwards
+        // for the side effects of our form submission (a redirect to /!).
+        const history = createMemoryHistory({
+          initialEntries: ['/sign-in'],
+          initialIndex: 0,
+        })
 
         const { container, getByRole } = render(
-              <MockedProvider mocks={mocks} addTypename={false}>
-                <UserVarProvider
-                  userVar={makeVar({
-                    jwt: null,
-                    tfaSendMethod: null,
-                    userName: null,
-                  })}
-                >
-                  <ChakraProvider theme={theme}>
-                    <I18nProvider i18n={i18n}>
-                      <Router history={history}>
-                        <SignInPage />
-                      </Router>
-                    </I18nProvider>
-                  </ChakraProvider>
-                </UserVarProvider>
-              </MockedProvider>,
-            )
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <SignInPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        );
+        
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')
@@ -172,9 +166,7 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(history.location.pathname).toEqual(
-            `/authenticate/email/${values.authenticateToken}`,
-          )
+          expect(history.location.pathname).toEqual(`/authenticate/email/${values.authenticateToken}`)
         })
       })
     })
@@ -203,7 +195,6 @@ describe('<SignInPage />', () => {
                       id: '1234asdf',
                       userName: 'Thalia.Rosenbaum@gmail.com',
                       tfaSendMethod: false,
-                      preferredLang: 'en',
                       emailValidated: true,
                     },
                     authToken: 'test123stringJWT',
@@ -233,14 +224,14 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/']}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')
@@ -319,7 +310,7 @@ describe('<SignInPage />', () => {
               </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
-        )
+        )//might not be needed
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')
@@ -340,11 +331,7 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(
-            queryByText(
-              /Unable to sign in to your account, please try again./i,
-            ),
-          )
+          expect(queryByText(/Unable to sign in to your account, please try again./i))
         })
       })
     })
@@ -391,14 +378,14 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/']}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')
@@ -419,11 +406,7 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(
-            queryByText(
-              /Unable to sign in to your account, please try again./i,
-            ),
-          )
+          expect(queryByText(/Unable to sign in to your account, please try again./i))
           expect(queryByText(/foobar/i))
         })
       })
@@ -471,14 +454,14 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/']}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )
+          </MockedProvider>
+        );
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')
