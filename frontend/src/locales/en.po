@@ -21,6 +21,10 @@ msgstr ", and"
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 
+#: src/guidance/GuidanceTagDetails.js:84
+msgid "{0} Findings"
+msgstr "{0} Findings"
+
 #: src/admin/AdminDomainModal.js:63
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} was added to {orgSlug}"
@@ -1211,8 +1215,8 @@ msgstr "DMARC Implementation Phase: {0}"
 #~ msgid "DMARC phase summary"
 #~ msgstr "DMARC phase summary"
 
-#: src/organizationDetails/OrganizationDetails.js:135
-#: src/organizationDetails/OrganizationDetails.js:173
+#: src/organizationDetails/OrganizationDetails.js:136
+#: src/organizationDetails/OrganizationDetails.js:177
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -1344,7 +1348,7 @@ msgstr "Domain:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:208
 #: src/domains/DomainsPage.js:272
-#: src/organizationDetails/OrganizationDetails.js:138
+#: src/organizationDetails/OrganizationDetails.js:139
 #: src/organizationDetails/OrganizationDomains.js:125
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -2351,7 +2355,7 @@ msgstr "Information shared with TBS, or acquired via systems hosted by TBS, may 
 msgid "Informative"
 msgstr "Informative"
 
-#: src/guidance/GuidanceTagDetails.js:93
+#: src/guidance/GuidanceTagDetails.js:98
 msgid "Informative tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 msgstr "Informative tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 
@@ -2648,6 +2652,10 @@ msgstr "More details"
 msgid "More info"
 msgstr "More info"
 
+#: src/summaries/AggregatedGuidanceSummary.js:65
+msgid "Most Common Negative Findings"
+msgstr "Most Common Negative Findings"
+
 #: src/app/ReadGuidancePage.js:535
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Mozilla SSL Configuration Generator"
@@ -2895,6 +2903,10 @@ msgstr "No known weak protocols used."
 msgid "No MX records found. Is the domain parked?"
 msgstr "No MX records found. Is the domain parked?"
 
+#: src/summaries/AggregatedGuidanceSummary.js:46
+msgid "No negative findings to show."
+msgstr "No negative findings to show."
+
 #: src/guidance/GuidancePage.js:136
 #: src/organizations/Organizations.js:112
 msgid "No Organizations"
@@ -3042,7 +3054,7 @@ msgstr "Organization"
 msgid "Organization created"
 msgstr "Organization created"
 
-#: src/organizationDetails/OrganizationDetails.js:67
+#: src/organizationDetails/OrganizationDetails.js:68
 msgid "Organization Details"
 msgstr "Organization Details"
 
@@ -3271,7 +3283,7 @@ msgstr "Pointer to a DKIM public key record in DNS."
 #~ msgid "Policy"
 #~ msgstr "Policy"
 
-#: src/guidance/GuidanceTagDetails.js:28
+#: src/guidance/GuidanceTagDetails.js:34
 msgid "Policy guidance:"
 msgstr "Policy guidance:"
 
@@ -3471,7 +3483,7 @@ msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
 #: src/guidance/GuidancePage.js:159
-#: src/organizationDetails/OrganizationDetails.js:112
+#: src/organizationDetails/OrganizationDetails.js:113
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
@@ -4192,7 +4204,7 @@ msgstr "Successfully removed user {0}."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 
-#: src/organizationDetails/OrganizationDetails.js:132
+#: src/organizationDetails/OrganizationDetails.js:133
 msgid "Summaries"
 msgstr "Summaries"
 
@@ -4301,7 +4313,7 @@ msgstr "TBS be identified as the source; and"
 msgid "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 msgstr "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 
-#: src/guidance/GuidanceTagDetails.js:47
+#: src/guidance/GuidanceTagDetails.js:53
 msgid "Technical implementation guidance:"
 msgstr "Technical implementation guidance:"
 
@@ -4945,7 +4957,7 @@ msgstr "User:"
 
 #: src/admin/AdminPage.js:199
 #: src/admin/AdminPanel.js:22
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:143
 msgid "Users"
 msgstr "Users"
 

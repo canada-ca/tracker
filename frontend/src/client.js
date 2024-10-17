@@ -47,6 +47,11 @@ export function createCache() {
           domains: relayStylePagination(),
         },
       },
+      OrganizationSummary: {
+        fields: {
+          negativeFindings: relayStylePagination(),
+        },
+      },
       MyTrackerResult: {
         fields: {
           domains: relayStylePagination(),
