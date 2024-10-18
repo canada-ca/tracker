@@ -34,8 +34,9 @@ import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
+import { bool } from 'prop-types'
 
-export default function OrganizationDetails() {
+export default function OrganizationDetails({ loginRequired }) {
   const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
@@ -142,7 +143,7 @@ export default function OrganizationDetails() {
           <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
-          {data?.organization?.userHasPermission && (
+          {(data?.organization?.userHasPermission || !loginRequired) && (
             <Tab borderTopWidth="4px">
               <Trans>Users</Trans>
             </Tab>
@@ -191,7 +192,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          {data?.organization?.userHasPermission && (
+          {(data?.organization?.userHasPermission || !loginRequired) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} />
@@ -202,4 +203,8 @@ export default function OrganizationDetails() {
       </Tabs>
     </Box>
   )
+}
+
+OrganizationDetails.propTypes = {
+  loginRequired: bool,
 }
