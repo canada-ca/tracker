@@ -32,7 +32,7 @@ def get_all_domains():
     FOR domain IN domains
         FILTER domain.archived != True
         FILTER domain.rcode != "NXDOMAIN"
-        RETURN { "domain": domain.domain, "id": domain._id, "key": domain._key }
+        RETURN { "domain": domain.domain, "id": domain._id, "key": domain._key, "ignoredCves": domain.ignoredCves }
     """
     cursor = db.aql.execute(query)
     return [domain for domain in cursor]
@@ -61,7 +61,12 @@ def remove_none_val_in_dict(dict):
 def update_domain_cve_detected(domain, web_components):
     cve_detected = False
     for wc in web_components:
-        if len(wc["WebComponentCves"]) > 0:
+        non_ignored_cves = [
+            cve
+            for cve in wc["WebComponentCves"]
+            if cve["Cve"] not in domain["ignoredCves"]
+        ]
+        if len(non_ignored_cves) > 0:
             cve_detected = True
             break
     query = f"""
