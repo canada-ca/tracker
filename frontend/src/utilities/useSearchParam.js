@@ -19,7 +19,7 @@ function useSearchParam({ name, validOptions, defaultValue }) {
       } else {
         searchParams.set(name, value)
       }
-      history.push({ search: searchParams.toString() })
+      history.replace({ search: searchParams.toString() })
     },
     [searchParams, history, name, validOptions],
   )
