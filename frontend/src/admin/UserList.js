@@ -34,7 +34,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
     id: null,
     userName: null,
   })
-  const [usersPerPage, setUsersPerPage] = useState(20)
+  const [usersPerPage, setUsersPerPage] = useState(50)
   const [editingUserRole, setEditingUserRole] = useState()
   const [editingUserName, setEditingUserName] = useState()
   const { isOpen, onOpen, onClose } = useDisclosure()

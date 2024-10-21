@@ -31,7 +31,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [filters, setFilters] = useState([
     { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
   ])
