@@ -1,46 +1,50 @@
 import React, { useState } from 'react'
-import { Accordion, Box, Heading, Text } from '@chakra-ui/react'
+import { Accordion, Box, Text } from '@chakra-ui/react'
 import { string } from 'prop-types'
 import { ORG_NEGATIVE_FINDINGS } from '../graphql/queries'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ListOf } from '../components/ListOf'
 import { Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { GuidanceTagDetails } from '../guidance/GuidanceTagDetails'
+import { useQuery } from '@apollo/client'
 
 export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
   const [tagsPerPage, setTagsPerPage] = useState(5)
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    hasNextPage,
-    hasPreviousPage,
-    resetToFirstPage,
-    totalCount,
-  } = usePaginatedCollection({
-    fetchForward: ORG_NEGATIVE_FINDINGS,
-    variables: { orgSlug },
-    recordsPerPage: tagsPerPage,
-    relayRoot: 'findOrganizationBySlug.summaries.negativeFindings',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const [currentPage, setCurrentPage] = useState(1)
+  const { loading, error, data } = useQuery(ORG_NEGATIVE_FINDINGS, { variables: { orgSlug } })
 
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const handleNext = () => {
+    setCurrentPage(currentPage + 1)
+  }
+
+  const handlePrevious = () => {
+    setCurrentPage(currentPage - 1)
+  }
+
+  const resetToFirstPage = () => {
+    setCurrentPage(1)
+  }
+
+  const handleItemsPerPageChange = (newItemsPerPage) => {
+    setTagsPerPage(newItemsPerPage)
+  }
+
+  const paginatedData = data?.findOrganizationBySlug?.summaries?.negativeFindings?.guidanceTags.slice(
+    (currentPage - 1) * tagsPerPage,
+    currentPage * tagsPerPage,
+  )
 
   let tagList = loading ? (
     <LoadingMessage />
   ) : (
     <Accordion>
       <ListOf
-        elements={nodes}
+        elements={paginatedData}
         ifEmpty={() => (
           <Text layerStyle="loadingMessage">
             <Trans>No negative findings to show. </Trans>
@@ -61,22 +65,18 @@ export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
 
   return (
     <Box {...props}>
-      <Heading size="md" mb="2">
-        <Trans>Most Common Negative Findings</Trans>
-      </Heading>
       {tagList}
       <RelayPaginationControls
-        onlyPagination={false}
-        selectedDisplayLimit={tagsPerPage}
-        setSelectedDisplayLimit={setTagsPerPage}
-        displayLimitOptions={[5, 10, 20]}
+        currentPage={currentPage}
+        itemsPerPage={tagsPerPage}
+        totalRecords={data?.findOrganizationBySlug?.summaries?.negativeFindings?.totalCount || 0}
+        next={handleNext}
+        hasNextPage={currentPage < data?.findOrganizationBySlug?.summaries?.negativeFindings?.totalCount / tagsPerPage}
+        hasPreviousPage={currentPage > 1}
+        previous={handlePrevious}
+        setSelectedDisplayLimit={handleItemsPerPageChange}
         resetToFirstPage={resetToFirstPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isLoadingMore={isLoadingMore}
-        totalRecords={totalCount}
+        displayLimitOptions={[5, 10, 20]}
       />
     </Box>
   )
