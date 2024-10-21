@@ -28,7 +28,7 @@ describe('<AggregatedGuidanceSummary />', () => {
     {
       request: {
         query: ORG_NEGATIVE_FINDINGS,
-        variables: { orgSlug: 'tbs-sct-gc-ca', first: 5 },
+        variables: { orgSlug: 'tbs-sct-gc-ca' },
       },
       result: {
         data: {
@@ -37,56 +37,45 @@ describe('<AggregatedGuidanceSummary />', () => {
             summaries: {
               negativeFindings: {
                 totalCount: 2,
-                edges: [
+                guidanceTags: [
                   {
-                    cursor: 'Hello World',
-                    node: {
-                      tagId: 'tag2',
-                      tagName: 'TAG-short-age',
-                      guidance: 'Hello World',
-                      refLinks: [
-                        {
-                          description: 'Aut autem consequatur ipsam aliquam sunt et at pariatur suscipit.',
-                          refLink: 'http://zita.com',
-                        },
-                      ],
-                      refLinksTech: [
-                        {
-                          description: 'Recusandae dolor quidem et repellendus iure sit aliquam.',
-                          refLink: 'http://audie.org',
-                        },
-                      ],
-                      count: 10,
-                    },
+                    tagId: 'tag2',
+                    tagName: 'TAG-short-age',
+                    guidance: 'Hello World',
+                    refLinks: [
+                      {
+                        description: 'Aut autem consequatur ipsam aliquam sunt et at pariatur suscipit.',
+                        refLink: 'http://zita.com',
+                      },
+                    ],
+                    refLinksTech: [
+                      {
+                        description: 'Recusandae dolor quidem et repellendus iure sit aliquam.',
+                        refLink: 'http://audie.org',
+                      },
+                    ],
+                    count: 10,
                   },
+
                   {
-                    cursor: 'Hello World',
-                    node: {
-                      tagId: 'tag9',
-                      tagName: 'TAG-certificate-expired',
-                      guidance: 'Hello World',
-                      refLinks: [
-                        {
-                          description: 'Vitae cum molestias veritatis.',
-                          refLink: 'https://michaela.com',
-                        },
-                      ],
-                      refLinksTech: [
-                        {
-                          description: 'Voluptatem repudiandae accusantium ratione ea sed.',
-                          refLink: 'https://dennis.name',
-                        },
-                      ],
-                      count: 5,
-                    },
+                    tagId: 'tag9',
+                    tagName: 'TAG-certificate-expired',
+                    guidance: 'Hello World',
+                    refLinks: [
+                      {
+                        description: 'Vitae cum molestias veritatis.',
+                        refLink: 'https://michaela.com',
+                      },
+                    ],
+                    refLinksTech: [
+                      {
+                        description: 'Voluptatem repudiandae accusantium ratione ea sed.',
+                        refLink: 'https://dennis.name',
+                      },
+                    ],
+                    count: 5,
                   },
                 ],
-                pageInfo: {
-                  startCursor: 'Hello World',
-                  endCursor: 'Hello World',
-                  hasNextPage: false,
-                  hasPreviousPage: true,
-                },
               },
             },
           },
@@ -117,7 +106,7 @@ describe('<AggregatedGuidanceSummary />', () => {
       </ChakraProvider>,
     )
     await waitFor(() => {
-      expect(getByText(/Most common negative findings/i)).toBeInTheDocument()
+      expect(getByText(/TAG-short-age/i)).toBeInTheDocument()
     })
   })
 
@@ -126,7 +115,7 @@ describe('<AggregatedGuidanceSummary />', () => {
       {
         request: {
           query: ORG_NEGATIVE_FINDINGS,
-          variables: { orgSlug: 'tbs-sct-gc-ca', first: 5 },
+          variables: { orgSlug: 'tbs-sct-gc-ca' },
         },
         error: new Error('An error occurred'),
       },
@@ -163,7 +152,7 @@ describe('<AggregatedGuidanceSummary />', () => {
       {
         request: {
           query: ORG_NEGATIVE_FINDINGS,
-          variables: { orgSlug: 'tbs-sct-gc-ca', first: 5 },
+          variables: { orgSlug: 'tbs-sct-gc-ca' },
         },
         result: {
           data: {
@@ -172,13 +161,7 @@ describe('<AggregatedGuidanceSummary />', () => {
               summaries: {
                 negativeFindings: {
                   totalCount: 0,
-                  edges: [],
-                  pageInfo: {
-                    startCursor: null,
-                    endCursor: null,
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                  },
+                  guidanceTags: [],
                 },
               },
             },
