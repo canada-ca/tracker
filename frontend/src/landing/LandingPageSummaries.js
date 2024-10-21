@@ -9,12 +9,18 @@ import { Box } from '@chakra-ui/react'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import useSearchParam from '../utilities/useSearchParam'
 
 export function LandingPageSummaries() {
-  const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
   const { loading, error, data } = useQuery(LANDING_PAGE_SUMMARIES)
+  const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
+    name: 'summary-range',
+    validOptions: ['last30days', 'lastyear', 'ytd'],
+    defaultValue: 'last30days',
+  })
+
   const { data: historicalSummaries, loading: histSumLoading } = useQuery(GET_HISTORICAL_CHART_SUMMARIES, {
-    variables: { month: progressChartRange, year: new Date().getFullYear().toString() },
+    variables: { month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
   })
 
   if (loading) return <LoadingMessage />
@@ -43,7 +49,8 @@ export function LandingPageSummaries() {
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <HistoricalSummariesGraph
                 data={historicalSummaries?.findChartSummaries}
-                setRange={setProgressChartRange}
+                setRange={setProgressChartRangeParam}
+                selectedRange={progressChartRangeParam}
                 width={1200}
                 height={500}
               />
