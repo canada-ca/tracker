@@ -32,7 +32,7 @@ describe('<DomainsPage />', () => {
       request: {
         query: PAGINATED_DOMAINS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: true,
@@ -118,7 +118,7 @@ describe('<DomainsPage />', () => {
       request: {
         query: PAGINATED_DOMAINS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: false,
@@ -207,7 +207,7 @@ describe('<DomainsPage />', () => {
       request: {
         query: PAGINATED_DOMAINS,
         variables: {
-          first: 10,
+          first: 50,
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: false,
