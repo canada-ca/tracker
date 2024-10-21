@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
