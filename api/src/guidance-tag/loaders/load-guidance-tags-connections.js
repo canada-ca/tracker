@@ -10,13 +10,13 @@ export const loadGuidanceTagSummaryConnectionsByTagId =
     if (typeof orderBy !== 'undefined') {
       /* istanbul ignore else */
       if (orderBy.field === 'tag-id') {
-        sortByField = aql`tag._key ${orderBy.direction}`
+        sortByField = aql`SORT tag._key ${orderBy.direction}`
       } else if (orderBy.field === 'tag-name') {
-        sortByField = aql`TRANSLATE(${language}, tag).tagName ${orderBy.direction}`
+        sortByField = aql`SORT TRANSLATE(${language}, tag).tagName ${orderBy.direction}`
       } else if (orderBy.field === 'guidance') {
-        sortByField = aql`TRANSLATE(${language}, tag).guidance ${orderBy.direction}`
+        sortByField = aql`SORT TRANSLATE(${language}, tag).guidance ${orderBy.direction}`
       } else if (orderBy.field === 'tag-count') {
-        sortByField = aql`TRANSLATE(tag._key, tagSummaries) ${orderBy.direction}`
+        sortByField = aql`SORT TRANSLATE(tag._key, tagSummaries) ${orderBy.direction}`
       }
     }
 
@@ -28,7 +28,7 @@ export const loadGuidanceTagSummaryConnectionsByTagId =
       LET retrievedGuidanceTags = (
         FOR tag IN guidanceTags
           FILTER tag._key IN ${tagIds}
-          SORT ${sortByField}
+          ${sortByField}
           RETURN MERGE(
             {
               _id: tag._id,
