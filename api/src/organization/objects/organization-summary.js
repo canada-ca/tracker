@@ -183,7 +183,7 @@ export const organizationSummaryType = new GraphQLObjectType({
         const permission = await checkPermission({ orgId: _id })
         if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
           console.error(
-            `User "${userKey}" attempted to retrieve CSV output for organization "${_id}". Permission: ${permission}`,
+            `User "${userKey}" attempted to access aggregated guidance for organization "${_id}". Permission: ${permission}`,
           )
           throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
         }
