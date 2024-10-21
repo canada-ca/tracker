@@ -45,7 +45,7 @@ describe('<DmarcByDomainPage />', () => {
       request: {
         query: FORWARD,
         variables: {
-          first: 10,
+          first: 50,
           month: 'LAST30DAYS',
           year: currentYear.toString(),
           orderBy: {
@@ -62,7 +62,7 @@ describe('<DmarcByDomainPage />', () => {
       request: {
         query: FORWARD,
         variables: {
-          first: 10,
+          first: 50,
           month: 'AUGUST',
           year: getDynamicYear(),
           orderBy: {

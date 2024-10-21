@@ -249,14 +249,14 @@ export function App({ initialLoading, isLoginRequired }) {
               >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <OrganizationDetails />
+                    <OrganizationDetails loginRequired={isLoginRequired} />
                   </ErrorBoundary>
                 )}
               </PrivatePage>
 
               <Page path="/admin/:activeMenu?" title={t`Admin`}>
                 {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                  <AdminPage isLoginRequired={isLoginRequired} />
+                  <AdminPage />
                 ) : (
                   <Redirect
                     to={{

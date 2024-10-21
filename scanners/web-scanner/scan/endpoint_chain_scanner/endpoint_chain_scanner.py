@@ -21,7 +21,7 @@ TIMEOUT_ERROR = "TIMEOUT_ERROR"
 UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
 DEFAULT_REQUEST_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0 Tracker-Suivi (+https://github.com/canada-ca/tracker)",
 }
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -139,12 +139,16 @@ def request_connection(
                         requests.Request(
                             "GET",
                             f"{scheme.lower()}://{ip_address}",
-                            headers={"Host": host},
+                            headers={"Host": host, **DEFAULT_REQUEST_HEADERS},
                         )
                     )
                 else:
                     req = session.prepare_request(
-                        requests.Request("GET", f"{scheme.lower()}://{host}")
+                        requests.Request(
+                            "GET",
+                            f"{scheme.lower()}://{host}",
+                            headers={**DEFAULT_REQUEST_HEADERS},
+                        )
                     )
 
             response = session.send(req, allow_redirects=False, timeout=TIMEOUT)

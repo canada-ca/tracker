@@ -39,7 +39,7 @@ export default function Organizations() {
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [orgsPerPage, setOrgsPerPage] = useState(10)
+  const [orgsPerPage, setOrgsPerPage] = useState(50)
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)

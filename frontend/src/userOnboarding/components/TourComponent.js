@@ -5,37 +5,48 @@ import { mainTourSteps } from '../config/tourSteps'
 import { Trans } from '@lingui/macro'
 import { useUserVar } from '../../utilities/userState'
 import theme from '../../theme/canada'
-import PropTypes from 'prop-types'
+import { useLocation } from 'react-router-dom'
+import { toursConfig } from './TourButton'
 
-export const TourComponent = ({ page }) => {
+export const TourComponent = () => {
   const { isEmailValidated } = useUserVar()
   const { isTourOpen, endTour, startTour } = useTour()
   const [tourKey, setTourKey] = useState(0)
   const { darkOrange } = theme.colors.tracker.logo
 
-  //handles starting the tour based on the page and user state
+  const { pathname } = useLocation()
+
+  const tourName = toursConfig[pathname]
+
+  // handles starting the tour based on the page and user state
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
+    if (!tourName) return
+
+    const hasSeenTour = localStorage.getItem(`hasSeenTour_${tourName}`)
     if (
       !hasSeenTour &&
-      (!mainTourSteps[page]['requiresAuth'] || (mainTourSteps[page]['requiresAuth'] && isEmailValidated()))
+      (!mainTourSteps[tourName]['requiresAuth'] || (mainTourSteps[tourName]['requiresAuth'] && isEmailValidated()))
     )
       startTour()
-  }, [page, startTour])
+  }, [tourName, startTour])
 
   useEffect(() => {
     if (isTourOpen) setTourKey((prev) => prev + 1)
   }, [isTourOpen])
 
+  if (!tourName) {
+    return null
+  }
+
   // handles the finishing and skipping/closing of tour
   const handleJoyrideCallback = ({ status, type, action }) => {
     if (['finished', 'skipped'].includes(status)) {
-      localStorage.setItem(`hasSeenTour_${page}`, true)
+      localStorage.setItem(`hasSeenTour_${tourName}`, true)
       endTour()
     }
 
     if (type === 'step:after' && action === 'close') {
-      localStorage.setItem(`hasSeenTour_${page}`, true)
+      localStorage.setItem(`hasSeenTour_${tourName}`, true)
       endTour()
     }
   }
@@ -44,7 +55,7 @@ export const TourComponent = ({ page }) => {
   return (
     <Joyride
       key={tourKey}
-      steps={mainTourSteps[page]['steps']}
+      steps={mainTourSteps[tourName]['steps']}
       run={isTourOpen}
       continuous={true}
       showProgress={false}
@@ -68,8 +79,4 @@ export const TourComponent = ({ page }) => {
       callback={handleJoyrideCallback}
     />
   )
-}
-
-TourComponent.propTypes = {
-  page: PropTypes.string.isRequired,
 }
