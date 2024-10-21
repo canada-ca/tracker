@@ -49,7 +49,7 @@ const tieredSummaries = {
   three: ['web', 'mail'],
 }
 
-export function HistoricalSummariesGraph({ data, setRange, selectedRange, width = 1200, height = 500 }) {
+export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last30days', width = 1200, height = 500 }) {
   const { colors } = theme
 
   const { searchValue: scoreTypeParam, setSearchParams: setScoreTypeParam } = useSearchParam({
@@ -165,13 +165,13 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange, width 
           <Trans>Range:</Trans>
         </Text>
         <Select mx="2" maxW="20%" borderColor="black" value={selectedRange} onChange={(e) => setRange(e.target.value)}>
-          <option value="LAST30DAYS">
+          <option value="last30days">
             <Trans>Last 30 Days of Data</Trans>
           </option>
-          <option value="LASTYEAR">
+          <option value="lastyear">
             <Trans>Last 365 Days of Data</Trans>
           </option>
-          <option value="YTD">
+          <option value="ytd">
             <Trans>Year to Date</Trans>
           </option>
         </Select>
@@ -321,7 +321,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange, width 
 
 HistoricalSummariesGraph.propTypes = {
   data: object.isRequired,
-  setRange: func,
+  setRange: func.isRequired,
   selectedRange: string,
   width: number,
   height: number,
