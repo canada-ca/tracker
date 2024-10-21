@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { UserIcon } from '../theme/Icons'
-import { Link as RouteLink, useParams, useHistory, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'
@@ -164,7 +164,7 @@ export default function OrganizationDetails({ loginRequired }) {
                     <HistoricalSummariesGraph
                       data={orgSummariesData?.findOrganizationBySlug?.historicalSummaries}
                       setRange={setProgressChartRangeParam}
-                    selectedRange={progressChartRangeParam}
+                      selectedRange={progressChartRangeParam}
                       width={1200}
                       height={500}
                     />

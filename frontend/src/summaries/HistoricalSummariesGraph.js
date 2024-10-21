@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Box, Flex, Select, Text } from '@chakra-ui/react'
-import { number, object } from 'prop-types'
+import { number, object, string } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 import theme from '../theme/canada'
 
@@ -51,9 +51,6 @@ const tieredSummaries = {
 
 export function HistoricalSummariesGraph({ data, setRange, selectedRange, width = 1200, height = 500 }) {
   const { colors } = theme
-  // const [scoreType, setScoreType] = useState('percentage')
-  // const [summaryTier, setSummaryTier] = useState('one')
-  // const [searchParams, setSearchParams] = useSearchParams()
 
   const { searchValue: scoreTypeParam, setSearchParams: setScoreTypeParam } = useSearchParam({
     name: 'score-type',
@@ -65,47 +62,6 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange, width 
     validOptions: Object.keys(tieredSummaries),
     defaultValue: 'one',
   })
-
-  //
-  // let scoreType = searchParams.get('score-type')
-  //
-  // const invalidParams = []
-  //
-  // const validScoreTypes = ['percentage', 'count']
-  // const setScoreType = (type) => {
-  //   if (validScoreTypes.includes(type)) {
-  //     setSearchParams({ 'score-type': type })
-  //   } else {
-  //     setSearchParams({ 'score-type': null })
-  //   }
-  // }
-  //
-  // if (!validScoreTypes.includes(scoreType) || scoreType === '') {
-  //   if (scoreType != null) invalidParams.push('score-type')
-  //   // Set default score type to 'percentage'
-  //   scoreType = 'percentage'
-  // }
-  //
-  // let summaryTier = searchParams.get('summary-tier')
-  //
-  // const validSummaryTiers = Object.keys(tieredSummaries)
-  // const setSummaryTier = (tier) => {
-  //   if (validSummaryTiers.includes(tier)) {
-  //     setSearchParams({ 'summary-tier': tier })
-  //   } else {
-  //     setSearchParams({ 'summary-tier': null })
-  //   }
-  // }
-  //
-  // if (!validSummaryTiers.includes(summaryTier) || summaryTier === '') {
-  //   if (summaryTier != null) invalidParams.push('summary-tier')
-  //   // Set default tier to 'one'
-  //   summaryTier = 'one'
-  // }
-  //
-  // useEffect(() => {
-  //   invalidParams.length > 0 && setSearchParams(invalidParams.reduce((acc, key) => ({ ...acc, [key]: null }), {}))
-  // }, [invalidParams, setSearchParams])
 
   const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
@@ -366,6 +322,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange, width 
 HistoricalSummariesGraph.propTypes = {
   data: object.isRequired,
   setRange: func,
+  selectedRange: string,
   width: number,
   height: number,
 }
