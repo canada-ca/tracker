@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Accordion, Box, Text } from '@chakra-ui/react'
+import { Accordion, Box, Heading, Text } from '@chakra-ui/react'
 import { string } from 'prop-types'
 import { ORG_NEGATIVE_FINDINGS } from '../graphql/queries'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
@@ -12,10 +12,11 @@ import { GuidanceTagDetails } from '../guidance/GuidanceTagDetails'
 import { useQuery } from '@apollo/client'
 
 export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
-  const [tagsPerPage, setTagsPerPage] = useState(5)
+  const [tagsPerPage, setTagsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
   const { loading, error, data } = useQuery(ORG_NEGATIVE_FINDINGS, { variables: { orgSlug } })
 
+  if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
 
   const handleNext = () => {
@@ -34,44 +35,39 @@ export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
     setTagsPerPage(newItemsPerPage)
   }
 
-  const paginatedData = data?.findOrganizationBySlug?.summaries?.negativeFindings?.guidanceTags.slice(
-    (currentPage - 1) * tagsPerPage,
-    currentPage * tagsPerPage,
-  )
-
-  let tagList = loading ? (
-    <LoadingMessage />
-  ) : (
-    <Accordion>
-      <ListOf
-        elements={paginatedData}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No negative findings to show. </Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {(guidanceTag, index) => (
-          <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${guidanceTag.tagId}:${index}`}>
-            <Box key={guidanceTag + index} bg="weakMuted" mb="1" rounded="md" mx="2">
-              <GuidanceTagDetails guidanceTag={guidanceTag} tagType="negative" />
-            </Box>
-          </ErrorBoundary>
-        )}
-      </ListOf>
-    </Accordion>
-  )
+  const { guidanceTags, totalCount } = data?.findOrganizationBySlug?.summaries?.negativeFindings
+  const paginatedData = guidanceTags.slice((currentPage - 1) * tagsPerPage, currentPage * tagsPerPage)
 
   return (
     <Box {...props}>
-      {tagList}
+      <Heading>
+        <Trans>Most Common Negative Findings</Trans>
+      </Heading>
+      <Accordion>
+        <ListOf
+          elements={paginatedData}
+          ifEmpty={() => (
+            <Text layerStyle="loadingMessage">
+              <Trans>No negative findings to show. </Trans>
+            </Text>
+          )}
+          mb="4"
+        >
+          {(guidanceTag, index) => (
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${guidanceTag.tagId}:${index}`}>
+              <Box key={guidanceTag + index} bg="weakMuted" mb="1" rounded="md" mx="2">
+                <GuidanceTagDetails guidanceTag={guidanceTag} tagType="negative" />
+              </Box>
+            </ErrorBoundary>
+          )}
+        </ListOf>
+      </Accordion>
       <RelayPaginationControls
         currentPage={currentPage}
         itemsPerPage={tagsPerPage}
-        totalRecords={data?.findOrganizationBySlug?.summaries?.negativeFindings?.totalCount || 0}
+        totalRecords={totalCount || 0}
         next={handleNext}
-        hasNextPage={currentPage < data?.findOrganizationBySlug?.summaries?.negativeFindings?.totalCount / tagsPerPage}
+        hasNextPage={currentPage < totalCount / tagsPerPage}
         hasPreviousPage={currentPage > 1}
         previous={handlePrevious}
         setSelectedDisplayLimit={handleItemsPerPageChange}
