@@ -4,6 +4,7 @@ import { Trans } from '@lingui/macro'
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Heading,
   IconButton,
@@ -151,6 +152,7 @@ export default function OrganizationDetails({ loginRequired }) {
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
+            <Divider />
             <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="B">
                 {orgSummariesLoading ? (
@@ -165,6 +167,7 @@ export default function OrganizationDetails({ loginRequired }) {
                     />
                   </ErrorBoundary>
                 )}
+                <Divider />
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" />
                 </ErrorBoundary>

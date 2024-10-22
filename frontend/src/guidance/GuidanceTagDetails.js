@@ -27,6 +27,10 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
     negative: 'weak',
   }
 
+  const getTagCategoryFromId = (tagId) => {
+    return tagId.split(/[0-9]/)[0].toUpperCase()
+  }
+
   const cccsGuidance =
     guidanceTag.refLinks[0]?.description !== null && guidanceTag.refLinks.length !== 0 ? (
       <Stack isInline={guidanceTag.refLinks.length <= 1}>
@@ -76,7 +80,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
       <Flex align="center" color={tagTypeColor[tagType]} fontWeight="bold" as={AccordionButton} fontSize="lg">
         {tagIcon()}
         <Text ml="2">
-          {guidanceTag?.count && `${guidanceTag.tagId}: `}
+          {guidanceTag?.count && `${getTagCategoryFromId(guidanceTag.tagId)}: `}
           {guidanceTag.tagName}
         </Text>
         <AccordionIcon />
