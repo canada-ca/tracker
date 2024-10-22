@@ -109,9 +109,10 @@ export const loadAllOrganizationDomainStatuses =
                 LIMIT 1
                 RETURN UNIQUE(
                   FOR wc IN finding.webComponents
-                      FILTER LENGTH(wc.WebComponentCves) > 0
-                      FOR vuln IN wc.WebComponentCves
-                          RETURN vuln.Cve
+                    FILTER LENGTH(wc.WebComponentCves) > 0
+                    FOR vuln IN wc.WebComponentCves
+                      FILTER vuln.Cve NOT IN d.ignoredCves
+                      RETURN vuln.Cve
                 )
             )[0]
             LET verifiedOrg = (
