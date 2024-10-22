@@ -63,7 +63,6 @@ export function AggregatedGuidanceSummary({ orgSlug, ...props }) {
         </ListOf>
       </Accordion>
       <RelayPaginationControls
-        currentPage={currentPage}
         selectedDisplayLimit={tagsPerPage}
         totalRecords={totalCount || 0}
         next={handleNext}
