@@ -21,6 +21,10 @@ msgstr ", et"
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du"
 
+#: src/guidance/GuidanceTagDetails.js:84
+msgid "{0} Findings"
+msgstr "{0} Constatations"
+
 #: src/admin/AdminDomainModal.js:63
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
@@ -169,7 +173,7 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
-#: src/guidance/GuidancePage.js:211
+#: src/guidance/GuidancePage.js:210
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
@@ -288,7 +292,7 @@ msgstr "Ajouter un utilisateur"
 
 #: src/guidance/AdditionalFindings.js:52
 #: src/guidance/AdditionalFindings.js:416
-#: src/guidance/GuidancePage.js:255
+#: src/guidance/GuidancePage.js:254
 msgid "Additional Findings"
 msgstr "Constatations supplémentaires"
 
@@ -397,7 +401,7 @@ msgid "An error occurred when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter"
 
 #: src/domains/DomainCard.js:38
-#: src/guidance/GuidancePage.js:99
+#: src/guidance/GuidancePage.js:98
 msgid "An error occurred while favouriting a domain."
 msgstr "Une erreur s'est produite lors de la mise en favori d'un domaine."
 
@@ -568,7 +572,7 @@ msgstr "État des actifs"
 msgid "Asset States"
 msgstr "Estados del activo"
 
-#: src/admin/AdminPage.js:200
+#: src/admin/AdminPage.js:199
 #: src/admin/AuditLogTable.js:95
 msgid "Audit Logs"
 msgstr "Journaux d'audit"
@@ -585,7 +589,7 @@ msgstr "Authentifier"
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
 #: src/guidance/CveIgnorer.js:131
-#: src/userOnboarding/components/TourComponent.js:63
+#: src/userOnboarding/components/TourComponent.js:74
 msgid "Back"
 msgstr "Retour"
 
@@ -1199,8 +1203,8 @@ msgstr "Phase de mise en œuvre de DMARC: {0}"
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
 
-#: src/organizationDetails/OrganizationDetails.js:135
-#: src/organizationDetails/OrganizationDetails.js:173
+#: src/organizationDetails/OrganizationDetails.js:137
+#: src/organizationDetails/OrganizationDetails.js:178
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -1221,7 +1225,7 @@ msgstr "Politique DMARC de mise en quarantaine ou de rejet, et rejet de tous les
 
 #: src/dmarc/DmarcReportPage.js:94
 #: src/domains/DomainCard.js:241
-#: src/guidance/GuidancePage.js:334
+#: src/guidance/GuidancePage.js:333
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -1332,7 +1336,7 @@ msgstr "Domaine:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:208
 #: src/domains/DomainsPage.js:272
-#: src/organizationDetails/OrganizationDetails.js:138
+#: src/organizationDetails/OrganizationDetails.js:140
 #: src/organizationDetails/OrganizationDomains.js:125
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -1415,7 +1419,7 @@ msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:252
+#: src/guidance/GuidancePage.js:251
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
@@ -1569,7 +1573,7 @@ msgstr "Erreur lors de la récupération des données DMARC pour {domainSlug}. <
 #~ msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 #~ msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système."
 
-#: src/guidance/GuidancePage.js:186
+#: src/guidance/GuidancePage.js:185
 msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
 msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <0/>Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système. Vous pouvez demander l'accès à une organisation ci-dessous pour voir les résultats du domaine."
 
@@ -1639,7 +1643,7 @@ msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 #~ msgstr "FAQ"
 
 #: src/domains/DomainCard.js:48
-#: src/guidance/GuidancePage.js:109
+#: src/guidance/GuidancePage.js:108
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
@@ -1680,7 +1684,7 @@ msgstr "Filtré"
 msgid "Filters:"
 msgstr "Filtres :"
 
-#: src/userOnboarding/components/TourComponent.js:66
+#: src/userOnboarding/components/TourComponent.js:77
 msgid "Finish"
 msgstr "Terminer"
 
@@ -1828,7 +1832,7 @@ msgstr "Direction du graphique :"
 msgid "Guidance"
 msgstr "Orientation"
 
-#: src/guidance/GuidancePage.js:122
+#: src/guidance/GuidancePage.js:121
 msgid "Guidance results"
 msgstr "Résultats de l'orientation"
 
@@ -2080,7 +2084,7 @@ msgstr "Si, à tout moment, vous ou vos représentants souhaitez ajuster ou annu
 msgid "If available, please use a managed device provided by your organization."
 msgstr "Si disponible, veuillez utiliser un dispositif géré fourni par votre organisation."
 
-#: src/guidance/GuidancePage.js:216
+#: src/guidance/GuidancePage.js:215
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
 
@@ -2311,7 +2315,7 @@ msgstr "Les renseignements partagés avec le SCT ou acquis par l'entremise de sy
 msgid "Informative"
 msgstr "Informatif"
 
-#: src/guidance/GuidanceTagDetails.js:93
+#: src/guidance/GuidanceTagDetails.js:98
 msgid "Informative tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 msgstr "Les balises informatives mettent en évidence des détails de configuration pertinents, mais ne sont pas traitées dans le cadre des exigences de la politique et n'ont aucun impact sur la notation."
 
@@ -2608,6 +2612,10 @@ msgstr "Plus de détails"
 msgid "More info"
 msgstr "Plus d'informations"
 
+#: src/summaries/AggregatedGuidanceSummary.js:44
+msgid "Most Common Negative Findings"
+msgstr "Résultats négatifs les plus fréquents"
+
 #: src/app/ReadGuidancePage.js:535
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Générateur de configuration SSL de Mozilla"
@@ -2719,7 +2727,7 @@ msgstr "Nouveau numéro de téléphone:"
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
-#: src/userOnboarding/components/TourComponent.js:64
+#: src/userOnboarding/components/TourComponent.js:75
 msgid "Next"
 msgstr "Suivant"
 
@@ -2847,7 +2855,11 @@ msgstr "Aucun protocole faible connu n'a été utilisé."
 msgid "No MX records found. Is the domain parked?"
 msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 
-#: src/guidance/GuidancePage.js:136
+#: src/summaries/AggregatedGuidanceSummary.js:51
+msgid "No negative findings to show."
+msgstr "Aucun résultat négatif à signaler."
+
+#: src/guidance/GuidancePage.js:135
 #: src/organizations/Organizations.js:112
 msgid "No Organizations"
 msgstr "Aucune organisation"
@@ -2864,7 +2876,7 @@ msgstr "Aucun en-tête de réponse n'a été trouvé"
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
-#: src/guidance/GuidancePage.js:231
+#: src/guidance/GuidancePage.js:230
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "Aucune donnée de balayage n'est actuellement disponible pour ce service. Vous pouvez demander un scan en utilisant le bouton d'actualisation, ou attendre jusqu'à 24 heures pour que les données soient actualisées."
 
@@ -2994,7 +3006,7 @@ msgstr "Organisation"
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/organizationDetails/OrganizationDetails.js:67
+#: src/organizationDetails/OrganizationDetails.js:69
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
@@ -3034,15 +3046,15 @@ msgstr "L'organisation possède ce domaine, mais il est en dehors du champ d'app
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/guidance/GuidancePage.js:341
+#: src/guidance/GuidancePage.js:340
 msgid "Organization(s):"
 msgstr "Organisation(s) :"
 
-#: src/admin/AdminPage.js:198
+#: src/admin/AdminPage.js:197
 #: src/app/App.js:134
 #: src/app/App.js:236
 #: src/app/FloatingMenu.js:103
-#: src/guidance/GuidancePage.js:194
+#: src/guidance/GuidancePage.js:193
 #: src/organizations/Organizations.js:103
 #: src/organizations/Organizations.js:187
 msgid "Organizations"
@@ -3223,7 +3235,7 @@ msgstr "Pointeur vers un enregistrement de clé publique DKIM dans le DNS."
 #~ msgid "Policy"
 #~ msgstr "Politique"
 
-#: src/guidance/GuidanceTagDetails.js:28
+#: src/guidance/GuidanceTagDetails.js:34
 msgid "Policy guidance:"
 msgstr "Orientation politique :"
 
@@ -3418,8 +3430,8 @@ msgstr "Signaler un problème"
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/guidance/GuidancePage.js:159
-#: src/organizationDetails/OrganizationDetails.js:112
+#: src/guidance/GuidancePage.js:158
+#: src/organizationDetails/OrganizationDetails.js:114
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
@@ -3565,7 +3577,7 @@ msgstr "Scan du domaine demandé avec succès"
 #: src/admin/AdminDomains.js:183
 #: src/domains/DomainCard.js:161
 #: src/domains/DomainsPage.js:134
-#: src/guidance/GuidancePage.js:302
+#: src/guidance/GuidancePage.js:301
 #: src/organizationDetails/OrganizationDomains.js:110
 msgid "Scan Pending"
 msgstr "Scan en attente"
@@ -3662,7 +3674,7 @@ msgstr "Sélectionnez l'état qui décrit le mieux l'actif par rapport à votre 
 msgid "Select an organization"
 msgstr "Sélectionnez une organisation"
 
-#: src/admin/AdminPage.js:162
+#: src/admin/AdminPage.js:161
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
@@ -3947,7 +3959,7 @@ msgstr "Déconnexion."
 msgid "Signature Hash:"
 msgstr "Signature Hash :"
 
-#: src/userOnboarding/components/TourComponent.js:65
+#: src/userOnboarding/components/TourComponent.js:76
 msgid "Skip"
 msgstr "Sauter"
 
@@ -4060,7 +4072,7 @@ msgstr "Dév"
 msgid "STAGING"
 msgstr "DÉV"
 
-#: src/userOnboarding/components/TourButton.js:53
+#: src/userOnboarding/components/TourButton.js:59
 msgid "Start Tour"
 msgstr "Début de la visite"
 
@@ -4134,7 +4146,7 @@ msgstr "L'utilisateur {0} a été supprimé."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Arrêt réussi de l'ignorance des CVE pour le domaine « {0} ». Nouvelles CVE ignorées : « {1} »."
 
-#: src/organizationDetails/OrganizationDetails.js:132
+#: src/organizationDetails/OrganizationDetails.js:134
 msgid "Summaries"
 msgstr "Résumés"
 
@@ -4150,7 +4162,7 @@ msgstr "Résumé de votre tracker"
 msgid "Summary Tier:"
 msgstr "Résumé Tier :"
 
-#: src/admin/AdminPage.js:195
+#: src/admin/AdminPage.js:194
 msgid "Super Admin Menu:"
 msgstr "Super Admin Menu :"
 
@@ -4243,7 +4255,7 @@ msgstr "le SCT soit identifié comme la source; et"
 msgid "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 msgstr "TBS se réserve le droit de refuser le service, de rejeter votre demande de compte ou d'annuler un compte existant, pour quelque raison que ce soit, à sa seule discrétion."
 
-#: src/guidance/GuidanceTagDetails.js:47
+#: src/guidance/GuidanceTagDetails.js:53
 msgid "Technical implementation guidance:"
 msgstr "Conseils techniques de mise en œuvre :"
 
@@ -4861,9 +4873,9 @@ msgstr "Utilisateur supprimé."
 msgid "User:"
 msgstr "Utilisateur:"
 
-#: src/admin/AdminPage.js:199
+#: src/admin/AdminPage.js:198
 #: src/admin/AdminPanel.js:22
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:144
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -5008,7 +5020,7 @@ msgid "Web Connections Summary"
 msgstr "Résumé des connexions web"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:249
+#: src/guidance/GuidancePage.js:248
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
@@ -5096,7 +5108,7 @@ msgstr "Wiki"
 #: src/admin/AdminDomains.js:182
 #: src/domains/DomainCard.js:149
 #: src/domains/DomainsPage.js:133
-#: src/guidance/GuidancePage.js:309
+#: src/guidance/GuidancePage.js:308
 #: src/organizationDetails/OrganizationDomains.js:109
 msgid "Wildcard"
 msgstr "Wildcard"
@@ -5163,7 +5175,7 @@ msgstr "Vous pouvez modifier les résultats de la liste des domaines à l'aide d
 msgid "You can search for an organization here"
 msgstr "Vous pouvez rechercher une organisation ici"
 
-#: src/guidance/GuidancePage.js:110
+#: src/guidance/GuidancePage.js:109
 msgid "You have successfully added {domainName} to myTracker."
 msgstr "Vous avez ajouté avec succès {domainName} à myTracker."
 

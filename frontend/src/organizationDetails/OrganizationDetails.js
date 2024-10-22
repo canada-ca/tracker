@@ -4,6 +4,7 @@ import { Trans } from '@lingui/macro'
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Heading,
   IconButton,
@@ -33,6 +34,7 @@ import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 import { bool } from 'prop-types'
 
 export default function OrganizationDetails({ loginRequired }) {
@@ -150,6 +152,7 @@ export default function OrganizationDetails({ loginRequired }) {
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
+            <Divider />
             <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="B">
                 {orgSummariesLoading ? (
@@ -164,6 +167,10 @@ export default function OrganizationDetails({ loginRequired }) {
                     />
                   </ErrorBoundary>
                 )}
+                <Divider />
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                  <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" />
+                </ErrorBoundary>
               </ABTestVariant>
             </ABTestWrapper>
           </TabPanel>
