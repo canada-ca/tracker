@@ -152,7 +152,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
 
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
-      <Text fontsize="lg">
+      <Text fontSize="lg">
         <Trans>
           <b>Last Scanned:</b> {formatTimestamp(timestamp)}
         </Trans>
@@ -370,7 +370,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                       : warning
                   return (
                     <Box key={idx} px="2">
-                      <Text fontsize="lg">
+                      <Text fontSize="lg">
                         <b>{idx + 1}.</b> {warningTranslated}
                       </Text>
                     </Box>
@@ -443,7 +443,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                 {nsRecords.warnings.map((warning, idx) => {
                   return (
                     <Box key={idx} px="2">
-                      <Text fontsize="lg">
+                      <Text fontSize="lg">
                         <b>{idx + 1}.</b> {warning}
                       </Text>
                     </Box>

@@ -320,9 +320,9 @@ export function AdminDomains({ orgSlug, orgId }) {
         )}
       >
         {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
-          <>
+          <React.Fragment key={`admindomain-${index}`}>
             {index === 0 && <Divider borderBottomColor="gray.400" />}
-            <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
+            <Flex p="1" align="center" rounded="md" mb="1">
               <Stack direction="row" flexGrow="0" mr="2">
                 <IconButton
                   data-testid={`remove-${index}`}
@@ -372,7 +372,7 @@ export function AdminDomains({ orgSlug, orgId }) {
               </ABTestWrapper>
             </Flex>
             <Divider borderBottomColor="gray.400" />
-          </>
+          </React.Fragment>
         )}
       </ListOf>
     </>
