@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
 import {
@@ -88,7 +88,6 @@ export default function Organizations() {
     relayRoot: 'findMyOrganizations',
   })
 
-  if (error) return <ErrorFallbackMessage error={error} />
   const orderByOptions = [
     { value: 'NAME', text: t`Name` },
     { value: 'ACRONYM', text: t`Acronym` },
@@ -96,62 +95,61 @@ export default function Organizations() {
     { value: 'VERIFIED', text: t`Verified` },
   ]
 
-  let orgList
-  if (loading) {
-    orgList = (
-      <LoadingMessage>
-        <Trans>Organizations</Trans>
-      </LoadingMessage>
-    )
-  } else {
-    orgList = (
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Organizations</Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
-          <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
-            <Flex align="center">
-              <ListItem mb="3" mr={userHasPermission ? '3rem' : '2'} w="100%" className="organization-card">
-                <OrganizationCard
-                  slug={slug}
-                  name={name}
-                  acronym={acronym}
-                  domainCount={domainCount}
-                  verified={verified}
-                  summaries={summaries}
-                />
-              </ListItem>
-              {isLoggedIn() && !userHasPermission && (
-                <>
-                  <IconButton
-                    aria-label={t`Request Invite`}
-                    variant="primary"
-                    icon={<UserIcon color="white" boxSize="icons.md" />}
-                    onClick={() => {
-                      setOrgInfo({ id, name })
-                      onOpen()
-                    }}
+  const orgList = useMemo(
+    () =>
+      loading ? (
+        <LoadingMessage>
+          <Trans>Organizations</Trans>
+        </LoadingMessage>
+      ) : (
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => (
+            <Text layerStyle="loadingMessage">
+              <Trans>No Organizations</Trans>
+            </Text>
+          )}
+          mb="4"
+        >
+          {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
+            <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+              <Flex align="center">
+                <ListItem mb="3" mr={userHasPermission ? '3rem' : '2'} w="100%" className="organization-card">
+                  <OrganizationCard
+                    slug={slug}
+                    name={name}
+                    acronym={acronym}
+                    domainCount={domainCount}
+                    verified={verified}
+                    summaries={summaries}
                   />
-                  <RequestOrgInviteModal
-                    isOpen={inviteRequestIsOpen}
-                    onClose={onClose}
-                    orgId={orgInfo.id}
-                    orgName={orgInfo.name}
-                  />
-                </>
-              )}
-            </Flex>
-          </ErrorBoundary>
-        )}
-      </ListOf>
-    )
-  }
+                </ListItem>
+                {isLoggedIn() && !userHasPermission && (
+                  <>
+                    <IconButton
+                      aria-label={t`Request Invite`}
+                      variant="primary"
+                      icon={<UserIcon color="white" boxSize="icons.md" />}
+                      onClick={() => {
+                        setOrgInfo({ id, name })
+                        onOpen()
+                      }}
+                    />
+                    <RequestOrgInviteModal
+                      isOpen={inviteRequestIsOpen}
+                      onClose={onClose}
+                      orgId={orgInfo.id}
+                      orgName={orgInfo.name}
+                    />
+                  </>
+                )}
+              </Flex>
+            </ErrorBoundary>
+          )}
+        </ListOf>
+      ),
+    [loading, JSON.stringify(nodes), isLoggedIn()],
+  )
 
   let unclaimedCard
   if (unclaimedLoading) {
@@ -179,6 +177,8 @@ export default function Organizations() {
       </Box>
     )
   }
+
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <Box w="100%" px="4">
