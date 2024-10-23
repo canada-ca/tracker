@@ -1,4 +1,4 @@
-import {GraphQLEnumType} from 'graphql'
+import { GraphQLEnumType } from 'graphql'
 
 export const GuidanceTagOrderField = new GraphQLEnumType({
   name: 'GuidanceTagOrderField',
@@ -15,6 +15,10 @@ export const GuidanceTagOrderField = new GraphQLEnumType({
     GUIDANCE: {
       value: 'guidance',
       description: 'Order guidance tag edges by tag guidance.',
+    },
+    TAG_COUNT: {
+      value: 'tag-count',
+      description: 'Order guidance tag edges by tag count.',
     },
   },
 })
