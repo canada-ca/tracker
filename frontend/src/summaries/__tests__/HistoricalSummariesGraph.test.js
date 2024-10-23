@@ -6,6 +6,7 @@ import { setupI18n } from '@lingui/core'
 
 import { historicalSummariesData } from '../../fixtures/summaryListData'
 import { HistoricalSummariesGraph } from '../HistoricalSummariesGraph'
+import { MemoryRouter } from 'react-router-dom'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors
 class ResizeObserver {
@@ -40,7 +41,9 @@ describe('<HistoricalSummariesGraph />', () => {
     const { queryByText } = render(
       <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
-          <HistoricalSummariesGraph data={historicalSummariesData} />
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <HistoricalSummariesGraph data={historicalSummariesData} setRange={() => {}} selectedRange="last30days" />
+          </MemoryRouter>
         </I18nProvider>
       </ChakraProvider>,
     )
