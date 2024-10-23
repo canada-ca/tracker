@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
   Box,
@@ -113,8 +113,6 @@ export default function DomainsPage() {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  if (error) return <ErrorFallbackMessage error={error} />
-
   const orderByOptions = [
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
@@ -203,66 +201,72 @@ export default function DomainsPage() {
     )
   })
 
-  const domainList = loading ? (
-    <LoadingMessage>
-      <Trans>Domains</Trans>
-    </LoadingMessage>
-  ) : (
-    <Box>
-      <DomainListFilters
-        filters={filters}
-        setFilters={setFilters}
-        statusOptions={orderByOptions}
-        filterTagOptions={filterTagOptions}
-      />
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {(
-          {
-            id,
-            domain,
-            status,
-            hasDMARCReport,
-            archived,
-            rcode,
-            blocked,
-            wildcardSibling,
-            webScanPending,
-            hasEntrustCertificate,
-            userHasPermission,
-            cveDetected,
-          },
-          index,
-        ) => (
-          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
-            <DomainCard
-              className="domain-card"
-              id={id}
-              url={domain}
-              status={status}
-              hasDMARCReport={hasDMARCReport}
-              isArchived={archived}
-              rcode={rcode}
-              blocked={blocked}
-              wildcardSibling={wildcardSibling}
-              webScanPending={webScanPending}
-              hasEntrustCertificate={hasEntrustCertificate}
-              userHasPermission={userHasPermission}
-              cveDetected={cveDetected}
-              mb="3"
-            />
-          </ErrorBoundary>
-        )}
-      </ListOf>
-    </Box>
+  const domainList = useMemo(
+    () =>
+      loading ? (
+        <LoadingMessage>
+          <Trans>Domains</Trans>
+        </LoadingMessage>
+      ) : (
+        <Box>
+          <DomainListFilters
+            filters={filters}
+            setFilters={setFilters}
+            statusOptions={orderByOptions}
+            filterTagOptions={filterTagOptions}
+          />
+          <ListOf
+            elements={nodes}
+            ifEmpty={() => (
+              <Text layerStyle="loadingMessage">
+                <Trans>No Domains</Trans>
+              </Text>
+            )}
+            mb="4"
+          >
+            {(
+              {
+                id,
+                domain,
+                status,
+                hasDMARCReport,
+                archived,
+                rcode,
+                blocked,
+                wildcardSibling,
+                webScanPending,
+                hasEntrustCertificate,
+                userHasPermission,
+                cveDetected,
+              },
+              index,
+            ) => (
+              <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+                <DomainCard
+                  className="domain-card"
+                  id={id}
+                  url={domain}
+                  status={status}
+                  hasDMARCReport={hasDMARCReport}
+                  isArchived={archived}
+                  rcode={rcode}
+                  blocked={blocked}
+                  wildcardSibling={wildcardSibling}
+                  webScanPending={webScanPending}
+                  hasEntrustCertificate={hasEntrustCertificate}
+                  userHasPermission={userHasPermission}
+                  cveDetected={cveDetected}
+                  mb="3"
+                />
+              </ErrorBoundary>
+            )}
+          </ListOf>
+        </Box>
+      ),
+    [loading, JSON.stringify(nodes), JSON.stringify(filters), setFilters],
   )
+
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <Box w="100%" px={4}>
