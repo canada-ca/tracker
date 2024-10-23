@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useQuery } from '@apollo/client'
 
 import { indexes } from './indexes'
@@ -47,6 +47,10 @@ export function usePaginatedCollection({
     )
   }
 
+  const resetToFirstPage = useCallback(() => {
+    setCurrentPage(1)
+  }, [setCurrentPage])
+
   return {
     loading,
     isLoadingMore,
@@ -72,9 +76,7 @@ export function usePaginatedCollection({
     previous: () => {
       setCurrentPage(currentPage > 2 ? currentPage - 1 : 1)
     },
-    resetToFirstPage: () => {
-      setCurrentPage(1)
-    },
+    resetToFirstPage: resetToFirstPage,
     hasPreviousPage: currentPage > 1,
     hasNextPage: currentPageInfo?.hasNextPage || currentPage < totalPages,
   }

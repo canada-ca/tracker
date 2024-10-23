@@ -180,31 +180,38 @@ export default function DmarcByDomainPage() {
     [domain, totalMessages, fullPassPercentage, passSpfOnlyPercentage, passDkimOnlyPercentage, failPercentage, i18n],
   )
 
-  // DMARC Summary Table setup
-  let tableDisplay
-
   // Initial sorting category for detail tables
   const initialSort = [{ id: 'totalMessages', desc: true }]
 
-  // Display error if exists
-  if (error) {
-    tableDisplay = <ErrorFallbackMessage error={error} />
-  } else
-    tableDisplay = (
-      <TrackerTable
-        data={formattedData}
-        columns={percentageColumns}
-        title="dmarcSummaries"
-        initialSort={initialSort}
-        mb="10px"
-        searchPlaceholder={t`Search for a domain`}
-        frontendPagination={false}
-        selectedDisplayLimit={selectedTableDisplayLimit}
-        manualSort={true}
-        manualFilters={true}
-        onSort={updateOrderBy}
-      />
-    )
+  // DMARC Summary Table setup
+  const tableDisplay = useMemo(
+    () =>
+      error ? (
+        <ErrorFallbackMessage error={error} />
+      ) : (
+        <TrackerTable
+          data={formattedData}
+          columns={percentageColumns}
+          title="dmarcSummaries"
+          initialSort={initialSort}
+          mb="10px"
+          searchPlaceholder={t`Search for a domain`}
+          frontendPagination={false}
+          selectedDisplayLimit={selectedTableDisplayLimit}
+          manualSort={true}
+          manualFilters={true}
+          onSort={updateOrderBy}
+        />
+      ),
+    [
+      error,
+      JSON.stringify(formattedData),
+      JSON.stringify(percentageColumns),
+      JSON.stringify(initialSort),
+      selectedTableDisplayLimit,
+      updateOrderBy,
+    ],
+  )
 
   const handleChange = (e) => {
     setSelectedDate(e.target.value)

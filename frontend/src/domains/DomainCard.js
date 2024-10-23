@@ -1,8 +1,8 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { Badge, Box, Button, Flex, IconButton, ListItem, Stack, Tag, TagLabel, Text, useToast } from '@chakra-ui/react'
-import { Link as RouteLink, useLocation } from 'react-router-dom'
-import { array, bool, object, string } from 'prop-types'
+import { Link as RouteLink } from 'react-router-dom'
+import { array, bool, object, oneOf, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { LinkIcon, StarIcon } from '@chakra-ui/icons'
@@ -26,9 +26,9 @@ export function DomainCard({
   hasEntrustCertificate,
   userHasPermission,
   cveDetected,
+  favouriteAction,
   ...rest
 }) {
-  const location = useLocation()
   const toast = useToast()
   const { isLoggedIn, isEmailValidated } = useUserVar()
 
@@ -222,8 +222,7 @@ export function DomainCard({
               variant="primary"
               as={RouteLink}
               to={{
-                pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
-                state: { from: location.pathname },
+                pathname: `/domains/${url}`,
               }}
               px="10"
             >
@@ -246,7 +245,7 @@ export function DomainCard({
           {isLoggedIn() && (
             <Stack justifyContent="center">
               {isEmailValidated() && userHasPermission && <ScanDomainButton domainUrl={url} />}
-              {location.pathname.match('my-tracker') ? (
+              {favouriteAction === 'unfavourite' ? (
                 <IconButton
                   onClick={async () => {
                     await unfavouriteDomain({ variables: { domainId: id } })
@@ -288,4 +287,5 @@ DomainCard.propTypes = {
   userHasPermission: bool,
   assetState: string,
   cveDetected: bool,
+  favouriteAction: oneOf(['favourite', 'unfavourite']),
 }
