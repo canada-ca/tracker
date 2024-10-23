@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -83,8 +83,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  if (error) return <ErrorFallbackMessage error={error} />
-
   const orderByOptions = [
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
@@ -120,84 +118,90 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: t`REQUIRES_INVESTIGATION`, text: t`Requires Investigation` },
   ]
 
-  const domainList = loading ? (
-    <LoadingMessage>
-      <Trans>Domains</Trans>
-    </LoadingMessage>
-  ) : (
-    <Box>
-      {orgSlug !== 'my-tracker' && (
-        <ABTestWrapper insiderVariantName="B">
-          <ABTestVariant name="A">
-            <DomainListFilters
-              filters={filters}
-              setFilters={setFilters}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-            />
-          </ABTestVariant>
-          <ABTestVariant name="B">
-            <DomainListFilters
-              filters={filters}
-              setFilters={setFilters}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-              assetStateOptions={assetStateOptions}
-            />
-          </ABTestVariant>
-        </ABTestWrapper>
-      )}
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {(
-          {
-            id,
-            domain,
-            status,
-            hasDMARCReport,
-            claimTags,
-            assetState,
-            archived,
-            rcode,
-            blocked,
-            wildcardSibling,
-            webScanPending,
-            hasEntrustCertificate,
-            userHasPermission,
-            cveDetected,
-          },
-          index,
-        ) => (
-          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
-            <DomainCard
-              id={id}
-              url={domain}
-              status={status}
-              hasDMARCReport={hasDMARCReport}
-              tags={claimTags}
-              assetState={assetState}
-              rcode={rcode}
-              isArchived={archived}
-              blocked={blocked}
-              wildcardSibling={wildcardSibling}
-              webScanPending={webScanPending}
-              hasEntrustCertificate={hasEntrustCertificate}
-              userHasPermission={userHasPermission}
-              cveDetected={cveDetected}
-              mb="3"
-            />
-          </ErrorBoundary>
-        )}
-      </ListOf>
-    </Box>
+  const domainList = useMemo(
+    () =>
+      loading ? (
+        <LoadingMessage>
+          <Trans>Domains</Trans>
+        </LoadingMessage>
+      ) : (
+        <Box>
+          {orgSlug !== 'my-tracker' && (
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="A">
+                <DomainListFilters
+                  filters={filters}
+                  setFilters={setFilters}
+                  statusOptions={orderByOptions}
+                  filterTagOptions={filterTagOptions}
+                />
+              </ABTestVariant>
+              <ABTestVariant name="B">
+                <DomainListFilters
+                  filters={filters}
+                  setFilters={setFilters}
+                  statusOptions={orderByOptions}
+                  filterTagOptions={filterTagOptions}
+                  assetStateOptions={assetStateOptions}
+                />
+              </ABTestVariant>
+            </ABTestWrapper>
+          )}
+          <ListOf
+            elements={nodes}
+            ifEmpty={() => (
+              <Text layerStyle="loadingMessage">
+                <Trans>No Domains</Trans>
+              </Text>
+            )}
+            mb="4"
+          >
+            {(
+              {
+                id,
+                domain,
+                status,
+                hasDMARCReport,
+                claimTags,
+                assetState,
+                archived,
+                rcode,
+                blocked,
+                wildcardSibling,
+                webScanPending,
+                hasEntrustCertificate,
+                userHasPermission,
+                cveDetected,
+              },
+              index,
+            ) => (
+              <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+                <DomainCard
+                  id={id}
+                  url={domain}
+                  status={status}
+                  hasDMARCReport={hasDMARCReport}
+                  tags={claimTags}
+                  assetState={assetState}
+                  rcode={rcode}
+                  isArchived={archived}
+                  blocked={blocked}
+                  wildcardSibling={wildcardSibling}
+                  webScanPending={webScanPending}
+                  hasEntrustCertificate={hasEntrustCertificate}
+                  userHasPermission={userHasPermission}
+                  cveDetected={cveDetected}
+                  mb="3"
+                />
+              </ErrorBoundary>
+            )}
+          </ListOf>
+        </Box>
+      ),
+    [loading, JSON.stringify(nodes), JSON.stringify(filters), setFilters, orgSlug],
   )
+
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <Box>
