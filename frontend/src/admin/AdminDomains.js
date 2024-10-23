@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
   Box,
@@ -168,8 +168,6 @@ export function AdminDomains({ orgSlug, orgId }) {
     },
   })
 
-  if (error) return <ErrorFallbackMessage error={error} />
-
   const filterTagOptions = [
     { value: t`NEW`, text: t`New` },
     { value: t`PROD`, text: t`Prod` },
@@ -184,199 +182,205 @@ export function AdminDomains({ orgSlug, orgId }) {
     { value: `ARCHIVED`, text: t`Archived` },
   ]
 
-  const adminDomainList = loading ? (
-    <LoadingMessage minH="50px">
-      <Trans>Domain List</Trans>
-    </LoadingMessage>
-  ) : (
-    <>
-      <Formik
-        validationSchema={validationSchema}
-        initialValues={{
-          filterCategory: '',
-          comparison: '',
-          filterValue: '',
-        }}
-        onSubmit={(values, { resetForm }) => {
-          setFilters([
-            ...new Map(
-              [...filters, values].map((item) => {
-                if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
-                else return [item['filterValue'], item]
-              }),
-            ).values(),
-          ])
-          resetForm()
-        }}
-      >
-        {({ handleChange, handleSubmit, errors, values }) => {
-          return (
-            <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
-              <Flex align="center">
-                <Text fontWeight="bold" mr="2">
-                  <Trans>Filters:</Trans>
-                </Text>
+  const adminDomainList = useMemo(
+    () =>
+      loading ? (
+        <LoadingMessage minH="50px">
+          <Trans>Domain List</Trans>
+        </LoadingMessage>
+      ) : (
+        <>
+          <Formik
+            validationSchema={validationSchema}
+            initialValues={{
+              filterCategory: '',
+              comparison: '',
+              filterValue: '',
+            }}
+            onSubmit={(values, { resetForm }) => {
+              setFilters([
+                ...new Map(
+                  [...filters, values].map((item) => {
+                    if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
+                    else return [item['filterValue'], item]
+                  }),
+                ).values(),
+              ])
+              resetForm()
+            }}
+          >
+            {({ handleChange, handleSubmit, errors, values }) => {
+              return (
+                <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
+                  <Flex align="center">
+                    <Text fontWeight="bold" mr="2">
+                      <Trans>Filters:</Trans>
+                    </Text>
 
-                <Box maxW="25%" mx="1">
-                  <Select
-                    aria-label="filterCategory"
-                    name="filterCategory"
-                    borderColor="black"
-                    onChange={(e) => {
-                      if (values.filterCategory !== e.target.value) values.filterValue = ''
-                      handleChange(e)
-                    }}
-                  >
-                    <option hidden value="">
-                      <Trans>Value</Trans>
-                    </option>
-                    <option value="TAGS">
-                      <Trans>Tag</Trans>
-                    </option>
-                    <ABTestWrapper insiderVariantName="B">
-                      <ABTestVariant name="B">
-                        <option value="ASSET_STATE">
-                          <Trans>Asset State</Trans>
+                    <Box maxW="25%" mx="1">
+                      <Select
+                        aria-label="filterCategory"
+                        name="filterCategory"
+                        borderColor="black"
+                        onChange={(e) => {
+                          if (values.filterCategory !== e.target.value) values.filterValue = ''
+                          handleChange(e)
+                        }}
+                      >
+                        <option hidden value="">
+                          <Trans>Value</Trans>
                         </option>
-                      </ABTestVariant>
-                    </ABTestWrapper>
-                  </Select>
-                  <Text color="red.500" mt={0}>
-                    {errors.comparison}
-                  </Text>
-                </Box>
-                <Box maxW="25%" mx="1">
-                  <Select name="comparison" borderColor="black" onChange={handleChange}>
-                    <option hidden value="">
-                      <Trans>Comparison</Trans>
-                    </option>
-                    <option value="EQUAL">
-                      <Trans>EQUALS</Trans>
-                    </option>
-                    <option value="NOT_EQUAL">
-                      <Trans>DOES NOT EQUAL</Trans>
-                    </option>
-                  </Select>
-                  <Text color="red.500" mt={0}>
-                    {errors.comparison}
-                  </Text>
-                </Box>
-                <Box maxW="25%" mx="1">
-                  <Select name="filterValue" borderColor="black" onChange={handleChange}>
-                    <option hidden value="">
-                      <Trans>Status/Tag/State</Trans>
-                    </option>
-                    {values.filterCategory === 'TAGS' ? (
-                      filterTagOptions.map(({ value, text }, idx) => {
-                        return (
-                          <option key={idx} value={value}>
-                            {text}
-                          </option>
-                        )
-                      })
-                    ) : (
-                      <>
+                        <option value="TAGS">
+                          <Trans>Tag</Trans>
+                        </option>
                         <ABTestWrapper insiderVariantName="B">
                           <ABTestVariant name="B">
-                            <option value="APPROVED">
-                              <Trans>Approved</Trans>
-                            </option>
-                            <option value="DEPENDENCY">
-                              <Trans>Dependency</Trans>
-                            </option>
-                            <option value="MONITOR_ONLY">
-                              <Trans>Monitor Only</Trans>
-                            </option>
-                            <option value="CANDIDATE">
-                              <Trans>Candidate</Trans>
-                            </option>
-                            <option value="REQUIRES_INVESTIGATION">
-                              <Trans>Requires Investigation</Trans>
+                            <option value="ASSET_STATE">
+                              <Trans>Asset State</Trans>
                             </option>
                           </ABTestVariant>
                         </ABTestWrapper>
-                      </>
-                    )}
-                  </Select>
-                  <Text color="red.500" mt={0}>
-                    {errors.filterValue}
-                  </Text>
-                </Box>
+                      </Select>
+                      <Text color="red.500" mt={0}>
+                        {errors.comparison}
+                      </Text>
+                    </Box>
+                    <Box maxW="25%" mx="1">
+                      <Select name="comparison" borderColor="black" onChange={handleChange}>
+                        <option hidden value="">
+                          <Trans>Comparison</Trans>
+                        </option>
+                        <option value="EQUAL">
+                          <Trans>EQUALS</Trans>
+                        </option>
+                        <option value="NOT_EQUAL">
+                          <Trans>DOES NOT EQUAL</Trans>
+                        </option>
+                      </Select>
+                      <Text color="red.500" mt={0}>
+                        {errors.comparison}
+                      </Text>
+                    </Box>
+                    <Box maxW="25%" mx="1">
+                      <Select name="filterValue" borderColor="black" onChange={handleChange}>
+                        <option hidden value="">
+                          <Trans>Status/Tag/State</Trans>
+                        </option>
+                        {values.filterCategory === 'TAGS' ? (
+                          filterTagOptions.map(({ value, text }, idx) => {
+                            return (
+                              <option key={idx} value={value}>
+                                {text}
+                              </option>
+                            )
+                          })
+                        ) : (
+                          <>
+                            <ABTestWrapper insiderVariantName="B">
+                              <ABTestVariant name="B">
+                                <option value="APPROVED">
+                                  <Trans>Approved</Trans>
+                                </option>
+                                <option value="DEPENDENCY">
+                                  <Trans>Dependency</Trans>
+                                </option>
+                                <option value="MONITOR_ONLY">
+                                  <Trans>Monitor Only</Trans>
+                                </option>
+                                <option value="CANDIDATE">
+                                  <Trans>Candidate</Trans>
+                                </option>
+                                <option value="REQUIRES_INVESTIGATION">
+                                  <Trans>Requires Investigation</Trans>
+                                </option>
+                              </ABTestVariant>
+                            </ABTestWrapper>
+                          </>
+                        )}
+                      </Select>
+                      <Text color="red.500" mt={0}>
+                        {errors.filterValue}
+                      </Text>
+                    </Box>
 
-                <Button ml="auto" variant="primary" type="submit">
-                  <Trans>Apply</Trans>
-                </Button>
-              </Flex>
-            </form>
-          )
-        }}
-      </Formik>
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-      >
-        {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
-          <>
-            {index === 0 && <Divider borderBottomColor="gray.400" />}
-            <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
-              <Stack direction="row" flexGrow="0" mr="2">
-                <IconButton
-                  data-testid={`remove-${index}`}
-                  onClick={() => {
-                    setSelectedRemoveProps({ domain, domainId, rcode })
-                    removeOnOpen()
-                  }}
-                  variant="danger"
-                  px="2"
-                  icon={<MinusIcon />}
-                  aria-label={'Remove ' + domain}
-                />
-                <IconButton
-                  data-testid={`edit-${index}`}
-                  variant="primary"
-                  px="2"
-                  onClick={() => {
-                    setModalProps({
-                      archived,
-                      mutation: 'update',
-                      assetState,
-                      tagInputList: claimTags,
-                      editingDomainId: domainId,
-                      editingDomainUrl: domain,
-                      orgCount: organizations.totalCount,
-                    })
-                    updateOnOpen()
-                  }}
-                  icon={<EditIcon />}
-                  aria-label={'Edit ' + domain}
-                />
-              </Stack>
-              <AdminDomainCard
-                url={domain}
-                tags={claimTags}
-                assetState={assetState}
-                isArchived={archived}
-                rcode={rcode}
-                locale={i18n.locale}
-                flexGrow={1}
-                fontSize={{ base: '75%', sm: '100%' }}
-              />
-              <ABTestWrapper>
-                <ABTestVariant name="B">
-                  <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
-                </ABTestVariant>
-              </ABTestWrapper>
-            </Flex>
-            <Divider borderBottomColor="gray.400" />
-          </>
-        )}
-      </ListOf>
-    </>
+                    <Button ml="auto" variant="primary" type="submit">
+                      <Trans>Apply</Trans>
+                    </Button>
+                  </Flex>
+                </form>
+              )
+            }}
+          </Formik>
+          <ListOf
+            elements={nodes}
+            ifEmpty={() => (
+              <Text layerStyle="loadingMessage">
+                <Trans>No Domains</Trans>
+              </Text>
+            )}
+          >
+            {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
+              <>
+                {index === 0 && <Divider borderBottomColor="gray.400" />}
+                <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
+                  <Stack direction="row" flexGrow="0" mr="2">
+                    <IconButton
+                      data-testid={`remove-${index}`}
+                      onClick={() => {
+                        setSelectedRemoveProps({ domain, domainId, rcode })
+                        removeOnOpen()
+                      }}
+                      variant="danger"
+                      px="2"
+                      icon={<MinusIcon />}
+                      aria-label={'Remove ' + domain}
+                    />
+                    <IconButton
+                      data-testid={`edit-${index}`}
+                      variant="primary"
+                      px="2"
+                      onClick={() => {
+                        setModalProps({
+                          archived,
+                          mutation: 'update',
+                          assetState,
+                          tagInputList: claimTags,
+                          editingDomainId: domainId,
+                          editingDomainUrl: domain,
+                          orgCount: organizations.totalCount,
+                        })
+                        updateOnOpen()
+                      }}
+                      icon={<EditIcon />}
+                      aria-label={'Edit ' + domain}
+                    />
+                  </Stack>
+                  <AdminDomainCard
+                    url={domain}
+                    tags={claimTags}
+                    assetState={assetState}
+                    isArchived={archived}
+                    rcode={rcode}
+                    locale={i18n.locale}
+                    flexGrow={1}
+                    fontSize={{ base: '75%', sm: '100%' }}
+                  />
+                  <ABTestWrapper>
+                    <ABTestVariant name="B">
+                      <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
+                    </ABTestVariant>
+                  </ABTestWrapper>
+                </Flex>
+                <Divider borderBottomColor="gray.400" />
+              </>
+            )}
+          </ListOf>
+        </>
+      ),
+    [loading, JSON.stringify(nodes), JSON.stringify(filters), setFilters, orgSlug, orgId],
   )
+
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <Stack mb="6" w="100%">
