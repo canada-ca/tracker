@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
@@ -64,6 +64,28 @@ export default function OrganizationDetails({ loginRequired }) {
     }
   }, [activeTab, history, orgSlug, defaultActiveTab])
 
+  const changeActiveTab = (index) => {
+    const tab = tabNames[index]
+    if (activeTab !== tab) {
+      history.replace(`/organizations/${orgSlug}/${tab}`)
+    }
+  }
+
+  const orgName = data?.organization?.name ?? ''
+
+  const organizationDomains = useMemo(
+    () => (
+      <OrganizationDomains
+        orgSlug={orgSlug}
+        orgName={orgName}
+        userHasPermission={data?.organization?.userHasPermission}
+      />
+    ),
+    [orgSlug, data?.organization?.domains],
+  )
+
+  const organizationAffiliations = useMemo(() => <OrganizationAffiliations orgSlug={orgSlug} />, [orgSlug])
+
   if (loading) {
     return (
       <LoadingMessage>
@@ -74,14 +96,6 @@ export default function OrganizationDetails({ loginRequired }) {
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
-  }
-
-  const orgName = data?.organization?.name ?? ''
-  const changeActiveTab = (index) => {
-    const tab = tabNames[index]
-    if (activeTab !== tab) {
-      history.replace(`/organizations/${orgSlug}/${tab}`)
-    }
   }
 
   return (
@@ -185,19 +199,11 @@ export default function OrganizationDetails({ loginRequired }) {
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationDomains
-                orgSlug={orgSlug}
-                orgName={orgName}
-                userHasPermission={data?.organization?.userHasPermission}
-              />
-            </ErrorBoundary>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>{organizationDomains}</ErrorBoundary>
           </TabPanel>
           {(data?.organization?.userHasPermission || !loginRequired) && (
             <TabPanel>
-              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <OrganizationAffiliations orgSlug={orgSlug} />
-              </ErrorBoundary>
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>{organizationAffiliations}</ErrorBoundary>
             </TabPanel>
           )}
         </TabPanels>

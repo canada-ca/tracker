@@ -191,6 +191,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
                   hasEntrustCertificate={hasEntrustCertificate}
                   userHasPermission={userHasPermission}
                   cveDetected={cveDetected}
+                  favouriteAction={orgSlug === 'my-tracker' ? 'unfavourite' : 'favourite'}
                   mb="3"
                 />
               </ErrorBoundary>
