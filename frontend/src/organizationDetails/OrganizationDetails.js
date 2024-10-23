@@ -45,8 +45,8 @@ export default function OrganizationDetails({ loginRequired }) {
   const defaultActiveTab = tabNames[0]
   const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
     name: 'summary-range',
-    validOptions: ['LAST30DAYS', 'LASTYEAR', 'YTD'],
-    defaultValue: 'LAST30DAYS',
+    validOptions: ['last30days', 'lastyear', 'ytd'],
+    defaultValue: 'last30days',
   })
 
   useDocumentTitle(`${orgSlug}`)
@@ -57,7 +57,7 @@ export default function OrganizationDetails({ loginRequired }) {
   })
 
   const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
-    variables: { orgSlug, month: progressChartRangeParam, year: new Date().getFullYear().toString() },
+    variables: { orgSlug, month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
     // errorPolicy: 'ignore', // allow partial success
   })
 
