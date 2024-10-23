@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { Box, Divider, Text } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -57,28 +57,32 @@ export function OrganizationAffiliations({ orgSlug }) {
     { value: 'DISPLAY_NAME', text: t`Name` },
   ]
 
-  if (error) return <ErrorFallbackMessage error={error} />
-
-  let userlist = loading ? (
-    <LoadingMessage />
-  ) : (
-    <ListOf
-      elements={nodes}
-      ifEmpty={() => (
-        <Text layerStyle="loadingMessage">
-          <Trans>No Users</Trans>
-        </Text>
-      )}
-      mb="4"
-    >
-      {({ permission, user }, index) => (
-        <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${user.id}:${index}`}>
-          <UserCard userName={user.userName} displayName={user.displayName} role={permission} />
-          <Divider borderColor="gray.900" />
-        </ErrorBoundary>
-      )}
-    </ListOf>
+  let userList = useMemo(
+    () =>
+      loading ? (
+        <LoadingMessage />
+      ) : (
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => (
+            <Text layerStyle="loadingMessage">
+              <Trans>No Users</Trans>
+            </Text>
+          )}
+          mb="4"
+        >
+          {({ permission, user }, index) => (
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${user.id}:${index}`}>
+              <UserCard userName={user.userName} displayName={user.displayName} role={permission} />
+              <Divider borderColor="gray.900" />
+            </ErrorBoundary>
+          )}
+        </ListOf>
+      ),
+    [loading, JSON.stringify(nodes)],
   )
+
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -100,7 +104,7 @@ export function OrganizationAffiliations({ orgSlug }) {
           placeholder={t`Search for a user by email`}
           totalRecords={totalCount}
         />
-        {userlist}
+        {userList}
         <RelayPaginationControls
           onlyPagination={false}
           selectedDisplayLimit={usersPerPage}
