@@ -1,16 +1,16 @@
-import React from 'react'
-import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
-import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-import { MockedProvider } from '@apollo/client/testing'
-import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
+import React from 'react';
+import { theme, ChakraProvider } from '@chakra-ui/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom'; // Ensure Routes is imported
+import { render, waitFor } from '@testing-library/react';
+import { I18nProvider } from '@lingui/react';
+import { setupI18n } from '@lingui/core';
+import { MockedProvider } from '@apollo/client/testing';
+import { makeVar } from '@apollo/client';
+import { en } from 'make-plural/plurals';
 
-import EmailValidationPage from '../EmailValidationPage'
-import { UserVarProvider } from '../../utilities/userState'
-import { VERIFY_ACCOUNT } from '../../graphql/mutations'
+import EmailValidationPage from '../EmailValidationPage';
+import { UserVarProvider } from '../../utilities/userState';
+import { VERIFY_ACCOUNT } from '../../graphql/mutations';
 
 const i18n = setupI18n({
   locale: 'en',
@@ -20,7 +20,7 @@ const i18n = setupI18n({
   localeData: {
     en: { plurals: en },
   },
-})
+});
 
 const successMocks = [
   {
@@ -41,7 +41,7 @@ const successMocks = [
       },
     },
   },
-]
+];
 
 const failMocks = [
   {
@@ -60,7 +60,7 @@ const failMocks = [
       },
     },
   },
-]
+];
 
 describe('<EmailValidationPage />', () => {
   describe('after loading mutation', () => {
@@ -92,18 +92,17 @@ describe('<EmailValidationPage />', () => {
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
+        </MockedProvider>
       );
-    
+
       await waitFor(() =>
         expect(
           queryByText(
             /Your account email could not be verified at this time. Please try again./,
-          ),
-        ).toBeInTheDocument(),
+          )
+        ).toBeInTheDocument()
       );
     });
-    
 
     it('displays a success message', async () => {
       const { queryByText } = render(
@@ -133,15 +132,14 @@ describe('<EmailValidationPage />', () => {
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>,
+        </MockedProvider>
       );
-    
+
       await waitFor(() =>
         expect(
-          queryByText(/Your account email was successfully verified/),
-        ).toBeInTheDocument(),
+          queryByText(/Your account email was successfully verified/)
+        ).toBeInTheDocument()
       );
     });
-    
-  })
-})
+  });
+});

@@ -3,14 +3,13 @@ import { cleanup, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
 
 import { useLocation } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom'; // Import Routes and Route
 
 import { FloatingMenu } from '../FloatingMenu'
 

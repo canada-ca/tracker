@@ -16,7 +16,7 @@ import { AUTHENTICATE } from '../graphql/mutations'
 
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserVar()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const location = useLocation()
   const toast = useToast()
   const { i18n } = useLingui()

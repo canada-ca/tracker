@@ -37,7 +37,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
-  const history = useNavigate()
+  const navigate = useNavigate() // Updated
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
@@ -47,14 +47,13 @@ export default function OrganizationDetails() {
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug, month: progressChartRange, year: new Date().getFullYear().toString() },
-    // errorPolicy: 'ignore', // allow partial success
   })
 
   useEffect(() => {
     if (!activeTab) {
-      history.replace(`/organizations/${orgSlug}/${defaultActiveTab}`)
+      navigate(`/organizations/${orgSlug}/${defaultActiveTab}`) // Updated
     }
-  }, [activeTab, history, orgSlug, defaultActiveTab])
+  }, [activeTab, navigate, orgSlug, defaultActiveTab])
 
   if (loading) {
     return (
@@ -72,7 +71,7 @@ export default function OrganizationDetails() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/organizations/${orgSlug}/${tab}`)
+      navigate(`/organizations/${orgSlug}/${tab}`) // Updated
     }
   }
 

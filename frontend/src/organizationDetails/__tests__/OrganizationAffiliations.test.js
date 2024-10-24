@@ -1,18 +1,18 @@
-import React from 'react'
-import { render, waitFor } from '@testing-library/react'
-import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter, Route } from 'react-router-dom'
-import { theme, ChakraProvider } from '@chakra-ui/react'
-import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-import matchMediaPolyfill from 'mq-polyfill'
-import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
+import React from 'react';
+import { render, waitFor } from '@testing-library/react';
+import { MockedProvider } from '@apollo/client/testing';
+import { MemoryRouter, Route, Routes } from 'react-router-dom'; // Added Routes here
+import { theme, ChakraProvider } from '@chakra-ui/react';
+import { I18nProvider } from '@lingui/react';
+import { setupI18n } from '@lingui/core';
+import matchMediaPolyfill from 'mq-polyfill';
+import { makeVar } from '@apollo/client';
+import { en } from 'make-plural/plurals';
 
-import { OrganizationAffiliations } from '../OrganizationAffiliations'
+import { OrganizationAffiliations } from '../OrganizationAffiliations';
 
-import { UserVarProvider } from '../../utilities/userState'
-import { PAGINATED_ORG_AFFILIATIONS } from '../../graphql/queries'
+import { UserVarProvider } from '../../utilities/userState';
+import { PAGINATED_ORG_AFFILIATIONS } from '../../graphql/queries';
 
 const i18n = setupI18n({
   locale: 'en',
@@ -138,7 +138,7 @@ describe('<OrganizationAffiliations />', () => {
               >
                 <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
                   <Routes>
-                    <OrganizationAffiliations orgSlug={orgSlug} />
+                    <Route path="/organization/:orgSlug" element={<OrganizationAffiliations orgSlug={orgSlug} />} />
                   </Routes>
                 </MemoryRouter>
               </UserVarProvider>
@@ -146,6 +146,7 @@ describe('<OrganizationAffiliations />', () => {
           </I18nProvider>
         </ChakraProvider>,
       );
+      
       
 
       await waitFor(() => {

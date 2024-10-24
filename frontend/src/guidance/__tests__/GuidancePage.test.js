@@ -27,14 +27,7 @@ const i18n = setupI18n({
 })
 
 matchMediaPolyfill(window)
-window
-  .matchMedia('(min-width: 920px)') // Create MediaQueryList instance
-  .addListener(console.log) // Subscribe to MQ mode changes
 
-/**
- * For dispatching resize event
- * we must implement window.resizeTo in jsdom
- */
 window.resizeTo = function resizeTo(width, height) {
   Object.assign(this, {
     innerWidth: width,
@@ -92,7 +85,7 @@ describe('<GuidancePage />', () => {
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains/forces.gc.ca/web-guidance']} initialIndex={0}>
+              <MemoryRouter initialEntries={['/domains/forces.gc.ca/web-guidance']}>
                 <Routes>
                   <Route path="/domains/:domainSlug/:activeTab?" element={<GuidancePage />} />
                 </Routes>
@@ -101,8 +94,7 @@ describe('<GuidancePage />', () => {
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>
-    );
-    
+    )
 
     await waitFor(() => {
       expect(getByText(/amie.info/i)).toBeInTheDocument()
@@ -111,32 +103,20 @@ describe('<GuidancePage />', () => {
 
   it('renders the loading message when the data is loading', async () => {
     window.resizeTo(1024, 768)
-    // const { getByText } = render(
-    //   <MockedProvider mocks={mocks}>
-    //     <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
-    //       <ChakraProvider theme={theme}>
-    //         <I18nProvider i18n={i18n}>
-    //           <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
-    //             <Route path="/domains/:domainSlug">
-    //               <GuidancePage />
-    //             </Route>
-    //           </MemoryRouter>
-    //         </I18nProvider>
-    //       </ChakraProvider>
-    //     </UserVarProvider>
-    //   </MockedProvider>
     const { getByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
-            <MemoryRouter initialEntries={['/guidance']}>
-              <Routes>
-                <Route path="/guidance" element={<GuidancePage />} />
-              </Routes>
-            </MemoryRouter>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/domains/forces.gc.ca']}>
+                <Routes>
+                  <Route path="/domains/:domainSlug" element={<GuidancePage />} />
+                </Routes>
+              </MemoryRouter>
+            </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
-      </MockedProvider>,
+      </MockedProvider>
     )
 
     expect(getByText(/Guidance results/i)).toBeInTheDocument()
@@ -144,32 +124,20 @@ describe('<GuidancePage />', () => {
 
   it('renders the user does not have permissions message when the user does not have permission', async () => {
     window.resizeTo(1024, 768)
-    // const { getByText, getAllByRole, getByRole } = render(
-    //   <MockedProvider mocks={mocks}>
-    //     <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: 'user' })}>
-    //       <ChakraProvider theme={theme}>
-    //         <I18nProvider i18n={i18n}>
-    //           <MemoryRouter initialEntries={['/domains/noaffiliations.gc.ca/web-guidance']} initialIndex={0}>
-    //             <Route path="/domains/:domainSlug/:activeTab?">
-    //               <GuidancePage />
-    //             </Route>
-    //           </MemoryRouter>
-    //         </I18nProvider>
-    //       </ChakraProvider>
-    //     </UserVarProvider>
-    //   </MockedProvider>
     const { getByText, getAllByRole, getByRole } = render(
       <MockedProvider mocks={mocks}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: 'user' })}>
           <ChakraProvider theme={theme}>
-            <MemoryRouter initialEntries={['/guidance']}>
-              <Routes>
-                <Route path="/guidance" element={<GuidancePage />} />
-              </Routes>
-            </MemoryRouter>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/domains/noaffiliations.gc.ca/web-guidance']}>
+                <Routes>
+                  <Route path="/domains/:domainSlug/:activeTab?" element={<GuidancePage />} />
+                </Routes>
+              </MemoryRouter>
+            </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
-      </MockedProvider>,
+      </MockedProvider>
     )
 
     await waitFor(() => {

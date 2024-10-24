@@ -79,18 +79,22 @@ function GuidancePage() {
   useDocumentTitle(`${domainName}`)
 
   const changeActiveTab = (index) => {
-    const tab = tabNames[index]
+    const tab = tabNames[index];
     if (activeTab !== tab) {
-      history.replace(`/domains/${domain}/${tab}`)
+      navigate(`/domains/${domain}/${tab}`);
     }
-  }
-
-  useEffect(() => {
-    if (!activeTab) {
-      history.replace(`/domains/${domain}/${defaultActiveTab}`)
-    }
-  }, [activeTab, history, domainName, defaultActiveTab])
-
+  };
+  
+  const MyComponent = () => {
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      if (!activeTab) {
+        navigate(`/domains/${domain}/${defaultActiveTab}`);
+      }
+    }, [activeTab, navigate, domain, defaultActiveTab]);
+  
+  };
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
       toast({

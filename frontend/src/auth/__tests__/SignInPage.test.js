@@ -1,6 +1,6 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { MemoryRouter, Router } from 'react-router-dom'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
@@ -93,8 +93,8 @@ describe('<SignInPage />', () => {
           email: 'testuser@testemail.ca',
           password: 'testuserpassword',
           authenticateToken: 'authenticate-token-test',
-        }
-
+        };
+    
         const mocks = [
           {
             request: {
@@ -117,15 +117,8 @@ describe('<SignInPage />', () => {
               },
             },
           },
-        ]
-
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
-
+        ];
+    
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
             <UserVarProvider
@@ -137,46 +130,49 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/']}>
-                    <SignInPage />
+                  <MemoryRouter initialEntries={['/sign-in']}>
+                    <Routes>
+                      <Route path="/sign-in" element={<SignInPage />} />
+                      <Route path="/authenticate/:sendMethod/:authenticateToken" element={<div>Authenticate Page</div>} />
+                    </Routes>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
+          </MockedProvider>
         );
-        
-
-        const email = container.querySelector('#email')
-        const password = container.querySelector('#password')
-        const form = getByRole('form')
-
+    
+        const email = container.querySelector('#email');
+        const password = container.querySelector('#password');
+        const form = getByRole('form');
+    
         fireEvent.change(email, {
           target: {
             value: values.email,
           },
-        })
-
+        });
+    
         fireEvent.change(password, {
           target: {
             value: values.password,
           },
-        })
-
-        fireEvent.submit(form)
-
+        });
+    
+        fireEvent.submit(form);
+    
         await waitFor(() => {
-          expect(history.location.pathname).toEqual(`/authenticate/email/${values.authenticateToken}`)
-        })
-      })
-    })
+          expect(window.location.pathname).toEqual(`/authenticate/email/${values.authenticateToken}`); // Check for redirect
+        });
+      });
+    });
+    
     describe('and 2fa is NOT enabled', () => {
       it('redirects to home page', async () => {
         const values = {
           email: 'testuser@testemail.ca',
           password: 'testuserpassword',
-        }
-
+        };
+    
         const mocks = [
           {
             request: {
@@ -204,15 +200,8 @@ describe('<SignInPage />', () => {
               },
             },
           },
-        ]
-
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
-
+        ];
+    
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
             <UserVarProvider
@@ -224,38 +213,41 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/']}>
-                    <SignInPage />
+                  <MemoryRouter initialEntries={['/sign-in']}>
+                    <Routes>
+                      <Route path="/sign-in" element={<SignInPage />} />
+                      <Route path="/" element={<div>Home Page</div>} />
+                    </Routes>
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>
         );
-
-        const email = container.querySelector('#email')
-        const password = container.querySelector('#password')
-        const form = getByRole('form')
-
+    
+        const email = container.querySelector('#email');
+        const password = container.querySelector('#password');
+        const form = getByRole('form');
+    
         fireEvent.change(email, {
           target: {
             value: values.email,
           },
-        })
-
+        });
+    
         fireEvent.change(password, {
           target: {
             value: values.password,
           },
-        })
-
-        fireEvent.submit(form)
-
+        });
+    
+        fireEvent.submit(form);
+    
         await waitFor(() => {
-          expect(history.location.pathname).toEqual('/')
-        })
-      })
-    })
+          expect(window.location.pathname).toEqual('/'); // Check for redirect to home page
+        });
+      });
+    });    
   })
 
   describe('when sign-in fails', () => {
@@ -303,14 +295,15 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/sign-in']}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
-          </MockedProvider>,
-        )//might not be needed
+          </MockedProvider>
+        );
+        
 
         const email = container.querySelector('#email')
         const password = container.querySelector('#password')

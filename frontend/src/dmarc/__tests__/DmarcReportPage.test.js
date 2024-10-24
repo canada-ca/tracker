@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router } from 'react-router-dom'
+import { MemoryRouter, Route, Router, Routes } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -240,7 +240,8 @@ describe('<DmarcReportPage />', () => {
         const history = createMemoryHistory({
           initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
           initialIndex: 0,
-        })
+        });
+    
         const { getByRole, findByRole } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
@@ -252,38 +253,34 @@ describe('<DmarcReportPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}>
                     <Routes>
                       <Route 
                         path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
                         element={<DmarcReportPage />} 
                       />
                     </Routes>
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>
         );
-        
-        await findByRole('button', { name: /Fully Aligned by IP Address/i })
-
+    
+        await findByRole('button', { name: /Fully Aligned by IP Address/i });
+    
         const periodSelector = getByRole('combobox', {
           name: /Showing data for period/i,
-        })
-
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
-
-        userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
-
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
-      })
-
+        });
+    
+        expect(window.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`);
+    
+        userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`);
+    
+        expect(window.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`);
+      });
+    
       it('the data changes', async () => {
-        const history = createMemoryHistory({
-          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
-          initialIndex: 0,
-        })
         const { getByRole, findByRole, queryByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
@@ -295,60 +292,56 @@ describe('<DmarcReportPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}>
                     <Routes>
                       <Route 
                         path="/domains/:domainSlug/dmarc-report/:period?/:year?" 
                         element={<DmarcReportPage />} 
                       />
                     </Routes>
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>
         );
-        
-        // page is loaded
-        await findByRole('button', { name: /Fully Aligned by IP Address/i })
-
+    
+        await findByRole('button', { name: /Fully Aligned by IP Address/i });
+    
         const periodSelector = getByRole('combobox', {
           name: /Showing data for period/i,
-        })
-
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
-
-        // check current state of data
-        expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).toBeInTheDocument()
-        expect(queryByText(/dkim-failure-dkim-domains-L30D.domain/)).toBeInTheDocument()
-        expect(queryByText(/spf-failure-spf-domains-L30D.domain/)).toBeInTheDocument()
-        expect(queryByText(/dmarc-failure-dkim-domains-L30D.domain/)).toBeInTheDocument()
-
-        expect(queryByText(/full-pass-dkim-domains-august.domain/)).not.toBeInTheDocument()
-        expect(queryByText(/dkim-failure-dkim-domains-august.domain/)).not.toBeInTheDocument()
-        expect(queryByText(/spf-failure-spf-domains-august.domain/)).not.toBeInTheDocument()
-        expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).not.toBeInTheDocument()
-
-        // change date
-        userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
-
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
-
-        // page is loaded
-        await findByRole('button', { name: /Fully Aligned by IP Address/i })
-
-        // check new state of data
-        expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).not.toBeInTheDocument()
-        expect(queryByText(/dkim-failure-dkim-domains-L30D.domain/)).not.toBeInTheDocument()
-        expect(queryByText(/spf-failure-spf-domains-L30D.domain/)).not.toBeInTheDocument()
-        expect(queryByText(/dmarc-failure-dkim-domains-L30D.domain/)).not.toBeInTheDocument()
-
-        expect(queryByText(/full-pass-dkim-domains-august.domain/)).toBeInTheDocument()
-        expect(queryByText(/dkim-failure-dkim-domains-august.domain/)).toBeInTheDocument()
-        expect(queryByText(/spf-failure-spf-domains-august.domain/)).toBeInTheDocument()
-        expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).toBeInTheDocument()
-      })
-    })
+        });
+    
+        expect(window.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`);
+    
+        expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).toBeInTheDocument();
+        expect(queryByText(/dkim-failure-dkim-domains-L30D.domain/)).toBeInTheDocument();
+        expect(queryByText(/spf-failure-spf-domains-L30D.domain/)).toBeInTheDocument();
+        expect(queryByText(/dmarc-failure-dkim-domains-L30D.domain/)).toBeInTheDocument();
+    
+        expect(queryByText(/full-pass-dkim-domains-august.domain/)).not.toBeInTheDocument();
+        expect(queryByText(/dkim-failure-dkim-domains-august.domain/)).not.toBeInTheDocument();
+        expect(queryByText(/spf-failure-spf-domains-august.domain/)).not.toBeInTheDocument();
+        expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).not.toBeInTheDocument();
+    
+        userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`);
+    
+        expect(window.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`);
+    
+        await findByRole('button', { name: /Fully Aligned by IP Address/i });
+    
+        expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).not.toBeInTheDocument();
+        expect(queryByText(/dkim-failure-dkim-domains-L30D.domain/)).not.toBeInTheDocument();
+        expect(queryByText(/spf-failure-spf-domains-L30D.domain/)).not.toBeInTheDocument();
+        expect(queryByText(/dmarc-failure-dkim-domains-L30D.domain/)).not.toBeInTheDocument();
+    
+        expect(queryByText(/full-pass-dkim-domains-august.domain/)).toBeInTheDocument();
+        expect(queryByText(/dkim-failure-dkim-domains-august.domain/)).toBeInTheDocument();
+        expect(queryByText(/spf-failure-spf-domains-august.domain/)).toBeInTheDocument();
+        expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).toBeInTheDocument();
+      });
+    });
+    
   })
 
   describe('when hasDMARCReport is false', () => {

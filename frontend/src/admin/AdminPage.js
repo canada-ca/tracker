@@ -18,7 +18,6 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -29,7 +28,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   const { activeMenu } = useParams()
   const toast = useToast()
-  const history = useNavigate()
+  const navigate = useNavigate() // Updated
   const { i18n } = useLingui()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
@@ -63,7 +62,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   useEffect(() => {
     if (!activeMenu) {
-      history.replace(`/admin/organizations`)
+      navigate(`/admin/organizations`) // Updated
     }
     if (initRender && data?.findMyOrganizations?.edges.length === 1) {
       setInitRender(false)
@@ -73,7 +72,7 @@ export default function AdminPage({ isLoginRequired }) {
       })
       setSelectedOrg(data?.findMyOrganizations?.edges[0]?.node?.name || 'none')
     }
-  }, [activeMenu, history, data])
+  }, [activeMenu, navigate, data]) // Updated
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
@@ -119,7 +118,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   const changeActiveMenu = (val) => {
     if (activeMenu !== val) {
-      history.replace(`/admin/${val}`)
+      navigate(`/admin/${val}`) // Updated
     }
   }
 
@@ -190,7 +189,6 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
     <label>
       <Flex align="center">
-        {/* <TourComponent page="adminProfilePage" /> */}
         <Text fontSize="lg" fontWeight="bold" mr="2">
           <Trans>Super Admin Menu:</Trans>
         </Text>

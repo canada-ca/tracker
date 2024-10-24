@@ -1,10 +1,9 @@
-import React from 'react'
-import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react'
-import { CheckCircleIcon } from '@chakra-ui/icons'
-import { Link as RouteLink, useMatch } from 'react-router-dom'
-import { bool, number, object, string } from 'prop-types'
-import { Trans } from '@lingui/macro'
-
+import React from 'react';
+import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react';
+import { CheckCircleIcon } from '@chakra-ui/icons';
+import { Link as RouteLink } from 'react-router-dom';
+import { bool, number, object, string } from 'prop-types';
+import { Trans } from '@lingui/macro';
 
 export function OrganizationCard({
   name,
@@ -16,37 +15,23 @@ export function OrganizationCard({
   disableLink = false,
   ...rest
 }) {
-  const { path, _url } = useMatch()
-  let httpsValue = 0
-  let dmarcValue = 0
-  const httpsSummary =
-    summaries?.https?.categories?.filter((cat) => {
-      return cat.name === 'pass'
-    }) || []
-  const dmarc =
-    summaries?.dmarc?.categories?.filter((cat) => {
-      return cat.name === 'pass'
-    }) || []
-  if (httpsSummary[0]?.percentage) httpsValue = httpsSummary[0]?.percentage
-  if (dmarc[0]?.percentage) dmarcValue = dmarc[0]?.percentage
+  let httpsValue = 0;
+  let dmarcValue = 0;
 
-  if (httpsValue % 1 >= 0.5) {
-    httpsValue = Math.ceil(httpsValue)
-  } else {
-    httpsValue = Math.floor(httpsValue)
-  }
+  const httpsSummary = summaries?.https?.categories?.filter((cat) => cat.name === 'pass') || [];
+  const dmarc = summaries?.dmarc?.categories?.filter((cat) => cat.name === 'pass') || [];
 
-  if (dmarcValue % 1 >= 0.5) {
-    dmarcValue = Math.ceil(dmarcValue)
-  } else {
-    dmarcValue = Math.floor(dmarcValue)
-  }
+  if (httpsSummary[0]?.percentage) httpsValue = httpsSummary[0]?.percentage;
+  if (dmarc[0]?.percentage) dmarcValue = dmarc[0]?.percentage;
+
+  httpsValue = Math.round(httpsValue);
+  dmarcValue = Math.round(dmarcValue);
 
   const linkProps = {
-    to: `${path}/${slug}`,
+    to: `/organizations/${slug}`,  // Replaced path with "organizations"
     as: RouteLink,
     _hover: { md: { bg: ['', 'gray.100'] } },
-  }
+  };
 
   return (
     <ListItem {...rest}>
@@ -60,14 +45,7 @@ export function OrganizationCard({
         p="4"
         {...(disableLink ? {} : linkProps)}
       >
-        <Box
-          flexGrow={{ md: '2' }}
-          flexBasis={{ md: '5em' }}
-          mr={{ md: '1em' }}
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ md: '6em' }}
-          maxWidth="100%"
-        >
+        <Box flexGrow={{ md: '2' }} flexBasis={{ md: '5em' }} mr={{ md: '1em' }} flexShrink={{ md: '0.5' }} minWidth={{ md: '6em' }} maxWidth="100%">
           <Stack isInline align="center">
             <Text fontSize="lg" fontWeight="semibold" textDecoration="underline" isTruncated>
               {name}
@@ -78,14 +56,7 @@ export function OrganizationCard({
             {verified && <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />}
           </Stack>
         </Box>
-        <Box
-          flexGrow={{ md: '0' }}
-          flexBasis={{ md: '7em' }}
-          mr={{ md: '1em' }}
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ md: '2em' }}
-          align="center"
-        >
+        <Box flexGrow={{ md: '0' }} flexBasis={{ md: '7em' }} mr={{ md: '1em' }} flexShrink={{ md: '0.5' }} minWidth={{ md: '2em' }} align="center">
           <Text fontWeight="semibold">
             <Trans>Services: {domainCount}</Trans>
           </Text>
@@ -108,7 +79,7 @@ export function OrganizationCard({
         </Box>
       </Flex>
     </ListItem>
-  )
+  );
 }
 
 OrganizationCard.propTypes = {
@@ -118,6 +89,5 @@ OrganizationCard.propTypes = {
   domainCount: number.isRequired,
   verified: bool,
   summaries: object,
-  domains: object,
   disableLink: bool,
-}
+};

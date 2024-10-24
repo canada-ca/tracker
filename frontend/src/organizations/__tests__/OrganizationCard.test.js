@@ -1,17 +1,15 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { List, theme, ChakraProvider, ListItem } from '@chakra-ui/react'
-import { I18nProvider } from '@lingui/react'
-import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
+import React from 'react';
+import { render } from '@testing-library/react';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { List, theme, ChakraProvider, ListItem } from '@chakra-ui/react';
+import { I18nProvider } from '@lingui/react';
+import { MockedProvider } from '@apollo/client/testing';
+import { setupI18n } from '@lingui/core';
+import { en } from 'make-plural/plurals';
+import { OrganizationCard } from '../OrganizationCard';
+import { matchMediaSize } from '../../helpers/matchMedia';
 
-import { OrganizationCard } from '../OrganizationCard'
-
-import { matchMediaSize } from '../../helpers/matchMedia'
-
-matchMediaSize()
+matchMediaSize();
 
 const i18n = setupI18n({
   locale: 'en',
@@ -21,70 +19,61 @@ const i18n = setupI18n({
   localeData: {
     en: { plurals: en },
   },
-})
+});
 
+// Adjusted summaries structure
 const summaries = {
-  mail: {
-    total: 23452,
+  https: {
     categories: [
-      {
-        name: 'pass',
-        count: 6577,
-        percentage: 23.4,
-      },
-      {
-        name: 'fail',
-        count: 7435,
-        percentage: 43.5,
-      },
+      { name: 'pass', percentage: 75 }, // Example data
     ],
   },
-  web: {
-    total: 57896,
+  dmarc: {
     categories: [
-      {
-        name: 'pass',
-        count: 6577,
-        percentage: 23.4,
-      },
-      {
-        name: 'fail',
-        count: 7435,
-        percentage: 43.5,
-      },
+      { name: 'pass', percentage: 80 }, // Example data
     ],
   },
-}
+};
 
-describe('<OrganizationsCard />', () => {
+describe('<OrganizationCard />', () => {
   it('successfully renders card with org name and number of services', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
+        <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <List>
-                <ListItem>
-                  <OrganizationCard
-                    slug="tbs-sct-gc-ca"
-                    name="Treasury Board Secretariat"
-                    acronym="TBS"
-                    domainCount={7}
-                    verified={false}
-                    summaries={summaries}
-                  />
-                </ListItem>
-              </List>
+              <Routes>
+                <Route path="/organizations/:slug" element={
+                  <List>
+                    <ListItem>
+                      <OrganizationCard
+                        slug="tbs-sct-gc-ca"
+                        name="Treasury Board Secretariat"
+                        acronym="TBS"
+                        domainCount={7}
+                        verified={false}
+                        summaries={summaries}
+                      />
+                    </ListItem>
+                  </List>
+                } />
+              </Routes>
             </I18nProvider>
           </ChakraProvider>
         </MemoryRouter>
-      </MockedProvider>,
-    )
+      </MockedProvider>
+    );
 
-    const orgName = getByText(/Treasury Board Secretariat/i)
-    expect(orgName).toBeDefined()
+    const orgName = getByText(/Treasury Board Secretariat/i);
+    expect(orgName).toBeDefined();
 
-    const domainCount = getByText(/Services: 7/i)
-    expect(domainCount).toBeDefined()
-  })
-})
+    const domainCount = getByText(/Services: 7/i);
+    expect(domainCount).toBeDefined();
+    
+    const httpsConfigured = getByText(/HTTPS Configured/i);
+    expect(httpsConfigured).toBeDefined();
+
+    const dmarcConfigured = getByText(/DMARC Configured/i);
+    expect(dmarcConfigured).toBeDefined();
+  });
+});

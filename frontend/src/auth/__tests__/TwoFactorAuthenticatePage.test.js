@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -315,8 +315,8 @@ describe('<TwoFactorAuthenticatePage />', () => {
       const values = {
         authenticateToken: 'authenticate-token-test',
         authenticationCode: 123456,
-      }
-
+      };
+    
       const mocks = [
         {
           request: {
@@ -345,15 +345,8 @@ describe('<TwoFactorAuthenticatePage />', () => {
             },
           },
         },
-      ]
-
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
-
+      ];
+    
       const { getAllByRole, getByRole } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
@@ -368,6 +361,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                 <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
                   <Routes>
                     <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                    <Route path="/" element={<div>Home Page</div>} />
                   </Routes>
                 </MemoryRouter>
               </I18nProvider>
@@ -375,22 +369,22 @@ describe('<TwoFactorAuthenticatePage />', () => {
           </UserVarProvider>
         </MockedProvider>
       );
-      
-
-      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
-      const form = getByRole('form')
-
+    
+      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0];
+      const form = getByRole('form');
+    
       fireEvent.change(twoFactorCode, {
         target: {
           value: values.authenticationCode,
         },
-      })
-
-      fireEvent.submit(form)
-
+      });
+    
+      fireEvent.submit(form);
+    
       await waitFor(() => {
-        expect(history.location.pathname).toEqual('/')
-      })
-    })
+        expect(window.location.pathname).toBe('/'); // Check that the pathname is '/'
+      });
+    });       
+    
   })
 })
