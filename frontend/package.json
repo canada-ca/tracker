@@ -8,6 +8,7 @@
     "start": "NODE_OPTIONS=--openssl-legacy-provider node index.js",
     "test": "jest --silent",
     "test-coverage": "jest --coverage",
+    "stats": "npm run --silent build -- --profile --json > bundlestats.json && webpack-bundle-analyzer bundlestats.json public",
     "lint": "eslint src",
     "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
     "extract": "lingui extract",
@@ -104,6 +105,7 @@
     "source-map-loader": "^4.0.0",
     "supertest": "^6.2.3",
     "webpack": "^5.94.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.10.0",
     "webpack-config-utils": "^2.3.1",
     "webpack-dev-server": "^4.9.2"
