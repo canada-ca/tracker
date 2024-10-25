@@ -119,7 +119,7 @@ describe('<SignInPage />', () => {
           },
         ];
     
-        const { container, getByRole } = render(
+        const { container, getByRole, getByText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
             <UserVarProvider
               userVar={makeVar({
@@ -161,68 +161,69 @@ describe('<SignInPage />', () => {
         fireEvent.submit(form);
     
         await waitFor(() => {
-          expect(window.location.pathname).toEqual(`/authenticate/email/${values.authenticateToken}`); // Check for redirect
+          expect(getByText(/Authenticate Page/i)).toBeInTheDocument(); // Check for presence of Authenticate Page
         });
-      });
+    });
+    
     });
     
     describe('and 2fa is NOT enabled', () => {
       it('redirects to home page', async () => {
         const values = {
-          email: 'testuser@testemail.ca',
-          password: 'testuserpassword',
+            email: 'testuser@testemail.ca',
+            password: 'testuserpassword',
         };
     
         const mocks = [
-          {
-            request: {
-              query: SIGN_IN,
-              variables: {
-                userName: values.email,
-                password: values.password,
-                rememberMe: false,
-              },
-            },
-            result: {
-              data: {
-                signIn: {
-                  result: {
-                    user: {
-                      id: '1234asdf',
-                      userName: 'Thalia.Rosenbaum@gmail.com',
-                      tfaSendMethod: false,
-                      emailValidated: true,
+            {
+                request: {
+                    query: SIGN_IN,
+                    variables: {
+                        userName: values.email,
+                        password: values.password,
+                        rememberMe: false,
                     },
-                    authToken: 'test123stringJWT',
-                    __typename: 'AuthResult',
-                  },
                 },
-              },
+                result: {
+                    data: {
+                        signIn: {
+                            result: {
+                                user: {
+                                    id: '1234asdf',
+                                    userName: 'Thalia.Rosenbaum@gmail.com',
+                                    tfaSendMethod: false,
+                                    emailValidated: true,
+                                },
+                                authToken: 'test123stringJWT',
+                                __typename: 'AuthResult',
+                            },
+                        },
+                    },
+                },
             },
-          },
         ];
     
-        const { container, getByRole } = render(
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <UserVarProvider
-              userVar={makeVar({
-                jwt: null,
-                tfaSendMethod: null,
-                userName: null,
-              })}
-            >
-              <ChakraProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/sign-in']}>
-                    <Routes>
-                      <Route path="/sign-in" element={<SignInPage />} />
-                      <Route path="/" element={<div>Home Page</div>} />
-                    </Routes>
-                  </MemoryRouter>
-                </I18nProvider>
-              </ChakraProvider>
-            </UserVarProvider>
-          </MockedProvider>
+        const { container, getByRole, getByText } = render(
+            <MockedProvider mocks={mocks} addTypename={false}>
+                <UserVarProvider
+                    userVar={makeVar({
+                        jwt: null,
+                        tfaSendMethod: null,
+                        userName: null,
+                    })}
+                >
+                    <ChakraProvider theme={theme}>
+                        <I18nProvider i18n={i18n}>
+                            <MemoryRouter initialEntries={['/sign-in']}>
+                                <Routes>
+                                    <Route path="/sign-in" element={<SignInPage />} />
+                                    <Route path="/" element={<div>Home Page</div>} />
+                                </Routes>
+                            </MemoryRouter>
+                        </I18nProvider>
+                    </ChakraProvider>
+                </UserVarProvider>
+            </MockedProvider>
         );
     
         const email = container.querySelector('#email');
@@ -230,25 +231,26 @@ describe('<SignInPage />', () => {
         const form = getByRole('form');
     
         fireEvent.change(email, {
-          target: {
-            value: values.email,
-          },
+            target: {
+                value: values.email,
+            },
         });
     
         fireEvent.change(password, {
-          target: {
-            value: values.password,
-          },
+            target: {
+                value: values.password,
+            },
         });
     
         fireEvent.submit(form);
     
         await waitFor(() => {
-          expect(window.location.pathname).toEqual('/'); // Check for redirect to home page
+            expect(getByText(/Home Page/i)).toBeInTheDocument(); // Check for presence of Home Page
         });
-      });
-    });    
-  })
+    }); 
+  });   
+});
+    
 
   describe('when sign-in fails', () => {
     describe('server-side error', () => {
