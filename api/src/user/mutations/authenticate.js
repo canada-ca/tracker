@@ -117,6 +117,7 @@ export const authenticate = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
@@ -141,6 +142,7 @@ export const authenticate = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred when setting email validated to true for user: ${user._key} during authentication: ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
         }
       }
@@ -149,6 +151,7 @@ export const authenticate = new mutationWithClientMutationId({
         await trx.commit()
       } catch (err) {
         console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
+        await trx.abort()
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
@@ -214,6 +217,7 @@ export const authenticate = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred when clearing tfa code on attempt timeout for user: ${user._key} during authentication: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
       }
 
@@ -221,6 +225,7 @@ export const authenticate = new mutationWithClientMutationId({
         await trx.commit()
       } catch (err) {
         console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
+        await trx.abort()
         throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
       }
       throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))

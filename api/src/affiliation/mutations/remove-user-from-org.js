@@ -158,6 +158,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
     }
 
@@ -167,6 +168,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
     }
 

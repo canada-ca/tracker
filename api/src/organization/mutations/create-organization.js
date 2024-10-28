@@ -180,6 +180,7 @@ export const createOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction error occurred when user: ${userKey} was creating new organization ${slugEN}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create organization. Please try again.`))
     }
     const organization = await cursor.next()
@@ -200,6 +201,7 @@ export const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when inserting edge definition for user: ${userKey} to ${slugEN}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create organization. Please try again.`))
     }
 
@@ -209,6 +211,7 @@ export const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when committing new organization: ${slugEN} for user: ${userKey} to db: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create organization. Please try again.`))
     }
 

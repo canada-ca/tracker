@@ -95,6 +95,7 @@ export const ignoreCve = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: "${userKey}" attempted to ignore CVE "${ignoredCve}" on domain "${domainId}", error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to ignore CVE. Please try again.`))
     }
 
@@ -105,6 +106,7 @@ export const ignoreCve = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred when user: "${userKey}" attempted to ignore CVE "${ignoredCve}" on domain "${domainId}", error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to ignore CVE. Please try again.`))
     }
 

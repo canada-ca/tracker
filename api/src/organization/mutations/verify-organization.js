@@ -102,6 +102,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction error occurred while upserting verified org: ${orgKey}, err: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 
@@ -118,6 +119,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction error occurred while unarchiving affiliated domains for org: ${orgKey}, err: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 
@@ -125,6 +127,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Transaction error occurred while committing newly verified org: ${orgKey}, err: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 

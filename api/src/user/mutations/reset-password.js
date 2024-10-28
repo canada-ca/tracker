@@ -121,6 +121,7 @@ export const resetPassword = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Trx step error occurred when user: ${user._key} attempted to reset their password: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
 
@@ -128,6 +129,7 @@ export const resetPassword = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
 
