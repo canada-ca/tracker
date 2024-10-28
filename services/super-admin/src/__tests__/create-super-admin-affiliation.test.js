@@ -71,6 +71,7 @@ describe('given the createSuperAdminAffiliation function', () => {
           commit() {
             throw new Error('Database error occurred.')
           },
+          abort() {},
         })
 
         const org = {
@@ -105,6 +106,7 @@ describe('given the createSuperAdminAffiliation function', () => {
           commit() {
             throw new Error('Database error occurred.')
           },
+          abort() {},
         })
 
         const org = {

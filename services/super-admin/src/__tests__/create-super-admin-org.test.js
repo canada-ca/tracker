@@ -64,6 +64,7 @@ describe('given the createSuperAdminOrg function', () => {
           commit() {
             throw new Error('Database error occurred.')
           },
+          abort() {},
         })
 
         try {
@@ -89,6 +90,7 @@ describe('given the createSuperAdminOrg function', () => {
           commit() {
             throw new Error('Database error occurred.')
           },
+          abort() {},
         })
 
         try {
