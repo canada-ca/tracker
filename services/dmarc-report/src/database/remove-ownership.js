@@ -4,8 +4,9 @@ async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
   // setup Transaction
   const trx = await arangoCtx.transaction(collectionStrings)
 
-  await trx.step(
-    () => arangoCtx.query`
+  try {
+    await trx.step(
+      () => arangoCtx.query`
       WITH domains, organizations, ownership
       LET domainId = FIRST(
         FOR domain IN domains
@@ -22,11 +23,11 @@ async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
         FILTER owner._to == domainId
         REMOVE { _key: owner._key } IN ownership
     `,
-  )
+    )
 
-  // remove dmarcSummaries and dmarcSummaryEdges
-  await trx.step(
-    () => arangoCtx.query`
+    // remove dmarcSummaries and dmarcSummaryEdges
+    await trx.step(
+      () => arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -48,9 +49,18 @@ async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
       )
       RETURN true
     `,
-  )
+    )
+  } catch (err) {
+    console.error(`Transaction step error occurred for dmarc summaries service when removing ownership data: ${err}`)
+    await trx.abort()
+  }
 
-  await trx.commit()
+  try {
+    await trx.commit()
+  } catch (err) {
+    console.error(`Transaction commit error occurred for dmarc summaries service when removing ownership data: ${err}`)
+    await trx.abort()
+  }
 }
 
 module.exports = {
