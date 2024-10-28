@@ -647,6 +647,7 @@ describe('removing an organization', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   auth: {
@@ -707,6 +708,7 @@ describe('removing an organization', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   auth: {
@@ -769,6 +771,7 @@ describe('removing an organization', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -1114,6 +1117,7 @@ describe('removing an organization', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   auth: {
@@ -1174,6 +1178,7 @@ describe('removing an organization', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   auth: {
@@ -1236,6 +1241,7 @@ describe('removing an organization', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {

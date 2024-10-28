@@ -427,6 +427,7 @@ describe('create an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -514,6 +515,7 @@ describe('create an organization', () => {
                     .fn()
                     .mockReturnValueOnce({ next: jest.fn() })
                     .mockRejectedValue(new Error('trx step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -599,6 +601,7 @@ describe('create an organization', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -792,6 +795,7 @@ describe('create an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -879,6 +883,7 @@ describe('create an organization', () => {
                     .fn()
                     .mockReturnValueOnce({ next: jest.fn() })
                     .mockRejectedValue(new Error('trx step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -964,6 +969,7 @@ describe('create an organization', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
