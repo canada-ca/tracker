@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 // import { Routes, Route, Link as RouteLink, Navigate, useLocation } from 'react-router-dom'
-import { Routes, Route, Link as RouteLink, Navigate} from 'react-router-dom'
+import { Routes, Route, Link as RouteLink, Navigate } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 // import { ErrorBoundary } from 'react-error-boundary'
@@ -194,21 +194,124 @@ export function App({ initialLoading, isLoginRequired }) {
         ) : (
           <Suspense fallback={<LoadingMessage />}>
             <Routes>
-              <Route path="/" element={<Page title={t`Home`}><LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} /></Page>} />
-              <Route path="/create-user/:userOrgToken?" element={<Page title={t`Create an Account`}><CreateUserPage /></Page>} />
+              <Route
+                path="/"
+                element={
+                  <Page title={t`Home`}>
+                    <LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} />
+                  </Page>
+                }
+              />
+              <Route
+                path="/create-user/:userOrgToken?"
+                element={
+                  <Page title={t`Create an Account`}>
+                    <CreateUserPage />
+                  </Page>
+                }
+              />
               <Route path="/sign-in" element={isLoggedIn() ? <Navigate to="/" /> : <SignInPage />} />
-              <Route path="/authenticate/:sendMethod/:authenticateToken" element={<Page title={t`Authenticate`}><TwoFactorAuthenticatePage /></Page>} />
-              <Route path="/forgot-password" element={<Page title={t`Forgot Password`}><ForgotPasswordPage /></Page>} />
-              <Route path="/reset-password/:resetToken" element={<Page title={t`Reset Password`}><ResetPasswordPage /></Page>} />
-              <Route path="/terms-and-conditions" element={<Page title={t`Terms & Conditions`}><TermsConditionsPage /></Page>} />
-              <Route path="/contact-us" element={<Page title={t`Contact Us`}><ContactUsPage /></Page>} />
-              <Route path="/guidance" element={<Page title={t`Read guidance`}><ReadGuidancePage /></Page>} />
-              <Route path="/organizations" element={<PrivatePage isLoginRequired={isLoginRequired} title={t`Organizations`}><Organizations /></PrivatePage>} />
-              <Route path="/organizations/:orgSlug/:activeTab?" element={<PrivatePage isLoginRequired={isLoginRequired}><OrganizationDetails /></PrivatePage>} />
-              <Route path="/admin/:activeMenu?" element={isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? <AdminPage /> : <Navigate to="/" />} />
-              <Route path="/dmarc-summaries" element={<PrivatePage isLoginRequired={isLoginRequired}><DmarcReportPage /></PrivatePage>} />
-              <Route path="/dmarc-by-domain/:domainSlug" element={<PrivatePage isLoginRequired={isLoginRequired}><DmarcByDomainPage /></PrivatePage>} />
-              <Route path="/my-tracker" element={<PrivatePage isLoginRequired={isLoginRequired}><MyTrackerPage /></PrivatePage>} />
+              <Route
+                path="/authenticate/:sendMethod/:authenticateToken"
+                element={
+                  <Page title={t`Authenticate`}>
+                    <TwoFactorAuthenticatePage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <Page title={t`Forgot Password`}>
+                    <ForgotPasswordPage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/reset-password/:resetToken"
+                element={
+                  <Page title={t`Reset Password`}>
+                    <ResetPasswordPage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/terms-and-conditions"
+                element={
+                  <Page title={t`Terms & Conditions`}>
+                    <TermsConditionsPage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/contact-us"
+                element={
+                  <Page title={t`Contact Us`}>
+                    <ContactUsPage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/guidance"
+                element={
+                  <Page title={t`Read guidance`}>
+                    <ReadGuidancePage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/organizations"
+                element={
+                  <PrivatePage isLoginRequired={isLoginRequired} title={t`Organizations`}>
+                    <Organizations />
+                  </PrivatePage>
+                }
+              />
+              <Route
+                path="/organizations/:orgSlug/:activeTab?"
+                element={
+                  <PrivatePage isLoginRequired={isLoginRequired}>
+                    <OrganizationDetails />
+                  </PrivatePage>
+                }
+              />
+              <Route
+                path="/admin/:activeMenu?"
+                element={
+                  <PrivatePage
+                    title={t`Admin`}
+                    isLoginRequired={isLoginRequired}
+                    isAuthed={isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE'}
+                    redirectTo={'/'}
+                  >
+                    <AdminPage />
+                  </PrivatePage>
+                }
+              />
+              <Route
+                path="/dmarc-summaries"
+                element={
+                  <PrivatePage isLoginRequired={isLoginRequired}>
+                    <DmarcReportPage />
+                  </PrivatePage>
+                }
+              />
+              <Route
+                path="/dmarc-by-domain/:domainSlug"
+                element={
+                  <PrivatePage isLoginRequired={isLoginRequired}>
+                    <DmarcByDomainPage />
+                  </PrivatePage>
+                }
+              />
+              <Route
+                path="/my-tracker"
+                element={
+                  <PrivatePage isLoginRequired={isLoginRequired}>
+                    <MyTrackerPage />
+                  </PrivatePage>
+                }
+              />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Suspense>

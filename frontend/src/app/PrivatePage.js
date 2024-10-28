@@ -1,6 +1,6 @@
 import React from 'react'
-import { bool, func } from 'prop-types'
-import { Redirect, useLocation } from 'react-router-dom'
+import { bool, string } from 'prop-types'
+import { Navigate, useLocation } from 'react-router-dom'
 
 import { Page } from './Page'
 
@@ -8,31 +8,29 @@ import { useUserVar } from '../utilities/userState'
 
 // A wrapper for <Page> that redirects to the login
 // screen if you're not yet authenticated.
-export function PrivatePage({ children, isLoginRequired, ...rest }) {
+export function PrivatePage({ isLoginRequired, isAuthed, redirectTo = '/sign-in', title, setTitle, children }) {
   const { isLoggedIn, isEmailValidated } = useUserVar()
   const location = useLocation()
 
-  return (
-    <Page
-      {...rest}
-      render={(props) =>
-        (isLoggedIn() && isEmailValidated()) || !isLoginRequired ? (
-          children(props)
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/sign-in',
-              state: { from: location },
-            }}
-          />
-        )
-      }
+  const isAuthenticated = isAuthed !== undefined ? isAuthed : (isLoggedIn() && isEmailValidated()) || !isLoginRequired
+
+  return isAuthenticated ? (
+    <Page title={title} setTitle={setTitle}>
+      {children}
+    </Page>
+  ) : (
+    <Navigate
+      to={{
+        pathname: redirectTo,
+        state: { from: location },
+      }}
     />
   )
 }
 
 PrivatePage.propTypes = {
-  children: func,
   isLoginRequired: bool,
+  isAuthed: bool,
+  redirectTo: string,
   ...Page.propTypes,
 }
