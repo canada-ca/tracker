@@ -628,6 +628,7 @@ describe('authenticate user account', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -689,6 +690,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -960,6 +962,7 @@ describe('authenticate user account', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -1021,6 +1024,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {

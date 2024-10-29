@@ -24,6 +24,7 @@ const createSuperAdminAffiliation = async ({
       })
     })
   } catch (err) {
+    await trx.abort()
     throw new Error(
       `Transaction step error occurred while creating new super admin affiliation: ${err}`,
     )
@@ -32,6 +33,7 @@ const createSuperAdminAffiliation = async ({
   try {
     await trx.commit()
   } catch (err) {
+    await trx.abort()
     throw new Error(
       `Transaction commit error occurred while creating new super admin affiliation: ${err}`,
     )

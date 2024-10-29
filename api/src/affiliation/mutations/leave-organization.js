@@ -67,6 +67,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred when removing user: ${user._key} affiliation with org: ${org._key}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable leave organization. Please try again.`))
     }
 
@@ -74,6 +75,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable leave organization. Please try again.`))
     }
 

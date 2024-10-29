@@ -197,7 +197,7 @@ given organization.`,
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
@@ -207,7 +207,7 @@ given organization.`,
       console.warn(
         `Transaction commit error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 

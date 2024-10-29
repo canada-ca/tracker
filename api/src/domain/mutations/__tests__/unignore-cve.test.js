@@ -239,6 +239,7 @@ describe('unignore mutation', () => {
     it('throws an error when the transaction step fails', async () => {
       superAdminContext.transaction = jest.fn().mockReturnValue({
         step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+        abort: jest.fn(),
       })
 
       const response = await graphql({
@@ -271,6 +272,7 @@ describe('unignore mutation', () => {
       superAdminContext.transaction = jest.fn().mockReturnValue({
         step: jest.fn().mockReturnValue(),
         commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+        abort: jest.fn(),
       })
 
       const response = await graphql({

@@ -98,6 +98,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userKey} while attempting to get dmarcSummaryInfo while removing org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
@@ -108,6 +109,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to get dmarcSummaryInfo while removing org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
@@ -138,6 +140,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred for user: ${userKey} while attempting to remove dmarc summaries while removing org: ${organization._key}, ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
       }
 
@@ -153,6 +156,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred for user: ${userKey} while attempting to remove ownerships while removing org: ${organization._key}, ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
       }
     }
@@ -183,6 +187,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
@@ -193,6 +198,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
@@ -219,6 +225,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${organization.slug}, ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
@@ -237,6 +244,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
@@ -254,6 +262,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
@@ -270,6 +279,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
@@ -302,6 +312,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred for user: ${userKey} while attempting to remove domains while removing org: ${organization._key}, ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
       }
@@ -366,6 +377,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred for user: ${userKey} while attempting to remove affiliations, and the org while removing org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
@@ -375,6 +387,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred for user: ${userKey} while attempting remove of org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 

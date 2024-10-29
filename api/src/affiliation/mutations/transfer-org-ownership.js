@@ -142,6 +142,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
@@ -164,6 +165,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
@@ -174,6 +176,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 

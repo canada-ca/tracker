@@ -24,12 +24,14 @@ const createSuperAdminAccount = async ({ collections, transaction, bcrypt }) => 
       })
     })
   } catch (err) {
+    await trx.abort()
     throw new Error(`Transaction step error occurred while creating new super admin account: ${err}`)
   }
 
   try {
     await trx.commit()
   } catch (err) {
+    await trx.abort()
     throw new Error(`Transaction commit error occurred while creating new super admin account: ${err}`)
   }
 

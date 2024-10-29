@@ -3812,6 +3812,7 @@ describe('removing a domain', () => {
             it('throws an error', async () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -3887,6 +3888,7 @@ describe('removing a domain', () => {
             it('throws an error', async () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -3967,6 +3969,7 @@ describe('removing a domain', () => {
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockRejectedValue(new Error('Transaction error occurred.')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -4054,6 +4057,7 @@ describe('removing a domain', () => {
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockRejectedValue(new Error('Step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -4134,6 +4138,7 @@ describe('removing a domain', () => {
 
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockRejectedValue(new Error('Step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -4208,6 +4213,7 @@ describe('removing a domain', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue({}),
             commit: jest.fn().mockRejectedValue(new Error('Transaction error occurred.')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -4964,6 +4970,7 @@ describe('removing a domain', () => {
             it('throws an error', async () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -5038,6 +5045,7 @@ describe('removing a domain', () => {
             it('throws an error', async () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -5117,6 +5125,7 @@ describe('removing a domain', () => {
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockRejectedValue(new Error('Transaction error occurred.')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -5203,6 +5212,7 @@ describe('removing a domain', () => {
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockRejectedValue(new Error('Step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -5284,6 +5294,7 @@ describe('removing a domain', () => {
 
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockRejectedValue(new Error('Step error')),
+                abort: jest.fn(),
               })
 
               const response = await graphql({
@@ -5358,6 +5369,7 @@ describe('removing a domain', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue({}),
             commit: jest.fn().mockRejectedValue(new Error('Transaction error occurred.')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
