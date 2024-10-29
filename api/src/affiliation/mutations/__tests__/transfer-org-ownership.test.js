@@ -813,6 +813,7 @@ describe('given the transferOrgOwnership mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Step Error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -880,6 +881,7 @@ describe('given the transferOrgOwnership mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step Error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -949,6 +951,7 @@ describe('given the transferOrgOwnership mutation', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue(),
             commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -1387,6 +1390,7 @@ describe('given the transferOrgOwnership mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Step Error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1456,6 +1460,7 @@ describe('given the transferOrgOwnership mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step Error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1527,6 +1532,7 @@ describe('given the transferOrgOwnership mutation', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue(),
             commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({

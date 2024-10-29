@@ -1639,6 +1639,7 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockRejectedValue(new Error('trx step error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -1716,6 +1717,7 @@ describe('given the removeUserFromOrg mutation', () => {
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(),
           commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+          abort: jest.fn(),
         })
 
         const response = await graphql({
@@ -2354,6 +2356,7 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockRejectedValue(new Error('trx step error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -2433,6 +2436,7 @@ describe('given the removeUserFromOrg mutation', () => {
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(),
           commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+          abort: jest.fn(),
         })
 
         const response = await graphql({

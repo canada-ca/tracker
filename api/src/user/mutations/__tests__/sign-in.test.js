@@ -1510,6 +1510,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1581,6 +1582,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1652,6 +1654,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1724,6 +1727,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1797,6 +1801,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1869,6 +1874,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1941,6 +1947,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2312,6 +2319,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2383,6 +2391,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2454,6 +2463,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2526,6 +2536,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2599,6 +2610,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2671,6 +2683,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2743,6 +2756,7 @@ describe('authenticate user account', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {

@@ -16,8 +16,9 @@ async function createSummary({ arangoCtx, date, domain, summaryData }) {
   const summaryDBInfo = await summaryCursor.next()
 
   // create edge
-  await trx.step(
-    () => arangoCtx.query`
+  try {
+    await trx.step(
+      () => arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -30,9 +31,18 @@ async function createSummary({ arangoCtx, date, domain, summaryData }) {
         startDate: ${date}
       } INTO domainsToDmarcSummaries
     `,
-  )
+    )
+  } catch (err) {
+    console.error(`Transaction step error occurred for dmarc summaries service when creating summary data: ${err}`)
+    await trx.abort()
+  }
 
-  await trx.commit()
+  try {
+    await trx.commit()
+  } catch (err) {
+    console.error(`Transaction commit error occurred for dmarc summaries service when creating summary data: ${err}`)
+    await trx.abort()
+  }
 }
 
 module.exports = {

@@ -248,6 +248,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction error occurred while upserting org: ${orgKey}, err: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update organization. Please try again.`))
     }
 
@@ -255,6 +256,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Transaction error occurred while committing org: ${orgKey}, err: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update organization. Please try again.`))
     }
 

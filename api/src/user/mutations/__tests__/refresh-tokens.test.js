@@ -680,6 +680,7 @@ describe('refresh users tokens', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({
@@ -761,6 +762,7 @@ describe('refresh users tokens', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
               commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({
@@ -1242,6 +1244,7 @@ describe('refresh users tokens', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({
@@ -1323,6 +1326,7 @@ describe('refresh users tokens', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
               commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({

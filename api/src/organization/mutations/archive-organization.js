@@ -98,6 +98,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userKey} while attempting to gather domain count while archiving org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
 
@@ -108,6 +109,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to gather domain count while archiving org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
 
@@ -126,6 +128,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred for user: ${userKey} while attempting to archive domains while archiving org: ${organization._key}, ${err}`,
           )
+          await trx.abort()
           throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
         }
       }
@@ -143,6 +146,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred for user: ${userKey} while attempting to unverify while archiving org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
 
@@ -152,6 +156,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred for user: ${userKey} while attempting archive of org: ${organization._key}, ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
 

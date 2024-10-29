@@ -147,6 +147,7 @@ export const signUp = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
@@ -155,6 +156,7 @@ export const signUp = new mutationWithClientMutationId({
       insertedUser = await insertedUserCursor.next()
     } catch (err) {
       console.error(`Cursor error occurred while user: ${userName} attempted to sign up, creating user: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
@@ -171,6 +173,7 @@ export const signUp = new mutationWithClientMutationId({
 
       if (userName !== tokenUserName) {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however emails do not match.`)
+        await trx.abort()
         return {
           _type: 'error',
           code: 400,
@@ -181,6 +184,7 @@ export const signUp = new mutationWithClientMutationId({
       const checkOrg = await loadOrgByKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however the org could not be found.`)
+        await trx.abort()
         return {
           _type: 'error',
           code: 400,
@@ -204,6 +208,7 @@ export const signUp = new mutationWithClientMutationId({
         console.error(
           `Transaction step error occurred while user: ${userName} attempted to sign up, assigning affiliation: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to sign up. Please try again.`))
       }
     }
@@ -212,6 +217,7 @@ export const signUp = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Transaction commit error occurred while user: ${userName} attempted to sign up: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 

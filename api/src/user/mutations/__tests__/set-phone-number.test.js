@@ -1527,6 +1527,7 @@ describe('user sets a new phone number', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1596,6 +1597,7 @@ describe('user sets a new phone number', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
               commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1678,6 +1680,7 @@ describe('user sets a new phone number', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1747,6 +1750,7 @@ describe('user sets a new phone number', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
               commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({

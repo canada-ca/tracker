@@ -235,6 +235,7 @@ describe('ignoreCve mutation', () => {
       const cve = 'CVE-1234-55555'
       superAdminContext.transaction = jest.fn().mockReturnValue({
         step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+        abort: jest.fn(),
       })
 
       const response = await graphql({
@@ -268,6 +269,7 @@ describe('ignoreCve mutation', () => {
       superAdminContext.transaction = jest.fn().mockReturnValue({
         step: jest.fn().mockReturnValue(),
         commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+        abort: jest.fn(),
       })
 
       const response = await graphql({

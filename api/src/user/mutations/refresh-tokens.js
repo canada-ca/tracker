@@ -119,6 +119,7 @@ export const refreshTokens = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Trx step error occurred when attempting to refresh tokens for user: ${userKey}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
     }
 
@@ -126,6 +127,7 @@ export const refreshTokens = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred while user: ${userKey} attempted to refresh tokens: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
     }
 

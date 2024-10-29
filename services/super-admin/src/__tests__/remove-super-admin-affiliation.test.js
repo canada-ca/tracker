@@ -69,6 +69,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
           commit() {
             throw new Error('Database error occurred.')
           },
+          abort() {},
         })
 
         try {
@@ -95,6 +96,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
           commit() {
             throw new Error('Database error occurred.')
           },
+          abort() {},
         })
 
         try {
