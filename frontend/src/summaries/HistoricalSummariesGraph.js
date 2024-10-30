@@ -18,6 +18,7 @@ import { Trans, t } from '@lingui/macro'
 import { func } from 'prop-types'
 import useSearchParam from '../utilities/useSearchParam'
 import { useLocation } from 'react-router-dom'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 const getDate = ({ date }) => new Date(date)
 
@@ -221,11 +222,15 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
           <option value="three">
             <Trans>Tier 3: Compliance</Trans>
           </option>
-          {location.pathname.includes('/organizations/') && (
-            <option value="four">
-              <Trans>Total Negative Findings</Trans>
-            </option>
-          )}
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              {location.pathname.includes('/organizations/') && (
+                <option value="four">
+                  <Trans>Total Negative Findings</Trans>
+                </option>
+              )}
+            </ABTestVariant>
+          </ABTestWrapper>
         </Select>
       </Flex>
       <Box position="relative">
