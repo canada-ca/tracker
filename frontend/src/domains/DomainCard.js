@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { Badge, Box, Button, Flex, IconButton, ListItem, Stack, Tag, TagLabel, Text, useToast } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
@@ -9,9 +9,10 @@ import { LinkIcon, StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
+import { isEqual } from 'lodash-es'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
-export function DomainCard({
+function DomainCard({
   id,
   url,
   status,
@@ -289,3 +290,11 @@ DomainCard.propTypes = {
   assetState: string,
   cveDetected: bool,
 }
+
+const memoizedDomainCard = memo(DomainCard, (prevProps, nextProps) => {
+  if (Object.keys(prevProps).length !== Object.keys(nextProps).length) return false
+
+  return isEqual(prevProps, nextProps)
+})
+
+export { memoizedDomainCard as DomainCard }

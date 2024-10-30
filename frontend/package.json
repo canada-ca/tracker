@@ -48,6 +48,7 @@
     "intro.js-react": "^1.0.0",
     "isomorphic-unfetch": "^3.1.0",
     "json-2-csv": "^3.17.1",
+    "lodash-es": "^4.17.21",
     "make-plural": "^7.1.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -124,7 +125,8 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/__mocks__/fileMock.js",
       "^d3$": "<rootDir>/node_modules/d3/dist/d3.min.js",
-      "^d3-[\\w]+$": "<rootDir>/node_modules/d3/dist/d3.min.js"
+      "^d3-[\\w]+$": "<rootDir>/node_modules/d3/dist/d3.min.js",
+      "^lodash-es$": "lodash"
     },
     "setupFilesAfterEnv": [
       "./src/setupTests.js"
