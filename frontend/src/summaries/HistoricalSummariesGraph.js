@@ -17,6 +17,7 @@ import { GlyphCircle } from '@visx/glyph'
 import { Trans, t } from '@lingui/macro'
 import { func } from 'prop-types'
 import useSearchParam from '../utilities/useSearchParam'
+import { useLocation } from 'react-router-dom'
 
 const getDate = ({ date }) => new Date(date)
 
@@ -57,6 +58,7 @@ const tieredSummaries = {
 
 export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last30days', width = 1200, height = 500 }) {
   const { colors } = theme
+  const location = useLocation()
 
   const { searchValue: scoreTypeParam, setSearchParams: setScoreTypeParam } = useSearchParam({
     name: 'score-type',
@@ -219,9 +221,11 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
           <option value="three">
             <Trans>Tier 3: Compliance</Trans>
           </option>
-          <option value="four">
-            <Trans>Total Negative Findings</Trans>
-          </option>
+          {location.pathname.includes('/organizations/') && (
+            <option value="four">
+              <Trans>Total Negative Findings</Trans>
+            </option>
+          )}
         </Select>
       </Flex>
       <Box position="relative">
