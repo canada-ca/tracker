@@ -18,7 +18,7 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -189,7 +189,7 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
     <label>
       <Flex align="center">
-        {/* <TourComponent page="adminProfilePage" /> */}
+        <TourComponent page="adminProfilePage" />
         <Text fontSize="lg" fontWeight="bold" mr="2">
           <Trans>Super Admin Menu:</Trans>
         </Text>

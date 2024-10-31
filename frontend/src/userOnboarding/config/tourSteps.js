@@ -145,24 +145,23 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
       {
-        target: '.create-organization-button',
-        content: (
-          <Trans>This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.</Trans>
-        ),
-        disableBeacon: true,
-      },
-      {
         target: '.dropdown',
-        content: (
-          <Trans>This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.</Trans>
-        ),
+        content: <Trans>If you are an admin of your organization, you can find it here</Trans>,
         disableBeacon: true,
       },
       {
-        target: '.super-admin',
-        content: (
-          <Trans>This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.</Trans>
-        ),
+        target: '.admin-domains-tab',
+        content: <Trans>This tab allows you to view and modify your domain list.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.admin-users-tab',
+        content: <Trans>This tab allows you to view and modify your organization's affiliated user roles.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.admin-activity-tab',
+        content: <Trans>This tab allows you to view event logs of privileged activity in your organization.</Trans>,
         disableBeacon: true,
       },
     ],

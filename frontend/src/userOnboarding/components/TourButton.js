@@ -14,7 +14,7 @@ export const toursConfig = {
   '/domains': 'domainPage',
   '/my-tracker/summary': 'myTrackerPage',
   // '/dmarc-summaries': 'dmarcSummariesPage',
-  // '/admin/organizations': 'adminProfilePage',
+  '/admin/organizations': 'adminProfilePage',
 }
 //Tour button as an icon, made for the individual pages (not needed for top banner)
 
