@@ -375,7 +375,7 @@ export function App({ initialLoading, isLoginRequired }) {
           <Trans>Contact Us</Trans>
         </Link>
 
-        <Link as={RouteLink} to="/guidance" ml="4">
+        <Link as={RouteLink} to="/guidance" ml="4" className="guidance-button">
           <Trans>Guidance</Trans>
         </Link>
       </Footer>

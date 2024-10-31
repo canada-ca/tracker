@@ -188,6 +188,11 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
       {
+        target: '.guidance-button',
+        content: <Trans>Click here for guidance on getting started with Tracker and frequently asked questions.</Trans>,
+        disableBeacon: true,
+      },
+      {
         target: '.contact-us-button',
         content: <Trans>Reach out to us if you have any questions.</Trans>,
         disableBeacon: true,
