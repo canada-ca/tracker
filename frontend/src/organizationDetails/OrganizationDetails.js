@@ -170,13 +170,16 @@ export default function OrganizationDetails({ loginRequired }) {
                       selectedRange={progressChartRangeParam}
                       width={1200}
                       height={500}
+                      userHasPermission={data?.organization?.userHasPermission}
                     />
                   </ErrorBoundary>
                 )}
                 <Divider />
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" />
-                </ErrorBoundary>
+                {data?.organization?.userHasPermission && (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" />
+                  </ErrorBoundary>
+                )}
               </ABTestVariant>
             </ABTestWrapper>
           </TabPanel>

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Box, Flex, Select, Text } from '@chakra-ui/react'
-import { number, object, string } from 'prop-types'
+import { bool, number, object, string } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 import theme from '../theme/canada'
 
@@ -57,7 +57,14 @@ const tieredSummaries = {
   four: ['negativeFindings'],
 }
 
-export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last30days', width = 1200, height = 500 }) {
+export function HistoricalSummariesGraph({
+  data,
+  setRange,
+  selectedRange = 'last30days',
+  width = 1200,
+  height = 500,
+  userHasPermission,
+}) {
   const { colors } = theme
   const location = useLocation()
 
@@ -224,7 +231,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
           </option>
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
-              {location.pathname.includes('/organizations/') && (
+              {location.pathname.includes('/organizations/') && userHasPermission && (
                 <option value="four">
                   <Trans>Total Negative Findings</Trans>
                 </option>
@@ -345,4 +352,5 @@ HistoricalSummariesGraph.propTypes = {
   selectedRange: string,
   width: number,
   height: number,
+  userHasPermission: bool,
 }
