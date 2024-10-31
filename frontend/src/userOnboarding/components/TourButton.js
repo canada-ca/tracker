@@ -10,7 +10,7 @@ export const toursConfig = {
   // list of pages with their paths
   // Start tour button will only appear on these pages
   '/': 'landingPage',
-  // '/organizations': 'organizationsPage',
+  '/organizations': 'organizationsPage',
   // '/domains': 'domainPage',
   // '/my-tracker/summary': ' myTrackerPage',
   // '/dmarc-summaries': 'dmarcSummariesPage',

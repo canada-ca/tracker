@@ -31,6 +31,11 @@ export const mainTourSteps = {
         content: <Trans>Here is the information for each organization</Trans>,
         disableBeacon: true,
       },
+      {
+        target: '.unclaimed-card',
+        content: <Trans>Find domains that potentially belong to your organization here.</Trans>,
+        disableBeacon: true,
+      },
     ],
   },
   domainPage: {

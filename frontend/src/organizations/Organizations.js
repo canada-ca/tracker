@@ -167,7 +167,7 @@ export default function Organizations() {
     unclaimedCard = (
       <Box mr="3rem" mb="3">
         <OrganizationCard
-          className="organization-card"
+          className="unclaimed-card"
           slug={slug}
           name={name}
           acronym={acronym}
