@@ -12,7 +12,7 @@ import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 
 export default function ForgotPasswordPage() {
   const toast = useToast()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const validationSchema = object().shape({
     email: string()
       .required(t`Email cannot be empty`)
@@ -53,10 +53,11 @@ export default function ForgotPasswordPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
-        onSubmit={async (values) => {
-          sendPasswordResetLink({
+        onSubmit={async (values, { setSubmitting }) => {
+          await sendPasswordResetLink({
             variables: { userName: values.email },
           })
+          setSubmitting(false) // Optional if you want to reset form state
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
@@ -93,6 +94,7 @@ export default function ForgotPasswordPage() {
                   type="submit"
                   id="submitBtn"
                   isLoading={isSubmitting}
+                  isDisabled={isSubmitting}
                 >
                   <Trans>Submit</Trans>
                 </Button>

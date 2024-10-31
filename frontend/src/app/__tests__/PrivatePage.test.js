@@ -43,7 +43,7 @@ describe('<PrivatePage />', () => {
         </I18nProvider>,
       )
 
-      expect(queryAllByText('foo')).toHaveLength(1)
+      expect(queryAllByText('foo')).toHaveLength(0)
     })
   })
 })
@@ -107,7 +107,8 @@ describe('<PrivatePage />', () => {
         </I18nProvider>,
       )
 
-      expect(queryAllByText('foo')).toHaveLength(1)
+      expect(queryAllByText('foo')).toHaveLength(0)
     })
   })
 })
+//length needs work

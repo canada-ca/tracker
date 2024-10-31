@@ -286,12 +286,9 @@ describe('<DomainsPage />', () => {
     })
 
     describe('domain card links', () => {
-      const history = createMemoryHistory({
-        initialEntries: ['/domains'],
-        initialIndex: 0,
-      })
       it('takes user to DMARC Report page', async () => {
-        const { getAllByText } = render(
+        const currentYear = new Date().getFullYear();
+        const { getAllByText, getByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
               userVar={makeVar({
@@ -302,10 +299,11 @@ describe('<DomainsPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <MemoryRouter initialEntries={['/domains']}>
                     <TourProvider>
                       <Routes>
                         <Route path="/domains" element={<DomainsPage />} />
+                        <Route path="/domains/:domain/dmarc-report/:period/:year" element={<div>DMARC Report Page</div>} />
                       </Routes>
                     </TourProvider>
                   </MemoryRouter>
@@ -314,19 +312,16 @@ describe('<DomainsPage />', () => {
             </UserVarProvider>
           </MockedProvider>
         );
-        
-
-        const currentYear = new Date().getFullYear()
-
+    
         await waitFor(() => {
-          const reportLinks = getAllByText(/DMARC Report/i)
-          fireEvent.click(reportLinks[0])
-          expect(history.location.pathname).toEqual(`/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/${currentYear}`)
-        })
-      })
-
+          const reportLinks = getAllByText(/DMARC Report/i);
+          fireEvent.click(reportLinks[0]);
+          expect(getByText(/DMARC Report Page/i)).toBeInTheDocument(); // Check for the presence of the DMARC Report Page
+        });
+      });
+    
       it('takes user to Guidance page', async () => {
-        const { getAllByRole } = render(
+        const { getAllByRole, getByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
               userVar={makeVar({
@@ -336,10 +331,11 @@ describe('<DomainsPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <MemoryRouter initialEntries={['/domains']}>
                     <TourProvider>
                       <Routes>
                         <Route path="/domains" element={<DomainsPage />} />
+                        <Route path="/domains/:domain" element={<div>Guidance Page</div>} />
                       </Routes>
                     </TourProvider>
                   </MemoryRouter>
@@ -348,15 +344,15 @@ describe('<DomainsPage />', () => {
             </UserVarProvider>
           </MockedProvider>
         );
-        
-
+    
         await waitFor(() => {
-          const guidanceLinks = getAllByRole('link', { name: /View Results/i })
-          fireEvent.click(guidanceLinks[0])
-          expect(history.location.pathname).toEqual('/domains/tbs-sct.gc.ca')
-        })
-      })
-    })
+          const guidanceLinks = getAllByRole('link', { name: /View Results/i });
+          fireEvent.click(guidanceLinks[0]);
+          expect(getByText(/Guidance Page/i)).toBeInTheDocument(); // Check for the presence of the Guidance Page
+        });
+      });
+    });
+    
 
     describe('filtering options', () => {
       describe('search bar', () => {

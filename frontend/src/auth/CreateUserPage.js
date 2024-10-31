@@ -17,7 +17,7 @@ import { SIGN_UP } from '../graphql/mutations'
 
 export default function CreateUserPage() {
   const toast = useToast()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const location = useLocation()
   const userOrgToken = useParams().userOrgToken || ''
 
