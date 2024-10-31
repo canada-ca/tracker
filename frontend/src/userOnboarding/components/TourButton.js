@@ -12,7 +12,7 @@ export const toursConfig = {
   '/': 'landingPage',
   '/organizations': 'organizationsPage',
   '/domains': 'domainPage',
-  // '/my-tracker/summary': ' myTrackerPage',
+  '/my-tracker/summary': 'myTrackerPage',
   // '/dmarc-summaries': 'dmarcSummariesPage',
   // '/admin/organizations': 'adminProfilePage',
 }

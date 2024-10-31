@@ -84,7 +84,10 @@ export const mainTourSteps = {
       {
         content: (
           <h1>
-            <Trans>This page is dedicated to your personal view of tracker</Trans>
+            <Trans>
+              This page is dedicated to your personal view of tracker. All domains marked as "favourite" will be
+              displayed in the metrics.
+            </Trans>
           </h1>
         ),
         placement: 'center',
@@ -93,27 +96,12 @@ export const mainTourSteps = {
       },
       {
         target: '.summary',
-        content: <Trans>Summary of your tracker</Trans>,
-        disableBeacon: true,
-      },
-      {
-        target: '.dmarc-phases',
-        content: <Trans>dmarc phases information</Trans>,
+        content: <Trans>This tab displays the HTTPS and DMARC summaries for your favourited domains.</Trans>,
         disableBeacon: true,
       },
       {
         target: '.domains',
-        content: <Trans>domains information</Trans>,
-        disableBeacon: true,
-      },
-      {
-        target: '.https-config-summary',
-        content: <Trans>https configuration summary</Trans>,
-        disableBeacon: true,
-      },
-      {
-        target: '.dmarc-phases-other',
-        content: <Trans>dmarc phases information</Trans>,
+        content: <Trans>This tab displays a list of your favourited domains.</Trans>,
         disableBeacon: true,
       },
     ],

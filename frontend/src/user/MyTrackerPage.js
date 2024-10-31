@@ -12,7 +12,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
@@ -49,7 +49,7 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%">
-      {/* <TourComponent page="myTrackerPage" /> */}
+      <TourComponent page="myTrackerPage" />
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading
           as="h1"
@@ -77,7 +77,7 @@ export default function OrganizationDetails() {
           <Tab borderTopWidth="4px" className="summary">
             <Trans>Summary</Trans>
           </Tab>
-          <Tab borderTopWidth="4px" className="dmarc-phases">
+          <Tab borderTopWidth="4px">
             <Trans>DMARC Phases</Trans>
           </Tab>
           <Tab borderTopWidth="4px" className="domains">
@@ -86,7 +86,7 @@ export default function OrganizationDetails() {
         </TabList>
 
         <TabPanels>
-          <TabPanel className="https-config-summary">
+          <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TierOneSummaries
                 https={data?.findMyTracker?.summaries.https}
@@ -94,7 +94,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel className="dmarc-phases-other">
+          <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box>
                 <Text fontSize="3xl">DMARC Phases</Text>
