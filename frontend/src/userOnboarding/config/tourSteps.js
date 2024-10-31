@@ -22,6 +22,11 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
       {
+        target: '.filter-affiliated',
+        content: <Trans>Here you can filter the list to only display your affiliated organizations.</Trans>,
+        disableBeacon: true,
+      },
+      {
         target: '.organization-card',
         content: <Trans>Here is the information for each organization</Trans>,
         disableBeacon: true,

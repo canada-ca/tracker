@@ -31,7 +31,7 @@ import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useQuery } from '@apollo/client'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -182,7 +182,7 @@ export default function Organizations() {
 
   return (
     <Box w="100%" px="4">
-      {/* <TourComponent page="organizationsPage" /> */}
+      <TourComponent page="organizationsPage" />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>Organizations</Trans>
       </Heading>
