@@ -62,7 +62,7 @@ export function SearchBox({
             />
           </InputGroup>
         </Flex>
-        {onToggle && <InfoButton bg="gray.50" onToggle={onToggle} />}
+        {onToggle && <InfoButton bg="gray.50" onToggle={onToggle} className="glossary-button" />}
         <Stack isInline align="center" ml={{ md: '5%' }}>
           <Text as="label" htmlFor="Sort-by-field" fontSize="md" fontWeight="bold" textAlign="center">
             <Trans>Sort by: </Trans>

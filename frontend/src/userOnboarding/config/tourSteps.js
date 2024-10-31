@@ -52,7 +52,7 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
       {
-        target: '.filter-box',
+        target: '.search-box',
         content: <Trans>You can modify the results of the domain list using these filters</Trans>,
         disableBeacon: true,
       },
@@ -69,6 +69,11 @@ export const mainTourSteps = {
       {
         target: '.domain-card',
         content: <Trans>Here is the information for each domain</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.glossary-button',
+        content: <Trans>Click here for additional information on statuses, tags, and filters.</Trans>,
         disableBeacon: true,
       },
     ],
