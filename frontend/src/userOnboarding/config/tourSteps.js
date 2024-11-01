@@ -28,12 +28,107 @@ export const mainTourSteps = {
       },
       {
         target: '.organization-card',
-        content: <Trans>Here is the information for each organization</Trans>,
+        content: <Trans>Here is the information for each organization. Click to view more details.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.request-invite-button',
+        content: <Trans>If you are unaffiliated with your organization, request an invite.</Trans>,
         disableBeacon: true,
       },
       {
         target: '.unclaimed-card',
         content: <Trans>Find domains that potentially belong to your organization here.</Trans>,
+        disableBeacon: true,
+      },
+    ],
+  },
+  organizationSummary: {
+    requiresAuth: true,
+    steps: [
+      {
+        content: (
+          <h1>
+            <Trans>ORG SUMMARY TAB</Trans>
+          </h1>
+        ),
+        placement: 'center',
+        target: 'body',
+        disableBeacon: true,
+      },
+      {
+        target: '.summaries-group',
+        content: <Trans>View summaries of your organization's web and email security compliance.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.progress-graph',
+        content: <Trans>See how your organization's security compliance has changed over time.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.aggregated-guidance-summary',
+        content: <Trans>See what your organization's most common issues are.</Trans>,
+        disableBeacon: true,
+      },
+    ],
+  },
+  organizationDomains: {
+    requiresAuth: true,
+    steps: [
+      // {
+      //   content: (
+      //     <h1>
+      //       <Trans>ORG DOMAINS TAB</Trans>
+      //     </h1>
+      //   ),
+      //   placement: 'center',
+      //   target: 'body',
+      //   disableBeacon: true,
+      // },
+      {
+        target: '.search-box',
+        content: <Trans>Search for domains here.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.domain-filters',
+        content: <Trans>Further filter your results here.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.domain-card',
+        content: <Trans>View high-level results for each domain.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.asset-state',
+        content: (
+          <Trans>
+            The asset state shows the domain's realtion to your organization. Only "approved" assets are counted in
+            summaries.
+          </Trans>
+        ),
+        disableBeacon: true,
+      },
+      {
+        target: '.domain-tag-row',
+        content: <Trans>Both user and system designated tags appear here.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.view-results-button',
+        content: <Trans>View detailed scan results and guidance by clicking here.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.request-scan-button',
+        content: <Trans>Refresh the web and email scan results for this domain.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.favourite-button',
+        content: <Trans>Mark domains as "Favourite" to save them to your "myTracker" page.</Trans>,
         disableBeacon: true,
       },
     ],
@@ -130,6 +225,10 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
     ],
+  },
+  userPage: {
+    requiresAuth: true,
+    steps: [],
   },
   adminProfilePage: {
     requiresAuth: true,

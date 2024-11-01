@@ -11,6 +11,8 @@ export const toursConfig = {
   // Start tour button will only appear on these pages
   '/': 'landingPage',
   '/organizations': 'organizationsPage',
+  '/organizations/:orgSlug/summary': 'organizationSummary',
+  '/organizations/:orgSlug/domains': 'organizationDomains',
   '/domains': 'domainPage',
   '/my-tracker/summary': 'myTrackerPage',
   // '/dmarc-summaries': 'dmarcSummariesPage',

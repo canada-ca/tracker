@@ -130,6 +130,7 @@ export default function Organizations() {
               {isLoggedIn() && !userHasPermission && (
                 <>
                   <IconButton
+                    className="request-invite-button"
                     aria-label={t`Request Invite`}
                     variant="primary"
                     icon={<UserIcon color="white" boxSize="icons.md" />}
@@ -207,7 +208,6 @@ export default function Organizations() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
-          className="search-box"
           selectedDisplayLimit={orgsPerPage}
           setSelectedDisplayLimit={setOrgsPerPage}
           hasNextPage={hasNextPage}

@@ -412,6 +412,7 @@ export function AdminDomains({ orgSlug, orgId }) {
                 <PlusSquareIcon color="gray.300" />
               </InputLeftElement>
               <Input
+                borderColor="black"
                 id="Search-for-domain-field"
                 type="text"
                 placeholder={i18n._(t`Domain URL`)}

@@ -157,6 +157,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
                 <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
+                borderColor="black"
                 id="Search-for-user-field"
                 aria-label="new-user-input"
                 placeholder={t`User email`}

@@ -121,13 +121,13 @@ function DomainCard({
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               {assetState && (
-                <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center">
+                <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center" className="asset-state">
                   {assetStateLabels[assetState]}
                 </Badge>
               )}
             </ABTestVariant>
           </ABTestWrapper>
-          <Flex ml="auto">
+          <Flex ml="auto" className="domain-tag-row">
             {rcode === 'NXDOMAIN' && (
               <Badge colorScheme="red" variant="subtle" alignSelf="center">
                 NXDOMAIN
@@ -220,6 +220,7 @@ function DomainCard({
 
           <Stack fontSize="sm" justifySelf="flex-end" alignSelf="stretch" justifyContent="center" mx="2">
             <Button
+              className="view-results-button"
               variant="primary"
               as={RouteLink}
               to={{
@@ -246,7 +247,9 @@ function DomainCard({
           </Stack>
           {isLoggedIn() && (
             <Stack justifyContent="center">
-              {isEmailValidated() && userHasPermission && <ScanDomainButton domainUrl={url} />}
+              {isEmailValidated() && userHasPermission && (
+                <ScanDomainButton className="request-scan-button" domainUrl={url} />
+              )}
               {location.pathname.match('my-tracker') ? (
                 <IconButton
                   onClick={async () => {
@@ -258,6 +261,7 @@ function DomainCard({
                 />
               ) : (
                 <IconButton
+                  className="favourite-button"
                   onClick={async () => {
                     await favouriteDomain({ variables: { domainId: id } })
                   }}
