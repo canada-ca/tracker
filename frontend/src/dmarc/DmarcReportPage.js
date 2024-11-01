@@ -34,7 +34,7 @@ import { NotificationBanner } from '../app/NotificationBanner'
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const fileName = `${domainSlug}_${period}-${year}`
-  const history = useNavigate()
+  const navigate = useNavigate()
   const { i18n } = useLingui()
 
   useDocumentTitle(t`DMARC Report for ${domainSlug}`)
@@ -80,12 +80,12 @@ export default function DmarcReportPage() {
 
   // Show data for newly selected date
   const handleChange = (e) => {
-    setSelectedDate(e.target.value)
-    const [newPeriod, newYear] = e.target.value.split(', ')
-    setSelectedPeriod(newPeriod)
-    setSelectedYear(newYear)
-    history.replace(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
-  }
+    setSelectedDate(e.target.value);
+    const [newPeriod, newYear] = e.target.value.split(', ');
+    setSelectedPeriod(newPeriod);
+    setSelectedYear(newYear);
+    navigate(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`); // Use navigate instead of history
+  };
 
   // Set DMARC bar graph Loading
   if (graphLoading || tableLoading) {

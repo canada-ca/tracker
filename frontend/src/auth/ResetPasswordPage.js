@@ -11,7 +11,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { RESET_PASSWORD } from '../graphql/mutations'
 
 export default function ResetPasswordPage() {
-  const history = useNavigate()
+  const navigate = useNavigate()
   const toast = useToast()
   const { resetToken } = useParams()
 

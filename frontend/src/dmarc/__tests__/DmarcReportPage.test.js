@@ -1,14 +1,14 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 import userEvent from '@testing-library/user-event'
-import { createMemoryHistory } from 'history'
+// import { createMemoryHistory } from 'history'
 
 
 import DmarcReportPage from '../DmarcReportPage'
@@ -238,10 +238,10 @@ describe('<DmarcReportPage />', () => {
 
     describe('changes period tables', () => {
       it('the url changes', async () => {
-        const history = createMemoryHistory({
-          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
-          initialIndex: 0,
-        });
+        // const history = createMemoryHistory({
+        //   initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+        //   initialIndex: 0,
+        // });
     
         // Destructure findByRole along with other query methods
         const { getByRole, findByRole, getByText } = render(
@@ -270,7 +270,7 @@ describe('<DmarcReportPage />', () => {
         );
     
         // Use findByRole here to wait for the button to appear
-        const button = await findByRole('button', { name: /Fully Aligned by IP Address/i });
+        await findByRole('button', { name: /Fully Aligned by IP Address/i });
     
         const periodSelector = getByRole('combobox', {
           name: /Showing data for period/i,
@@ -286,13 +286,12 @@ describe('<DmarcReportPage />', () => {
         // Verify that new content appears instead of checking the URL
 
         await waitFor(() => {
-          screen.logTestingPlaygroundURL()
           expect(getByText(/AUGUST Report/i)).toBeInTheDocument(); // Adjust based on actual content
         });
       });
     
       it('the data changes', async () => {
-        const { getByRole, findByRole, getByText, queryByText } = render(
+        const { getByRole, findByRole, queryByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
               userVar={makeVar({
@@ -317,7 +316,7 @@ describe('<DmarcReportPage />', () => {
           </MockedProvider>
         );
     
-        const button = await findByRole('button', { name: /Fully Aligned by IP Address/i });
+        await findByRole('button', { name: /Fully Aligned by IP Address/i });
     
         const periodSelector = getByRole('combobox', {
           name: /Showing data for period/i,
