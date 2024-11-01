@@ -5,8 +5,9 @@ async function removeSummary({ arangoCtx, domain, date }) {
   // setup Transaction
   const trx = await arangoCtx.transaction(collectionStrings)
 
-  await trx.step(
-    () => arangoCtx.query`
+  try {
+    await trx.step(
+      () => arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -29,9 +30,18 @@ async function removeSummary({ arangoCtx, domain, date }) {
       )
       RETURN true
     `,
-  )
+    )
+  } catch (err) {
+    console.error(`Transaction step error occurred for dmarc summaries service when removing summary data: ${err}`)
+    await trx.abort()
+  }
 
-  await trx.commit()
+  try {
+    await trx.commit()
+  } catch (err) {
+    console.error(`Transaction commit error occurred for dmarc summaries service when removing summary data: ${err}`)
+    await trx.abort()
+  }
 }
 
 module.exports = {

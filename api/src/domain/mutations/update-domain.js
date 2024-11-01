@@ -194,6 +194,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
@@ -236,6 +237,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
     }
 
@@ -246,6 +248,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 

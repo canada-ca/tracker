@@ -124,6 +124,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Trx step error occurred when upserting email validation for user: ${user._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
@@ -131,6 +132,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred when upserting email validation for user: ${user._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 

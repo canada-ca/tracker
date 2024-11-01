@@ -2591,7 +2591,9 @@ describe('removing an organization', () => {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
-                transaction: jest.fn(),
+                transaction: jest.fn().mockReturnValue({
+                  abort: jest.fn(),
+                }),
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('owner'),
@@ -2680,7 +2682,9 @@ describe('removing an organization', () => {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
-                transaction: jest.fn(),
+                transaction: jest.fn().mockReturnValue({
+                  abort: jest.fn(),
+                }),
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('owner'),
@@ -2771,7 +2775,9 @@ describe('removing an organization', () => {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
-                transaction: jest.fn(),
+                transaction: jest.fn().mockReturnValue({
+                  abort: jest.fn(),
+                }),
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('owner'),
@@ -2857,7 +2863,9 @@ describe('removing an organization', () => {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
-                transaction: jest.fn(),
+                transaction: jest.fn().mockReturnValue({
+                  abort: jest.fn(),
+                }),
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('owner'),
@@ -2918,6 +2926,7 @@ describe('removing an organization', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Trx Step')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -3008,6 +3017,7 @@ describe('removing an organization', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -3101,6 +3111,7 @@ describe('removing an organization', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Trx Step')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -3194,6 +3205,7 @@ describe('removing an organization', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -3293,6 +3305,7 @@ describe('removing an organization', () => {
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockRejectedValue(new Error('Trx Step')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -3393,6 +3406,7 @@ describe('removing an organization', () => {
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockRejectedValue(new Error('Trx Step')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -3485,6 +3499,7 @@ describe('removing an organization', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue({}),
             commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({

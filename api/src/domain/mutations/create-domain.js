@@ -187,6 +187,7 @@ export const createDomain = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
@@ -195,6 +196,7 @@ export const createDomain = new mutationWithClientMutationId({
       insertedDomain = await domainCursor.next()
     } catch (err) {
       console.error(`Cursor error occurred for user: ${userKey} when inserting new domain: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
@@ -214,6 +216,7 @@ export const createDomain = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
@@ -221,6 +224,7 @@ export const createDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 

@@ -1864,6 +1864,7 @@ describe('testing user sign up', () => {
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
                   }),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -1979,6 +1980,7 @@ describe('testing user sign up', () => {
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
                   }),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2061,6 +2063,7 @@ describe('testing user sign up', () => {
                   step: jest.fn().mockReturnValue({
                     next: jest.fn().mockRejectedValue('Cursor Error'),
                   }),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2157,6 +2160,7 @@ describe('testing user sign up', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('Transaction Step Error'),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2262,6 +2266,7 @@ describe('testing user sign up', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2357,6 +2362,7 @@ describe('testing user sign up', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
                   commit: jest.fn().mockRejectedValue('Transaction Commit Error'),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2703,6 +2709,7 @@ describe('testing user sign up', () => {
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
                   }),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2819,6 +2826,7 @@ describe('testing user sign up', () => {
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
                   }),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2902,6 +2910,7 @@ describe('testing user sign up', () => {
                   step: jest.fn().mockReturnValue({
                     next: jest.fn().mockRejectedValue('Cursor Error'),
                   }),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -2998,6 +3007,7 @@ describe('testing user sign up', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('Transaction Step Error'),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -3103,6 +3113,7 @@ describe('testing user sign up', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {
@@ -3198,6 +3209,7 @@ describe('testing user sign up', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
                   commit: jest.fn().mockRejectedValue('Transaction Commit Error'),
+                  abort: jest.fn(),
                 }),
                 uuidv4,
                 auth: {

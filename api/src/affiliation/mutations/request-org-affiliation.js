@@ -119,6 +119,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
@@ -135,6 +136,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
@@ -145,6 +147,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
@@ -165,6 +168,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
         console.error(
           `Database error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while creating cursor for retrieving organization names. error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to request invite. Please try again.`))
       }
       let orgNames
@@ -174,6 +178,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
         console.error(
           `Cursor error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to request invite. Please try again.`))
       }
       const adminLink = `https://${request.get('host')}/admin/organizations`
@@ -204,6 +209,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 

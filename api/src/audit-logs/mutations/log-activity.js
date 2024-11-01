@@ -42,17 +42,15 @@ export const logActivity = async ({
         `,
     )
   } catch (err) {
-    console.error(
-      `Transaction step error occurred while attempting to log user action: ${err}`,
-    )
+    console.error(`Transaction step error occurred while attempting to log user action: ${err}`)
+    await trx.abort()
   }
 
   try {
     await trx.commit()
   } catch (err) {
-    console.error(
-      `Transaction commit error occurred while attempting to log user action: ${err}`,
-    )
+    console.error(`Transaction commit error occurred while attempting to log user action: ${err}`)
+    await trx.abort()
   }
 
   return auditLog

@@ -184,6 +184,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Database error occurred for user: ${userKey} when attempting to archive domain: ${domain}, error: ${err}`,
           )
+          await trx.abort()
           continue
         }
       } else {
@@ -199,6 +200,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Database error occurred for user: ${userKey}, when counting domain claims for domain: ${checkDomain.domain}, error: ${err}`,
           )
+          await trx.abort()
           continue
         }
 
@@ -212,6 +214,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Error occurred for user: ${userKey}, when attempting to remove domain "${domain}" from organization with slug "${org.slug}". Organization does not have claim for domain.`,
           )
+          await trx.abort()
           continue
         }
 
@@ -228,6 +231,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Database error occurred for user: ${userKey}, when counting ownership claims for domain: ${checkDomain.domain}, error: ${err}`,
           )
+          await trx.abort()
           continue
         }
 
@@ -258,6 +262,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred when removing dmarc summary data for user: ${userKey} while attempting to remove domain: ${checkDomain.domain}, error: ${err}`,
             )
+            await trx.abort()
             continue
           }
 
@@ -277,6 +282,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred when removing ownership data for user: ${userKey} while attempting to remove domain: ${checkDomain.domain}, error: ${err}`,
             )
+            await trx.abort()
             continue
           }
         }
@@ -305,6 +311,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
             )
+            await trx.abort()
             continue
           }
 
@@ -323,6 +330,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
             )
+            await trx.abort()
             continue
           }
 
@@ -340,6 +348,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred while user: ${userKey} attempted to remove domain ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
             )
+            await trx.abort()
             continue
           }
         } else {
@@ -363,6 +372,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred while user: ${userKey} attempted to remove claim for ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
             )
+            await trx.abort()
             continue
           }
         }
@@ -374,6 +384,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Trx commit error occurred while user: ${userKey} attempted to remove domains in org: ${org.slug}, error: ${err}`,
           )
+          await trx.abort()
           continue
         }
 

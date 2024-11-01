@@ -638,6 +638,7 @@ describe('given an unsuccessful leave', () => {
 
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -706,6 +707,7 @@ describe('given an unsuccessful leave', () => {
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(new Error('Step error occurred.')),
           commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
+          abort: jest.fn(),
         })
 
         const response = await graphql({
@@ -849,6 +851,7 @@ describe('given an unsuccessful leave', () => {
 
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -917,6 +920,7 @@ describe('given an unsuccessful leave', () => {
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(new Error('Step error occurred.')),
           commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
+          abort: jest.fn(),
         })
 
         const response = await graphql({

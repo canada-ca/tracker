@@ -68,6 +68,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Trx step error occurred when upserting the tfaValidate field for ${user._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to two factor authenticate. Please try again.`))
     }
 
@@ -75,6 +76,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred when upserting the tfaValidate field for ${user._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to two factor authenticate. Please try again.`))
     }
 
