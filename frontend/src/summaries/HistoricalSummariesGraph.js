@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Box, Flex, Select, Text } from '@chakra-ui/react'
-import { number, object, string } from 'prop-types'
+import { array, number, string } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 import theme from '../theme/canada'
 
@@ -320,7 +320,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
 }
 
 HistoricalSummariesGraph.propTypes = {
-  data: object.isRequired,
+  data: array.isRequired,
   setRange: func.isRequired,
   selectedRange: string,
   width: number,

@@ -65,20 +65,16 @@ export function WebTLSResults({ tlsResult }) {
               <Trans>The following ciphers are from known weak protocols and must be disabled:</Trans>
             </Text>
             {weakProtocols?.map((protocol) => {
-              return (
-                <>
-                  {rest[protocol]?.map(({ name }, idx) => {
-                    return (
-                      <Flex key={idx} {...cipherStyleProps}>
-                        <Flex align="center" minW="50%">
-                          <Text color="weak">{name}</Text>
-                        </Flex>
-                        <Text color="weak">{weakProtocolNames[protocol]}</Text>
-                      </Flex>
-                    )
-                  })}
-                </>
-              )
+              return rest[protocol]?.map(({ name }, idx) => {
+                return (
+                  <Flex key={`${protocol}-${idx}`} {...cipherStyleProps}>
+                    <Flex align="center" minW="50%">
+                      <Text color="weak">{name}</Text>
+                    </Flex>
+                    <Text color="weak">{weakProtocolNames[protocol]}</Text>
+                  </Flex>
+                )
+              })
             })}
           </Box>
         ) : (
@@ -497,10 +493,10 @@ export function WebTLSResults({ tlsResult }) {
                                   </Text>
                                   {sanList.map((san, idx) => {
                                     return (
-                                      <>
+                                      <React.Fragment key={idx}>
                                         {san}
                                         {idx < sanList.length - 1 && ', '}
-                                      </>
+                                      </React.Fragment>
                                     )
                                   })}
                                 </Flex>
