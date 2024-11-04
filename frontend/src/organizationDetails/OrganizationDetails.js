@@ -37,7 +37,6 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 import { bool } from 'prop-types'
-import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails({ loginRequired }) {
   const { isLoggedIn } = useUserVar()
@@ -155,7 +154,6 @@ export default function OrganizationDetails({ loginRequired }) {
 
         <TabPanels>
           <TabPanel>
-            {/* <TourComponent page="organizationSummary" /> */}
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
@@ -193,7 +191,6 @@ export default function OrganizationDetails({ loginRequired }) {
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <TourComponent page="organizationDomains" />
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationDomains
                 orgSlug={orgSlug}

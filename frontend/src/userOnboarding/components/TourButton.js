@@ -11,11 +11,11 @@ export const toursConfig = {
   // Start tour button will only appear on these pages
   '/': 'landingPage',
   '/organizations': 'organizationsPage',
-  '/organizations/:orgSlug/summary': 'organizationSummary',
-  '/organizations/:orgSlug/domains': 'organizationDomains',
+  '/organizations/*/summary': 'organizationSummary',
+  '/organizations/*/domains': 'organizationDomains',
   '/domains': 'domainPage',
   '/my-tracker/summary': 'myTrackerPage',
-  // '/dmarc-summaries': 'dmarcSummariesPage',
+  '/dmarc-summaries': 'dmarcSummariesPage',
   '/admin/organizations': 'adminProfilePage',
 }
 //Tour button as an icon, made for the individual pages (not needed for top banner)
@@ -42,11 +42,22 @@ export const toursConfig = {
 //   )
 // }
 
+const matchPathname = (pathname, config) => {
+  for (const key in config) {
+    const regex = new RegExp(`^${key.replace(/\*/g, '.*')}$`)
+    if (regex.test(pathname)) {
+      return config[key]
+    }
+  }
+  return null
+}
+
 export const TourButton = () => {
   const { pathname } = useLocation()
   const { startTour } = useTour()
 
-  const tourName = toursConfig[pathname]
+  const tourName = matchPathname(pathname, toursConfig)
+  console.log(tourName)
 
   const handleStartTour = () => {
     if (tourName) startTour(tourName)

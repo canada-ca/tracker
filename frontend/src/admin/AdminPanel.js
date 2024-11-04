@@ -9,12 +9,10 @@ import { UserList } from './UserList'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
-import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
-      <TourComponent page="adminProfilePage" />
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="2">
           <Tab borderTopWidth="4px" className="admin-domains-tab">

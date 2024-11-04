@@ -15,8 +15,16 @@ export const TourComponent = () => {
   const { darkOrange } = theme.colors.tracker.logo
 
   const { pathname } = useLocation()
-
-  const tourName = toursConfig[pathname]
+  const matchPathname = (pathname, config) => {
+    for (const key in config) {
+      const regex = new RegExp(`^${key.replace(/\*/g, '.*')}$`)
+      if (regex.test(pathname)) {
+        return config[key]
+      }
+    }
+    return null
+  }
+  const tourName = matchPathname(pathname, toursConfig)
 
   // handles starting the tour based on the page and user state
   useEffect(() => {

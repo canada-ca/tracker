@@ -12,7 +12,6 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
-import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
@@ -49,7 +48,6 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%">
-      <TourComponent page="myTrackerPage" />
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading
           as="h1"
