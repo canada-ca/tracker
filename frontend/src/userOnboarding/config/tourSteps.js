@@ -191,22 +191,22 @@ export const mainTourSteps = {
     steps: [
       {
         target: '.month-select',
-        content: <Trans>Choose the period of data to view</Trans>,
-        disableBeacon: true,
-      },
-      {
-        target: '.filter-switch',
-        content: <Trans>Filter the data to view</Trans>,
-        disableBeacon: true,
-      },
-      {
-        target: '.export-button',
-        content: <Trans>Button to export the data</Trans>,
+        content: <Trans>Choose the period of data to view.</Trans>,
         disableBeacon: true,
       },
       {
         target: '.search-bar',
-        content: <Trans>Search for a specific domain</Trans>,
+        content: <Trans>Search for a specific domain.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.info-button',
+        content: <Trans>Button to open the glossary.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.filter-switch',
+        content: <Trans>Use filters to make your search more specific.</Trans>,
         disableBeacon: true,
       },
     ],

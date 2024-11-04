@@ -57,7 +57,6 @@ export const TourButton = () => {
   const { startTour } = useTour()
 
   const tourName = matchPathname(pathname, toursConfig)
-  console.log(tourName)
 
   const handleStartTour = () => {
     if (tourName) startTour(tourName)
