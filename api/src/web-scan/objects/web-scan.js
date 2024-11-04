@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
 
 import { webScanResultType } from './web-scan-result'
 
@@ -12,6 +12,10 @@ export const webScanType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: `The status of the scan for the given domain and IP address.`,
+    },
+    isPrivateIp: {
+      type: GraphQLBoolean,
+      description: `Whether the IP address is a private IP address.`,
     },
     results: {
       type: webScanResultType,
