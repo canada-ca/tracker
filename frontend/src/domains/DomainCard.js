@@ -127,7 +127,7 @@ function DomainCard({
               )}
             </ABTestVariant>
           </ABTestWrapper>
-          <Flex ml="auto" className="domain-tag-row">
+          <Flex ml="auto" className="system-tags">
             {rcode === 'NXDOMAIN' && (
               <Badge colorScheme="red" variant="subtle" alignSelf="center">
                 NXDOMAIN
@@ -165,7 +165,7 @@ function DomainCard({
           </Flex>
         </Flex>
         <Flex>
-          <Box mr="auto">
+          <Box mr="auto" className="user-tags">
             <Flex flexWrap="wrap">
               {tags?.map((tag, idx) => {
                 return (

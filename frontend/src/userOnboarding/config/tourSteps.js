@@ -47,16 +47,6 @@ export const mainTourSteps = {
     requiresAuth: true,
     steps: [
       {
-        content: (
-          <h1>
-            <Trans>ORG SUMMARY TAB</Trans>
-          </h1>
-        ),
-        placement: 'center',
-        target: 'body',
-        disableBeacon: true,
-      },
-      {
         target: '.summaries-group',
         content: <Trans>View summaries of your organization's web and email security compliance.</Trans>,
         disableBeacon: true,
@@ -76,16 +66,6 @@ export const mainTourSteps = {
   organizationDomains: {
     requiresAuth: true,
     steps: [
-      // {
-      //   content: (
-      //     <h1>
-      //       <Trans>ORG DOMAINS TAB</Trans>
-      //     </h1>
-      //   ),
-      //   placement: 'center',
-      //   target: 'body',
-      //   disableBeacon: true,
-      // },
       {
         target: '.search-box',
         content: <Trans>Search for domains here.</Trans>,
@@ -112,8 +92,13 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
       {
-        target: '.domain-tag-row',
-        content: <Trans>Both user and system designated tags appear here.</Trans>,
+        target: '.system-tags',
+        content: <Trans>System-designated tags appear here.</Trans>,
+        disableBeacon: true,
+      },
+      {
+        target: '.user-tags',
+        content: <Trans>User-designated tags appear here.</Trans>,
         disableBeacon: true,
       },
       {
