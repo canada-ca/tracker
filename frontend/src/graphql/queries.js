@@ -727,6 +727,11 @@ export const GET_HISTORICAL_ORG_SUMMARIES = gql`
         mail {
           ...RequiredSummaryFields
         }
+        negativeFindings(orderBy: { direction: DESC, field: TAG_COUNT }) {
+          guidanceTags {
+            count
+          }
+        }
       }
     }
   }

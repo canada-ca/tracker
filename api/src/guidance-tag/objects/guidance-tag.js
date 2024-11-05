@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLList, GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 
 import { refLinksType } from './ref-links'
@@ -35,7 +35,7 @@ export const guidanceTagType = new GraphQLObjectType({
       resolve: ({ refLinksTechnical }) => refLinksTechnical,
     },
     count: {
-      type: GraphQLString,
+      type: GraphQLInt,
       description: 'Number of times the tag has been applied.',
       resolve: ({ count }) => count,
     },
