@@ -32,6 +32,7 @@ import { MonthSelect } from '../components/MonthSelect'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -220,6 +221,7 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%" px="2">
+      <TourComponent />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
       </Heading>

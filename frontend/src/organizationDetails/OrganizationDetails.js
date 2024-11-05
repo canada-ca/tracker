@@ -37,6 +37,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 import { bool } from 'prop-types'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails({ loginRequired }) {
   const { isLoggedIn } = useUserVar()
@@ -91,6 +92,7 @@ export default function OrganizationDetails({ loginRequired }) {
 
   return (
     <Box w="100%">
+      <TourComponent />
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <IconButton
           icon={<ArrowLeftIcon />}

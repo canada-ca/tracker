@@ -201,10 +201,6 @@ export const mainTourSteps = {
       },
     ],
   },
-  userPage: {
-    requiresAuth: true,
-    steps: [],
-  },
   adminProfilePage: {
     requiresAuth: true,
     steps: [

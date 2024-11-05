@@ -23,7 +23,6 @@ import { NotificationBanner } from './NotificationBanner'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 import { bool } from 'prop-types'
-import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -106,7 +105,6 @@ export function App({ initialLoading, isLoginRequired }) {
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
       <ScrollToAnchor />
-      <TourComponent />
       <header>
         <CSSReset />
         <SkipLink invisible href="#main">
