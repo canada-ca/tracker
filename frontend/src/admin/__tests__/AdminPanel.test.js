@@ -14,10 +14,8 @@ import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawOrgDomainListData } from '../../fixtures/orgDomainListData'
 import { rawOrgUserListData } from '../../fixtures/orgUserListData'
-import {
-  PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
-  PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
-} from '../../graphql/queries'
+import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE, PAGINATED_ORG_DOMAINS_ADMIN_PAGE } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -50,18 +48,18 @@ describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <Route path="/admin">
-                  <AdminPanel
-                    orgSlug="test-org.slug"
-                    permission="ADMIN"
-                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  />
+                  <TourProvider>
+                    <AdminPanel
+                      orgSlug="test-org.slug"
+                      permission="ADMIN"
+                      orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    />
+                  </TourProvider>
                 </Route>
               </MemoryRouter>
             </ChakraProvider>
