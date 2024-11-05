@@ -22,6 +22,7 @@ msgid ". Personal information will not be disclosed by Treasury Board Secretaria
 msgstr ". Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du"
 
 #: src/guidance/GuidanceTagDetails.js:88
+#: src/guidance/GuidanceTagDetails.js:88
 msgid "{0} Findings"
 msgstr "{0} Constatations"
 
@@ -2735,6 +2736,10 @@ msgstr "Noms :"
 msgid "Negative"
 msgstr "Négatif"
 
+#: src/summaries/HistoricalSummariesGraph.js:88
+msgid "Negative Findings"
+msgstr "Constatations négatives"
+
 #: src/guidance/GuidanceTagList.js:122
 #~ msgid "Negative Tags"
 #~ msgstr "Étiquettes négatives"
@@ -4656,6 +4661,10 @@ msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonct
 #: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total des messages"
+
+#: src/summaries/HistoricalSummariesGraph.js:229
+msgid "Total Negative Findings"
+msgstr "Total des conclusions négatives"
 
 #: src/organizationDetails/OrganizationSummary.js:22
 #~ msgid "Total users"

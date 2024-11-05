@@ -22,6 +22,7 @@ msgid ". Personal information will not be disclosed by Treasury Board Secretaria
 msgstr ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 
 #: src/guidance/GuidanceTagDetails.js:88
+#: src/guidance/GuidanceTagDetails.js:88
 msgid "{0} Findings"
 msgstr "{0} Findings"
 
@@ -2783,6 +2784,10 @@ msgstr "Names:"
 msgid "Negative"
 msgstr "Negative"
 
+#: src/summaries/HistoricalSummariesGraph.js:88
+msgid "Negative Findings"
+msgstr "Negative Findings"
+
 #: src/guidance/GuidanceTagList.js:122
 #~ msgid "Negative Tags"
 #~ msgstr "Negative Tags"
@@ -4734,6 +4739,10 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 #: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total Messages"
+
+#: src/summaries/HistoricalSummariesGraph.js:229
+msgid "Total Negative Findings"
+msgstr "Total Negative Findings"
 
 #: src/organizationDetails/OrganizationSummary.js:22
 #~ msgid "Total users"

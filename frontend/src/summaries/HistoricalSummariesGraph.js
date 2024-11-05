@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Box, Flex, Select, Text } from '@chakra-ui/react'
-import { number, object, string } from 'prop-types'
+import { array, bool, number, string } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 import theme from '../theme/canada'
 
@@ -17,16 +17,24 @@ import { GlyphCircle } from '@visx/glyph'
 import { Trans, t } from '@lingui/macro'
 import { func } from 'prop-types'
 import useSearchParam from '../utilities/useSearchParam'
+import { useLocation } from 'react-router-dom'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 const getDate = ({ date }) => new Date(date)
 
 const getSummaries = (data, scanTypes, scoreType) => {
   let summaries = []
-  data.forEach((summary) => {
+  data?.forEach((summary) => {
     for (const scanType of scanTypes) {
       const { date, [scanType]: scanTypeData } = summary
-      const scanTypeNode = { date, type: scanType, score: scanTypeData.categories[0][scoreType]?.toFixed(0) }
-      summaries.push(scanTypeNode)
+      let score = 0
+      if (scanType === 'negativeFindings') {
+        score = scanTypeData?.guidanceTags?.map(({ count }) => count)?.reduce((a, b) => a + b)
+      } else {
+        score = scanTypeData.categories[0][scoreType]?.toFixed(0)
+      }
+      if (typeof score === 'undefined') continue
+      summaries.push({ date, type: scanType, score })
     }
   })
   return summaries
@@ -47,10 +55,19 @@ const tieredSummaries = {
   one: ['https', 'dmarc'],
   two: ['webConnections', 'ssl', 'spf', 'dkim', 'dmarcPhase'],
   three: ['web', 'mail'],
+  four: ['negativeFindings'],
 }
 
-export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last30days', width = 1200, height = 500 }) {
+export function HistoricalSummariesGraph({
+  data,
+  setRange,
+  selectedRange = 'last30days',
+  width = 1200,
+  height = 500,
+  userHasPermission,
+}) {
   const { colors } = theme
+  const location = useLocation()
 
   const { searchValue: scoreTypeParam, setSearchParams: setScoreTypeParam } = useSearchParam({
     name: 'score-type',
@@ -76,6 +93,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
     dmarcPhase: `DMARC`,
     web: t`Web`,
     mail: t`Mail`,
+    negativeFindings: t`Negative Findings`,
   }
 
   // tooltip parameters
@@ -125,7 +143,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
   const rdScale = scaleLinear({
     range: [innerHeight, 0],
     domain:
-      scoreTypeParam === 'percentage'
+      scoreTypeParam === 'percentage' && summaryTierParam !== 'four'
         ? [0, 100]
         : [Math.min(...summaries.map(getRD)), Math.max(...summaries.map(getRD))],
     nice: true,
@@ -184,6 +202,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
           borderColor="black"
           value={scoreTypeParam}
           onChange={(e) => setScoreTypeParam(e.target.value)}
+          isDisabled={summaryTierParam === 'four'}
         >
           <option value="percentage">
             <Trans>Percentage</Trans>
@@ -211,6 +230,15 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
           <option value="three">
             <Trans>Tier 3: Compliance</Trans>
           </option>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              {location.pathname.includes('/organizations/') && userHasPermission && (
+                <option value="four">
+                  <Trans>Total Negative Findings</Trans>
+                </option>
+              )}
+            </ABTestVariant>
+          </ABTestWrapper>
         </Select>
       </Flex>
       <Box position="relative">
@@ -310,7 +338,7 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
             {tooltipData.map((d, i) => (
               <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(
                 tooltipData[i],
-              )}${scoreTypeParam === 'percentage' ? '%' : ''}`}</Text>
+              )}${scoreTypeParam === 'percentage' && summaryTierParam !== 'four' ? '%' : ''}`}</Text>
             ))}
           </TooltipWithBounds>
         )}
@@ -320,9 +348,10 @@ export function HistoricalSummariesGraph({ data, setRange, selectedRange = 'last
 }
 
 HistoricalSummariesGraph.propTypes = {
-  data: object.isRequired,
+  data: array.isRequired,
   setRange: func.isRequired,
   selectedRange: string,
   width: number,
   height: number,
+  userHasPermission: bool,
 }

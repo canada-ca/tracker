@@ -61,7 +61,7 @@ export default function OrganizationDetails({ loginRequired }) {
 
   const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
     variables: { orgSlug, month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
-    // errorPolicy: 'ignore', // allow partial success
+    errorPolicy: 'ignore', // allow partial success
   })
 
   useEffect(() => {
@@ -172,13 +172,16 @@ export default function OrganizationDetails({ loginRequired }) {
                       selectedRange={progressChartRangeParam}
                       width={1200}
                       height={500}
+                      userHasPermission={data?.organization?.userHasPermission}
                     />
                   </ErrorBoundary>
                 )}
                 <Divider />
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
-                </ErrorBoundary>
+                {data?.organization?.userHasPermission && (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
+                  </ErrorBoundary>
+                )}
               </ABTestVariant>
             </ABTestWrapper>
           </TabPanel>
