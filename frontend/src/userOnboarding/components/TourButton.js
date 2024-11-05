@@ -42,7 +42,7 @@ export const toursConfig = {
 //   )
 // }
 
-const matchPathname = (pathname, config) => {
+export const matchPathname = (pathname, config) => {
   for (const key in config) {
     const regex = new RegExp(`^${key.replace(/\*/g, '.*')}$`)
     if (regex.test(pathname)) {
