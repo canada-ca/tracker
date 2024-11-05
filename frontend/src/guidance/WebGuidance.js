@@ -126,7 +126,7 @@ export function WebGuidance({ webResults, timestamp }) {
   return (
     <>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        <Text fontsize="lg">
+        <Text fontSize="lg">
           <Trans>
             <b>Last Scanned:</b> {formatTimestamp(timestamp)}
           </Trans>

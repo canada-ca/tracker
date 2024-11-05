@@ -341,12 +341,12 @@ function GuidancePage() {
         </Text>
         {organizations.edges.map(({ node }, idx) => {
           return (
-            <>
-              <Link as={RouteLink} to={`/organizations/${node.slug}`} key={idx}>
+            <React.Fragment key={idx}>
+              <Link as={RouteLink} to={`/organizations/${node.slug}`}>
                 {node.name} ({node.acronym})
               </Link>
               {idx !== organizations.edges.length - 1 && <Text mr="1">,</Text>}
-            </>
+            </React.Fragment>
           )
         })}
       </Flex>
