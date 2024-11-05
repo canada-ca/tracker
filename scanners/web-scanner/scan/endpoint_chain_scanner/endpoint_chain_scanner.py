@@ -159,7 +159,7 @@ def request_connection(
                     req = session.prepare_request(
                         requests.Request(
                             "GET",
-                            f"{scheme.lower()}://{host}:1010",
+                            f"{scheme.lower()}://{host}",
                             headers={**DEFAULT_REQUEST_HEADERS},
                         )
                     )
