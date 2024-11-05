@@ -24,15 +24,16 @@ const getDate = ({ date }) => new Date(date)
 
 const getSummaries = (data, scanTypes, scoreType) => {
   let summaries = []
-  data.forEach((summary) => {
+  data?.forEach((summary) => {
     for (const scanType of scanTypes) {
       const { date, [scanType]: scanTypeData } = summary
-      let score
+      let score = 0
       if (scanType === 'negativeFindings') {
-        score = scanTypeData.guidanceTags.map(({ count }) => count).reduce((a, b) => a + b)
+        score = scanTypeData?.guidanceTags?.map(({ count }) => count)?.reduce((a, b) => a + b)
       } else {
         score = scanTypeData.categories[0][scoreType]?.toFixed(0)
       }
+      if (typeof score === 'undefined') continue
       summaries.push({ date, type: scanType, score })
     }
   })

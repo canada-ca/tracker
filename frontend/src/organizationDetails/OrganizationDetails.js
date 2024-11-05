@@ -60,7 +60,7 @@ export default function OrganizationDetails({ loginRequired }) {
 
   const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
     variables: { orgSlug, month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
-    // errorPolicy: 'ignore', // allow partial success
+    errorPolicy: 'ignore', // allow partial success
   })
 
   useEffect(() => {
