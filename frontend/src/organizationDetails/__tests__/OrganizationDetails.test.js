@@ -143,7 +143,7 @@ describe('<OrganizationDetails />', () => {
                 >
                   <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']}>
                     <Routes>
-                      <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                      <Route path="/organizations/:orgSlug/:activeTab??" element={<OrganizationDetails />} />
                     </Routes>
                   </MemoryRouter>
                 </UserVarProvider>
@@ -173,7 +173,7 @@ describe('<OrganizationDetails />', () => {
                 >
                   <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']}>
                     <Routes>
-                      <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                      <Route path="/organizations/:orgSlug/:activeTab??" element={<OrganizationDetails />} />
                     </Routes>
                   </MemoryRouter>
                 </UserVarProvider>
@@ -206,7 +206,7 @@ describe('<OrganizationDetails />', () => {
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Routes>
                     {/* Use the 'element' prop in v6 */}
-                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                    <Route path="/organizations/:orgSlug/:activeTab??" element={<OrganizationDetails />} />
                   </Routes>
                 </MemoryRouter>
               </UserVarProvider>
@@ -323,7 +323,7 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Routes>
-                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                    <Route path="/organizations/:orgSlug/:activeTab??" element={<OrganizationDetails />} />
                   </Routes>
                 </MemoryRouter>
               </UserVarProvider>
@@ -351,7 +351,7 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Routes>
-                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                    <Route path="/organizations/:orgSlug/:activeTab??" element={<OrganizationDetails />} />
                   </Routes>
                 </MemoryRouter>
               </UserVarProvider>
@@ -379,7 +379,7 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']}>
                   <Routes>
-                    <Route path="/organizations/:orgSlug" element={<OrganizationDetails />} />
+                    <Route path="/organizations/:orgSlug/:activeTab??" element={<OrganizationDetails />} />
                   </Routes>
                 </MemoryRouter>
               </UserVarProvider>

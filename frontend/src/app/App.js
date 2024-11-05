@@ -25,11 +25,11 @@ import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 import { bool } from 'prop-types'
 
-// const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
+const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
-// const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
-// const UserPage = lazyWithRetry(() => import('../user/UserPage'))
+const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
+const UserPage = lazyWithRetry(() => import('../user/UserPage'))
 const SignInPage = lazyWithRetry(() => import('../auth/SignInPage'))
 const DmarcReportPage = lazyWithRetry(() => import('../dmarc/DmarcReportPage'))
 const Organizations = lazyWithRetry(() => import('../organizations/Organizations'))
@@ -40,8 +40,8 @@ const ResetPasswordPage = lazyWithRetry(() => import('../auth/ResetPasswordPage'
 const DmarcByDomainPage = lazyWithRetry(() => import('../dmarc/DmarcByDomainPage'))
 const TermsConditionsPage = lazyWithRetry(() => import('../termsConditions/TermsConditionsPage'))
 const TwoFactorAuthenticatePage = lazyWithRetry(() => import('../auth/TwoFactorAuthenticatePage'))
-// const EmailValidationPage = lazyWithRetry(() => import('../auth/EmailValidationPage'))
-// const CreateOrganizationPage = lazyWithRetry(() => import('../createOrganization/CreateOrganizationPage'))
+const EmailValidationPage = lazyWithRetry(() => import('../auth/EmailValidationPage'))
+const CreateOrganizationPage = lazyWithRetry(() => import('../createOrganization/CreateOrganizationPage'))
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))

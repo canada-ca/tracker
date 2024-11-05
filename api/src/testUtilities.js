@@ -1,5 +1,12 @@
 import { ensure } from 'arango-tools'
 import { Database } from 'arangojs'
+import { useLocation } from 'react-router-dom'
+
+export const LocationDisplay = () => {
+  const location = useLocation()
+
+  return <div data-testid="location-display">{location.pathname}</div>
+}
 
 export async function ensureDatabase(options) {
   let variables
