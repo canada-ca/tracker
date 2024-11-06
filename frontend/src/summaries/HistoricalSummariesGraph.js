@@ -177,7 +177,7 @@ export function HistoricalSummariesGraph({
   })
 
   return (
-    <>
+    <Box className="progress-graph">
       <Flex align="center" my="2">
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Range:</Trans>
@@ -343,7 +343,7 @@ export function HistoricalSummariesGraph({
           </TooltipWithBounds>
         )}
       </Box>
-    </>
+    </Box>
   )
 }
 
