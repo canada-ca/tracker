@@ -120,7 +120,6 @@ async def run():
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
-        asset_state = payload.get("assetState")
         if not domain.endswith(".gc.ca") and not domain.endswith(".canada.ca"):
             logger.info(f"Skipping '{domain}' as it is not a GC domain.")
             return
