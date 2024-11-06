@@ -2671,6 +2671,10 @@ msgstr "Noms :"
 msgid "Negative"
 msgstr "Négatif"
 
+#: src/summaries/HistoricalSummariesGraph.js:88
+msgid "Negative Findings"
+msgstr "Constatations négatives"
+
 #: src/guidance/GuidanceTagList.js:122
 #~ msgid "Negative Tags"
 #~ msgstr "Étiquettes négatives"
@@ -4548,6 +4552,10 @@ msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonct
 #: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total des messages"
+
+#: src/summaries/HistoricalSummariesGraph.js:229
+msgid "Total Negative Findings"
+msgstr "Total des conclusions négatives"
 
 #: src/organizationDetails/OrganizationSummary.js:22
 #~ msgid "Total users"
