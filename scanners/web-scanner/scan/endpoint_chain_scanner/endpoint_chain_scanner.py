@@ -144,7 +144,6 @@ def request_connection(
                 session.mount("https://", HostHeaderSSLAdapter())
             else:
                 session.mount("https://", AnyTlsVersionAdapter())
-            session.mount("http://", AnyTlsVersionAdapter())
 
             if prepared_request:
                 req = prepared_request
