@@ -97,7 +97,7 @@ msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
 #: src/guidance/EmailGuidance.js:156
-#: src/guidance/WebGuidance.js:152
+#: src/guidance/WebGuidance.js:148
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Last Scanned:</0> {0}"
 
@@ -1026,7 +1026,7 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-#: src/summaries/HistoricalSummariesGraph.js:179
+#: src/summaries/HistoricalSummariesGraph.js:197
 msgid "Data:"
 msgstr "Data:"
 
@@ -1216,7 +1216,7 @@ msgstr "DMARC Implementation Phase: {0}"
 #~ msgstr "DMARC phase summary"
 
 #: src/organizationDetails/OrganizationDetails.js:143
-#: src/organizationDetails/OrganizationDetails.js:187
+#: src/organizationDetails/OrganizationDetails.js:190
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -1297,7 +1297,7 @@ msgstr "Domain"
 msgid "Domain added"
 msgstr "Domain added"
 
-#: src/summaries/HistoricalSummariesGraph.js:192
+#: src/summaries/HistoricalSummariesGraph.js:211
 msgid "Domain count"
 msgstr "Domain count"
 
@@ -2496,7 +2496,7 @@ msgstr "Language:"
 #~ msgstr "Last 30 Days"
 
 #: src/components/MonthSelect.js:60
-#: src/summaries/HistoricalSummariesGraph.js:169
+#: src/summaries/HistoricalSummariesGraph.js:187
 msgid "Last 30 Days of Data"
 msgstr "Last 30 Days of Data"
 
@@ -2504,7 +2504,7 @@ msgstr "Last 30 Days of Data"
 #~ msgid "Last 365 Days"
 #~ msgstr "Last 365 Days"
 
-#: src/summaries/HistoricalSummariesGraph.js:172
+#: src/summaries/HistoricalSummariesGraph.js:190
 msgid "Last 365 Days of Data"
 msgstr "Last 365 Days of Data"
 
@@ -2576,7 +2576,7 @@ msgstr "Lookups:"
 msgid "Low"
 msgstr "Low"
 
-#: src/summaries/HistoricalSummariesGraph.js:78
+#: src/summaries/HistoricalSummariesGraph.js:95
 msgid "Mail"
 msgstr "Mail"
 
@@ -2719,7 +2719,7 @@ msgstr "Names:"
 msgid "Negative"
 msgstr "Negative"
 
-#: src/summaries/HistoricalSummariesGraph.js:88
+#: src/summaries/HistoricalSummariesGraph.js:96
 msgid "Negative Findings"
 msgstr "Negative Findings"
 
@@ -3196,7 +3196,7 @@ msgstr "pct:"
 msgid "PENDING"
 msgstr "PENDING"
 
-#: src/summaries/HistoricalSummariesGraph.js:189
+#: src/summaries/HistoricalSummariesGraph.js:208
 msgid "Percentage"
 msgstr "Percentage"
 
@@ -3408,7 +3408,7 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
-#: src/summaries/HistoricalSummariesGraph.js:165
+#: src/summaries/HistoricalSummariesGraph.js:183
 msgid "Range:"
 msgstr "Range:"
 
@@ -4224,7 +4224,7 @@ msgstr "Summary"
 msgid "Summary of your tracker"
 msgstr "Summary of your tracker"
 
-#: src/summaries/HistoricalSummariesGraph.js:196
+#: src/summaries/HistoricalSummariesGraph.js:215
 msgid "Summary Tier:"
 msgstr "Summary Tier:"
 
@@ -4448,7 +4448,7 @@ msgstr "The results of DKIM verification of the message. Can be pass, fail, neut
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 
-#: src/guidance/WebGuidance.js:189
+#: src/guidance/WebGuidance.js:185
 msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 msgstr "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 
@@ -4540,7 +4540,7 @@ msgstr "This page is dedicated to everything domains"
 msgid "This page is dedicated to your personal view of tracker"
 msgstr "This page is dedicated to your personal view of tracker"
 
-#: src/guidance/WebGuidance.js:168
+#: src/guidance/WebGuidance.js:164
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 
@@ -4552,7 +4552,7 @@ msgstr "This user is not affiliated with any organizations"
 #~ msgid "Tier 1"
 #~ msgstr "Tier 1"
 
-#: src/summaries/HistoricalSummariesGraph.js:206
+#: src/summaries/HistoricalSummariesGraph.js:225
 #: src/summaries/TieredSummaries.js:25
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
@@ -4561,7 +4561,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgid "Tier 2"
 #~ msgstr "Tier 2"
 
-#: src/summaries/HistoricalSummariesGraph.js:209
+#: src/summaries/HistoricalSummariesGraph.js:228
 #: src/summaries/TieredSummaries.js:36
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
@@ -4570,7 +4570,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgid "Tier 3"
 #~ msgstr "Tier 3"
 
-#: src/summaries/HistoricalSummariesGraph.js:212
+#: src/summaries/HistoricalSummariesGraph.js:231
 #: src/summaries/TieredSummaries.js:53
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
@@ -4635,7 +4635,7 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 msgid "Total Messages"
 msgstr "Total Messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:229
+#: src/summaries/HistoricalSummariesGraph.js:237
 msgid "Total Negative Findings"
 msgstr "Total Negative Findings"
 
@@ -5099,7 +5099,7 @@ msgstr "weak"
 
 #: src/admin/AdminDomains.js:178
 #: src/organizationDetails/OrganizationDomains.js:105
-#: src/summaries/HistoricalSummariesGraph.js:77
+#: src/summaries/HistoricalSummariesGraph.js:94
 msgid "Web"
 msgstr "Web"
 
@@ -5117,7 +5117,7 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Components"
 msgstr "Web Components"
 
-#: src/summaries/HistoricalSummariesGraph.js:72
+#: src/summaries/HistoricalSummariesGraph.js:89
 msgid "Web Connections"
 msgstr "Web Connections"
 
@@ -5240,7 +5240,7 @@ msgstr "WILDCARD"
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Would you like to request an invite to {orgName}?"
 
-#: src/summaries/HistoricalSummariesGraph.js:175
+#: src/summaries/HistoricalSummariesGraph.js:193
 msgid "Year to Date"
 msgstr "Year to Date"
 

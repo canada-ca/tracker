@@ -97,7 +97,7 @@ msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
 #: src/guidance/EmailGuidance.js:156
-#: src/guidance/WebGuidance.js:152
+#: src/guidance/WebGuidance.js:148
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Dernière numérisation:</0> {0}"
 
@@ -1014,7 +1014,7 @@ msgid "Data Security and Use"
 msgstr "Sécurité et utilisation des données"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-#: src/summaries/HistoricalSummariesGraph.js:179
+#: src/summaries/HistoricalSummariesGraph.js:197
 msgid "Data:"
 msgstr "Données:"
 
@@ -1204,7 +1204,7 @@ msgstr "Phase de mise en œuvre de DMARC: {0}"
 #~ msgstr "Résumé de la phase DMARC"
 
 #: src/organizationDetails/OrganizationDetails.js:143
-#: src/organizationDetails/OrganizationDetails.js:187
+#: src/organizationDetails/OrganizationDetails.js:190
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -1285,7 +1285,7 @@ msgstr "Domaine"
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/summaries/HistoricalSummariesGraph.js:192
+#: src/summaries/HistoricalSummariesGraph.js:211
 msgid "Domain count"
 msgstr "Compte de domaine"
 
@@ -2456,7 +2456,7 @@ msgstr "La langue:"
 #~ msgstr "Les 30 derniers jours"
 
 #: src/components/MonthSelect.js:60
-#: src/summaries/HistoricalSummariesGraph.js:169
+#: src/summaries/HistoricalSummariesGraph.js:187
 msgid "Last 30 Days of Data"
 msgstr "Données des 30 derniers jours"
 
@@ -2464,7 +2464,7 @@ msgstr "Données des 30 derniers jours"
 #~ msgid "Last 365 Days"
 #~ msgstr "Les 365 derniers jours"
 
-#: src/summaries/HistoricalSummariesGraph.js:172
+#: src/summaries/HistoricalSummariesGraph.js:190
 msgid "Last 365 Days of Data"
 msgstr "Données des 365 derniers jours"
 
@@ -2536,7 +2536,7 @@ msgstr "Les recherches :"
 msgid "Low"
 msgstr "Faible"
 
-#: src/summaries/HistoricalSummariesGraph.js:78
+#: src/summaries/HistoricalSummariesGraph.js:95
 msgid "Mail"
 msgstr "Courrier"
 
@@ -2671,7 +2671,7 @@ msgstr "Noms :"
 msgid "Negative"
 msgstr "Négatif"
 
-#: src/summaries/HistoricalSummariesGraph.js:88
+#: src/summaries/HistoricalSummariesGraph.js:96
 msgid "Negative Findings"
 msgstr "Constatations négatives"
 
@@ -3148,7 +3148,7 @@ msgstr "pct:"
 msgid "PENDING"
 msgstr "EN ATTENTE"
 
-#: src/summaries/HistoricalSummariesGraph.js:189
+#: src/summaries/HistoricalSummariesGraph.js:208
 msgid "Percentage"
 msgstr "Pourcentage"
 
@@ -3356,7 +3356,7 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
-#: src/summaries/HistoricalSummariesGraph.js:165
+#: src/summaries/HistoricalSummariesGraph.js:183
 msgid "Range:"
 msgstr "Gamme :"
 
@@ -4166,7 +4166,7 @@ msgstr "Résumé"
 msgid "Summary of your tracker"
 msgstr "Résumé de votre tracker"
 
-#: src/summaries/HistoricalSummariesGraph.js:196
+#: src/summaries/HistoricalSummariesGraph.js:215
 msgid "Summary Tier:"
 msgstr "Résumé Tier :"
 
@@ -4390,7 +4390,7 @@ msgstr "Résultats de la vérification DKIM du message. Il peut s'agir d'un succ
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "Résultats de la vérification DKIM du message. Il peut s'agir d'un succès, d'un échec, d'un résultat neutre, d'une erreur temporaire ou d'une erreur permanente."
 
-#: src/guidance/WebGuidance.js:189
+#: src/guidance/WebGuidance.js:185
 msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 msgstr "Le point d'extrémité sélectionné est une adresse IP privée. Tracker n'effectue pas d'analyse sur les adresses IP privées."
 
@@ -4474,7 +4474,7 @@ msgstr "Cette page est consacrée à tous les domaines"
 msgid "This page is dedicated to your personal view of tracker"
 msgstr "Cette page est dédiée à votre avis personnel sur le tracker."
 
-#: src/guidance/WebGuidance.js:168
+#: src/guidance/WebGuidance.js:164
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "Ce service n'est pas un service d'hébergement Web et ne nécessite pas la conformité aux exigences de configuration de la gestion des sites et services Web."
 
@@ -4482,17 +4482,17 @@ msgstr "Ce service n'est pas un service d'hébergement Web et ne nécessite pas 
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
-#: src/summaries/HistoricalSummariesGraph.js:206
+#: src/summaries/HistoricalSummariesGraph.js:225
 #: src/summaries/TieredSummaries.js:25
 msgid "Tier 1: Minimum Requirements"
 msgstr "Niveau 1 : Exigences minimales"
 
-#: src/summaries/HistoricalSummariesGraph.js:209
+#: src/summaries/HistoricalSummariesGraph.js:228
 #: src/summaries/TieredSummaries.js:36
 msgid "Tier 2: Improved Posture"
 msgstr "Niveau 2 : Amélioration de la posture"
 
-#: src/summaries/HistoricalSummariesGraph.js:212
+#: src/summaries/HistoricalSummariesGraph.js:231
 #: src/summaries/TieredSummaries.js:53
 msgid "Tier 3: Compliance"
 msgstr "Niveau 3 : Conformité"
@@ -4553,7 +4553,7 @@ msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonct
 msgid "Total Messages"
 msgstr "Total des messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:229
+#: src/summaries/HistoricalSummariesGraph.js:237
 msgid "Total Negative Findings"
 msgstr "Total des conclusions négatives"
 
@@ -5009,7 +5009,7 @@ msgstr "faible"
 
 #: src/admin/AdminDomains.js:178
 #: src/organizationDetails/OrganizationDomains.js:105
-#: src/summaries/HistoricalSummariesGraph.js:77
+#: src/summaries/HistoricalSummariesGraph.js:94
 msgid "Web"
 msgstr "Web"
 
@@ -5027,7 +5027,7 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Components"
 msgstr "Composants Web"
 
-#: src/summaries/HistoricalSummariesGraph.js:72
+#: src/summaries/HistoricalSummariesGraph.js:89
 msgid "Web Connections"
 msgstr "Connexions web"
 
@@ -5138,7 +5138,7 @@ msgstr "WILDCARD"
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Souhaitez-vous demander une invitation à {orgName} ?"
 
-#: src/summaries/HistoricalSummariesGraph.js:175
+#: src/summaries/HistoricalSummariesGraph.js:193
 msgid "Year to Date"
 msgstr "Depuis le début de l'année"
 
