@@ -9,19 +9,21 @@ import { UserList } from './UserList'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
+      <TourComponent />
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="2">
-          <Tab borderTopWidth="4px">
+          <Tab borderTopWidth="4px" className="admin-domains-tab">
             <Trans>Domains</Trans>
           </Tab>
-          <Tab borderTopWidth="4px">
+          <Tab borderTopWidth="4px" className="admin-users-tab">
             <Trans>Users</Trans>
           </Tab>
-          <Tab borderTopWidth="4px">
+          <Tab borderTopWidth="4px" className="admin-activity-tab">
             <Trans>Activity</Trans>
           </Tab>
         </TabList>
