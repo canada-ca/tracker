@@ -232,7 +232,8 @@ class TLSResult:
         try:
             scan_request = ServerScanRequest(
                 server_location=ServerNetworkLocation(
-                    hostname=domain, ip_address=ip_address
+                    hostname=domain,
+                    ip_address=ip_address,
                 ),
                 scan_commands=designated_scans,
                 network_configuration=ServerNetworkConfiguration(

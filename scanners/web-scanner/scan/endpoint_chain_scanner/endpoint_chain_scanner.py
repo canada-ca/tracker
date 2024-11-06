@@ -90,6 +90,7 @@ class AnyTlsVersionAdapter(HTTPAdapter):
     def init_poolmanager(self, *args, **pool_kwargs):
         ssl_context = ssl.create_default_context()
         ssl_context.set_ciphers("DEFAULT@SECLEVEL=0")
+        ssl_context.check_hostname = False
         ssl_context.minimum_version = ssl.TLSVersion.TLSv1
         pool_kwargs["ssl_context"] = ssl_context
 
@@ -142,7 +143,8 @@ def request_connection(
             if scheme.lower() == "https" and ip_address:
                 session.mount("https://", HostHeaderSSLAdapter())
             else:
-                session.mount("", AnyTlsVersionAdapter())
+                session.mount("https://", AnyTlsVersionAdapter())
+            session.mount("http://", AnyTlsVersionAdapter())
 
             if prepared_request:
                 req = prepared_request
