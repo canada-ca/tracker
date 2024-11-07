@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import { useUserVar } from '../../utilities/userState'
 import theme from '../../theme/canada'
 import { useLocation } from 'react-router-dom'
-import { toursConfig } from './TourButton'
+import { toursConfig, matchPathname } from './TourButton'
 
 export const TourComponent = () => {
   const { isEmailValidated } = useUserVar()
@@ -15,8 +15,7 @@ export const TourComponent = () => {
   const { darkOrange } = theme.colors.tracker.logo
 
   const { pathname } = useLocation()
-
-  const tourName = toursConfig[pathname]
+  const tourName = matchPathname(pathname, toursConfig)
 
   // handles starting the tour based on the page and user state
   useEffect(() => {

@@ -292,7 +292,6 @@ export const createDomain = new mutationWithClientMutationId({
         channel: 'scans.add_domain_to_easm',
         msg: {
           domain: returnDomain.domain,
-          assetState: assetState,
           domain_key: returnDomain._key,
           hash: returnDomain.hash,
           user_key: null, // only used for One Time Scans

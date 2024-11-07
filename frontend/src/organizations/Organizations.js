@@ -31,7 +31,7 @@ import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useQuery } from '@apollo/client'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -130,6 +130,7 @@ export default function Organizations() {
               {isLoggedIn() && !userHasPermission && (
                 <>
                   <IconButton
+                    className="request-invite-button"
                     aria-label={t`Request Invite`}
                     variant="primary"
                     icon={<UserIcon color="white" boxSize="icons.md" />}
@@ -167,7 +168,7 @@ export default function Organizations() {
     unclaimedCard = (
       <Box mr="3rem" mb="3">
         <OrganizationCard
-          className="organization-card"
+          className="unclaimed-card"
           slug={slug}
           name={name}
           acronym={acronym}
@@ -182,7 +183,7 @@ export default function Organizations() {
 
   return (
     <Box w="100%" px="4">
-      {/* <TourComponent page="organizationsPage" /> */}
+      <TourComponent />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>Organizations</Trans>
       </Heading>
@@ -207,7 +208,6 @@ export default function Organizations() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
-          className="search-box"
           selectedDisplayLimit={orgsPerPage}
           setSelectedDisplayLimit={setOrgsPerPage}
           hasNextPage={hasNextPage}

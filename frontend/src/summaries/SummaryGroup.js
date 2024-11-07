@@ -33,7 +33,14 @@ export function SummaryGroup({ summaries }) {
   }
 
   return (
-    <Flex direction={{ base: 'column', md: 'row' }} justify="space-evenly" align="stretch" w="100%" mb={6}>
+    <Flex
+      className="summaries-group"
+      direction={{ base: 'column', md: 'row' }}
+      justify="space-evenly"
+      align="stretch"
+      w="100%"
+      mb={6}
+    >
       {summaries.map(({ id, title, description, data }) => (
         <SummaryCard
           key={id}
