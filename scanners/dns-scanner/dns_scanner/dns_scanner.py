@@ -105,7 +105,7 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result.rcode = "NOERROR"
     scan_result.record_exists = True
 
-    resolver = dns.resolver.get_default_resolver()
+    resolver = dns.resolver.Resolver()
     resolver.timeout = TIMEOUT
     resolver.lifetime = TIMEOUT * 2
 

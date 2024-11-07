@@ -23,15 +23,15 @@ logger = logging.getLogger(__name__)
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 
 
-def check_if_domain_exists(domain, custom_resolver):
-    if custom_resolver:
-        current_resolver = custom_resolver
-    else:
-        current_resolver = dns.resolver.get_default_resolver()
+def check_if_domain_exists(domain, resolver):
+    if not resolver:
+        resolver = dns.resolver.Resolver()
+        resolver.timeout = TIMEOUT
+        resolver.lifetime = TIMEOUT * 2
 
     # Check if domain exists, only return True if DNS returns NOERROR
     try:
-        exist_response = current_resolver.resolve(
+        exist_response = resolver.resolve(
             domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False
         )
         return exist_response.response.rcode() == dns.rcode.NOERROR
@@ -96,6 +96,10 @@ class DMARCScanner:
         domain_list = list()
         domain_list.append(self.domain)
 
+        resolver = dns.resolver.Resolver()
+        resolver.timeout = TIMEOUT
+        resolver.lifetime = TIMEOUT * 2
+
         try:
             # Perform "checkdmarc" scan on provided domain.
             scan_result = json.loads(
@@ -103,11 +107,13 @@ class DMARCScanner:
                     {
                         "domain": self.domain,
                         "base_domain": get_base_domain(self.domain),
-                        "ns": check_ns(self.domain, timeout=TIMEOUT),
-                        "mx": check_mx(self.domain, skip_tls=True, timeout=TIMEOUT),
-                        "spf": check_spf(self.domain, timeout=TIMEOUT),
+                        "ns": check_ns(self.domain, resolver=resolver),
+                        "mx": check_mx(self.domain, skip_tls=True, resolver=resolver),
+                        "spf": check_spf(self.domain, resolver=resolver),
                         "dmarc": check_dmarc(
-                            self.domain, ignore_unrelated_records=True, timeout=TIMEOUT
+                            self.domain,
+                            ignore_unrelated_records=True,
+                            resolver=resolver,
                         ),
                     }
                 )
@@ -149,10 +155,6 @@ class DMARCScanner:
             )
             parsed_uris = [parse_dmarc_report_uri(uri) for uri in uris]
             scan_result["dmarc"].get("tags", {}).get("rua", {})["value"] = parsed_uris
-
-        resolver = dns.resolver.get_default_resolver()
-        resolver.timeout = TIMEOUT
-        resolver.lifetime = TIMEOUT * 2
 
         for rua_value in (
             scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", [])
