@@ -77,8 +77,8 @@ msgstr "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden yo
 msgid "<0>Current Phone Number:</0> {detailValue}"
 msgstr "<0>Current Phone Number:</0> {detailValue}"
 
-#: src/guidance/EmailGuidance.js:384
-#: src/guidance/EmailGuidance.js:457
+#: src/guidance/EmailGuidance.js:386
+#: src/guidance/EmailGuidance.js:459
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Error:</0> {0}"
 
@@ -86,17 +86,17 @@ msgstr "<0>Error:</0> {0}"
 msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 msgstr "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 
-#: src/guidance/EmailGuidance.js:344
-#: src/guidance/EmailGuidance.js:431
+#: src/guidance/EmailGuidance.js:346
+#: src/guidance/EmailGuidance.js:433
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Hostname:</0> {hostname}"
 
-#: src/guidance/EmailGuidance.js:349
+#: src/guidance/EmailGuidance.js:351
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
-#: src/guidance/EmailGuidance.js:156
+#: src/guidance/EmailGuidance.js:158
 #: src/guidance/WebGuidance.js:150
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Last Scanned:</0> {0}"
@@ -105,7 +105,7 @@ msgstr "<0>Last Scanned:</0> {0}"
 #~ msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 #~ msgstr "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 
-#: src/guidance/EmailGuidance.js:354
+#: src/guidance/EmailGuidance.js:356
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Preference:</0> {preference}"
 
@@ -308,7 +308,7 @@ msgstr "Additional Findings"
 #~ msgid "Additonal findings"
 #~ msgstr "Additonal findings"
 
-#: src/app/App.js:257
+#: src/app/App.js:273
 msgid "Admin"
 msgstr "Admin"
 
@@ -602,7 +602,7 @@ msgstr "Audit Logs"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:223
+#: src/app/App.js:239
 msgid "Authenticate"
 msgstr "Authenticate"
 
@@ -758,7 +758,7 @@ msgstr "Changes Required for ITPIN Compliance"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 
-#: src/guidance/EmailGuidance.js:394
+#: src/guidance/EmailGuidance.js:396
 msgid "Changes:"
 msgstr "Changes:"
 
@@ -842,7 +842,7 @@ msgstr "Close"
 msgid "Close Account"
 msgstr "Close Account"
 
-#: src/guidance/EmailGuidance.js:323
+#: src/guidance/EmailGuidance.js:325
 msgid "CNAME:"
 msgstr "CNAME:"
 
@@ -930,8 +930,8 @@ msgstr "Contact the Tracker Team"
 msgid "contact us"
 msgstr "contact us"
 
-#: src/app/App.js:232
-#: src/app/App.js:375
+#: src/app/App.js:248
+#: src/app/App.js:391
 #: src/app/ContactUsPage.js:52
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -986,7 +986,7 @@ msgstr "Create a free account to gain visibility into your organization's digita
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/app/App.js:200
+#: src/app/App.js:216
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -999,7 +999,7 @@ msgid "Create an organization"
 msgstr "Create an organization"
 
 #: src/admin/AdminPage.js:139
-#: src/app/App.js:337
+#: src/app/App.js:353
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Create Organization"
@@ -1071,7 +1071,7 @@ msgstr "DDOS Protection"
 msgid "December"
 msgstr "December"
 
-#: src/guidance/EmailGuidance.js:196
+#: src/guidance/EmailGuidance.js:198
 msgid "Default:"
 msgstr "Default:"
 
@@ -1239,7 +1239,7 @@ msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
 #: src/domains/ScanDomain.js:322
-#: src/guidance/EmailGuidance.js:163
+#: src/guidance/EmailGuidance.js:165
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
@@ -1283,7 +1283,7 @@ msgid "DMARC Status"
 msgstr "DMARC Status"
 
 #: src/app/App.js:144
-#: src/app/App.js:299
+#: src/app/App.js:315
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:168
 #: src/dmarc/DmarcByDomainPage.js:226
@@ -1298,7 +1298,7 @@ msgstr "DMARC Summary"
 msgid "DNS Host"
 msgstr "DNS Host"
 
-#: src/guidance/EmailGuidance.js:96
+#: src/guidance/EmailGuidance.js:98
 msgid "DNS Result Summary"
 msgstr "DNS Result Summary"
 
@@ -1376,7 +1376,7 @@ msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:21
 #: src/app/App.js:137
-#: src/app/App.js:270
+#: src/app/App.js:286
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:208
 #: src/domains/DomainsPage.js:266
@@ -1409,7 +1409,7 @@ msgstr "Domains used for SPF validation."
 msgid "Don't have an account? <0>Sign up</0>"
 msgstr "Don't have an account? <0>Sign up</0>"
 
-#: src/app/NotificationBanner.js:57
+#: src/app/NotificationBanner.js:69
 msgid "Don't show again"
 msgstr "Don't show again"
 
@@ -1515,7 +1515,7 @@ msgstr "Email Updates status changed"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:333
+#: src/app/App.js:349
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -1820,7 +1820,7 @@ msgstr "For questions and issues related to scan data, your organization's domai
 msgid "For users interested in using new features that are still in progress."
 msgstr "For users interested in using new features that are still in progress."
 
-#: src/app/App.js:226
+#: src/app/App.js:242
 #: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Forgot Password"
@@ -1914,7 +1914,7 @@ msgstr "Government of Canada Employees"
 msgid "Graph direction:"
 msgstr "Graph direction:"
 
-#: src/app/App.js:379
+#: src/app/App.js:395
 #: src/dmarc/DmarcReportPage.js:206
 #: src/dmarc/DmarcReportPage.js:660
 msgid "Guidance"
@@ -1994,7 +1994,7 @@ msgid "High"
 msgstr "High"
 
 #: src/app/App.js:117
-#: src/app/App.js:196
+#: src/app/App.js:212
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
@@ -2530,11 +2530,11 @@ msgstr "June"
 msgid "Jurisdiction"
 msgstr "Jurisdiction"
 
-#: src/guidance/EmailGuidance.js:242
+#: src/guidance/EmailGuidance.js:244
 msgid "Key length:"
 msgstr "Key length:"
 
-#: src/guidance/EmailGuidance.js:236
+#: src/guidance/EmailGuidance.js:238
 msgid "Key type:"
 msgstr "Key type:"
 
@@ -2577,7 +2577,7 @@ msgstr "Last 365 Days of Data"
 msgid "Last Seen: {0}"
 msgstr "Last Seen: {0}"
 
-#: src/guidance/EmailGuidance.js:338
+#: src/guidance/EmailGuidance.js:340
 msgid "Latest Scan:"
 msgstr "Latest Scan:"
 
@@ -2624,7 +2624,7 @@ msgstr "Login"
 msgid "Login to your account"
 msgstr "Login to your account"
 
-#: src/guidance/EmailGuidance.js:190
+#: src/guidance/EmailGuidance.js:192
 msgid "Lookups:"
 msgstr "Lookups:"
 
@@ -2636,7 +2636,7 @@ msgstr "Low"
 msgid "Mail"
 msgstr "Mail"
 
-#: src/guidance/EmailGuidance.js:333
+#: src/guidance/EmailGuidance.js:335
 msgid "Mail Servers (MX)"
 msgstr "Mail Servers (MX)"
 
@@ -2648,7 +2648,7 @@ msgstr "Mail-sending"
 msgid "Managing Your Domains:"
 msgstr "Managing Your Domains:"
 
-#: src/app/App.js:178
+#: src/app/App.js:194
 msgid "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 msgstr "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 
@@ -2745,7 +2745,7 @@ msgstr "My domain does not send emails, how can I get my domain's DMARC, DKIM, a
 #~ msgstr "My Tracker"
 
 #: src/app/App.js:151
-#: src/app/App.js:320
+#: src/app/App.js:336
 #: src/user/MyTrackerPage.js:34
 #: src/user/MyTrackerPage.js:61
 msgid "myTracker"
@@ -2766,7 +2766,7 @@ msgstr "Name (EN)"
 msgid "Name (FR)"
 msgstr "Name (FR)"
 
-#: src/guidance/EmailGuidance.js:423
+#: src/guidance/EmailGuidance.js:425
 msgid "Name Servers (NS)"
 msgstr "Name Servers (NS)"
 
@@ -2967,7 +2967,7 @@ msgstr "No guidance found for this category"
 msgid "No known weak protocols used."
 msgstr "No known weak protocols used."
 
-#: src/guidance/EmailGuidance.js:369
+#: src/guidance/EmailGuidance.js:371
 msgid "No MX records found. Is the domain parked?"
 msgstr "No MX records found. Is the domain parked?"
 
@@ -3017,7 +3017,7 @@ msgstr "No values were supplied when attempting to update organization details."
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
-#: src/guidance/EmailGuidance.js:325
+#: src/guidance/EmailGuidance.js:327
 #: src/guidance/IgnoredCves.js:18
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
@@ -3172,7 +3172,7 @@ msgstr "Organization(s):"
 
 #: src/admin/AdminPage.js:195
 #: src/app/App.js:134
-#: src/app/App.js:236
+#: src/app/App.js:252
 #: src/app/FloatingMenu.js:103
 #: src/guidance/GuidancePage.js:193
 #: src/organizations/Organizations.js:103
@@ -3203,7 +3203,7 @@ msgstr "our Terms and Conditions on the TBS website"
 msgid "OWNER"
 msgstr "OWNER"
 
-#: src/guidance/EmailGuidance.js:286
+#: src/guidance/EmailGuidance.js:288
 msgid "p:"
 msgstr "p:"
 
@@ -3256,7 +3256,7 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/guidance/EmailGuidance.js:298
+#: src/guidance/EmailGuidance.js:300
 msgid "pct:"
 msgstr "pct:"
 
@@ -3400,7 +3400,7 @@ msgstr "PREVIEW"
 #~ msgid "Previous"
 #~ msgstr "Previous"
 
-#: src/app/App.js:367
+#: src/app/App.js:383
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:41
@@ -3488,7 +3488,7 @@ msgstr "Reach out if you have any questions."
 #~ msgid "Reach out to us if you have any questions."
 #~ msgstr "Reach out to us if you have any questions."
 
-#: src/app/App.js:234
+#: src/app/App.js:250
 msgid "Read guidance"
 msgstr "Read guidance"
 
@@ -3509,9 +3509,9 @@ msgstr "Received Chain Contains Anchor Certificate"
 msgid "Received Chain Has Valid Order"
 msgstr "Received Chain Has Valid Order"
 
-#: src/guidance/EmailGuidance.js:184
-#: src/guidance/EmailGuidance.js:230
-#: src/guidance/EmailGuidance.js:280
+#: src/guidance/EmailGuidance.js:186
+#: src/guidance/EmailGuidance.js:232
+#: src/guidance/EmailGuidance.js:282
 msgid "Record:"
 msgstr "Record:"
 
@@ -3621,7 +3621,7 @@ msgstr "Requires Investigation"
 msgid "REQUIRES_INVESTIGATION"
 msgstr "REQUIRES_INVESTIGATION"
 
-#: src/app/App.js:228
+#: src/app/App.js:244
 #: src/auth/ResetPasswordPage.js:95
 msgid "Reset Password"
 msgstr "Reset Password"
@@ -4078,7 +4078,7 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 #~ msgid "Siganture Hash:"
 #~ msgstr "Siganture Hash:"
 
-#: src/app/App.js:206
+#: src/app/App.js:222
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:105
 #: src/app/TopBanner.js:137
@@ -4129,7 +4129,7 @@ msgstr "Sort by:"
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
-#: src/guidance/EmailGuidance.js:292
+#: src/guidance/EmailGuidance.js:294
 msgid "sp:"
 msgstr "sp:"
 
@@ -4425,13 +4425,13 @@ msgstr "Technical implementation guidance:"
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:371
+#: src/app/App.js:387
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
-#: src/app/App.js:230
+#: src/app/App.js:246
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
@@ -4669,7 +4669,7 @@ msgstr "This user is not affiliated with any organizations"
 #~ msgstr "Tier 1"
 
 #: src/summaries/HistoricalSummariesGraph.js:225
-#: src/summaries/TieredSummaries.js:25
+#: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
 
@@ -4678,7 +4678,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgstr "Tier 2"
 
 #: src/summaries/HistoricalSummariesGraph.js:228
-#: src/summaries/TieredSummaries.js:36
+#: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
 
@@ -4687,7 +4687,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgstr "Tier 3"
 
 #: src/summaries/HistoricalSummariesGraph.js:231
-#: src/summaries/TieredSummaries.js:53
+#: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
 
@@ -4809,7 +4809,7 @@ msgstr "Tracker logo outline"
 msgid "Tracker logo text"
 msgstr "Tracker logo text"
 
-#: src/app/App.js:175
+#: src/app/App.js:191
 msgid "Tracker now automatically manages your DKIM selectors."
 msgstr "Tracker now automatically manages your DKIM selectors."
 
@@ -5208,8 +5208,8 @@ msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 #~ msgid "Warnings"
 #~ msgstr "Warnings"
 
-#: src/guidance/EmailGuidance.js:364
-#: src/guidance/EmailGuidance.js:441
+#: src/guidance/EmailGuidance.js:366
+#: src/guidance/EmailGuidance.js:443
 msgid "Warnings:"
 msgstr "Warnings:"
 
@@ -5437,6 +5437,10 @@ msgstr "You agree to protect any information disclosed to you by TBS in accordan
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
+#: src/app/App.js:173
+msgid "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
+msgstr "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
+
 #: src/userOnboarding/config/tourSteps.js:51
 #~ msgid "You can filter the list of domains here"
 #~ msgstr "You can filter the list of domains here"
@@ -5531,7 +5535,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:307
+#: src/app/App.js:323
 msgid "Your Account"
 msgstr "Your Account"
 
