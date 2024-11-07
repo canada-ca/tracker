@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dns-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-2dc3fdf-1730750136 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-cdcc9e5-1731012574 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
