@@ -12,7 +12,7 @@ from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "10"))
+TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 
 
 @dataclass
@@ -105,9 +105,13 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result.rcode = "NOERROR"
     scan_result.record_exists = True
 
+    resolver = dns.resolver.Resolver()
+    resolver.timeout = TIMEOUT
+    resolver.lifetime = TIMEOUT * 2
+
     # Get chaining results (A and CNAME records)
     try:
-        a_records = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
+        a_records = resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
         a_records = None
     except Exception as e:
@@ -126,7 +130,7 @@ def scan_domain(domain, dkim_selectors=None):
     # Check for wildcard sibling domains
     try:
         wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
-        dns.resolver.resolve(
+        resolver.resolve(
             wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False
         )
         scan_result.wildcard_sibling = True
@@ -140,7 +144,7 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
     try:
-        cname_record = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.CNAME)
+        cname_record = resolver.resolve(qname=domain, rdtype=dns.rdatatype.CNAME)
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
         cname_record = None
         pass
