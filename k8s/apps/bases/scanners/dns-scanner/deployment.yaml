@@ -46,7 +46,7 @@ spec:
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: SCAN_TIMEOUT
-              value: "80"
+              value: "20"
             - name: NAME
               valueFrom:
                 fieldRef:
