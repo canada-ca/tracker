@@ -5337,7 +5337,7 @@ msgstr "Vous acceptez d'utiliser notre site Web, nos produits et nos services un
 
 #: src/app/App.js:173
 msgid "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
-msgstr "Vous visitez actuellement un environnement de démonstration, utilisé uniquement à des fins de test. Il ne s'agit pas du site de production. Il ne s'agit pas du site de production.</0><1/>Visitez le site de production à l'adresse <2>https://tracker.canada.ca</2> (réseau GC uniquement)."
+msgstr "Vous visitez actuellement un environnement de démonstration, utilisé uniquement à des fins de test. Il ne s'agit pas du site de production. Il ne s'agit <0>pas du site de production.</0><1/>Visitez le site de production à l'adresse <2>https://tracker.canada.ca</2> (réseau GC uniquement)."
 
 #: src/userOnboarding/config/tourSteps.js:51
 #~ msgid "You can filter the list of domains here"
