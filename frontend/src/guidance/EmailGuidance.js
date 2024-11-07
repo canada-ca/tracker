@@ -59,8 +59,10 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
   }
 
   const formatTimestamp = (ts) => {
-    const dateTime = ts.split('T')
-    return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+    const date = new Date(ts)
+    return date.toLocaleString('en-CA', {
+      timeZoneName: 'short',
+    })
   }
 
   const dmarcStepList = !dmarcSteps
