@@ -77,8 +77,8 @@ msgstr "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden yo
 msgid "<0>Current Phone Number:</0> {detailValue}"
 msgstr "<0>Current Phone Number:</0> {detailValue}"
 
-#: src/guidance/EmailGuidance.js:384
-#: src/guidance/EmailGuidance.js:457
+#: src/guidance/EmailGuidance.js:386
+#: src/guidance/EmailGuidance.js:459
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Error:</0> {0}"
 
@@ -86,17 +86,17 @@ msgstr "<0>Error:</0> {0}"
 msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 msgstr "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 
-#: src/guidance/EmailGuidance.js:344
-#: src/guidance/EmailGuidance.js:431
+#: src/guidance/EmailGuidance.js:346
+#: src/guidance/EmailGuidance.js:433
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Hostname:</0> {hostname}"
 
-#: src/guidance/EmailGuidance.js:349
+#: src/guidance/EmailGuidance.js:351
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
-#: src/guidance/EmailGuidance.js:156
+#: src/guidance/EmailGuidance.js:158
 #: src/guidance/WebGuidance.js:150
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Last Scanned:</0> {0}"
@@ -105,7 +105,7 @@ msgstr "<0>Last Scanned:</0> {0}"
 #~ msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 #~ msgstr "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 
-#: src/guidance/EmailGuidance.js:354
+#: src/guidance/EmailGuidance.js:356
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Preference:</0> {preference}"
 
@@ -758,7 +758,7 @@ msgstr "Changes Required for ITPIN Compliance"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 
-#: src/guidance/EmailGuidance.js:394
+#: src/guidance/EmailGuidance.js:396
 msgid "Changes:"
 msgstr "Changes:"
 
@@ -842,7 +842,7 @@ msgstr "Close"
 msgid "Close Account"
 msgstr "Close Account"
 
-#: src/guidance/EmailGuidance.js:323
+#: src/guidance/EmailGuidance.js:325
 msgid "CNAME:"
 msgstr "CNAME:"
 
@@ -1071,7 +1071,7 @@ msgstr "DDOS Protection"
 msgid "December"
 msgstr "December"
 
-#: src/guidance/EmailGuidance.js:196
+#: src/guidance/EmailGuidance.js:198
 msgid "Default:"
 msgstr "Default:"
 
@@ -1239,7 +1239,7 @@ msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
 #: src/domains/ScanDomain.js:322
-#: src/guidance/EmailGuidance.js:163
+#: src/guidance/EmailGuidance.js:165
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
@@ -1298,7 +1298,7 @@ msgstr "DMARC Summary"
 msgid "DNS Host"
 msgstr "DNS Host"
 
-#: src/guidance/EmailGuidance.js:96
+#: src/guidance/EmailGuidance.js:98
 msgid "DNS Result Summary"
 msgstr "DNS Result Summary"
 
@@ -2530,11 +2530,11 @@ msgstr "June"
 msgid "Jurisdiction"
 msgstr "Jurisdiction"
 
-#: src/guidance/EmailGuidance.js:242
+#: src/guidance/EmailGuidance.js:244
 msgid "Key length:"
 msgstr "Key length:"
 
-#: src/guidance/EmailGuidance.js:236
+#: src/guidance/EmailGuidance.js:238
 msgid "Key type:"
 msgstr "Key type:"
 
@@ -2577,7 +2577,7 @@ msgstr "Last 365 Days of Data"
 msgid "Last Seen: {0}"
 msgstr "Last Seen: {0}"
 
-#: src/guidance/EmailGuidance.js:338
+#: src/guidance/EmailGuidance.js:340
 msgid "Latest Scan:"
 msgstr "Latest Scan:"
 
@@ -2624,7 +2624,7 @@ msgstr "Login"
 msgid "Login to your account"
 msgstr "Login to your account"
 
-#: src/guidance/EmailGuidance.js:190
+#: src/guidance/EmailGuidance.js:192
 msgid "Lookups:"
 msgstr "Lookups:"
 
@@ -2636,7 +2636,7 @@ msgstr "Low"
 msgid "Mail"
 msgstr "Mail"
 
-#: src/guidance/EmailGuidance.js:333
+#: src/guidance/EmailGuidance.js:335
 msgid "Mail Servers (MX)"
 msgstr "Mail Servers (MX)"
 
@@ -2766,7 +2766,7 @@ msgstr "Name (EN)"
 msgid "Name (FR)"
 msgstr "Name (FR)"
 
-#: src/guidance/EmailGuidance.js:423
+#: src/guidance/EmailGuidance.js:425
 msgid "Name Servers (NS)"
 msgstr "Name Servers (NS)"
 
@@ -2967,7 +2967,7 @@ msgstr "No guidance found for this category"
 msgid "No known weak protocols used."
 msgstr "No known weak protocols used."
 
-#: src/guidance/EmailGuidance.js:369
+#: src/guidance/EmailGuidance.js:371
 msgid "No MX records found. Is the domain parked?"
 msgstr "No MX records found. Is the domain parked?"
 
@@ -3017,7 +3017,7 @@ msgstr "No values were supplied when attempting to update organization details."
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
-#: src/guidance/EmailGuidance.js:325
+#: src/guidance/EmailGuidance.js:327
 #: src/guidance/IgnoredCves.js:18
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
@@ -3203,7 +3203,7 @@ msgstr "our Terms and Conditions on the TBS website"
 msgid "OWNER"
 msgstr "OWNER"
 
-#: src/guidance/EmailGuidance.js:286
+#: src/guidance/EmailGuidance.js:288
 msgid "p:"
 msgstr "p:"
 
@@ -3256,7 +3256,7 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/guidance/EmailGuidance.js:298
+#: src/guidance/EmailGuidance.js:300
 msgid "pct:"
 msgstr "pct:"
 
@@ -3509,9 +3509,9 @@ msgstr "Received Chain Contains Anchor Certificate"
 msgid "Received Chain Has Valid Order"
 msgstr "Received Chain Has Valid Order"
 
-#: src/guidance/EmailGuidance.js:184
-#: src/guidance/EmailGuidance.js:230
-#: src/guidance/EmailGuidance.js:280
+#: src/guidance/EmailGuidance.js:186
+#: src/guidance/EmailGuidance.js:232
+#: src/guidance/EmailGuidance.js:282
 msgid "Record:"
 msgstr "Record:"
 
@@ -4129,7 +4129,7 @@ msgstr "Sort by:"
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
-#: src/guidance/EmailGuidance.js:292
+#: src/guidance/EmailGuidance.js:294
 msgid "sp:"
 msgstr "sp:"
 
@@ -4669,7 +4669,7 @@ msgstr "This user is not affiliated with any organizations"
 #~ msgstr "Tier 1"
 
 #: src/summaries/HistoricalSummariesGraph.js:225
-#: src/summaries/TieredSummaries.js:25
+#: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
 
@@ -4678,7 +4678,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgstr "Tier 2"
 
 #: src/summaries/HistoricalSummariesGraph.js:228
-#: src/summaries/TieredSummaries.js:36
+#: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
 
@@ -4687,7 +4687,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgstr "Tier 3"
 
 #: src/summaries/HistoricalSummariesGraph.js:231
-#: src/summaries/TieredSummaries.js:53
+#: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
 
@@ -5208,8 +5208,8 @@ msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 #~ msgid "Warnings"
 #~ msgstr "Warnings"
 
-#: src/guidance/EmailGuidance.js:364
-#: src/guidance/EmailGuidance.js:441
+#: src/guidance/EmailGuidance.js:366
+#: src/guidance/EmailGuidance.js:443
 msgid "Warnings:"
 msgstr "Warnings:"
 

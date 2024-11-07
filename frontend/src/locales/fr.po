@@ -77,8 +77,8 @@ msgstr "<0><1>Conseil de recherche : Caractère générique <2>%</2></1></0><3>U
 msgid "<0>Current Phone Number:</0> {detailValue}"
 msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
 
-#: src/guidance/EmailGuidance.js:384
-#: src/guidance/EmailGuidance.js:457
+#: src/guidance/EmailGuidance.js:386
+#: src/guidance/EmailGuidance.js:459
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Erreur:</0> {0}"
 
@@ -86,17 +86,17 @@ msgstr "<0>Erreur:</0> {0}"
 msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1>.</0>"
 
-#: src/guidance/EmailGuidance.js:344
-#: src/guidance/EmailGuidance.js:431
+#: src/guidance/EmailGuidance.js:346
+#: src/guidance/EmailGuidance.js:433
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Nom d'hôte:</0> {hostname}"
 
-#: src/guidance/EmailGuidance.js:349
+#: src/guidance/EmailGuidance.js:351
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
-#: src/guidance/EmailGuidance.js:156
+#: src/guidance/EmailGuidance.js:158
 #: src/guidance/WebGuidance.js:150
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Dernière numérisation:</0> {0}"
@@ -105,7 +105,7 @@ msgstr "<0>Dernière numérisation:</0> {0}"
 #~ msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 #~ msgstr "<0>Note : </0>Les domaines situés en dehors du champ d'application du GC peuvent ne pas être analysés immédiatement."
 
-#: src/guidance/EmailGuidance.js:354
+#: src/guidance/EmailGuidance.js:356
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Préférence:</0> {préférence}"
 
@@ -746,7 +746,7 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changements requis pour la conformité aux exigences de configuration de la gestion des sites et services Web."
 
-#: src/guidance/EmailGuidance.js:394
+#: src/guidance/EmailGuidance.js:396
 msgid "Changes:"
 msgstr "Changements :"
 
@@ -830,7 +830,7 @@ msgstr "Fermer"
 msgid "Close Account"
 msgstr "Fermer le compte"
 
-#: src/guidance/EmailGuidance.js:323
+#: src/guidance/EmailGuidance.js:325
 msgid "CNAME:"
 msgstr "CNAME:"
 
@@ -1059,7 +1059,7 @@ msgstr "Protection DDOS"
 msgid "December"
 msgstr "Décembre"
 
-#: src/guidance/EmailGuidance.js:196
+#: src/guidance/EmailGuidance.js:198
 msgid "Default:"
 msgstr "Par défaut :"
 
@@ -1227,7 +1227,7 @@ msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
 #: src/domains/ScanDomain.js:322
-#: src/guidance/EmailGuidance.js:163
+#: src/guidance/EmailGuidance.js:165
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
@@ -1286,7 +1286,7 @@ msgstr "Résumé DMARC"
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
-#: src/guidance/EmailGuidance.js:96
+#: src/guidance/EmailGuidance.js:98
 msgid "DNS Result Summary"
 msgstr "Résumé des résultats du DNS"
 
@@ -2490,11 +2490,11 @@ msgstr "Juin"
 msgid "Jurisdiction"
 msgstr "Compétence"
 
-#: src/guidance/EmailGuidance.js:242
+#: src/guidance/EmailGuidance.js:244
 msgid "Key length:"
 msgstr "Longueur des clés :"
 
-#: src/guidance/EmailGuidance.js:236
+#: src/guidance/EmailGuidance.js:238
 msgid "Key type:"
 msgstr "Type de clé :"
 
@@ -2537,7 +2537,7 @@ msgstr "Données des 365 derniers jours"
 msgid "Last Seen: {0}"
 msgstr "Dernière visite : {0}"
 
-#: src/guidance/EmailGuidance.js:338
+#: src/guidance/EmailGuidance.js:340
 msgid "Latest Scan:"
 msgstr "Dernière analyse :"
 
@@ -2584,7 +2584,7 @@ msgstr "Connexion"
 msgid "Login to your account"
 msgstr "Connectez-vous à votre compte"
 
-#: src/guidance/EmailGuidance.js:190
+#: src/guidance/EmailGuidance.js:192
 msgid "Lookups:"
 msgstr "Les recherches :"
 
@@ -2596,7 +2596,7 @@ msgstr "Faible"
 msgid "Mail"
 msgstr "Courrier"
 
-#: src/guidance/EmailGuidance.js:333
+#: src/guidance/EmailGuidance.js:335
 msgid "Mail Servers (MX)"
 msgstr "Serveurs de messagerie (MX)"
 
@@ -2718,7 +2718,7 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/guidance/EmailGuidance.js:423
+#: src/guidance/EmailGuidance.js:425
 msgid "Name Servers (NS)"
 msgstr "Serveurs de noms (NS)"
 
@@ -2919,7 +2919,7 @@ msgstr "Aucun conseil trouvé pour cette catégorie"
 msgid "No known weak protocols used."
 msgstr "Aucun protocole faible connu n'a été utilisé."
 
-#: src/guidance/EmailGuidance.js:369
+#: src/guidance/EmailGuidance.js:371
 msgid "No MX records found. Is the domain parked?"
 msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 
@@ -2969,7 +2969,7 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 msgid "Non-compliant"
 msgstr "Non conforme"
 
-#: src/guidance/EmailGuidance.js:325
+#: src/guidance/EmailGuidance.js:327
 #: src/guidance/IgnoredCves.js:18
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
@@ -3155,7 +3155,7 @@ msgstr "nos conditions générales sur le site Web du SCT"
 msgid "OWNER"
 msgstr "PROPRIÉTAIRE"
 
-#: src/guidance/EmailGuidance.js:286
+#: src/guidance/EmailGuidance.js:288
 msgid "p:"
 msgstr "p:"
 
@@ -3208,7 +3208,7 @@ msgstr "Mot de passe:"
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 
-#: src/guidance/EmailGuidance.js:298
+#: src/guidance/EmailGuidance.js:300
 msgid "pct:"
 msgstr "pct:"
 
@@ -3457,9 +3457,9 @@ msgstr "La chaîne reçue contient le certificat d'ancrage"
 msgid "Received Chain Has Valid Order"
 msgstr "La chaîne reçue a un ordre valide"
 
-#: src/guidance/EmailGuidance.js:184
-#: src/guidance/EmailGuidance.js:230
-#: src/guidance/EmailGuidance.js:280
+#: src/guidance/EmailGuidance.js:186
+#: src/guidance/EmailGuidance.js:232
+#: src/guidance/EmailGuidance.js:282
 msgid "Record:"
 msgstr "Record :"
 
@@ -4079,7 +4079,7 @@ msgstr "Trier par:"
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
-#: src/guidance/EmailGuidance.js:292
+#: src/guidance/EmailGuidance.js:294
 msgid "sp:"
 msgstr "sp:"
 
@@ -4599,17 +4599,17 @@ msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
 #: src/summaries/HistoricalSummariesGraph.js:225
-#: src/summaries/TieredSummaries.js:25
+#: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Niveau 1 : Exigences minimales"
 
 #: src/summaries/HistoricalSummariesGraph.js:228
-#: src/summaries/TieredSummaries.js:36
+#: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Niveau 2 : Amélioration de la posture"
 
 #: src/summaries/HistoricalSummariesGraph.js:231
-#: src/summaries/TieredSummaries.js:53
+#: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Niveau 3 : Conformité"
 
@@ -5122,8 +5122,8 @@ msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
 #~ msgid "Warnings"
 #~ msgstr "Avertissements"
 
-#: src/guidance/EmailGuidance.js:364
-#: src/guidance/EmailGuidance.js:441
+#: src/guidance/EmailGuidance.js:366
+#: src/guidance/EmailGuidance.js:443
 msgid "Warnings:"
 msgstr "Avertissements :"
 
