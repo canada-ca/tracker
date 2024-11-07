@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
+import { Link as RouteLink, Redirect, Switch, useLocation } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -168,7 +168,23 @@ export function App({ initialLoading, isLoginRequired }) {
         )}
       </Navigation>
 
+      <NotificationBanner status="warning" hideable initialHideState={window.env?.APP_IS_PRODUCTION === true}>
+        <Text fontWeight="medium">
+          <Trans>
+            You are current visiting a staging environment, used for testing purposes only. This is{' '}
+            <b>not the live production site.</b>
+            <br />
+            Visit the production site at{' '}
+            <Link href="https://tracker.canada.ca" isExternal={true} color="blue.500">
+              https://tracker.canada.ca
+            </Link>{' '}
+            (GC network only).
+          </Trans>
+        </Text>
+      </NotificationBanner>
+
       {notificationBanner()}
+
       <NotificationBanner status="info" bannerId="automatic-dkim-selectors" hideable>
         <Box>
           <AlertTitle>
