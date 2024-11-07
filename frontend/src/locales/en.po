@@ -97,7 +97,7 @@ msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
 #: src/guidance/EmailGuidance.js:156
-#: src/guidance/WebGuidance.js:130
+#: src/guidance/WebGuidance.js:150
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Last Scanned:</0> {0}"
 
@@ -636,7 +636,7 @@ msgstr "Blank fields will not be included when updating the organization."
 #: src/admin/AdminDomains.js:181
 #: src/domains/DomainCard.js:143
 #: src/domains/DomainsPage.js:132
-#: src/guidance/WebGuidance.js:84
+#: src/guidance/WebGuidance.js:97
 #: src/organizationDetails/OrganizationDomains.js:108
 msgid "Blocked"
 msgstr "Blocked"
@@ -1540,11 +1540,11 @@ msgstr "Email Verification Sent"
 msgid "Email:"
 msgstr "Email:"
 
-#: src/guidance/WebGuidance.js:54
+#: src/guidance/WebGuidance.js:57
 msgid "Endpoint Summary"
 msgstr "Endpoint Summary"
 
-#: src/guidance/WebGuidance.js:98
+#: src/guidance/WebGuidance.js:116
 msgid "Endpoint:"
 msgstr "Endpoint:"
 
@@ -3415,6 +3415,10 @@ msgstr "Privacy Act."
 msgid "Privacy Notice Statement"
 msgstr "Privacy Notice Statement"
 
+#: src/guidance/WebGuidance.js:102
+msgid "Private IP"
+msgstr "Private IP"
+
 #: src/admin/AdminDomains.js:175
 #: src/organizationDetails/OrganizationDomains.js:102
 msgid "Prod"
@@ -4544,6 +4548,14 @@ msgstr "The results of DKIM verification of the message. Can be pass, fail, neut
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 
+#: src/guidance/WebGuidance.js:187
+msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
+msgstr "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
+
+#: src/guidance/WebGuidance.js:189
+#~ msgid "The selected endpoint is a private IP address. Tracker scans are not performed on private IP addresses."
+#~ msgstr "The selected endpoint is a private IP address. Tracker scans are not performed on private IP addresses."
+
 #: src/app/ReadGuidancePage.js:139
 msgid "The summary cards show two metrics that Tracker scans:"
 msgstr "The summary cards show two metrics that Tracker scans:"
@@ -4636,7 +4648,7 @@ msgstr "This page displays your personal view of tracked domains. All domains ma
 #~ msgid "This page is dedicated to your personal view of tracker"
 #~ msgstr "This page is dedicated to your personal view of tracker"
 
-#: src/guidance/WebGuidance.js:146
+#: src/guidance/WebGuidance.js:166
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 

@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import ipaddress
 import json
 import logging
 import time
@@ -279,8 +280,49 @@ def process_msg(msg):
             )
             domain.update({"webScanPending": True})
 
+            all_ips_private = True
+
+            for ip in scan_results.get("resolve_ips", []) or []:
+                try:
+                    is_private_ip = ipaddress.ip_address(ip).is_private
+                except ValueError:
+                    logger.error(
+                        f"Invalid IP address: {ip} for received message: {msg}"
+                    )
+                    continue
+
+                all_ips_private = all_ips_private and is_private_ip
+
+                web_scan_status = "pending" if not is_private_ip else "complete"
+
+                web_scan = db.collection("webScan").insert(
+                    {
+                        "status": web_scan_status,
+                        "ipAddress": ip,
+                        "isPrivateIp": is_private_ip,
+                    }
+                )
+                db.collection("webToWebScans").insert(
+                    {
+                        "_from": web_entry["_id"],
+                        "_to": web_scan["_id"],
+                    }
+                )
+
+                if not is_private_ip:
+                    formatted_scan_data_array.append(
+                        {
+                            "user_key": user_key,
+                            "domain": domain["domain"],
+                            "domain_key": domain_key,
+                            "shared_id": shared_id,
+                            "ip_address": ip,
+                            "web_scan_key": web_scan["_key"],
+                        }
+                    )
+
             # If we have no IPs, we can't do web scans. Set all web statuses to info
-            if not scan_results.get("resolve_ips", None):
+            if not scan_results.get("resolve_ips", None) or all_ips_private:
                 domain.update({"webScanPending": False})
                 domain["status"].update(
                     {
@@ -316,27 +358,6 @@ def process_msg(msg):
                     logger.error(
                         f"Error while updating domain after retrying for received message: {msg}: {error_str}"
                     )
-
-            for ip in scan_results.get("resolve_ips", None) or []:
-                web_scan = db.collection("webScan").insert(
-                    {"status": "pending", "ipAddress": ip}
-                )
-                db.collection("webToWebScans").insert(
-                    {
-                        "_from": web_entry["_id"],
-                        "_to": web_scan["_id"],
-                    }
-                )
-                formatted_scan_data_array.append(
-                    {
-                        "user_key": user_key,
-                        "domain": domain["domain"],
-                        "domain_key": domain_key,
-                        "shared_id": shared_id,
-                        "ip_address": ip,
-                        "web_scan_key": web_scan["_key"],
-                    }
-                )
 
         except Exception as e:
             logger.error(

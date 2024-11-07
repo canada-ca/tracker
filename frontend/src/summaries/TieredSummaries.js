@@ -6,61 +6,53 @@ import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
 import { Trans } from '@lingui/macro'
 import { object } from 'prop-types'
-import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export function TieredSummaries({ summaries }) {
   const { https, dmarc, webConnections, ssl, spf, dkim, dmarcPhase, web, mail } = summaries
 
   return (
     <Box>
-      <ABTestWrapper insiderVariantName="B">
-        <ABTestVariant name="A">
-          <TierOneSummaries https={https} dmarc={dmarc} />
-        </ABTestVariant>
-        <ABTestVariant name="B">
-          <Accordion allowMultiple defaultIndex={[0]}>
-            <AccordionItem>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left" fontSize="xl">
-                  <Trans>Tier 1: Minimum Requirements</Trans>
-                </Box>
-                <AccordionIcon boxSize="icons.xl" />
-              </AccordionButton>
-              <AccordionPanel>
-                <TierOneSummaries https={https} dmarc={dmarc} />
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left" fontSize="xl">
-                  <Trans>Tier 2: Improved Posture</Trans>
-                </Box>
-                <AccordionIcon boxSize="icons.xl" />
-              </AccordionButton>
-              <AccordionPanel>
-                <TierTwoSummaries
-                  webConnections={webConnections}
-                  ssl={ssl}
-                  spf={spf}
-                  dkim={dkim}
-                  dmarcPhases={dmarcPhase}
-                />
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left" fontSize="xl">
-                  <Trans>Tier 3: Compliance</Trans>
-                </Box>
-                <AccordionIcon boxSize="icons.xl" />
-              </AccordionButton>
-              <AccordionPanel>
-                <TierThreeSummaries web={web} mail={mail} />
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </ABTestVariant>
-      </ABTestWrapper>
+      <Accordion allowMultiple defaultIndex={[0]}>
+        <AccordionItem>
+          <AccordionButton>
+            <Box as="span" flex="1" textAlign="left" fontSize="xl">
+              <Trans>Tier 1: Minimum Requirements</Trans>
+            </Box>
+            <AccordionIcon boxSize="icons.xl" />
+          </AccordionButton>
+          <AccordionPanel>
+            <TierOneSummaries https={https} dmarc={dmarc} />
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box as="span" flex="1" textAlign="left" fontSize="xl">
+              <Trans>Tier 2: Improved Posture</Trans>
+            </Box>
+            <AccordionIcon boxSize="icons.xl" />
+          </AccordionButton>
+          <AccordionPanel>
+            <TierTwoSummaries
+              webConnections={webConnections}
+              ssl={ssl}
+              spf={spf}
+              dkim={dkim}
+              dmarcPhases={dmarcPhase}
+            />
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box as="span" flex="1" textAlign="left" fontSize="xl">
+              <Trans>Tier 3: Compliance</Trans>
+            </Box>
+            <AccordionIcon boxSize="icons.xl" />
+          </AccordionButton>
+          <AccordionPanel>
+            <TierThreeSummaries web={web} mail={mail} />
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </Box>
   )
 }

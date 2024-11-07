@@ -97,7 +97,7 @@ msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:95
 #: src/guidance/EmailGuidance.js:156
-#: src/guidance/WebGuidance.js:130
+#: src/guidance/WebGuidance.js:150
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Dernière numérisation:</0> {0}"
 
@@ -624,7 +624,7 @@ msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de
 #: src/admin/AdminDomains.js:181
 #: src/domains/DomainCard.js:143
 #: src/domains/DomainsPage.js:132
-#: src/guidance/WebGuidance.js:84
+#: src/guidance/WebGuidance.js:97
 #: src/organizationDetails/OrganizationDomains.js:108
 msgid "Blocked"
 msgstr "Bloqué"
@@ -1512,11 +1512,11 @@ msgstr "Envoi d'un courriel de vérification"
 msgid "Email:"
 msgstr "Courrier électronique:"
 
-#: src/guidance/WebGuidance.js:54
+#: src/guidance/WebGuidance.js:57
 msgid "Endpoint Summary"
 msgstr "Résumé du point d'aboutissement"
 
-#: src/guidance/WebGuidance.js:98
+#: src/guidance/WebGuidance.js:116
 msgid "Endpoint:"
 msgstr "Point d'aboutissement :"
 
@@ -3367,6 +3367,10 @@ msgstr "Loi sur la protection de la vie privée."
 msgid "Privacy Notice Statement"
 msgstr "Déclaration de confidentialité"
 
+#: src/guidance/WebGuidance.js:102
+msgid "Private IP"
+msgstr "IP privé"
+
 #: src/admin/AdminDomains.js:175
 #: src/organizationDetails/OrganizationDomains.js:102
 msgid "Prod"
@@ -4486,6 +4490,10 @@ msgstr "Résultats de la vérification DKIM du message. Il peut s'agir d'un succ
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "Résultats de la vérification DKIM du message. Il peut s'agir d'un succès, d'un échec, d'un résultat neutre, d'une erreur temporaire ou d'une erreur permanente."
 
+#: src/guidance/WebGuidance.js:187
+msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
+msgstr "Le point d'extrémité sélectionné est une adresse IP privée. Tracker n'effectue pas d'analyse sur les adresses IP privées."
+
 #: src/app/ReadGuidancePage.js:139
 msgid "The summary cards show two metrics that Tracker scans:"
 msgstr "Les cartes récapitulatives présentent deux mesures que Suivi analyse :"
@@ -4574,7 +4582,7 @@ msgstr "Cette page affiche votre vue personnelle des domaines suivis. Tous les d
 #~ msgid "This page is dedicated to your personal view of tracker"
 #~ msgstr "Cette page est dédiée à votre avis personnel sur le tracker."
 
-#: src/guidance/WebGuidance.js:146
+#: src/guidance/WebGuidance.js:166
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "Ce service n'est pas un service d'hébergement Web et ne nécessite pas la conformité aux exigences de configuration de la gestion des sites et services Web."
 
