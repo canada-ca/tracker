@@ -443,6 +443,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             results {
               ipAddress
               status
+              isPrivateIp
               results {
                 timestamp
                 tlsResult {
