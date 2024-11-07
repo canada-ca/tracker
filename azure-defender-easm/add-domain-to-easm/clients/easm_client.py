@@ -51,13 +51,3 @@ def create_disco_group(name, assets, frequency=0):
 
 def delete_disco_group(group_name):
     EASM_CLIENT.discovery_groups.delete(group_name)
-
-
-def update_asset_state(asset_name, asset_uuid, asset_state):
-    update_request = {"state": {f"{asset_state}"}}
-    asset_filter = f"uuid = {asset_uuid}"
-    try:
-        EASM_CLIENT.assets.update(body=update_request, filter=asset_filter)
-        logger.info(f"{asset_name} updated as '{asset_state}'")
-    except Exception as e:
-        logger.error(f"Failed to label {asset_name}: {e}")
