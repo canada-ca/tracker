@@ -425,7 +425,7 @@ msgstr "Permission Denied: Please contact organization user for help with retrie
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission Denied: Please contact organization user for help with scanning this domain."
 
-#: src/domain/mutations/update-domain.js:141
+#: src/domain/mutations/update-domain.js:140
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Permission Denied: Please contact organization user for help with updating this domain."
 
@@ -908,8 +908,8 @@ msgstr "Unable to invite yourself to an org."
 msgid "Unable to leave undefined organization."
 msgstr "Unable to leave undefined organization."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:26
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:36
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:24
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:34
 msgid "Unable to load additional findings. Please try again."
 msgstr "Unable to load additional findings. Please try again."
 
@@ -1458,21 +1458,21 @@ msgstr "Unable to unfavourite unknown domain."
 #~ msgid "Unable to unignore CVE. Please try again."
 #~ msgstr "Unable to unignore CVE. Please try again."
 
-#: src/domain/mutations/update-domain.js:241
+#: src/domain/mutations/update-domain.js:240
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
-#: src/domain/mutations/update-domain.js:127
+#: src/domain/mutations/update-domain.js:126
 msgid "Unable to update domain in an unknown org."
 msgstr "Unable to update domain in an unknown org."
 
-#: src/domain/mutations/update-domain.js:168
+#: src/domain/mutations/update-domain.js:167
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Unable to update domain that does not belong to the given organization."
 
-#: src/domain/mutations/update-domain.js:158
-#: src/domain/mutations/update-domain.js:198
-#: src/domain/mutations/update-domain.js:252
+#: src/domain/mutations/update-domain.js:157
+#: src/domain/mutations/update-domain.js:197
+#: src/domain/mutations/update-domain.js:251
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
@@ -1518,7 +1518,7 @@ msgstr "Unable to update role: user does not belong to organization."
 msgid "Unable to update role: user unknown."
 msgstr "Unable to update role: user unknown."
 
-#: src/domain/mutations/update-domain.js:113
+#: src/domain/mutations/update-domain.js:112
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
 
@@ -1588,8 +1588,7 @@ msgstr "Verification error. Please activate multi-factor authentication to acces
 msgid "Verification error. Please verify your account via email to access content."
 msgstr "Verification error. Please verify your account via email to access content."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:6
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:10
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:8
 msgid "You must provide a `domainId` to retrieve a domain's additional findings."
 msgstr "You must provide a `domainId` to retrieve a domain's additional findings."
 
