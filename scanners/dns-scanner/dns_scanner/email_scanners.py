@@ -107,13 +107,21 @@ class DMARCScanner:
                     {
                         "domain": self.domain,
                         "base_domain": get_base_domain(self.domain),
-                        "ns": check_ns(self.domain, resolver=resolver),
-                        "mx": check_mx(self.domain, skip_tls=True, resolver=resolver),
-                        "spf": check_spf(self.domain, resolver=resolver),
+                        "ns": check_ns(self.domain, resolver=resolver, timeout=TIMEOUT),
+                        "mx": check_mx(
+                            self.domain,
+                            skip_tls=True,
+                            resolver=resolver,
+                            timeout=TIMEOUT,
+                        ),
+                        "spf": check_spf(
+                            self.domain, resolver=resolver, timeout=TIMEOUT
+                        ),
                         "dmarc": check_dmarc(
                             self.domain,
                             ignore_unrelated_records=True,
                             resolver=resolver,
+                            timeout=TIMEOUT,
                         ),
                     }
                 )
