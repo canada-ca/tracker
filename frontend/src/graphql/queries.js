@@ -443,6 +443,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             results {
               ipAddress
               status
+              isPrivateIp
               results {
                 timestamp
                 tlsResult {
@@ -726,6 +727,11 @@ export const GET_HISTORICAL_ORG_SUMMARIES = gql`
         }
         mail {
           ...RequiredSummaryFields
+        }
+        negativeFindings(orderBy: { direction: DESC, field: TAG_COUNT }) {
+          guidanceTags {
+            count
+          }
         }
       }
     }

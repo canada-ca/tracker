@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dns-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-8587e9d-1725463441 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-cdcc9e5-1731012574 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
@@ -46,7 +46,7 @@ spec:
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: SCAN_TIMEOUT
-              value: "80"
+              value: "20"
             - name: NAME
               valueFrom:
                 fieldRef:

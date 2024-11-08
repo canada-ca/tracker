@@ -7,6 +7,7 @@ const fs = require('fs')
 const staticPath = join(resolve(process.cwd()), 'public')
 
 const frenchHosts = process.env.FRENCH_HOSTS?.split(',') || []
+const isProduction = process.env.TRACKER_PRODUCTION === 'true'
 
 function Server() {
   const server = express()
@@ -30,7 +31,10 @@ function Server() {
     const defaultLanguage = frenchHosts.includes(host) ? 'fr' : 'en'
     let html = fs
       .readFileSync(resolve(join('public', 'index.html')), 'utf8')
-      .replace('</head>', `<script>window.APP_DEFAULT_LANGUAGE="${defaultLanguage}"</script></head>`)
+      .replace(
+        '</head>',
+        `<script>window.env={APP_DEFAULT_LANGUAGE:"${defaultLanguage}",APP_IS_PRODUCTION:${isProduction} }</script></head>`,
+      )
     res.send(html)
   })
   return server

@@ -39,7 +39,7 @@ export function SearchBox({
 }) {
   const orderIconName = orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
   return (
-    <Box {...props} bg="gray.100" p="2" mb="4" borderColor="gray.300" borderWidth="1px">
+    <Box className="search-box" {...props} bg="gray.100" p="2" mb="4" borderColor="gray.300" borderWidth="1px">
       <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'stretch', md: 'center' }} mb={2}>
         <Flex direction="row" minW={{ base: '100%', md: '50%' }} alignItems="center" flexGrow={1}>
           <Text as="label" htmlFor="Search-for-field" fontSize="md" fontWeight="bold" textAlign="center" mr={2}>
@@ -62,7 +62,7 @@ export function SearchBox({
             />
           </InputGroup>
         </Flex>
-        {onToggle && <InfoButton bg="gray.50" onToggle={onToggle} />}
+        {onToggle && <InfoButton bg="gray.50" onToggle={onToggle} className="glossary-button" />}
         <Stack isInline align="center" ml={{ md: '5%' }}>
           <Text as="label" htmlFor="Sort-by-field" fontSize="md" fontWeight="bold" textAlign="center">
             <Trans>Sort by: </Trans>

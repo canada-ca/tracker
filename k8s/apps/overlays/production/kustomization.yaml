@@ -30,6 +30,7 @@ replicas:
   - name: web-scanner
     count: 20
 patchesStrategicMerge:
+  - frontend-production-env-patch.yaml
   - update-selectors-enable-selector-removal-patch.yaml
   - easm-to-tracker-sync-suspend-patch.yaml
 components:

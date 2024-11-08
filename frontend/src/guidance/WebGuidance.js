@@ -25,6 +25,9 @@ export function WebGuidance({ webResults, timestamp }) {
   let totalWebFail = 0
   let isWebHosting = false
   webResults.forEach(({ results }) => {
+    if (!results) {
+      return
+    }
     const { positiveTags: tlsPass, neutralTags: tlsInfo, negativeTags: tlsFail } = results.tlsResult
     const {
       positiveTags: httpsPass,
@@ -57,13 +60,23 @@ export function WebGuidance({ webResults, timestamp }) {
         <GuidanceSummaryCategories passCount={totalWebPass} infoCount={totalWebInfo} failCount={totalWebFail} />
       </Flex>
       <AccordionPanel>
-        {webResults.map(({ ipAddress, results }, idx) => {
-          const { positiveTags: tlsPass, neutralTags: tlsInfo, negativeTags: tlsFail } = results.tlsResult
-          const { positiveTags: httpsPass, neutralTags: httpsInfo, negativeTags: httpsFail } = results.connectionResults
+        {webResults.map(({ ipAddress, isPrivateIp, results }, idx) => {
+          let endpointPass = 0
+          let endpointInfo = 0
+          let endpointFail = 0
 
-          const endpointPass = tlsPass.length + httpsPass.length
-          const endpointInfo = tlsInfo.length + httpsInfo.length
-          const endpointFail = tlsFail.length + httpsFail.length
+          if (results) {
+            const { positiveTags: tlsPass, neutralTags: tlsInfo, negativeTags: tlsFail } = results.tlsResult
+            const {
+              positiveTags: httpsPass,
+              neutralTags: httpsInfo,
+              negativeTags: httpsFail,
+            } = results.connectionResults
+
+            endpointPass = tlsPass.length + httpsPass.length
+            endpointInfo = tlsInfo.length + httpsInfo.length
+            endpointFail = tlsFail.length + httpsFail.length
+          }
 
           return (
             <Flex
@@ -79,9 +92,14 @@ export function WebGuidance({ webResults, timestamp }) {
                 {ipAddress}
               </Text>
 
-              {results.connectionResults?.httpsChainResult?.connections?.[0]?.connection?.blockedCategory && (
+              {results?.connectionResults?.httpsChainResult?.connections?.[0]?.connection?.blockedCategory && (
                 <Badge colorScheme="red" alignSelf="center" fontSize="md" mr="1">
                   <Trans>Blocked</Trans>
+                </Badge>
+              )}
+              {isPrivateIp && (
+                <Badge colorScheme="blue" alignSelf="center" fontSize="md" mr="1">
+                  <Trans>Private IP</Trans>
                 </Badge>
               )}
               <GuidanceSummaryCategories passCount={endpointPass} infoCount={endpointInfo} failCount={endpointFail} />
@@ -114,19 +132,21 @@ export function WebGuidance({ webResults, timestamp }) {
     </Flex>
   )
 
-  const { connectionResults, tlsResult } = webResults.find(({ ipAddress }) => {
+  const currentEndpoint = webResults.find(({ ipAddress }) => {
     return ipAddress === selectedEndpoint
-  }).results
+  })
 
   const formatTimestamp = (ts) => {
-    const dateTime = ts.split('T')
-    return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+    const date = new Date(ts)
+    return date.toLocaleString('en-CA', {
+      timeZoneName: 'short',
+    })
   }
 
   return (
     <>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        <Text fontsize="lg">
+        <Text fontSize="lg">
           <Trans>
             <b>Last Scanned:</b> {formatTimestamp(timestamp)}
           </Trans>
@@ -152,8 +172,30 @@ export function WebGuidance({ webResults, timestamp }) {
         )}
         {endPointSummary}
         {endpointSelect}
-        <WebConnectionResults connectionResults={connectionResults} />
-        <WebTLSResults tlsResult={tlsResult} />
+        {currentEndpoint.isPrivateIp && (
+          <Flex
+            fontSize="lg"
+            fontWeight="bold"
+            px="2"
+            py="1"
+            textAlign="center"
+            borderWidth="1px"
+            borderColor="black"
+            rounded="md"
+          >
+            <Text>
+              <Trans>
+                The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses.
+              </Trans>
+            </Text>
+          </Flex>
+        )}
+        {currentEndpoint.results && (
+          <>
+            <WebConnectionResults connectionResults={currentEndpoint.results.connectionResults} />
+            <WebTLSResults tlsResult={currentEndpoint.results.tlsResult} />
+          </>
+        )}
       </Accordion>
     </>
   )

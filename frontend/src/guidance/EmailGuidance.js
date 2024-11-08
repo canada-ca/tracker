@@ -59,8 +59,10 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
   }
 
   const formatTimestamp = (ts) => {
-    const dateTime = ts.split('T')
-    return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+    const date = new Date(ts)
+    return date.toLocaleString('en-CA', {
+      timeZoneName: 'short',
+    })
   }
 
   const dmarcStepList = !dmarcSteps
@@ -152,7 +154,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
 
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
-      <Text fontsize="lg">
+      <Text fontSize="lg">
         <Trans>
           <b>Last Scanned:</b> {formatTimestamp(timestamp)}
         </Trans>
@@ -370,7 +372,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                       : warning
                   return (
                     <Box key={idx} px="2">
-                      <Text fontsize="lg">
+                      <Text fontSize="lg">
                         <b>{idx + 1}.</b> {warningTranslated}
                       </Text>
                     </Box>
@@ -443,7 +445,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                 {nsRecords.warnings.map((warning, idx) => {
                   return (
                     <Box key={idx} px="2">
-                      <Text fontsize="lg">
+                      <Text fontSize="lg">
                         <b>{idx + 1}.</b> {warning}
                       </Text>
                     </Box>

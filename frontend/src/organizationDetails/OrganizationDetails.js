@@ -37,6 +37,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 import { bool } from 'prop-types'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails({ loginRequired }) {
   const { isLoggedIn } = useUserVar()
@@ -60,7 +61,7 @@ export default function OrganizationDetails({ loginRequired }) {
 
   const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
     variables: { orgSlug, month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
-    // errorPolicy: 'ignore', // allow partial success
+    errorPolicy: 'ignore', // allow partial success
   })
 
   useEffect(() => {
@@ -91,6 +92,7 @@ export default function OrganizationDetails({ loginRequired }) {
 
   return (
     <Box w="100%">
+      <TourComponent />
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <IconButton
           icon={<ArrowLeftIcon />}
@@ -170,13 +172,16 @@ export default function OrganizationDetails({ loginRequired }) {
                       selectedRange={progressChartRangeParam}
                       width={1200}
                       height={500}
+                      userHasPermission={data?.organization?.userHasPermission}
                     />
                   </ErrorBoundary>
                 )}
                 <Divider />
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" />
-                </ErrorBoundary>
+                {data?.organization?.userHasPermission && (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
+                  </ErrorBoundary>
+                )}
               </ABTestVariant>
             </ABTestWrapper>
           </TabPanel>
