@@ -8,6 +8,8 @@ import dns.resolver
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
 from dns.exception import Timeout
 
+# from dns.rrset import RRset
+
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
 logger = logging.getLogger(__name__)
@@ -129,11 +131,20 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check for wildcard sibling domains
     try:
+        scan_result.wildcard_sibling = False
         wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
-        resolver.resolve(
-            wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False
+        wildcard_record = dns.resolver.resolve(
+            wildcard_sibling_domain,
+            rdtype=dns.rdatatype.A,
+            raise_on_no_answer=False,
         )
-        scan_result.wildcard_sibling = True
+        if wildcard_record is not None:
+            if a_records is None:
+                scan_result.wildcard_sibling = True
+            # check to see if subdomain and wildcard record point to the same endpoints
+            elif a_records.response.answer[-1] == wildcard_record.response.answer[-1]:
+                scan_result.wildcard_sibling = True
+
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
         scan_result.wildcard_sibling = False
     except Exception as e:
