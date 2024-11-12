@@ -8,8 +8,6 @@ import dns.resolver
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
 from dns.exception import Timeout
 
-# from dns.rrset import RRset
-
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
 logger = logging.getLogger(__name__)
