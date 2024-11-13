@@ -10,14 +10,14 @@ import {
   Flex,
   Text,
 } from '@chakra-ui/react'
-import { object } from 'prop-types'
+import { bool, object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
 import { t, Trans } from '@lingui/macro'
 import { DetailTooltip } from './DetailTooltip'
 
-export function WebConnectionResults({ connectionResults }) {
+export function WebConnectionResults({ connectionResults, isWebHosting }) {
   const {
     httpLive,
     httpsLive,
@@ -168,7 +168,7 @@ export function WebConnectionResults({ connectionResults }) {
               <Box fontSize="lg" px="2">
                 <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows if the HTTPS connection is live.`}>
-                    <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
+                    <StatusIcon status={!isWebHosting ? 'INFO' : httpsLive ? 'PASS' : 'FAIL'} />
                     <Text px="1">
                       <Trans>HTTPS Live</Trans>
                     </Text>
@@ -179,7 +179,15 @@ export function WebConnectionResults({ connectionResults }) {
                   <DetailTooltip
                     label={t`Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never.`}
                   >
-                    <StatusIcon status={httpsImmediatelyDowngrades || httpsEventuallyDowngrades ? 'FAIL' : 'PASS'} />
+                    <StatusIcon
+                      status={
+                        !isWebHosting
+                          ? 'INFO'
+                          : httpsImmediatelyDowngrades || httpsEventuallyDowngrades
+                          ? 'FAIL'
+                          : 'PASS'
+                      }
+                    />
                     <Text px="1">
                       <Trans>HTTPS Downgrades</Trans>
                     </Text>
@@ -190,7 +198,7 @@ export function WebConnectionResults({ connectionResults }) {
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows if the HSTS (HTTP Strict Transport Security) header is present.`}>
-                    <StatusIcon status={hstsParsed ? 'PASS' : 'FAIL'} />
+                    <StatusIcon status={!isWebHosting ? 'INFO' : hstsParsed ? 'PASS' : 'FAIL'} />
                     <Text px="1">
                       <Trans>HSTS Parsed</Trans>
                     </Text>
@@ -241,4 +249,5 @@ export function WebConnectionResults({ connectionResults }) {
 
 WebConnectionResults.propTypes = {
   connectionResults: object,
+  isWebHosting: bool,
 }
