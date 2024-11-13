@@ -33,7 +33,6 @@ import { RadialBarChart } from '../summaries/RadialBarChart'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 import { bool } from 'prop-types'
@@ -160,30 +159,26 @@ export default function OrganizationDetails({ loginRequired }) {
               <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
             <Divider />
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                {orgSummariesLoading ? (
-                  <LoadingMessage height={500} />
-                ) : (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <HistoricalSummariesGraph
-                      data={orgSummariesData?.findOrganizationBySlug?.historicalSummaries}
-                      setRange={setProgressChartRangeParam}
-                      selectedRange={progressChartRangeParam}
-                      width={1200}
-                      height={500}
-                      userHasPermission={data?.organization?.userHasPermission}
-                    />
-                  </ErrorBoundary>
-                )}
-                <Divider />
-                {data?.organization?.userHasPermission && (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
-                  </ErrorBoundary>
-                )}
-              </ABTestVariant>
-            </ABTestWrapper>
+            {orgSummariesLoading ? (
+              <LoadingMessage height={500} />
+            ) : (
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <HistoricalSummariesGraph
+                  data={orgSummariesData?.findOrganizationBySlug?.historicalSummaries}
+                  setRange={setProgressChartRangeParam}
+                  selectedRange={progressChartRangeParam}
+                  width={1200}
+                  height={500}
+                  userHasPermission={data?.organization?.userHasPermission}
+                />
+              </ErrorBoundary>
+            )}
+            <Divider />
+            {data?.organization?.userHasPermission && (
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
+              </ErrorBoundary>
+            )}
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
