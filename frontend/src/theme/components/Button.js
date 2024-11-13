@@ -60,6 +60,14 @@ const Button = {
         bg: 'gray.200',
       },
     },
+    catchy: {
+      ...commonProps,
+      color: 'gray.50',
+      bg: 'tracker.logo.orange',
+      _hover: {
+        bg: 'tracker.logo.darkOrange',
+      },
+    },
     danger: {
       ...commonProps,
       color: 'gray.50',
