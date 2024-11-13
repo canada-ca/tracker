@@ -1,15 +1,15 @@
 const { loadGuidanceTagSummaryConnectionsByTagId } = require('../load-guidance-tags-connections')
+const { createI18n } = require('../../../create-i18n')
 
 describe('loadGuidanceTagSummaryConnectionsByTagId', () => {
-  let query, userKey, cleanseInput, i18n, language
+  let query, userKey, cleanseInput, language
+
+  const i18n = createI18n('en')
 
   beforeEach(() => {
     query = jest.fn()
     userKey = '1'
     cleanseInput = jest.fn((input) => input)
-    i18n = {
-      _: jest.fn((msg) => msg),
-    }
     language = 'en'
   })
 

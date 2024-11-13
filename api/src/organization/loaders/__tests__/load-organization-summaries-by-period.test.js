@@ -1,15 +1,15 @@
 import { loadOrganizationSummariesByPeriod } from '../load-organization-summaries-by-period'
+import { createI18n } from '../../../create-i18n'
 
 describe('loadOrganizationSummariesByPeriod', () => {
-  let query, userKey, cleanseInput, i18n
+  let query, userKey, cleanseInput
+
+  const i18n = createI18n('en')
 
   beforeEach(() => {
     query = jest.fn()
     userKey = '1'
     cleanseInput = jest.fn((input) => input)
-    i18n = {
-      _: jest.fn((msg) => msg),
-    }
   })
 
   it('throws an error if period is not provided', async () => {

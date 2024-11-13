@@ -13,6 +13,7 @@ RUN npm ci
 
 COPY ./src ./src
 COPY ./index.js .
+COPY ./lingui.config.js .
 COPY ./.env.example .
 
 RUN npm run build
@@ -28,6 +29,7 @@ COPY --from=builder /app/package.json .
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.env.example .
 COPY --from=builder /app/index.js .
+COPY --from=builder /app/lingui.config.js .
 COPY --from=builder /app/dist ./dist
 
 USER node
