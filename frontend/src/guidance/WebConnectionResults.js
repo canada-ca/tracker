@@ -85,11 +85,15 @@ export function WebConnectionResults({ connectionResults }) {
       }
     })
 
-  const connectionResultsStatus = [connectionResults.httpsStatus, connectionResults.hstsStatus].every(
-    (status) => status.toUpperCase() === 'PASS',
+  let connectionResultsStatus = 'FAIL'
+  if (
+    [(connectionResults.httpsStatus, connectionResults.hstsStatus)].every((status) => status.toUpperCase() === 'PASS')
   )
-    ? 'PASS'
-    : 'FAIL'
+    connectionResultsStatus = 'PASS'
+  else if (
+    [(connectionResults.httpsStatus, connectionResults.hstsStatus)].every((status) => status.toUpperCase() === 'INFO')
+  )
+    connectionResultsStatus = 'INFO'
 
   return (
     <AccordionItem>
