@@ -1,15 +1,15 @@
 import { loadChartSummariesByPeriod } from '../load-chart-summaries-by-period'
+import { createI18n } from '../../../create-i18n'
 
 describe('loadChartSummariesByPeriod', () => {
-  let query, userKey, cleanseInput, i18n
+  let query, userKey, cleanseInput
+
+  const i18n = createI18n('en')
 
   beforeEach(() => {
     query = jest.fn()
     userKey = 'test-user'
     cleanseInput = jest.fn((input) => input)
-    i18n = {
-      _: jest.fn((msg) => msg),
-    }
   })
 
   it('throws an error if period is not provided', async () => {

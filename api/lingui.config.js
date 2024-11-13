@@ -5,7 +5,6 @@ module.exports = {
       include: ['src'],
     },
   ],
-  extractBabelOptions: {},
   fallbackLocales: {
     default: 'en',
   },
