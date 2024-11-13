@@ -30,7 +30,38 @@ module.exports = (env) => {
     devServer: {
       port: 3300,
       host: '0.0.0.0',
-      devMiddleware: { publicPath: '/' },
+      devMiddleware: {
+        publicPath: '/',
+      },
+      setupMiddlewares: (middlewares, devServer) => {
+        devServer.app.use((req, res, next) => {
+          devServer.middleware.waitUntilValid(() => {
+            if (req.url === '/' || req.url.endsWith('.html')) {
+              const fs = devServer.middleware.context.outputFileSystem
+              const indexHtmlPath = path.join(devServer.middleware.context.compiler.outputPath, 'index.html')
+
+              try {
+                let html = fs.readFileSync(indexHtmlPath, 'utf-8')
+                html = html.replace(
+                  '</head>',
+                  `<script>window.env={APP_DEFAULT_LANGUAGE:"en",APP_IS_PRODUCTION:true}</script></head>`,
+                )
+
+                res.setHeader('Content-Type', 'text/html')
+                res.send(html)
+              } catch (err) {
+                console.error('Failed to read index.html:', err)
+                next(err)
+              }
+            } else {
+              next()
+            }
+          })
+        })
+
+        return middlewares
+      },
+
       hot: true,
       historyApiFallback: { disableDotRule: true },
     },
