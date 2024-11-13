@@ -63,9 +63,9 @@ const Button = {
     catchy: {
       ...commonProps,
       color: 'gray.50',
-      bg: 'tracker.logo.orange',
+      bg: 'tracker.logo.darkOrange',
       _hover: {
-        bg: 'tracker.logo.darkOrange',
+        bg: 'tracker.logo.orange',
       },
     },
     danger: {
