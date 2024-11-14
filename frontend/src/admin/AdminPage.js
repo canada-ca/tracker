@@ -116,7 +116,7 @@ export default function AdminPage() {
     )
   }
 
-  if (data?.isUserAdmin) {
+  if (!data?.isUserAdmin) {
     return (
       <Stack align="center" mx="auto">
         <Text fontSize="3xl" fontWeight="bold">
