@@ -67,7 +67,7 @@ export const TourButton = () => {
   }
 
   return (
-    <Button onClick={handleStartTour} variant="primaryWhite" mx="2" display={{ base: 'none', md: 'inline' }}>
+    <Button onClick={handleStartTour} variant="catchy" mx="2" display={{ base: 'none', md: 'inline' }}>
       <Trans>Start Tour</Trans>
     </Button>
   )
