@@ -116,6 +116,32 @@ export default function AdminPage() {
     )
   }
 
+  if (!data?.isUserAdmin) {
+    return (
+      <Stack align="center" mx="auto">
+        <Text fontSize="3xl" fontWeight="bold">
+          <Trans>You currently have no admin affiliations.</Trans>
+        </Text>
+        <Flex fontSize="xl">
+          <Text mr="2">
+            <Trans>Search for your organization to request an invite</Trans>
+          </Text>
+          <Button size="xl" variant="link" as={RouteLink} to="/organizations" color="blue.500">
+            <Trans>here.</Trans>
+          </Button>
+        </Flex>
+        <Flex fontSize="xl">
+          <Text mr="2">
+            <Trans>Is your organization not using Tracker yet?</Trans>
+          </Text>
+          <Button size="xl" variant="link" as={RouteLink} to="/create-organization" color="blue.500">
+            <Trans>Click here.</Trans>
+          </Button>
+        </Flex>
+      </Stack>
+    )
+  }
+
   const changeActiveMenu = (val) => {
     if (activeMenu !== val) {
       history.replace(`/admin/${val}`)
