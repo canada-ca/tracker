@@ -41,7 +41,7 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
     chainResult.connections.map(({ uri, connection, error }, idx) => {
       if (error) {
         return (
-          <Box px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
+          <Box key={idx} px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
             <Text>
               {idx + 1}. {uri}
             </Text>
