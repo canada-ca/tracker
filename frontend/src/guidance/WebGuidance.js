@@ -192,7 +192,10 @@ export function WebGuidance({ webResults, timestamp }) {
         )}
         {currentEndpoint.results && (
           <>
-            <WebConnectionResults connectionResults={currentEndpoint.results.connectionResults} />
+            <WebConnectionResults
+              isWebHosting={isWebHosting}
+              connectionResults={currentEndpoint.results.connectionResults}
+            />
             <WebTLSResults tlsResult={currentEndpoint.results.tlsResult} />
           </>
         )}

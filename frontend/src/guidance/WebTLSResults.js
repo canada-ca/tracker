@@ -88,12 +88,6 @@ export function WebTLSResults({ tlsResult }) {
     </Box>
   )
 
-  const _weakCiphers = (suite) => {
-    const weakIndex = suite?.findIndex(({ strength }) => strength === 'weak')
-    if (weakIndex === -1) return false
-    return true
-  }
-
   const cipherCurveTextColor = (strength) => {
     return strength === 'weak' ? 'weak' : 'black'
   }
@@ -190,15 +184,6 @@ export function WebTLSResults({ tlsResult }) {
 
   const { robotVulnerable, heartbleedVulnerable } = tlsResult
 
-  const tlsStatus = [
-    tlsResult.certificateStatus,
-    tlsResult.protocolStatus,
-    tlsResult.cipherStatus,
-    tlsResult.curveStatus,
-  ].every((status) => status.toUpperCase() === 'PASS')
-    ? 'PASS'
-    : 'FAIL'
-
   const columnInfoStyleProps = {
     align: 'center',
     py: '0.5',
@@ -209,7 +194,7 @@ export function WebTLSResults({ tlsResult }) {
   return (
     <AccordionItem>
       <Flex as={AccordionButton}>
-        <StatusIcon status={tlsStatus} boxSize="icons.lg" />
+        <StatusIcon status={tlsResult.sslStatus} boxSize="icons.lg" />
         <Text fontSize="2xl" ml="2">
           <Trans>TLS Results</Trans>
         </Text>
