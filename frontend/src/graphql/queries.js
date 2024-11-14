@@ -1145,6 +1145,7 @@ export const ADMIN_PAGE = gql`
         }
       }
     }
+    isUserAdmin
     isUserSuperAdmin
   }
 `

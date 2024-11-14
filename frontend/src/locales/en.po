@@ -592,7 +592,7 @@ msgstr "Asset State"
 msgid "Asset States"
 msgstr "Asset States"
 
-#: src/admin/AdminPage.js:197
+#: src/admin/AdminPage.js:223
 #: src/admin/AuditLogTable.js:95
 msgid "Audit Logs"
 msgstr "Audit Logs"
@@ -826,6 +826,10 @@ msgstr "Click for additional information on statuses, tags, and filters."
 msgid "Click for guidance on getting started with Tracker and frequently asked questions."
 msgstr "Click for guidance on getting started with Tracker and frequently asked questions."
 
+#: src/admin/AdminPage.js:138
+msgid "Click here."
+msgstr "Click here."
+
 #: src/userOnboarding/config/tourSteps.js:106
 msgid "Click to view detailed scan results and guidance."
 msgstr "Click to view detailed scan results and guidance."
@@ -998,7 +1002,7 @@ msgstr "Create an Account"
 msgid "Create an organization"
 msgstr "Create an organization"
 
-#: src/admin/AdminPage.js:139
+#: src/admin/AdminPage.js:165
 #: src/app/App.js:353
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
@@ -1969,6 +1973,10 @@ msgstr "Heartbleed Vulnerable"
 #~ msgid "Here you can filter the list of organizations to only show verified organizations"
 #~ msgstr "Here you can filter the list of organizations to only show verified organizations"
 
+#: src/admin/AdminPage.js:130
+msgid "here."
+msgstr "here."
+
 #: src/admin/AdminDomains.js:174
 #: src/organizationDetails/OrganizationDomains.js:101
 #~ msgid "Hidden"
@@ -2474,6 +2482,10 @@ msgstr "Is DKIM aligned. Can be true or false."
 #: src/dmarc/DmarcReportPage.js:269
 msgid "Is SPF aligned. Can be true or false."
 msgstr "Is SPF aligned. Can be true or false."
+
+#: src/admin/AdminPage.js:135
+msgid "Is your organization not using Tracker yet?"
+msgstr "Is your organization not using Tracker yet?"
 
 #: src/guidance/WebTLSResults.js:476
 msgid "Issuer:"
@@ -3170,7 +3182,7 @@ msgstr "Organization:"
 msgid "Organization(s):"
 msgstr "Organization(s):"
 
-#: src/admin/AdminPage.js:195
+#: src/admin/AdminPage.js:221
 #: src/app/App.js:134
 #: src/app/App.js:252
 #: src/app/FloatingMenu.js:103
@@ -3782,6 +3794,10 @@ msgstr "Search for an organization"
 msgid "Search for domains here."
 msgstr "Search for domains here."
 
+#: src/admin/AdminPage.js:127
+msgid "Search for your organization to request an invite"
+msgstr "Search for your organization to request an invite"
+
 #: src/dmarc/DmarcReportPage.js:439
 msgid "Search Fully Aligned Items"
 msgstr "Search Fully Aligned Items"
@@ -3826,7 +3842,7 @@ msgstr "Select a state that best describes the asset in relation to your organiz
 msgid "Select an organization"
 msgstr "Select an organization"
 
-#: src/admin/AdminPage.js:160
+#: src/admin/AdminPage.js:186
 msgid "Select an organization to view admin options"
 msgstr "Select an organization to view admin options"
 
@@ -4320,7 +4336,7 @@ msgstr "Summary"
 msgid "Summary Tier:"
 msgstr "Summary Tier:"
 
-#: src/admin/AdminPage.js:192
+#: src/admin/AdminPage.js:218
 msgid "Super Admin Menu:"
 msgstr "Super Admin Menu:"
 
@@ -5107,7 +5123,7 @@ msgstr "User-designated tags appear here."
 msgid "User:"
 msgstr "User:"
 
-#: src/admin/AdminPage.js:196
+#: src/admin/AdminPage.js:222
 #: src/admin/AdminPanel.js:24
 #: src/organizationDetails/OrganizationDetails.js:152
 msgid "Users"
@@ -5452,6 +5468,10 @@ msgstr "You are current visiting a staging environment, used for testing purpose
 #: src/userOnboarding/config/tourSteps.js:11
 #~ msgid "You can search for an organization here"
 #~ msgstr "You can search for an organization here"
+
+#: src/admin/AdminPage.js:123
+msgid "You currently have no admin affiliations."
+msgstr "You currently have no admin affiliations."
 
 #: src/guidance/GuidancePage.js:109
 msgid "You have successfully added {domainName} to myTracker."
