@@ -226,7 +226,10 @@ def process_tls_results(tls_results, web_server_present):
             curve_status = "pass"
             positive_tags.append("ssl20")
 
-    if protocol_status == cipher_status == curve_status == certificate_status == "pass":
+    if (
+        protocol_status == cipher_status == certificate_status == "pass"
+        and curve_status != "fail"
+    ):
         ssl_status = "pass"
     elif (
         protocol_status == cipher_status == curve_status == certificate_status == "info"
