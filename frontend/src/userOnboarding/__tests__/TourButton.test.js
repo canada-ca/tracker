@@ -3,7 +3,18 @@ import { render, fireEvent } from '@testing-library/react'
 import { TourButton } from '../components/TourButton'
 import * as useTourModule from '../hooks/useTour'
 import { MemoryRouter } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import { I18nProvider } from '@lingui/react'
+import { setupI18n } from '@lingui/core'
+
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
 
 // Mock the useTour hook
 jest.mock('../hooks/useTour', () => ({
@@ -21,36 +32,19 @@ describe('TourTextButton', () => {
     const mockStartTour = jest.fn()
     useTourModule.useTour.mockReturnValue({ startTour: mockStartTour })
     const mockUseLocation = require('react-router-dom').useLocation
-    mockUseLocation.mockReturnValue({ pathname: '/organizations' })
+    mockUseLocation.mockReturnValue({ pathname: '/' })
 
-    const { getByText } = render(
+    const { getByRole } = render(
       <MemoryRouter>
-        <TourButton />
+        <I18nProvider i18n={i18n}>
+          <TourButton />
+        </I18nProvider>
       </MemoryRouter>,
     )
 
     //Simulate button click
-    fireEvent.click(getByText('Start Tour'))
+    fireEvent.click(getByRole('button', { name: /Start Tour/i }))
 
-    expect(mockStartTour).toHaveBeenCalledWith('organizationsPage')
-  })
-
-  it('logs a warning when there is no tour configured for the current pathname', () => {
-    // Setup mocks
-    useTourModule.useTour.mockReturnValue({ startTour: jest.fn() })
-    useLocation.mockReturnValue({ pathname: '/unconfigured-path' })
-
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-
-    // Render TourButton
-    const { getByText } = render(<TourButton />)
-
-    // Simulate button click
-    fireEvent.click(getByText('Start Tour'))
-
-    // Assert that console.warn was called with 'No Tour'
-    expect(consoleWarnSpy).toHaveBeenCalledWith('No Tour')
-
-    consoleWarnSpy.mockRestore()
+    expect(mockStartTour).toHaveBeenCalledWith('landingPage')
   })
 })

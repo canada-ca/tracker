@@ -20,7 +20,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-from clients.easm_client import run_disco_group, create_disco_group, update_asset_state
+from clients.easm_client import run_disco_group, create_disco_group
 from clients.kusto_client import get_host_asset
 
 NAME = os.getenv("NAME", "add-domain-to-easm")
@@ -120,7 +120,6 @@ async def run():
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
-        asset_state = payload.get("assetState")
         if not domain.endswith(".gc.ca") and not domain.endswith(".canada.ca"):
             logger.info(f"Skipping '{domain}' as it is not a GC domain.")
             return
@@ -128,10 +127,7 @@ async def run():
         try:
             easm_asset = get_host_asset(domain)
             if len(easm_asset) > 0:
-                logger.info(
-                    f"Updating asset state for '{domain}' as it already exists in EASM."
-                )
-                update_asset_state(domain, easm_asset[0]["AssetUuid"], asset_state)
+                logger.info(f"Skipping '{domain}' as it already exists in EASM.")
                 return
         except Exception as e:
             logger.error(f"Checking if asset exists in EASM: {str(e)}")

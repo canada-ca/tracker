@@ -34,7 +34,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
     id: null,
     userName: null,
   })
-  const [usersPerPage, setUsersPerPage] = useState(20)
+  const [usersPerPage, setUsersPerPage] = useState(50)
   const [editingUserRole, setEditingUserRole] = useState()
   const [editingUserName, setEditingUserName] = useState()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -157,6 +157,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
                 <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
+                borderColor="black"
                 id="Search-for-user-field"
                 aria-label="new-user-input"
                 placeholder={t`User email`}

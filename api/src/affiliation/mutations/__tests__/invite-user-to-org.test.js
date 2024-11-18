@@ -2615,6 +2615,7 @@ describe('invite user to org', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step err'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -2691,6 +2692,7 @@ describe('invite user to org', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit err'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -3182,6 +3184,7 @@ describe('invite user to org', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step err'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -3258,6 +3261,7 @@ describe('invite user to org', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit err'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {

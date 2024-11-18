@@ -107,6 +107,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(`Transaction step error occurred for user: ${userKey} when removing domain edge: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to unfavourite domain. Please try again.`))
     }
 
@@ -114,6 +115,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Transaction commit error occurred while user: ${userKey} was unfavouriting domain: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to unfavourite domain. Please try again.`))
     }
 

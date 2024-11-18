@@ -57,7 +57,6 @@ export const updateDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      publish,
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
@@ -194,6 +193,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
@@ -236,6 +236,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
     }
 
@@ -246,6 +247,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
@@ -320,24 +322,6 @@ export const updateDomain = new mutationWithClientMutationId({
           updatedProperties: [{ name: 'archived', oldValue: domain.archived, newValue: archived }],
         },
       })
-    }
-
-    if (typeof assetState !== 'undefined' && assetState !== claim.assetState) {
-      try {
-        await publish({
-          channel: 'scans.add_domain_to_easm',
-          msg: {
-            domain: returnDomain.domain,
-            assetState,
-            domain_key: returnDomain._key,
-            hash: returnDomain.hash,
-            user_key: null, // only used for One Time Scans
-            shared_id: null, // only used for One Time Scans
-          },
-        })
-      } catch (err) {
-        console.error(`Error publishing to NATS for domain ${returnDomain._key}: ${err}`)
-      }
     }
 
     returnDomain.id = returnDomain._key

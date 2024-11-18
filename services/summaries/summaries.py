@@ -58,12 +58,40 @@ def ignore_domain(domain):
     )
 
 
+def get_domain_negative_findings(db, domain_id):
+    cursor = db.aql.execute(
+        """
+            LET emailTags = (
+                FOR dnsScan, dnsE IN 1 OUTBOUND @domain_id domainsDNS
+                    SORT dnsScan.timestamp DESC
+                    LIMIT 1
+                    RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
+            )[0]
+            LET webTags = (
+                FOR web, webE IN 1 OUTBOUND @domain_id domainsWeb
+                    SORT web.timestamp DESC
+                    LIMIT 1
+                    FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
+                        RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
+            )
+            FOR tag IN FLATTEN([emailTags, webTags], 2)
+                FILTER tag != null
+                RETURN tag
+        """,
+        bind_vars={"domain_id": domain_id},
+    )
+    if cursor.empty():
+        return []
+    return [tag for tag in cursor]
+
+
 def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
+    chartSummariesCol = db.collection("chartSummaries")
 
     # Gather summaries from domain statuses
     chartSummaries = {}
@@ -143,13 +171,25 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     }
 
     # Update chart summaries in DB
-    db.collection("chartSummaries").insert(
-        {
-            "date": date.today().isoformat(),
-            **chartSummaries,
-            "dmarc_phase": dmarc_phase_summary,
-        }
-    )
+    todayISO = date.today().isoformat()
+    cursor = chartSummariesCol.find({"date": todayISO})
+    if cursor.empty():
+        chartSummariesCol.insert(
+            {
+                "date": todayISO,
+                **chartSummaries,
+                "dmarc_phase": dmarc_phase_summary,
+            }
+        )
+    else:
+        logging.info("Chart summary from today already present. Updating summary...")
+        chartSummariesCol.update_match(
+            {"date": todayISO},
+            {
+                **chartSummaries,
+                "dmarc_phase": dmarc_phase_summary,
+            },
+        )
     logging.info(f"Chart summary update completed.")
 
 
@@ -161,200 +201,223 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
-        # tier 1
-        https_fail = 0
-        https_pass = 0
-        dmarc_pass = 0
-        dmarc_fail = 0
+        try:
+            # tier 1
+            https_fail = 0
+            https_pass = 0
+            dmarc_pass = 0
+            dmarc_fail = 0
 
-        # tier 2
-        web_connections_fail = 0
-        web_connections_pass = 0
-        ssl_fail = 0
-        ssl_pass = 0
-        spf_fail = 0
-        spf_pass = 0
-        dkim_fail = 0
-        dkim_pass = 0
+            # tier 2
+            web_connections_fail = 0
+            web_connections_pass = 0
+            ssl_fail = 0
+            ssl_pass = 0
+            spf_fail = 0
+            spf_pass = 0
+            dkim_fail = 0
+            dkim_pass = 0
 
-        # tier 3
-        web_fail = 0
-        web_pass = 0
-        mail_fail = 0
-        mail_pass = 0
+            # tier 3
+            web_fail = 0
+            web_pass = 0
+            mail_fail = 0
+            mail_pass = 0
 
-        # dmarc phase
-        dmarc_phase_not_implemented = 0
-        dmarc_phase_assess = 0
-        dmarc_phase_deploy = 0
-        dmarc_phase_enforce = 0
-        dmarc_phase_maintain = 0
+            # dmarc phase
+            dmarc_phase_not_implemented = 0
+            dmarc_phase_assess = 0
+            dmarc_phase_deploy = 0
+            dmarc_phase_enforce = 0
+            dmarc_phase_maintain = 0
 
-        claims = db.collection("claims").find({"_from": org["_id"]})
-        for claim in claims:
-            domain = db.collection("domains").get({"_id": claim["_to"]})
-            domain_status = domain.get("status", {})
-            if ignore_domain(domain) is False and claim.get("assetState") == "approved":
-                # tier 1
-                # https
-                https_status = domain_status.get("https")
-                if https_status == "pass":
-                    https_pass = https_pass + 1
-                elif https_status == "fail":
-                    https_fail = https_fail + 1
-                # dmarc
-                dmarc_status = domain_status.get("dmarc")
-                if dmarc_status == "pass":
-                    dmarc_pass = dmarc_pass + 1
-                elif dmarc_status == "fail":
-                    dmarc_fail = dmarc_fail + 1
+            negative_tags = {}
 
-                # tier 2
-                # web connections
-                hsts_status = domain_status.get("hsts")
-                if https_status == "pass" and hsts_status == "pass":
-                    web_connections_pass = web_connections_pass + 1
-                elif https_status == "fail" or hsts_status == "fail":
-                    web_connections_fail = web_connections_fail + 1
-                # ssl/tls
-                ssl_status = domain_status.get("ssl")
-                if ssl_status == "pass":
-                    ssl_pass = ssl_pass + 1
-                elif ssl_status == "fail":
-                    ssl_fail = ssl_fail + 1
-                # spf
-                spf_status = domain_status.get("spf")
-                if spf_status == "pass":
-                    spf_pass = spf_pass + 1
-                elif spf_status == "fail":
-                    spf_fail = spf_fail + 1
-                # dkim
-                dkim_status = domain_status.get("dkim")
-                if dkim_status == "pass":
-                    dkim_pass = dkim_pass + 1
-                elif dkim_status == "fail":
-                    dkim_fail = dkim_fail + 1
-
-                # tier 3
-                # web
-                if ssl_status == "pass" and https_status == "pass":
-                    web_pass = web_pass + 1
-                elif ssl_status == "fail" or https_status == "fail":
-                    web_fail = web_fail + 1
-                # mail
-                if dkim_status == "info":
-                    if dmarc_status == "pass" and spf_status == "pass":
-                        mail_pass = mail_pass + 1
-                    elif dmarc_status == "fail" or spf_status == "fail":
-                        mail_fail = mail_fail + 1
-                else:
+            claims = db.collection("claims").find({"_from": org["_id"]})
+            for claim in claims:
+                domain = db.collection("domains").get({"_id": claim["_to"]})
+                try:
+                    domain_status = domain.get("status", {})
                     if (
-                        dmarc_status == "pass"
-                        and spf_status == "pass"
-                        and dkim_status == "pass"
+                        ignore_domain(domain) is False
+                        and claim.get("assetState") == "approved"
                     ):
-                        mail_pass = mail_pass + 1
-                    elif (
-                        dmarc_status == "fail"
-                        or spf_status == "fail"
-                        or dkim_status == "fail"
-                    ):
-                        mail_fail = mail_fail + 1
+                        # tier 1
+                        # https
+                        https_status = domain_status.get("https")
+                        if https_status == "pass":
+                            https_pass = https_pass + 1
+                        elif https_status == "fail":
+                            https_fail = https_fail + 1
+                        # dmarc
+                        dmarc_status = domain_status.get("dmarc")
+                        if dmarc_status == "pass":
+                            dmarc_pass = dmarc_pass + 1
+                        elif dmarc_status == "fail":
+                            dmarc_fail = dmarc_fail + 1
 
-                # dmarc phase
-                phase = domain.get("phase")
-                if phase is None or dmarc_status == "info":
-                    logging.info(
-                        f"No DMARC scan data available for domain \"{domain['domain']}\"."
-                    )
+                        # tier 2
+                        # web connections
+                        hsts_status = domain_status.get("hsts")
+                        if https_status == "pass" and hsts_status == "pass":
+                            web_connections_pass = web_connections_pass + 1
+                        elif https_status == "fail" or hsts_status == "fail":
+                            web_connections_fail = web_connections_fail + 1
+                        # ssl/tls
+                        ssl_status = domain_status.get("ssl")
+                        if ssl_status == "pass":
+                            ssl_pass = ssl_pass + 1
+                        elif ssl_status == "fail":
+                            ssl_fail = ssl_fail + 1
+                        # spf
+                        spf_status = domain_status.get("spf")
+                        if spf_status == "pass":
+                            spf_pass = spf_pass + 1
+                        elif spf_status == "fail":
+                            spf_fail = spf_fail + 1
+                        # dkim
+                        dkim_status = domain_status.get("dkim")
+                        if dkim_status == "pass":
+                            dkim_pass = dkim_pass + 1
+                        elif dkim_status == "fail":
+                            dkim_fail = dkim_fail + 1
+
+                        # tier 3
+                        # web
+                        if ssl_status == "pass" and https_status == "pass":
+                            web_pass = web_pass + 1
+                        elif ssl_status == "fail" or https_status == "fail":
+                            web_fail = web_fail + 1
+                        # mail
+                        if dkim_status == "info":
+                            if dmarc_status == "pass" and spf_status == "pass":
+                                mail_pass = mail_pass + 1
+                            elif dmarc_status == "fail" or spf_status == "fail":
+                                mail_fail = mail_fail + 1
+                        else:
+                            if (
+                                dmarc_status == "pass"
+                                and spf_status == "pass"
+                                and dkim_status == "pass"
+                            ):
+                                mail_pass = mail_pass + 1
+                            elif (
+                                dmarc_status == "fail"
+                                or spf_status == "fail"
+                                or dkim_status == "fail"
+                            ):
+                                mail_fail = mail_fail + 1
+
+                        # dmarc phase
+                        phase = domain.get("phase")
+                        if phase is None or dmarc_status == "info":
+                            logging.info(
+                                f"No DMARC scan data available for domain \"{domain['domain']}\"."
+                            )
+                            continue
+
+                        if phase == "not implemented":
+                            dmarc_phase_not_implemented = (
+                                dmarc_phase_not_implemented + 1
+                            )
+                        elif phase == "assess":
+                            dmarc_phase_assess = dmarc_phase_assess + 1
+                        elif phase == "deploy":
+                            dmarc_phase_deploy = dmarc_phase_deploy + 1
+                        elif phase == "enforce":
+                            dmarc_phase_enforce = dmarc_phase_enforce + 1
+                        elif phase == "maintain":
+                            dmarc_phase_maintain = dmarc_phase_maintain + 1
+
+                        # Negative tags
+                        domain_negative_tags = get_domain_negative_findings(
+                            db, domain["_id"]
+                        )
+                        for tag in domain_negative_tags:
+                            if tag in negative_tags:
+                                negative_tags[tag] += 1
+                            else:
+                                negative_tags[tag] = 1
+                except Exception as e:
+                    logging.error(f"Error processing domain {domain['_id']}: {e}")
                     continue
 
-                if phase == "not implemented":
-                    dmarc_phase_not_implemented = dmarc_phase_not_implemented + 1
-                elif phase == "assess":
-                    dmarc_phase_assess = dmarc_phase_assess + 1
-                elif phase == "deploy":
-                    dmarc_phase_deploy = dmarc_phase_deploy + 1
-                elif phase == "enforce":
-                    dmarc_phase_enforce = dmarc_phase_enforce + 1
-                elif phase == "maintain":
-                    dmarc_phase_maintain = dmarc_phase_maintain + 1
-
-        dmarc_phase_total = (
-            dmarc_phase_not_implemented
-            + dmarc_phase_assess
-            + dmarc_phase_deploy
-            + dmarc_phase_enforce
-            + dmarc_phase_maintain
-        )
-
-        summary_data = {
-            "date": date.today().isoformat(),
-            "dmarc": {
-                "pass": dmarc_pass,
-                "fail": dmarc_fail,
-                "total": dmarc_pass + dmarc_fail,
-            },
-            "web": {
-                "pass": web_pass,
-                "fail": web_fail,
-                "total": web_pass + web_fail,
-                # Don't count non web-hosting domains
-            },
-            "mail": {
-                "pass": mail_pass,
-                "fail": mail_fail,
-                "total": mail_pass + mail_fail,
-            },
-            "dmarc_phase": {
-                "not_implemented": dmarc_phase_not_implemented,
-                "assess": dmarc_phase_assess,
-                "deploy": dmarc_phase_deploy,
-                "enforce": dmarc_phase_enforce,
-                "maintain": dmarc_phase_maintain,
-                "total": dmarc_phase_total,
-            },
-            "https": {
-                "pass": https_pass,
-                "fail": https_fail,
-                "total": https_pass + https_fail,
-                # Don't count non web-hosting domains
-            },
-            "ssl": {
-                "pass": ssl_pass,
-                "fail": ssl_fail,
-                "total": ssl_pass + ssl_fail,
-                # Don't count non web-hosting domains
-            },
-            "spf": {
-                "pass": spf_pass,
-                "fail": spf_fail,
-                "total": spf_pass + spf_fail,
-            },
-            "dkim": {
-                "pass": dkim_pass,
-                "fail": dkim_fail,
-                "total": dkim_pass + dkim_fail,
-            },
-            "web_connections": {
-                "pass": web_connections_pass,
-                "fail": web_connections_fail,
-                "total": web_connections_pass + web_connections_fail,
-                # Don't count non web-hosting domains
-            },
-        }
-
-        current_summary = org.get("summaries")
-        if current_summary is not None:
-            if current_summary.get("date") is None:
-                current_summary.update(
-                    {"date": (date.today() - timedelta(days=1)).isoformat()}
-                )
-            db.collection("organizationSummaries").insert(
-                {"organization": org.get("_id"), **current_summary}
+            dmarc_phase_total = (
+                dmarc_phase_not_implemented
+                + dmarc_phase_assess
+                + dmarc_phase_deploy
+                + dmarc_phase_enforce
+                + dmarc_phase_maintain
             )
-        org.update({"summaries": summary_data})
-        db.collection("organizations").update(org)
+
+            summary_data = {
+                "date": date.today().isoformat(),
+                "dmarc": {
+                    "pass": dmarc_pass,
+                    "fail": dmarc_fail,
+                    "total": dmarc_pass + dmarc_fail,
+                },
+                "web": {
+                    "pass": web_pass,
+                    "fail": web_fail,
+                    "total": web_pass + web_fail,
+                    # Don't count non web-hosting domains
+                },
+                "mail": {
+                    "pass": mail_pass,
+                    "fail": mail_fail,
+                    "total": mail_pass + mail_fail,
+                },
+                "dmarc_phase": {
+                    "not_implemented": dmarc_phase_not_implemented,
+                    "assess": dmarc_phase_assess,
+                    "deploy": dmarc_phase_deploy,
+                    "enforce": dmarc_phase_enforce,
+                    "maintain": dmarc_phase_maintain,
+                    "total": dmarc_phase_total,
+                },
+                "https": {
+                    "pass": https_pass,
+                    "fail": https_fail,
+                    "total": https_pass + https_fail,
+                    # Don't count non web-hosting domains
+                },
+                "ssl": {
+                    "pass": ssl_pass,
+                    "fail": ssl_fail,
+                    "total": ssl_pass + ssl_fail,
+                    # Don't count non web-hosting domains
+                },
+                "spf": {
+                    "pass": spf_pass,
+                    "fail": spf_fail,
+                    "total": spf_pass + spf_fail,
+                },
+                "dkim": {
+                    "pass": dkim_pass,
+                    "fail": dkim_fail,
+                    "total": dkim_pass + dkim_fail,
+                },
+                "web_connections": {
+                    "pass": web_connections_pass,
+                    "fail": web_connections_fail,
+                    "total": web_connections_pass + web_connections_fail,
+                    # Don't count non web-hosting domains
+                },
+                "negative_tags": negative_tags,
+            }
+
+            current_summary = org.get("summaries", {})
+            if current_summary.get("date", "") != date.today().isoformat():
+                logging.info(f"Storing previous summary for org: {org['_key']}")
+                db.collection("organizationSummaries").insert(
+                    {"organization": org.get("_id"), **current_summary}
+                )
+            org.update({"summaries": summary_data})
+            db.collection("organizations").update(org)
+        except Exception as e:
+            logging.error(f"Error processing organization {org['_id']}: {e}")
+            continue
 
     logging.info(f"Organization summary value update completed.")
 

@@ -6,6 +6,10 @@ import { setupI18n } from '@lingui/core'
 
 import { historicalSummariesData } from '../../fixtures/summaryListData'
 import { HistoricalSummariesGraph } from '../HistoricalSummariesGraph'
+import { MemoryRouter } from 'react-router-dom'
+import { UserVarProvider } from '../../utilities/userState'
+import { makeVar } from '@apollo/client'
+import { MockedProvider } from '@apollo/client/testing'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors
 class ResizeObserver {
@@ -40,7 +44,23 @@ describe('<HistoricalSummariesGraph />', () => {
     const { queryByText } = render(
       <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
-          <HistoricalSummariesGraph data={historicalSummariesData} />
+          <MockedProvider>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tlfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <HistoricalSummariesGraph
+                  data={historicalSummariesData}
+                  setRange={() => {}}
+                  selectedRange="last30days"
+                />
+              </MemoryRouter>
+            </UserVarProvider>
+          </MockedProvider>
         </I18nProvider>
       </ChakraProvider>,
     )

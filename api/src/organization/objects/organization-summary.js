@@ -2,6 +2,8 @@ import { GraphQLObjectType } from 'graphql'
 
 import { categorizedSummaryType } from '../../summaries'
 import { GraphQLDate } from 'graphql-scalars'
+import { t } from '@lingui/macro'
+import { guidanceTagOrder, guidanceTagConnection } from '../../guidance-tag'
 
 const calculatePercentage = (numerator, denominator) => {
   if (denominator <= 0) {
@@ -155,6 +157,42 @@ export const organizationSummaryType = new GraphQLObjectType({
           categories,
           total: dkim.total,
         }
+      },
+    },
+    negativeFindings: {
+      type: guidanceTagConnection,
+      description: 'Aggregated negative findings for a given organization.',
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections.',
+        },
+      },
+      resolve: async (
+        { _id, negative_tags },
+        args,
+        {
+          userKey,
+          auth: { checkPermission, userRequired, verifiedRequired },
+          loaders: { loadGuidanceTagSummaryConnectionsByTagId },
+        },
+      ) => {
+        const user = await userRequired()
+        verifiedRequired({ user })
+
+        const permission = await checkPermission({ orgId: _id })
+        if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
+          console.error(
+            `User "${userKey}" attempted to access aggregated guidance for organization "${_id}". Permission: ${permission}`,
+          )
+          throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
+        }
+
+        const guidanceTags = await loadGuidanceTagSummaryConnectionsByTagId({
+          guidanceTags: negative_tags,
+          ...args,
+        })
+        return guidanceTags
       },
     },
   }),

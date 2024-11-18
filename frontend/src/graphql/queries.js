@@ -443,6 +443,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             results {
               ipAddress
               status
+              isPrivateIp
               results {
                 timestamp
                 tlsResult {
@@ -727,11 +728,42 @@ export const GET_HISTORICAL_ORG_SUMMARIES = gql`
         mail {
           ...RequiredSummaryFields
         }
+        negativeFindings(orderBy: { direction: DESC, field: TAG_COUNT }) {
+          guidanceTags {
+            count
+          }
+        }
       }
     }
   }
 
   ${Summary.fragments.requiredFields}
+`
+
+export const ORG_NEGATIVE_FINDINGS = gql`
+  query OrgAggregatedNegativeGuidance($orgSlug: Slug!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      summaries {
+        negativeFindings(orderBy: { direction: DESC, field: TAG_COUNT }) {
+          guidanceTags {
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+            count
+          }
+          totalCount
+        }
+      }
+    }
+  }
 `
 
 export const PAGINATED_ORG_DOMAINS = gql`
@@ -1113,6 +1145,7 @@ export const ADMIN_PAGE = gql`
         }
       }
     }
+    isUserAdmin
     isUserSuperAdmin
   }
 `

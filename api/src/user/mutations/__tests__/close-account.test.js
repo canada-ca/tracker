@@ -1000,6 +1000,7 @@ describe('given the closeAccount mutation', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('trx step error')),
               commit: jest.fn(),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1064,6 +1065,7 @@ describe('given the closeAccount mutation', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
               commit: jest.fn(),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1129,6 +1131,7 @@ describe('given the closeAccount mutation', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue(),
             commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -1337,6 +1340,7 @@ describe('given the closeAccount mutation', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('trx step error')),
               commit: jest.fn(),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1401,6 +1405,7 @@ describe('given the closeAccount mutation', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
               commit: jest.fn(),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -1466,6 +1471,7 @@ describe('given the closeAccount mutation', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue(),
             commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({

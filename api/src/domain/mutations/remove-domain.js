@@ -182,6 +182,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred when removing dmarc summary data for user: ${userKey} while attempting to remove domain: ${domain.domain}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
@@ -201,6 +202,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred when removing ownership data for user: ${userKey} while attempting to remove domain: ${domain.domain}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
     }
@@ -229,6 +231,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
@@ -247,6 +250,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
@@ -264,6 +268,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
@@ -280,6 +285,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
@@ -297,6 +303,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred while user: ${userKey} attempted to remove domain ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
     } else {
@@ -320,6 +327,7 @@ export const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred while user: ${userKey} attempted to remove claim for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
     }
@@ -331,6 +339,7 @@ export const removeDomain = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred while user: ${userKey} attempted to remove ${domain.domain} in org: ${org.slug}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 

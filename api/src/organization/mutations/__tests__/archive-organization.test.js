@@ -445,6 +445,7 @@ describe('archiving an organization', () => {
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockReturnValue({}),
             commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({

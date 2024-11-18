@@ -5,8 +5,9 @@ async function createOwnership({ arangoCtx, domain, orgAcronymEn }) {
   // setup Transaction
   const trx = await arangoCtx.transaction(collectionStrings)
 
-  await trx.step(
-    () => arangoCtx.query`
+  try {
+    await trx.step(
+      () => arangoCtx.query`
       WITH domains, organizations, ownership
       LET domainId = FIRST(
         FOR domain IN domains
@@ -23,9 +24,18 @@ async function createOwnership({ arangoCtx, domain, orgAcronymEn }) {
         _to: domainId,
       } INTO ownership
     `,
-  )
+    )
+  } catch (err) {
+    console.error(`Transaction step error occurred for dmarc summaries service when creating ownership data: ${err}`)
+    await trx.abort()
+  }
 
-  await trx.commit()
+  try {
+    await trx.commit()
+  } catch (err) {
+    console.error(`Transaction commit error occurred for dmarc summaries service when creating ownership data: ${err}`)
+    await trx.abort()
+  }
 }
 
 module.exports = {

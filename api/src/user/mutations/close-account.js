@@ -45,6 +45,7 @@ export const closeAccountSelf = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred when removing users remaining affiliations when user: ${user._key} attempted to close account: ${userId}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 
@@ -60,6 +61,7 @@ export const closeAccountSelf = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred when removing user: ${user._key} attempted to close account: ${userId}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 
@@ -67,6 +69,7 @@ export const closeAccountSelf = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred when user: ${user._key} attempted to close account: ${userId}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 
@@ -174,6 +177,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred when removing users remaining affiliations when user: ${user._key} attempted to close account: ${userId}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 
@@ -189,6 +193,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred when removing user: ${user._key} attempted to close account: ${userId}: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 
@@ -196,6 +201,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred when user: ${user._key} attempted to close account: ${userId}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 

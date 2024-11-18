@@ -22,6 +22,7 @@ const removeSuperAdminAffiliation = async ({
       `
     })
   } catch (err) {
+    await trx.abort()
     throw new Error(
       `Transaction step error occurred well removing super admin affiliation: ${err}`,
     )
@@ -30,6 +31,7 @@ const removeSuperAdminAffiliation = async ({
   try {
     await trx.commit()
   } catch (err) {
+    await trx.abort()
     throw new Error(
       `Transaction commit error occurred while removing new super admin affiliation: ${err}`,
     )

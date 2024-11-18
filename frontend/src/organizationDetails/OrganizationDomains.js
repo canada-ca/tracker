@@ -30,7 +30,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [filters, setFilters] = useState([
     { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
   ])
@@ -126,27 +126,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     </LoadingMessage>
   ) : (
     <Box>
-      {orgSlug !== 'my-tracker' && (
-        <ABTestWrapper insiderVariantName="B">
-          <ABTestVariant name="A">
-            <DomainListFilters
-              filters={filters}
-              setFilters={setFilters}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-            />
-          </ABTestVariant>
-          <ABTestVariant name="B">
-            <DomainListFilters
-              filters={filters}
-              setFilters={setFilters}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-              assetStateOptions={assetStateOptions}
-            />
-          </ABTestVariant>
-        </ABTestWrapper>
-      )}
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -177,6 +156,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         ) => (
           <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
+              className="domain-card"
               id={id}
               url={domain}
               status={status}
@@ -291,12 +271,33 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
       />
 
       {orgSlug !== 'my-tracker' && (
-        <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold" fontSize="lg">
-            <Trans>Filters:</Trans>
-          </Text>
-          <FilterList filters={filters} setFilters={setFilters} />
-        </Flex>
+        <Box className="domain-filters">
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold" fontSize="lg">
+              <Trans>Filters:</Trans>
+            </Text>
+            <FilterList filters={filters} setFilters={setFilters} />
+          </Flex>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="A">
+              <DomainListFilters
+                filters={filters}
+                setFilters={setFilters}
+                statusOptions={orderByOptions}
+                filterTagOptions={filterTagOptions}
+              />
+            </ABTestVariant>
+            <ABTestVariant name="B">
+              <DomainListFilters
+                filters={filters}
+                setFilters={setFilters}
+                statusOptions={orderByOptions}
+                filterTagOptions={filterTagOptions}
+                assetStateOptions={assetStateOptions}
+              />
+            </ABTestVariant>
+          </ABTestWrapper>
+        </Box>
       )}
 
       {domainList}

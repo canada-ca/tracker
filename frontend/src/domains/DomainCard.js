@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { Badge, Box, Button, Flex, IconButton, ListItem, Stack, Tag, TagLabel, Text, useToast } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
@@ -9,9 +9,10 @@ import { LinkIcon, StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
+import { isEqual } from 'lodash-es'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
-export function DomainCard({
+function DomainCard({
   id,
   url,
   status,
@@ -120,13 +121,13 @@ export function DomainCard({
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               {assetState && (
-                <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center">
+                <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center" className="asset-state">
                   {assetStateLabels[assetState]}
                 </Badge>
               )}
             </ABTestVariant>
           </ABTestWrapper>
-          <Flex ml="auto">
+          <Flex ml="auto" className="system-tags">
             {rcode === 'NXDOMAIN' && (
               <Badge colorScheme="red" variant="subtle" alignSelf="center">
                 NXDOMAIN
@@ -164,7 +165,7 @@ export function DomainCard({
           </Flex>
         </Flex>
         <Flex>
-          <Box mr="auto">
+          <Box mr="auto" className="user-tags">
             <Flex flexWrap="wrap">
               {tags?.map((tag, idx) => {
                 return (
@@ -219,6 +220,7 @@ export function DomainCard({
 
           <Stack fontSize="sm" justifySelf="flex-end" alignSelf="stretch" justifyContent="center" mx="2">
             <Button
+              className="view-results-button"
               variant="primary"
               as={RouteLink}
               to={{
@@ -245,7 +247,9 @@ export function DomainCard({
           </Stack>
           {isLoggedIn() && (
             <Stack justifyContent="center">
-              {isEmailValidated() && userHasPermission && <ScanDomainButton domainUrl={url} />}
+              {isEmailValidated() && userHasPermission && (
+                <ScanDomainButton className="request-scan-button" domainUrl={url} />
+              )}
               {location.pathname.match('my-tracker') ? (
                 <IconButton
                   onClick={async () => {
@@ -257,6 +261,7 @@ export function DomainCard({
                 />
               ) : (
                 <IconButton
+                  className="favourite-button"
                   onClick={async () => {
                     await favouriteDomain({ variables: { domainId: id } })
                   }}
@@ -289,3 +294,11 @@ DomainCard.propTypes = {
   assetState: string,
   cveDetected: bool,
 }
+
+const memoizedDomainCard = memo(DomainCard, (prevProps, nextProps) => {
+  if (Object.keys(prevProps).length !== Object.keys(nextProps).length) return false
+
+  return isEqual(prevProps, nextProps)
+})
+
+export { memoizedDomainCard as DomainCard }

@@ -4,13 +4,17 @@ import { useTour } from '../hooks/useTour'
 // import { QuestionOutlineIcon } from '@chakra-ui/icons'
 // import { IconButton } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
-const toursConfig = {
-  //list of pages with their paths
+export const toursConfig = {
+  // list of pages with their paths
+  // Start tour button will only appear on these pages
   '/': 'landingPage',
   '/organizations': 'organizationsPage',
+  '/organizations/*/summary': 'organizationSummary',
+  '/organizations/*/domains': 'organizationDomains',
   '/domains': 'domainPage',
-  '/my-tracker/summary': ' myTrackerPage',
+  '/my-tracker/summary': 'myTrackerPage',
   '/dmarc-summaries': 'dmarcSummariesPage',
   '/admin/organizations': 'adminProfilePage',
 }
@@ -21,11 +25,7 @@ const toursConfig = {
 //   const { startTour } = useTour()
 //   const handleStartTour = () => {
 //     const tourName = toursConfig[pathname]
-//     if (tourName) {
-//       startTour(tourName)
-//     } else {
-//       console.warn('No Tour')
-//     }
+//     if (tourName) startTour(tourName)
 //   }
 
 //   return (
@@ -42,22 +42,33 @@ const toursConfig = {
 //   )
 // }
 
+export const matchPathname = (pathname, config) => {
+  for (const key in config) {
+    const regex = new RegExp(`^${key.replace(/\*/g, '.*')}$`)
+    if (regex.test(pathname)) {
+      return config[key]
+    }
+  }
+  return null
+}
+
 export const TourButton = () => {
   const { pathname } = useLocation()
   const { startTour } = useTour()
 
+  const tourName = matchPathname(pathname, toursConfig)
+
   const handleStartTour = () => {
-    const tourName = toursConfig[pathname]
-    if (tourName) {
-      startTour(tourName)
-    } else {
-      console.warn('No Tour')
-    }
+    if (tourName) startTour(tourName)
+  }
+
+  if (!tourName) {
+    return null
   }
 
   return (
-    <Button onClick={handleStartTour} variant="primaryWhite" mx="2" display={{ base: 'none', md: 'inline' }}>
-      Start Tour
+    <Button onClick={handleStartTour} variant="catchy" mx="2" display={{ base: 'none', md: 'inline' }}>
+      <Trans>Start Tour</Trans>
     </Button>
   )
 }
