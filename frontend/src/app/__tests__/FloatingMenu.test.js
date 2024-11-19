@@ -11,6 +11,12 @@ import { makeVar } from '@apollo/client'
 
 import { useLocation } from 'react-router-dom';
 
+export const LocationDisplay = () => {
+  const location = useLocation()
+
+  return <div data-testid="location-display">{location.pathname}</div>
+}
+
 import { FloatingMenu } from '../FloatingMenu'
 
 import { UserVarProvider } from '../../utilities/userState'
@@ -116,16 +122,8 @@ describe('<FloatingMenu>', () => {
 
   describe('when the menu is open', () => {
     describe("and the 'Sign In' button is clicked", () => {
-      it('redirects to the sign in page', async () => {
-        let wLocation
-        
-        const FloatingMenuWrapper = () => {
-          const location = useLocation();
-          wLocation = location; // capture location here
-          return null; // No rendering needed here
-        };
-        
-        const { getByText } = render(
+      it('redirects to the sign-in page', async () => {
+        const { getByText, getByTestId } = render(
           <MockedProvider>
             <UserVarProvider
               userVar={makeVar({
@@ -139,32 +137,33 @@ describe('<FloatingMenu>', () => {
                   <ChakraProvider theme={theme}>
                     <FloatingMenu />
                     <Routes>
-                      {/* Using the FloatingMenuWrapper as a direct child of <Routes> */}
-                      <Route path="*" element={<FloatingMenuWrapper />} />
+                      {/* Add LocationDisplay to observe the current path */}
+                      <Route path="*" element={<LocationDisplay />} />
                     </Routes>
                   </ChakraProvider>
                 </I18nProvider>
               </MemoryRouter>
             </UserVarProvider>
-          </MockedProvider>,
+          </MockedProvider>
         );
-        
-
-        const menuButton = getByText(/Menu/i)
-        fireEvent.click(menuButton)
-
+    
+        const menuButton = getByText(/Menu/i);
+        fireEvent.click(menuButton);
+    
         await waitFor(() => {
-          expect(getByText(/Sign In/i)).toBeInTheDocument()
-        })
-
-        const signInButton = getByText(/Sign In/i)
-        fireEvent.click(signInButton)
-
+          expect(getByText(/Sign In/i)).toBeInTheDocument();
+        });
+    
+        const signInButton = getByText(/Sign In/i);
+        fireEvent.click(signInButton);
+    
         await waitFor(() => {
-          expect(wLocation.pathname).toBe('/sign-in')
-        })
-      })
-    })
+          const locationDisplay = getByTestId('location-display');
+          expect(locationDisplay.textContent).toBe('/sign-in');
+        });
+      });
+    });
+    
     describe('when user is logged in', () => {
       describe('when the Sign Out button is clicked', () => {
         afterEach(cleanup)
