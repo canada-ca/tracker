@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 gql = ">=3.0.0a5"
-aiohttp = "==3.10.2"
+aiohttp = "==3.11.4"
 websockets = "*"
 python-slugify = "*"
 cryptography = "~=43.0.1"
