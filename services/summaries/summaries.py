@@ -351,6 +351,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             )
 
             summary_data = {
+                "organization": org["_id"],
                 "date": date.today().isoformat(),
                 "dmarc": {
                     "pass": dmarc_pass,
