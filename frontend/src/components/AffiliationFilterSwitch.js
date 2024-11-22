@@ -5,6 +5,8 @@ import { UserIcon } from '../theme/Icons'
 import { t } from '@lingui/macro'
 import { useUserVar } from '../utilities/userState'
 
+
+
 export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
   const { isLoggedIn } = useUserVar()
   if (!isLoggedIn()) return null

@@ -3,24 +3,18 @@ import { cleanup, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
-
-import { useLocation } from 'react-router-dom';
-
-export const LocationDisplay = () => {
-  const location = useLocation()
-
-  return <div data-testid="location-display">{location.pathname}</div>
-}
+ import { LocationDisplay } from '../../components/LocationDisplay'
 
 import { FloatingMenu } from '../FloatingMenu'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { SIGN_OUT } from '../../graphql/mutations'
+import { expect } from 'playwright/test'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -36,9 +30,7 @@ describe('<FloatingMenu>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -136,34 +128,32 @@ describe('<FloatingMenu>', () => {
                 <I18nProvider i18n={i18n}>
                   <ChakraProvider theme={theme}>
                     <FloatingMenu />
-                    <Routes>
-                      {/* Add LocationDisplay to observe the current path */}
-                      <Route path="*" element={<LocationDisplay />} />
-                    </Routes>
+                    <LocationDisplay />
                   </ChakraProvider>
                 </I18nProvider>
               </MemoryRouter>
             </UserVarProvider>
-          </MockedProvider>
-        );
-    
-        const menuButton = getByText(/Menu/i);
-        fireEvent.click(menuButton);
-    
+          </MockedProvider>,
+        )
+        const locationDisplay = getByTestId('location-display')
+        expect(locationDisplay).toHaveTextContent('/')
+
+        const menuButton = getByText(/Menu/i)
+        fireEvent.click(menuButton)
+
         await waitFor(() => {
-          expect(getByText(/Sign In/i)).toBeInTheDocument();
-        });
-    
-        const signInButton = getByText(/Sign In/i);
-        fireEvent.click(signInButton);
-    
+          expect(getByText(/Sign In/i)).toBeInTheDocument()
+        })
+
+        const signInButton = getByText(/Sign In/i)
+        fireEvent.click(signInButton)
+
         await waitFor(() => {
-          const locationDisplay = getByTestId('location-display');
-          expect(locationDisplay.textContent).toBe('/sign-in');
-        });
-      });
-    });
-    
+          expect(locationDisplay).toHaveTextContent("/sign-in")
+        })
+      })
+    })
+
     describe('when user is logged in', () => {
       describe('when the Sign Out button is clicked', () => {
         afterEach(cleanup)
@@ -260,15 +250,12 @@ describe('<FloatingMenu>', () => {
           fireEvent.click(signOutButton)
 
           await waitFor(() => {
-            expect(
-              queryByText(/An error occured when you attempted to sign out/i),
-            )
+            expect(queryByText(/An error occured when you attempted to sign out/i))
           })
         })
       })
     })
   })
 })
-
 
 //i edited this page.

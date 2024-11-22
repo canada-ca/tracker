@@ -5,11 +5,13 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { createMemoryHistory } from 'history'
+// import { createMemoryHistory} from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
 import TwoFactorAuthenticatePage from '../TwoFactorAuthenticatePage'
+
+import { LocationDisplay } from '../../components/LocationDisplay'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { AUTHENTICATE } from '../../graphql/mutations'
@@ -39,12 +41,11 @@ describe('<TwoFactorAuthenticatePage />', () => {
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
-      </MockedProvider>
-    );
-  
-    await waitFor(() => expect(getByText(/Two Factor Authentication/)).toBeInTheDocument());
-  });
-  
+      </MockedProvider>,
+    )
+
+    await waitFor(() => expect(getByText(/Two Factor Authentication/)).toBeInTheDocument())
+  })
 
   describe('given no input', () => {
     describe('when the form is submitted', () => {
@@ -72,9 +73,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
-            </MockedProvider>
-          );
-          
+            </MockedProvider>,
+          )
+
           const submitButton = getByText('Submit')
           fireEvent.click(submitButton)
 
@@ -111,13 +112,6 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
-
       const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
@@ -131,15 +125,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
                   <Routes>
-                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                    <Route
+                      path="/authenticate/:sendMethod/:authenticateToken"
+                      element={<TwoFactorAuthenticatePage />}
+                    />
                   </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>
-      );
-      
+        </MockedProvider>,
+      )
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
@@ -187,13 +183,6 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
-
       const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
@@ -207,15 +196,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
                   <Routes>
-                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                    <Route
+                      path="/authenticate/:sendMethod/:authenticateToken"
+                      element={<TwoFactorAuthenticatePage />}
+                    />
                   </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>
-      );
-      
+        </MockedProvider>,
+      )
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
@@ -263,13 +254,6 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
-
       const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
@@ -283,15 +267,17 @@ describe('<TwoFactorAuthenticatePage />', () => {
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
                   <Routes>
-                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                    <Route
+                      path="/authenticate/:sendMethod/:authenticateToken"
+                      element={<TwoFactorAuthenticatePage />}
+                    />
                   </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>
-      );
-      
+        </MockedProvider>,
+      )
 
       const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
@@ -311,12 +297,12 @@ describe('<TwoFactorAuthenticatePage />', () => {
   })
 
   describe('when authentication succeeds', () => {
-    it('redirects to home page', async () => {
+    it('redirects to the home page', async () => {
       const values = {
         authenticateToken: 'authenticate-token-test',
         authenticationCode: 123456,
-      };
-    
+      }
+
       const mocks = [
         {
           request: {
@@ -345,9 +331,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
             },
           },
         },
-      ];
-    
-      const { getAllByRole, getByRole } = render(
+      ]
+
+      const { getAllByRole, getByRole, getByTestId } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -360,31 +346,37 @@ describe('<TwoFactorAuthenticatePage />', () => {
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']}>
                   <Routes>
-                    <Route path="/authenticate/:sendMethod/:authenticateToken" element={<TwoFactorAuthenticatePage />} />
+                    <Route
+                      path="/authenticate/:sendMethod/:authenticateToken"
+                      element={<TwoFactorAuthenticatePage />}
+                    />
                     <Route path="/" element={<div>Home Page</div>} />
+                    {/* Add LocationDisplay to monitor the current route */}
+                    <Route path="*" element={<LocationDisplay />} />
                   </Routes>
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
-        </MockedProvider>
-      );
-    
-      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0];
-      const form = getByRole('form');
-    
+        </MockedProvider>,
+      )
+
+      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
+      const form = getByRole('form')
+
       fireEvent.change(twoFactorCode, {
         target: {
           value: values.authenticationCode,
         },
-      });
-    
-      fireEvent.submit(form);
-    
+      })
+
+      fireEvent.submit(form)
+
+      // Check that the current location changes to '/'
       await waitFor(() => {
-        expect(window.location.pathname).toBe('/'); // Check that the pathname is '/'
-      });
-    });       
-    
+        const locationDisplay = getByTestId('location-display')
+        expect(locationDisplay.textContent).toBe('/sign-in')
+      })
+    })
   })
 })
