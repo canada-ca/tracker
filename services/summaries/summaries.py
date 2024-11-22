@@ -201,6 +201,8 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
+        logging.info(f"Working on organization {org['orgDetails']['en']['name']}...")
+
         try:
             # tier 1
             https_fail = 0
@@ -233,7 +235,8 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
             negative_tags = {}
 
-            claims = db.collection("claims").find({"_from": org["_id"]})
+            claims_cursor = db.collection("claims").find({"_from": org["_id"]})
+            claims = [claim for claim in claims_cursor]
             for claim in claims:
                 domain = db.collection("domains").get({"_id": claim["_to"]})
                 try:
