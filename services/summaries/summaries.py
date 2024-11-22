@@ -428,6 +428,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
 if __name__ == "__main__":
     logging.info("Summary service started")
-    # update_chart_summaries()
+    update_chart_summaries()
     update_org_summaries()
     logging.info(f"Summary service shutting down...")
