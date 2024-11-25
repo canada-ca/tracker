@@ -54,6 +54,15 @@ def update_selectors(
             logger.info(f"Processing {selector_doc['id']} {selector['selector']}")
             # Skip selector if last_seen is older than 1 year
             try:
+                if (
+                    selector.get("last_seen", None) is None
+                    or selector.get("first_seen", None) is None
+                ):
+                    logger.info(
+                        f"Skipping {selector_doc['id']} {selector['selector']} - missing seen dates"
+                    )
+                    continue
+
                 current_date = datetime.now()
                 selector_date = datetime.strptime(selector["last_seen"], "%Y-%m-%d")
                 date_diff = (current_date - selector_date).days
@@ -119,7 +128,9 @@ def update_selectors(
             """
             FOR edge IN domainsToSelectors
                 LET date_diff_in_days = DATE_DIFF(edge.lastSeen, DATE_NOW(), "d")
-                FILTER !!edge.lastSeen && date_diff_in_days > 365
+                LET is_old = !!edge.lastSeen && date_diff_in_days > 365
+                LET missing_seen_dates = edge.firstSeen == null OR edge.lastSeen == null
+                FILTER is_old OR missing_seen_dates
                 LET from_domain = DOCUMENT(edge._from).domain
                 LET to_selector = DOCUMENT(edge._to).selector
                 REMOVE edge IN domainsToSelectors
@@ -128,30 +139,47 @@ def update_selectors(
                     from_domain: from_domain,
                     to_selector: to_selector,
                     date_diff_in_days: date_diff_in_days,
+                    is_old: is_old,
+                    missing_seen_dates: missing_seen_dates,
                 }
             """
         )
         for edge in removed_edges_cursor:
-            logger.info(
-                f"Removed edge {edge['_id']} from {edge['from_domain']} to {edge['to_selector']} - ({edge['date_diff_in_days']} days old)"
-            )
+            if edge["missing_seen_dates"]:
+                logger.info(
+                    f"Removed edge {edge['_id']} from {edge['from_domain']} to {edge['to_selector']} - missing seen dates"
+                )
+            else:
+                logger.info(
+                    f"Removed edge {edge['_id']} from {edge['from_domain']} to {edge['to_selector']} - ({edge['date_diff_in_days']} days old)"
+                )
     else:
-        # Get selectors that are older than 1 year
-        logger.info("Getting old selector edges")
-        old_edges_cursor = arango_db.aql.execute(
+        # Report on old selector edges or missing seen dates
+        logger.info("Reporting on old selector edges or missing seen dates")
+        report_edges_cursor = arango_db.aql.execute(
             """
             FOR edge IN domainsToSelectors
                 LET date_diff_in_days = DATE_DIFF(edge.lastSeen, DATE_NOW(), "d")
-                FILTER !!edge.lastSeen && date_diff_in_days > 365
+                LET is_old = !!edge.lastSeen && date_diff_in_days > 365
+                LET missing_seen_dates = edge.firstSeen == null OR edge.lastSeen == null
+                FILTER is_old OR missing_seen_dates
+
                 RETURN {
                     _id: edge._id,
                     from_domain: DOCUMENT(edge._from).domain,
                     to_selector: DOCUMENT(edge._to).selector,
                     date_diff_in_days: date_diff_in_days,
+                    is_old: is_old,
+                    missing_seen_dates: missing_seen_dates,
                 }
             """
         )
-        for edge in old_edges_cursor:
-            logger.info(
-                f"Old edge {edge['_id']} from {edge['from_domain']} to {edge['to_selector']} - ({edge['date_diff_in_days']} days old)"
-            )
+        for edge in report_edges_cursor:
+            if edge["missing_seen_dates"]:
+                logger.info(
+                    f"Unknown age edge {edge['_id']} from {edge['from_domain']} to {edge['to_selector']} - missing seen dates"
+                )
+            else:
+                logger.info(
+                    f"Old edge {edge['_id']} from {edge['from_domain']} to {edge['to_selector']} - ({edge['date_diff_in_days']} days old)"
+                )
