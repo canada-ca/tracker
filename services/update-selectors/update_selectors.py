@@ -1,5 +1,6 @@
 import logging
 from typing import TypedDict, Iterable
+from datetime import datetime
 
 from arango.database import StandardDatabase
 from azure.cosmos import ContainerProxy

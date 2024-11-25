@@ -8,8 +8,11 @@ from dotenv import load_dotenv
 
 from update_selectors import update_selectors
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO,
-                    format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+)
 logger = logging.getLogger()
 
 load_dotenv()
@@ -26,7 +29,7 @@ COSMOS_DB_SELECTORS_CONTAINER = os.getenv("COSMOS_DB_SELECTORS_CONTAINER")
 REMOVE_SELECTORS = os.getenv("REMOVE_SELECTORS", "false").lower() == "true"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     missing_envs = []
     for key, val in {
         "ARANGO_DB_USER": ARANGO_DB_USER,
@@ -46,10 +49,14 @@ if __name__ == '__main__':
 
     # Establish DB connection
     arango_client = ArangoClient(hosts=ARANGO_DB_URL)
-    db = arango_client.db(ARANGO_DB_NAME, username=ARANGO_DB_USER, password=ARANGO_DB_PASS)
+    db = arango_client.db(
+        ARANGO_DB_NAME, username=ARANGO_DB_USER, password=ARANGO_DB_PASS
+    )
 
     # Set CosmosDB http_logging_policy logging level to warning to avoid excessive logging
-    logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
+    logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(
+        logging.WARNING
+    )
 
     # Initialize the Cosmos client using connection string
     cosmos_client = CosmosClient.from_connection_string(COSMOS_DB_CONN_STRING)
@@ -60,4 +67,8 @@ if __name__ == '__main__':
     # Get container
     selector_container = cosmos_db.get_container_client(COSMOS_DB_SELECTORS_CONTAINER)
 
-    update_selectors(arango_db=db, selector_container=selector_container, remove_selectors=REMOVE_SELECTORS)
+    update_selectors(
+        arango_db=db,
+        selector_container=selector_container,
+        remove_selectors=REMOVE_SELECTORS,
+    )
