@@ -36,10 +36,6 @@ export const updateDomain = new mutationWithClientMutationId({
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
     },
-    ignoredCves: {
-      description: 'List of CVEs that the user has chosen to ignore.',
-      type: new GraphQLList(CveID),
-    },
   }),
   outputFields: () => ({
     result: {
@@ -90,13 +86,6 @@ export const updateDomain = new mutationWithClientMutationId({
       assetState = cleanseInput(args.assetState)
     } else {
       assetState = ''
-    }
-
-    let ignoredCves
-    if (typeof args.ignoredCves !== 'undefined') {
-      ignoredCves = args.ignoredCves
-    } else {
-      ignoredCves = null
     }
 
     // Check to see if domain exists
@@ -175,7 +164,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
-      ignoredCves: ignoredCves || domain?.ignoredCves,
     }
 
     try {
