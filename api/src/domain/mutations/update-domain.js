@@ -261,14 +261,6 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof ignoredCves !== 'undefined' && JSON.stringify(domain.ignoredCves) !== JSON.stringify(ignoredCves)) {
-      updatedProperties.push({
-        name: 'ignoredCves',
-        oldValue: domain.ignoredCves,
-        newValue: ignoredCves,
-      })
-    }
-
     if (updatedProperties.length > 0) {
       await logActivity({
         transaction,
