@@ -51,6 +51,16 @@ def update_selectors(
 
         for selector in selector_doc["data"]:
             logger.info(f"Processing {selector_doc['id']} {selector['selector']}")
+            # Skip selector if last_seen is older than 1 year
+            current_date = datetime.now()
+            selector_date = datetime.strptime(selector["last_seen"], "%Y-%m-%d")
+            date_diff = (current_date - selector_date).days
+
+            if date_diff > 365:
+                logger.info(
+                    f"Skipping {selector_doc['id']} {selector['selector']} - last seen {date_diff} days ago"
+                )
+                continue
 
             # Ensure selectors exist in ArangoDB (upsert)
             try:
