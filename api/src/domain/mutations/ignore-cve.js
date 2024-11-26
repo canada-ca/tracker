@@ -155,11 +155,12 @@ export const ignoreCve = new mutationWithClientMutationId({
     // Get all verified claims to domain and activityLog those organizations
     try {
       const orgs = await query`
-      FOR v, e IN 1..1 OUTBOUND ${domain._id} claims
-      FILTER v.verified == true
+      FOR v, e IN 1..1 INBOUND ${domain._id} claims
+        FILTER v.verified == true
         RETURN {
           _key: v._key,
           name: v.orgDetails.en.orgName,
+        }
     `
       for await (const org of orgs) {
         await logActivity({
