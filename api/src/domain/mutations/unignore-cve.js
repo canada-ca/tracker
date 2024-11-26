@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { CveID } from '../../scalars'
 import { ignoreCveUnion } from '../unions/ignore-cve-union'
+import { logActivity } from '../../audit-logs'
 
 export const unignoreCve = new mutationWithClientMutationId({
   name: 'UnignoreCve',
@@ -149,6 +150,72 @@ export const unignoreCve = new mutationWithClientMutationId({
       )
       await trx.abort()
       throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
+    }
+
+    // Get all verified claims to domain and activityLog those organizations
+    try {
+      const orgs = await query`
+      FOR v, e IN 1..1 OUTBOUND ${domain._id} claims
+      FILTER v.verified == true
+        RETURN {
+          _key: v._key,
+          name: v.orgDetails.en.orgName,
+    `
+      for await (const org of orgs) {
+        await logActivity({
+          transaction,
+          collections,
+          query,
+          initiatedBy: {
+            id: user._key,
+            userName: user.userName,
+            role: 'super_admin',
+          },
+          action: 'unignore',
+          target: {
+            resource: domain.domain,
+            organization: {
+              id: org._key,
+              name: org.name,
+            },
+            resourceType: 'domain',
+            updatedProperties: [
+              {
+                name: ignoredCve,
+                oldValue: 'ignored',
+                newValue: 'unignored',
+              },
+            ],
+          },
+        })
+      }
+      // Log activity for super admin logging
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: 'super_admin',
+        },
+        action: 'ignore',
+        target: {
+          resource: domain.domain,
+          resourceType: 'domain',
+          updatedProperties: [
+            {
+              name: ignoredCve,
+              oldValue: 'ignored',
+              newValue: 'unignored',
+            },
+          ],
+        },
+      })
+    } catch (err) {
+      console.error(
+        `Database error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}" during activity logs, error: ${err}`,
+      )
     }
 
     // Clear dataloader and load updated domain
