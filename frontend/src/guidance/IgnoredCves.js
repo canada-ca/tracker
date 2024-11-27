@@ -8,8 +8,6 @@ function IgnoredCves({ undetectedIgnoredCves, detectedIgnoredCves, setActiveCveH
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
 
-  console.log({ detectedIgnoredCves })
-
   return (
     <>
       <Divider borderBottomColor="gray.900" />
