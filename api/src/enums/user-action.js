@@ -31,14 +31,6 @@ export const UserActionEnums = new GraphQLEnumType({
       value: 'export',
       description: 'A resource was exported.',
     },
-    IGNORE: {
-      value: 'ignore',
-      description: 'A resource was ignored.',
-    },
-    UNIGNORE: {
-      value: 'unignore',
-      description: 'A resource was unignored.',
-    },
   },
   description: 'Describes actions performed by users to modify resources.',
 })

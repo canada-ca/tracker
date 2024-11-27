@@ -86,8 +86,6 @@ export function AuditLogTable({ orgId = null }) {
     { value: 'DELETE', text: t`Delete` },
     { value: 'EXPORT', text: t`Export` },
     { value: 'SCAN', text: t`Scan` },
-    { value: 'IGNORE', text: t`Ignore` },
-    { value: 'UNIGNORE', text: t`Unignore` },
   ]
 
   let logTable

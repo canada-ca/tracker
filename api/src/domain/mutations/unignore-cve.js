@@ -172,7 +172,7 @@ export const unignoreCve = new mutationWithClientMutationId({
             userName: user.userName,
             role: 'super_admin',
           },
-          action: 'unignore',
+          action: 'update',
           target: {
             resource: domain.domain,
             organization: {
@@ -200,7 +200,7 @@ export const unignoreCve = new mutationWithClientMutationId({
           userName: user.userName,
           role: 'super_admin',
         },
-        action: 'ignore',
+        action: 'update',
         target: {
           resource: domain.domain,
           resourceType: 'domain',
