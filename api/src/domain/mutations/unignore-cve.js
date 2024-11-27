@@ -100,24 +100,20 @@ export const unignoreCve = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
     }
 
-    let currentDomainVulnerabilities
+    let currentDomainVulnerabilitiesCursor
     try {
-      currentDomainVulnerabilities = await (
-        await trx.step(
-          () => query`
+      currentDomainVulnerabilitiesCursor = await trx.step(
+        () => query`
         FOR finding IN additionalFindings
           FILTER finding.domain == ${domain._id}
           LIMIT 1
-          RETURN UNIQUE(
-            FOR wc IN finding.webComponents
-              FILTER LENGTH(wc.WebComponentCves) > 0
-              FOR vuln IN wc.WebComponentCves
-                FILTER vuln.Cve NOT IN ${newIgnoredCves}
-                RETURN vuln.Cve
-          )
+          FOR wc IN finding.webComponents
+            FILTER LENGTH(wc.WebComponentCves) > 0
+            FOR vuln IN wc.WebComponentCves
+              FILTER vuln.Cve NOT IN ${newIgnoredCves}
+              RETURN DISTINCT vuln.Cve
       `,
-        )
-      ).next()
+      )
     } catch (err) {
       console.error(
         `Transaction step error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}" when getting current CVEs, error: ${err}`,
@@ -130,7 +126,7 @@ export const unignoreCve = new mutationWithClientMutationId({
       await trx.step(
         () =>
           query`
-          UPDATE { _key: ${domain._key}, cveDetected: ${currentDomainVulnerabilities.length > 0} } IN domains
+          UPDATE { _key: ${domain._key}, cveDetected: ${currentDomainVulnerabilitiesCursor.count > 0} } IN domains
       `,
       )
     } catch (err) {
