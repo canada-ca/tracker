@@ -13,7 +13,7 @@
   "author": "Mike Williamson",
   "license": "MIT",
   "dependencies": {
-    "arangojs": "^8.0.0",
+    "arangojs": "^9.2.0",
     "async-wait-until": "^2.0.7",
     "dotenv-safe": "^8.2.0",
     "nats": "^2.7.0"
