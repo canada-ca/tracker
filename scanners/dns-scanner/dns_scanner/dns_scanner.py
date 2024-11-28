@@ -138,7 +138,11 @@ def scan_domain(domain, dkim_selectors=None):
         )
         if wildcard_record is not None:
             if a_records is None:
-                scan_result.wildcard_sibling = True
+                try:
+                    resolver.resolve(qname=domain, rdtype=dns.rdatatype.MX)
+                    scan_result.wildcard_sibling = True
+                except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+                    pass
             # check to see if subdomain and wildcard record point to the same endpoints
             elif a_records.response.answer[-1] == wildcard_record.response.answer[-1]:
                 scan_result.wildcard_sibling = True
