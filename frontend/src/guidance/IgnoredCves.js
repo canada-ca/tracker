@@ -67,27 +67,26 @@ function IgnoredCves({ undetectedIgnoredCves, detectedIgnoredCves, setActiveCveH
               </Text>
             ) : (
               <SimpleGrid columns={8}>
-                {undetectedIgnoredCves &&
-                  undetectedIgnoredCves.map((cve) => {
-                    return (
-                      <Button
-                        key={`ignored-${cve}`}
-                        borderRadius="full"
-                        m="1"
-                        borderColor="black"
-                        borderWidth="1px"
-                        bg="gray.100"
-                        fontWeight="normal"
-                        size="sm"
-                        _hover={{ bg: 'gray.200' }}
-                        onClick={() => {
-                          setActiveCveHandler(cve)
-                        }}
-                      >
-                        {cve}
-                      </Button>
-                    )
-                  })}
+                {undetectedIgnoredCves.map((cve) => {
+                  return (
+                    <Button
+                      key={`ignored-${cve}`}
+                      borderRadius="full"
+                      m="1"
+                      borderColor="black"
+                      borderWidth="1px"
+                      bg="gray.100"
+                      fontWeight="normal"
+                      size="sm"
+                      _hover={{ bg: 'gray.200' }}
+                      onClick={() => {
+                        setActiveCveHandler(cve)
+                      }}
+                    >
+                      {cve}
+                    </Button>
+                  )
+                })}
               </SimpleGrid>
             )}
           </Box>
