@@ -23,7 +23,7 @@ azure_cosmos_db_conn_string = f"AccountEndpoint=https://{COSMOS_DB_HOST}:8081/;A
 
 
 def get_date_ago_formatted(days):
-    return (datetime.datetime.utcnow() - datetime.timedelta(days=days)).strftime(
+    return (datetime.datetime.now() - datetime.timedelta(days=days)).strftime(
         "%Y-%m-%d"
     )
 
@@ -49,13 +49,14 @@ class TestUpdateSelectors:
                 "id": "domain2",
                 "data": [
                     {
+                        # This selector already exists with this domain
                         "selector": "selector2",
                         "first_seen": get_date_ago_formatted(10),
                         "last_seen": get_date_ago_formatted(10),
                     },
-                    # This selector should be removed
                     {
-                        "selector": "selector3",
+                        # This selector should be skipped (older than 1 year)
+                        "selector": "selector1",
                         "first_seen": get_date_ago_formatted(400),
                         "last_seen": get_date_ago_formatted(370),
                     },
@@ -108,11 +109,13 @@ class TestUpdateSelectors:
         ]
         existing_domains_to_selectors = [
             {
+                # This selector should be removed (no last_seen or first_seen)
                 "_id": "domainsToSelectors/1",
                 "_from": "domains/1",
                 "_to": "selectors/1",
             },
             {
+                # This selector should not be removed
                 "_id": "domainsToSelectors/2",
                 "_from": "domains/2",
                 "_to": "selectors/2",
@@ -120,11 +123,12 @@ class TestUpdateSelectors:
                 "last_seen": get_date_ago_formatted(10),
             },
             {
+                # This selector should be removed (last_seen older than 1 year)
                 "_id": "domainsToSelectors/3",
                 "_from": "domains/2",
                 "_to": "selectors/3",
                 "first_seen": get_date_ago_formatted(400),
-                "last_seen": get_date_ago_formatted(350),
+                "last_seen": get_date_ago_formatted(370),
             },
         ]
         for collection, docs in {
@@ -186,8 +190,23 @@ class TestUpdateSelectors:
         # selector4 should have been added
         assert arango_db["selectors"].count() == 4
         assert arango_db["domains"].count() == 3
+        t = [t for t in arango_db["domainsToSelectors"].all()]
         # selector3 edge to domain2 should have been removed, selector4 edge to domain3 should have been added
-        assert arango_db["domainsToSelectors"].count() == 3
+        assert arango_db["domainsToSelectors"].count() == 2
+
+        # domain1 should have no selectors (selector1 edge should have been removed)
+        domain1_selectors = [
+            sel["selector"]
+            for sel in arango_db.aql.execute(
+                """
+                FOR v, e IN 1..1 ANY 'domains/1' domainsToSelectors
+                    RETURN v.selector
+                """,
+            )
+        ]
+        assert len(domain1_selectors) == 0
+
+        # domain2 should have selector2 only (selector3 edge should have been removed)
         domain2_selectors = [
             sel["selector"]
             for sel in arango_db.aql.execute(
@@ -199,7 +218,8 @@ class TestUpdateSelectors:
         ]
         assert "selector2" in domain2_selectors
         assert "selector3" not in domain2_selectors
-        # selector4 edge to domain3 should have been added
+
+        # domain3 to selector4 edge should have been added
         domain3_selectors = [
             sel["selector"]
             for sel in arango_db.aql.execute(
@@ -210,17 +230,6 @@ class TestUpdateSelectors:
             )
         ]
         assert "selector4" in domain3_selectors
-        # Previous selector1 edge for domain1 which doesn't have last_seen or first_seen should not be removed
-        assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 ANY 'domains/1' domainsToSelectors
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 1
-        )
 
     def test_update_selectors_without_removal(self, arango_db, selector_container):
         update_selectors.update_selectors(
@@ -235,6 +244,19 @@ class TestUpdateSelectors:
         assert arango_db["domains"].count() == 3
         # selector3 edge to domain2 should not have been removed, selector4 edge to domain3 should have been added
         assert arango_db["domainsToSelectors"].count() == 4
+
+        # domain1 should have no selectors (selector1 edge should not have been removed)
+        domain1_selectors = [
+            sel["selector"]
+            for sel in arango_db.aql.execute(
+                """
+                FOR v, e IN 1..1 ANY 'domains/1' domainsToSelectors
+                    RETURN v
+                """,
+            )
+        ]
+        assert len(domain1_selectors) == 1
+
         domain2_selectors = [
             sel["selector"]
             for sel in arango_db.aql.execute(
@@ -257,14 +279,3 @@ class TestUpdateSelectors:
             )
         ]
         assert "selector4" in domain3_selectors
-        # Previous selector1 edge for domain1 which doesn't have last_seen or first_seen should not be removed
-        assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 ANY 'domains/1' domainsToSelectors
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 1
-        )
