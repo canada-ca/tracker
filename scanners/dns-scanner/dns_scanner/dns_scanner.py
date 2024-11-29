@@ -129,9 +129,6 @@ def scan_domain(domain, dkim_selectors=None):
         scan_result.resolve_ips = None
         scan_result.resolve_chain = None
 
-    # right now we just mark them as having a wildcard sibling, through db properties, api, and frontend. we should probably create a new property if we actually suspect the dns entry is wildcard
-    # DNS load balancing is a huge can of worms. Returned records can differ for each request. Could attempt to check for loadbalancing by requesting 2 random subdomains (essentially 2 wildcard checks) and comparing results between those. If diff - probably loadbalanced since these weird random subdomains are unlikely to exist
-
     # Check for wildcard entry
     try:
         # check two random subdomains for matching records
