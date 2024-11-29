@@ -32,6 +32,7 @@ const mocks = [
     result: {
       data: {
         findDomainByDomain: {
+          ignoredCves: [],
           additionalFindings: {
             timestamp: '2021-05-24 09:51:49.819Z',
             headers: [],

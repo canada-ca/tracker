@@ -71,7 +71,6 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
-    cveDetected,
     userHasPermission,
     webScanPending,
     wildcardSibling,
@@ -275,7 +274,7 @@ function GuidancePage() {
             )}
           </TabPanel>
           <TabPanel>
-            <AdditionalFindings domain={domainName} cveDetected={cveDetected} />
+            <AdditionalFindings domain={domainName} />
           </TabPanel>
         </TabPanels>
       </Tabs>

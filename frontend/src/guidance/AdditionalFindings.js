@@ -32,7 +32,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import CveIgnorer from './CveIgnorer'
 import IgnoredCves from './IgnoredCves'
 
-export function AdditionalFindings({ domain, cveDetected }) {
+export function AdditionalFindings({ domain }) {
   const { i18n } = useLingui()
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
@@ -80,6 +80,25 @@ export function AdditionalFindings({ domain, cveDetected }) {
     ({ webComponentCategory }) => !['Framework', 'DDOS Protection', 'CDN'].includes(webComponentCategory),
   )
 
+  const detectedIgnoredCves = Object.keys(vulnerabilitySeverities).reduce((acc, severity) => {
+    const currentVulns = vulnerabilities[severity].filter((vuln) => ignoredCves.includes(vuln.cve))
+    if (currentVulns.length > 0) acc[severity] = currentVulns
+
+    return acc
+  }, {})
+
+  const allDetectedCves = Object.keys(vulnerabilitySeverities).reduce((acc, severity) => {
+    return acc.concat(vulnerabilities[severity].map((vuln) => vuln.cve))
+  }, [])
+
+  const unignoredDetectedCves = Object.keys(vulnerabilitySeverities).reduce((acc, severity) => {
+    const filteredCves = vulnerabilities[severity].filter(({ cve }) => !ignoredCves.includes(cve))
+    if (filteredCves.length > 0) acc[severity] = filteredCves
+    return acc
+  }, {})
+
+  const undetectedIgnoredCves = ignoredCves.filter((cve) => !allDetectedCves.includes(cve))
+
   const setActiveCveHandler = (cve) => {
     setActiveCve({
       cve,
@@ -120,46 +139,52 @@ export function AdditionalFindings({ domain, cveDetected }) {
               >
                 <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
               </Link>
-              {cveDetected ? (
-                Object.keys(vulnerabilitySeverities).map((severity) => {
-                  return (
-                    vulnerabilities[severity].length > 0 && (
-                      <Box key={severity} px="2" mb="2">
-                        <Text>
-                          <b>{vulnerabilitySeverities[severity]}</b>
-                        </Text>
-                        <SimpleGrid columns={8}>
-                          {vulnerabilities[severity].map(({ cve }) => {
-                            return (
-                              <Button
-                                key={cve}
-                                borderRadius="full"
-                                m="1"
-                                borderColor="black"
-                                borderWidth="1px"
-                                bg={severity}
-                                fontWeight="normal"
-                                size="sm"
-                                _hover={{ bg: cveSeverityOnHover[severity] }}
-                                onClick={() => {
-                                  setActiveCveHandler(cve)
-                                }}
-                              >
-                                {cve}
-                              </Button>
-                            )
-                          })}
-                        </SimpleGrid>
-                      </Box>
+              <Box px="2">
+                {Object.keys(unignoredDetectedCves).length > 0 ? (
+                  Object.keys(vulnerabilitySeverities).map((severity) => {
+                    return (
+                      unignoredDetectedCves[severity]?.length > 0 && (
+                        <Box key={severity} mb="2">
+                          <Text>
+                            <b>{vulnerabilitySeverities[severity]}</b>
+                          </Text>
+                          <SimpleGrid columns={8}>
+                            {unignoredDetectedCves[severity].map(({ cve }) => {
+                              return (
+                                <Button
+                                  key={cve}
+                                  borderRadius="full"
+                                  m="1"
+                                  borderColor="black"
+                                  borderWidth="1px"
+                                  bg={severity}
+                                  fontWeight="normal"
+                                  size="sm"
+                                  _hover={{ bg: cveSeverityOnHover[severity] }}
+                                  onClick={() => {
+                                    setActiveCveHandler(cve)
+                                  }}
+                                >
+                                  {cve}
+                                </Button>
+                              )
+                            })}
+                          </SimpleGrid>
+                        </Box>
+                      )
                     )
-                  )
-                })
-              ) : (
-                <Text fontWeight="bold" fontSize="xl">
-                  <Trans>No Top 25 Vulnerabilites Detected</Trans>
-                </Text>
-              )}
-              <IgnoredCves ignoredCves={ignoredCves} setActiveCveHandler={setActiveCveHandler} />
+                  })
+                ) : (
+                  <Text fontWeight="bold" fontSize="xl">
+                    <Trans>No Top 25 Vulnerabilites Detected</Trans>
+                  </Text>
+                )}
+              </Box>
+              <IgnoredCves
+                undetectedIgnoredCves={undetectedIgnoredCves}
+                detectedIgnoredCves={detectedIgnoredCves}
+                setActiveCveHandler={setActiveCveHandler}
+              />
             </AccordionPanel>
           </AccordionItem>
 
