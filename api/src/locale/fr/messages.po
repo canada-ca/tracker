@@ -157,11 +157,11 @@ msgstr "Impossible d'interroger les sélecteurs de domaine sans autorisation."
 msgid "Cannot query web scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse web sans autorisation."
 
-#: src/domain/mutations/ignore-cve.js:75
+#: src/domain/mutations/ignore-cve.js:76
 msgid "CVE is already ignored for this domain."
 msgstr "CVE est déjà ignoré pour ce domaine."
 
-#: src/domain/mutations/unignore-cve.js:75
+#: src/domain/mutations/unignore-cve.js:76
 msgid "CVE is not ignored for this domain."
 msgstr "Le CVE n'est pas ignoré dans ce domaine."
 
@@ -420,7 +420,7 @@ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/domain/mutations/update-domain.js:140
+#: src/domain/mutations/update-domain.js:128
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
@@ -865,9 +865,11 @@ msgstr "Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez rées
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer."
 
-#: src/domain/mutations/ignore-cve.js:62
-#: src/domain/mutations/ignore-cve.js:99
-#: src/domain/mutations/ignore-cve.js:110
+#: src/domain/mutations/ignore-cve.js:63
+#: src/domain/mutations/ignore-cve.js:100
+#: src/domain/mutations/ignore-cve.js:122
+#: src/domain/mutations/ignore-cve.js:137
+#: src/domain/mutations/ignore-cve.js:148
 msgid "Unable to ignore CVE. Please try again."
 msgstr "Impossible d'ignorer le CVE. Veuillez réessayer."
 
@@ -1056,8 +1058,8 @@ msgid "Unable to load mail summary. Please try again."
 msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 
 #: src/additional-findings/loaders/load-top-25-reports.js:29
-#: src/organization/loaders/load-all-organization-domain-statuses.js:147
-#: src/organization/loaders/load-organization-domain-statuses.js:150
+#: src/organization/loaders/load-all-organization-domain-statuses.js:148
+#: src/organization/loaders/load-organization-domain-statuses.js:151
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Impossible de charger les statuts des domaines d'organisation. Veuillez réessayer."
 
@@ -1400,9 +1402,11 @@ msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organ
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
-#: src/domain/mutations/unignore-cve.js:62
-#: src/domain/mutations/unignore-cve.js:99
-#: src/domain/mutations/unignore-cve.js:110
+#: src/domain/mutations/unignore-cve.js:63
+#: src/domain/mutations/unignore-cve.js:100
+#: src/domain/mutations/unignore-cve.js:122
+#: src/domain/mutations/unignore-cve.js:137
+#: src/domain/mutations/unignore-cve.js:148
 msgid "Unable to stop ignoring CVE. Please try again."
 msgstr "Impossible d'arrêter d'ignorer le CVE. Veuillez réessayer."
 
@@ -1447,21 +1451,21 @@ msgstr "Impossible de défavoriser le domaine. Veuillez réessayer."
 msgid "Unable to unfavourite unknown domain."
 msgstr "Impossible de défavoriser un domaine inconnu."
 
-#: src/domain/mutations/update-domain.js:240
+#: src/domain/mutations/update-domain.js:227
 msgid "Unable to update domain edge. Please try again."
 msgstr "Impossible de mettre à jour le bord du domaine. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:126
+#: src/domain/mutations/update-domain.js:114
 msgid "Unable to update domain in an unknown org."
 msgstr "Impossible de mettre à jour le domaine dans un org inconnu."
 
-#: src/domain/mutations/update-domain.js:167
+#: src/domain/mutations/update-domain.js:155
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée."
 
-#: src/domain/mutations/update-domain.js:157
-#: src/domain/mutations/update-domain.js:197
-#: src/domain/mutations/update-domain.js:251
+#: src/domain/mutations/update-domain.js:145
+#: src/domain/mutations/update-domain.js:184
+#: src/domain/mutations/update-domain.js:238
 msgid "Unable to update domain. Please try again."
 msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 
@@ -1507,7 +1511,7 @@ msgstr "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas �
 msgid "Unable to update role: user unknown."
 msgstr "Impossible de mettre à jour le rôle : utilisateur inconnu."
 
-#: src/domain/mutations/update-domain.js:112
+#: src/domain/mutations/update-domain.js:100
 msgid "Unable to update unknown domain."
 msgstr "Impossible de mettre à jour un domaine inconnu."
 
