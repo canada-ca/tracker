@@ -3,6 +3,7 @@ import time
 import re
 import os
 import logging
+import uuid
 
 import dns.resolver
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
@@ -30,6 +31,7 @@ class DNSScanResult:
     spf: dict = None
     dmarc: dict = None
     wildcard_sibling: bool = None
+    wildcard_entry: bool = None
 
 
 def get_dns_return_type(domain, query_type):
@@ -127,33 +129,107 @@ def scan_domain(domain, dkim_selectors=None):
         scan_result.resolve_ips = None
         scan_result.resolve_chain = None
 
-    # Check for wildcard sibling domains
+    # right now we just mark them as having a wildcard sibling, through db properties, api, and frontend. we should probably create a new property if we actually suspect the dns entry is wildcard
+    # DNS load balancing is a huge can of worms. Returned records can differ for each request. Could attempt to check for loadbalancing by requesting 2 random subdomains (essentially 2 wildcard checks) and comparing results between those. If diff - probably loadbalanced since these weird random subdomains are unlikely to exist
+
+    # Check for wildcard entry
     try:
-        scan_result.wildcard_sibling = False
-        wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
-        wildcard_record = dns.resolver.resolve(
-            wildcard_sibling_domain,
+        # check two random subdomains for matching records
+        scan_result.wildcard_entry = False
+        lower_level_domain = domain.split(".", 1)[1]
+        random_sub1 = f"{uuid.uuid4().hex[:8]}.{domain}"
+        random_sub2 = f"{uuid.uuid4().hex[:8]}.{domain}"
+
+        random_sub1_record = dns.resolver.resolve(
+            random_sub1,
             rdtype=dns.rdatatype.A,
             raise_on_no_answer=False,
         )
-        if wildcard_record is not None:
-            if a_records is None:
-                try:
-                    resolver.resolve(qname=domain, rdtype=dns.rdatatype.MX)
-                    scan_result.wildcard_sibling = True
-                except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
-                    pass
-            # check to see if subdomain and wildcard record point to the same endpoints
-            elif a_records.response.answer[-1] == wildcard_record.response.answer[-1]:
-                scan_result.wildcard_sibling = True
+        random_sub2_record = dns.resolver.resolve(
+            random_sub2,
+            rdtype=dns.rdatatype.A,
+            raise_on_no_answer=False,
+        )
+
+        if random_sub1_record is not None and random_sub2_record is not None:
+            if (
+                a_records is not None
+                or random_sub1_record.response.answer[-1]
+                == random_sub2_record.response.answer[-1]
+            ):
+                # check domain next level down for wildcard status. If next level down is wildcard entry, this domain is likely just a sibling
+                lower_level_random1 = f"{uuid.uuid4().hex[:8]}.{lower_level_domain}"
+                lower_level_random2 = f"{uuid.uuid4().hex[:8]}.{lower_level_domain}"
+
+                lower_random_sub1_record = dns.resolver.resolve(
+                    lower_level_random1,
+                    rdtype=dns.rdatatype.A,
+                    raise_on_no_answer=False,
+                )
+                lower_random_sub2_record = dns.resolver.resolve(
+                    lower_level_random2,
+                    rdtype=dns.rdatatype.A,
+                    raise_on_no_answer=False,
+                )
+                if (
+                    lower_random_sub1_record is None
+                    and lower_random_sub2_record is None
+                ):
+                    scan_result.wildcard_entry = True
+                    scan_result.wildcard_sibling = False
 
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
-        scan_result.wildcard_sibling = False
+        scan_result.wildcard_entry = False
     except Exception as e:
         logger.error(
-            f"Unknown error checking for wildcard sibling domain for {domain}: {e}"
+            f"Unknown error checking for wildcard entry domain for {domain}: {e}"
         )
-        scan_result.wildcard_sibling = False
+        scan_result.wildcard_entry = False
+
+    if scan_result.wildcard_entry is False:
+        # Check for wildcard sibling domains
+        try:
+            scan_result.wildcard_sibling = False
+            wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
+            wildcard_record = dns.resolver.resolve(
+                wildcard_sibling_domain,
+                rdtype=dns.rdatatype.A,
+                raise_on_no_answer=False,
+            )
+            if wildcard_record is not None:
+                if a_records is None:
+                    try:
+                        # check for mail-only subdomain (e.g. mail.example.com)
+                        mx_records = resolver.resolve(
+                            qname=domain, rdtype=dns.rdatatype.MX
+                        )
+                        wildcard_mx = dns.resolver.resolve(
+                            wildcard_sibling_domain,
+                            rdtype=dns.rdatatype.MX,
+                            raise_on_no_answer=False,
+                        )
+                        # if mx records exist and match, is wildcard sibling
+                        if (
+                            mx_records is None
+                            or str(mx_records.response.answer[-1]).split(" ", 1)[1]
+                            == str(wildcard_mx.response.answer[-1]).split(" ", 1)[1]
+                        ):
+                            scan_result.wildcard_sibling = True
+                    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+                        pass
+                # check to see if subdomain and wildcard record point to the same endpoints
+                elif (
+                    a_records.response.answer[-1] == wildcard_record.response.answer[-1]
+                ):
+                    scan_result.wildcard_sibling = True
+
+        except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+            scan_result.wildcard_sibling = False
+        except Exception as e:
+            logger.error(
+                f"Unknown error checking for wildcard sibling domain for {domain}: {e}"
+            )
+            scan_result.wildcard_sibling = False
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
     try:
