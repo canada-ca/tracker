@@ -27,7 +27,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: registry.k8s.io/echoserver:1.4
+        - image: gcr.io/google-containers/echoserver:1.10
           name: echo
 #          ports:
 #            - containerPort: 80
