@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-echo
+  name: tracker-echo
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-echo
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tracker-echo
+    spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: registry.k8s.io/echoserver:1.4
+          name: echo
+#          ports:
+#            - containerPort: 80
+#          securityContext:
+#            runAsGroup: 1000
+#            runAsUser: 1000
+#            allowPrivilegeEscalation: false
+#            capabilities:
+#              drop:
+#                - ALL
+#            privileged: false
+#            readOnlyRootFilesystem: true
+#            runAsNonRoot: true
+status: {}
