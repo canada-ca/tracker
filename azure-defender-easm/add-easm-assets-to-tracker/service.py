@@ -127,7 +127,7 @@ async def main():
             logger.error(f"Error occured when creating domain: {e}")
             return None
 
-    def create_claim(org_id, domain_id, domain_name, txn_col):
+    async def create_claim(org_id, domain_id, domain_name, txn_col):
         insert_claim = {
             "_from": org_id,
             "_to": domain_id,
@@ -137,12 +137,14 @@ async def main():
         }
 
         try:
-            txn_col.insert(insert_claim)
+            created_claim = txn_col.insert(insert_claim)
             logger.info(f"Successfully created claim for domain: {domain_name}")
+            return created_claim
         except Exception as e:
             logger.error("Error occured when creating claim for ", e)
+            return None
 
-    def log_activity(domain, org_id, trx_col):
+    async def log_activity(domain, org_id, txn_col):
         insert_activity = {
             "timestamp": date.today().isoformat(),
             "initiatedBy": {
@@ -167,10 +169,12 @@ async def main():
         }
 
         try:
-            trx_col.insert(insert_activity)
+            created_log = txn_col.insert(insert_activity)
             logger.info(f"Successfully logged activity for domain: {domain}")
+            return created_log
         except Exception as e:
             logger.error(f"Error occured when logging activity for {domain}: {e}")
+            return None
 
     # main logic
     async def add_discovered_domain(domains, org_id):
@@ -199,15 +203,29 @@ async def main():
 
             # create domain
             created_domain = await create_domain(domain=domain, txn_col=txn_col_domains)
+            if created_domain is None:
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
             # add domain to org
-            create_claim(
+            created_claim = await create_claim(
                 org_id=org_id,
                 domain_id=created_domain["_id"],
                 domain_name=domain,
                 txn_col=txn_col_claims,
             )
+            if created_claim is None:
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
             # add activity logging
-            log_activity(domain=domain, org_id=org_id, trx_col=txn_col_audit_logs)
+            created_log = await log_activity(
+                domain=domain, org_id=org_id, txn_col=txn_col_audit_logs
+            )
+            if created_log is None:
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
 
             # commit transaction
             try:
