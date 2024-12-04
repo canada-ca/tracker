@@ -84,7 +84,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                         == str(wildcard_mx.response.answer[-1]).split(" ", 1)[1]
                     ):
                         result["wildcard_entry"] = True
-                except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+                except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
                     logger.error(
                         f"Error checking for wildcard status (MX record check) on {domain}: {e}"
                     )
@@ -93,14 +93,22 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                         f"Unknown error checking for wildcard status (MX record check) on {domain}: {e}"
                     )
             # check to see if subdomain and wildcard record point to the same endpoints
-            elif a_records.response.answer[-1] == wildcard_record.response.answer[-1]:
-                result["wildcard_entry"] = True
+            elif (
+                len(a_records.response.answer) > 0
+                and len(wildcard_record.response.answer) > 0
+            ):
+                if (
+                    str(a_records.response.answer[-1]).split(" ", 1)[1]
+                    == str(wildcard_record.response.answer[-1]).split(" ", 1)[1]
+                ):
+                    result["wildcard_entry"] = True
 
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
         logger.error(f"Error checking for wildcard status on {domain}: {e}")
     except Exception as e:
         logger.error(f"Unknown error checking for wildcard status on {domain}: {e}")
 
+    print(result)
     return result
 
 
