@@ -3,5 +3,5 @@ kind: Kustomization
 namespace: db
 resources:
 - namespace.yaml
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.2.43/manifests/arango-crd.yaml
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.2.43/manifests/arango-deployment.yaml
+- https://github.com/arangodb/kube-arangodb/manifests/kustomize/crd?ref=1.2.43
+- https://github.com/arangodb/kube-arangodb/manifests/kustomize/deployment?ref=1.2.43
