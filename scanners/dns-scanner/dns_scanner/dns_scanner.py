@@ -96,7 +96,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
             elif a_records.response.answer[-1] == wildcard_record.response.answer[-1]:
                 result["wildcard_entry"] = True
 
-    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
         logger.error(f"Error checking for wildcard status on {domain}: {e}")
     except Exception as e:
         logger.error(f"Unknown error checking for wildcard status on {domain}: {e}")
