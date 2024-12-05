@@ -1,4 +1,4 @@
-FROM python:3.11.6-slim-bookworm AS python-builder
+FROM python:3.13.1-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -30,7 +30,7 @@ RUN curl -LO https://github.com/findomain/findomain/releases/latest/download/fin
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.11.6-slim-bookworm
+FROM python:3.13.1-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
