@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/preset-env": "^7.22.7",
-    "jscodeshift": "^0.15.0",
+    "jscodeshift": "^17.1.0",
     "jscodeshift-helper": "^1.1.0"
   },
   "devDependencies": {
