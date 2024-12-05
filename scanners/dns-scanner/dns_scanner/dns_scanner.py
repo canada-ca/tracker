@@ -3,7 +3,6 @@ import time
 import re
 import os
 import logging
-import uuid
 
 import dns.resolver
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer
@@ -56,6 +55,12 @@ def get_dns_return_type(domain, query_type):
         return None
 
 
+def format_answers(ans):
+    ans_list = [str(x) for x in ans]
+    ans_list.sort()
+    return ans_list
+
+
 def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
     result = {"wildcard_entry": False, "wildcard_sibling": False}
     try:
@@ -78,10 +83,9 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                         raise_on_no_answer=False,
                     )
                     # if mx records exist and match, is wildcard entry
-                    if (
-                        mx_records is None
-                        or str(mx_records.response.answer[-1]).split(" ", 1)[1]
-                        == str(wildcard_mx.response.answer[-1]).split(" ", 1)[1]
+                    if (mx_records is None and wildcard_mx is None) or (
+                        format_answers(mx_records.response.answer[-1])
+                        == format_answers(wildcard_mx.response.answer[-1])
                     ):
                         result["wildcard_entry"] = True
                 except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
@@ -97,9 +101,8 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                 len(a_records.response.answer) > 0
                 and len(wildcard_record.response.answer) > 0
             ):
-                if (
-                    str(a_records.response.answer[-1]).split(" ", 1)[1]
-                    == str(wildcard_record.response.answer[-1]).split(" ", 1)[1]
+                if format_answers(a_records.response.answer[-1]) == format_answers(
+                    wildcard_record.response.answer[-1]
                 ):
                     result["wildcard_entry"] = True
 
