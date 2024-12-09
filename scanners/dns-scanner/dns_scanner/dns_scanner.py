@@ -111,7 +111,6 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
     except Exception as e:
         logger.error(f"Unknown error checking for wildcard status on {domain}: {e}")
 
-    print(result)
     return result
 
 
