@@ -58,7 +58,7 @@ spec:
                     secretKeyRef:
                       key: password
                       name: arangodb
-              image: arangodb:3.12.1
+              image: arangodb:3.12.3
               name: dump
               resources:
                   requests:

@@ -112,7 +112,6 @@ describe('update a users role', () => {
         secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
-          preferredLang: 'english',
         })
       })
       describe('requesting user is a super admin', () => {
@@ -590,7 +589,6 @@ describe('update a users role', () => {
         secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
-          preferredLang: 'english',
         })
       })
       describe('requesting user is a super admin', () => {
@@ -1739,6 +1737,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step error'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -1811,6 +1810,7 @@ describe('update a users role', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit error'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -2568,6 +2568,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step error'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -2642,6 +2643,7 @@ describe('update a users role', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit error'),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {

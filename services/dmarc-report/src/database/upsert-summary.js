@@ -21,8 +21,9 @@ async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
   const trx = await arangoCtx.transaction(collectionStrings)
 
   // create summary
-  await trx.step(
-    () => arangoCtx.query`
+  try {
+    await trx.step(
+      () => arangoCtx.query`
         WITH dmarcSummaries
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
@@ -32,9 +33,18 @@ async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
             IN dmarcSummaries
           RETURN NEW
       `,
-  )
+    )
+  } catch (err) {
+    console.error(`Transaction step error occurred for dmarc summaries service when upserting summary data: ${err}`)
+    await trx.abort()
+  }
 
-  await trx.commit()
+  try {
+    await trx.commit()
+  } catch (err) {
+    console.error(`Transaction commit error occurred for dmarc summaries service when upserting summary data: ${err}`)
+    await trx.abort()
+  }
 }
 
 module.exports = {

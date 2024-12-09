@@ -6,7 +6,8 @@ import { verifyAccountUnion } from '../unions'
 
 export const verifyAccount = new mutationWithClientMutationId({
   name: 'VerifyAccount',
-  description: 'This mutation allows the user to verify their account through a token sent in an email.',
+  description:
+    'This mutation allows the user to switch usernames/verify their account through a token sent in an email.',
   inputFields: () => ({
     verifyTokenString: {
       type: new GraphQLNonNull(GraphQLString),
@@ -28,7 +29,8 @@ export const verifyAccount = new mutationWithClientMutationId({
       collections,
       transaction,
       auth: { verifyToken },
-      loaders: { loadUserByKey },
+      loaders: { loadUserByKey, loadUserByUserName },
+      notify: { sendUpdatedUserNameEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -50,9 +52,21 @@ export const verifyAccount = new mutationWithClientMutationId({
       }
     }
 
+    // Check to see if userName exists in tokenParameters
+    if (!tokenParameters?.userName) {
+      console.warn(
+        `When validating account, user attempted to verify account, but userName is not located in the token parameters.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to verify account. Please request a new email.`),
+      }
+    }
+
     // Auth shouldn't be needed with this
     // Check if user exists
-    const { userKey } = tokenParameters
+    const { userKey, userName: newUserName } = tokenParameters
     const user = await loadUserByKey.load(userKey)
 
     if (typeof user === 'undefined') {
@@ -64,6 +78,30 @@ export const verifyAccount = new mutationWithClientMutationId({
       }
     }
 
+    // Ensure newUserName is still not already in use
+    const checkUser = await loadUserByUserName.load(newUserName)
+    if (typeof checkUser !== 'undefined') {
+      console.warn(`User: ${userKey} attempted to update their username, but the username is already in use.`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Username not available, please try another.`),
+      }
+    }
+
+    // Send email to current email address
+    try {
+      await sendUpdatedUserNameEmail({
+        previousUserName: user.userName,
+        newUserName,
+        displayName: user.displayName,
+        userKey,
+      })
+    } catch (err) {
+      console.error(`Error occurred when sending updated username email for ${userKey}: ${err}`)
+      throw new Error(i18n._(t`Unable to send updated username email. Please try again.`))
+    }
+
     // Setup Transaction
     const trx = await transaction(collections)
 
@@ -73,13 +111,20 @@ export const verifyAccount = new mutationWithClientMutationId({
         () => query`
           WITH users
           UPSERT { _key: ${user._key} }
-            INSERT { emailValidated: true }
-            UPDATE { emailValidated: true }
+            INSERT {
+              emailValidated: true,
+              userName: ${newUserName},
+            }
+            UPDATE {
+              emailValidated: true,
+              userName: ${newUserName},
+            }
             IN users
         `,
       )
     } catch (err) {
       console.error(`Trx step error occurred when upserting email validation for user: ${user._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
@@ -87,6 +132,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Trx commit error occurred when upserting email validation for user: ${user._key}: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
@@ -94,7 +140,7 @@ export const verifyAccount = new mutationWithClientMutationId({
 
     return {
       _type: 'success',
-      status: i18n._(t`Successfully email verified account, and set TFA send method to email.`),
+      status: i18n._(t`Successfully email verified account.`),
     }
   },
 })

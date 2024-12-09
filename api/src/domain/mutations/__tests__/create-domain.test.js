@@ -1626,6 +1626,7 @@ describe('create a domain', () => {
                   step: jest.fn().mockReturnValueOnce({
                     next: jest.fn().mockRejectedValue(new Error('cursor error')),
                   }),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
@@ -1732,6 +1733,7 @@ describe('create a domain', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -1840,6 +1842,7 @@ describe('create a domain', () => {
                         next: jest.fn(),
                       })
                       .mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -1945,6 +1948,7 @@ describe('create a domain', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -2056,6 +2060,7 @@ describe('create a domain', () => {
                       .fn()
                       .mockReturnValueOnce({ next: jest.fn().mockReturnValue() })
                       .mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -2168,6 +2173,7 @@ describe('create a domain', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn().mockReturnValue() }),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
@@ -2820,6 +2826,7 @@ describe('create a domain', () => {
                   step: jest.fn().mockReturnValueOnce({
                     next: jest.fn().mockRejectedValue(new Error('cursor error')),
                   }),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
@@ -2926,6 +2933,7 @@ describe('create a domain', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -3034,6 +3042,7 @@ describe('create a domain', () => {
                         next: jest.fn(),
                       })
                       .mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -3139,6 +3148,7 @@ describe('create a domain', () => {
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -3250,6 +3260,7 @@ describe('create a domain', () => {
                       .fn()
                       .mockReturnValueOnce({ next: jest.fn().mockReturnValueOnce(undefined) })
                       .mockRejectedValue(new Error('trx step error')),
+                    abort: jest.fn(),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
@@ -3362,6 +3373,7 @@ describe('create a domain', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn().mockReturnValueOnce(undefined) }),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 publish: jest.fn(),

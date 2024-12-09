@@ -21,7 +21,7 @@ const progressReportService = async ({ query, log, notifyClient }) => {
 
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
-    const vulnerableAssets = findVulnerabilitiesByOrgId({ query, orgId: value._id })
+    const vulnerableAssets = await findVulnerabilitiesByOrgId({ query, orgId: value._id })
     const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
     for (const user of orgAdmins) {
       await sendOrgProgressReport({

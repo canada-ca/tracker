@@ -32,14 +32,14 @@ import { MonthSelect } from '../components/MonthSelect'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
   const { isLoggedIn, hasAffiliation } = useUserVar()
 
-  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
+  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(50)
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
@@ -221,16 +221,15 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%" px="2">
-      {/* <TourComponent page="dmarcSummariesPage" /> */}
+      <TourComponent />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
       </Heading>
-      <Flex align="center" mb={2}>
+      <Flex align="center" mb={2} className="month-select">
         <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>
           <Trans>Showing data for period: </Trans>
         </Text>
         <MonthSelect
-          className="month-select"
           id="data-date-range"
           width="fit-content"
           handleChange={handleChange}
@@ -262,7 +261,7 @@ export default function DmarcByDomainPage() {
           />
         </InputGroup>
 
-        <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" className="export-button" />
+        <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" className="info-button" />
         <RuaDomainsExportButton />
       </Flex>
       {isLoggedIn() && (

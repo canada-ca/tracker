@@ -187,41 +187,54 @@ def process_tls_results(tls_results, web_server_present):
     ]
 
     # certificate status
-    if any(
-        tag in negative_tags
-        for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]
+    if (
+        len(tls_results.get("certificate_chain_info", {}).get("certificate_chain", []))
+        > 0
     ):
-        certificate_status = "fail"
-    else:
-        certificate_status = "pass"
-        positive_tags.append("ssl21")
+        if any(
+            tag in negative_tags
+            for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]
+        ):
+            certificate_status = "fail"
+        else:
+            certificate_status = "pass"
+            positive_tags.append("ssl21")
 
     # get protocol status
-    protocol_status = "pass"
-    for suite_list in unaccepted_tls_protocols:
-        if len(accepted_cipher_suites[suite_list]) > 0:
-            protocol_status = "fail"
-            negative_tags.append("ssl24")
-            break
-    if protocol_status == "pass":
-        positive_tags.append("ssl18")
+    if accepted_cipher_suites:
+        protocol_status = "pass"
+        for suite_list in unaccepted_tls_protocols:
+            if len(accepted_cipher_suites[suite_list]) > 0:
+                protocol_status = "fail"
+                negative_tags.append("ssl24")
+                break
+        if protocol_status == "pass":
+            positive_tags.append("ssl18")
 
-    # get cipher status
-    if "ssl6" in negative_tags:
-        cipher_status = "fail"
-    else:
-        cipher_status = "pass"
-        positive_tags.append("ssl19")
+        # get cipher status
+        if "ssl6" in negative_tags:
+            cipher_status = "fail"
+        else:
+            cipher_status = "pass"
+            positive_tags.append("ssl19")
 
     # get curve status
-    if weak_curve:
-        curve_status = "fail"
-    else:
-        curve_status = "pass"
-        positive_tags.append("ssl20")
+    if tls_results.get("accepted_elliptic_curves", []):
+        if weak_curve:
+            curve_status = "fail"
+        else:
+            curve_status = "pass"
+            positive_tags.append("ssl20")
 
-    if protocol_status == cipher_status == curve_status == certificate_status == "pass":
+    if (
+        protocol_status == cipher_status == certificate_status == "pass"
+        and curve_status != "fail"
+    ):
         ssl_status = "pass"
+    elif (
+        protocol_status == cipher_status == curve_status == certificate_status == "info"
+    ):
+        ssl_status = "info"
     else:
         ssl_status = "fail"
 

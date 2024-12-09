@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { CveID } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { AssetStateEnums } from '../../enums'
@@ -35,10 +34,6 @@ export const updateDomain = new mutationWithClientMutationId({
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
-    },
-    ignoredCves: {
-      description: 'List of CVEs that the user has chosen to ignore.',
-      type: new GraphQLList(CveID),
     },
   }),
   outputFields: () => ({
@@ -90,13 +85,6 @@ export const updateDomain = new mutationWithClientMutationId({
       assetState = cleanseInput(args.assetState)
     } else {
       assetState = ''
-    }
-
-    let ignoredCves
-    if (typeof args.ignoredCves !== 'undefined') {
-      ignoredCves = args.ignoredCves
-    } else {
-      ignoredCves = null
     }
 
     // Check to see if domain exists
@@ -175,7 +163,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
-      ignoredCves: ignoredCves || domain?.ignoredCves,
     }
 
     try {
@@ -193,6 +180,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
@@ -235,6 +223,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
     }
 
@@ -245,6 +234,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
@@ -255,7 +245,7 @@ export const updateDomain = new mutationWithClientMutationId({
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
 
     const updatedProperties = []
-    if (typeof assetState !== 'undefined') {
+    if (typeof assetState !== 'undefined' && assetState !== claim.assetState) {
       updatedProperties.push({
         name: 'assetState',
         oldValue: claim.assetState,
@@ -268,14 +258,6 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'tags',
         oldValue: claim.tags,
         newValue: tags,
-      })
-    }
-
-    if (typeof ignoredCves !== 'undefined' && JSON.stringify(domain.ignoredCves) !== JSON.stringify(ignoredCves)) {
-      updatedProperties.push({
-        name: 'ignoredCves',
-        oldValue: domain.ignoredCves,
-        newValue: ignoredCves,
       })
     }
 

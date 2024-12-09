@@ -6,7 +6,7 @@ metadata:
   labels:
     app: arangodb
 spec:
-  image: arangodb/arangodb:3.12.1
+  image: arangodb/arangodb:3.12.3
   environment: Production
   mode: Single
   tls:

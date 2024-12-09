@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Progress, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
@@ -48,65 +48,64 @@ export function OrganizationCard({
   }
 
   return (
-    <ListItem {...rest}>
-      <Flex
-        width="100%"
-        borderWidth="1px"
-        borderColor="black"
-        rounded="md"
-        direction={{ base: 'column', md: 'row' }}
-        alignItems={{ base: 'flex-start', md: 'center' }}
-        p="4"
-        {...(disableLink ? {} : linkProps)}
+    <Flex
+      width="100%"
+      borderWidth="1px"
+      borderColor="black"
+      rounded="md"
+      direction={{ base: 'column', md: 'row' }}
+      alignItems={{ base: 'flex-start', md: 'center' }}
+      p="4"
+      {...(disableLink ? {} : linkProps)}
+      {...rest}
+    >
+      <Box
+        flexGrow={{ md: '2' }}
+        flexBasis={{ md: '5em' }}
+        mr={{ md: '1em' }}
+        flexShrink={{ md: '0.5' }}
+        minWidth={{ md: '6em' }}
+        maxWidth="100%"
       >
-        <Box
-          flexGrow={{ md: '2' }}
-          flexBasis={{ md: '5em' }}
-          mr={{ md: '1em' }}
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ md: '6em' }}
-          maxWidth="100%"
-        >
-          <Stack isInline align="center">
-            <Text fontSize="lg" fontWeight="semibold" textDecoration="underline" isTruncated>
-              {name}
-            </Text>
-            <Text fontSize="lg" fontWeight="semibold">
-              ({acronym})
-            </Text>
-            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />}
-          </Stack>
-        </Box>
-        <Box
-          flexGrow={{ md: '0' }}
-          flexBasis={{ md: '7em' }}
-          mr={{ md: '1em' }}
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ md: '2em' }}
-          align="center"
-        >
-          <Text fontWeight="semibold">
-            <Trans>Services: {domainCount}</Trans>
+        <Stack isInline align="center">
+          <Text fontSize="lg" fontWeight="semibold" textDecoration="underline" isTruncated>
+            {name}
           </Text>
-        </Box>
+          <Text fontSize="lg" fontWeight="semibold">
+            ({acronym})
+          </Text>
+          {verified && <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />}
+        </Stack>
+      </Box>
+      <Box
+        flexGrow={{ md: '0' }}
+        flexBasis={{ md: '7em' }}
+        mr={{ md: '1em' }}
+        flexShrink={{ md: '0.5' }}
+        minWidth={{ md: '2em' }}
+        align="center"
+      >
+        <Text fontWeight="semibold">
+          <Trans>Services: {domainCount}</Trans>
+        </Text>
+      </Box>
 
-        <Box mr={{ md: '1em' }} flexShrink={{ md: '0.5' }} minWidth={{ base: '100%', md: '3em' }} textAlign="left">
-          <Text fontWeight="bold">
-            <Trans>HTTPS Configured</Trans>
-          </Text>
-          <Text>{httpsValue}%</Text>
-          <Progress value={httpsValue} bg="gray.300" aria-hidden="true" />
-        </Box>
+      <Box mr={{ md: '1em' }} flexShrink={{ md: '0.5' }} minWidth={{ base: '100%', md: '3em' }} textAlign="left">
+        <Text fontWeight="bold">
+          <Trans>HTTPS Configured</Trans>
+        </Text>
+        <Text>{httpsValue}%</Text>
+        <Progress value={httpsValue} bg="gray.300" aria-hidden="true" />
+      </Box>
 
-        <Box flexShrink={{ md: '0.5' }} minWidth={{ base: '100%', md: '3em' }} textAlign="left">
-          <Text fontWeight="bold">
-            <Trans>DMARC Configured</Trans>
-          </Text>
-          <Text>{dmarcValue}%</Text>
-          <Progress value={dmarcValue} bg="gray.300" aria-hidden="true" />
-        </Box>
-      </Flex>
-    </ListItem>
+      <Box flexShrink={{ md: '0.5' }} minWidth={{ base: '100%', md: '3em' }} textAlign="left">
+        <Text fontWeight="bold">
+          <Trans>DMARC Configured</Trans>
+        </Text>
+        <Text>{dmarcValue}%</Text>
+        <Progress value={dmarcValue} bg="gray.300" aria-hidden="true" />
+      </Box>
+    </Flex>
   )
 }
 

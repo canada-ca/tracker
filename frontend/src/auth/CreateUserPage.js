@@ -6,8 +6,6 @@ import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
-import { LanguageSelect } from './LanguageSelect'
-
 import { EmailField } from '../components/fields/EmailField'
 import { DisplayNameField } from '../components/fields/DisplayNameField'
 import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
@@ -85,13 +83,12 @@ export default function CreateUserPage() {
   return (
     <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
-        validationSchema={createValidationSchema(['email', 'displayName', 'password', 'confirmPassword', 'lang'])}
+        validationSchema={createValidationSchema(['email', 'displayName', 'password', 'confirmPassword'])}
         initialValues={{
           email: '',
           displayName: '',
           password: '',
           confirmPassword: '',
-          lang: '',
         }}
         onSubmit={async (values) => {
           signUp({
@@ -100,7 +97,6 @@ export default function CreateUserPage() {
               displayName: values.displayName,
               password: values.password,
               confirmPassword: values.confirmPassword,
-              preferredLang: values.lang,
               signUpToken: userOrgToken,
             },
           })
@@ -128,8 +124,6 @@ export default function CreateUserPage() {
             </Stack>
 
             <PasswordConfirmation direction={['column', 'row']} w={{ lg: '50%', md: '100%' }} mb="2" />
-
-            <LanguageSelect name="lang" w={{ lg: '25%', md: '50%' }} mb="6" />
 
             <Box mb="4">
               <Checkbox colorScheme="orange" isRequired mb="4" borderColor="black">

@@ -135,7 +135,7 @@ const successMocks = [
     request: {
       query: FIND_MY_USERS,
       variables: {
-        first: 10,
+        first: 50,
         orderBy: { field: 'USER_USERNAME', direction: 'ASC' },
         search: '',
       },
@@ -147,9 +147,7 @@ const successMocks = [
       query: UPDATE_USER_ROLE,
       variables: {
         userName: saUserListMockData.data.findMyUsers.edges[0].node.userName,
-        orgId:
-          saUserListMockData.data.findMyUsers.edges[0].node.affiliations
-            .edges[0].node.organization.id,
+        orgId: saUserListMockData.data.findMyUsers.edges[0].node.affiliations.edges[0].node.organization.id,
         role: 'ADMIN',
       },
     },
@@ -170,9 +168,7 @@ const successMocks = [
       query: REMOVE_USER_FROM_ORG,
       variables: {
         userId: saUserListMockData.data.findMyUsers.edges[0].node.id,
-        orgId:
-          saUserListMockData.data.findMyUsers.edges[0].node.affiliations
-            .edges[0].node.organization.id,
+        orgId: saUserListMockData.data.findMyUsers.edges[0].node.affiliations.edges[0].node.organization.id,
       },
     },
     result: {
@@ -197,9 +193,7 @@ describe('<SuperAdminUserList />', () => {
   it('successfully renders with mocked data', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={successMocks} cache={createCache()}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/admin/users']}>
@@ -213,9 +207,7 @@ describe('<SuperAdminUserList />', () => {
     // wait for query to load
     await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
     // get user data
-    await waitFor(() =>
-      expect(queryByText(/Jonathan Kassulke/i)).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)).toBeInTheDocument())
   })
   describe('individual user cards', () => {
     it('are clickable', async () => {
@@ -241,9 +233,7 @@ describe('<SuperAdminUserList />', () => {
       // wait for query to load
       await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
       // get user data
-      await waitFor(() =>
-        expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument())
       const userCard1 = getByRole('button', {
         name: /Raegan.Ritchie50@yahoo.com/i,
       })
@@ -272,23 +262,15 @@ describe('<SuperAdminUserList />', () => {
             </MockedProvider>,
           )
           // wait for query to load
-          await waitFor(() =>
-            expect(queryByText(/search/i)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
           // get user data
-          await waitFor(() =>
-            expect(
-              queryByText(/Raegan.Ritchie50@yahoo.com/i),
-            ).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument())
           const userCard1 = getByRole('button', {
             name: /Raegan.Ritchie50@yahoo.com/i,
           })
           fireEvent.click(userCard1)
 
-          await waitFor(() =>
-            expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument())
         })
 
         describe('admin abilities', () => {
@@ -313,29 +295,19 @@ describe('<SuperAdminUserList />', () => {
               </MockedProvider>,
             )
             // wait for query to load
-            await waitFor(() =>
-              expect(queryByText(/search/i)).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
             // get user data
-            await waitFor(() =>
-              expect(
-                queryByText(/Raegan.Ritchie50@yahoo.com/i),
-              ).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument())
             const userCard1 = getByRole('button', {
               name: /Raegan.Ritchie50@yahoo.com/i,
             })
             fireEvent.click(userCard1)
-            await waitFor(() =>
-              expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument())
             const editBtn = getByRole('button', {
               name: 'Edit Raegan.Ritchie50@yahoo.com in Kreiger - Schamberger',
             })
             fireEvent.click(editBtn)
-            await waitFor(() =>
-              expect(queryAllByText(/Edit User/i)[0]).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryAllByText(/Edit User/i)[0]).toBeInTheDocument())
           })
           it('remove user from org', async () => {
             const { queryByText, getByRole, queryAllByText } = render(
@@ -358,22 +330,14 @@ describe('<SuperAdminUserList />', () => {
               </MockedProvider>,
             )
             // wait for query to load
-            await waitFor(() =>
-              expect(queryByText(/search/i)).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
             // get user data
-            await waitFor(() =>
-              expect(
-                queryByText(/Raegan.Ritchie50@yahoo.com/i),
-              ).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument())
             const userCard1 = getByRole('button', {
               name: /Raegan.Ritchie50@yahoo.com/i,
             })
             fireEvent.click(userCard1)
-            await waitFor(() =>
-              expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument(),
-            )
+            await waitFor(() => expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument())
             const removeBtn = getByRole('button', {
               name: 'Remove Raegan.Ritchie50@yahoo.com from Kreiger - Schamberger',
             })
@@ -404,26 +368,16 @@ describe('<SuperAdminUserList />', () => {
             </MockedProvider>,
           )
           // wait for query to load
-          await waitFor(() =>
-            expect(queryByText(/search/i)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
           // get user data
-          await waitFor(() =>
-            expect(
-              queryByText(/Raegan.Ritchie50@yahoo.com/i),
-            ).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument())
           const userCard1 = getByRole('button', {
             name: /Raegan.Ritchie50@yahoo.com/i,
           })
           fireEvent.click(userCard1)
 
           await waitFor(() =>
-            expect(
-              queryByText(
-                /This user is not affiliated with any organizations/i,
-              ),
-            ).toBeInTheDocument(),
+            expect(queryByText(/This user is not affiliated with any organizations/i)).toBeInTheDocument(),
           )
         })
       })

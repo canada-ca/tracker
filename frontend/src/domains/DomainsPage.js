@@ -36,7 +36,7 @@ import { useUserVar } from '../utilities/userState'
 import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import withSuperAdmin from '../app/withSuperAdmin'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -45,7 +45,7 @@ export default function DomainsPage() {
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
   const [filters, setFilters] = useState([])
 
@@ -209,12 +209,6 @@ export default function DomainsPage() {
     </LoadingMessage>
   ) : (
     <Box>
-      <DomainListFilters
-        filters={filters}
-        setFilters={setFilters}
-        statusOptions={orderByOptions}
-        filterTagOptions={filterTagOptions}
-      />
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -266,7 +260,7 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      {/* <TourComponent page="domainPage" /> */}
+      <TourComponent />
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
@@ -310,7 +304,7 @@ export default function DomainsPage() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
-          className="filter-box"
+          className="search-box"
           selectedDisplayLimit={domainsPerPage}
           setSelectedDisplayLimit={setDomainsPerPage}
           hasNextPage={hasNextPage}
@@ -329,16 +323,23 @@ export default function DomainsPage() {
           searchTip={domainSearchTip}
           totalRecords={totalCount}
         />
-        {isLoggedIn() && (
+
+        <Box className="filters">
           <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg" className="filters">
+            <Text mr="2" fontWeight="bold" fontSize="lg">
               <Trans>Filters:</Trans>
             </Text>
             <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-            <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
+            {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
             <FilterList filters={filters} setFilters={setFilters} />
           </Flex>
-        )}
+          <DomainListFilters
+            filters={filters}
+            setFilters={setFilters}
+            statusOptions={orderByOptions}
+            filterTagOptions={filterTagOptions}
+          />
+        </Box>
 
         {domainList}
 

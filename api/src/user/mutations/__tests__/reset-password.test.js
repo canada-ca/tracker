@@ -66,7 +66,6 @@ describe('reset users password', () => {
                 userName: "test.account@istio.actually.exists"
                 password: "testpassword123"
                 confirmPassword: "testpassword123"
-                preferredLang: FRENCH
               }
             ) {
               result {
@@ -944,6 +943,7 @@ describe('reset users password', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   bcrypt,
@@ -1014,6 +1014,7 @@ describe('reset users password', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   bcrypt,
@@ -1445,6 +1446,7 @@ describe('reset users password', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   bcrypt,
@@ -1515,6 +1517,7 @@ describe('reset users password', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   bcrypt,

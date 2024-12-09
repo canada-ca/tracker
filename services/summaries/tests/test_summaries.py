@@ -14,6 +14,9 @@ db = arango_client.db("test", username="", password="")
 db.create_collection("scanSummaries")
 db.create_collection("chartSummaries")
 db.create_collection("organizationSummaries")
+db.create_collection("dns")
+db.create_collection("web")
+db.create_collection("webScan")
 graph = db.create_graph("compliance")
 domains = graph.create_vertex_collection("domains")
 orgs = graph.create_vertex_collection("organizations")
@@ -23,12 +26,28 @@ claims = graph.create_edge_definition(
     from_vertex_collections=["organizations"],
     to_vertex_collections=["domains"],
 )
+domains_dns = graph.create_edge_definition(
+    edge_collection="domainsDNS",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["dns"],
+)
+domains_web = graph.create_edge_definition(
+    edge_collection="domainsWeb",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["web"],
+)
+web_to_web_scans = graph.create_edge_definition(
+    edge_collection="webToWebScans",
+    from_vertex_collections=["web"],
+    to_vertex_collections=["webScan"],
+)
 
 org = orgs.insert(
     {
         "_key": "testorg",
         "verified": True,
         "summaries": {
+            "organization": "organizations/testorg",
             "dmarc": {"pass": 0, "fail": 0, "total": 0},
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
@@ -117,9 +136,9 @@ domain3 = domains.insert(
     }
 )
 
-claims.insert({"_from": org["_id"], "_to": domain1["_id"]})
-claims.insert({"_from": org["_id"], "_to": domain2["_id"]})
-claims.insert({"_from": org["_id"], "_to": domain3["_id"]})
+claims.insert({"_from": org["_id"], "_to": domain1["_id"], "assetState": "approved"})
+claims.insert({"_from": org["_id"], "_to": domain2["_id"], "assetState": "approved"})
+claims.insert({"_from": org["_id"], "_to": domain3["_id"], "assetState": "approved"})
 
 
 def test_update_chart_summaries():
@@ -162,6 +181,7 @@ def test_update_org_summaries():
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
+        "organization": "organizations/testorg",
         "date": date.today().isoformat(),
         "dmarc": {"pass": 2, "fail": 1, "total": 3},
         "https": {"pass": 2, "fail": 1, "total": 3},
@@ -179,4 +199,5 @@ def test_update_org_summaries():
             "maintain": 2,
             "total": 3,
         },
+        "negative_tags": {},
     }

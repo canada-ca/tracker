@@ -5,14 +5,14 @@ import os
 import logging
 
 import dns.resolver
-from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
+from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer
 from dns.exception import Timeout
 
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "10"))
+TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 
 
 @dataclass
@@ -30,6 +30,7 @@ class DNSScanResult:
     spf: dict = None
     dmarc: dict = None
     wildcard_sibling: bool = None
+    wildcard_entry: bool = None
 
 
 def get_dns_return_type(domain, query_type):
@@ -52,6 +53,65 @@ def get_dns_return_type(domain, query_type):
             f"Error while checking if domain '{domain}' exists with query type '${dns.rdatatype.to_text(query_type)}': {e}"
         )
         return None
+
+
+def format_answers(ans):
+    ans_list = [str(x) for x in ans]
+    ans_list.sort()
+    return ans_list
+
+
+def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
+    result = {"wildcard_entry": False, "wildcard_sibling": False}
+    try:
+        wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
+        wildcard_record = dns.resolver.resolve(
+            wildcard_sibling_domain,
+            rdtype=dns.rdatatype.A,
+            raise_on_no_answer=False,
+        )
+        if wildcard_record is not None:
+            # if wildcard exists on domain, is sibling
+            result["wildcard_sibling"] = True
+            if a_records is None:
+                try:
+                    # check for mail-only subdomain (e.g. mail.example.com)
+                    mx_records = resolver.resolve(qname=domain, rdtype=dns.rdatatype.MX)
+                    wildcard_mx = dns.resolver.resolve(
+                        wildcard_sibling_domain,
+                        rdtype=dns.rdatatype.MX,
+                        raise_on_no_answer=False,
+                    )
+                    # if mx records exist and match, is wildcard entry
+                    if (mx_records is None and wildcard_mx is None) or (
+                        format_answers(mx_records.response.answer[-1])
+                        == format_answers(wildcard_mx.response.answer[-1])
+                    ):
+                        result["wildcard_entry"] = True
+                except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
+                    logger.error(
+                        f"Error checking for wildcard status (MX record check) on {domain}: {e}"
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Unknown error checking for wildcard status (MX record check) on {domain}: {e}"
+                    )
+            # check to see if subdomain and wildcard record point to the same endpoints
+            elif (
+                len(a_records.response.answer) > 0
+                and len(wildcard_record.response.answer) > 0
+            ):
+                if format_answers(a_records.response.answer[-1]) == format_answers(
+                    wildcard_record.response.answer[-1]
+                ):
+                    result["wildcard_entry"] = True
+
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
+        logger.error(f"Error checking for wildcard status on {domain}: {e}")
+    except Exception as e:
+        logger.error(f"Unknown error checking for wildcard status on {domain}: {e}")
+
+    return result
 
 
 def scan_domain(domain, dkim_selectors=None):
@@ -105,9 +165,13 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result.rcode = "NOERROR"
     scan_result.record_exists = True
 
+    resolver = dns.resolver.Resolver()
+    resolver.timeout = TIMEOUT
+    resolver.lifetime = TIMEOUT * 2
+
     # Get chaining results (A and CNAME records)
     try:
-        a_records = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
+        a_records = resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
         a_records = None
     except Exception as e:
@@ -123,24 +187,14 @@ def scan_domain(domain, dkim_selectors=None):
         scan_result.resolve_ips = None
         scan_result.resolve_chain = None
 
-    # Check for wildcard sibling domains
-    try:
-        wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
-        dns.resolver.resolve(
-            wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False
-        )
-        scan_result.wildcard_sibling = True
-    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
-        scan_result.wildcard_sibling = False
-    except Exception as e:
-        logger.error(
-            f"Unknown error checking for wildcard sibling domain for {domain}: {e}"
-        )
-        scan_result.wildcard_sibling = False
+    # Get wildcard status of domain
+    wildcard_status = get_wildcard_status(domain, resolver, a_records)
+    scan_result.wildcard_entry = wildcard_status["wildcard_entry"]
+    scan_result.wildcard_sibling = wildcard_status["wildcard_sibling"]
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
     try:
-        cname_record = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.CNAME)
+        cname_record = resolver.resolve(qname=domain, rdtype=dns.rdatatype.CNAME)
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
         cname_record = None
         pass

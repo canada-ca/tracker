@@ -183,6 +183,7 @@ function mocks() {
             ],
           },
           isUserSuperAdmin: true,
+          isUserAdmin: true,
         },
       },
     },
@@ -215,6 +216,7 @@ function mocks() {
             ],
           },
           isUserSuperAdmin: true,
+          isUserAdmin: true,
         },
       },
     },
@@ -245,7 +247,7 @@ function mocks() {
       request: {
         query: PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
         variables: {
-          first: 20,
+          first: 50,
           orgSlug: 'Wolf-Group',
           search: '',
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
@@ -300,7 +302,7 @@ function mocks() {
         query: PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
         variables: {
           orgSlug: 'Wolf-Group',
-          first: 20,
+          first: 50,
           search: '',
           includePending: true,
           orderBy: { field: 'PERMISSION', direction: 'ASC' },

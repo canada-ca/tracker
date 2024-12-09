@@ -1,12 +1,11 @@
-import {t} from '@lingui/macro'
-import {mutationWithClientMutationId} from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { mutationWithClientMutationId } from 'graphql-relay'
 
-import {removePhoneNumberUnion} from '../unions'
+import { removePhoneNumberUnion } from '../unions'
 
 export const removePhoneNumber = new mutationWithClientMutationId({
   name: 'RemovePhoneNumber',
-  description:
-    'This mutation allows for users to remove a phone number from their account.',
+  description: 'This mutation allows for users to remove a phone number from their account.',
   outputFields: () => ({
     result: {
       type: removePhoneNumberUnion,
@@ -15,10 +14,7 @@ export const removePhoneNumber = new mutationWithClientMutationId({
       resolve: (payload) => payload,
     },
   }),
-  mutateAndGetPayload: async (
-    _args,
-    {i18n, collections, query, transaction, auth: {userRequired}},
-  ) => {
+  mutateAndGetPayload: async (_args, { i18n, collections, query, transaction, auth: { userRequired } }) => {
     // Get requesting user
     const user = await userRequired()
 
@@ -50,23 +46,17 @@ export const removePhoneNumber = new mutationWithClientMutationId({
       `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred well removing phone number for user: ${user._key}: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to remove phone number. Please try again.`),
-      )
+      console.error(`Trx step error occurred well removing phone number for user: ${user._key}: ${err}`)
+      await trx.abort()
+      throw new Error(i18n._(t`Unable to remove phone number. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred well removing phone number for user: ${user._key}: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to remove phone number. Please try again.`),
-      )
+      console.error(`Trx commit error occurred well removing phone number for user: ${user._key}: ${err}`)
+      await trx.abort()
+      throw new Error(i18n._(t`Unable to remove phone number. Please try again.`))
     }
 
     console.info(`User: ${user._key} successfully removed their phone number.`)

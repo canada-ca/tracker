@@ -13,6 +13,7 @@ import OrganizationDetails from '../OrganizationDetails'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { ORG_DETAILS_PAGE } from '../../graphql/queries'
+import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -51,7 +52,7 @@ describe('<OrganizationDetails />', () => {
       {
         request: {
           query: ORG_DETAILS_PAGE,
-          variables: { slug: 'tbs-sct-gc-ca', month: 'LAST30DAYS', year: new Date().getFullYear().toString() },
+          variables: { slug: 'tbs-sct-gc-ca' },
         },
         result: {
           data: {
@@ -143,7 +144,9 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
                   <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
+                    <TourProvider>
+                      <OrganizationDetails />
+                    </TourProvider>
                   </Route>
                 </MemoryRouter>
               </UserVarProvider>
@@ -172,7 +175,9 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
                   <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
+                    <TourProvider>
+                      <OrganizationDetails />
+                    </TourProvider>{' '}
                   </Route>
                 </MemoryRouter>
               </UserVarProvider>
@@ -203,7 +208,9 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
+                    <TourProvider>
+                      <OrganizationDetails />
+                    </TourProvider>
                   </Route>
                 </MemoryRouter>
               </UserVarProvider>
@@ -224,8 +231,6 @@ describe('<OrganizationDetails />', () => {
           query: ORG_DETAILS_PAGE,
           variables: {
             slug: 'treasury-board-of-canada-secretariat',
-            month: 'LAST30DAYS',
-            year: new Date().getFullYear().toString(),
           },
         },
         result: {
@@ -320,7 +325,9 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
+                    <TourProvider>
+                      <OrganizationDetails />
+                    </TourProvider>
                   </Route>
                 </MemoryRouter>
               </UserVarProvider>
@@ -347,7 +354,9 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
+                    <TourProvider>
+                      <OrganizationDetails />
+                    </TourProvider>
                   </Route>
                 </MemoryRouter>
               </UserVarProvider>
@@ -374,7 +383,9 @@ describe('<OrganizationDetails />', () => {
               >
                 <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
                   <Route path="/organizations/:orgSlug">
-                    <OrganizationDetails />
+                    <TourProvider>
+                      <OrganizationDetails />
+                    </TourProvider>
                   </Route>
                 </MemoryRouter>
               </UserVarProvider>

@@ -19,7 +19,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating a domain', () => {
-  let query, drop, truncate, schema, collections, transaction, user
+  let query, drop, truncate, schema, collections, transaction, publish, user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -66,6 +66,7 @@ describe('updating a domain', () => {
 
         schema: dbschema,
       }))
+      publish = jest.fn()
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -163,6 +164,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: user._key,
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -254,6 +256,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: user._key,
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -345,6 +348,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: user._key,
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -415,6 +419,7 @@ describe('updating a domain', () => {
             fr: frenchMessages.messages,
           },
         })
+        publish = jest.fn()
       })
       describe('domain cannot be found', () => {
         it('returns an error message', async () => {
@@ -451,6 +456,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -533,6 +539,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -614,6 +621,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
@@ -696,6 +704,7 @@ describe('updating a domain', () => {
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
@@ -778,6 +787,7 @@ describe('updating a domain', () => {
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
                 transaction,
+                publish,
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -853,6 +863,7 @@ describe('updating a domain', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -934,6 +945,7 @@ describe('updating a domain', () => {
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
                 commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                abort: jest.fn(),
               }),
               userKey: 123,
               auth: {
@@ -1020,6 +1032,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -1101,6 +1114,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
@@ -1182,6 +1196,7 @@ describe('updating a domain', () => {
               query,
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
@@ -1264,6 +1279,7 @@ describe('updating a domain', () => {
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
+              publish,
               userKey: 123,
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
@@ -1346,6 +1362,7 @@ describe('updating a domain', () => {
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
                 transaction,
+                publish,
                 userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -1421,6 +1438,7 @@ describe('updating a domain', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('trx step error')),
+                  abort: jest.fn(),
                 }),
                 userKey: 123,
                 auth: {
@@ -1502,6 +1520,7 @@ describe('updating a domain', () => {
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
                 commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+                abort: jest.fn(),
               }),
               userKey: 123,
               auth: {

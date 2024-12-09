@@ -3,7 +3,6 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
-import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ms from 'ms'
@@ -29,10 +28,6 @@ export const signUp = new mutationWithClientMutationId({
     confirmPassword: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'A secondary password field used to confirm the user entered the correct password.',
-    },
-    preferredLang: {
-      type: new GraphQLNonNull(LanguageEnums),
-      description: 'The users preferred language.',
     },
     signUpToken: {
       type: GraphQLString,
@@ -70,7 +65,6 @@ export const signUp = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const password = cleanseInput(args.password)
     const confirmPassword = cleanseInput(args.confirmPassword)
-    const preferredLang = cleanseInput(args.preferredLang)
     const signUpToken = cleanseInput(args.signUpToken)
     const rememberMe = args.rememberMe
 
@@ -117,7 +111,6 @@ export const signUp = new mutationWithClientMutationId({
       displayName: displayName,
       userName: userName,
       password: hashedPassword,
-      preferredLang: preferredLang,
       phoneValidated: false,
       emailValidated: false,
       insideUser: false,
@@ -154,6 +147,7 @@ export const signUp = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
       )
+      await trx.abort()
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
@@ -162,6 +156,7 @@ export const signUp = new mutationWithClientMutationId({
       insertedUser = await insertedUserCursor.next()
     } catch (err) {
       console.error(`Cursor error occurred while user: ${userName} attempted to sign up, creating user: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
@@ -178,6 +173,7 @@ export const signUp = new mutationWithClientMutationId({
 
       if (userName !== tokenUserName) {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however emails do not match.`)
+        await trx.abort()
         return {
           _type: 'error',
           code: 400,
@@ -188,6 +184,7 @@ export const signUp = new mutationWithClientMutationId({
       const checkOrg = await loadOrgByKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however the org could not be found.`)
+        await trx.abort()
         return {
           _type: 'error',
           code: 400,
@@ -211,6 +208,7 @@ export const signUp = new mutationWithClientMutationId({
         console.error(
           `Transaction step error occurred while user: ${userName} attempted to sign up, assigning affiliation: ${err}`,
         )
+        await trx.abort()
         throw new Error(i18n._(t`Unable to sign up. Please try again.`))
       }
     }
@@ -219,6 +217,7 @@ export const signUp = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(`Transaction commit error occurred while user: ${userName} attempted to sign up: ${err}`)
+      await trx.abort()
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 

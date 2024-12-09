@@ -229,6 +229,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.error(
         `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
       )
+      await trx.abort()
       return {
         _type: 'error',
         code: 500,
@@ -249,6 +250,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.error(
         `Transaction commit error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
       )
+      await trx.abort()
       return {
         _type: 'error',
         code: 500,

@@ -71,7 +71,6 @@ describe('refresh users tokens', () => {
         user = await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'english',
           phoneValidated: false,
           emailValidated: false,
           tfaCode: null,
@@ -172,7 +171,6 @@ describe('refresh users tokens', () => {
         user = await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLang: 'english',
           phoneValidated: false,
           emailValidated: false,
           tfaCode: null,
@@ -682,6 +680,7 @@ describe('refresh users tokens', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({
@@ -763,6 +762,7 @@ describe('refresh users tokens', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
               commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({
@@ -1244,6 +1244,7 @@ describe('refresh users tokens', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({
@@ -1325,6 +1326,7 @@ describe('refresh users tokens', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
               commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
             })
 
             const refreshToken = tokenize({

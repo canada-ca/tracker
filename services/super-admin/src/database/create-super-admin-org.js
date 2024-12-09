@@ -57,6 +57,7 @@ const createSuperAdminOrg = async ({ collections, transaction }) => {
       })
     })
   } catch (err) {
+    await trx.abort()
     throw new Error(
       `Transaction step error occurred while creating new super admin org: ${err}`,
     )
@@ -65,6 +66,7 @@ const createSuperAdminOrg = async ({ collections, transaction }) => {
   try {
     await trx.commit()
   } catch (err) {
+    await trx.abort()
     throw new Error(
       `Transaction commit error occurred while creating new super admin org: ${err}`,
     )

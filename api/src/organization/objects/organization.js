@@ -11,7 +11,6 @@ import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
 import { OrderDirection, PeriodEnums } from '../../enums'
-import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -73,7 +72,7 @@ export const organizationType = new GraphQLObjectType({
       resolve: ({ summaries }) => summaries,
     },
     historicalSummaries: {
-      type: orgSummaryConnection.connectionType,
+      type: new GraphQLList(organizationSummaryType),
       description: 'Historical summaries based on scan types that are preformed on the given organizations domains.',
       args: {
         month: {
@@ -309,10 +308,10 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { i18n, auth: { checkPermission }, loaders: { loadAffiliationConnectionsByOrgId } },
+        { i18n, auth: { checkPermission, loginRequiredBool }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
-        if (['user', 'admin', 'owner', 'super_admin'].includes(permission) === false) {
+        if (['user', 'admin', 'owner', 'super_admin'].includes(permission) === false && loginRequiredBool) {
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 

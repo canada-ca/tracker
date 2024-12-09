@@ -46,13 +46,14 @@ import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
+import { domainSearchTip } from '../domains/DomainsPage'
 
 export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(20)
+  const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [selectedRemoveProps, setSelectedRemoveProps] = useState({
     domain: '',
     domainId: '',
@@ -319,9 +320,9 @@ export function AdminDomains({ orgSlug, orgId }) {
         )}
       >
         {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
-          <>
+          <React.Fragment key={`admindomain-${index}`}>
             {index === 0 && <Divider borderBottomColor="gray.400" />}
-            <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
+            <Flex p="1" align="center" rounded="md" mb="1">
               <Stack direction="row" flexGrow="0" mr="2">
                 <IconButton
                   data-testid={`remove-${index}`}
@@ -371,7 +372,7 @@ export function AdminDomains({ orgSlug, orgId }) {
               </ABTestWrapper>
             </Flex>
             <Divider borderBottomColor="gray.400" />
-          </>
+          </React.Fragment>
         )}
       </ListOf>
     </>
@@ -411,6 +412,7 @@ export function AdminDomains({ orgSlug, orgId }) {
                 <PlusSquareIcon color="gray.300" />
               </InputLeftElement>
               <Input
+                borderColor="black"
                 id="Search-for-domain-field"
                 type="text"
                 placeholder={i18n._(t`Domain URL`)}
@@ -432,6 +434,9 @@ export function AdminDomains({ orgSlug, orgId }) {
             </Button>
           </Flex>
         </form>
+        <Box mt="1" backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
+          {domainSearchTip}
+        </Box>
         <Divider borderBottomWidth="1px" borderBottomColor="black" />
         <RelayPaginationControls
           onlyPagination={false}

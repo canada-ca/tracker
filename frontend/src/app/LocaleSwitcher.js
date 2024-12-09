@@ -47,10 +47,10 @@ const Toggler = (props) => {
   )
 }
 
-export function LocaleSwitcher() {
+export function LocaleSwitcher({ ...props }) {
   const { i18n } = useLingui()
   return (
-    <Box>
+    <Box {...props}>
       {i18n.locale === 'en' && <Toggler locale="fr" />}
       {i18n.locale === 'fr' && <Toggler locale="en" />}
     </Box>

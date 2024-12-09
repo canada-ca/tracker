@@ -1,4 +1,5 @@
 import re
+import ssl
 from typing import Optional, Union
 from urllib.parse import urlsplit
 import urllib3
@@ -21,7 +22,7 @@ TIMEOUT_ERROR = "TIMEOUT_ERROR"
 UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
 DEFAULT_REQUEST_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0 Tracker-Suivi (+https://github.com/canada-ca/tracker)",
 }
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -85,7 +86,18 @@ class HTTPSConnectionRequest(HTTPConnectionRequest):
     scheme: str = "https"
 
 
-class HostHeaderSSLAdapter(HTTPAdapter):
+class AnyTlsVersionAdapter(HTTPAdapter):
+    def init_poolmanager(self, *args, **pool_kwargs):
+        ssl_context = ssl.create_default_context()
+        ssl_context.set_ciphers("DEFAULT@SECLEVEL=0")
+        ssl_context.check_hostname = False
+        ssl_context.minimum_version = ssl.TLSVersion.TLSv1
+        pool_kwargs["ssl_context"] = ssl_context
+
+        return super().init_poolmanager(*args, **pool_kwargs)
+
+
+class HostHeaderSSLAdapter(AnyTlsVersionAdapter):
     # Copied from https://github.com/requests/toolbelt/blob/9f6209553bbf8f31caccaf8efe15c89ec74dd147/requests_toolbelt/adapters/host_header_ssl.py
 
     def send(self, request, **kwargs):
@@ -128,23 +140,29 @@ def request_connection(
     with requests.Session() as session:
         session.verify = False
         try:
+            if scheme.lower() == "https" and ip_address:
+                session.mount("https://", HostHeaderSSLAdapter())
+            else:
+                session.mount("https://", AnyTlsVersionAdapter())
+
             if prepared_request:
                 req = prepared_request
             else:
-                if scheme.lower() == "https":
-                    session.mount("https://", HostHeaderSSLAdapter())
-
                 if ip_address:
                     req = session.prepare_request(
                         requests.Request(
                             "GET",
                             f"{scheme.lower()}://{ip_address}",
-                            headers={"Host": host},
+                            headers={"Host": host, **DEFAULT_REQUEST_HEADERS},
                         )
                     )
                 else:
                     req = session.prepare_request(
-                        requests.Request("GET", f"{scheme.lower()}://{host}")
+                        requests.Request(
+                            "GET",
+                            f"{scheme.lower()}://{host}",
+                            headers={**DEFAULT_REQUEST_HEADERS},
+                        )
                     )
 
             response = session.send(req, allow_redirects=False, timeout=TIMEOUT)

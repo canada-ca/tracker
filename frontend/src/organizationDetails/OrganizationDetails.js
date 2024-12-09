@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Heading,
   IconButton,
@@ -27,31 +28,43 @@ import { TieredSummaries } from '../summaries/TieredSummaries'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { ORG_DETAILS_PAGE } from '../graphql/queries'
+import { ORG_DETAILS_PAGE, GET_HISTORICAL_ORG_SUMMARIES } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import useSearchParam from '../utilities/useSearchParam'
+import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
+import { bool } from 'prop-types'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
-export default function OrganizationDetails() {
+export default function OrganizationDetails({ loginRequired }) {
   const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
   const defaultActiveTab = tabNames[0]
+  const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
+    name: 'summary-range',
+    validOptions: ['last30days', 'lastyear', 'ytd'],
+    defaultValue: 'last30days',
+  })
 
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug, month: progressChartRange, year: new Date().getFullYear().toString() },
+    variables: { slug: orgSlug },
     // errorPolicy: 'ignore', // allow partial success
   })
 
+  const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
+    variables: { orgSlug, month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
+    errorPolicy: 'ignore', // allow partial success
+  })
+
   useEffect(() => {
-    if (!activeTab) {
+    if (!activeTab || !tabNames.includes(activeTab)) {
       history.replace(`/organizations/${orgSlug}/${defaultActiveTab}`)
     }
   }, [activeTab, history, orgSlug, defaultActiveTab])
@@ -72,12 +85,13 @@ export default function OrganizationDetails() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/organizations/${orgSlug}/${tab}`)
+      history.push(`/organizations/${orgSlug}/${tab}`)
     }
   }
 
   return (
     <Box w="100%">
+      <TourComponent />
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <IconButton
           icon={<ArrowLeftIcon />}
@@ -119,7 +133,7 @@ export default function OrganizationDetails() {
       <Tabs
         isFitted
         variant="enclosed-colored"
-        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        index={tabNames.indexOf(activeTab) > -1 ? tabNames.indexOf(activeTab) : 0}
         onChange={(i) => changeActiveTab(i)}
       >
         <TabList mb="4">
@@ -132,7 +146,7 @@ export default function OrganizationDetails() {
           <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
-          {data?.organization?.userHasPermission && (
+          {(data?.organization?.userHasPermission || !loginRequired) && (
             <Tab borderTopWidth="4px">
               <Trans>Users</Trans>
             </Tab>
@@ -144,18 +158,27 @@ export default function OrganizationDetails() {
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <HistoricalSummariesGraph
-                    data={data?.organization?.historicalSummaries}
-                    setRange={setProgressChartRange}
-                    width={1200}
-                    height={500}
-                  />
-                </ErrorBoundary>
-              </ABTestVariant>
-            </ABTestWrapper>
+            <Divider />
+            {orgSummariesLoading ? (
+              <LoadingMessage height={500} />
+            ) : (
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <HistoricalSummariesGraph
+                  data={orgSummariesData?.findOrganizationBySlug?.historicalSummaries}
+                  setRange={setProgressChartRangeParam}
+                  selectedRange={progressChartRangeParam}
+                  width={1200}
+                  height={500}
+                  userHasPermission={data?.organization?.userHasPermission}
+                />
+              </ErrorBoundary>
+            )}
+            <Divider />
+            {data?.organization?.userHasPermission && (
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
+              </ErrorBoundary>
+            )}
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -176,7 +199,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          {data?.organization?.userHasPermission && (
+          {(data?.organization?.userHasPermission || !loginRequired) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} />
@@ -187,4 +210,8 @@ export default function OrganizationDetails() {
       </Tabs>
     </Box>
   )
+}
+
+OrganizationDetails.propTypes = {
+  loginRequired: bool,
 }

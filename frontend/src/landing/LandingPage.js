@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -22,7 +22,7 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
 
   return (
     <Stack w="100%">
-      {/* <TourComponent page="landingPage" /> */}
+      <TourComponent />
       <Box mb="16" textAlign="left" px="4">
         <Heading as="h1">
           <Trans>Track Digital Security</Trans>

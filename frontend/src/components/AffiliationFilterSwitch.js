@@ -10,7 +10,7 @@ export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
   if (!isLoggedIn()) return null
   return (
     <Tooltip label={t`Filter list to affiliated resources only.`} hasArrow>
-      <Flex align="center" my="2" maxW="5rem">
+      <Flex align="center" my="2" maxW="5rem" className="filter-affiliated">
         <Switch
           isFocusable={true}
           aria-label="Filter list to affiliated resources only."

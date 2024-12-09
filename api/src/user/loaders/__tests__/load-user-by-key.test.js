@@ -51,14 +51,12 @@ describe('given a loadUserByKey dataloader', () => {
       await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
       })
       await collections.users.save({
         userName: 'random@email.ca',
         displayName: 'Random Name',
-        preferredLang: 'english',
         tfaValidated: false,
         emailValidated: false,
       })

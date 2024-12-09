@@ -800,6 +800,7 @@ describe('testing the removePhoneNumber mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -846,6 +847,7 @@ describe('testing the removePhoneNumber mutation', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn(),
               commit: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -907,6 +909,7 @@ describe('testing the removePhoneNumber mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({
@@ -953,6 +956,7 @@ describe('testing the removePhoneNumber mutation', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn(),
               commit: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
+              abort: jest.fn(),
             })
 
             const response = await graphql({

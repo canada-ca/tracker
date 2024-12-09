@@ -54,21 +54,18 @@ describe('given findMyUsersQuery', () => {
       superAdmin = await collections.users.save({
         displayName: 'Super Admin',
         userName: 'super.admin@istio.actually.exists',
-        preferredLang: 'english',
         emailValidated: true,
       })
 
       user1 = await collections.users.save({
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
-        preferredLang: 'french',
         emailValidated: true,
       })
 
       user2 = await collections.users.save({
         displayName: 'Real User',
         userName: 'real.user@istio.actually.exists',
-        preferredLang: 'english',
         emailValidated: true,
       })
 

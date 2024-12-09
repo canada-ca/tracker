@@ -18,9 +18,8 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
-// import { TourComponent } from '../userOnboarding/components/TourComponent'
 
-export default function AdminPage({ isLoginRequired }) {
+export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
@@ -117,6 +116,32 @@ export default function AdminPage({ isLoginRequired }) {
     )
   }
 
+  if (!data?.isUserAdmin) {
+    return (
+      <Stack align="center" mx="auto">
+        <Text fontSize="3xl" fontWeight="bold">
+          <Trans>You currently have no admin affiliations.</Trans>
+        </Text>
+        <Flex fontSize="xl">
+          <Text mr="2">
+            <Trans>Search for your organization to request an invite</Trans>
+          </Text>
+          <Button size="xl" variant="link" as={RouteLink} to="/organizations" color="blue.500">
+            <Trans>here.</Trans>
+          </Button>
+        </Flex>
+        <Flex fontSize="xl">
+          <Text mr="2">
+            <Trans>Is your organization not using Tracker yet?</Trans>
+          </Text>
+          <Button size="xl" variant="link" as={RouteLink} to="/create-organization" color="blue.500">
+            <Trans>Click here.</Trans>
+          </Button>
+        </Flex>
+      </Stack>
+    )
+  }
+
   const changeActiveMenu = (val) => {
     if (activeMenu !== val) {
       history.replace(`/admin/${val}`)
@@ -147,7 +172,6 @@ export default function AdminPage({ isLoginRequired }) {
             mb="1rem"
             removeOrgCallback={setSelectedOrg}
             key={orgDetails.slug} // set key, this resets state when switching orgs (closes editing box)
-            isLoginRequired={isLoginRequired}
           />
           <AdminPanel
             activeMenu={activeMenu}
@@ -190,7 +214,6 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
     <label>
       <Flex align="center">
-        {/* <TourComponent page="adminProfilePage" /> */}
         <Text fontSize="lg" fontWeight="bold" mr="2">
           <Trans>Super Admin Menu:</Trans>
         </Text>

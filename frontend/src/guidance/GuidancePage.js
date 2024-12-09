@@ -9,6 +9,7 @@ import {
   Heading,
   IconButton,
   Link,
+  ListItem,
   Tab,
   TabList,
   TabPanel,
@@ -50,7 +51,6 @@ function GuidancePage() {
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
     fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-only',
     errorPolicy: 'all',
   })
 
@@ -71,7 +71,6 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
-    cveDetected,
     userHasPermission,
     webScanPending,
     wildcardSibling,
@@ -140,19 +139,18 @@ function GuidancePage() {
         {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
           <ErrorBoundary key={`${slug}:${index}`} ErrorFallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
-              <OrganizationCard
-                disableLink={true}
-                id={id}
-                slug={slug}
-                name={name}
-                acronym={acronym}
-                domainCount={domainCount}
-                verified={verified}
-                summaries={summaries}
-                mb="3"
-                mr={userHasPermission ? '3rem' : '2'}
-                w="100%"
-              />
+              <ListItem mb="3" mr={userHasPermission ? '3rem' : '2'} w="100%">
+                <OrganizationCard
+                  disableLink={true}
+                  id={id}
+                  slug={slug}
+                  name={name}
+                  acronym={acronym}
+                  domainCount={domainCount}
+                  verified={verified}
+                  summaries={summaries}
+                />
+              </ListItem>
               {isLoggedIn() && !userHasPermission && (
                 <>
                   <IconButton
@@ -276,7 +274,7 @@ function GuidancePage() {
             )}
           </TabPanel>
           <TabPanel>
-            <AdditionalFindings domain={domainName} cveDetected={cveDetected} />
+            <AdditionalFindings domain={domainName} />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -342,12 +340,12 @@ function GuidancePage() {
         </Text>
         {organizations.edges.map(({ node }, idx) => {
           return (
-            <>
-              <Link as={RouteLink} to={`/organizations/${node.slug}`} key={idx}>
+            <React.Fragment key={idx}>
+              <Link as={RouteLink} to={`/organizations/${node.slug}`}>
                 {node.name} ({node.acronym})
               </Link>
               {idx !== organizations.edges.length - 1 && <Text mr="1">,</Text>}
-            </>
+            </React.Fragment>
           )
         })}
       </Flex>

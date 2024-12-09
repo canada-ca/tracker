@@ -31,7 +31,7 @@ const successMocks = [
     request: {
       query: FORWARD,
       variables: {
-        first: 20,
+        first: 50,
         orgSlug: 'test-org.slug',
         search: '',
         includePending: true,
@@ -44,7 +44,7 @@ const successMocks = [
     request: {
       query: FORWARD,
       variables: {
-        first: 20,
+        first: 50,
         orgSlug: 'test-org.slug',
         search: '',
         includePending: true,
@@ -81,7 +81,6 @@ const successMocks = [
         userName: 'newUser@test.ca',
         requestedRole: 'USER',
         orgId: rawOrgUserListData.findOrganizationBySlug.id,
-        preferredLang: 'ENGLISH',
       },
     },
     result: {
@@ -228,7 +227,7 @@ describe('<UserList />', () => {
                   <UserList
                     includePending={true}
                     permission={'SUPER_ADMIN'}
-                    usersPerPage={10}
+                    usersPerPage={50}
                     orgSlug={'test-org.slug'}
                     orgId={rawOrgUserListData.findOrganizationBySlug.id}
                   />

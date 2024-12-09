@@ -52,7 +52,6 @@ describe('user send password reset email', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
-        preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
         tfaCode: 123456,
@@ -476,6 +475,7 @@ describe('user send password reset email', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -532,6 +532,7 @@ describe('user send password reset email', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -722,6 +723,7 @@ describe('user send password reset email', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -778,6 +780,7 @@ describe('user send password reset email', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                  abort: jest.fn(),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({

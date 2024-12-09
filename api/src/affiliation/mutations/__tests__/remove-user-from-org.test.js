@@ -97,7 +97,6 @@ const orgTwoData = {
 const adminData = {
   userName: 'admin.account@istio.actually.exists',
   displayName: 'Test Admin',
-  preferredLang: 'french',
   tfaValidated: false,
   emailValidated: true,
   tfaSendMethod: 'email',
@@ -106,7 +105,6 @@ const adminData = {
 const userData = {
   userName: 'test.account@istio.actually.exists',
   displayName: 'Test Account',
-  preferredLang: 'french',
   tfaValidated: false,
   emailValidated: true,
   tfaSendMethod: 'email',
@@ -1641,6 +1639,7 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockRejectedValue(new Error('trx step error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -1718,6 +1717,7 @@ describe('given the removeUserFromOrg mutation', () => {
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(),
           commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+          abort: jest.fn(),
         })
 
         const response = await graphql({
@@ -2356,6 +2356,7 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest.fn().mockRejectedValue(new Error('trx step error')),
+            abort: jest.fn(),
           })
 
           const response = await graphql({
@@ -2435,6 +2436,7 @@ describe('given the removeUserFromOrg mutation', () => {
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(),
           commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
+          abort: jest.fn(),
         })
 
         const response = await graphql({
