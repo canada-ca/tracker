@@ -16,7 +16,7 @@ import { loadOrgByKey } from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY, TRACKER_PRODUCTION } = process.env
 
 describe('testing user sign up', () => {
   let query, drop, truncate, collections, transaction, schema, i18n, mockTokenize, mockNotify
