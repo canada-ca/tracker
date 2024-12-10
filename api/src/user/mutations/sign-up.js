@@ -7,7 +7,7 @@ import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ms from 'ms'
 
-const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
+const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY, TRACKER_PRODUCTION } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -67,6 +67,16 @@ export const signUp = new mutationWithClientMutationId({
     const confirmPassword = cleanseInput(args.confirmPassword)
     const signUpToken = cleanseInput(args.signUpToken)
     const rememberMe = args.rememberMe
+
+    const isProduction = TRACKER_PRODUCTION === 'true'
+    if (isProduction === false) {
+      console.warn(`User: ${userName} tried to sign up but did not meet requirements.`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`User is trying to register for a non-production environment.`),
+      }
+    }
 
     // Check to make sure password meets length requirement
     if (password.length < 12) {
