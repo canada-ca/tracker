@@ -66,9 +66,9 @@ export function SuperAdminUserList() {
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_OTHER, {
     refetchQueries: ['FindMyUsers'],
-    update(cache, { data: { closeAccount } }) {
-      if (closeAccount.result.__typename === 'CloseAccountResult') {
-        cache.evict({ id: cache.identify(closeAccount.result.user) })
+    update(cache, { data: { closeAccountOther } }) {
+      if (closeAccountOther.result.__typename === 'CloseAccountResult') {
+        cache.evict({ id: cache.identify(closeAccountOther.result.user) })
       }
     },
     onError(error) {
@@ -81,8 +81,8 @@ export function SuperAdminUserList() {
         position: 'top-left',
       })
     },
-    onCompleted({ closeAccount }) {
-      if (closeAccount.result.__typename === 'CloseAccountResult') {
+    onCompleted({ closeAccountOther }) {
+      if (closeAccountOther.result.__typename === 'CloseAccountResult') {
         toast({
           title: t`Account Closed Successfully`,
           description: t`Tracker account has been successfully closed.`,
@@ -92,10 +92,10 @@ export function SuperAdminUserList() {
           position: 'top-left',
         })
         closeAccountOnClose()
-      } else if (closeAccount.result.__typename === 'CloseAccountError') {
+      } else if (closeAccountOther.result.__typename === 'CloseAccountError') {
         toast({
           title: t`Unable to close the account.`,
-          description: closeAccount.result.description,
+          description: closeAccountOther.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
