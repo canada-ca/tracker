@@ -173,6 +173,7 @@ export const organizationType = new GraphQLObjectType({
           'rcode',
           'blocked',
           'wildcardSibling',
+          'wildcardEntry',
           'hasEntrustCertificate',
           'top25Vulnerabilities',
         ]

@@ -48,6 +48,7 @@ export const getAllOrganizationDomainStatuses = {
       'rcode',
       'blocked',
       'wildcardSibling',
+      'wildcardEntry',
       'hasEntrustCertificate',
       'top25Vulnerabilities',
     ]

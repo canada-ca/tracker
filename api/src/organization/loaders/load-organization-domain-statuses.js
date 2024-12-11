@@ -74,6 +74,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.wildcardEntry ${comparison} true
+          `
           } else if (filterValue === 'has-entrust-certificate') {
             domainFilters = aql`
             ${domainFilters}
