@@ -51,8 +51,6 @@ export function App({ initialLoading, isLoginRequired }) {
   const { i18n } = useLingui()
   const location = useLocation()
 
-  console.log('APP_IS_PRODUCTION: ', window.env?.APP_IS_PRODUCTION)
-
   const notificationBanner = () => {
     if (isLoggedIn()) {
       if (isEmailValidated()) {
