@@ -1,6 +1,7 @@
 # This file is used to generate the Istio configuration for the cluster. Do not apply this file directly.
-# Update the value for the `tag` field to the desired version of Istio to the currently used version of istioctl,
-#   then run `make update-istio` to generate the Istio configuration.
+# Update the value for the `tag` field to the desired version of Istio (which should match the version of istioctl used).
+# Ensure the Makefile's `make update-istio` command will use the expected version of istioctl on the system. Then run
+#   `make update-istio` to generate the Istio configuration (or manually run with the correct version of istioctl).
 # Apply the generated configuration by running `kubectl apply -f k8s/infrastructure/bases/istio/platform/crds.yaml`
 
 apiVersion: install.istio.io/v1alpha1
