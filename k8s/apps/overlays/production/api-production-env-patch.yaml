@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracker-api
+  namespace: api
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          env:
+            - name: TRACKER_PRODUCTION
+              value: "true"
