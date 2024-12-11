@@ -213,9 +213,11 @@ export function App({ initialLoading, isLoginRequired }) {
                 <LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} />
               </Page>
 
-              <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
-                <CreateUserPage />
-              </Page>
+              {window.env?.APP_IS_PRODUCTION === true && (
+                <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
+                  <CreateUserPage />
+                </Page>
+              )}
 
               <Page
                 path="/sign-in"
