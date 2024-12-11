@@ -386,6 +386,9 @@ export const CLOSE_ACCOUNT_OTHER = gql`
         }
         ... on CloseAccountResult {
           status
+          user {
+            id
+          }
         }
       }
     }

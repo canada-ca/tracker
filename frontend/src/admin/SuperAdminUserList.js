@@ -66,8 +66,11 @@ export function SuperAdminUserList() {
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_OTHER, {
     refetchQueries: ['FindMyUsers'],
-    awaitRefetchQueries: true,
-
+    update(cache, { data: { closeAccount } }) {
+      if (closeAccount.result.__typename === 'CloseAccountResult') {
+        cache.evict({ id: cache.identify(closeAccount.result.user) })
+      }
+    },
     onError(error) {
       toast({
         title: t`Unable to close this account.`,
