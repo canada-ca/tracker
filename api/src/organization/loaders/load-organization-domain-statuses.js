@@ -146,6 +146,7 @@ export const loadOrganizationDomainStatuses =
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
+              wildcardEntry: v.wildcardEntry,
               hasEntrustCertificate: v.hasEntrustCertificate,
               top25Vulnerabilities: vulnerabilities
             }

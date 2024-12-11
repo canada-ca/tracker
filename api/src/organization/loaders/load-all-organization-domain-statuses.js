@@ -143,6 +143,7 @@ export const loadAllOrganizationDomainStatuses =
               "rcode": d.rcode,
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
+              "wildcardEntry": d.wildcardEntry,
               "hasEntrustCertificate": d.hasEntrustCertificate,
               "top25Vulnerabilities": vulnerabilities
             }
