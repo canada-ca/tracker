@@ -225,6 +225,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
     return {
       _type: 'regular',
       status: i18n._(t`Successfully closed account.`),
+      user: checkUser,
     }
   },
 })
