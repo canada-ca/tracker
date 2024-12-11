@@ -110,6 +110,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
       rcode: 'NOERROR',
       blocked: false,
       wildcardSibling: false,
+      wildcardEntry: false,
       hasEntrustCertificate: false,
       cveDetected: false,
     })
@@ -129,6 +130,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
       rcode: 'NOERROR',
       blocked: false,
       wildcardSibling: false,
+      wildcardEntry: false,
       hasEntrustCertificate: false,
       cveDetected: false,
     })
@@ -266,9 +268,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate,top25Vulnerabilities
-"domain.one","Org One","OO",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false",
-"domain.two","Org One","OO",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false",`,
+            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,top25Vulnerabilities
+"domain.one","Org One","OO",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false","false",
+"domain.two","Org One","OO",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false","false",`,
           },
         }
 
@@ -384,9 +386,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate,top25Vulnerabilities
-"domain.one","Org One","OO",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false",
-"domain.two","Org One","OO",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false",`,
+            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,top25Vulnerabilities
+"domain.one","Org One","OO",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false","false",
+"domain.two","Org One","OO",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false","false",`,
           },
         }
         expect(response).toEqual(expectedResponse)
