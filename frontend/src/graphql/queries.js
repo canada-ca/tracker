@@ -296,6 +296,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       rcode
       blocked
       wildcardSibling
+      wildcardEntry
       webScanPending
       cveDetected
       status {
@@ -800,6 +801,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             rcode
             blocked
             wildcardSibling
+            wildcardEntry
             webScanPending
             userHasPermission
             hasEntrustCertificate
@@ -865,6 +867,7 @@ export const PAGINATED_DOMAINS = gql`
           rcode
           blocked
           wildcardSibling
+          wildcardEntry
           webScanPending
           status {
             ...RequiredDomainStatusFields
@@ -1297,6 +1300,7 @@ export const MY_TRACKER_DOMAINS = gql`
             rcode
             blocked
             wildcardSibling
+            wildcardEntry
             webScanPending
           }
           cursor

@@ -74,6 +74,7 @@ function GuidancePage() {
     userHasPermission,
     webScanPending,
     wildcardSibling,
+    wildcardEntry,
   } = data?.findDomainByDomain || {}
 
   useDocumentTitle(`${domainName}`)
@@ -300,15 +301,17 @@ function GuidancePage() {
             <Trans>Scan Pending</Trans>
           </Badge>
         )}
-        {wildcardSibling && (
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <Badge colorScheme="red" alignSelf="center" fontSize="md">
-                <Trans>Wildcard</Trans>*
+
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            {wildcardSibling && (
+              <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+                {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
               </Badge>
-            </ABTestVariant>
-          </ABTestWrapper>
-        )}
+            )}
+          </ABTestVariant>
+        </ABTestWrapper>
+
         {isLoggedIn() && (
           <IconButton
             onClick={async () => {

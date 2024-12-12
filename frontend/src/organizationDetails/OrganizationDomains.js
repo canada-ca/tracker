@@ -106,7 +106,8 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: t`INACTIVE`, text: t`Inactive` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
-    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
+    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
@@ -147,6 +148,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             rcode,
             blocked,
             wildcardSibling,
+            wildcardEntry,
             webScanPending,
             hasEntrustCertificate,
             userHasPermission,
@@ -167,6 +169,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               isArchived={archived}
               blocked={blocked}
               wildcardSibling={wildcardSibling}
+              wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
               hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}

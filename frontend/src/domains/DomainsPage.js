@@ -130,7 +130,9 @@ export default function DomainsPage() {
   const filterTagOptions = [
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
+    { value: `ARCHIVED`, text: t`Archived` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
@@ -228,6 +230,7 @@ export default function DomainsPage() {
             rcode,
             blocked,
             wildcardSibling,
+            wildcardEntry,
             webScanPending,
             hasEntrustCertificate,
             userHasPermission,
@@ -246,6 +249,7 @@ export default function DomainsPage() {
               rcode={rcode}
               blocked={blocked}
               wildcardSibling={wildcardSibling}
+              wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
               hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
