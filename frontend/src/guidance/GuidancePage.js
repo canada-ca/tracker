@@ -74,6 +74,7 @@ function GuidancePage() {
     userHasPermission,
     webScanPending,
     wildcardSibling,
+    wildcardEntry,
   } = data?.findDomainByDomain || {}
 
   useDocumentTitle(`${domainName}`)
@@ -300,7 +301,7 @@ function GuidancePage() {
             <Trans>Scan Pending</Trans>
           </Badge>
         )}
-        {wildcardSibling && (
+        {(wildcardSibling || wildcardEntry) && (
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               <Badge colorScheme="red" alignSelf="center" fontSize="md">
