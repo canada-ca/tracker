@@ -146,9 +146,9 @@ function DomainCard({
             )}
             <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="B">
-                {(wildcardSibling || wildcardEntry) && (
-                  <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
-                    <Trans>Wildcard</Trans>*
+                {wildcardSibling && (
+                  <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+                    {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
                   </Badge>
                 )}
                 {hasEntrustCertificate && (
