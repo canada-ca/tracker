@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
 - ../../../../bases/istio/platform
 patchesStrategicMerge:
-  - ingress-gateway-svc-ip.yaml
+  - ingress-gateway-svc-ip-patch.yaml
