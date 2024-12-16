@@ -132,7 +132,6 @@ async def main():
             "_from": org_id,
             "_to": domain_id,
             "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "outsideComment": "",
             "firstSeen": date.today().isoformat(),
         }
 
@@ -180,7 +179,7 @@ async def main():
     async def add_discovered_domain(domains, org_id):
         for domain in domains:
             # check if domain exists in system
-            domain_exists = get_domain_exists(domains)
+            domain_exists = get_domain_exists(domain)
             if domain_exists is None:
                 logger.error(f"Error occured when checking if domain exists: {e}")
                 continue
