@@ -127,6 +127,29 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     </LoadingMessage>
   ) : (
     <Box>
+      {orgSlug !== 'my-tracker' && (
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="A">
+            <DomainListFilters
+              className="domain-filters"
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+            />
+          </ABTestVariant>
+          <ABTestVariant name="B">
+            <DomainListFilters
+              className="domain-filters"
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+              assetStateOptions={assetStateOptions}
+            />
+          </ABTestVariant>
+        </ABTestWrapper>
+      )}
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -274,33 +297,12 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
       />
 
       {orgSlug !== 'my-tracker' && (
-        <Box className="domain-filters">
-          <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
-              <Trans>Filters:</Trans>
-            </Text>
-            <FilterList filters={filters} setFilters={setFilters} />
-          </Flex>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="A">
-              <DomainListFilters
-                filters={filters}
-                setFilters={setFilters}
-                statusOptions={orderByOptions}
-                filterTagOptions={filterTagOptions}
-              />
-            </ABTestVariant>
-            <ABTestVariant name="B">
-              <DomainListFilters
-                filters={filters}
-                setFilters={setFilters}
-                statusOptions={orderByOptions}
-                filterTagOptions={filterTagOptions}
-                assetStateOptions={assetStateOptions}
-              />
-            </ABTestVariant>
-          </ABTestWrapper>
-        </Box>
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <FilterList filters={filters} setFilters={setFilters} />
+        </Flex>
       )}
 
       {domainList}

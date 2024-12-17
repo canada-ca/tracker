@@ -211,6 +211,13 @@ export default function DomainsPage() {
     </LoadingMessage>
   ) : (
     <Box>
+      <DomainListFilters
+        className="filters"
+        filters={filters}
+        setFilters={setFilters}
+        statusOptions={orderByOptions}
+        filterTagOptions={filterTagOptions}
+      />
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -328,22 +335,14 @@ export default function DomainsPage() {
           totalRecords={totalCount}
         />
 
-        <Box className="filters">
-          <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
-              <Trans>Filters:</Trans>
-            </Text>
-            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-            {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
-            <FilterList filters={filters} setFilters={setFilters} />
-          </Flex>
-          <DomainListFilters
-            filters={filters}
-            setFilters={setFilters}
-            statusOptions={orderByOptions}
-            filterTagOptions={filterTagOptions}
-          />
-        </Box>
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
+          <FilterList filters={filters} setFilters={setFilters} />
+        </Flex>
 
         {domainList}
 
