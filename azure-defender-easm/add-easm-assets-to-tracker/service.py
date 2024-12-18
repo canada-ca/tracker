@@ -230,26 +230,27 @@ async def main():
             try:
                 txn_db.commit_transaction()
                 logger.info(f"Successfully committed transaction for domain: {domain}")
+
+                # publish domain to NATS
+                try:
+                    await publish(
+                        "scans.requests",
+                        json.dumps(
+                            {
+                                "domain": domain,
+                                "domain_key": created_domain["_key"],
+                            }
+                        ).encode(),
+                    )
+                    logger.info(f"Published domain: {domain} to NATS")
+                except Exception as e:
+                    logger.error(f"Failed to publish domain: {domain} to NATS: {e}")
+
             except Exception as e:
                 logger.error(f"Failed to commit transaction for domain: {domain}: {e}")
                 # abort transaction
                 txn_db.abort_transaction()
                 continue
-
-            # publish domain to NATS
-            try:
-                await publish(
-                    "scans.requests",
-                    json.dumps(
-                        {
-                            "domain": domain,
-                            "domain_key": created_domain["_key"],
-                        }
-                    ).encode(),
-                )
-                logger.info(f"Published domain: {domain} to NATS")
-            except Exception as e:
-                logger.error(f"Failed to publish domain: {domain} to NATS: {e}")
 
     verified_orgs = get_verified_orgs()
     for org in verified_orgs:
