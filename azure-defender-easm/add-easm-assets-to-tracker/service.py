@@ -242,7 +242,7 @@ async def main():
                     "scans.requests",
                     json.dumps(
                         {
-                            "domain": created_domain["domain"],
+                            "domain": domain,
                             "domain_key": created_domain["_key"],
                         }
                     ).encode(),
