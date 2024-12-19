@@ -1,7 +1,7 @@
 import logging
 import os
 import json
-from datetime import date
+from datetime import datetime
 from arango import ArangoClient
 
 from dotenv import load_dotenv
@@ -145,7 +145,7 @@ async def main():
 
     async def log_activity(domain, org_id, txn_col):
         insert_activity = {
-            "timestamp": date.today().isoformat(),
+            "timestamp": datetime.today().isoformat(),
             "initiatedBy": {
                 "id": "easm",
                 "userName": "automated-discovery-service",
