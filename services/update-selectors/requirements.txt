@@ -5,7 +5,7 @@ charset-normalizer==3.3.2
 docopt==0.6.2
 idna==3.7
 nats-py==2.6.0
-notifications-python-client==8.0.1
+notifications-python-client==10.0.1
 PyJWT==2.8.0
 pytest==7.4.4
 python-arango==7.3.4
