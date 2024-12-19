@@ -188,7 +188,7 @@ def process_tls_results(tls_results, web_server_present):
 
     # certificate status
     if (
-        tls_results.get("certificate_chain_info")
+        tls_results.get("certificate_chain_info", None)
         and len(
             tls_results.get("certificate_chain_info", {}).get("certificate_chain", [])
         )
