@@ -132,7 +132,7 @@ async def main():
             "_from": org_id,
             "_to": domain_id,
             "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "firstSeen": date.today().isoformat(),
+            "firstSeen": datetime.today().isoformat(),
         }
 
         try:
@@ -153,18 +153,18 @@ async def main():
             },
             "target": {
                 "resource": domain,
-                "updatedProperties": {
-                    "name": "tags",
-                    "oldValue": [],
-                    "newValue": [{"en": "NEW", "fr": "NOUVEAU"}],
-                },
-                "organization": {
-                    "id": org_id,
-                },
+                "updatedProperties": [
+                    {
+                        "name": "tags",
+                        "oldValue": [],
+                        "newValue": [{"en": "NEW", "fr": "NOUVEAU"}],
+                    }
+                ],
+                "organization": {"id": org_key},
                 "resourceType": "domain",
             },
             "action": "add",
-            "reason": "",
+            "reason": None,
         }
 
         try:
