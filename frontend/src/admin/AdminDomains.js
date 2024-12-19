@@ -27,7 +27,7 @@ import {
 import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
-import { number, string } from 'prop-types'
+import { bool, number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
 import { AdminDomainCard } from './AdminDomainCard'
@@ -48,7 +48,7 @@ import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 
-export function AdminDomains({ orgSlug, orgId }) {
+export function AdminDomains({ orgSlug, orgId, verified, permission }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -324,17 +324,19 @@ export function AdminDomains({ orgSlug, orgId }) {
             {index === 0 && <Divider borderBottomColor="gray.400" />}
             <Flex p="1" align="center" rounded="md" mb="1">
               <Stack direction="row" flexGrow="0" mr="2">
-                <IconButton
-                  data-testid={`remove-${index}`}
-                  onClick={() => {
-                    setSelectedRemoveProps({ domain, domainId, rcode })
-                    removeOnOpen()
-                  }}
-                  variant="danger"
-                  px="2"
-                  icon={<MinusIcon />}
-                  aria-label={'Remove ' + domain}
-                />
+                {(!verified || permission === 'SUPER_ADMIN' || rcode === 'NXDOMAIN') && (
+                  <IconButton
+                    data-testid={`remove-${index}`}
+                    onClick={() => {
+                      setSelectedRemoveProps({ domain, domainId, rcode })
+                      removeOnOpen()
+                    }}
+                    variant="danger"
+                    px="2"
+                    icon={<MinusIcon />}
+                    aria-label={'Remove ' + domain}
+                  />
+                )}
                 <IconButton
                   data-testid={`edit-${index}`}
                   variant="primary"
@@ -592,6 +594,7 @@ export function AdminDomains({ orgSlug, orgId }) {
 AdminDomains.propTypes = {
   orgSlug: string.isRequired,
   orgId: string.isRequired,
+  verified: bool,
   domainsPerPage: number,
   permission: string,
 }
