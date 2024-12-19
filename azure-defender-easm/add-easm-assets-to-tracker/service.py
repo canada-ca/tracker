@@ -143,7 +143,7 @@ async def main():
             logger.error("Error occured when creating claim for ", e)
             return None
 
-    async def log_activity(domain, org_id, txn_col):
+    async def log_activity(domain, org_key, txn_col):
         insert_activity = {
             "timestamp": datetime.today().isoformat(),
             "initiatedBy": {
@@ -218,8 +218,9 @@ async def main():
                 txn_db.abort_transaction()
                 continue
             # add activity logging
+            org_key = org_id.split("/")[-1]
             created_log = await log_activity(
-                domain=domain, org_id=org_id, txn_col=txn_col_audit_logs
+                domain=domain, org_key=org_key, txn_col=txn_col_audit_logs
             )
             if created_log is None:
                 # abort transaction
@@ -277,7 +278,9 @@ async def main():
 
     try:
         unlabelled_assets = get_unlabelled_assets()
-        await add_discovered_domain(unlabelled_assets, UNCLAIMED_ID)
+        domains = get_org_domains(org_id)
+        new_domains = list(set(unlabelled_assets) - set(domains))
+        await add_discovered_domain(new_domains, UNCLAIMED_ID)
     except Exception as e:
         logger.error(f"Error when attempting to add new assets to unclaimed org: {e}")
 
