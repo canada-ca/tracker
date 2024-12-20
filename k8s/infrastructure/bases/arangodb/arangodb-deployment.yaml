@@ -46,7 +46,7 @@ spec:
     args:
       - --server.harden
       - --javascript.endpoints-allowlist="^https?://arangodb\.db(:8529)?(/|$)"
-    memoryReservation: 10
+    memoryReservation: 20
     resources:
       requests:
         cpu: 500m
