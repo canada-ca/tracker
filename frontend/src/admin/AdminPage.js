@@ -69,6 +69,7 @@ export default function AdminPage() {
       setOrgDetails({
         slug: data?.findMyOrganizations?.edges[0]?.node?.slug,
         id: data?.findMyOrganizations?.edges[0]?.node?.id,
+        verified: data?.findMyOrganizations?.edges[0]?.node?.verified,
       })
       setSelectedOrg(data?.findMyOrganizations?.edges[0]?.node?.name || 'none')
     }
@@ -95,8 +96,8 @@ export default function AdminPage() {
   } else {
     options = []
     data.findMyOrganizations?.edges.forEach((edge) => {
-      const { slug, name, id } = edge.node
-      options.push({ label: name, value: { slug: slug, id: id } })
+      const { slug, name, id, verified } = edge.node
+      options.push({ label: name, value: { slug: slug, id: id, verified: verified } })
     })
     dropdown = (
       <Dropdown
@@ -177,6 +178,7 @@ export default function AdminPage() {
             activeMenu={activeMenu}
             orgSlug={orgDetails.slug}
             orgId={orgDetails.id}
+            verified={orgDetails.verified}
             permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
             mr="4"
           />

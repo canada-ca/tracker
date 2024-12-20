@@ -1,7 +1,7 @@
 import React from 'react'
 import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import { string } from 'prop-types'
+import { bool, string } from 'prop-types'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { AdminDomains } from './AdminDomains'
@@ -11,7 +11,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
-export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
+export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified }) {
   return (
     <Stack spacing={10}>
       <TourComponent />
@@ -31,7 +31,7 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <AdminDomains orgSlug={orgSlug} orgId={orgId} />
+              <AdminDomains orgSlug={orgSlug} orgId={orgId} verified={verified} permission={permission} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
@@ -61,4 +61,5 @@ AdminPanel.propTypes = {
   orgSlug: string.isRequired,
   permission: string.isRequired,
   orgId: string,
+  verified: bool,
 }
