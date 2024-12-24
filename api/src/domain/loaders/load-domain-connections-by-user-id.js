@@ -508,9 +508,8 @@ export const loadDomainConnectionsByUserId =
       search = cleanseInput(search)
       domainQuery = aql`
         LET searchedDomains = (
-          FOR domain IN domains
+          FOR domain IN collectedDomains
             FILTER LOWER(domain.domain) LIKE LOWER(${search})
-            FILTER domain IN collectedDomains
             RETURN domain
         )
       `
