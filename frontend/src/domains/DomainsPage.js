@@ -306,9 +306,10 @@ export default function DomainsPage() {
         <InfoBox title={t`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
         <InfoBox
-          title={t`WILDCARD`}
-          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+          title={t`WILDCARD SIBLING`}
+          info={t`Tag used to show domains have a wildcard resolver as a sibling.`}
         />
+        <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
         <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
         <InfoBox title={t`ENTRUST`} info={t`Tag used to show domains that have an Entrust certificate.`} />
