@@ -179,7 +179,8 @@ export function AdminDomains({ orgSlug, orgId }) {
     { value: t`INACTIVE`, text: t`Inactive` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
-    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
+    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
