@@ -15,7 +15,7 @@ pycparser==2.21
 PyJWT==2.8.0
 pyleri==1.4.1
 PyNaCl==1.5.0
-python-arango==7.3.4
+python-arango==8.1.4
 python-dotenv==0.21.0
 requests==2.32.3
 requests-file==1.5.1
