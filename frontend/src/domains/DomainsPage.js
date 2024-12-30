@@ -215,6 +215,7 @@ export default function DomainsPage() {
         className="filters"
         filters={filters}
         setFilters={setFilters}
+        resetToFirstPage={resetToFirstPage}
         statusOptions={orderByOptions}
         filterTagOptions={filterTagOptions}
       />
@@ -339,9 +340,13 @@ export default function DomainsPage() {
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
-          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          <AffiliationFilterSwitch
+            isAffiliated={isAffiliated}
+            setIsAffiliated={setIsAffiliated}
+            resetToFirstPage={resetToFirstPage}
+          />
           {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
-          <FilterList filters={filters} setFilters={setFilters} />
+          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
         </Flex>
 
         {domainList}

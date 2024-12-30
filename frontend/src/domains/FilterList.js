@@ -5,7 +5,7 @@ import { Tag, TagCloseButton, TagLabel, TagRightIcon } from '@chakra-ui/tag'
 import { t } from '@lingui/macro'
 import { array, func } from 'prop-types'
 
-export function FilterList({ filters, setFilters }) {
+export function FilterList({ filters, setFilters, resetToFirstPage }) {
   const statuses = {
     HTTPS_STATUS: `HTTPS`,
     HSTS_STATUS: `HSTS`,
@@ -75,7 +75,12 @@ export function FilterList({ filters, setFilters }) {
           <Tag fontSize="lg" borderWidth="1px" borderColor="gray.300" key={idx} m="1" bg={tagBgColour(filterValue)}>
             {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
             {displayTag(filterCategory, filterValue)}
-            <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
+            <TagCloseButton
+              onClick={() => {
+                setFilters(filters.filter((_, i) => i !== idx))
+                resetToFirstPage()
+              }}
+            />
           </Tag>
         )
       })}
@@ -86,4 +91,5 @@ export function FilterList({ filters, setFilters }) {
 FilterList.propTypes = {
   filters: array.isRequired,
   setFilters: func.isRequired,
+  resetToFirstPage: func.isRequired,
 }

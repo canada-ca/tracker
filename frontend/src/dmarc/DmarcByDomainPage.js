@@ -269,7 +269,11 @@ export default function DmarcByDomainPage() {
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
-          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          <AffiliationFilterSwitch
+            isAffiliated={isAffiliated}
+            setIsAffiliated={setIsAffiliated}
+            resetToFirstPage={resetToFirstPage}
+          />
         </Flex>
       )}
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
