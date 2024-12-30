@@ -5,7 +5,7 @@ import { UserIcon } from '../theme/Icons'
 import { t } from '@lingui/macro'
 import { useUserVar } from '../utilities/userState'
 
-export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
+export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated, resetToFirstPage }) {
   const { isLoggedIn } = useUserVar()
   if (!isLoggedIn()) return null
   return (
@@ -16,7 +16,10 @@ export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
           aria-label="Filter list to affiliated resources only."
           mx="2"
           defaultChecked={isAffiliated}
-          onChange={(e) => setIsAffiliated(e.target.checked)}
+          onChange={(e) => {
+            setIsAffiliated(e.target.checked)
+            resetToFirstPage()
+          }}
         />
         <UserIcon color="gray.900" size="lg" />
       </Flex>
@@ -27,4 +30,5 @@ export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
 AffiliationFilterSwitch.propTypes = {
   isAffiliated: bool,
   setIsAffiliated: func,
+  resetToFirstPage: func,
 }

@@ -232,6 +232,7 @@ export function AuditLogTable({ orgId = null }) {
                     } else {
                       setActiveResourceFilters(activeResourceFilters.filter((tag) => tag !== value))
                     }
+                    resetToFirstPage()
                   }}
                 >
                   <Text mx="auto">{text}</Text>
@@ -263,6 +264,7 @@ export function AuditLogTable({ orgId = null }) {
                     } else {
                       setActiveActionFilters(activeActionFilters.filter((tag) => tag !== value))
                     }
+                    resetToFirstPage()
                   }}
                 >
                   <Text mx="auto">{text}</Text>
@@ -278,6 +280,7 @@ export function AuditLogTable({ orgId = null }) {
             onClick={() => {
               setActiveResourceFilters([])
               setActiveActionFilters([])
+              resetToFirstPage()
             }}
           >
             Clear

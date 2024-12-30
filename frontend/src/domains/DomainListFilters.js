@@ -8,6 +8,7 @@ import { array, func } from 'prop-types'
 export function DomainListFilters({
   filters,
   setFilters,
+  resetToFirstPage,
   statusOptions,
   filterTagOptions,
   assetStateOptions = [],
@@ -71,6 +72,7 @@ export function DomainListFilters({
               }),
             ).values(),
           ])
+          resetToFirstPage()
           resetForm()
         }}
       >
@@ -158,6 +160,7 @@ export function DomainListFilters({
 DomainListFilters.propTypes = {
   filters: array,
   setFilters: func,
+  resetToFirstPage: func,
   statusOptions: array,
   filterTagOptions: array,
   assetStateOptions: array,

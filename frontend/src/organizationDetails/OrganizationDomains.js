@@ -134,6 +134,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               className="domain-filters"
               filters={filters}
               setFilters={setFilters}
+              resetToFirstPage={resetToFirstPage}
               statusOptions={orderByOptions}
               filterTagOptions={filterTagOptions}
             />
@@ -143,6 +144,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               className="domain-filters"
               filters={filters}
               setFilters={setFilters}
+              resetToFirstPage={resetToFirstPage}
               statusOptions={orderByOptions}
               filterTagOptions={filterTagOptions}
               assetStateOptions={assetStateOptions}
@@ -301,7 +303,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
-          <FilterList filters={filters} setFilters={setFilters} />
+          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
         </Flex>
       )}
 

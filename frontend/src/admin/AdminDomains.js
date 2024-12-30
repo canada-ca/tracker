@@ -206,6 +206,7 @@ export function AdminDomains({ orgSlug, orgId }) {
               }),
             ).values(),
           ])
+          resetToFirstPage()
           resetForm()
         }}
       >
@@ -453,7 +454,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         />
       </Box>
       <Flex align="center" mb="2">
-        <FilterList filters={filters} setFilters={setFilters} />
+        <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls
