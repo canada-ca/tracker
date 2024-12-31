@@ -540,14 +540,12 @@ export const loadDomainConnectionsByUserId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           ${hasNextPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           ${hasPreviousPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 
