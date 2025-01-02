@@ -288,13 +288,6 @@ export const loadDomainConnectionsByOrgId =
       }
     }
 
-    let sortString
-    if (typeof last !== 'undefined') {
-      sortString = aql`DESC`
-    } else {
-      sortString = aql`ASC`
-    }
-
     let domainFilters = aql``
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
@@ -496,14 +489,14 @@ export const loadDomainConnectionsByOrgId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           ${hasNextPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           ${hasPreviousPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 
