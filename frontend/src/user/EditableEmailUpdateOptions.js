@@ -14,7 +14,6 @@ import {
   ModalOverlay,
   Stack,
   Switch,
-  Text,
   Tooltip,
   useDisclosure,
   useToast,
@@ -143,16 +142,20 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                       >
                         <QuestionOutlineIcon tabIndex={0} />
                       </Tooltip>
-                      <Switch
-                        isFocusable={true}
-                        id="orgFootprint"
-                        mx="2"
-                        defaultChecked={emailUpdateOptions.orgFootprint}
-                        onChange={handleChange}
-                      />
-                      <Text>
+                      <label>
+                        <Switch
+                          name="orgFootprint"
+                          isFocusable={true}
+                          id="orgFootprint"
+                          aria-label="Recent Activity"
+                          mx="2"
+                          defaultChecked={emailUpdateOptions.orgFootprint}
+                          onChange={handleChange}
+                        />
+                      </label>
+                      <Badge variant="outline" color="gray.900" p="1">
                         <Trans>Recent Activity</Trans>
-                      </Text>
+                      </Badge>
                     </Flex>
                     <Flex>
                       <Tooltip
@@ -160,16 +163,20 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                       >
                         <QuestionOutlineIcon tabIndex={0} />
                       </Tooltip>
-                      <Switch
-                        isFocusable={true}
-                        id="progressReport"
-                        mx="2"
-                        defaultChecked={emailUpdateOptions.progressReport}
-                        onChange={handleChange}
-                      />
-                      <Text>
+                      <label>
+                        <Switch
+                          name="Progress Report"
+                          isFocusable={true}
+                          id="progressReport"
+                          aria-label="Progress Report"
+                          mx="2"
+                          defaultChecked={emailUpdateOptions.progressReport}
+                          onChange={handleChange}
+                        />
+                      </label>
+                      <Badge variant="outline" color="gray.900" p="1">
                         <Trans>Progress Report</Trans>
-                      </Text>
+                      </Badge>
                     </Flex>
                   </Stack>
                 </ModalBody>
