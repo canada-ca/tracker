@@ -38,6 +38,8 @@ import { CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
 import { InsideUserSwitch } from './InsideUserSwitch'
 import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { EditableEmailSubscriptionOptions } from './EditableEmailSubscriptionOptions'
 
 export default function UserPage() {
   const toast = useToast()
@@ -126,6 +128,7 @@ export default function UserPage() {
     phoneValidated,
     insideUser,
     receiveUpdateEmails,
+    emailUpdateOptions,
   } = queryUserData?.userPage
 
   return (
@@ -155,8 +158,15 @@ export default function UserPage() {
             mb="8"
           />
 
+          <ABTestWrapper>
+            <ABTestVariant name="A">
+              <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
+            </ABTestVariant>
+            <ABTestVariant name="B">
+              <EditableEmailSubscriptionOptions emailUpdateOptions={emailUpdateOptions} />
+            </ABTestVariant>
+          </ABTestWrapper>
           <InsideUserSwitch insideUser={insideUser || false} />
-          <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
 
           <Flex mt="auto">
             <Button
@@ -168,7 +178,7 @@ export default function UserPage() {
               ml="auto"
               mb={2}
             >
-              <Trans> Close Account </Trans>
+              <Trans>Close Account</Trans>
             </Button>
           </Flex>
         </Box>
