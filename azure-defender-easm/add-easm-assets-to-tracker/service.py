@@ -1,7 +1,7 @@
 import logging
 import os
 import json
-from datetime import date
+from datetime import datetime
 from arango import ArangoClient
 
 from dotenv import load_dotenv
@@ -127,24 +127,25 @@ async def main():
             logger.error(f"Error occured when creating domain: {e}")
             return None
 
-    def create_claim(org_id, domain_id, domain_name, txn_col):
+    async def create_claim(org_id, domain_id, domain_name, txn_col):
         insert_claim = {
             "_from": org_id,
             "_to": domain_id,
             "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "outsideComment": "",
-            "firstSeen": date.today().isoformat(),
+            "firstSeen": datetime.today().isoformat(),
         }
 
         try:
-            txn_col.insert(insert_claim)
+            created_claim = txn_col.insert(insert_claim)
             logger.info(f"Successfully created claim for domain: {domain_name}")
+            return created_claim
         except Exception as e:
             logger.error("Error occured when creating claim for ", e)
+            return None
 
-    def log_activity(domain, org_id, trx_col):
+    async def log_activity(domain, org_key, txn_col):
         insert_activity = {
-            "timestamp": date.today().isoformat(),
+            "timestamp": datetime.today().isoformat(),
             "initiatedBy": {
                 "id": "easm",
                 "userName": "automated-discovery-service",
@@ -152,31 +153,33 @@ async def main():
             },
             "target": {
                 "resource": domain,
-                "updatedProperties": {
-                    "name": "tags",
-                    "oldValue": [],
-                    "newValue": [{"en": "NEW", "fr": "NOUVEAU"}],
-                },
-                "organization": {
-                    "id": org_id,
-                },
+                "updatedProperties": [
+                    {
+                        "name": "tags",
+                        "oldValue": [],
+                        "newValue": [{"en": "NEW", "fr": "NOUVEAU"}],
+                    }
+                ],
+                "organization": {"id": org_key},
                 "resourceType": "domain",
             },
             "action": "add",
-            "reason": "",
+            "reason": None,
         }
 
         try:
-            trx_col.insert(insert_activity)
+            created_log = txn_col.insert(insert_activity)
             logger.info(f"Successfully logged activity for domain: {domain}")
+            return created_log
         except Exception as e:
             logger.error(f"Error occured when logging activity for {domain}: {e}")
+            return None
 
     # main logic
     async def add_discovered_domain(domains, org_id):
         for domain in domains:
             # check if domain exists in system
-            domain_exists = get_domain_exists(domains)
+            domain_exists = get_domain_exists(domain)
             if domain_exists is None:
                 logger.error(f"Error occured when checking if domain exists: {e}")
                 continue
@@ -199,40 +202,56 @@ async def main():
 
             # create domain
             created_domain = await create_domain(domain=domain, txn_col=txn_col_domains)
+            if created_domain is None:
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
             # add domain to org
-            create_claim(
+            created_claim = await create_claim(
                 org_id=org_id,
                 domain_id=created_domain["_id"],
                 domain_name=domain,
                 txn_col=txn_col_claims,
             )
+            if created_claim is None:
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
             # add activity logging
-            log_activity(domain=domain, org_id=org_id, trx_col=txn_col_audit_logs)
+            org_key = org_id.split("/")[-1]
+            created_log = await log_activity(
+                domain=domain, org_key=org_key, txn_col=txn_col_audit_logs
+            )
+            if created_log is None:
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
 
             # commit transaction
             try:
                 txn_db.commit_transaction()
                 logger.info(f"Successfully committed transaction for domain: {domain}")
+
+                # publish domain to NATS
+                try:
+                    await publish(
+                        "scans.requests",
+                        json.dumps(
+                            {
+                                "domain": domain,
+                                "domain_key": created_domain["_key"],
+                            }
+                        ).encode(),
+                    )
+                    logger.info(f"Published domain: {domain} to NATS")
+                except Exception as e:
+                    logger.error(f"Failed to publish domain: {domain} to NATS: {e}")
+
             except Exception as e:
                 logger.error(f"Failed to commit transaction for domain: {domain}: {e}")
                 # abort transaction
                 txn_db.abort_transaction()
                 continue
-
-            # publish domain to NATS
-            try:
-                await publish(
-                    "scans.requests",
-                    json.dumps(
-                        {
-                            "domain": created_domain["domain"],
-                            "domain_key": created_domain["_key"],
-                        }
-                    ).encode(),
-                )
-                logger.info(f"Published domain: {domain} to NATS")
-            except Exception as e:
-                logger.error(f"Failed to publish domain: {domain} to NATS: {e}")
 
     verified_orgs = get_verified_orgs()
     for org in verified_orgs:
@@ -259,7 +278,9 @@ async def main():
 
     try:
         unlabelled_assets = get_unlabelled_assets()
-        await add_discovered_domain(unlabelled_assets, UNCLAIMED_ID)
+        domains = get_org_domains(org_id)
+        new_domains = list(set(unlabelled_assets) - set(domains))
+        await add_discovered_domain(new_domains, UNCLAIMED_ID)
     except Exception as e:
         logger.error(f"Error when attempting to add new assets to unclaimed org: {e}")
 
