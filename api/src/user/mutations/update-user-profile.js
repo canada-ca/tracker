@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 
 import { TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
+import { emailSubscriptionsInput } from '../inputs/email-subscription-options'
 
 const { AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
@@ -32,6 +33,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
     receiveUpdateEmails: {
       type: GraphQLBoolean,
       description: 'The updated boolean which represents if the user wants to receive update emails.',
+    },
+    emailUpdateOptions: {
+      type: emailSubscriptionsInput,
+      description:
+        'A number of different emails ther user can optionally receieve periodically that provide updates about their organization.',
     },
   }),
   outputFields: () => ({
@@ -63,6 +69,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
     const insideUserBool = args.insideUser
     const receiveUpdateEmailsBool = args.receiveUpdateEmails
+    const emailUpdateOptions = cleanseInput(args.emailUpdateOptions)
 
     // Get user info from DB
     const user = await userRequired()
@@ -132,6 +139,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       insideUser: typeof insideUserBool !== 'undefined' ? insideUserBool : user?.insideUser,
       receiveUpdateEmails:
         typeof receiveUpdateEmailsBool !== 'undefined' ? receiveUpdateEmailsBool : user?.receiveUpdateEmails,
+      emailUpdateOptions: typeof emailUpdateOptions !== 'undefined' ? emailUpdateOptions : user?.emailUpdateOptions,
     }
 
     // Setup Transaction
