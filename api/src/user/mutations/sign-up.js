@@ -6,7 +6,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ms from 'ms'
-import { emailSubscriptionOptionsType } from '../objects/email-subscription-options'
+import { emailUpdateOptionsType } from '../objects/email-update-options'
 
 const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY, TRACKER_PRODUCTION } = process.env
 
@@ -118,9 +118,7 @@ export const signUp = new mutationWithClientMutationId({
     const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
     // dynamically grabs email sub options
-    const emailUpdateOptions = Object.fromEntries(
-      emailSubscriptionOptionsType.getFields().map((option) => [option, true]),
-    )
+    const emailUpdateOptions = Object.fromEntries(emailUpdateOptionsType.getFields().map((option) => [option, true]))
 
     // Create User Structure for insert
     const user = {

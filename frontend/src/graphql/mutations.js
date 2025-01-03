@@ -119,7 +119,7 @@ export const UPDATE_USER_PROFILE = gql`
     $tfaSendMethod: TFASendMethodEnum
     $insideUser: Boolean
     $receiveUpdateEmails: Boolean
-    $emailUpdateOptions: EmailSubscriptionsInput
+    $emailUpdateOptions: emailUpdatesInput
   ) {
     updateUserProfile(
       input: {

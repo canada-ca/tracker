@@ -5,7 +5,7 @@ import { t } from '@lingui/macro'
 
 import { TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
-import { emailSubscriptionsInput } from '../inputs/email-subscription-options'
+import { emailUpdatesInput } from '../inputs/email-update-options'
 
 const { AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
@@ -35,7 +35,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       description: 'The updated boolean which represents if the user wants to receive update emails.',
     },
     emailUpdateOptions: {
-      type: emailSubscriptionsInput,
+      type: emailUpdatesInput,
       description:
         'A number of different emails ther user can optionally receieve periodically that provide updates about their organization.',
     },

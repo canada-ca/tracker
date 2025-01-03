@@ -1,7 +1,7 @@
 import { GraphQLBoolean, GraphQLInputObjectType } from 'graphql'
 
-export const emailSubscriptionsInput = new GraphQLInputObjectType({
-  name: 'EmailSubscriptionsInput',
+export const emailUpdatesInput = new GraphQLInputObjectType({
+  name: 'emailUpdatesInput',
   fields: () => ({
     orgFootprint: {
       type: GraphQLBoolean,

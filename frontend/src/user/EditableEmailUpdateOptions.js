@@ -28,7 +28,7 @@ import { RadioCheckedIcon, RadioUncheckedIcon } from '../theme/Icons'
 import { Formik } from 'formik'
 import { EditIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 
-export function EditableEmailSubscriptionOptions({ emailUpdateOptions, ...props }) {
+export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
   const toast = useToast()
   const { login, currentUser } = useUserVar()
   const initialFocusRef = useRef()
@@ -188,6 +188,6 @@ export function EditableEmailSubscriptionOptions({ emailUpdateOptions, ...props 
   )
 }
 
-EditableEmailSubscriptionOptions.propTypes = {
+EditableEmailUpdateOptions.propTypes = {
   emailUpdateOptions: object,
 }

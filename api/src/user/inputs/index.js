@@ -1,2 +1,2 @@
 export * from './user-order'
-export * from './email-subscription-options.js'
+export * from './email-update-options.js'

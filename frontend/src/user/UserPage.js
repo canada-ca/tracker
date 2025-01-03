@@ -39,7 +39,7 @@ import { NotificationBanner } from '../app/NotificationBanner'
 import { InsideUserSwitch } from './InsideUserSwitch'
 import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
-import { EditableEmailSubscriptionOptions } from './EditableEmailSubscriptionOptions'
+import { EditableEmailUpdateOptions } from './EditableEmailUpdateOptions'
 
 export default function UserPage() {
   const toast = useToast()
@@ -163,7 +163,7 @@ export default function UserPage() {
               <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
             </ABTestVariant>
             <ABTestVariant name="B">
-              <EditableEmailSubscriptionOptions emailUpdateOptions={emailUpdateOptions} />
+              <EditableEmailUpdateOptions emailUpdateOptions={emailUpdateOptions} />
             </ABTestVariant>
           </ABTestWrapper>
           <InsideUserSwitch insideUser={insideUser || false} />
