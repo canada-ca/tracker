@@ -69,7 +69,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
     const insideUserBool = args.insideUser
     const receiveUpdateEmailsBool = args.receiveUpdateEmails
-    const emailUpdateOptions = cleanseInput(args.emailUpdateOptions)
+    const emailUpdateOptions = args.emailUpdateOptions
 
     // Get user info from DB
     const user = await userRequired()

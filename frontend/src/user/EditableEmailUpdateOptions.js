@@ -136,7 +136,7 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                 <ModalCloseButton />
                 <ModalBody>
                   <Stack spacing="4" p="6">
-                    <Flex>
+                    <Flex align="center">
                       <Tooltip
                         label={t`For organization admins interested in receiving email updates on new activity in their organizations.`}
                       >
@@ -157,7 +157,7 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                         <Trans>Recent Activity</Trans>
                       </Badge>
                     </Flex>
-                    <Flex>
+                    <Flex align="center">
                       <Tooltip
                         label={t`For organization admins interested in receiving monthly email updates how their organization is progressing to 100% compliance.`}
                       >
@@ -165,7 +165,7 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                       </Tooltip>
                       <label>
                         <Switch
-                          name="Progress Report"
+                          name="progressReport"
                           isFocusable={true}
                           id="progressReport"
                           aria-label="Progress Report"
