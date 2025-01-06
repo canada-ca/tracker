@@ -110,7 +110,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
-    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const assetStateOptions = [
@@ -175,7 +174,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             wildcardSibling,
             wildcardEntry,
             webScanPending,
-            hasEntrustCertificate,
             userHasPermission,
             cveDetected,
           },
@@ -196,7 +194,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               wildcardSibling={wildcardSibling}
               wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
-              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
               mb="3"

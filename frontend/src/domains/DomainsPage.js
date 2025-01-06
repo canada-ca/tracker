@@ -134,7 +134,6 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -240,7 +239,6 @@ export default function DomainsPage() {
             wildcardSibling,
             wildcardEntry,
             webScanPending,
-            hasEntrustCertificate,
             userHasPermission,
             cveDetected,
           },
@@ -259,7 +257,6 @@ export default function DomainsPage() {
               wildcardSibling={wildcardSibling}
               wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
-              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
               mb="3"
@@ -312,7 +309,6 @@ export default function DomainsPage() {
         <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
         <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
-        <InfoBox title={t`ENTRUST`} info={t`Tag used to show domains that have an Entrust certificate.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>

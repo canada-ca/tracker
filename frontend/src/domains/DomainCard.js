@@ -25,7 +25,6 @@ function DomainCard({
   wildcardSibling,
   wildcardEntry,
   webScanPending,
-  hasEntrustCertificate,
   userHasPermission,
   cveDetected,
   ...rest
@@ -149,11 +148,6 @@ function DomainCard({
                 {wildcardSibling && (
                   <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
                     {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
-                  </Badge>
-                )}
-                {hasEntrustCertificate && (
-                  <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
-                    <Trans>Entrust Certificate</Trans>
                   </Badge>
                 )}
               </ABTestVariant>
@@ -291,7 +285,6 @@ DomainCard.propTypes = {
   wildcardSibling: bool,
   wildcardEntry: bool,
   webScanPending: bool,
-  hasEntrustCertificate: bool,
   userHasPermission: bool,
   assetState: string,
   cveDetected: bool,
