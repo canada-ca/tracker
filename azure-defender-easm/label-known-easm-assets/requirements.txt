@@ -1,6 +1,6 @@
 azure-identity==1.16.1
 azure-defender-easm==1.0.0b1
-azure-kusto-data==4.3.1
+azure-kusto-data==4.6.2
 python-dotenv==1.0.0
 python-arango==7.3.4
 numpy==1.26.4
