@@ -37,7 +37,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     emailUpdateOptions: {
       type: emailUpdatesInput,
       description:
-        'A number of different emails ther user can optionally receieve periodically that provide updates about their organization.',
+        'A number of different emails the user can optionally receieve periodically that provide updates about their organization.',
     },
   }),
   outputFields: () => ({
