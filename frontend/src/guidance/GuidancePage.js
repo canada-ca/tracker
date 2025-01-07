@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
-import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
 import { t, Trans } from '@lingui/macro'
@@ -54,7 +54,7 @@ function GuidancePage() {
     errorPolicy: 'all',
   })
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const { isLoggedIn, isEmailValidated } = useUserVar()
   const { from } = location.state || { from: { pathname: '/domains' } }
@@ -82,13 +82,13 @@ function GuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/domains/${domain}/${tab}`)
+      navigate(`/domains/${domain}/${tab}`, { replace: true })
     }
   }
 
   useEffect(() => {
     if (!activeTab) {
-      history.replace(`/domains/${domain}/${defaultActiveTab}`)
+      navigate(`/domains/${domain}/${defaultActiveTab}`, { replace: true })
     }
   }, [activeTab, history, domainName, defaultActiveTab])
 
@@ -287,7 +287,7 @@ function GuidancePage() {
       <Flex flexDirection={{ base: 'column', md: 'row' }} alignItems="center" mb="4">
         <IconButton
           icon={<ArrowLeftIcon />}
-          onClick={() => history.push(from)}
+          onClick={() => navigate(from)}
           color="gray.900"
           fontSize="2xl"
           aria-label="back"

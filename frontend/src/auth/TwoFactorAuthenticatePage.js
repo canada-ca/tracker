@@ -2,7 +2,7 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { ErrorMessage, Formik } from 'formik'
 
@@ -15,7 +15,7 @@ import { AUTHENTICATE } from '../graphql/mutations'
 
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserVar()
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const toast = useToast()
   const { i18n } = useLingui()
@@ -32,7 +32,7 @@ export default function TwoFactorAuthenticatePage() {
         isClosable: true,
         position: 'top-left',
       })
-      history.push('/sign-in')
+      navigate('/sign-in')
     },
     onCompleted({ authenticate }) {
       // User successfully completes tfa validation
@@ -46,7 +46,7 @@ export default function TwoFactorAuthenticatePage() {
           affiliations: authenticate.result.user.affiliations,
         })
         // redirect to the home page.
-        history.replace(from)
+        navigate(from, { replace: true })
         // Display a welcome message
         toast({
           title: i18n._(t`Sign In.`),
@@ -67,7 +67,7 @@ export default function TwoFactorAuthenticatePage() {
           isClosable: true,
           position: 'top-left',
         })
-        history.push('/sign-in')
+        navigate('/sign-in')
       } else {
         toast({
           title: t`Incorrect send method received.`,
@@ -77,7 +77,7 @@ export default function TwoFactorAuthenticatePage() {
           isClosable: true,
           position: 'top-left',
         })
-        history.push('/sign-in')
+        navigate('/sign-in')
       }
     },
   })
