@@ -6,6 +6,7 @@ import { affiliationOrgOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
+import { emailUpdateOptionsType } from './email-update-options'
 
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
@@ -55,6 +56,12 @@ export const userPersonalType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Does the user want to receive update emails.',
       resolve: ({ receiveUpdateEmails }) => receiveUpdateEmails,
+    },
+    emailUpdateOptions: {
+      type: emailUpdateOptionsType,
+      description:
+        'A number of different emails the user can optionally receieve periodically that provide updates about their organization.',
+      resolve: ({ emailUpdateOptions }) => emailUpdateOptions,
     },
     affiliations: {
       type: affiliationConnection.connectionType,
