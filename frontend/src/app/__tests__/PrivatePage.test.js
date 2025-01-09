@@ -46,9 +46,7 @@ describe('<PrivatePage />', () => {
       expect(queryAllByText('foo')).toHaveLength(1)
     })
   })
-})
 
-describe('<PrivatePage />', () => {
   describe('when userName is falsy', () => {
     it(`executes its child as a function`, async () => {
       const { queryAllByText } = render(
@@ -61,12 +59,7 @@ describe('<PrivatePage />', () => {
               })}
             >
               <MemoryRouter initialEntries={['/organizations/foo']}>
-                <PrivatePage
-                  isLoginRequired={true}
-                  path="/organizations/:orgSlug"
-                  title={'foo'}
-                  exact
-                >
+                <PrivatePage isLoginRequired={true} path="/organizations/:orgSlug" title={'foo'} exact>
                   {({ match }) => <p>{match.params.orgSlug}</p>}
                 </PrivatePage>
               </MemoryRouter>
@@ -78,9 +71,7 @@ describe('<PrivatePage />', () => {
       expect(queryAllByText('foo')).toHaveLength(0)
     })
   })
-})
 
-describe('<PrivatePage />', () => {
   describe('when a userName is defined', () => {
     it(`passes props to the child`, async () => {
       const { queryAllByText } = render(
@@ -93,12 +84,7 @@ describe('<PrivatePage />', () => {
               })}
             >
               <MemoryRouter initialEntries={['/organizations/foo']}>
-                <PrivatePage
-                  isLoginRequired={true}
-                  path="/organizations/:orgSlug"
-                  title={'foo'}
-                  exact
-                >
+                <PrivatePage isLoginRequired={true} path="/organizations/:orgSlug" title={'foo'} exact>
                   {({ match }) => <p>{match.params.orgSlug}</p>}
                 </PrivatePage>
               </MemoryRouter>
