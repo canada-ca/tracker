@@ -41,7 +41,7 @@ export function NotificationBanner({
   }
 
   return (
-    <Box {...props} p="2">
+    <Box {...props} py="2">
       <Alert status={status}>
         <Flex
           maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
