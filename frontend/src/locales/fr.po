@@ -177,7 +177,7 @@ msgstr "404 - Page non trouvée"
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
-#: src/admin/AdminDomains.js:523
+#: src/admin/AdminDomains.js:525
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous. Pour qu'un domaine n'existe plus, il doit être supprimé du DNS. Si vous devez supprimer ce domaine pour une autre raison, veuillez contacter TBS Cyber Security."
 
@@ -185,7 +185,7 @@ msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "Une politique DMARC minimale de \"p=none\" avec au moins une adresse définie comme destinataire des rapports agrégés."
 
-#: src/dmarc/DmarcByDomainPage.js:317
+#: src/dmarc/DmarcByDomainPage.js:335
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "Une ventilation plus détaillée de chaque domaine peut être trouvée en cliquant sur son adresse dans la première colonne."
 
@@ -278,7 +278,7 @@ msgstr "Activité"
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/admin/AdminDomains.js:435
+#: src/admin/AdminDomains.js:437
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -340,27 +340,27 @@ msgstr "Affiliations :"
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Vous avez déjà un compte ? <0>Connecter</0>"
 
-#: src/admin/AdminDomains.js:572
+#: src/admin/AdminDomains.js:574
 #: src/organizationDetails/OrganizationDomains.js:263
 msgid "An asset confirmed to belong to the organization."
 msgstr "Se confirma que un activo pertenece a la organización."
 
-#: src/admin/AdminDomains.js:575
+#: src/admin/AdminDomains.js:577
 #: src/organizationDetails/OrganizationDomains.js:266
 msgid "An asset that is owned by a third party and supports the operation of organization-owned assets."
 msgstr "Activo propiedad de un tercero que sirve de apoyo al funcionamiento de los activos propiedad de la organización."
 
-#: src/admin/AdminDomains.js:579
+#: src/admin/AdminDomains.js:581
 #: src/organizationDetails/OrganizationDomains.js:270
 msgid "An asset that is relevant to the organization but is not a direct part of the attack surface."
 msgstr "Un activo que es relevante para la organización pero que no forma parte directamente de la superficie de ataque."
 
-#: src/admin/AdminDomains.js:583
+#: src/admin/AdminDomains.js:585
 #: src/organizationDetails/OrganizationDomains.js:274
 msgid "An asset that is suspected to belong to the organization but has not been confirmed."
 msgstr "Activo que se sospecha que pertenece a la organización pero que no se ha confirmado."
 
-#: src/admin/AdminDomains.js:587
+#: src/admin/AdminDomains.js:589
 #: src/organizationDetails/OrganizationDomains.js:278
 msgid "An asset that requires further investigation to determine its relationship to the organization."
 msgstr "Un activo que requiere más investigación para determinar su relación con la organización."
@@ -515,7 +515,7 @@ msgstr "Appliquez des filtres pour affiner les résultats de votre recherche de 
 #: src/admin/AdminDomainCard.js:9
 #: src/admin/AdminDomainModal.js:292
 #: src/admin/AdminDomains.js:284
-#: src/admin/AdminDomains.js:572
+#: src/admin/AdminDomains.js:574
 #: src/domains/DomainCard.js:99
 #: src/domains/FilterList.js:22
 #: src/organizationDetails/OrganizationDomains.js:117
@@ -578,11 +578,11 @@ msgstr "Évaluer l’état actuel."
 msgid "Asset State"
 msgstr "État des actifs"
 
-#: src/admin/AdminDomains.js:566
+#: src/admin/AdminDomains.js:568
 msgid "Asset States"
 msgstr "Estados del activo"
 
-#: src/admin/AdminPage.js:223
+#: src/admin/AdminPage.js:225
 #: src/admin/AuditLogTable.js:95
 msgid "Audit Logs"
 msgstr "Journaux d'audit"
@@ -672,7 +672,7 @@ msgstr "Annuler"
 #: src/admin/AdminDomainCard.js:12
 #: src/admin/AdminDomainModal.js:301
 #: src/admin/AdminDomains.js:293
-#: src/admin/AdminDomains.js:582
+#: src/admin/AdminDomains.js:584
 #: src/domains/DomainCard.js:102
 #: src/domains/FilterList.js:25
 #: src/organizationDetails/OrganizationDomains.js:120
@@ -816,7 +816,7 @@ msgstr "Cliquez pour plus d'informations sur les statuts, les étiquettes et les
 msgid "Click for guidance on getting started with Tracker and frequently asked questions."
 msgstr "Cliquez pour obtenir des conseils sur la façon de démarrer avec Tracker et les questions les plus fréquentes."
 
-#: src/admin/AdminPage.js:138
+#: src/admin/AdminPage.js:139
 msgid "Click here."
 msgstr "Cliquez ici."
 
@@ -867,7 +867,7 @@ msgid "Configuration requirements for web sites and services completely met"
 msgstr "Les exigences de configuration des sites et services web sont entièrement satisfaites"
 
 #: src/admin/AdminDomainModal.js:324
-#: src/admin/AdminDomains.js:558
+#: src/admin/AdminDomains.js:560
 #: src/admin/OrganizationInformation.js:345
 #: src/admin/OrganizationInformation.js:436
 #: src/admin/SuperAdminUserList.js:427
@@ -893,7 +893,7 @@ msgstr "Confirmer le nouveau mot de passe:"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe:"
 
-#: src/admin/AdminDomains.js:518
+#: src/admin/AdminDomains.js:520
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine:"
 
@@ -993,7 +993,7 @@ msgstr "Créer un compte"
 msgid "Create an organization"
 msgstr "Créer une organisation"
 
-#: src/admin/AdminPage.js:165
+#: src/admin/AdminPage.js:166
 #: src/app/App.js:355
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
@@ -1082,7 +1082,7 @@ msgstr "Supprimer"
 #: src/admin/AdminDomainCard.js:10
 #: src/admin/AdminDomainModal.js:295
 #: src/admin/AdminDomains.js:287
-#: src/admin/AdminDomains.js:574
+#: src/admin/AdminDomains.js:576
 #: src/domains/DomainCard.js:100
 #: src/domains/FilterList.js:23
 #: src/organizationDetails/OrganizationDomains.js:118
@@ -1285,8 +1285,8 @@ msgstr "Statut DMARC"
 #: src/app/App.js:144
 #: src/app/App.js:317
 #: src/app/FloatingMenu.js:131
-#: src/dmarc/DmarcByDomainPage.js:168
-#: src/dmarc/DmarcByDomainPage.js:226
+#: src/dmarc/DmarcByDomainPage.js:171
+#: src/dmarc/DmarcByDomainPage.js:229
 msgid "DMARC Summaries"
 msgstr "Résumés DMARC"
 
@@ -1316,8 +1316,8 @@ msgid "DOES NOT EQUAL"
 msgstr "N'EST PAS ÉGAL"
 
 #: src/admin/AuditLogTable.js:77
-#: src/dmarc/DmarcByDomainPage.js:111
-#: src/dmarc/DmarcByDomainPage.js:295
+#: src/dmarc/DmarcByDomainPage.js:114
+#: src/dmarc/DmarcByDomainPage.js:313
 #: src/domains/DomainsPage.js:284
 #: src/domains/DomainsPage.js:333
 #: src/organizationDetails/OrganizationDomains.js:226
@@ -1357,7 +1357,7 @@ msgstr "Domaine supprimé de {orgSlug}"
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
-#: src/admin/AdminDomains.js:420
+#: src/admin/AdminDomains.js:422
 #: src/components/fields/DomainField.js:38
 msgid "Domain URL"
 msgstr "URL du domaine"
@@ -1671,8 +1671,8 @@ msgstr "Échec"
 msgid "Fail DKIM"
 msgstr "Échec DKIM"
 
-#: src/dmarc/DmarcByDomainPage.js:143
-#: src/dmarc/DmarcByDomainPage.js:309
+#: src/dmarc/DmarcByDomainPage.js:146
+#: src/dmarc/DmarcByDomainPage.js:327
 msgid "Fail DKIM %"
 msgstr "Échec DKIM %"
 
@@ -1683,8 +1683,8 @@ msgstr "Échec DKIM %"
 msgid "Fail SPF"
 msgstr "Échec du SPF"
 
-#: src/dmarc/DmarcByDomainPage.js:150
-#: src/dmarc/DmarcByDomainPage.js:305
+#: src/dmarc/DmarcByDomainPage.js:153
+#: src/dmarc/DmarcByDomainPage.js:323
 msgid "Fail SPF %"
 msgstr "Échec du SPF %"
 
@@ -1743,7 +1743,7 @@ msgstr "Filtré"
 #~ msgstr "Filtres"
 
 #: src/admin/AdminDomains.js:219
-#: src/dmarc/DmarcByDomainPage.js:270
+#: src/dmarc/DmarcByDomainPage.js:273
 #: src/domains/DomainsPage.js:342
 #: src/organizationDetails/OrganizationDomains.js:305
 #: src/organizations/Organizations.js:235
@@ -1832,13 +1832,13 @@ msgstr "Français"
 msgid "Frequently Asked Questions"
 msgstr "Foire aux questions"
 
-#: src/dmarc/DmarcByDomainPage.js:157
-#: src/dmarc/DmarcByDomainPage.js:313
+#: src/dmarc/DmarcByDomainPage.js:160
+#: src/dmarc/DmarcByDomainPage.js:331
 msgid "Full Fail %"
 msgstr "Échec total %"
 
-#: src/dmarc/DmarcByDomainPage.js:136
-#: src/dmarc/DmarcByDomainPage.js:301
+#: src/dmarc/DmarcByDomainPage.js:139
+#: src/dmarc/DmarcByDomainPage.js:319
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
@@ -1956,7 +1956,7 @@ msgstr "Vulnérabilité Heartbleed"
 #~ msgid "Here you can filter the list of organizations to only show verified organizations"
 #~ msgstr "Vous pouvez filtrer la liste des organisations pour n'afficher que les organisations vérifiées."
 
-#: src/admin/AdminPage.js:130
+#: src/admin/AdminPage.js:131
 msgid "here."
 msgstr "ici."
 
@@ -2229,6 +2229,11 @@ msgstr "Mise en œuvre : <0>Conseils de mise en œuvre : protection du domaine d
 msgid "Implemented"
 msgstr "Mis en œuvre"
 
+#: src/dmarc/DmarcByDomainPage.js:286
+#: src/dmarc/DmarcReportPage.js:669
+msgid "Important Notice:"
+msgstr "Avis important :"
+
 #: src/guidance/AdditionalFindings.js:140
 msgid "Improving GC Cyber Security Health SPIN"
 msgstr "Renforcement de la cybersécurité au gouvernement du Canada AMOPS"
@@ -2469,7 +2474,7 @@ msgstr "Est aligné sur la norme DKIM. Peut être vrai ou faux."
 msgid "Is SPF aligned. Can be true or false."
 msgstr "Est aligné sur le SPF. Peut être vrai ou faux."
 
-#: src/admin/AdminPage.js:135
+#: src/admin/AdminPage.js:136
 msgid "Is your organization not using Tracker yet?"
 msgstr "Votre organisation n'utilise pas encore Tracker ?"
 
@@ -2610,7 +2615,7 @@ msgstr "Liste des balises d'orientation"
 msgid "Loading {children}..."
 msgstr "Chargement {children}..."
 
-#: src/dmarc/DmarcByDomainPage.js:242
+#: src/dmarc/DmarcByDomainPage.js:245
 msgid "Loading Data..."
 msgstr "Chargement des données..."
 
@@ -2696,7 +2701,7 @@ msgstr "Surveiller les rapports DMARC."
 #: src/admin/AdminDomainCard.js:11
 #: src/admin/AdminDomainModal.js:298
 #: src/admin/AdminDomains.js:290
-#: src/admin/AdminDomains.js:578
+#: src/admin/AdminDomains.js:580
 #: src/domains/DomainCard.js:101
 #: src/domains/FilterList.js:24
 #: src/organizationDetails/OrganizationDomains.js:119
@@ -3153,8 +3158,8 @@ msgstr "Organisation non mise à jour"
 msgid "Organization owns this domain, but it is outside the allowed scope"
 msgstr "L'organisation possède ce domaine, mais il est en dehors du champ d'application autorisé"
 
-#: src/admin/AdminPage.js:87
-#: src/admin/AdminPage.js:104
+#: src/admin/AdminPage.js:88
+#: src/admin/AdminPage.js:105
 #: src/admin/UserListModal.js:237
 msgid "Organization:"
 msgstr "Organisation:"
@@ -3163,7 +3168,7 @@ msgstr "Organisation:"
 msgid "Organization(s):"
 msgstr "Organisation(s) :"
 
-#: src/admin/AdminPage.js:221
+#: src/admin/AdminPage.js:223
 #: src/app/App.js:134
 #: src/app/App.js:254
 #: src/app/FloatingMenu.js:103
@@ -3490,7 +3495,7 @@ msgstr "Conseils de lecture"
 msgid "Read Guidance"
 msgstr "Conseils de lecture"
 
-#: src/admin/AdminDomains.js:532
+#: src/admin/AdminDomains.js:534
 #: src/admin/AuditLogTable.js:132
 msgid "Reason"
 msgstr "Raison"
@@ -3539,7 +3544,7 @@ msgstr "Rappelle-toi de moi"
 msgid "Remove"
 msgstr "Retirer"
 
-#: src/admin/AdminDomains.js:512
+#: src/admin/AdminDomains.js:514
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -3608,7 +3613,7 @@ msgstr "Exigences : <0>Exigences de configuration de la gestion des sites et ser
 #: src/admin/AdminDomainCard.js:13
 #: src/admin/AdminDomainModal.js:304
 #: src/admin/AdminDomains.js:296
-#: src/admin/AdminDomains.js:586
+#: src/admin/AdminDomains.js:588
 #: src/domains/DomainCard.js:103
 #: src/domains/FilterList.js:26
 #: src/organizationDetails/OrganizationDomains.js:121
@@ -3730,7 +3735,7 @@ msgstr "SCAN EN ATTENTE"
 msgid "Scan Request"
 msgstr "Demande de numérisation"
 
-#: src/admin/AdminDomains.js:421
+#: src/admin/AdminDomains.js:423
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
@@ -3746,8 +3751,8 @@ msgstr "Rechercher les éléments en échec de DKIM"
 msgid "Search DMARC Failing Items"
 msgstr "Recherche d'éléments défaillants DMARC"
 
-#: src/dmarc/DmarcByDomainPage.js:200
-#: src/dmarc/DmarcByDomainPage.js:256
+#: src/dmarc/DmarcByDomainPage.js:203
+#: src/dmarc/DmarcByDomainPage.js:259
 #: src/domains/DomainsPage.js:334
 #: src/organizationDetails/OrganizationDomains.js:296
 msgid "Search for a domain"
@@ -3781,7 +3786,7 @@ msgstr "Rechercher une organisation"
 msgid "Search for domains here."
 msgstr "Recherchez des domaines ici."
 
-#: src/admin/AdminPage.js:127
+#: src/admin/AdminPage.js:128
 msgid "Search for your organization to request an invite"
 msgstr "Recherchez votre organisation pour demander une invitation"
 
@@ -3793,7 +3798,7 @@ msgstr "Recherche d'éléments entièrement alignés"
 msgid "Search SPF Failing Items"
 msgstr "Rechercher les éléments défaillants du SPF"
 
-#: src/admin/AdminDomains.js:410
+#: src/admin/AdminDomains.js:412
 #: src/admin/UserList.js:153
 #: src/components/ReactTableGlobalFilter.js:36
 #: src/components/SearchBox.js:46
@@ -3812,7 +3817,7 @@ msgstr "Voir les en-têtes"
 #~ msgid "Select a reason for adding this outside domain"
 #~ msgstr "Sélectionnez une raison pour l'ajout de ce domaine extérieur"
 
-#: src/admin/AdminDomains.js:543
+#: src/admin/AdminDomains.js:545
 msgid "Select a reason for removing this domain"
 msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 
@@ -3820,12 +3825,12 @@ msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Sélectionnez l'état qui décrit le mieux l'actif par rapport à votre organisation."
 
-#: src/admin/AdminPage.js:90
-#: src/admin/AdminPage.js:107
+#: src/admin/AdminPage.js:91
+#: src/admin/AdminPage.js:108
 msgid "Select an organization"
 msgstr "Sélectionnez une organisation"
 
-#: src/admin/AdminPage.js:186
+#: src/admin/AdminPage.js:188
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
@@ -3884,8 +3889,8 @@ msgstr "Voir {pageSize}"
 msgid "Show password"
 msgstr "Afficher le mot de passe"
 
-#: src/dmarc/DmarcByDomainPage.js:230
-#: src/dmarc/DmarcReportPage.js:670
+#: src/dmarc/DmarcByDomainPage.js:233
+#: src/dmarc/DmarcReportPage.js:684
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période:"
 
@@ -4043,7 +4048,7 @@ msgstr "Indique le pourcentage de domaines qui ont configuré HTTPS et qui mette
 #~ msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "Indique le pourcentage de domaines qui ont configuré HTTPS et qui mettent à niveau les connexions HTTP vers HTTPS (ITPIN 6.1.1)."
 
-#: src/dmarc/DmarcByDomainPage.js:314
+#: src/dmarc/DmarcByDomainPage.js:332
 msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 msgstr "Indique le pourcentage de courriels provenant du domaine qui ne satisfont pas aux exigences SPF et DKIM."
 
@@ -4051,7 +4056,7 @@ msgstr "Indique le pourcentage de courriels provenant du domaine qui ne satisfon
 #~ msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 #~ msgstr "Indique le pourcentage d'e-mails du domaine qui ne répondent pas aux exigences SPF et DKIM."
 
-#: src/dmarc/DmarcByDomainPage.js:310
+#: src/dmarc/DmarcByDomainPage.js:328
 msgid "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 msgstr "Indique le pourcentage de courriels provenant du domaine qui ne répondent pas aux exigences DKIM, mais qui répondent aux exigences SPF."
 
@@ -4059,7 +4064,7 @@ msgstr "Indique le pourcentage de courriels provenant du domaine qui ne réponde
 #~ msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 #~ msgstr "Indique le pourcentage d'e-mails du domaine qui ne répondent pas aux exigences DKIM, mais qui répondent aux exigences SPF."
 
-#: src/dmarc/DmarcByDomainPage.js:306
+#: src/dmarc/DmarcByDomainPage.js:324
 msgid "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 msgstr "Indique le pourcentage de courriels provenant du domaine qui ne répondent pas aux exigences SPF, mais qui répondent aux exigences DKIM."
 
@@ -4067,7 +4072,7 @@ msgstr "Indique le pourcentage de courriels provenant du domaine qui ne réponde
 #~ msgid "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 #~ msgstr "Indique le pourcentage d'e-mails du domaine qui ne répondent pas aux exigences SPF, mais qui répondent aux exigences DKIM."
 
-#: src/dmarc/DmarcByDomainPage.js:302
+#: src/dmarc/DmarcByDomainPage.js:320
 msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 msgstr "Indique le pourcentage de courriels provenant du domaine qui ont satisfait aux exigences SPF et DKIM."
 
@@ -4075,7 +4080,7 @@ msgstr "Indique le pourcentage de courriels provenant du domaine qui ont satisfa
 #~ msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 #~ msgstr "Indique le pourcentage d'e-mails du domaine qui ont passé les exigences SPF et DKIM."
 
-#: src/dmarc/DmarcByDomainPage.js:298
+#: src/dmarc/DmarcByDomainPage.js:316
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine pendant la période sélectionnée."
 
@@ -4227,7 +4232,7 @@ msgstr "Dév"
 msgid "STAGING"
 msgstr "DÉV"
 
-#: src/userOnboarding/components/TourButton.js:46
+#: src/userOnboarding/components/TourButton.js:71
 msgid "Start Tour"
 msgstr "Début de la visite"
 
@@ -4317,7 +4322,7 @@ msgstr "Résumé"
 msgid "Summary Tier:"
 msgstr "Résumé Tier :"
 
-#: src/admin/AdminPage.js:218
+#: src/admin/AdminPage.js:220
 msgid "Super Admin Menu:"
 msgstr "Super Admin Menu :"
 
@@ -4461,7 +4466,7 @@ msgstr "Test"
 msgid "TEST"
 msgstr "TEST"
 
-#: src/admin/AdminDomains.js:567
+#: src/admin/AdminDomains.js:569
 msgid "The \"Asset State\" describes how the domain relates to your organization. These states are used by Tracker to give you a more accurate summary of your attack surface."
 msgstr "El «Estado del Activo» describe cómo el dominio se relaciona con su organización. Suivi utiliza estos estados para ofrecerle un resumen más preciso de su superficie de ataque."
 
@@ -4493,7 +4498,12 @@ msgstr "L'état du bien montre la relation du domaine avec votre organisation. S
 msgid "The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
 msgstr "La mesure d'application de DMARC prise par le destinataire, soit aucune, soit la mise en quarantaine, soit le rejet."
 
-#: src/dmarc/DmarcByDomainPage.js:295
+#: src/dmarc/DmarcByDomainPage.js:289
+#: src/dmarc/DmarcReportPage.js:672
+msgid "The DMARC Summaries data has not been updated since December 2024. We are working to refresh this information. Please note that any displayed data may not reflect current email security status."
+msgstr "Les données des sommaires DMARC n'ont pas été mises à jour depuis décembre 2024. Nous travaillons à actualiser ces informations. Veuillez noter que les données affichées pourraient ne pas refléter l'état actuel de la sécurité des courriels."
+
+#: src/dmarc/DmarcByDomainPage.js:313
 #: src/domains/DomainsPage.js:284
 #: src/organizationDetails/OrganizationDomains.js:226
 msgid "The domain address."
@@ -4599,12 +4609,12 @@ msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la 
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
-#: src/admin/AdminDomains.js:549
+#: src/admin/AdminDomains.js:551
 #: src/admin/AuditLogTable.js:147
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
-#: src/admin/AdminDomains.js:546
+#: src/admin/AdminDomains.js:548
 #: src/admin/AuditLogTable.js:145
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
@@ -4727,8 +4737,8 @@ msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonct
 #~ msgid "Top 25 vulnerability detected in additional findings."
 #~ msgstr "Las 25 principales vulnerabilidades detectadas en hallazgos adicionales."
 
-#: src/dmarc/DmarcByDomainPage.js:129
-#: src/dmarc/DmarcByDomainPage.js:297
+#: src/dmarc/DmarcByDomainPage.js:132
+#: src/dmarc/DmarcByDomainPage.js:315
 #: src/dmarc/DmarcReportPage.js:190
 #: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
@@ -5091,7 +5101,7 @@ msgstr "Les balises désignées par l'utilisateur apparaissent ici."
 msgid "User:"
 msgstr "Utilisateur:"
 
-#: src/admin/AdminPage.js:222
+#: src/admin/AdminPage.js:224
 #: src/admin/AdminPanel.js:24
 #: src/organizationDetails/OrganizationDetails.js:151
 msgid "Users"
@@ -5442,7 +5452,7 @@ msgstr "Vous visitez actuellement un environnement de démonstration, utilisé u
 #~ msgid "You can search for an organization here"
 #~ msgstr "Vous pouvez rechercher une organisation ici"
 
-#: src/admin/AdminPage.js:123
+#: src/admin/AdminPage.js:124
 msgid "You currently have no admin affiliations."
 msgstr "Vous n'avez actuellement aucune affiliation administrative."
 
