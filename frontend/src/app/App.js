@@ -298,7 +298,7 @@ export function App({ initialLoading, isLoginRequired }) {
                 path="/organizations/:orgSlug/:activeTab?"
                 exact
                 element={
-                  <PrivatePage condition={(isLoggedIn() && isEmailValidated()) || !isLoginRequired}>
+                  <PrivatePage condition={(isLoggedIn() && isEmailValidated()) || !isLoginRequired} setTitle={false}>
                     <OrganizationDetails />
                   </PrivatePage>
                 }
@@ -330,7 +330,7 @@ export function App({ initialLoading, isLoginRequired }) {
                 path="/domains/:domainSlug/:activeTab?"
                 exact
                 element={
-                  <PrivatePage condition={isLoggedIn() && isEmailValidated()}>
+                  <PrivatePage condition={isLoggedIn() && isEmailValidated()} setTitle={false}>
                     <GuidancePage />
                   </PrivatePage>
                 }
@@ -340,7 +340,7 @@ export function App({ initialLoading, isLoginRequired }) {
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
                 exact
                 element={
-                  <PrivatePage condition={isLoggedIn() && isEmailValidated()}>
+                  <PrivatePage condition={isLoggedIn() && isEmailValidated()} setTitle={false}>
                     <DmarcReportPage />
                   </PrivatePage>
                 }
