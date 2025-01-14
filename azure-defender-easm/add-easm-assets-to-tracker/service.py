@@ -127,7 +127,7 @@ async def main():
             logger.error(f"Error occured when creating domain: {e}")
             return None
 
-    async def create_claim(org_id, domain_id, domain_name, txn_col):
+    def create_claim(org_id, domain_id, domain_name, txn_col):
         insert_claim = {
             "_from": org_id,
             "_to": domain_id,
@@ -140,10 +140,10 @@ async def main():
             logger.info(f"Successfully created claim for domain: {domain_name}")
             return created_claim
         except Exception as e:
-            logger.error("Error occured when creating claim for ", e)
+            logger.error(f"Error occured when creating claim for {domain_name}", e)
             return None
 
-    async def log_activity(domain, org_key, txn_col):
+    def log_activity(domain, org_key, txn_col):
         insert_activity = {
             "timestamp": datetime.today().isoformat(),
             "initiatedBy": {
@@ -181,7 +181,6 @@ async def main():
             # check if domain exists in system
             domain_exists = get_domain_exists(domain)
             if domain_exists is None:
-                logger.error(f"Error occured when checking if domain exists: {e}")
                 continue
             # if domain exists, skip
             elif domain_exists:
