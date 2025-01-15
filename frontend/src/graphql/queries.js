@@ -904,6 +904,10 @@ export const QUERY_CURRENT_USER = gql`
       emailValidated
       insideUser
       receiveUpdateEmails
+      emailUpdateOptions {
+        orgFootprint
+        progressReport
+      }
     }
     isUserAdmin
   }

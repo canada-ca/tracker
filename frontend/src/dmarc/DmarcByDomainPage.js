@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import {
+  AlertDescription,
+  AlertTitle,
   Box,
   Divider,
   Flex,
@@ -33,6 +35,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -276,6 +279,21 @@ export default function DmarcByDomainPage() {
           />
         </Flex>
       )}
+
+      <NotificationBanner status="warning" bannerId="dmarc-report-outage" hideable>
+        <Box>
+          <AlertTitle>
+            <Trans>Important Notice:</Trans>
+          </AlertTitle>
+          <AlertDescription>
+            <Trans>
+              The DMARC Summaries data has not been updated since December 2024. We are working to refresh this
+              information. Please note that any displayed data may not reflect current email security status.
+            </Trans>
+          </AlertDescription>
+        </Box>
+      </NotificationBanner>
+
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls
