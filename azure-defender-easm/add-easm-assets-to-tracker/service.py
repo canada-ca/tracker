@@ -28,6 +28,7 @@ DB_URL = os.getenv("DB_URL")
 
 NATS_URL = os.getenv("NATS_URL")
 UNCLAIMED_ID = os.getenv("UNCLAIMED_ID")
+SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")
 
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
@@ -132,7 +133,7 @@ async def main():
             "_from": org_id,
             "_to": domain_id,
             "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "firstSeen": datetime.today().isoformat(),
+            "firstSeen": datetime.today().astimezone().isoformat(),
         }
 
         try:
@@ -145,7 +146,7 @@ async def main():
 
     def log_activity(domain, org_key, txn_col):
         insert_activity = {
-            "timestamp": datetime.today().isoformat(),
+            "timestamp": datetime.today().astimezone().isoformat(),
             "initiatedBy": {
                 "id": "easm",
                 "userName": SERVICE_ACCOUNT_EMAIL,
