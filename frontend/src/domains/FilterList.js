@@ -30,8 +30,6 @@ export function FilterList({ filters, setFilters, resetToFirstPage }) {
     switch (filterValue) {
       case 'CVE_DETECTED':
         return t`SPIN Top 25`
-      case 'HAS_ENTRUST_CERTIFICATE':
-        return t`Entrust Certificate`
       default:
         return filterValue
     }
