@@ -148,7 +148,7 @@ async def main():
             "timestamp": datetime.today().isoformat(),
             "initiatedBy": {
                 "id": "easm",
-                "userName": "automated-discovery-service",
+                "userName": SERVICE_ACCOUNT_EMAIL,
                 "role": "service",
             },
             "target": {
