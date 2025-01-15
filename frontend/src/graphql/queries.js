@@ -514,7 +514,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     verifiedChainHasSha1Signature
                     verifiedChainHasLegacySymantecAnchor
                     passedValidation
-                    hasEntrustCertificate
                     certificateChain {
                       notValidBefore
                       notValidAfter
@@ -804,7 +803,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
             wildcardEntry
             webScanPending
             userHasPermission
-            hasEntrustCertificate
             cveDetected
           }
         }
@@ -875,7 +873,6 @@ export const PAGINATED_DOMAINS = gql`
           archived
           hasDMARCReport
           userHasPermission
-          hasEntrustCertificate
           cveDetected
           __typename
         }
