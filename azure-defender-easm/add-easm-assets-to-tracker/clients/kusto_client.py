@@ -35,7 +35,7 @@ def get_labelled_org_assets_from_org_key(org_key):
     | join kind=inner EasmHostAsset on AssetName
     | where TimeGeneratedValue > ago(24h)
     | where Cnames == '[]'
-    | project AssetName
+    | summarize by AssetName
     """
     try:
         response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
@@ -59,7 +59,7 @@ def get_unlabelled_assets():
     | join kind=inner EasmHostAsset on AssetName
     | where TimeGeneratedValue > ago(24h)
     | where Cnames == '[]'
-    | project AssetName
+    | summarize by AssetName
     """
     try:
         response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
