@@ -8,5 +8,6 @@ resources:
 - storage-classes.yaml
 - restrict-instance-metadata.yaml
 patchesStrategicMerge:
+  - arangodb-memory-limit-patch.yaml
   - arangodb-retain-storage-patch.yaml
   - ingress-gateway-tls-patch.yaml
