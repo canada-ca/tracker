@@ -34,6 +34,7 @@ export const unignoreCve = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { userRequired, checkSuperAdmin, superAdminRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey },
@@ -167,6 +168,7 @@ export const unignoreCve = new mutationWithClientMutationId({
             id: user._key,
             userName: user.userName,
             role: 'super_admin',
+            ipAddress: ip,
           },
           action: 'update',
           target: {
@@ -195,6 +197,7 @@ export const unignoreCve = new mutationWithClientMutationId({
           id: user._key,
           userName: user.userName,
           role: 'super_admin',
+          ipAddress: ip,
         },
         action: 'update',
         target: {
