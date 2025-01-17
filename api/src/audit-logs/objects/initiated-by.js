@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
+import { GraphQLEmailAddress, GraphQLIP } from 'graphql-scalars'
 import { RoleEnums } from '../../enums'
 
 export const initiatedByType = new GraphQLObjectType({
@@ -12,6 +12,16 @@ export const initiatedByType = new GraphQLObjectType({
       type: GraphQLEmailAddress,
       description: 'User email address.',
       resolve: ({ userName }) => userName,
+    },
+    ipAddress: {
+      type: GraphQLIP,
+      description: 'User IP address.',
+      resolve: async ({ ipAddress }, _args, { auth: { checkSuperAdmin, superAdminRequired } }) => {
+        const isSuperAdmin = await checkSuperAdmin()
+        superAdminRequired({ isSuperAdmin })
+
+        return ipAddress
+      },
     },
     role: {
       type: RoleEnums,

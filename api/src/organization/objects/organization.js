@@ -137,6 +137,7 @@ export const organizationType = new GraphQLObjectType({
           query,
           transaction,
           collections,
+          request: { ip },
           auth: { checkPermission, userRequired, verifiedRequired },
           loaders: { loadOrganizationDomainStatuses },
         },
@@ -232,6 +233,7 @@ export const organizationType = new GraphQLObjectType({
             id: user._key,
             userName: user.userName,
             role: permission,
+            ipAddress: ip,
           },
           action: 'export',
           target: {

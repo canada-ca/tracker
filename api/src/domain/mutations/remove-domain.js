@@ -38,6 +38,7 @@ export const removeDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
@@ -352,6 +353,7 @@ export const removeDomain = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: permission,
+        ipAddress: ip,
       },
       action: 'remove',
       target: {

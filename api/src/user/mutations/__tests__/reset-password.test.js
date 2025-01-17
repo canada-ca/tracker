@@ -100,6 +100,7 @@ describe('reset users password', () => {
           request: {
             protocol: 'https',
             get: (text) => text,
+            ip: '127.0.0.1',
           },
         },
       })
@@ -228,6 +229,7 @@ describe('reset users password', () => {
             jwt,
             response: mockedResponse,
             uuidv4,
+            request: { ip: '127.0.0.1' },
             auth: {
               bcrypt,
               tokenize: jest.fn().mockReturnValue('token'),
@@ -300,6 +302,7 @@ describe('reset users password', () => {
             query,
             collections: collectionNames,
             transaction,
+            request: { ip: '127.0.0.1' },
             auth: {
               bcrypt,
               tokenize,
@@ -443,6 +446,7 @@ describe('reset users password', () => {
             uuidv4,
             response: mockedResponse,
             jwt,
+            request: { ip: '127.0.0.1' },
             auth: {
               bcrypt,
               tokenize: jest.fn().mockReturnValue('token'),

@@ -29,6 +29,7 @@ export const requestScan = new mutationWithClientMutationId({
       transaction,
       i18n,
       userKey,
+      request: { ip },
       publish,
       auth: { checkDomainPermission, userRequired, verifiedRequired },
       loaders: { loadDomainByDomain, loadWebConnectionsByDomainId, loadWebScansByWebId },
@@ -146,6 +147,7 @@ export const requestScan = new mutationWithClientMutationId({
           id: user._key,
           userName: user.userName,
           role: permission,
+          ipAddress: ip,
         },
         action: 'scan',
         target: {

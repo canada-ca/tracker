@@ -259,6 +259,7 @@ export const createDomain = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: permission,
+        ipAddress: request.ip,
       },
       action: 'add',
       target: {

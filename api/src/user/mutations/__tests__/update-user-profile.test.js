@@ -203,6 +203,7 @@ describe('authenticate user account', () => {
               userKey: user._key,
               request: {
                 get: jest.fn().mockReturnValue('domain.ca'),
+                ip: '127.0.0.1',
               },
               auth: {
                 bcrypt,
@@ -903,6 +904,7 @@ describe('authenticate user account', () => {
                 userKey: user._key,
                 request: {
                   get: jest.fn().mockReturnValue('domain.ca'),
+                  ip: '127.0.0.1',
                 },
                 auth: {
                   bcrypt,

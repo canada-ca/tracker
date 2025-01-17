@@ -226,6 +226,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -315,6 +316,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -528,6 +530,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -723,6 +726,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -812,6 +816,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1029,6 +1034,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1201,6 +1207,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1290,6 +1297,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1364,6 +1372,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1428,6 +1437,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1506,6 +1516,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1670,6 +1681,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1759,6 +1771,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1833,6 +1846,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1897,6 +1911,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1975,6 +1990,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -2244,6 +2260,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -2333,6 +2350,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -2546,6 +2564,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -2712,6 +2731,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -2801,6 +2821,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -2875,6 +2896,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2939,6 +2961,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -3013,6 +3036,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -3181,6 +3205,7 @@ describe('removing a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -3250,6 +3275,7 @@ describe('removing a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -3322,6 +3348,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -3397,6 +3424,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
@@ -3472,6 +3500,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
@@ -3549,6 +3578,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
@@ -3624,6 +3654,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
@@ -3701,6 +3732,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -3772,6 +3804,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -3851,6 +3884,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -3927,6 +3961,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -4011,6 +4046,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -4096,6 +4132,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -4174,6 +4211,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -4252,6 +4290,7 @@ describe('removing a domain', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -4335,6 +4374,7 @@ describe('removing a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -4404,6 +4444,7 @@ describe('removing a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -4476,6 +4517,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -4552,6 +4594,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
@@ -4628,6 +4671,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
@@ -4706,6 +4750,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
@@ -4782,6 +4827,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
@@ -4860,6 +4906,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -4931,6 +4978,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -5009,6 +5057,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -5084,6 +5133,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -5167,6 +5217,7 @@ describe('removing a domain', () => {
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -5251,6 +5302,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -5330,6 +5382,7 @@ describe('removing a domain', () => {
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -5408,6 +5461,7 @@ describe('removing a domain', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),

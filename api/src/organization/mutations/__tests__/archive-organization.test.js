@@ -163,6 +163,7 @@ describe('archiving an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -307,6 +308,7 @@ describe('archiving an organization', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
@@ -374,6 +376,7 @@ describe('archiving an organization', () => {
                     collections: collectionNames,
                     transaction,
                     userKey: 123,
+                    request: { ip: '127.0.0.1' },
                     auth: {
                       checkPermission: jest.fn().mockReturnValue('admin'),
                       userRequired: jest.fn(),
@@ -479,6 +482,7 @@ describe('archiving an organization', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('super_admin'),
                 userRequired: jest.fn(),

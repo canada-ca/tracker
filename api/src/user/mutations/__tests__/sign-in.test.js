@@ -108,6 +108,7 @@ describe('authenticate user account', () => {
           request: {
             protocol: 'https',
             get: (text) => text,
+            ip: '127.0.0.1',
           },
         },
       })
@@ -186,6 +187,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockedTokenize,
@@ -276,6 +278,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockedTokenize,
@@ -368,6 +371,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockedTokenize,
@@ -468,6 +472,7 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 jwt,
                 auth: {
                   bcrypt,
@@ -573,6 +578,7 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 jwt,
                 auth: {
                   bcrypt,
@@ -661,6 +667,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize,
@@ -758,6 +765,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockedTokenize,
@@ -852,6 +860,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockedTokenize,
@@ -952,6 +961,7 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockedTokenize,
@@ -1056,6 +1066,7 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 jwt,
                 auth: {
                   bcrypt,

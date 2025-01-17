@@ -165,6 +165,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -242,6 +243,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -328,6 +330,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -405,6 +408,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -500,6 +504,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -642,6 +647,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -719,6 +725,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -805,6 +812,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -882,6 +890,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -977,6 +986,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: user._key,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
@@ -1072,6 +1082,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn(),
                   userRequired: jest.fn().mockReturnValue({
@@ -1141,6 +1152,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn(),
                   userRequired: jest.fn().mockReturnValue({
@@ -1212,6 +1224,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn(),
                   userRequired: jest.fn().mockReturnValue({
@@ -1285,6 +1298,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn().mockReturnValue({
@@ -1361,6 +1375,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn().mockReturnValue({
@@ -1437,6 +1452,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -1516,6 +1532,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction: jest.fn(),
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn().mockReturnValue({
@@ -1595,6 +1612,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -1666,6 +1684,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -1740,6 +1759,7 @@ describe('update a users role', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -1813,6 +1833,7 @@ describe('update a users role', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -1897,6 +1918,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn(),
                   userRequired: jest.fn().mockReturnValue({
@@ -1966,6 +1988,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn(),
                   userRequired: jest.fn().mockReturnValue({
@@ -2037,6 +2060,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn(),
                   userRequired: jest.fn().mockReturnValue({
@@ -2110,6 +2134,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn().mockReturnValue({
@@ -2186,6 +2211,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn().mockReturnValue({
@@ -2262,6 +2288,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -2343,6 +2370,7 @@ describe('update a users role', () => {
                   collections: collectionNames,
                   transaction: jest.fn(),
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn().mockReturnValue({
@@ -2422,6 +2450,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -2495,6 +2524,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -2571,6 +2601,7 @@ describe('update a users role', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({
@@ -2646,6 +2677,7 @@ describe('update a users role', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({

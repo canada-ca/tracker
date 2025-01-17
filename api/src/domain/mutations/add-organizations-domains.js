@@ -47,6 +47,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
@@ -278,6 +279,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
             id: user._key,
             userName: user.userName,
             role: permission,
+            ipAddress: ip,
           },
           action: 'add',
           target: {
@@ -304,6 +306,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           id: user._key,
           userName: user.userName,
           role: permission,
+          ipAddress: ip,
         },
         action: 'add',
         target: {

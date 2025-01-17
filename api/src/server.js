@@ -61,6 +61,7 @@ export const Server = async ({
     ],
   })
   await server.start()
+  app.set('trust proxy', true)
   app.use(
     '/graphql',
     cors(),

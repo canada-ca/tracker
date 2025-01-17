@@ -29,6 +29,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired },
       validators: { cleanseInput },
       loaders: { loadOrgByKey },
@@ -170,6 +171,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: permission,
+        ipAddress: ip,
       },
       action: 'update',
       updatedProperties: [

@@ -55,6 +55,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       transaction,
       uuidv4,
+      request: { ip },
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       notify: { sendAuthEmail },
@@ -254,6 +255,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       initiatedBy: {
         userName,
+        ipAddress: ip,
       },
       action: 'create',
       target: {
