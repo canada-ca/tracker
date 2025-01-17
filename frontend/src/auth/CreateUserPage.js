@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Heading, Stack, Text, useToast, Checkbox, Link } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { Link as RouteLink, useParams, useHistory, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -15,7 +15,7 @@ import { SIGN_UP } from '../graphql/mutations'
 
 export default function CreateUserPage() {
   const toast = useToast()
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const userOrgToken = useParams().userOrgToken || ''
 
@@ -35,7 +35,7 @@ export default function CreateUserPage() {
     onCompleted({ signUp }) {
       if (signUp.result.__typename === 'TFASignInResult') {
         // redirect to the authenticate page
-        history.push(`/authenticate/${signUp.result.sendMethod.toLowerCase()}/${signUp.result.authenticateToken}`, {
+        navigate(`/authenticate/${signUp.result.sendMethod.toLowerCase()}/${signUp.result.authenticateToken}`, {
           from,
         })
         // Display a welcome message

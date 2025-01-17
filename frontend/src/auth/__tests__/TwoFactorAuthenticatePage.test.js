@@ -1,11 +1,10 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
@@ -26,16 +25,31 @@ const i18n = setupI18n({
 
 describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <div>Landing Page</div>,
+        },
+        {
+          path: '/authenticate/:sendMethod/:authenticateToken',
+          element: <TwoFactorAuthenticatePage />,
+        },
+      ],
+      {
+        initialEntries: ['/authenticate/phone/authenticate-token-test'],
+        initialIndex: 0,
+      },
+    )
+
     const { getByText } = render(
       <MockedProvider>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
-                <Route path="/authenticate/:sendMethod/:authenticateToken">
-                  <TwoFactorAuthenticatePage />
-                </Route>
-              </MemoryRouter>
+              <RouterProvider router={router}>
+                <TwoFactorAuthenticatePage />
+              </RouterProvider>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
@@ -49,6 +63,23 @@ describe('<TwoFactorAuthenticatePage />', () => {
     describe('when the form is submitted', () => {
       describe('two factor code input', () => {
         it('displays an error message', async () => {
+          const router = createMemoryRouter(
+            [
+              {
+                path: '/',
+                element: <div>Landing Page</div>,
+              },
+              {
+                path: '/authenticate/:sendMethod/:authenticateToken',
+                element: <TwoFactorAuthenticatePage />,
+              },
+            ],
+            {
+              initialEntries: ['/authenticate/phone/authenticate-token-test'],
+              initialIndex: 0,
+            },
+          )
+
           const { getByText } = render(
             <MockedProvider>
               <UserVarProvider
@@ -60,11 +91,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
-                      <Route path="/authenticate/:sendMethod/:authenticateToken">
-                        <TwoFactorAuthenticatePage />
-                      </Route>
-                    </MemoryRouter>
+                    <RouterProvider router={router}>
+                      <TwoFactorAuthenticatePage />
+                    </RouterProvider>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
@@ -106,12 +135,22 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div>Landing Page</div>,
+          },
+          {
+            path: '/authenticate/:sendMethod/:authenticateToken',
+            element: <TwoFactorAuthenticatePage />,
+          },
+        ],
+        {
+          initialEntries: ['/authenticate/phone/authenticate-token-test'],
+          initialIndex: 0,
+        },
+      )
 
       const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -124,11 +163,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <RouterProvider router={router}>
+                  <TwoFactorAuthenticatePage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -181,12 +218,22 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div>Landing Page</div>,
+          },
+          {
+            path: '/authenticate/:sendMethod/:authenticateToken',
+            element: <TwoFactorAuthenticatePage />,
+          },
+        ],
+        {
+          initialEntries: ['/authenticate/phone/authenticate-token-test'],
+          initialIndex: 0,
+        },
+      )
 
       const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -199,11 +246,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <RouterProvider router={router}>
+                  <TwoFactorAuthenticatePage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -256,12 +301,22 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div>Landing Page</div>,
+          },
+          {
+            path: '/authenticate/:sendMethod/:authenticateToken',
+            element: <TwoFactorAuthenticatePage />,
+          },
+        ],
+        {
+          initialEntries: ['/authenticate/phone/authenticate-token-test'],
+          initialIndex: 0,
+        },
+      )
 
       const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -274,11 +329,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <RouterProvider router={router}>
+                  <TwoFactorAuthenticatePage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -338,12 +391,22 @@ describe('<TwoFactorAuthenticatePage />', () => {
         },
       ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/authenticate/phone/authenticate-token-test'],
-        initialIndex: 0,
-      })
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div>Landing Page</div>,
+          },
+          {
+            path: '/authenticate/:sendMethod/:authenticateToken',
+            element: <TwoFactorAuthenticatePage />,
+          },
+        ],
+        {
+          initialEntries: ['/authenticate/phone/authenticate-token-test'],
+          initialIndex: 0,
+        },
+      )
 
       const { getAllByRole, getByRole } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -356,11 +419,9 @@ describe('<TwoFactorAuthenticatePage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <TwoFactorAuthenticatePage />
-                  </Route>
-                </Router>
+                <RouterProvider router={router}>
+                  <TwoFactorAuthenticatePage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -379,7 +440,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
       fireEvent.submit(form)
 
       await waitFor(() => {
-        expect(history.location.pathname).toEqual('/')
+        expect(router.state.location.pathname).toEqual('/')
       })
     })
   })

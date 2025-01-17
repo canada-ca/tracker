@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Progress, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
@@ -15,7 +15,6 @@ export function OrganizationCard({
   disableLink = false,
   ...rest
 }) {
-  const { path, _url } = useRouteMatch()
   let httpsValue = 0
   let dmarcValue = 0
   const httpsSummary =
@@ -42,7 +41,7 @@ export function OrganizationCard({
   }
 
   const linkProps = {
-    to: `${path}/${slug}`,
+    to: `/organizations/${slug}`,
     as: RouteLink,
     _hover: { md: { bg: ['', 'gray.100'] } },
   }

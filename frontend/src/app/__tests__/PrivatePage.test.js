@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
@@ -23,8 +23,25 @@ const i18n = setupI18n({
 
 describe('<PrivatePage />', () => {
   describe('when a userName is defined', () => {
-    it(`executes its child as a function`, async () => {
-      const { queryAllByText } = render(
+    it('executes its child as a function', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/sign-in',
+            element: <p>sign in</p>,
+          },
+          {
+            path: '/',
+            element: <PrivatePage condition={true}>{<p>foo</p>}</PrivatePage>,
+          },
+        ],
+        {
+          initialEntries: ['/'],
+          initialIndex: 0,
+        },
+      )
+
+      const { queryByText } = render(
         <I18nProvider i18n={i18n}>
           <MockedProvider>
             <UserVarProvider
@@ -33,25 +50,36 @@ describe('<PrivatePage />', () => {
                 emailValidated: true,
               })}
             >
-              <MemoryRouter initialEntries={['/']}>
-                <PrivatePage isLoginRequired={true} path="/">
-                  {() => <p>foo</p>}
-                </PrivatePage>
-              </MemoryRouter>
+              <RouterProvider router={router} />
             </UserVarProvider>
           </MockedProvider>
         </I18nProvider>,
       )
 
-      expect(queryAllByText('foo')).toHaveLength(1)
+      expect(queryByText('foo')).toBeInTheDocument()
     })
   })
-})
 
-describe('<PrivatePage />', () => {
   describe('when userName is falsy', () => {
-    it(`executes its child as a function`, async () => {
-      const { queryAllByText } = render(
+    it('redirects to the sign-in page', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/sign-in',
+            element: <p>sign in</p>,
+          },
+          {
+            path: '/organizations/:orgSlug',
+            element: <PrivatePage condition={false}>{({ match }) => <p>{match.params.orgSlug}</p>}</PrivatePage>,
+          },
+        ],
+        {
+          initialEntries: ['/organizations/foo'],
+          initialIndex: 0,
+        },
+      )
+
+      const { queryByText } = render(
         <I18nProvider i18n={i18n}>
           <MockedProvider>
             <UserVarProvider
@@ -60,54 +88,13 @@ describe('<PrivatePage />', () => {
                 emailValidated: undefined,
               })}
             >
-              <MemoryRouter initialEntries={['/organizations/foo']}>
-                <PrivatePage
-                  isLoginRequired={true}
-                  path="/organizations/:orgSlug"
-                  title={'foo'}
-                  exact
-                >
-                  {({ match }) => <p>{match.params.orgSlug}</p>}
-                </PrivatePage>
-              </MemoryRouter>
+              <RouterProvider router={router} />
             </UserVarProvider>
           </MockedProvider>
         </I18nProvider>,
       )
 
-      expect(queryAllByText('foo')).toHaveLength(0)
-    })
-  })
-})
-
-describe('<PrivatePage />', () => {
-  describe('when a userName is defined', () => {
-    it(`passes props to the child`, async () => {
-      const { queryAllByText } = render(
-        <I18nProvider i18n={i18n}>
-          <MockedProvider>
-            <UserVarProvider
-              userVar={makeVar({
-                userName: 'asdf',
-                emailValidated: true,
-              })}
-            >
-              <MemoryRouter initialEntries={['/organizations/foo']}>
-                <PrivatePage
-                  isLoginRequired={true}
-                  path="/organizations/:orgSlug"
-                  title={'foo'}
-                  exact
-                >
-                  {({ match }) => <p>{match.params.orgSlug}</p>}
-                </PrivatePage>
-              </MemoryRouter>
-            </UserVarProvider>
-          </MockedProvider>
-        </I18nProvider>,
-      )
-
-      expect(queryAllByText('foo')).toHaveLength(1)
+      expect(queryByText('foo')).not.toBeInTheDocument()
     })
   })
 })

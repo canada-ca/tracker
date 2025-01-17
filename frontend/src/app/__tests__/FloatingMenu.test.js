@@ -3,7 +3,7 @@ import { cleanup, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
@@ -27,9 +27,7 @@ describe('<FloatingMenu>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -109,41 +107,41 @@ describe('<FloatingMenu>', () => {
         })
       })
     })
-  })
-
-  describe('when the menu is open', () => {
     describe("and the 'Sign In' button is clicked", () => {
       it('redirects to the sign in page', async () => {
-        let wLocation
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/sign-in',
+              element: <div>Sign in</div>,
+            },
+            {
+              path: '/',
+              element: <FloatingMenu />,
+            },
+          ],
+          {
+            initialEntries: ['/'],
+            initialIndex: 0,
+          },
+        )
 
         const { getByText } = render(
           <MockedProvider>
-            <UserVarProvider
-              userVar={makeVar({
-                jwt: null,
-                tfaSendMethod: null,
-                userName: null,
-              })}
-            >
-              <MemoryRouter initialEntries={['/']}>
-                <I18nProvider i18n={i18n}>
-                  <ChakraProvider theme={theme}>
-                    <FloatingMenu />
-                    <Route
-                      path="*"
-                      render={({ _history, location }) => {
-                        wLocation = location
-                        return null
-                      }}
-                    />
-                  </ChakraProvider>
-                </I18nProvider>
-              </MemoryRouter>
+            <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+              <I18nProvider i18n={i18n}>
+                <ChakraProvider theme={theme}>
+                  <RouterProvider router={router} />
+                </ChakraProvider>
+              </I18nProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
-        const menuButton = getByText(/Menu/i)
-        fireEvent.click(menuButton)
+
+        await waitFor(() => {
+          const menuButton = getByText(/Menu/i)
+          fireEvent.click(menuButton)
+        })
 
         await waitFor(() => {
           expect(getByText(/Sign In/i)).toBeInTheDocument()
@@ -153,7 +151,7 @@ describe('<FloatingMenu>', () => {
         fireEvent.click(signInButton)
 
         await waitFor(() => {
-          expect(wLocation.pathname).toBe('/sign-in')
+          expect(router.state.location.pathname).toBe('/sign-in')
         })
       })
     })
@@ -253,9 +251,7 @@ describe('<FloatingMenu>', () => {
           fireEvent.click(signOutButton)
 
           await waitFor(() => {
-            expect(
-              queryByText(/An error occured when you attempted to sign out/i),
-            )
+            expect(queryByText(/An error occured when you attempted to sign out/i))
           })
         })
       })

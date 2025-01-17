@@ -8,7 +8,7 @@ import { UserVarProvider } from '../../utilities/userState'
 import { makeVar } from '@apollo/client'
 import { createCache } from '../../client'
 import { ChakraProvider, theme } from '@chakra-ui/react'
-import { MemoryRouter } from 'react-router-dom/cjs/react-router-dom.min'
+import { MemoryRouter } from 'react-router-dom'
 import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({

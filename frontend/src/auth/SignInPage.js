@@ -1,7 +1,7 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { Box, Button, Checkbox, Flex, Heading, Link, Text, useToast } from '@chakra-ui/react'
-import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { useLingui } from '@lingui/react'
@@ -16,7 +16,7 @@ import { SIGN_IN } from '../graphql/mutations'
 export default function SignInPage() {
   const { login } = useUserVar()
   const { i18n } = useLingui()
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const toast = useToast()
 
@@ -50,7 +50,7 @@ export default function SignInPage() {
           affiliations: signIn.result.user.affiliations,
         })
         // redirect to the home page.
-        history.push(from)
+        navigate(from)
         // Display a welcome message
         toast({
           title: i18n._(t`Sign In.`),
@@ -64,7 +64,7 @@ export default function SignInPage() {
       // 2FA enabled
       else if (signIn.result.__typename === 'TFASignInResult') {
         // redirect to the authenticate page
-        history.push(`/authenticate/${signIn.result.sendMethod.toLowerCase()}/${signIn.result.authenticateToken}`, {
+        navigate(`/authenticate/${signIn.result.sendMethod.toLowerCase()}/${signIn.result.authenticateToken}`, {
           from,
         })
       }

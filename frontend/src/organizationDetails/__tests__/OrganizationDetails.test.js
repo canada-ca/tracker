@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -128,6 +128,20 @@ describe('<OrganizationDetails />', () => {
         },
       },
     ]
+
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/organizations/:orgSlug/:activeTab?',
+          element: <OrganizationDetails />,
+        },
+      ],
+      {
+        initialEntries: ['/organizations/tbs-sct-gc-ca'],
+        initialIndex: 0,
+      },
+    )
+
     it('displays details using the tbs-sct-gc-ca slug', async () => {
       window.resizeTo(1024, 768)
 
@@ -142,13 +156,11 @@ describe('<OrganizationDetails />', () => {
                   userName: null,
                 })}
               >
-                <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <TourProvider>
-                      <OrganizationDetails />
-                    </TourProvider>
-                  </Route>
-                </MemoryRouter>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <OrganizationDetails />
+                  </RouterProvider>
+                </TourProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
@@ -162,6 +174,7 @@ describe('<OrganizationDetails />', () => {
     })
     it('displays the request invite button for unaffiliated users', async () => {
       window.resizeTo(1024, 768)
+
       const { queryByRole, getByText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -173,13 +186,11 @@ describe('<OrganizationDetails />', () => {
                   userName: 'justauser',
                 })}
               >
-                <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <TourProvider>
-                      <OrganizationDetails />
-                    </TourProvider>{' '}
-                  </Route>
-                </MemoryRouter>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <OrganizationDetails />
+                  </RouterProvider>
+                </TourProvider>{' '}
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
@@ -206,13 +217,11 @@ describe('<OrganizationDetails />', () => {
                   userName: 'justauser',
                 })}
               >
-                <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <TourProvider>
-                      <OrganizationDetails />
-                    </TourProvider>
-                  </Route>
-                </MemoryRouter>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <OrganizationDetails />
+                  </RouterProvider>
+                </TourProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
@@ -309,6 +318,20 @@ describe('<OrganizationDetails />', () => {
         },
       },
     ]
+
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/organizations/:orgSlug/:activeTab?',
+          element: <OrganizationDetails />,
+        },
+      ],
+      {
+        initialEntries: ['/organizations/treasury-board-of-canada-secretariat'],
+        initialIndex: 0,
+      },
+    )
+
     it('displays details using the treasury-board-of-canada-secretariat slug', async () => {
       window.resizeTo(1024, 768)
 
@@ -323,13 +346,11 @@ describe('<OrganizationDetails />', () => {
                   userName: 'justauser',
                 })}
               >
-                <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <TourProvider>
-                      <OrganizationDetails />
-                    </TourProvider>
-                  </Route>
-                </MemoryRouter>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <OrganizationDetails />
+                  </RouterProvider>
+                </TourProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
@@ -352,13 +373,11 @@ describe('<OrganizationDetails />', () => {
                   userName: 'justauser',
                 })}
               >
-                <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <TourProvider>
-                      <OrganizationDetails />
-                    </TourProvider>
-                  </Route>
-                </MemoryRouter>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <OrganizationDetails />
+                  </RouterProvider>
+                </TourProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
@@ -381,13 +400,11 @@ describe('<OrganizationDetails />', () => {
                   userName: 'justauser',
                 })}
               >
-                <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
-                  <Route path="/organizations/:orgSlug">
-                    <TourProvider>
-                      <OrganizationDetails />
-                    </TourProvider>
-                  </Route>
-                </MemoryRouter>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <OrganizationDetails />
+                  </RouterProvider>
+                </TourProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>

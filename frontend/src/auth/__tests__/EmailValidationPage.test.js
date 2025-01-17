@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -62,6 +62,19 @@ const failMocks = [
   },
 ]
 
+const router = createMemoryRouter(
+  [
+    {
+      path: '/validate/:verifyToken',
+      element: <EmailValidationPage />,
+    },
+  ],
+  {
+    initialEntries: ['/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe'],
+    initialIndex: 0,
+  },
+)
+
 describe('<EmailValidationPage />', () => {
   describe('after loading mutation', () => {
     it('displays an error message', async () => {
@@ -76,16 +89,9 @@ describe('<EmailValidationPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/validate/:verifyToken">
-                    <EmailValidationPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <EmailValidationPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -94,9 +100,7 @@ describe('<EmailValidationPage />', () => {
 
       await waitFor(() =>
         expect(
-          queryByText(
-            /Your account email could not be verified at this time. Please try again./,
-          ),
+          queryByText(/Your account email could not be verified at this time. Please try again./),
         ).toBeInTheDocument(),
       )
     })
@@ -113,27 +117,16 @@ describe('<EmailValidationPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/validate/:verifyToken">
-                    <EmailValidationPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <EmailValidationPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
 
-      await waitFor(() =>
-        expect(
-          queryByText(/Your account email was successfully verified/),
-        ).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(queryByText(/Your account email was successfully verified/)).toBeInTheDocument())
     })
   })
 })

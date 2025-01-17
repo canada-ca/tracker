@@ -1,11 +1,10 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
@@ -46,6 +45,20 @@ describe('<ForgotPasswordPage />', () => {
     describe('when onBlur fires', () => {
       describe('email field', () => {
         it('displays an error message', async () => {
+          const router = createMemoryRouter(
+            [
+              {
+                path: '/forgot-password',
+                element: <ForgotPasswordPage />,
+              },
+            ],
+            {
+              // Set for where you want to start in the routes. Remember, KISS (Keep it simple, stupid) the routes.
+              initialEntries: ['/forgot-password'],
+              // We don't need to explicitly set this, but it's nice to have.
+              initialIndex: 0,
+            },
+          )
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
               <UserVarProvider
@@ -57,12 +70,9 @@ describe('<ForgotPasswordPage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={['/forgot-password']}
-                      initialIndex={0}
-                    >
+                    <RouterProvider router={router}>
                       <ForgotPasswordPage />
-                    </MemoryRouter>
+                    </RouterProvider>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
@@ -75,21 +85,32 @@ describe('<ForgotPasswordPage />', () => {
             fireEvent.blur(email)
           })
 
-          await waitFor(() =>
-            expect(queryByText(/Email cannot be empty/i)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Email cannot be empty/i)).toBeInTheDocument())
         })
       })
     })
   })
 
   describe('when given correct input', () => {
-    const history = createMemoryHistory({
-      initialEntries: ['/forgot-password'],
-      initialIndex: 0,
-    })
-
     it('successfully submits', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div />,
+          },
+          {
+            path: '/forgot-password',
+            element: <ForgotPasswordPage />,
+          },
+        ],
+        {
+          // Set for where you want to start in the routes. Remember, KISS (Keep it simple, stupid) the routes.
+          initialEntries: ['/forgot-password'],
+          // We don't need to explicitly set this, but it's nice to have.
+          initialIndex: 0,
+        },
+      )
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={mocks}>
           <UserVarProvider
@@ -101,19 +122,9 @@ describe('<ForgotPasswordPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={['/forgot-password']}
-                  initialIndex={0}
-                >
-                  <Router history={history}>
-                    <Switch>
-                      <Route
-                        path="/forgot-password"
-                        render={() => <ForgotPasswordPage />}
-                      />
-                    </Switch>
-                  </Router>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <ForgotPasswordPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -126,13 +137,11 @@ describe('<ForgotPasswordPage />', () => {
       fireEvent.click(submitBtn)
 
       await waitFor(() => {
-        expect(
-          queryByText(/An email was sent with a link to reset your password/i),
-        ).toBeInTheDocument()
+        expect(queryByText(/An email was sent with a link to reset your password/i)).toBeInTheDocument()
       })
 
       await waitFor(() => {
-        expect(history.location.pathname).toEqual('/')
+        expect(router.state.location.pathname).toEqual('/')
       })
     })
   })
