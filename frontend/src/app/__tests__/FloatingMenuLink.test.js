@@ -1,10 +1,9 @@
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
-import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
@@ -46,11 +45,11 @@ describe('<FloatingMenuLink>', () => {
         [
           {
             path: '/sign-in',
-            element: <div>Sign in</div>,
+            element: <div>Sign in page</div>,
           },
           {
-            path: '*',
-            element: <div></div>,
+            path: '/',
+            element: <FloatingMenuLink to="/sign-in" text="Sign In" />,
           },
         ],
         {
@@ -58,20 +57,13 @@ describe('<FloatingMenuLink>', () => {
           initialIndex: 0,
         },
       )
+
       const { getByText } = render(
         <MockedProvider>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
+          <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <RouterProvider router={router}>
-                  <FloatingMenuLink to="/sign-in" text="Sign In" />
-                </RouterProvider>
+                <RouterProvider router={router} />
               </ChakraProvider>
             </I18nProvider>
           </UserVarProvider>

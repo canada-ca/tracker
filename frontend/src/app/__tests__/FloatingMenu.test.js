@@ -107,9 +107,6 @@ describe('<FloatingMenu>', () => {
         })
       })
     })
-  })
-
-  describe('when the menu is open', () => {
     describe("and the 'Sign In' button is clicked", () => {
       it('redirects to the sign in page', async () => {
         const router = createMemoryRouter(
@@ -119,8 +116,8 @@ describe('<FloatingMenu>', () => {
               element: <div>Sign in</div>,
             },
             {
-              path: '*',
-              element: <div></div>,
+              path: '/',
+              element: <FloatingMenu />,
             },
           ],
           {
@@ -131,27 +128,20 @@ describe('<FloatingMenu>', () => {
 
         const { getByText } = render(
           <MockedProvider>
-            <UserVarProvider
-              userVar={makeVar({
-                jwt: null,
-                tfaSendMethod: null,
-                userName: null,
-              })}
-            >
-              <MemoryRouter initialEntries={['/']}>
-                <I18nProvider i18n={i18n}>
-                  <ChakraProvider theme={theme}>
-                    <RouterProvider router={router}>
-                      <FloatingMenu />
-                    </RouterProvider>
-                  </ChakraProvider>
-                </I18nProvider>
-              </MemoryRouter>
+            <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+              <I18nProvider i18n={i18n}>
+                <ChakraProvider theme={theme}>
+                  <RouterProvider router={router} />
+                </ChakraProvider>
+              </I18nProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
-        const menuButton = getByText(/Menu/i)
-        fireEvent.click(menuButton)
+
+        await waitFor(() => {
+          const menuButton = getByText(/Menu/i)
+          fireEvent.click(menuButton)
+        })
 
         await waitFor(() => {
           expect(getByText(/Sign In/i)).toBeInTheDocument()
