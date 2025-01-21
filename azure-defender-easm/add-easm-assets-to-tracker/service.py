@@ -1,7 +1,7 @@
 import logging
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from arango import ArangoClient
 
 from dotenv import load_dotenv
@@ -100,7 +100,7 @@ async def main():
             return None
 
     # insert functions
-    async def create_domain(domain: str, txn_col):
+    def create_domain(domain: str, txn_col):
         insert_domain = {
             "domain": domain.lower(),
             "lastRan": None,
@@ -133,7 +133,10 @@ async def main():
             "_from": org_id,
             "_to": domain_id,
             "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "firstSeen": datetime.today().astimezone().isoformat(),
+            "firstSeen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
+                :-3
+            ]
+            + "Z",
         }
 
         try:
@@ -146,7 +149,10 @@ async def main():
 
     def log_activity(domain, org_key, txn_col):
         insert_activity = {
-            "timestamp": datetime.today().astimezone().isoformat(),
+            "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
+                :-3
+            ]
+            + "Z",
             "initiatedBy": {
                 "id": "easm",
                 "userName": SERVICE_ACCOUNT_EMAIL,
