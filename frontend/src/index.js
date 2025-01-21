@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter as Router, useHistory, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, useNavigate, useLocation } from 'react-router-dom'
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
@@ -20,7 +20,7 @@ const I18nApp = () => {
   const { currentUser, login } = useUserVar()
   const location = useLocation()
   const { from } = location.state || { from: { pathname: '/' } }
-  const history = useHistory()
+  const navigate = useNavigate()
   const {
     data: loginRequiredData,
     loading: loginRequiredLoading,
@@ -44,7 +44,7 @@ const I18nApp = () => {
               insideUser: refreshTokens.result.user.insideUser,
               affiliations: refreshTokens.result.user.affiliations,
             })
-            if (from.pathname !== '/') history.replace(from)
+            if (from.pathname !== '/') navigate(from, { replace: true })
           }
           // Non server error occurs
           else if (refreshTokens.result.__typename === 'AuthenticateError') {

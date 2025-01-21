@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -69,6 +69,19 @@ const successMocks = [
   },
 ]
 
+const router = createMemoryRouter(
+  [
+    {
+      path: '/reset-password/:resetToken',
+      element: <ResetPasswordPage />,
+    },
+  ],
+  {
+    initialEntries: ['/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe'],
+    initialIndex: 0,
+  },
+)
+
 describe('<ResetPasswordPage />', () => {
   describe('given no input', () => {
     describe('when onBlur fires', () => {
@@ -85,16 +98,9 @@ describe('<ResetPasswordPage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
-                    </MemoryRouter>
+                    <RouterProvider router={router}>
+                      <ResetPasswordPage />
+                    </RouterProvider>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
@@ -107,9 +113,7 @@ describe('<ResetPasswordPage />', () => {
             fireEvent.blur(password)
           })
 
-          await waitFor(() =>
-            expect(queryByText(/Password cannot be empty/)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Password cannot be empty/)).toBeInTheDocument())
         })
       })
 
@@ -126,16 +130,9 @@ describe('<ResetPasswordPage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
-                    </MemoryRouter>
+                    <RouterProvider router={router}>
+                      <ResetPasswordPage />
+                    </RouterProvider>
                   </I18nProvider>
                 </ChakraProvider>
               </UserVarProvider>
@@ -146,9 +143,7 @@ describe('<ResetPasswordPage />', () => {
 
           await waitFor(() => fireEvent.blur(confirmPassword))
 
-          await waitFor(() =>
-            expect(queryByText(/Password confirmation/)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Password confirmation/)).toBeInTheDocument())
         })
       })
     })
@@ -167,16 +162,9 @@ describe('<ResetPasswordPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/reset-password/:resetToken">
-                    <ResetPasswordPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <ResetPasswordPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -196,6 +184,19 @@ describe('<ResetPasswordPage />', () => {
     })
 
     it('fails in reseting the password', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/reset-password/:resetToken',
+            element: <ResetPasswordPage />,
+          },
+        ],
+        {
+          initialEntries: ['/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe'],
+          initialIndex: 0,
+        },
+      )
+
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={failMocks}>
           <UserVarProvider
@@ -207,16 +208,9 @@ describe('<ResetPasswordPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/reset-password/:resetToken">
-                    <ResetPasswordPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <ResetPasswordPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -231,9 +225,7 @@ describe('<ResetPasswordPage />', () => {
         fireEvent.change(password, { target: { value: 'newPassword1' } })
         fireEvent.change(confirmPassword, { target: { value: 'newPassword1' } })
         fireEvent.click(submitBtn)
-        expect(
-          queryByText(/Unable to reset your password, please try again./i),
-        ).toBeInTheDocument()
+        expect(queryByText(/Unable to reset your password, please try again./i)).toBeInTheDocument()
       })
     })
   })
