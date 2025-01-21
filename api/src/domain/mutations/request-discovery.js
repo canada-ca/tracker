@@ -34,6 +34,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
       i18n,
       userKey,
       publish,
+      request: { ip },
       auth: { checkDomainPermission, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
@@ -114,6 +115,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: permission,
+        ipAddress: ip,
       },
       action: 'discover',
       target: {

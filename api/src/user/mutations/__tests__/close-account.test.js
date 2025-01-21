@@ -164,6 +164,7 @@ describe('given the closeAccount mutation', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            request: { ip: '127.0.0.1' },
             auth: {
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
@@ -242,6 +243,7 @@ describe('given the closeAccount mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkSuperAdmin: checkSuperAdmin({
                   i18n,
@@ -324,6 +326,7 @@ describe('given the closeAccount mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkSuperAdmin: checkSuperAdmin({
                   i18n,
@@ -391,6 +394,7 @@ describe('given the closeAccount mutation', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            request: { ip: '127.0.0.1' },
             auth: {
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
@@ -559,6 +563,7 @@ describe('given the closeAccount mutation', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            request: { ip: '127.0.0.1' },
             auth: {
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
@@ -643,6 +648,7 @@ describe('given the closeAccount mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkSuperAdmin: checkSuperAdmin({
                   i18n,
@@ -730,6 +736,7 @@ describe('given the closeAccount mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkSuperAdmin: checkSuperAdmin({
                   i18n,
@@ -804,6 +811,7 @@ describe('given the closeAccount mutation', () => {
             collections: collectionNames,
             transaction,
             userKey: superAdmin._key,
+            request: { ip: '127.0.0.1' },
             auth: {
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
@@ -890,6 +898,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(false),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
@@ -951,6 +960,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
@@ -1027,6 +1037,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
@@ -1092,6 +1103,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
@@ -1158,6 +1170,7 @@ describe('given the closeAccount mutation', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: '123',
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkSuperAdmin: jest.fn().mockReturnValue(true),
                 userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
@@ -1230,6 +1243,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(false),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
@@ -1291,6 +1305,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
@@ -1367,6 +1382,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
@@ -1432,6 +1448,7 @@ describe('given the closeAccount mutation', () => {
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: '123',
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
@@ -1498,6 +1515,7 @@ describe('given the closeAccount mutation', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: '123',
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkSuperAdmin: jest.fn().mockReturnValue(true),
                 userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),

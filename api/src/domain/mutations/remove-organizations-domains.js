@@ -42,6 +42,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByDomain, loadOrgByKey },
@@ -161,6 +162,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
                 id: user._key,
                 userName: user.userName,
                 role: permission,
+                ipAddress: ip,
               },
               action: 'update',
               target: {
@@ -398,6 +400,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
               id: user._key,
               userName: user.userName,
               role: permission,
+              ipAddress: ip,
             },
             action: 'remove',
             target: {
@@ -426,6 +429,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             id: user._key,
             userName: user.userName,
             role: permission,
+            ipAddress: ip,
           },
           action: 'update',
           target: {
@@ -453,6 +457,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             id: user._key,
             userName: user.userName,
             role: permission,
+            ipAddress: ip,
           },
           action: 'remove',
           target: {

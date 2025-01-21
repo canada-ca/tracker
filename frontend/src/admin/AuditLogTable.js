@@ -140,7 +140,7 @@ export function AuditLogTable({ orgId = null }) {
                 return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
               }
               const resourceType = resourceFilters.find(({ value }) => target.resourceType.toUpperCase() === value)
-              action = actionFilters.find(({ value }) => action.toUpperCase() === value)
+              action = actionFilters.find(({ value }) => action?.toUpperCase() === value)
               if (reason === 'NONEXISTENT') {
                 reason = <Trans>This domain no longer exists</Trans>
               } else if (reason === 'WRONG_ORG') {

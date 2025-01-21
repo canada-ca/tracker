@@ -90,6 +90,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired },
       loaders: { loadOrgByKey },
       validators: { cleanseInput, slugify },
@@ -303,6 +304,7 @@ export const updateOrganization = new mutationWithClientMutationId({
           id: user._key,
           userName: user.userName,
           role: permission,
+          ipAddress: ip,
         },
         action: 'update',
         target: {
