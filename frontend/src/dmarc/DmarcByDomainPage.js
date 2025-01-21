@@ -118,7 +118,7 @@ export default function DmarcByDomainPage() {
         return (
           <Link
             as={RouteLink}
-            to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            to={`/domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             isExternal={false}
           >
             {`${value} `} <LinkIcon aria-hidden="true" />

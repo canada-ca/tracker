@@ -3,7 +3,7 @@ import { Button, Flex, Stack, Text, useToast, Select } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useQuery } from '@apollo/client'
-import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 
 import { AdminPanel } from './AdminPanel'
@@ -28,7 +28,7 @@ export default function AdminPage() {
 
   const { activeMenu } = useParams()
   const toast = useToast()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { i18n } = useLingui()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
@@ -62,7 +62,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!activeMenu) {
-      history.replace(`/admin/organizations`)
+      navigate(`/admin/organizations`, { replace: true })
     }
     if (initRender && data?.findMyOrganizations?.edges.length === 1) {
       setInitRender(false)
@@ -145,7 +145,7 @@ export default function AdminPage() {
 
   const changeActiveMenu = (val) => {
     if (activeMenu !== val) {
-      history.replace(`/admin/${val}`)
+      navigate(`/admin/${val}`, { replace: true })
     }
   }
 

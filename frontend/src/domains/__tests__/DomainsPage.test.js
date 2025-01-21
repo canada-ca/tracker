@@ -1,11 +1,10 @@
 import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
@@ -286,10 +285,22 @@ describe('<DomainsPage />', () => {
     })
 
     describe('domain card links', () => {
-      const history = createMemoryHistory({
-        initialEntries: ['/domains'],
-        initialIndex: 0,
-      })
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div>Landing Page</div>,
+          },
+          {
+            path: '/domains',
+            element: <DomainsPage />,
+          },
+        ],
+        {
+          initialEntries: ['/domains'],
+          initialIndex: 0,
+        },
+      )
       it('takes user to DMARC Report page', async () => {
         const { getAllByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
@@ -302,15 +313,11 @@ describe('<DomainsPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <Router history={history}>
-                      <TourProvider>
-                        <Switch>
-                          <Route path="/domains" render={() => <DomainsPage />} />
-                        </Switch>
-                      </TourProvider>
-                    </Router>
-                  </MemoryRouter>
+                  <TourProvider>
+                    <RouterProvider router={router}>
+                      <DomainsPage />
+                    </RouterProvider>
+                  </TourProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -322,11 +329,29 @@ describe('<DomainsPage />', () => {
         await waitFor(() => {
           const reportLinks = getAllByText(/DMARC Report/i)
           fireEvent.click(reportLinks[0])
-          expect(history.location.pathname).toEqual(`/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/${currentYear}`)
+          expect(router.state.location.pathname).toEqual(
+            `/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/${currentYear}`,
+          )
         })
       })
 
       it('takes user to Guidance page', async () => {
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/',
+              element: <div>Landing Page</div>,
+            },
+            {
+              path: '/domains',
+              element: <DomainsPage />,
+            },
+          ],
+          {
+            initialEntries: ['/domains'],
+            initialIndex: 0,
+          },
+        )
         const { getAllByRole } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
@@ -337,15 +362,11 @@ describe('<DomainsPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <Router history={history}>
-                      <TourProvider>
-                        <Switch>
-                          <Route path="/domains" render={() => <DomainsPage />} />
-                        </Switch>
-                      </TourProvider>
-                    </Router>
-                  </MemoryRouter>
+                  <TourProvider>
+                    <RouterProvider router={router}>
+                      <DomainsPage />
+                    </RouterProvider>
+                  </TourProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -355,7 +376,7 @@ describe('<DomainsPage />', () => {
         await waitFor(() => {
           const guidanceLinks = getAllByRole('link', { name: /View Results/i })
           fireEvent.click(guidanceLinks[0])
-          expect(history.location.pathname).toEqual('/domains/tbs-sct.gc.ca')
+          expect(router.state.location.pathname).toEqual('/domains/tbs-sct.gc.ca')
         })
       })
     })

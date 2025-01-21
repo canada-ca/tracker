@@ -1,9 +1,8 @@
 import React from 'react'
-import { createMemoryHistory } from 'history'
-import { MemoryRouter, Router } from 'react-router-dom'
+import { MemoryRouter, createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
@@ -56,7 +55,7 @@ describe('<SignInPage />', () => {
 
   describe('when the password field is empty', () => {
     it('displays an error message', async () => {
-      const { container } = render(
+      const { container, getByText } = render(
         <MockedProvider>
           <UserVarProvider
             userVar={makeVar({
@@ -80,9 +79,9 @@ describe('<SignInPage />', () => {
 
       fireEvent.blur(password)
 
-      const errorElement = await waitFor(() => getByText(container, /Password cannot be empty/i), { container })
-
-      expect(errorElement.innerHTML).toMatch(/Password cannot be empty/i)
+      await waitFor(() => {
+        expect(getByText(/Password cannot be empty/i)).toBeInTheDocument()
+      })
     })
   })
 
@@ -119,12 +118,22 @@ describe('<SignInPage />', () => {
           },
         ]
 
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/authenticate/email/authenticate-token-test',
+              element: <div>Authenticate</div>,
+            },
+            {
+              path: '/sign-in',
+              element: <SignInPage />,
+            },
+          ],
+          {
+            initialEntries: ['/sign-in'],
+            initialIndex: 0,
+          },
+        )
 
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
@@ -137,9 +146,9 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <RouterProvider router={router}>
                     <SignInPage />
-                  </Router>
+                  </RouterProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -150,22 +159,12 @@ describe('<SignInPage />', () => {
         const password = container.querySelector('#password')
         const form = getByRole('form')
 
-        fireEvent.change(email, {
-          target: {
-            value: values.email,
-          },
-        })
-
-        fireEvent.change(password, {
-          target: {
-            value: values.password,
-          },
-        })
-
+        fireEvent.change(email, { target: { value: values.email } })
+        fireEvent.change(password, { target: { value: values.password } })
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(history.location.pathname).toEqual(`/authenticate/email/${values.authenticateToken}`)
+          expect(router.state.location.pathname).toEqual('/authenticate/email/authenticate-token-test')
         })
       })
     })
@@ -205,12 +204,22 @@ describe('<SignInPage />', () => {
           },
         ]
 
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/',
+              element: <div>Landing Page</div>,
+            },
+            {
+              path: '/sign-in',
+              element: <SignInPage />,
+            },
+          ],
+          {
+            initialEntries: ['/sign-in'],
+            initialIndex: 0,
+          },
+        )
 
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
@@ -223,9 +232,9 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <RouterProvider router={router}>
                     <SignInPage />
-                  </Router>
+                  </RouterProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -236,22 +245,12 @@ describe('<SignInPage />', () => {
         const password = container.querySelector('#password')
         const form = getByRole('form')
 
-        fireEvent.change(email, {
-          target: {
-            value: values.email,
-          },
-        })
-
-        fireEvent.change(password, {
-          target: {
-            value: values.password,
-          },
-        })
-
+        fireEvent.change(email, { target: { value: values.email } })
+        fireEvent.change(password, { target: { value: values.password } })
         fireEvent.submit(form)
 
         await waitFor(() => {
-          expect(history.location.pathname).toEqual('/')
+          expect(router.state.location.pathname).toEqual('/')
         })
       })
     })
@@ -284,13 +283,6 @@ describe('<SignInPage />', () => {
           },
         ]
 
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
-
         const { container, getByRole, queryByText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
             <UserVarProvider
@@ -302,9 +294,9 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -315,18 +307,8 @@ describe('<SignInPage />', () => {
         const password = container.querySelector('#password')
         const form = getByRole('form')
 
-        fireEvent.change(email, {
-          target: {
-            value: values.email,
-          },
-        })
-
-        fireEvent.change(password, {
-          target: {
-            value: values.password,
-          },
-        })
-
+        fireEvent.change(email, { target: { value: values.email } })
+        fireEvent.change(password, { target: { value: values.password } })
         fireEvent.submit(form)
 
         await waitFor(() => {
@@ -359,13 +341,6 @@ describe('<SignInPage />', () => {
           },
         ]
 
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
-
         const { container, getByRole, queryByText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
             <UserVarProvider
@@ -377,9 +352,9 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -390,18 +365,8 @@ describe('<SignInPage />', () => {
         const password = container.querySelector('#password')
         const form = getByRole('form')
 
-        fireEvent.change(email, {
-          target: {
-            value: values.email,
-          },
-        })
-
-        fireEvent.change(password, {
-          target: {
-            value: values.password,
-          },
-        })
-
+        fireEvent.change(email, { target: { value: values.email } })
+        fireEvent.change(password, { target: { value: values.password } })
         fireEvent.submit(form)
 
         await waitFor(() => {
@@ -435,13 +400,6 @@ describe('<SignInPage />', () => {
           },
         ]
 
-        // create a history object and inject it so we can inspect it afterwards
-        // for the side effects of our form submission (a redirect to /!).
-        const history = createMemoryHistory({
-          initialEntries: ['/sign-in'],
-          initialIndex: 0,
-        })
-
         const { container, getByRole, queryByText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
             <UserVarProvider
@@ -453,9 +411,9 @@ describe('<SignInPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <SignInPage />
-                  </Router>
+                  </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -466,18 +424,8 @@ describe('<SignInPage />', () => {
         const password = container.querySelector('#password')
         const form = getByRole('form')
 
-        fireEvent.change(email, {
-          target: {
-            value: values.email,
-          },
-        })
-
-        fireEvent.change(password, {
-          target: {
-            value: values.password,
-          },
-        })
-
+        fireEvent.change(email, { target: { value: values.email } })
+        fireEvent.change(password, { target: { value: values.password } })
         fireEvent.submit(form)
 
         await waitFor(() => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -46,16 +46,33 @@ const mocks = [
 
 describe('<CreateUserPage />', () => {
   it('renders', async () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <div>Landing Page</div>,
+        },
+        {
+          path: '/create-user/:userOrgToken?',
+          element: <CreateUserPage />,
+        },
+      ],
+      {
+        // Set for where you want to start in the routes. Remember, KISS (Keep it simple, stupid) the routes.
+        initialEntries: ['/create-user/invited-token-test'],
+        // We don't need to explicitly set this, but it's nice to have.
+        initialIndex: 0,
+      },
+    )
+
     const { queryByText } = render(
       <MockedProvider mocks={mocks}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/create-user/invited-token-test']} initialIndex={0}>
-                <Route path="/create-user/:userOrgToken?">
-                  <CreateUserPage />
-                </Route>
-              </MemoryRouter>
+              <RouterProvider router={router}>
+                <CreateUserPage />
+              </RouterProvider>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
@@ -67,6 +84,25 @@ describe('<CreateUserPage />', () => {
 
   describe('given optional invited token', () => {
     it('displays a notification', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/',
+            element: <div>Landing Page</div>,
+          },
+          {
+            path: '/create-user/:userOrgToken?',
+            element: <CreateUserPage />,
+          },
+        ],
+        {
+          // Set for where you want to start in the routes. Remember, KISS (Keep it simple, stupid) the routes.
+          initialEntries: ['/create-user/invited-token-test'],
+          // We don't need to explicitly set this, but it's nice to have.
+          initialIndex: 0,
+        },
+      )
+
       const { queryByText } = render(
         <MockedProvider mocks={mocks}>
           <UserVarProvider
@@ -78,11 +114,9 @@ describe('<CreateUserPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/create-user/invited-token-test']} initialIndex={0}>
-                  <Route path="/create-user/:userOrgToken?">
-                    <CreateUserPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <CreateUserPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
