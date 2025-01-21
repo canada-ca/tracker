@@ -201,13 +201,13 @@ async def main():
             txn_col_audit_logs = txn_db.collection("auditLogs")
 
             # create domain
-            created_domain = await create_domain(domain=domain, txn_col=txn_col_domains)
+            created_domain = create_domain(domain=domain, txn_col=txn_col_domains)
             if created_domain is None:
                 # abort transaction
                 txn_db.abort_transaction()
                 continue
             # add domain to org
-            created_claim = await create_claim(
+            created_claim = create_claim(
                 org_id=org_id,
                 domain_id=created_domain["_id"],
                 domain_name=domain,
@@ -219,7 +219,7 @@ async def main():
                 continue
             # add activity logging
             org_key = org_id.split("/")[-1]
-            created_log = await log_activity(
+            created_log = log_activity(
                 domain=domain, org_key=org_key, txn_col=txn_col_audit_logs
             )
             if created_log is None:
