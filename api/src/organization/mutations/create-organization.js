@@ -83,6 +83,7 @@ export const createOrganization = new mutationWithClientMutationId({
       transaction,
       query,
       userKey,
+      request: { ip },
       auth: { userRequired, verifiedRequired },
       loaders: { loadOrgBySlug },
       validators: { cleanseInput, slugify },
@@ -223,6 +224,7 @@ export const createOrganization = new mutationWithClientMutationId({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
+        ipAddress: ip,
       },
       action: 'create',
       target: {

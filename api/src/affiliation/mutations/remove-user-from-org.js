@@ -34,6 +34,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByKey },
       validators: { cleanseInput },
@@ -181,6 +182,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: permission,
+        ipAddress: ip,
       },
       action: 'remove',
       target: {

@@ -133,6 +133,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -211,6 +212,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -289,6 +291,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -367,6 +370,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -445,6 +449,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -523,6 +528,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -601,6 +607,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -692,6 +699,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -772,6 +780,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -850,6 +859,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -928,6 +938,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1006,6 +1017,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1084,6 +1096,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1162,6 +1175,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1240,6 +1254,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1331,6 +1346,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1420,6 +1436,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1498,6 +1515,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1576,6 +1594,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1654,6 +1673,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1732,6 +1752,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1810,6 +1831,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1888,6 +1910,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -1979,6 +2002,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2059,6 +2083,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2137,6 +2162,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2215,6 +2241,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2293,6 +2320,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2371,6 +2399,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2449,6 +2478,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2527,6 +2557,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2618,6 +2649,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: user._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
@@ -2715,6 +2747,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -2792,6 +2825,7 @@ describe('updating an organization', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('user'),
                     userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -2867,6 +2901,7 @@ describe('updating an organization', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue(undefined),
                     userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -2944,6 +2979,7 @@ describe('updating an organization', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3026,6 +3062,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3096,6 +3133,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3164,6 +3202,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3262,6 +3301,7 @@ describe('updating an organization', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3359,6 +3399,7 @@ describe('updating an organization', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3442,6 +3483,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3519,6 +3561,7 @@ describe('updating an organization', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('user'),
                     userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3594,6 +3637,7 @@ describe('updating an organization', () => {
                   collections: collectionNames,
                   transaction,
                   userKey: 123,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     checkPermission: jest.fn().mockReturnValue(undefined),
                     userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3671,6 +3715,7 @@ describe('updating an organization', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3753,6 +3798,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3823,6 +3869,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3891,6 +3938,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -3989,6 +4037,7 @@ describe('updating an organization', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
@@ -4086,6 +4135,7 @@ describe('updating an organization', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),

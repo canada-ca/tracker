@@ -164,6 +164,7 @@ describe('authenticate user account', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            request: { ip: '127.0.0.1' },
             auth: {
               bcrypt,
               tokenize,
@@ -298,6 +299,7 @@ describe('authenticate user account', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            request: { ip: '127.0.0.1' },
             auth: {
               bcrypt,
               tokenize,

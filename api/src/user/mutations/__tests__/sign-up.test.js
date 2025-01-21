@@ -113,6 +113,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -186,6 +187,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -247,7 +249,7 @@ describe('testing user sign up', () => {
                   query,
                   collections: collectionNames,
                   transaction,
-
+                  request: { ip: '127.0.0.1' },
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -323,6 +325,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -420,7 +423,7 @@ describe('testing user sign up', () => {
                   query,
                   collections: collectionNames,
                   transaction,
-
+                  request: { ip: '127.0.0.1' },
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -498,6 +501,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -572,6 +576,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -636,7 +641,7 @@ describe('testing user sign up', () => {
                   query,
                   collections: collectionNames,
                   transaction,
-
+                  request: { ip: '127.0.0.1' },
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -714,6 +719,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -788,6 +794,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -870,7 +877,7 @@ describe('testing user sign up', () => {
                   query,
                   collections: collectionNames,
                   transaction,
-
+                  request: { ip: '127.0.0.1' },
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -944,6 +951,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1005,7 +1013,7 @@ describe('testing user sign up', () => {
                   query,
                   collections: collectionNames,
                   transaction,
-
+                  request: { ip: '127.0.0.1' },
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -1080,6 +1088,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1179,6 +1188,7 @@ describe('testing user sign up', () => {
                   transaction,
                   uuidv4,
 
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1255,6 +1265,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1329,6 +1340,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1395,6 +1407,7 @@ describe('testing user sign up', () => {
                   transaction,
                   uuidv4,
 
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1471,6 +1484,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1545,6 +1559,7 @@ describe('testing user sign up', () => {
                   collections: collectionNames,
                   transaction,
                   uuidv4,
+                  request: { ip: '127.0.0.1' },
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1629,6 +1644,7 @@ describe('testing user sign up', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1701,6 +1717,7 @@ describe('testing user sign up', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1773,6 +1790,7 @@ describe('testing user sign up', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1867,6 +1885,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -1983,6 +2002,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2066,6 +2086,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2163,6 +2184,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2269,6 +2291,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2365,6 +2388,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2474,6 +2498,7 @@ describe('testing user sign up', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -2546,6 +2571,7 @@ describe('testing user sign up', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -2618,6 +2644,7 @@ describe('testing user sign up', () => {
               collections: collectionNames,
               transaction,
               uuidv4,
+              request: { ip: '127.0.0.1' },
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -2712,6 +2739,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2829,6 +2857,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2913,6 +2942,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -3010,6 +3040,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -3116,6 +3147,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -3212,6 +3244,7 @@ describe('testing user sign up', () => {
                   abort: jest.fn(),
                 }),
                 uuidv4,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,

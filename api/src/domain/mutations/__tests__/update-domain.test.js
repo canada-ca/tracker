@@ -166,6 +166,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   i18n,
@@ -258,6 +259,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   i18n,
@@ -350,6 +352,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: user._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   i18n,
@@ -458,6 +461,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
@@ -541,6 +545,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
@@ -623,6 +628,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
@@ -706,6 +712,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -789,6 +796,7 @@ describe('updating a domain', () => {
                 transaction,
                 publish,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -866,6 +874,7 @@ describe('updating a domain', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -948,6 +957,7 @@ describe('updating a domain', () => {
                 abort: jest.fn(),
               }),
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -1034,6 +1044,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
@@ -1116,6 +1127,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
@@ -1198,6 +1210,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
@@ -1281,6 +1294,7 @@ describe('updating a domain', () => {
               transaction,
               publish,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -1364,6 +1378,7 @@ describe('updating a domain', () => {
                 transaction,
                 publish,
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -1441,6 +1456,7 @@ describe('updating a domain', () => {
                   abort: jest.fn(),
                 }),
                 userKey: 123,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -1523,6 +1539,7 @@ describe('updating a domain', () => {
                 abort: jest.fn(),
               }),
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
