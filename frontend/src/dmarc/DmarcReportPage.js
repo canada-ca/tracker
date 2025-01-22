@@ -663,20 +663,6 @@ export default function DmarcReportPage() {
         </Flex>
       </Box>
 
-      <NotificationBanner status="warning" bannerId="dmarc-report-outage" hideable>
-        <Box>
-          <AlertTitle>
-            <Trans>Important Notice:</Trans>
-          </AlertTitle>
-          <AlertDescription>
-            <Trans>
-              The DMARC Summaries data has not been updated since December 2024. We are working to refresh this
-              information. Please note that any displayed data may not reflect current email security status.
-            </Trans>
-          </AlertDescription>
-        </Box>
-      </NotificationBanner>
-
       {graphDisplay}
 
       <Flex align="center" mb={2}>
