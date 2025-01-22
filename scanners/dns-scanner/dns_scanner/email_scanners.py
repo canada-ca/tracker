@@ -3,13 +3,15 @@ import json
 import logging
 import os
 import shutil
+from collections import OrderedDict
+
 import time
 
 import dkim
 import dns
 import nacl
 import tldextract
-from checkdmarc import DNSException, check_ns, check_mx, get_base_domain
+from checkdmarc import DNSException, check_ns, get_base_domain
 from checkdmarc.dmarc import DMARCError, parse_dmarc_report_uri, check_dmarc
 from checkdmarc.spf import SPFError, check_spf
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
@@ -40,6 +42,70 @@ def check_if_domain_exists(domain, resolver):
     except Exception as e:
         logger.error(f"Unknown error getting A record for {domain}: {e}")
         return False
+
+
+def check_mx_records(
+    domain: str, resolver: dns.resolver.Resolver = None, lifetime: float = 2.0
+) -> OrderedDict:
+    hosts = []
+    warnings = []
+
+    try:
+        answers = resolver.resolve(domain, "MX")
+        if not answers:
+            warnings.append("No MX records found")
+        for rdata in answers:
+            if rdata.exchange.to_text() == ".":
+                if rdata.preference != 0:
+                    warnings.append(
+                        f"Null MX record with non-zero preference {rdata.preference}"
+                    )
+                hosts.append(
+                    OrderedDict(
+                        [
+                            ("preference", rdata.preference),
+                            ("hostname", "."),
+                            ("addresses", []),
+                        ]
+                    )
+                )
+                continue
+            hostname = rdata.exchange.to_text().rstrip(".").lower()
+            addresses = []
+            try:
+                a_answers = resolver.resolve(hostname, "A", lifetime=lifetime)
+                addresses.extend([a.to_text() for a in a_answers])
+            except dns.resolver.NoAnswer:
+                pass
+            try:
+                aaaa_answers = resolver.resolve(hostname, "AAAA", lifetime=lifetime)
+                addresses.extend([aaaa.to_text() for aaaa in aaaa_answers])
+            except dns.resolver.NoAnswer:
+                pass
+            hosts.append(
+                OrderedDict(
+                    [
+                        ("preference", rdata.preference),
+                        ("hostname", hostname),
+                        ("addresses", addresses),
+                    ]
+                )
+            )
+    except dns.resolver.NXDOMAIN:
+        return OrderedDict(
+            [("hosts", []), ("error", f"The domain {domain} does not exist")]
+        )
+    except dns.resolver.NoAnswer:
+        return OrderedDict(
+            [
+                ("hosts", []),
+                ("error", f"The domain {domain} does not have any MX records"),
+            ]
+        )
+    except Exception as error:
+        return OrderedDict([("hosts", []), ("error", str(error))])
+
+    return OrderedDict([("hosts", hosts), ("warnings", warnings)])
 
 
 class DMARCScanner:
@@ -98,7 +164,8 @@ class DMARCScanner:
 
         resolver = dns.resolver.Resolver()
         resolver.timeout = TIMEOUT
-        resolver.lifetime = TIMEOUT * 2
+        lifetime = TIMEOUT * 2
+        resolver.lifetime = lifetime
 
         try:
             # Perform "checkdmarc" scan on provided domain.
@@ -108,11 +175,8 @@ class DMARCScanner:
                         "domain": self.domain,
                         "base_domain": get_base_domain(self.domain),
                         "ns": check_ns(self.domain, resolver=resolver, timeout=TIMEOUT),
-                        "mx": check_mx(
-                            self.domain,
-                            skip_tls=True,
-                            resolver=resolver,
-                            timeout=TIMEOUT,
+                        "mx": check_mx_records(
+                            self.domain, resolver=resolver, lifetime=lifetime
                         ),
                         "spf": check_spf(
                             self.domain, resolver=resolver, timeout=TIMEOUT
