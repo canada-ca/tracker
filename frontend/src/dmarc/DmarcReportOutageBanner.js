@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro'
 
 export function DmarcReportOutageBanner() {
   return (
-    <NotificationBanner status="warning" bannerId="dmarc-report-outage-2" hideable>
+    <NotificationBanner status="warning" bannerId="dmarc-report-outage-2">
       <Box>
         <AlertTitle>
           <Trans>Note:</Trans>
