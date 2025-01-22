@@ -283,12 +283,13 @@ export default function DmarcByDomainPage() {
       <NotificationBanner status="warning" bannerId="dmarc-report-outage" hideable>
         <Box>
           <AlertTitle>
-            <Trans>Important Notice:</Trans>
+            <Trans>Note:</Trans>
           </AlertTitle>
           <AlertDescription>
             <Trans>
-              The DMARC Summaries data has not been updated since December 2024. We are working to refresh this
-              information. Please note that any displayed data may not reflect current email security status.
+              There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service
+              disruption. This does not affect current DMARC reporting, and all data before and after this period
+              remains complete and accurate.
             </Trans>
           </AlertDescription>
         </Box>
