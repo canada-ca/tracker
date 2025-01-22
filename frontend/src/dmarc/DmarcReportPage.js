@@ -30,6 +30,7 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { MonthSelect } from '../components/MonthSelect'
 import { NotificationBanner } from '../app/NotificationBanner'
+import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -663,20 +664,7 @@ export default function DmarcReportPage() {
         </Flex>
       </Box>
 
-      <NotificationBanner status="warning" bannerId="dmarc-report-outage" hideable>
-        <Box>
-          <AlertTitle>
-            <Trans>Note:</Trans>
-          </AlertTitle>
-          <AlertDescription>
-            <Trans>
-              There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service
-              disruption. This does not affect current DMARC reporting, and all data before and after this period
-              remains complete and accurate.
-            </Trans>
-          </AlertDescription>
-        </Box>
-      </NotificationBanner>
+      <DmarcReportOutageBanner />
 
       {graphDisplay}
 

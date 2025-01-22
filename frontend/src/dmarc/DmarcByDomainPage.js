@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import {
-  AlertDescription,
-  AlertTitle,
   Box,
   Divider,
   Flex,
@@ -35,7 +33,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { NotificationBanner } from '../app/NotificationBanner'
+import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -280,20 +278,7 @@ export default function DmarcByDomainPage() {
         </Flex>
       )}
 
-      <NotificationBanner status="warning" bannerId="dmarc-report-outage" hideable>
-        <Box>
-          <AlertTitle>
-            <Trans>Note:</Trans>
-          </AlertTitle>
-          <AlertDescription>
-            <Trans>
-              There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service
-              disruption. This does not affect current DMARC reporting, and all data before and after this period
-              remains complete and accurate.
-            </Trans>
-          </AlertDescription>
-        </Box>
-      </NotificationBanner>
+      <DmarcReportOutageBanner />
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
