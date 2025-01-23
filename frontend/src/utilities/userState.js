@@ -56,6 +56,7 @@ export function UserVarProvider({
       emailValidated: null,
       insideUser: null,
       affiliations: null,
+      dismissedMessages: null,
     })
     await client.resetStore()
   }

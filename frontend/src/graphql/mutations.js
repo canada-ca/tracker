@@ -715,4 +715,27 @@ export const UNIGNORE_CVE = gql`
   }
 `
 
+export const DISMISS_MESSAGE = gql`
+  mutation DismissMessage($messageId: String!) {
+    dismissMessage(input: { messageId: $messageId }) {
+      result {
+        ... on DismissMessageResult {
+          status
+          user {
+            id
+            dismissedMessages {
+              messageId
+              dismissedAt
+            }
+          }
+        }
+        ... on DismissMessageError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''

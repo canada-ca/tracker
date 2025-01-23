@@ -44,6 +44,7 @@ export default function TwoFactorAuthenticatePage() {
           emailValidated: authenticate.result.user.emailValidated,
           insideUser: authenticate.result.user.insideUser,
           affiliations: authenticate.result.user.affiliations,
+          dismissedMessages: authenticate.result.user.dismissedMessages,
         })
         // redirect to the home page.
         navigate(from, { replace: true })
