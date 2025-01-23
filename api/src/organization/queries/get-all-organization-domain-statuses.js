@@ -35,6 +35,7 @@ export const getAllOrganizationDomainStatuses = {
       'domain',
       'orgName',
       'orgAcronym',
+      'orgExternalId',
       'ipAddresses',
       'https',
       'hsts',
