@@ -284,8 +284,8 @@ async def main():
 
     try:
         unlabelled_assets = get_unlabelled_assets()
-        domains = get_org_domains(org_id)
-        new_domains = list(set(unlabelled_assets) - set(domains))
+        unclaimed_domains = get_org_domains(UNCLAIMED_ID)
+        new_domains = list(set(unlabelled_assets) - set(unclaimed_domains))
         await add_discovered_domain(new_domains, UNCLAIMED_ID)
     except Exception as e:
         logger.error(f"Error when attempting to add new assets to unclaimed org: {e}")
