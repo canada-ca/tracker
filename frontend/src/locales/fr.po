@@ -4588,7 +4588,7 @@ msgstr "Il existe une interruption dans les données historiques de DMARC entre 
 
 #: src/guidance/AdditionalFindings.js:119
 msgid "These findings are imported from Microsoft's <0>External Attack Surface Management <1/></0> tool. <2>Automated updates to these findings occur daily.</2>"
-msgstr "Estos hallazgos se importan de la herramienta <0>Gestión de la superficie de ataque externa</></0> de Microsoft. <2>Las actualizaciones automatizadas de estos hallazgos se producen a diario.</2>"
+msgstr "Ces résultats sont importés de l'outil <0>External Attack Surface Management <1/></0> de Microsoft. <Des mises à jour automatiques de ces résultats sont effectuées quotidiennement."
 
 #: src/guidance/AdditionalFindings.js:445
 #~ msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
