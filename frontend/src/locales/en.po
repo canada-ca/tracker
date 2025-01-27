@@ -95,7 +95,7 @@ msgstr "<0>Hostname:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
-#: src/guidance/AdditionalFindings.js:114
+#: src/guidance/AdditionalFindings.js:113
 #: src/guidance/EmailGuidance.js:158
 #: src/guidance/WebGuidance.js:150
 msgid "<0>Last Scanned:</0> {0}"
@@ -137,11 +137,11 @@ msgstr "1. Assess"
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
-#: src/guidance/AdditionalFindings.js:200
+#: src/guidance/AdditionalFindings.js:209
 msgid "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 msgstr "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 
-#: src/guidance/AdditionalFindings.js:247
+#: src/guidance/AdditionalFindings.js:256
 msgid "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 
@@ -149,11 +149,11 @@ msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame
 msgid "3. Enforce"
 msgstr "3. Enforce"
 
-#: src/guidance/AdditionalFindings.js:275
+#: src/guidance/AdditionalFindings.js:284
 msgid "3.1.2 Use a denial-of-service mitigation service"
 msgstr "3.1.2 Use a denial-of-service mitigation service"
 
-#: src/guidance/AdditionalFindings.js:306
+#: src/guidance/AdditionalFindings.js:315
 msgid "3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the origin server."
 msgstr "3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the origin server."
 
@@ -298,8 +298,7 @@ msgstr "Add User"
 #~ msgid "Additional findings"
 #~ msgstr "Additional findings"
 
-#: src/guidance/AdditionalFindings.js:52
-#: src/guidance/AdditionalFindings.js:441
+#: src/guidance/AdditionalFindings.js:51
 #: src/guidance/GuidancePage.js:254
 msgid "Additional Findings"
 msgstr "Additional Findings"
@@ -340,7 +339,7 @@ msgstr "Admin Profile"
 msgid "Admins of an organization can add domains to their list."
 msgstr "Admins of an organization can add domains to their list."
 
-#: src/guidance/AdditionalFindings.js:421
+#: src/guidance/AdditionalFindings.js:430
 msgid "Affected Components:"
 msgstr "Affected Components:"
 
@@ -944,7 +943,7 @@ msgstr "contact us"
 msgid "Contact Us"
 msgstr "Contact Us"
 
-#: src/guidance/AdditionalFindings.js:300
+#: src/guidance/AdditionalFindings.js:309
 msgid "Content Delivery Network"
 msgstr "Content Delivery Network"
 
@@ -1070,7 +1069,7 @@ msgstr "Data Security and Use"
 msgid "Data:"
 msgstr "Data:"
 
-#: src/guidance/AdditionalFindings.js:269
+#: src/guidance/AdditionalFindings.js:278
 msgid "DDOS Protection"
 msgstr "DDOS Protection"
 
@@ -1766,7 +1765,7 @@ msgstr "Filter the list to display only verified organizations."
 msgid "Filter the list to show your affiliated organizations."
 msgstr "Filter the list to show your affiliated organizations."
 
-#: src/guidance/AdditionalFindings.js:390
+#: src/guidance/AdditionalFindings.js:399
 msgid "Filtered"
 msgstr "Filtered"
 
@@ -1790,11 +1789,11 @@ msgstr "Find domains that potentially belong to your organization."
 msgid "Finish"
 msgstr "Finish"
 
-#: src/guidance/AdditionalFindings.js:219
-#: src/guidance/AdditionalFindings.js:283
-#: src/guidance/AdditionalFindings.js:316
-#: src/guidance/AdditionalFindings.js:358
-#: src/guidance/AdditionalFindings.js:400
+#: src/guidance/AdditionalFindings.js:228
+#: src/guidance/AdditionalFindings.js:292
+#: src/guidance/AdditionalFindings.js:325
+#: src/guidance/AdditionalFindings.js:367
+#: src/guidance/AdditionalFindings.js:409
 msgid "First Seen: {0}"
 msgstr "First Seen: {0}"
 
@@ -1856,7 +1855,7 @@ msgstr "Forgot Password"
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/guidance/AdditionalFindings.js:194
+#: src/guidance/AdditionalFindings.js:203
 msgid "Frameworks"
 msgstr "Frameworks"
 
@@ -2274,7 +2273,7 @@ msgstr "Implemented"
 #~ msgid "Important Notice:"
 #~ msgstr "Important Notice:"
 
-#: src/guidance/AdditionalFindings.js:140
+#: src/guidance/AdditionalFindings.js:149
 msgid "Improving GC Cyber Security Health SPIN"
 msgstr "Improving GC Cyber Security Health SPIN"
 
@@ -2612,11 +2611,11 @@ msgstr "Last 365 Days of Data"
 #~ msgid "Last Scanned"
 #~ msgstr "Last Scanned"
 
-#: src/guidance/AdditionalFindings.js:222
-#: src/guidance/AdditionalFindings.js:286
-#: src/guidance/AdditionalFindings.js:319
-#: src/guidance/AdditionalFindings.js:361
-#: src/guidance/AdditionalFindings.js:403
+#: src/guidance/AdditionalFindings.js:231
+#: src/guidance/AdditionalFindings.js:295
+#: src/guidance/AdditionalFindings.js:328
+#: src/guidance/AdditionalFindings.js:370
+#: src/guidance/AdditionalFindings.js:412
 msgid "Last Seen: {0}"
 msgstr "Last Seen: {0}"
 
@@ -2757,7 +2756,7 @@ msgstr "MONITOR_ONLY"
 msgid "More details"
 msgstr "More details"
 
-#: src/guidance/AdditionalFindings.js:431
+#: src/guidance/AdditionalFindings.js:440
 msgid "More info"
 msgstr "More info"
 
@@ -2916,15 +2915,15 @@ msgstr "No"
 msgid "No activity logs"
 msgstr "No activity logs"
 
-#: src/guidance/AdditionalFindings.js:65
+#: src/guidance/AdditionalFindings.js:64
 msgid "No additional findings available at this time."
 msgstr "No additional findings available at this time."
 
-#: src/guidance/AdditionalFindings.js:371
+#: src/guidance/AdditionalFindings.js:380
 msgid "No additional web components found"
 msgstr "No additional web components found"
 
-#: src/guidance/AdditionalFindings.js:324
+#: src/guidance/AdditionalFindings.js:333
 msgid "No CDN found"
 msgstr "No CDN found"
 
@@ -2973,7 +2972,7 @@ msgstr "No data found when retrieving top 25 report."
 msgid "No data was found to export."
 msgstr "No data was found to export."
 
-#: src/guidance/AdditionalFindings.js:291
+#: src/guidance/AdditionalFindings.js:300
 msgid "No DDOS Protection found"
 msgstr "No DDOS Protection found"
 
@@ -2991,7 +2990,7 @@ msgstr "No DDOS Protection found"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/guidance/AdditionalFindings.js:232
+#: src/guidance/AdditionalFindings.js:241
 msgid "No frameworks found"
 msgstr "No frameworks found"
 
@@ -3024,7 +3023,7 @@ msgstr "No negative findings to show."
 msgid "No Organizations"
 msgstr "No Organizations"
 
-#: src/guidance/AdditionalFindings.js:260
+#: src/guidance/AdditionalFindings.js:269
 msgid "No response headers found"
 msgstr "No response headers found"
 
@@ -3040,7 +3039,7 @@ msgstr "No scan data for this organization."
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
-#: src/guidance/AdditionalFindings.js:179
+#: src/guidance/AdditionalFindings.js:188
 msgid "No Top 25 Vulnerabilites Detected"
 msgstr "No Top 25 Vulnerabilites Detected"
 
@@ -3154,7 +3153,7 @@ msgstr "Once access is given to your department by the TBS Cyber team, they will
 msgid "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 msgstr "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 
-#: src/guidance/AdditionalFindings.js:388
+#: src/guidance/AdditionalFindings.js:397
 msgid "Open"
 msgstr "Open"
 
@@ -3408,7 +3407,7 @@ msgstr "Pointer to a DKIM public key record in DNS."
 msgid "Policy guidance:"
 msgstr "Policy guidance:"
 
-#: src/guidance/AdditionalFindings.js:380
+#: src/guidance/AdditionalFindings.js:389
 msgid "Ports"
 msgstr "Ports"
 
@@ -3702,7 +3701,7 @@ msgstr "Resource Type"
 msgid "Resource:"
 msgstr "Resource:"
 
-#: src/guidance/AdditionalFindings.js:241
+#: src/guidance/AdditionalFindings.js:250
 msgid "Response Headers"
 msgstr "Response Headers"
 
@@ -4247,7 +4246,7 @@ msgstr "SPF Summary"
 msgid "SPIN Top 25"
 msgstr "SPIN Top 25"
 
-#: src/guidance/AdditionalFindings.js:126
+#: src/guidance/AdditionalFindings.js:135
 msgid "SPIN Top 25 Vulnerabilities"
 msgstr "SPIN Top 25 Vulnerabilities"
 
@@ -4292,7 +4291,7 @@ msgstr "Start Tour"
 #~ msgid "State: {lastPortState}"
 #~ msgstr "State: {lastPortState}"
 
-#: src/guidance/AdditionalFindings.js:397
+#: src/guidance/AdditionalFindings.js:406
 msgid "State: {lastPortStateTranslated}"
 msgstr "State: {lastPortStateTranslated}"
 
@@ -4649,9 +4648,13 @@ msgstr "The user's role has been successfully updated"
 msgid "There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service disruption. This does not affect current DMARC reporting, and all data before and after this period remains complete and accurate."
 msgstr "There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service disruption. This does not affect current DMARC reporting, and all data before and after this period remains complete and accurate."
 
+#: src/guidance/AdditionalFindings.js:119
+msgid "These findings are imported from Microsoft's <0>External Attack Surface Management <1/></0> tool. <2>Automated updates to these findings occur daily.</2>"
+msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management <1/></0> tool. <2>Automated updates to these findings occur daily.</2>"
+
 #: src/guidance/AdditionalFindings.js:445
-msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
-msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
+#~ msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
+#~ msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
 
 #: src/guidance/AdditionalFindings.js:357
 #~ msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
@@ -5355,7 +5358,7 @@ msgstr "WEB"
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
 
-#: src/guidance/AdditionalFindings.js:333
+#: src/guidance/AdditionalFindings.js:342
 msgid "Web Components"
 msgstr "Web Components"
 
@@ -5422,8 +5425,8 @@ msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 
 #: src/guidance/AdditionalFindings.js:120
-msgid "What are these additional findings?"
-msgstr "What are these additional findings?"
+#~ msgid "What are these additional findings?"
+#~ msgstr "What are these additional findings?"
 
 #: src/app/ReadGuidancePage.js:397
 msgid "What does it mean if a domain is “unreachable”?"
