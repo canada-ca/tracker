@@ -133,7 +133,7 @@ export const loadOrganizationDomainStatuses =
                   FOR wc IN finding.webComponents
                     FILTER LENGTH(wc.WebComponentCves) > 0
                     FOR vuln IN wc.WebComponentCves
-                      FILTER vuln.Cve NOT IN v.ignoredCves
+                      FILTER vuln.Cve NOT IN (v.ignoredCves || [])
                       RETURN vuln.Cve
                 )
             )[0]
