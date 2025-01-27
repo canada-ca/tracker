@@ -717,7 +717,7 @@
             }
           ]
         }
-},
+      },
       "ssl25": {
         "en": {
           "tagName": "Invalid Chain Order",
