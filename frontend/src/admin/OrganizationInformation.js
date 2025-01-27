@@ -319,7 +319,7 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }} mb="0.5rem">
                     <FormField name="cityFR" label={t`City (FR)`} />
                   </Box>
-                  {externalIdField}
+                  <ExternalIdField />
                   <Button
                     variant="danger"
                     type="reset"
@@ -467,9 +467,9 @@ const AcronymFields = withSuperAdmin(() => {
   )
 })
 
-const externalIdField = withSuperAdmin(() => {
+const ExternalIdField = withSuperAdmin(() => {
   return (
-    <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+    <Box gridColumn={{ base: 'span 4', md: 'span 2' }} mb="0.5rem">
       <FormField name="externalId" label={t`External ID`} />
     </Box>
   )
