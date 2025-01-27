@@ -304,7 +304,7 @@ export function WebTLSResults({ tlsResult }) {
                       </DetailTooltip>
                       <Text>{receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex {...columnInfoStyleProps}>
+                    <Flex {...columnInfoStyleProps} bg={receivedChainHasValidOrder ? '' : 'weakMuted'}>
                       <DetailTooltip
                         label={t`Shows if all the certificates in the bundle provided by the server were sent in the correct order.`}
                       >
