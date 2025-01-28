@@ -738,4 +738,27 @@ export const DISMISS_MESSAGE = gql`
   }
 `
 
+export const COMPLETE_TOUR = gql`
+  mutation CompleteTour($tourId: String!) {
+    completeTour(input: { tourId: $tourId }) {
+      result {
+        ... on CompleteTourResult {
+          status
+          user {
+            id
+            completedTours {
+              tourId
+              completedAt
+            }
+          }
+        }
+        ... on CompleteTourError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''

@@ -15,6 +15,10 @@ export const Authorization = {
             messageId
             dismissedAt
           }
+          completedTours {
+            tourId
+            completedAt
+          }
           affiliations(first: 1) {
             totalCount
           }

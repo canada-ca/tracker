@@ -49,6 +49,7 @@ export default function SignInPage() {
           insideUser: signIn.result.user.insideUser,
           affiliations: signIn.result.user.affiliations,
           dismissedMessages: signIn.result.user.dismissedMessages,
+          completedTours: signIn.result.user.completedTours,
         })
         // redirect to the home page.
         navigate(from)

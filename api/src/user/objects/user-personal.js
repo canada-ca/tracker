@@ -90,12 +90,12 @@ export const userPersonalType = new GraphQLObjectType({
     dismissedMessages: {
       type: new GraphQLList(dismissedMessage),
       description: 'Messages that the user has dismissed.',
-      resolve: ({ dismissedMessages }) => dismissedMessages,
+      resolve: ({ dismissedMessages }) => dismissedMessages || [],
     },
     completedTours: {
       type: new GraphQLList(completedTour),
       description: 'Tours the user has completed.',
-      resolve: ({ completedTours }) => completedTours,
+      resolve: ({ completedTours }) => completedTours || [],
     },
   }),
   interfaces: [nodeInterface],

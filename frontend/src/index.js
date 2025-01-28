@@ -44,6 +44,7 @@ const I18nApp = () => {
               insideUser: refreshTokens.result.user.insideUser,
               affiliations: refreshTokens.result.user.affiliations,
               dismissedMessages: refreshTokens.result.user.dismissedMessages,
+              completedTours: refreshTokens.result.user.completedTours,
             })
             if (from.pathname !== '/') navigate(from, { replace: true })
           }
