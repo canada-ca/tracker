@@ -9,12 +9,18 @@ import asyncio
 import nats
 from nats.js.api import RetentionPolicy
 
+import dns.resolver
+from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
+from dns.exception import Timeout
+
 load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
 logger = logging.getLogger()
+
+TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 
 from clients.kusto_client import (
     get_labelled_org_assets_from_org_key,
@@ -192,6 +198,17 @@ async def main():
             # if domain exists, skip
             elif domain_exists:
                 logger.info(f"Domain: {domain} already exists in system")
+                continue
+
+            # check for NXDOMAIN
+            resolver = dns.resolver.Resolver()
+            resolver.timeout = TIMEOUT
+            resolver.lifetime = TIMEOUT * 2
+            try:
+                resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
+            except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+                continue
+            except Exception as e:
                 continue
 
             # setup transaction
