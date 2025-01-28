@@ -1,5 +1,5 @@
 import { dbNameFromFile } from 'arango-tools'
-import { createUserContextGenerator, ensureDatabase as ensure, isAfterDate } from '../../../testUtilities'
+import { createUserContextGenerator, ensureDatabase as ensure } from '../../../testUtilities'
 import { graphql, GraphQLSchema } from 'graphql'
 
 import { createQuerySchema } from '../../../query'

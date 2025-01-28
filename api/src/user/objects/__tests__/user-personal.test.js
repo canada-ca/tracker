@@ -7,7 +7,6 @@ import { affiliationConnection } from '../../../affiliation/objects'
 import { completedTour, dismissedMessage, userPersonalType } from '../index'
 import { TfaSendMethodEnum } from '../../../enums'
 import { decryptPhoneNumber } from '../../../validators'
-import { dismissMessage } from '../../mutations'
 
 const { CIPHER_KEY } = process.env
 
