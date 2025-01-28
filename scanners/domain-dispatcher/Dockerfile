@@ -1,4 +1,4 @@
-FROM node:23.3.0-alpine
+FROM node:23.6.1-alpine
 
 ENV NODE_ENV production
 
