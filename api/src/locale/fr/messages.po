@@ -664,6 +664,10 @@ msgstr "La valeur du jeton est incorrecte, veuillez vous connecter à nouveau."
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer."
 
+#: src/user/mutations/complete-tour.js:73
+msgid "Tour completion confirmed successfully"
+msgstr "Confirmation de l'achèvement du voyage"
+
 #: src/user/mutations/verify-phone-number.js:51
 msgid "Two factor code is incorrect. Please try again."
 msgstr "Le code à deux facteurs est incorrect. Veuillez réessayer."
@@ -720,6 +724,11 @@ msgstr "Impossible de fermer le compte d'un utilisateur non défini."
 msgid "Unable to close account. Please try again."
 msgstr "Impossible de fermer le compte. Veuillez réessayer."
 
+#: src/user/mutations/complete-tour.js:39
+#: src/user/mutations/complete-tour.js:64
+msgid "Unable to confirm completion of the tour. Please try again."
+msgstr "Impossible de confirmer l'achèvement de la visite. Veuillez réessayer."
+
 #: src/domain/mutations/create-domain.js:98
 msgid "Unable to create domain in unknown organization."
 msgstr "Impossible de créer un domaine dans une organisation inconnue."
@@ -751,7 +760,7 @@ msgstr "Impossible de créer une organisation. Veuillez réessayer."
 msgid "Unable to discover domains for unknown organization."
 msgstr "Impossible de découvrir les domaines d'une organisation inconnue."
 
-#: src/user/mutations/dismiss-message.js:36
+#: src/user/mutations/dismiss-message.js:39
 #: src/user/mutations/dismiss-message.js:66
 msgid "Unable to dismiss message. Please try again."
 msgstr "Impossible de rejeter le message. Veuillez réessayer."

@@ -664,6 +664,10 @@ msgstr "Token value incorrect, please sign in again."
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Too many failed login attempts, please reset your password, and try again."
 
+#: src/user/mutations/complete-tour.js:73
+msgid "Tour completion confirmed successfully"
+msgstr "Tour completion confirmed successfully"
+
 #: src/user/mutations/verify-phone-number.js:51
 msgid "Two factor code is incorrect. Please try again."
 msgstr "Two factor code is incorrect. Please try again."
@@ -720,6 +724,11 @@ msgstr "Unable to close account of an undefined user."
 msgid "Unable to close account. Please try again."
 msgstr "Unable to close account. Please try again."
 
+#: src/user/mutations/complete-tour.js:39
+#: src/user/mutations/complete-tour.js:64
+msgid "Unable to confirm completion of the tour. Please try again."
+msgstr "Unable to confirm completion of the tour. Please try again."
+
 #: src/domain/mutations/create-domain.js:98
 msgid "Unable to create domain in unknown organization."
 msgstr "Unable to create domain in unknown organization."
@@ -751,7 +760,7 @@ msgstr "Unable to create organization. Please try again."
 msgid "Unable to discover domains for unknown organization."
 msgstr "Unable to discover domains for unknown organization."
 
-#: src/user/mutations/dismiss-message.js:36
+#: src/user/mutations/dismiss-message.js:39
 #: src/user/mutations/dismiss-message.js:66
 msgid "Unable to dismiss message. Please try again."
 msgstr "Unable to dismiss message. Please try again."
