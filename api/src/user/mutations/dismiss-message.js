@@ -2,7 +2,7 @@ import { GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-import { dismissMessageUnion } from '../unions/dismiss-message-union'
+import { dismissMessageUnion } from '../unions'
 
 export const dismissMessage = new mutationWithClientMutationId({
   name: 'DismissMessage',
@@ -28,17 +28,17 @@ export const dismissMessage = new mutationWithClientMutationId({
     // Cleanse Input
     const messageId = cleanseInput(args.messageId)
 
+    // Get user info from DB
+    const user = await userRequired()
+
     if (!messageId) {
-      console.warn(`User attempted to dismiss message without providing a message id.`)
+      console.warn(`User: ${user._key} did not provide a message id when attempting to dismiss a message.`)
       return {
         _type: 'error',
         code: 400,
         description: i18n._(t`Unable to dismiss message. Please try again.`),
       }
     }
-
-    // Get user info from DB
-    const user = await userRequired()
 
     // Dismiss message
     try {
@@ -53,7 +53,7 @@ export const dismissMessage = new mutationWithClientMutationId({
         WITH {
           dismissedMessages: APPEND(
             userDismissedMessages[* FILTER CURRENT.messageId != ${messageId}],
-            { messageId: ${messageId}, dismissedAt: DATE_NOW() }
+            { messageId: ${messageId}, dismissedAt: DATE_ISO8601(DATE_NOW()) }
           )
         }
         IN users

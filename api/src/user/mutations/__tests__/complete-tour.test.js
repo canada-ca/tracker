@@ -1,5 +1,5 @@
 import { dbNameFromFile } from 'arango-tools'
-import { createUserContextGenerator, ensureDatabase as ensure, isAfterDate } from '../../../testUtilities'
+import { createUserContextGenerator, ensureDatabase as ensure } from '../../../testUtilities'
 import { graphql, GraphQLSchema } from 'graphql'
 
 import { createQuerySchema } from '../../../query'
@@ -27,7 +27,7 @@ const i18n = createI18n('en')
 
 let db, query, drop, truncate, collections, transaction, createUserContext, normalUser, normalUserContext
 
-describe('dismiss message mutation', () => {
+describe('complete tour mutation', () => {
   beforeAll(async () => {
     ;({ db, query, drop, truncate, collections, transaction } = await ensure({
       variables: {
@@ -74,30 +74,30 @@ describe('dismiss message mutation', () => {
     await drop()
   })
 
-  it('adds dismissed message on successful mutation', async () => {
+  it('adds completed tour on successful mutation', async () => {
     const currentUserState = await (await query`RETURN DOCUMENT(users, ${normalUser._key})`).next()
 
-    expect(currentUserState?.dismissedMessages).toBeUndefined()
+    expect(currentUserState?.completedTours).toBeUndefined()
 
-    const messageToIgnoreOne = 'message1'
+    const tourToCompleteOne = 'tour1'
 
     const response = await graphql({
       schema,
       source: `
         mutation {
-          dismissMessage(input: { messageId: "${messageToIgnoreOne}" }) {
+          completeTour(input: { tourId: "${tourToCompleteOne}" }) {
             result {
-              ... on DismissMessageResult {
+              ... on CompleteTourResult {
                 status
                 user {
                   id
-                  dismissedMessages {
-                    messageId
-                    dismissedAt
+                  completedTours {
+                    tourId
+                    completedAt
                   }
                 }
               }
-              ... on DismissMessageError {
+              ... on CompleteTourError {
                 code
                 description
               }
@@ -109,20 +109,20 @@ describe('dismiss message mutation', () => {
       contextValue: normalUserContext,
     })
 
-    const messageOneDismissTime = response?.data?.dismissMessage?.result?.user?.dismissedMessages?.[0]?.dismissedAt
-    expect(!!messageOneDismissTime).not.toBeFalsy()
+    const tourOneCompleteTime = response?.data?.completeTour?.result?.user?.completedTours?.[0]?.completedAt
+    expect(!!tourOneCompleteTime).not.toBeFalsy()
 
     const expectedResponse = {
       data: {
-        dismissMessage: {
+        completeTour: {
           result: {
-            status: 'Message dismissed successfully',
+            status: 'Tour completion confirmed successfully',
             user: {
               id: toGlobalId('user', normalUser._key),
-              dismissedMessages: [
+              completedTours: [
                 {
-                  messageId: messageToIgnoreOne,
-                  dismissedAt: messageOneDismissTime,
+                  tourId: tourToCompleteOne,
+                  completedAt: tourOneCompleteTime,
                 },
               ],
             },
@@ -133,25 +133,25 @@ describe('dismiss message mutation', () => {
 
     expect(response).toEqual(expectedResponse)
 
-    const messageToIgnoreTwo = 'message2'
+    const tourToCompleteTwo = 'tour2'
 
     const responseTwo = await graphql({
       schema,
       source: `
         mutation {
-          dismissMessage(input: { messageId: "${messageToIgnoreTwo}" }) {
+          completeTour(input: { tourId: "${tourToCompleteTwo}" }) {
             result {
-              ... on DismissMessageResult {
+              ... on CompleteTourResult {
                 status
                 user {
                   id
-                  dismissedMessages {
-                    messageId
-                    dismissedAt
+                  completedTours {
+                    tourId
+                    completedAt
                   }
                 }
               }
-              ... on DismissMessageError {
+              ... on CompleteTourError {
                 code
                 description
               }
@@ -163,24 +163,24 @@ describe('dismiss message mutation', () => {
       contextValue: normalUserContext,
     })
 
-    const messageTwoDismissTime = responseTwo?.data?.dismissMessage?.result?.user?.dismissedMessages?.[1]?.dismissedAt
-    expect(!!messageTwoDismissTime).not.toBeFalsy()
+    const tourTwoCompleteTime = responseTwo?.data?.completeTour?.result?.user?.completedTours?.[1]?.completedAt
+    expect(!!tourTwoCompleteTime).not.toBeFalsy()
 
     const expectedResponseTwo = {
       data: {
-        dismissMessage: {
+        completeTour: {
           result: {
-            status: 'Message dismissed successfully',
+            status: 'Tour completion confirmed successfully',
             user: {
               id: toGlobalId('user', normalUser._key),
-              dismissedMessages: [
+              completedTours: [
                 {
-                  messageId: messageToIgnoreOne,
-                  dismissedAt: messageOneDismissTime,
+                  tourId: tourToCompleteOne,
+                  completedAt: tourOneCompleteTime,
                 },
                 {
-                  messageId: messageToIgnoreTwo,
-                  dismissedAt: messageTwoDismissTime,
+                  tourId: tourToCompleteTwo,
+                  completedAt: tourTwoCompleteTime,
                 },
               ],
             },
@@ -191,33 +191,33 @@ describe('dismiss message mutation', () => {
 
     expect(responseTwo).toEqual(expectedResponseTwo)
   })
-  it('updates timestamp for re-ignored message', async () => {
-    const messageToIgnore = 'message1'
-    await query`UPDATE { _key: ${normalUser._key}} WITH { dismissedMessages: [{messageId: ${messageToIgnore}, dismissedAt: DATE_ISO8601(DATE_NOW())}]} IN users`
+  it('updates timestamp for re-completed tour', async () => {
+    const tourToComplete = 'tour1'
+    await query`UPDATE { _key: ${normalUser._key}} WITH { completedTours: [{tourId: ${tourToComplete}, completedAt: DATE_ISO8601(DATE_NOW())}]} IN users`
     const currentUserState = await (await query`RETURN DOCUMENT(users, ${normalUser._key})`).next()
 
-    expect(currentUserState?.dismissedMessages).toHaveLength(1)
+    expect(currentUserState?.completedTours).toHaveLength(1)
 
-    const originalDismissedAt = currentUserState?.dismissedMessages[0].dismissedAt
-    expect(!!originalDismissedAt).not.toBeFalsy()
+    const originalCompletedAt = currentUserState?.completedTours[0].completedAt
+    expect(!!originalCompletedAt).not.toBeFalsy()
 
     const _response = await graphql({
       schema,
       source: `
         mutation {
-          dismissMessage(input: { messageId: "${messageToIgnore}" }) {
+          completeTour(input: { tourId: "${tourToComplete}" }) {
             result {
-              ... on DismissMessageResult {
+              ... on CompleteTourResult {
                 status
                 user {
                   id
-                  dismissedMessages {
-                    messageId
-                    dismissedAt
+                  completedTours {
+                    tourId
+                    completedAt
                   }
                 }
               }
-              ... on DismissMessageError {
+              ... on CompleteTourError {
                 code
                 description
               }
@@ -230,27 +230,27 @@ describe('dismiss message mutation', () => {
     })
 
     const newUserState = await (await query`RETURN DOCUMENT(users, ${normalUser._key})`).next()
-    expect(newUserState?.dismissedMessages).toHaveLength(1)
-    expect(new Date(newUserState.dismissedMessages[0].dismissedAt) > new Date(originalDismissedAt)).toBe(true)
+    expect(newUserState?.completedTours).toHaveLength(1)
+    expect(new Date(newUserState.completedTours[0].completedAt) > new Date(originalCompletedAt)).toBe(true)
   })
-  it('throws an error when messageId is empty after input cleansing', async () => {
+  it('throws an error when tourId is empty after input cleansing', async () => {
     const response = await graphql({
       schema,
       source: `
         mutation {
-          dismissMessage(input: { messageId: "  " }) {
+          completeTour(input: { tourId: "  " }) {
             result {
-              ... on DismissMessageResult {
+              ... on CompleteTourResult {
                 status
                 user {
                   id
-                  dismissedMessages {
-                    messageId
-                    dismissedAt
+                  completedTours {
+                    tourId
+                    completedAt
                   }
                 }
               }
-              ... on DismissMessageError {
+              ... on CompleteTourError {
                 code
                 description
               }
@@ -264,10 +264,10 @@ describe('dismiss message mutation', () => {
 
     const expectedResponse = {
       data: {
-        dismissMessage: {
+        completeTour: {
           result: {
             code: 400,
-            description: 'Unable to dismiss message. Please try again.',
+            description: 'Unable to confirm completion of the tour. Please try again.',
           },
         },
       },
@@ -276,7 +276,7 @@ describe('dismiss message mutation', () => {
     expect(response).toEqual(expectedResponse)
     expect(consoleOutput).toHaveLength(1)
     expect(consoleOutput[0]).toEqual(
-      `User: ${normalUser._key} did not provide a message id when attempting to dismiss a message.`,
+      `User: ${normalUser._key} did not provide a tour id when attempting to confirm completion of the tour.`,
     )
   })
 })

@@ -4,7 +4,7 @@ import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 import { affiliationConnection } from '../../../affiliation/objects'
-import { userPersonalType } from '../index'
+import { completedTour, dismissedMessage, userPersonalType } from '../index'
 import { TfaSendMethodEnum } from '../../../enums'
 import { decryptPhoneNumber } from '../../../validators'
 import { dismissMessage } from '../../mutations'
@@ -65,7 +65,13 @@ describe('given the user object', () => {
       const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('dismissedMessages')
-      expect(demoType.dismissedMessages.type).toMatchObject(new GraphQLList(dismissMessage))
+      expect(demoType.dismissedMessages.type).toMatchObject(new GraphQLList(dismissedMessage))
+    })
+    it('has a completedTours field', () => {
+      const demoType = userPersonalType.getFields()
+
+      expect(demoType).toHaveProperty('completedTours')
+      expect(demoType.completedTours.type).toMatchObject(new GraphQLList(completedTour))
     })
   })
   describe('testing the field resolvers', () => {
@@ -248,6 +254,37 @@ describe('given the user object', () => {
           {
             messageId: 'message2',
             dismissedAt: ts,
+          },
+        ])
+      })
+    })
+    describe('testing the completedTours field', () => {
+      it('returns the resolved value', () => {
+        const demoType = userPersonalType.getFields()
+
+        const ts = Date.now()
+
+        expect(
+          demoType.completedTours.resolve({
+            completedTours: [
+              {
+                tourId: 'tour1',
+                completedAt: ts,
+              },
+              {
+                tourId: 'tour2',
+                completedAt: ts,
+              },
+            ],
+          }),
+        ).toEqual([
+          {
+            tourId: 'tour1',
+            completedAt: ts,
+          },
+          {
+            tourId: 'tour2',
+            completedAt: ts,
           },
         ])
       })

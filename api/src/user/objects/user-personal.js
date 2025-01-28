@@ -8,6 +8,7 @@ import { TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
 import { emailUpdateOptionsType } from './email-update-options'
 import { dismissedMessage } from './dismissed-message'
+import { completedTour } from './completed-tour'
 
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
@@ -90,6 +91,11 @@ export const userPersonalType = new GraphQLObjectType({
       type: new GraphQLList(dismissedMessage),
       description: 'Messages that the user has dismissed.',
       resolve: ({ dismissedMessages }) => dismissedMessages,
+    },
+    completedTours: {
+      type: new GraphQLList(completedTour),
+      description: 'Tours the user has completed.',
+      resolve: ({ completedTours }) => completedTours,
     },
   }),
   interfaces: [nodeInterface],
