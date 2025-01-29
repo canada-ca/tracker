@@ -72,7 +72,10 @@ export const TourComponent = () => {
 
   // handles the finishing and skipping/closing of tour
   const handleJoyrideCallback = async ({ status, type, action }) => {
-    if (['finished', 'skipped'].includes(status) || (type === 'step:after' && action === 'close')) {
+    if (
+      (['finished', 'skipped'].includes(status) && type === 'tour:end') ||
+      (status === 'running' && type === 'step:after' && action === 'close')
+    ) {
       endTour()
       await completeTour({
         variables: {
