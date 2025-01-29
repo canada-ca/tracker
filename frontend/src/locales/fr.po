@@ -607,7 +607,7 @@ msgstr "Authentifier"
 #: src/auth/ForgotPasswordPage.js:87
 #: src/createOrganization/CreateOrganizationPage.js:158
 #: src/guidance/CveIgnorer.js:131
-#: src/userOnboarding/components/TourComponent.js:104
+#: src/userOnboarding/components/TourComponent.js:107
 msgid "Back"
 msgstr "Retour"
 
@@ -1762,7 +1762,7 @@ msgstr "Filtres :"
 msgid "Find domains that potentially belong to your organization."
 msgstr "Trouvez des domaines qui pourraient appartenir à votre organisation."
 
-#: src/userOnboarding/components/TourComponent.js:107
+#: src/userOnboarding/components/TourComponent.js:110
 msgid "Finish"
 msgstr "Terminer"
 
@@ -2860,7 +2860,7 @@ msgstr "Nouveau numéro de téléphone:"
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
-#: src/userOnboarding/components/TourComponent.js:105
+#: src/userOnboarding/components/TourComponent.js:108
 msgid "Next"
 msgstr "Suivant"
 
@@ -4141,7 +4141,7 @@ msgstr "Déconnexion."
 msgid "Signature Hash:"
 msgstr "Signature Hash :"
 
-#: src/userOnboarding/components/TourComponent.js:106
+#: src/userOnboarding/components/TourComponent.js:109
 msgid "Skip"
 msgstr "Sauter"
 
