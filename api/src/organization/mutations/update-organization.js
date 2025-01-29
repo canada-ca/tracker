@@ -74,6 +74,10 @@ export const updateOrganization = new mutationWithClientMutationId({
       type: GraphQLBoolean,
       description: 'If the organization has domains that are managed externally.',
     },
+    externalId: {
+      type: GraphQLString,
+      description: 'String ID used to identify the organization in an external system.',
+    },
   }),
   outputFields: () => ({
     result: {
@@ -117,6 +121,7 @@ export const updateOrganization = new mutationWithClientMutationId({
     const provinceFR = cleanseInput(args.provinceFR)
     const cityEN = cleanseInput(args.cityEN)
     const cityFR = cleanseInput(args.cityFR)
+    const externalId = cleanseInput(args.externalId)
 
     // Create Slug
     const slugEN = slugify(nameEN)
@@ -230,6 +235,10 @@ export const updateOrganization = new mutationWithClientMutationId({
 
     if (permission === 'super_admin' && typeof args.externallyManaged !== 'undefined') {
       updatedOrgDetails.externallyManaged = args.externallyManaged
+    }
+
+    if (permission === 'super_admin' && typeof args.externalId !== 'undefined') {
+      updatedOrgDetails.externalId = externalId
     }
 
     // Setup Trans action

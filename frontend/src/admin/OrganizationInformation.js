@@ -239,6 +239,7 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
               provinceFR: '',
               cityEN: '',
               cityFR: '',
+              externalId: '',
             }}
             validationSchema={updateOrgValidationSchema}
             onSubmit={async (values, formikHelpers) => {
@@ -318,6 +319,7 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }} mb="0.5rem">
                     <FormField name="cityFR" label={t`City (FR)`} />
                   </Box>
+                  <ExternalIdField />
                   <Button
                     variant="danger"
                     type="reset"
@@ -381,6 +383,13 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
             <Trans>Country:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.country}
+            </Box>
+          </Text>
+
+          <Text fontWeight="bold">
+            <Trans>External ID:</Trans>{' '}
+            <Box as="span" fontWeight="normal">
+              {org?.externalId || t`None`}
             </Box>
           </Text>
         </Grid>
@@ -455,6 +464,14 @@ const AcronymFields = withSuperAdmin(() => {
         <FormField name="acronymFR" label={t`Acronym (FR)`} />
       </Box>
     </>
+  )
+})
+
+const ExternalIdField = withSuperAdmin(() => {
+  return (
+    <Box gridColumn={{ base: 'span 4', md: 'span 2' }} mb="0.5rem">
+      <FormField name="externalId" label={t`External ID`} />
+    </Box>
   )
 })
 

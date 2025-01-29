@@ -246,15 +246,15 @@ msgstr "Account Settings"
 msgid "Acronym"
 msgstr "Acronym"
 
-#: src/admin/OrganizationInformation.js:452
+#: src/admin/OrganizationInformation.js:461
 msgid "Acronym (EN)"
 msgstr "Acronym (EN)"
 
-#: src/admin/OrganizationInformation.js:455
+#: src/admin/OrganizationInformation.js:464
 msgid "Acronym (FR)"
 msgstr "Acronym (FR)"
 
-#: src/admin/OrganizationInformation.js:361
+#: src/admin/OrganizationInformation.js:363
 msgid "Acronym:"
 msgstr "Acronym:"
 
@@ -563,7 +563,7 @@ msgstr "ARCHIVED"
 msgid "Are you sure you want to ignore this CVE?"
 msgstr "Are you sure you want to ignore this CVE?"
 
-#: src/admin/OrganizationInformation.js:423
+#: src/admin/OrganizationInformation.js:432
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 
@@ -631,7 +631,7 @@ msgstr "Below are steps on how government organizations can leverage the Tracker
 msgid "BETA"
 msgstr "BETA"
 
-#: src/admin/OrganizationInformation.js:294
+#: src/admin/OrganizationInformation.js:295
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Blank fields will not be included when updating the organization."
 
@@ -800,19 +800,19 @@ msgstr "Ciphers Status"
 msgid "City"
 msgstr "City"
 
-#: src/admin/OrganizationInformation.js:316
+#: src/admin/OrganizationInformation.js:317
 msgid "City (EN)"
 msgstr "City (EN)"
 
-#: src/admin/OrganizationInformation.js:319
+#: src/admin/OrganizationInformation.js:320
 msgid "City (FR)"
 msgstr "City (FR)"
 
-#: src/admin/OrganizationInformation.js:368
+#: src/admin/OrganizationInformation.js:370
 msgid "City:"
 msgstr "City:"
 
-#: src/admin/OrganizationInformation.js:328
+#: src/admin/OrganizationInformation.js:330
 msgid "Clear"
 msgstr "Clear"
 
@@ -836,7 +836,7 @@ msgstr "Click here."
 msgid "Click to view detailed scan results and guidance."
 msgstr "Click to view detailed scan results and guidance."
 
-#: src/admin/OrganizationInformation.js:337
+#: src/admin/OrganizationInformation.js:339
 #: src/app/FloatingMenu.js:267
 msgid "Close"
 msgstr "Close"
@@ -880,8 +880,8 @@ msgstr "Configuration requirements for web sites and services completely met"
 
 #: src/admin/AdminDomainModal.js:324
 #: src/admin/AdminDomains.js:560
-#: src/admin/OrganizationInformation.js:345
-#: src/admin/OrganizationInformation.js:436
+#: src/admin/OrganizationInformation.js:347
+#: src/admin/OrganizationInformation.js:445
 #: src/admin/SuperAdminUserList.js:427
 #: src/admin/UserListModal.js:277
 #: src/domains/SubdomainDiscoveryButton.js:92
@@ -966,15 +966,15 @@ msgstr "Correct misconfigurations and update records as required; and"
 msgid "Country"
 msgstr "Country"
 
-#: src/admin/OrganizationInformation.js:304
+#: src/admin/OrganizationInformation.js:305
 msgid "Country (EN)"
 msgstr "Country (EN)"
 
-#: src/admin/OrganizationInformation.js:307
+#: src/admin/OrganizationInformation.js:308
 msgid "Country (FR)"
 msgstr "Country (FR)"
 
-#: src/admin/OrganizationInformation.js:381
+#: src/admin/OrganizationInformation.js:383
 msgid "Country:"
 msgstr "Country:"
 
@@ -1590,7 +1590,7 @@ msgstr "Endpoint:"
 msgid "English"
 msgstr "English"
 
-#: src/admin/OrganizationInformation.js:429
+#: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -1683,6 +1683,14 @@ msgstr "Export SPIN Top 25"
 #: src/components/ExportButton.js:8
 msgid "Export to CSV"
 msgstr "Export to CSV"
+
+#: src/admin/OrganizationInformation.js:473
+msgid "External ID"
+msgstr "External ID"
+
+#: src/admin/OrganizationInformation.js:390
+msgid "External ID:"
+msgstr "External ID:"
 
 #: src/dmarc/DmarcReportPage.js:142
 #: src/dmarc/DmarcReportPage.js:143
@@ -2803,11 +2811,11 @@ msgstr "myTracker"
 msgid "Name"
 msgstr "Name"
 
-#: src/admin/OrganizationInformation.js:298
+#: src/admin/OrganizationInformation.js:299
 msgid "Name (EN)"
 msgstr "Name (EN)"
 
-#: src/admin/OrganizationInformation.js:301
+#: src/admin/OrganizationInformation.js:302
 msgid "Name (FR)"
 msgstr "Name (FR)"
 
@@ -3053,7 +3061,7 @@ msgstr "No users"
 msgid "No Users"
 msgstr "No Users"
 
-#: src/admin/OrganizationInformation.js:260
+#: src/admin/OrganizationInformation.js:261
 msgid "No values were supplied when attempting to update organization details."
 msgstr "No values were supplied when attempting to update organization details."
 
@@ -3061,6 +3069,7 @@ msgstr "No values were supplied when attempting to update organization details."
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
+#: src/admin/OrganizationInformation.js:392
 #: src/guidance/EmailGuidance.js:327
 #: src/guidance/IgnoredCves.js:22
 #: src/guidance/IgnoredCves.js:66
@@ -3192,7 +3201,7 @@ msgstr "Organization is invested in the outside domain"
 #~ msgid "Organization left successfully"
 #~ msgstr "Organization left successfully"
 
-#: src/admin/OrganizationInformation.js:432
+#: src/admin/OrganizationInformation.js:441
 #: src/organizations/Organizations.js:193
 msgid "Organization Name"
 msgstr "Organization Name"
@@ -3201,7 +3210,7 @@ msgstr "Organization Name"
 msgid "Organization name does not match."
 msgstr "Organization name does not match."
 
-#: src/admin/OrganizationInformation.js:259
+#: src/admin/OrganizationInformation.js:260
 msgid "Organization not updated"
 msgstr "Organization not updated"
 
@@ -3518,15 +3527,15 @@ msgstr "Protocols Status"
 msgid "Province"
 msgstr "Province"
 
-#: src/admin/OrganizationInformation.js:310
+#: src/admin/OrganizationInformation.js:311
 msgid "Province (EN)"
 msgstr "Province (EN)"
 
-#: src/admin/OrganizationInformation.js:313
+#: src/admin/OrganizationInformation.js:314
 msgid "Province (FR)"
 msgstr "Province (FR)"
 
-#: src/admin/OrganizationInformation.js:374
+#: src/admin/OrganizationInformation.js:376
 msgid "Province:"
 msgstr "Province:"
 
@@ -3604,7 +3613,7 @@ msgid "Remove Domain"
 msgstr "Remove Domain"
 
 #: src/admin/OrganizationInformation.js:208
-#: src/admin/OrganizationInformation.js:418
+#: src/admin/OrganizationInformation.js:427
 msgid "Remove Organization"
 msgstr "Remove Organization"
 
@@ -4179,7 +4188,7 @@ msgstr "Skip"
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/admin/OrganizationInformation.js:355
+#: src/admin/OrganizationInformation.js:357
 msgid "Slug:"
 msgstr "Slug:"
 

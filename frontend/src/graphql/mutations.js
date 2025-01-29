@@ -502,6 +502,7 @@ export const UPDATE_ORGANIZATION = gql`
     $provinceFR: String
     $cityEN: String
     $cityFR: String
+    $externalId: String
   ) {
     updateOrganization(
       input: {
@@ -520,6 +521,7 @@ export const UPDATE_ORGANIZATION = gql`
         provinceFR: $provinceFR
         cityEN: $cityEN
         cityFR: $cityFR
+        externalId: $externalId
       }
     ) {
       result {
@@ -533,6 +535,7 @@ export const UPDATE_ORGANIZATION = gql`
           country
           province
           city
+          externalId
         }
         ... on OrganizationError {
           code
