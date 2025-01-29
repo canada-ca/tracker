@@ -30,6 +30,7 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { MonthSelect } from '../components/MonthSelect'
 import { NotificationBanner } from '../app/NotificationBanner'
+import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -663,19 +664,7 @@ export default function DmarcReportPage() {
         </Flex>
       </Box>
 
-      <NotificationBanner status="warning" bannerId="dmarc-report-outage" hideable>
-        <Box>
-          <AlertTitle>
-            <Trans>Important Notice:</Trans>
-          </AlertTitle>
-          <AlertDescription>
-            <Trans>
-              The DMARC Summaries data has not been updated since December 2024. We are working to refresh this
-              information. Please note that any displayed data may not reflect current email security status.
-            </Trans>
-          </AlertDescription>
-        </Box>
-      </NotificationBanner>
+      <DmarcReportOutageBanner />
 
       {graphDisplay}
 

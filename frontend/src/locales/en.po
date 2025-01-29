@@ -41,7 +41,7 @@ msgstr "{buttonLabel}"
 msgid "{count} records..."
 msgstr "{count} records..."
 
-#: src/dmarc/DmarcReportPage.js:116
+#: src/dmarc/DmarcReportPage.js:117
 msgid "{domainSlug} does not support aggregate data"
 msgstr "{domainSlug} does not support aggregate data"
 
@@ -189,7 +189,7 @@ msgstr "A domain may only be removed for one of the reasons below. For a domain 
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 
-#: src/dmarc/DmarcByDomainPage.js:335
+#: src/dmarc/DmarcByDomainPage.js:321
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 
@@ -1129,7 +1129,7 @@ msgstr "Deploy initial DMARC records with policy of none; and"
 msgid "Deploy SPF records for all domains;"
 msgstr "Deploy SPF records for all domains;"
 
-#: src/dmarc/DmarcReportPage.js:265
+#: src/dmarc/DmarcReportPage.js:266
 msgid "Details for a given guidance tag can be found on the wiki, see below."
 msgstr "Details for a given guidance tag can be found on the wiki, see below."
 
@@ -1171,7 +1171,7 @@ msgstr "Display Name:"
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 
-#: src/dmarc/DmarcReportPage.js:226
+#: src/dmarc/DmarcReportPage.js:227
 msgid "Disposition"
 msgstr "Disposition"
 
@@ -1180,21 +1180,21 @@ msgstr "Disposition"
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/dmarc/DmarcReportPage.js:218
+#: src/dmarc/DmarcReportPage.js:219
 msgid "DKIM Aligned"
 msgstr "DKIM Aligned"
 
-#: src/dmarc/DmarcReportPage.js:182
+#: src/dmarc/DmarcReportPage.js:183
 msgid "DKIM Domains"
 msgstr "DKIM Domains"
 
-#: src/dmarc/DmarcReportPage.js:326
+#: src/dmarc/DmarcReportPage.js:327
 msgid "DKIM Failure Table"
 msgstr "DKIM Failure Table"
 
-#: src/dmarc/DmarcReportPage.js:334
-#: src/dmarc/DmarcReportPage.js:368
-#: src/dmarc/DmarcReportPage.js:628
+#: src/dmarc/DmarcReportPage.js:335
+#: src/dmarc/DmarcReportPage.js:369
+#: src/dmarc/DmarcReportPage.js:629
 msgid "DKIM Failures by IP Address"
 msgstr "DKIM Failures by IP Address"
 
@@ -1206,7 +1206,7 @@ msgstr "DKIM record and keys are deployed and valid"
 #~ msgid "DKIM record could not be found for this selector."
 #~ msgstr "DKIM record could not be found for this selector."
 
-#: src/dmarc/DmarcReportPage.js:222
+#: src/dmarc/DmarcReportPage.js:223
 msgid "DKIM Results"
 msgstr "DKIM Results"
 
@@ -1214,7 +1214,7 @@ msgstr "DKIM Results"
 #~ msgid "DKIM Selector"
 #~ msgstr "DKIM Selector"
 
-#: src/dmarc/DmarcReportPage.js:186
+#: src/dmarc/DmarcReportPage.js:187
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
@@ -1248,13 +1248,13 @@ msgstr "DMARC Configuration Summary"
 msgid "DMARC Configured"
 msgstr "DMARC Configured"
 
-#: src/dmarc/DmarcReportPage.js:541
+#: src/dmarc/DmarcReportPage.js:542
 msgid "DMARC Failure Table"
 msgstr "DMARC Failure Table"
 
-#: src/dmarc/DmarcReportPage.js:549
-#: src/dmarc/DmarcReportPage.js:585
-#: src/dmarc/DmarcReportPage.js:630
+#: src/dmarc/DmarcReportPage.js:550
+#: src/dmarc/DmarcReportPage.js:586
+#: src/dmarc/DmarcReportPage.js:631
 msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
@@ -1287,13 +1287,13 @@ msgstr "DMARC policy of quarantine or reject, and all messages from non-mail dom
 #~ msgid "DMARC record could not be found during the scan."
 #~ msgstr "DMARC record could not be found during the scan."
 
-#: src/dmarc/DmarcReportPage.js:94
+#: src/dmarc/DmarcReportPage.js:95
 #: src/domains/DomainCard.js:238
 #: src/guidance/GuidancePage.js:335
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
-#: src/dmarc/DmarcReportPage.js:40
+#: src/dmarc/DmarcReportPage.js:41
 msgid "DMARC Report for {domainSlug}"
 msgstr "DMARC Report for {domainSlug}"
 
@@ -1305,8 +1305,8 @@ msgstr "DMARC Status"
 #: src/app/App.js:141
 #: src/app/App.js:353
 #: src/app/FloatingMenu.js:131
-#: src/dmarc/DmarcByDomainPage.js:171
-#: src/dmarc/DmarcByDomainPage.js:229
+#: src/dmarc/DmarcByDomainPage.js:169
+#: src/dmarc/DmarcByDomainPage.js:227
 msgid "DMARC Summaries"
 msgstr "DMARC Summaries"
 
@@ -1314,7 +1314,7 @@ msgstr "DMARC Summaries"
 msgid "DMARC Summary"
 msgstr "DMARC Summary"
 
-#: src/dmarc/DmarcReportPage.js:195
+#: src/dmarc/DmarcReportPage.js:196
 msgid "DNS Host"
 msgstr "DNS Host"
 
@@ -1336,8 +1336,8 @@ msgid "DOES NOT EQUAL"
 msgstr "DOES NOT EQUAL"
 
 #: src/admin/AuditLogTable.js:77
-#: src/dmarc/DmarcByDomainPage.js:114
-#: src/dmarc/DmarcByDomainPage.js:313
+#: src/dmarc/DmarcByDomainPage.js:112
+#: src/dmarc/DmarcByDomainPage.js:299
 #: src/domains/DomainsPage.js:281
 #: src/domains/DomainsPage.js:329
 #: src/organizationDetails/OrganizationDomains.js:223
@@ -1353,7 +1353,7 @@ msgstr "Domain added"
 msgid "Domain count"
 msgstr "Domain count"
 
-#: src/dmarc/DmarcReportPage.js:237
+#: src/dmarc/DmarcReportPage.js:238
 msgid "Domain from Simple Mail Transfer Protocol (SMTP) banner message."
 msgstr "Domain from Simple Mail Transfer Protocol (SMTP) banner message."
 
@@ -1421,7 +1421,7 @@ msgstr "Domains found through this method will be automatically added to <0>{org
 #~ msgid "domains information"
 #~ msgstr "domains information"
 
-#: src/dmarc/DmarcReportPage.js:257
+#: src/dmarc/DmarcReportPage.js:258
 msgid "Domains used for SPF validation."
 msgstr "Domains used for SPF validation."
 
@@ -1646,7 +1646,7 @@ msgstr "Enter your user account's verified email address and we will send you a 
 #~ msgid "Entrust Certificates issued after October 31, 2024 <0>will be distrusted</0> in Chrome 127 and later versions. Immediate action is required to maintain user access. Failure to act may result in security warnings or access issues for Chromes users."
 #~ msgstr "Entrust Certificates issued after October 31, 2024 <0>will be distrusted</0> in Chrome 127 and later versions. Immediate action is required to maintain user access. Failure to act may result in security warnings or access issues for Chromes users."
 
-#: src/dmarc/DmarcReportPage.js:177
+#: src/dmarc/DmarcReportPage.js:178
 msgid "Envelope From"
 msgstr "Envelope From"
 
@@ -1655,7 +1655,7 @@ msgstr "Envelope From"
 msgid "EQUALS"
 msgstr "EQUALS"
 
-#: src/dmarc/DmarcReportPage.js:103
+#: src/dmarc/DmarcReportPage.js:104
 msgid "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 msgstr "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
@@ -1692,39 +1692,39 @@ msgstr "Export SPIN Top 25"
 msgid "Export to CSV"
 msgstr "Export to CSV"
 
-#: src/dmarc/DmarcReportPage.js:141
 #: src/dmarc/DmarcReportPage.js:142
+#: src/dmarc/DmarcReportPage.js:143
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
 #: src/domains/DomainListFilters.js:50
 msgid "Fail"
 msgstr "Fail"
 
-#: src/dmarc/DmarcReportPage.js:135
 #: src/dmarc/DmarcReportPage.js:136
+#: src/dmarc/DmarcReportPage.js:137
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
-#: src/dmarc/DmarcByDomainPage.js:146
-#: src/dmarc/DmarcByDomainPage.js:327
+#: src/dmarc/DmarcByDomainPage.js:144
+#: src/dmarc/DmarcByDomainPage.js:313
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
-#: src/dmarc/DmarcReportPage.js:138
 #: src/dmarc/DmarcReportPage.js:139
+#: src/dmarc/DmarcReportPage.js:140
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
-#: src/dmarc/DmarcByDomainPage.js:153
-#: src/dmarc/DmarcByDomainPage.js:323
+#: src/dmarc/DmarcByDomainPage.js:151
+#: src/dmarc/DmarcByDomainPage.js:309
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
-#: src/dmarc/DmarcReportPage.js:635
+#: src/dmarc/DmarcReportPage.js:636
 msgid "Fake email domain blocks (reject + quarantine):"
 msgstr "Fake email domain blocks (reject + quarantine):"
 
@@ -1783,7 +1783,7 @@ msgstr "Filtered"
 #~ msgstr "Filters"
 
 #: src/admin/AdminDomains.js:219
-#: src/dmarc/DmarcByDomainPage.js:273
+#: src/dmarc/DmarcByDomainPage.js:271
 #: src/domains/DomainsPage.js:338
 #: src/organizationDetails/OrganizationDomains.js:302
 #: src/organizations/Organizations.js:235
@@ -1880,23 +1880,23 @@ msgstr "French"
 msgid "Frequently Asked Questions"
 msgstr "Frequently Asked Questions"
 
-#: src/dmarc/DmarcByDomainPage.js:160
-#: src/dmarc/DmarcByDomainPage.js:331
+#: src/dmarc/DmarcByDomainPage.js:158
+#: src/dmarc/DmarcByDomainPage.js:317
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/dmarc/DmarcByDomainPage.js:139
-#: src/dmarc/DmarcByDomainPage.js:319
+#: src/dmarc/DmarcByDomainPage.js:137
+#: src/dmarc/DmarcByDomainPage.js:305
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
-#: src/dmarc/DmarcReportPage.js:407
-#: src/dmarc/DmarcReportPage.js:436
-#: src/dmarc/DmarcReportPage.js:627
+#: src/dmarc/DmarcReportPage.js:408
+#: src/dmarc/DmarcReportPage.js:437
+#: src/dmarc/DmarcReportPage.js:628
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/dmarc/DmarcReportPage.js:399
+#: src/dmarc/DmarcReportPage.js:400
 msgid "Fully Aligned Table"
 msgstr "Fully Aligned Table"
 
@@ -1950,8 +1950,8 @@ msgid "Graph direction:"
 msgstr "Graph direction:"
 
 #: src/app/App.js:433
-#: src/dmarc/DmarcReportPage.js:206
-#: src/dmarc/DmarcReportPage.js:660
+#: src/dmarc/DmarcReportPage.js:207
+#: src/dmarc/DmarcReportPage.js:661
 msgid "Guidance"
 msgstr "Guidance"
 
@@ -1972,7 +1972,7 @@ msgstr "Guidance results"
 msgid "Hash Algorithm:"
 msgstr "Hash Algorithm:"
 
-#: src/dmarc/DmarcReportPage.js:201
+#: src/dmarc/DmarcReportPage.js:202
 msgid "Header From"
 msgstr "Header From"
 
@@ -2043,7 +2043,7 @@ msgstr "Home"
 msgid "Horizontal View"
 msgstr "Horizontal View"
 
-#: src/dmarc/DmarcReportPage.js:253
+#: src/dmarc/DmarcReportPage.js:254
 msgid "Host from reverse DNS of source IP address."
 msgstr "Host from reverse DNS of source IP address."
 
@@ -2279,8 +2279,8 @@ msgstr "Implemented"
 
 #: src/dmarc/DmarcByDomainPage.js:286
 #: src/dmarc/DmarcReportPage.js:669
-msgid "Important Notice:"
-msgstr "Important Notice:"
+#~ msgid "Important Notice:"
+#~ msgstr "Important Notice:"
 
 #: src/guidance/AdditionalFindings.js:140
 msgid "Improving GC Cyber Security Health SPIN"
@@ -2522,11 +2522,11 @@ msgstr "Invite Requested"
 msgid "Invite User"
 msgstr "Invite User"
 
-#: src/dmarc/DmarcReportPage.js:277
+#: src/dmarc/DmarcReportPage.js:278
 msgid "Is DKIM aligned. Can be true or false."
 msgstr "Is DKIM aligned. Can be true or false."
 
-#: src/dmarc/DmarcReportPage.js:269
+#: src/dmarc/DmarcReportPage.js:270
 msgid "Is SPF aligned. Can be true or false."
 msgstr "Is SPF aligned. Can be true or false."
 
@@ -2671,7 +2671,7 @@ msgstr "List of guidance tags"
 msgid "Loading {children}..."
 msgstr "Loading {children}..."
 
-#: src/dmarc/DmarcByDomainPage.js:245
+#: src/dmarc/DmarcByDomainPage.js:243
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
@@ -2952,23 +2952,23 @@ msgstr "No CDN found"
 msgid "No current phone number"
 msgstr "No current phone number"
 
-#: src/dmarc/DmarcReportPage.js:387
+#: src/dmarc/DmarcReportPage.js:388
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "No data for the DKIM Failures by IP Address table"
 
-#: src/dmarc/DmarcReportPage.js:604
+#: src/dmarc/DmarcReportPage.js:605
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "No data for the DMARC Failures by IP Address table"
 
-#: src/dmarc/DmarcReportPage.js:166
+#: src/dmarc/DmarcReportPage.js:167
 msgid "No data for the DMARC yearly report graph"
 msgstr "No data for the DMARC yearly report graph"
 
-#: src/dmarc/DmarcReportPage.js:455
+#: src/dmarc/DmarcReportPage.js:456
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "No data for the Fully Aligned by IP Address table"
 
-#: src/dmarc/DmarcReportPage.js:524
+#: src/dmarc/DmarcReportPage.js:525
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "No data for the SPF Failures by IP Address table"
 
@@ -3111,6 +3111,10 @@ msgstr "Not Implemented"
 #: src/app/ContactUsPage.js:24
 #~ msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 #~ msgstr "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+
+#: src/dmarc/DmarcReportOutageBanner.js:11
+msgid "Note:"
+msgstr "Note:"
 
 #: src/admin/AdminDomainModal.js:361
 msgid "Note: This could affect results for multiple organizations"
@@ -3276,8 +3280,8 @@ msgstr "p:"
 msgid "Page {0} of {1}"
 msgstr "Page {0} of {1}"
 
-#: src/dmarc/DmarcReportPage.js:132
 #: src/dmarc/DmarcReportPage.js:133
+#: src/dmarc/DmarcReportPage.js:134
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
 #: src/domains/DomainListFilters.js:44
@@ -3410,7 +3414,7 @@ msgstr "Please enter your two factor code below."
 #~ msgid "Please follow the link in order to verify your account and start using Tracker."
 #~ msgstr "Please follow the link in order to verify your account and start using Tracker."
 
-#: src/dmarc/DmarcReportPage.js:245
+#: src/dmarc/DmarcReportPage.js:246
 msgid "Pointer to a DKIM public key record in DNS."
 msgstr "Pointer to a DKIM public key record in DNS."
 
@@ -3814,16 +3818,16 @@ msgstr "Search by Domain URL"
 msgid "Search by initiated by, resource name"
 msgstr "Search by initiated by, resource name"
 
-#: src/dmarc/DmarcReportPage.js:371
+#: src/dmarc/DmarcReportPage.js:372
 msgid "Search DKIM Failing Items"
 msgstr "Search DKIM Failing Items"
 
-#: src/dmarc/DmarcReportPage.js:588
+#: src/dmarc/DmarcReportPage.js:589
 msgid "Search DMARC Failing Items"
 msgstr "Search DMARC Failing Items"
 
-#: src/dmarc/DmarcByDomainPage.js:203
-#: src/dmarc/DmarcByDomainPage.js:259
+#: src/dmarc/DmarcByDomainPage.js:201
+#: src/dmarc/DmarcByDomainPage.js:257
 #: src/domains/DomainsPage.js:330
 #: src/organizationDetails/OrganizationDomains.js:293
 msgid "Search for a domain"
@@ -3861,11 +3865,11 @@ msgstr "Search for domains here."
 msgid "Search for your organization to request an invite"
 msgstr "Search for your organization to request an invite"
 
-#: src/dmarc/DmarcReportPage.js:439
+#: src/dmarc/DmarcReportPage.js:440
 msgid "Search Fully Aligned Items"
 msgstr "Search Fully Aligned Items"
 
-#: src/dmarc/DmarcReportPage.js:508
+#: src/dmarc/DmarcReportPage.js:509
 msgid "Search SPF Failing Items"
 msgstr "Search SPF Failing Items"
 
@@ -3964,8 +3968,8 @@ msgstr "Show {pageSize}"
 msgid "Show password"
 msgstr "Show password"
 
-#: src/dmarc/DmarcByDomainPage.js:233
-#: src/dmarc/DmarcReportPage.js:684
+#: src/dmarc/DmarcByDomainPage.js:231
+#: src/dmarc/DmarcReportPage.js:673
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
 
@@ -4117,7 +4121,7 @@ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade 
 #~ msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 
-#: src/dmarc/DmarcByDomainPage.js:332
+#: src/dmarc/DmarcByDomainPage.js:318
 msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 
@@ -4125,7 +4129,7 @@ msgstr "Shows the percentage of emails from the domain that fail both SPF and DK
 #~ msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:328
+#: src/dmarc/DmarcByDomainPage.js:314
 msgid "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 msgstr "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 
@@ -4133,7 +4137,7 @@ msgstr "Shows the percentage of emails from the domain that fail DKIM requiremen
 #~ msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:324
+#: src/dmarc/DmarcByDomainPage.js:310
 msgid "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 
@@ -4141,7 +4145,7 @@ msgstr "Shows the percentage of emails from the domain that fail SPF requirement
 #~ msgid "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:320
+#: src/dmarc/DmarcByDomainPage.js:306
 msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 
@@ -4149,7 +4153,7 @@ msgstr "Shows the percentage of emails from the domain that have passed both SPF
 #~ msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:316
+#: src/dmarc/DmarcByDomainPage.js:302
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
@@ -4203,7 +4207,7 @@ msgstr "Slug:"
 msgid "Sort by:"
 msgstr "Sort by:"
 
-#: src/dmarc/DmarcReportPage.js:172
+#: src/dmarc/DmarcReportPage.js:173
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
@@ -4216,21 +4220,21 @@ msgstr "sp:"
 msgid "SPF"
 msgstr "SPF"
 
-#: src/dmarc/DmarcReportPage.js:210
+#: src/dmarc/DmarcReportPage.js:211
 msgid "SPF Aligned"
 msgstr "SPF Aligned"
 
-#: src/dmarc/DmarcReportPage.js:197
+#: src/dmarc/DmarcReportPage.js:198
 msgid "SPF Domains"
 msgstr "SPF Domains"
 
-#: src/dmarc/DmarcReportPage.js:467
+#: src/dmarc/DmarcReportPage.js:468
 msgid "SPF Failure Table"
 msgstr "SPF Failure Table"
 
-#: src/dmarc/DmarcReportPage.js:475
-#: src/dmarc/DmarcReportPage.js:505
-#: src/dmarc/DmarcReportPage.js:629
+#: src/dmarc/DmarcReportPage.js:476
+#: src/dmarc/DmarcReportPage.js:506
+#: src/dmarc/DmarcReportPage.js:630
 msgid "SPF Failures by IP Address"
 msgstr "SPF Failures by IP Address"
 
@@ -4242,7 +4246,7 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF record is deployed and valid"
 msgstr "SPF record is deployed and valid"
 
-#: src/dmarc/DmarcReportPage.js:214
+#: src/dmarc/DmarcReportPage.js:215
 msgid "SPF Results"
 msgstr "SPF Results"
 
@@ -4554,7 +4558,7 @@ msgstr "The <0>\"Getting Started\" guide and FAQ section</0> will help you to un
 #~ msgid "The <0>Tracker</0> platform"
 #~ msgstr "The <0>Tracker</0> platform"
 
-#: src/dmarc/DmarcReportPage.js:261
+#: src/dmarc/DmarcReportPage.js:262
 msgid "The address/domain used in the \"From\" field."
 msgstr "The address/domain used in the \"From\" field."
 
@@ -4570,22 +4574,22 @@ msgstr "The advice, guidance or services provided to you by TBS will be provided
 msgid "The asset state shows the domain's relation to your organization. Only \"approved\" assets are counted in summaries."
 msgstr "The asset state shows the domain's relation to your organization. Only \"approved\" assets are counted in summaries."
 
-#: src/dmarc/DmarcReportPage.js:285
+#: src/dmarc/DmarcReportPage.js:286
 msgid "The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
 msgstr "The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
 
 #: src/dmarc/DmarcByDomainPage.js:289
 #: src/dmarc/DmarcReportPage.js:672
-msgid "The DMARC Summaries data has not been updated since December 2024. We are working to refresh this information. Please note that any displayed data may not reflect current email security status."
-msgstr "The DMARC Summaries data has not been updated since December 2024. We are working to refresh this information. Please note that any displayed data may not reflect current email security status."
+#~ msgid "The DMARC Summaries data has not been updated since December 2024. We are working to refresh this information. Please note that any displayed data may not reflect current email security status."
+#~ msgstr "The DMARC Summaries data has not been updated since December 2024. We are working to refresh this information. Please note that any displayed data may not reflect current email security status."
 
-#: src/dmarc/DmarcByDomainPage.js:313
+#: src/dmarc/DmarcByDomainPage.js:299
 #: src/domains/DomainsPage.js:281
 #: src/organizationDetails/OrganizationDomains.js:223
 msgid "The domain address."
 msgstr "The domain address."
 
-#: src/dmarc/DmarcReportPage.js:241
+#: src/dmarc/DmarcReportPage.js:242
 msgid "The domains used for DKIM validation."
 msgstr "The domains used for DKIM validation."
 
@@ -4593,7 +4597,7 @@ msgstr "The domains used for DKIM validation."
 msgid "The following ciphers are from known weak protocols and must be disabled:"
 msgstr "The following ciphers are from known weak protocols and must be disabled:"
 
-#: src/dmarc/DmarcReportPage.js:617
+#: src/dmarc/DmarcReportPage.js:618
 msgid "The following data may have recently changed."
 msgstr "The following data may have recently changed."
 
@@ -4605,7 +4609,7 @@ msgstr "The Government of Canada’s (GC) <0>Directive on Service and Digital</0
 msgid "The graphics displayed on the Tracker website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada’s approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs."
 msgstr "The graphics displayed on the Tracker website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada’s approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs."
 
-#: src/dmarc/DmarcReportPage.js:233
+#: src/dmarc/DmarcReportPage.js:234
 msgid "The IP address of sending server."
 msgstr "The IP address of sending server."
 
@@ -4637,11 +4641,11 @@ msgstr "The process of detecting DKIM selectors is not immediate. It may take mo
 msgid "The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS."
 msgstr "The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS."
 
-#: src/dmarc/DmarcReportPage.js:273
+#: src/dmarc/DmarcReportPage.js:274
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
 msgstr "The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
 
-#: src/dmarc/DmarcReportPage.js:281
+#: src/dmarc/DmarcReportPage.js:282
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 
@@ -4657,13 +4661,17 @@ msgstr "The selected endpoint is a private IP address. Tracker does not perform 
 msgid "The summary cards show two metrics that Tracker scans:"
 msgstr "The summary cards show two metrics that Tracker scans:"
 
-#: src/dmarc/DmarcReportPage.js:249
+#: src/dmarc/DmarcReportPage.js:250
 msgid "The Total Messages from this sender."
 msgstr "The Total Messages from this sender."
 
 #: src/admin/UserListModal.js:107
 msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
+
+#: src/dmarc/DmarcReportOutageBanner.js:14
+msgid "There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service disruption. This does not affect current DMARC reporting, and all data before and after this period remains complete and accurate."
+msgstr "There is a gap in historical DMARC data between December 20, 2024 and January 21, 2025 due to a service disruption. This does not affect current DMARC reporting, and all data before and after this period remains complete and accurate."
 
 #: src/guidance/AdditionalFindings.js:445
 msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur daily."
@@ -4841,9 +4849,9 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 #~ msgid "Top 25 vulnerability detected in additional findings."
 #~ msgstr "Top 25 vulnerability detected in additional findings."
 
-#: src/dmarc/DmarcByDomainPage.js:132
-#: src/dmarc/DmarcByDomainPage.js:315
-#: src/dmarc/DmarcReportPage.js:190
+#: src/dmarc/DmarcByDomainPage.js:130
+#: src/dmarc/DmarcByDomainPage.js:301
+#: src/dmarc/DmarcReportPage.js:191
 #: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total Messages"
@@ -5298,7 +5306,7 @@ msgstr "View summaries of your organization's web and email security compliance.
 #~ msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 #~ msgstr "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 
-#: src/dmarc/DmarcReportPage.js:641
+#: src/dmarc/DmarcReportPage.js:642
 msgid "Volume of messages spoofing domain (reject + quarantine + none):"
 msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 
@@ -5331,7 +5339,7 @@ msgstr "We reserve the right to make changes to our website layout and content, 
 msgid "We reserve the right to modify or terminate our services for any reason, without notice, at any time."
 msgstr "We reserve the right to modify or terminate our services for any reason, without notice, at any time."
 
-#: src/dmarc/DmarcReportPage.js:620
+#: src/dmarc/DmarcReportPage.js:621
 msgid "We've made enhancements to our DMARC data tables to provide a more accurate view of the information."
 msgstr "We've made enhancements to our DMARC data tables to provide a more accurate view of the information."
 

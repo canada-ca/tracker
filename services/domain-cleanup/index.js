@@ -21,19 +21,25 @@ const { removeNXDomainService, unclaimedCleanupService, untagNewDomainsService }
   })
 
   try {
+    console.log('Starting NXDOMAIN cleanup service...')
     await removeNXDomainService({ query, log: console.log })
+    console.log('NXDOMAIN cleanup service finished successfully.')
   } catch (err) {
     console.log(err)
   }
 
   try {
+    console.log('Starting unclaimed cleanup service...')
     await unclaimedCleanupService({ query, log: console.log })
+    console.log('Unclaimed cleanup service finished successfully.')
   } catch (err) {
     console.log(err)
   }
 
   try {
+    console.log('Starting untag new domains service...')
     await untagNewDomainsService({ query, log: console.log })
+    console.log('Untag new domain service finished successfully.')
   } catch (err) {
     console.log(err)
   }
