@@ -130,6 +130,7 @@ export const loadAllOrganizationDomainStatuses =
               "domain": d.domain,
               "orgName": verifiedOrg.name,
               "orgAcronym": verifiedOrg.acronym,
+              "orgExternalID": verifiedOrg.externalId,
               "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,

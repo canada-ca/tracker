@@ -66,6 +66,11 @@ export const organizationType = new GraphQLObjectType({
       description: 'Whether the organization is externally managed.',
       resolve: ({ externallyManaged }) => externallyManaged,
     },
+    externalId: {
+      type: GraphQLString,
+      description: 'String ID used to identify the organization in an external system.',
+      resolve: ({ externalId }) => externalId,
+    },
     summaries: {
       type: organizationSummaryType,
       description: 'Summaries based on scan types that are preformed on the given organizations domains.',
