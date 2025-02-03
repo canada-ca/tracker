@@ -38,7 +38,6 @@ export function AdditionalFindings({ domain }) {
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
   const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
 
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
@@ -104,7 +103,7 @@ export function AdditionalFindings({ domain }) {
       cve,
       affectedWebComps: webComponents.filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve)),
     })
-    cveOnOpen()
+    onOpen()
   }
 
   return (
@@ -116,9 +115,19 @@ export function AdditionalFindings({ domain }) {
           </Trans>
         </Text>
 
-        <Button variant="link" my="4" onClick={onOpen} fontSize="lg">
-          <Trans>What are these additional findings?</Trans>
-        </Button>
+        <Text fontSize="lg">
+          <Trans>
+            These findings are imported from Microsoft's{' '}
+            <Link
+              color="blue.500"
+              isExternal
+              href="https://learn.microsoft.com/en-us/azure/external-attack-surface-management/"
+            >
+              External Attack Surface Management <ExternalLinkIcon />
+            </Link>{' '}
+            tool. <b>Automated updates to these findings occur daily.</b>
+          </Trans>
+        </Text>
         <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5, 6]} w="100%">
           <AccordionItem>
             <Flex as={AccordionButton}>
@@ -412,7 +421,7 @@ export function AdditionalFindings({ domain }) {
         </Accordion>
       </Box>
 
-      <Modal isOpen={cveIsOpen} onClose={cveOnClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{activeCve?.cve}</ModalHeader>
@@ -431,30 +440,6 @@ export function AdditionalFindings({ domain }) {
               <Trans>More info</Trans> <ExternalLinkIcon />
             </Link>
           </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Trans>Additional Findings</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody fontSize="lg">
-            <Trans>
-              These findings are imported from Microsoft's{' '}
-              <Link
-                color="blue.500"
-                isExternal
-                href="https://learn.microsoft.com/en-us/azure/external-attack-surface-management/"
-              >
-                External Attack Surface Management
-              </Link>{' '}
-              tool. Updates to these findings occur daily.
-            </Trans>
-          </ModalBody>
-          <ModalFooter />
         </ModalContent>
       </Modal>
     </>
