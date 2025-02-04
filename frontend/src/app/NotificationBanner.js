@@ -8,14 +8,7 @@ import { useMutation } from '@apollo/client'
 import { DISMISS_MESSAGE } from '../graphql/mutations'
 import { useUserVar } from '../utilities/userState'
 
-export function NotificationBanner({
-  children,
-  hideable = false,
-  bannerId,
-  initialHideState = false,
-  status = 'info',
-  ...props
-}) {
+export function NotificationBanner({ children, hideable = false, bannerId, status = 'info', ...props }) {
   const toast = useToast()
   const { login, currentUser, isLoggedIn } = useUserVar()
 
@@ -25,8 +18,7 @@ export function NotificationBanner({
   }
 
   const [hideBanner, setHideBanner] = useState(
-    checkHideBanner({ dismissedMessages: currentUser?.dismissedMessages || [], userLoggedIn: isLoggedIn() }) ||
-      initialHideState,
+    checkHideBanner({ dismissedMessages: currentUser?.dismissedMessages || [], userLoggedIn: isLoggedIn() }),
   )
 
   const [dismissMessage, { loading, _error }] = useMutation(DISMISS_MESSAGE, {
@@ -147,7 +139,6 @@ export function NotificationBanner({
 NotificationBanner.propTypes = {
   hideable: bool,
   bannerId: string,
-  initialHideState: bool,
   status: oneOf(['info', 'warning', 'success', 'error', 'loading']),
   children: any,
 }
