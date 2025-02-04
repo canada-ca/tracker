@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Joyride from 'react-joyride'
 import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
@@ -15,7 +15,6 @@ export const TourComponent = () => {
   const toast = useToast()
   const { isEmailValidated } = useUserVar()
   const { isTourOpen, endTour, startTour } = useTour()
-  const [tourKey, _setTourKey] = useState(0)
   const { login, currentUser, isLoggedIn } = useUserVar()
   const { darkOrange } = theme.colors.tracker.logo
 
@@ -87,7 +86,7 @@ export const TourComponent = () => {
 
   return (
     <Joyride
-      key={tourKey}
+      key={`${tourName}-tour-${isTourOpen}`}
       steps={mainTourSteps[tourName]['steps']}
       run={isTourOpen}
       continuous={true}
