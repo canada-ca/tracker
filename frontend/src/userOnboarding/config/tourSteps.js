@@ -4,7 +4,6 @@ import { Trans } from '@lingui/macro'
 //Tour steps for each page labeled by the page name, with option for requiring authentication
 export const mainTourSteps = {
   organizationsPage: {
-    requiresAuth: true,
     steps: [
       {
         target: '.search-box',
@@ -44,7 +43,6 @@ export const mainTourSteps = {
     ],
   },
   organizationSummary: {
-    requiresAuth: true,
     steps: [
       {
         target: '.summaries-group',
@@ -64,7 +62,6 @@ export const mainTourSteps = {
     ],
   },
   organizationDomains: {
-    requiresAuth: true,
     steps: [
       {
         target: '.search-box',
@@ -119,7 +116,6 @@ export const mainTourSteps = {
     ],
   },
   domainPage: {
-    requiresAuth: true,
     steps: [
       {
         target: '.search-box',
@@ -149,7 +145,6 @@ export const mainTourSteps = {
     ],
   },
   myTrackerPage: {
-    requiresAuth: true,
     steps: [
       {
         content: (
@@ -177,7 +172,6 @@ export const mainTourSteps = {
     ],
   },
   dmarcSummariesPage: {
-    requiresAuth: true,
     steps: [
       {
         target: '.month-select',
@@ -202,7 +196,6 @@ export const mainTourSteps = {
     ],
   },
   adminProfilePage: {
-    requiresAuth: true,
     steps: [
       {
         content: (
@@ -237,7 +230,6 @@ export const mainTourSteps = {
     ],
   },
   landingPage: {
-    requiresAuth: false,
     steps: [
       {
         target: '.create-account-button',

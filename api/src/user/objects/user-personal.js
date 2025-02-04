@@ -1,4 +1,4 @@
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
@@ -7,6 +7,8 @@ import { affiliationConnection } from '../../affiliation/objects'
 import { TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
 import { emailUpdateOptionsType } from './email-update-options'
+import { dismissedMessage } from './dismissed-message'
+import { completedTour } from './completed-tour'
 
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
@@ -84,6 +86,16 @@ export const userPersonalType = new GraphQLObjectType({
         })
         return affiliations
       },
+    },
+    dismissedMessages: {
+      type: new GraphQLList(dismissedMessage),
+      description: 'Messages that the user has dismissed.',
+      resolve: ({ dismissedMessages }) => dismissedMessages || [],
+    },
+    completedTours: {
+      type: new GraphQLList(completedTour),
+      description: 'Tours the user has completed.',
+      resolve: ({ completedTours }) => completedTours || [],
     },
   }),
   interfaces: [nodeInterface],
