@@ -718,4 +718,50 @@ export const UNIGNORE_CVE = gql`
   }
 `
 
+export const DISMISS_MESSAGE = gql`
+  mutation DismissMessage($messageId: String!) {
+    dismissMessage(input: { messageId: $messageId }) {
+      result {
+        ... on DismissMessageResult {
+          status
+          user {
+            id
+            dismissedMessages {
+              messageId
+              dismissedAt
+            }
+          }
+        }
+        ... on DismissMessageError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const COMPLETE_TOUR = gql`
+  mutation CompleteTour($tourId: String!) {
+    completeTour(input: { tourId: $tourId }) {
+      result {
+        ... on CompleteTourResult {
+          status
+          user {
+            id
+            completedTours {
+              tourId
+              completedAt
+            }
+          }
+        }
+        ... on CompleteTourError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
