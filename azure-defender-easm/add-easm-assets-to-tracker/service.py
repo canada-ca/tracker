@@ -95,7 +95,7 @@ async def main():
             domains = [domain for domain in cursor]
             return len(domains) > 0
         except Exception as e:
-            logger.error(f"Error occured when checking if domain exists: {e}")
+            logger.error(f"Error occurred when checking if domain exists: {e}")
             return None
 
     # insert functions
@@ -124,7 +124,7 @@ async def main():
             logger.info(f"Successfully created domain: {domain}")
             return created_domain
         except Exception as e:
-            logger.error(f"Error occured when creating domain: {e}")
+            logger.error(f"Error occurred when creating domain: {e}")
             return None
 
     def create_claim(org_id, domain_id, domain_name, txn_col):
@@ -140,7 +140,7 @@ async def main():
             txn_col.insert(insert_claim)
             logger.info(f"Successfully created claim for domain: {domain_name}")
         except Exception as e:
-            logger.error("Error occured when creating claim for ", e)
+            logger.error("Error occurred when creating claim for ", e)
 
     def log_activity(domain, org_id, trx_col):
         insert_activity = {
@@ -170,7 +170,7 @@ async def main():
             trx_col.insert(insert_activity)
             logger.info(f"Successfully logged activity for domain: {domain}")
         except Exception as e:
-            logger.error(f"Error occured when logging activity for {domain}: {e}")
+            logger.error(f"Error occurred when logging activity for {domain}: {e}")
 
     # main logic
     async def add_discovered_domain(domains, org_id):
@@ -178,7 +178,7 @@ async def main():
             # check if domain exists in system
             domain_exists = get_domain_exists(domains)
             if domain_exists is None:
-                logger.error(f"Error occured when checking if domain exists: {e}")
+                logger.error(f"Error occurred when checking if domain exists: {e}")
                 continue
             # if domain exists, skip
             elif domain_exists:

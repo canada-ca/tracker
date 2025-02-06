@@ -1,6 +1,6 @@
 # Progress Report Service
 
-The purpose of this service is to provide organization admins with a periodic update on their progress towards acceptable cyber hygeine.
+The purpose of this service is to provide organization admins with a periodic update on their progress towards acceptable cyber hygiene.
 The service calculates a number of statistics, including:
 
 1. Change in overall HTTPS and DMARC compliance (percentage + number of domains)
@@ -35,7 +35,7 @@ DB_NAME=track_dmarc
 
 ### Local development
 
-The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have it's own .env file, and the value of the root password should align with the value of `DB_PASS` in the services `.env` file.
+The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have its own .env file, and the value of the root password should align with the value of `DB_PASS` in the services `.env` file.
 
 ```bash
 # Write the arango test credentials into an env file:

@@ -11,7 +11,7 @@ npm install
 
 #### Running API Server
 
-In accordance with the [12Factor app](https://12factor.net) philosophy, the server [draws it's config from the environment](https://12factor.net/config). It does based on a `.env` file that should exist in the root of the API folder which can be created with the following command, obviously modifying the test values shown to suit your setup.
+In accordance with the [12Factor app](https://12factor.net) philosophy, the server [draws it's config from the environment](https://12factor.net/config). It does so based on a `.env` file that should exist in the root of the API folder which can be created with the following command, obviously modifying the test values shown to suit your setup.
 
 ```bash
 cat <<'EOF' > test.env
@@ -76,7 +76,7 @@ npm run dev
 
 #### Running Tests
 
-The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have it's own .env file, and the value of the root password should align with the value of `DB_PASS` in the APIs `test.env` file.
+The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have its own .env file, and the value of the root password should align with the value of `DB_PASS` in the APIs `test.env` file.
 
 ```bash
 # Write the arango test credentials into an env file:

@@ -1,6 +1,6 @@
 # Domain loader
 
-This directory contains a program to facilitate the insertion of organization and domain data from a JSON file. It is intended to be run once on a fresh install of Tracker, to seed the database and allow the super admin to start sending out some initial invitations.
+This directory contains a program to facilitate the insertion of organization and domain data from a JSON file. It is intended to be run once on a fresh installation of Tracker, to seed the database and allow the super admin to start sending out some initial invitations.
 
 The JSON file used for input must adhere to the following structure:
 
