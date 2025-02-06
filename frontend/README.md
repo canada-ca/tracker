@@ -57,7 +57,7 @@ This allows changes to the code to be reflected immediately in the running conta
 You can see the service running on `localhost:3000` and the API running on `localhost:3000/graphql`.
 If you want to modify the schema you can reach the editor at `localhost:3000/editor`.
 
-#### Stopping it it
+#### Stopping
 
 When you are done:
 

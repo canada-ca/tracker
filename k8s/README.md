@@ -32,7 +32,7 @@ $ make secrets env=minikube
 $ make platform env=minikube
 ```
 
-Watch the results with `watch kubectl get pods -n istio-system`. Once Istio is running (and ready to inject it's sidecar proxies), the config for our app can be applied.
+Watch the results with `watch kubectl get pods -n istio-system`. Once Istio is running (and ready to inject its sidecar proxies), the config for our app can be applied.
 
 ```
 $ make app env=minikube
@@ -42,7 +42,7 @@ Depending on the speed of your system you might need to run the kustomize/apply 
 
 ### Seeing the result:
 
-The app lets you connect to both ports 80 and 443 (which is using a self signed certificate).
+The app lets you connect to both ports 80 and 443 (which is using a self-signed certificate).
 
 ```bash
 $ minikube service list
@@ -58,9 +58,9 @@ The directory layout here to allow the patching of a basic flux install using [K
 
 ## Testing config changes
 
-Config changes can be pretty high impact, so trying it out somewhere is pretty useful. To that end, we have a few ways to bring up a "non-prod" version of the app; basically, using a self signed cert and requesting its own IP address.
+Config changes can be pretty high impact, so trying it out somewhere is pretty useful. To that end, we have a few ways to bring up a "non-prod" version of the app; basically, using a self-signed cert and requesting its own IP address.
 
-Containerized applications [read their config from the environment](https://12factor.net/config), and that environment is largely populated via secrets. Consequently we create these secrets and the namespaces they live in before doing the deployment.
+Containerized applications [read their config from the environment](https://12factor.net/config), and that environment is largely populated via secrets. Consequently, we create these secrets and the namespaces they live in before doing the deployment.
 
 You can run `make credentials` in the project root to generate a basic set of dev credentials. Without passing any arguments, `make credentials` is equivalent to `make credentials mode=dev displayname=admin email=admin@example.com password=admin`. These default arguments set the credentials for the super admin user, and if you intend to log into your testing instance, make a note of those or adjust the arguments as needed.
 

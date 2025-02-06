@@ -10,7 +10,7 @@ The basic flow starts with the `domain-dispatcher` doing the equivalent of the f
 nats pub domains.8017518 '{"domain": "pensezcybersecurite.gc.ca", "domain_key": "8017518", "user_key": null, "shared_id": null, "selectors": []}'
 ```
 
-The `https-scanner` that has essentially done `nats sub domains.*`, and after doing it's scan does the equivalent of the following command:
+The `https-scanner` that has essentially done `nats sub domains.*`, and after doing its scan does the equivalent of the following command:
 
 ```sh
 nats pub "domains.8017518.https" '{"results": {"implementation": "Valid HTTPS", "enforced": "Strict", "hsts": "HSTS Fully Implemented", "hsts_age": 31536000, "preload_status": "HSTS Not Preloaded", "expired_cert": false, "self_signed_cert": false, "cert_revocation_status": "Valid", "cert_bad_hostname": false}, "scan_type": "https", "user_key": null, "domain_key": "8017518", "shared_id": null}'
@@ -52,7 +52,7 @@ $ docker-compose up -d https* dns* tls*
 
 ### Running the dispatcher
 
-Finally we run the service that pulls that test domain from the db and publishes it, kicking off the chain.
+Finally, we run the service that pulls that test domain from the db and publishes it, kicking off the chain.
 
 ```sh
 $ docker-compose up domain-dispatcher
@@ -81,4 +81,4 @@ arangosh --quiet --server.database track_dmarc --javascript.execute query-result
 
 ## Watching events
 
-You can subscript to all the events for debugging purposes with `nats sub "domains.>"`
+You can subscribe to all the events for debugging purposes with `nats sub "domains.>"`
