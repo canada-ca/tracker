@@ -35,7 +35,7 @@ def filter_recent_data(data_list, last_seen_key, start_date):
         ]
     except AttributeError:
         logger.error(
-            f"Problem occured filtering list to recent entries. Returning full list..."
+            f"Problem occurred filtering list to recent entries. Returning full list..."
         )
         return data_list
 

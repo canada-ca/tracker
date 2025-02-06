@@ -62,7 +62,7 @@ export const userPersonalType = new GraphQLObjectType({
     emailUpdateOptions: {
       type: emailUpdateOptionsType,
       description:
-        'A number of different emails the user can optionally receieve periodically that provide updates about their organization.',
+        'A number of different emails the user can optionally receive periodically that provide updates about their organization.',
       resolve: ({ emailUpdateOptions }) => emailUpdateOptions,
     },
     affiliations: {

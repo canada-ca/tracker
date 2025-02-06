@@ -169,7 +169,7 @@ export function App({ initialLoading, isLoginRequired }) {
         <NotificationBanner status="warning" hideable>
           <Text fontWeight="medium">
             <Trans>
-              You are current visiting a staging environment, used for testing purposes only. This is{' '}
+              You are currently visiting a staging environment, used for testing purposes only. This is{' '}
               <b>not the live production site.</b>
               <br />
               Visit the production site at{' '}

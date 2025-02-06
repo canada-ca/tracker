@@ -307,7 +307,7 @@ msgstr "Additional Findings"
 #~ msgid "Additonal findings"
 #~ msgstr "Additonal findings"
 
-#: src/app/App.js:312
+#: src/app/App.js:314
 msgid "Admin"
 msgstr "Admin"
 
@@ -397,11 +397,11 @@ msgstr "An error has occurred."
 #~ msgid "An error occured when you attempted to sign out"
 #~ msgstr "An error occured when you attempted to sign out"
 
-#: src/userOnboarding/components/TourComponent.js:33
+#: src/userOnboarding/components/TourComponent.js:32
 msgid "An error occurred when completing the tour."
 msgstr "An error occurred when completing the tour."
 
-#: src/app/NotificationBanner.js:35
+#: src/app/NotificationBanner.js:27
 msgid "An error occurred when dismissing the message."
 msgstr "An error occurred when dismissing the message."
 
@@ -611,14 +611,14 @@ msgstr "Audit Logs"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:233
+#: src/app/App.js:235
 msgid "Authenticate"
 msgstr "Authenticate"
 
 #: src/auth/ForgotPasswordPage.js:87
 #: src/createOrganization/CreateOrganizationPage.js:158
 #: src/guidance/CveIgnorer.js:131
-#: src/userOnboarding/components/TourComponent.js:107
+#: src/userOnboarding/components/TourComponent.js:106
 msgid "Back"
 msgstr "Back"
 
@@ -944,8 +944,8 @@ msgstr "Contact the Tracker Team"
 msgid "contact us"
 msgstr "contact us"
 
-#: src/app/App.js:269
-#: src/app/App.js:429
+#: src/app/App.js:271
+#: src/app/App.js:431
 #: src/app/ContactUsPage.js:52
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -1000,7 +1000,7 @@ msgstr "Create a free account to gain visibility into your organization's digita
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/app/App.js:221
+#: src/app/App.js:223
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -1013,7 +1013,7 @@ msgid "Create an organization"
 msgstr "Create an organization"
 
 #: src/admin/AdminPage.js:166
-#: src/app/App.js:391
+#: src/app/App.js:393
 #: src/createOrganization/CreateOrganizationPage.js:162
 msgid "Create Organization"
 msgstr "Create Organization"
@@ -1302,7 +1302,7 @@ msgid "DMARC Status"
 msgstr "DMARC Status"
 
 #: src/app/App.js:141
-#: src/app/App.js:353
+#: src/app/App.js:355
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:169
 #: src/dmarc/DmarcByDomainPage.js:227
@@ -1395,7 +1395,7 @@ msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:21
 #: src/app/App.js:134
-#: src/app/App.js:323
+#: src/app/App.js:325
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:209
 #: src/domains/DomainsPage.js:275
@@ -1428,7 +1428,7 @@ msgstr "Domains used for SPF validation."
 msgid "Don't have an account? <0>Sign up</0>"
 msgstr "Don't have an account? <0>Sign up</0>"
 
-#: src/app/NotificationBanner.js:133
+#: src/app/NotificationBanner.js:125
 msgid "Don't show again"
 msgstr "Don't show again"
 
@@ -1544,7 +1544,7 @@ msgstr "Email Updates status changed"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:380
+#: src/app/App.js:382
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -1801,7 +1801,7 @@ msgstr "Filters:"
 msgid "Find domains that potentially belong to your organization."
 msgstr "Find domains that potentially belong to your organization."
 
-#: src/userOnboarding/components/TourComponent.js:110
+#: src/userOnboarding/components/TourComponent.js:109
 msgid "Finish"
 msgstr "Finish"
 
@@ -1862,7 +1862,7 @@ msgstr "For questions and issues related to scan data, your organization's domai
 msgid "For users interested in using new features that are still in progress."
 msgstr "For users interested in using new features that are still in progress."
 
-#: src/app/App.js:242
+#: src/app/App.js:244
 #: src/auth/ForgotPasswordPage.js:62
 msgid "Forgot Password"
 msgstr "Forgot Password"
@@ -1956,7 +1956,7 @@ msgstr "Government of Canada Employees"
 msgid "Graph direction:"
 msgstr "Graph direction:"
 
-#: src/app/App.js:433
+#: src/app/App.js:435
 #: src/dmarc/DmarcReportPage.js:207
 #: src/dmarc/DmarcReportPage.js:661
 msgid "Guidance"
@@ -2041,7 +2041,7 @@ msgid "High"
 msgstr "High"
 
 #: src/app/App.js:114
-#: src/app/App.js:211
+#: src/app/App.js:213
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
@@ -2328,11 +2328,11 @@ msgstr "Incorrect createDomain.result typename."
 msgid "Incorrect createOrganization.result typename."
 msgstr "Incorrect createOrganization.result typename."
 
-#: src/app/NotificationBanner.js:68
+#: src/app/NotificationBanner.js:60
 msgid "Incorrect dismiss method received."
 msgstr "Incorrect dismiss method received."
 
-#: src/app/NotificationBanner.js:69
+#: src/app/NotificationBanner.js:61
 msgid "Incorrect dismissMessage.result typename."
 msgstr "Incorrect dismissMessage.result typename."
 
@@ -2715,7 +2715,7 @@ msgstr "Mail-sending"
 msgid "Managing Your Domains:"
 msgstr "Managing Your Domains:"
 
-#: src/app/App.js:191
+#: src/app/App.js:193
 msgid "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 msgstr "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 
@@ -2747,7 +2747,7 @@ msgstr "Menu"
 #~ msgid "Menu:"
 #~ msgstr "Menu:"
 
-#: src/app/NotificationBanner.js:46
+#: src/app/NotificationBanner.js:38
 msgid "Message dismissed successfully"
 msgstr "Message dismissed successfully"
 
@@ -2817,7 +2817,7 @@ msgstr "My domain does not send emails, how can I get my domain's DMARC, DKIM, a
 #~ msgstr "My Tracker"
 
 #: src/app/App.js:148
-#: src/app/App.js:371
+#: src/app/App.js:373
 #: src/user/MyTrackerPage.js:34
 #: src/user/MyTrackerPage.js:61
 msgid "myTracker"
@@ -2915,7 +2915,7 @@ msgstr "New Phone Number:"
 msgid "New Value:"
 msgstr "New Value:"
 
-#: src/userOnboarding/components/TourComponent.js:108
+#: src/userOnboarding/components/TourComponent.js:107
 msgid "Next"
 msgstr "Next"
 
@@ -3249,7 +3249,7 @@ msgstr "Organization(s):"
 
 #: src/admin/AdminPage.js:223
 #: src/app/App.js:131
-#: src/app/App.js:290
+#: src/app/App.js:292
 #: src/app/FloatingMenu.js:103
 #: src/guidance/GuidancePage.js:193
 #: src/organizations/Organizations.js:103
@@ -3477,7 +3477,7 @@ msgstr "PREVIEW"
 #~ msgid "Previous"
 #~ msgstr "Previous"
 
-#: src/app/App.js:421
+#: src/app/App.js:423
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:41
@@ -3570,7 +3570,7 @@ msgstr "Reach out if you have any questions."
 #~ msgid "Reach out to us if you have any questions."
 #~ msgstr "Reach out to us if you have any questions."
 
-#: src/app/App.js:278
+#: src/app/App.js:280
 msgid "Read guidance"
 msgstr "Read guidance"
 
@@ -3708,7 +3708,7 @@ msgstr "Requires Investigation"
 msgid "REQUIRES_INVESTIGATION"
 msgstr "REQUIRES_INVESTIGATION"
 
-#: src/app/App.js:251
+#: src/app/App.js:253
 #: src/auth/ResetPasswordPage.js:95
 msgid "Reset Password"
 msgstr "Reset Password"
@@ -4199,7 +4199,7 @@ msgstr "Sign Out."
 msgid "Signature Hash:"
 msgstr "Signature Hash:"
 
-#: src/userOnboarding/components/TourComponent.js:109
+#: src/userOnboarding/components/TourComponent.js:108
 msgid "Skip"
 msgstr "Skip"
 
@@ -4525,13 +4525,13 @@ msgstr "Technical implementation guidance:"
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:425
+#: src/app/App.js:427
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
-#: src/app/App.js:260
+#: src/app/App.js:262
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
@@ -4625,7 +4625,7 @@ msgstr "The IP address of sending server."
 msgid "The material available on this web site is subject to the"
 msgstr "The material available on this web site is subject to the"
 
-#: src/app/NotificationBanner.js:47
+#: src/app/NotificationBanner.js:39
 msgid "The message has been dismissed and will not be shown again."
 msgstr "The message has been dismissed and will not be shown again."
 
@@ -4926,7 +4926,7 @@ msgstr "Tracker logo outline"
 msgid "Tracker logo text"
 msgstr "Tracker logo text"
 
-#: src/app/App.js:188
+#: src/app/App.js:190
 msgid "Tracker now automatically manages your DKIM selectors."
 msgstr "Tracker now automatically manages your DKIM selectors."
 
@@ -4963,7 +4963,7 @@ msgstr "Unable to close the account."
 msgid "Unable to close this account."
 msgstr "Unable to close this account."
 
-#: src/userOnboarding/components/TourComponent.js:49
+#: src/userOnboarding/components/TourComponent.js:48
 msgid "Unable to complete the tour."
 msgstr "Unable to complete the tour."
 
@@ -4983,7 +4983,7 @@ msgstr "Unable to create new organization."
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
 
-#: src/app/NotificationBanner.js:59
+#: src/app/NotificationBanner.js:51
 msgid "Unable to dismiss the message."
 msgstr "Unable to dismiss the message."
 
@@ -5588,8 +5588,12 @@ msgid "You agree to use our website, products and services only for lawful purpo
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
 #: src/app/App.js:170
-msgid "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
-msgstr "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
+#~ msgid "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
+#~ msgstr "You are current visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
+
+#: src/app/App.js:171
+msgid "You are currently visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
+msgstr "You are currently visiting a staging environment, used for testing purposes only. This is <0>not the live production site.</0><1/>Visit the production site at <2>https://tracker.canada.ca</2> (GC network only)."
 
 #: src/userOnboarding/config/tourSteps.js:51
 #~ msgid "You can filter the list of domains here"
@@ -5690,7 +5694,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:362
+#: src/app/App.js:364
 msgid "Your Account"
 msgstr "Your Account"
 
