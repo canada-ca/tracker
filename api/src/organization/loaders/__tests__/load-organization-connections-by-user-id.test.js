@@ -50,6 +50,7 @@ describe('given the load organization connections by user id function', () => {
       })
       orgOne = await collections.organizations.save({
         verified: false,
+        externalId: 'test',
         summaries: {
           web: {
             pass: 50,
@@ -87,6 +88,7 @@ describe('given the load organization connections by user id function', () => {
       })
       orgTwo = await collections.organizations.save({
         verified: false,
+        externalId: 'test',
         summaries: {
           web: {
             pass: 52,
@@ -511,6 +513,7 @@ describe('given the load organization connections by user id function', () => {
             beforeEach(async () => {
               orgThree = await collections.organizations.save({
                 verified: false,
+                externalId: 'test',
                 summaries: {
                   web: {
                     pass: 51,
@@ -2243,6 +2246,7 @@ describe('given the load organization connections by user id function', () => {
             beforeEach(async () => {
               saOrg = await collections.organizations.save({
                 verified: false,
+                externalId: 'test',
                 summaries: {
                   web: {
                     pass: 52,
@@ -2616,6 +2620,7 @@ describe('given the load organization connections by user id function', () => {
             beforeEach(async () => {
               orgThree = await collections.organizations.save({
                 verified: false,
+                externalId: 'test',
                 summaries: {
                   web: {
                     pass: 51,
@@ -4449,6 +4454,7 @@ describe('given the load organization connections by user id function', () => {
             beforeEach(async () => {
               saOrg = await collections.organizations.save({
                 verified: false,
+                externalId: 'test',
                 summaries: {
                   web: {
                     pass: 52,

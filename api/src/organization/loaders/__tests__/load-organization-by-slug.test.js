@@ -37,7 +37,8 @@ describe('given a loadOrgBySlug dataloader', () => {
     })
     beforeEach(async () => {
       await collections.organizations.save({
-        verified: true,
+        verified: false,
+        externalId: 'test',
         summaries: {
           web: {
             pass: 50,
@@ -74,7 +75,8 @@ describe('given a loadOrgBySlug dataloader', () => {
         },
       })
       await collections.organizations.save({
-        verified: true,
+        verified: false,
+        externalId: 'test',
         orgDetails: {
           en: {
             slug: 'treasury-board-secretariat',
@@ -135,6 +137,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   _type: "organization",
                   id: org._key,
                   verified: org.verified,
+                  externalId: org.externalId,
                   domainCount: COUNT(domains),
                   summaries: org.summaries,
                   slugEN: org.orgDetails.en.slug,
@@ -217,6 +220,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   _type: "organization",
                   id: org._key,
                   verified: org.verified,
+                  externalId: org.externalId,
                   domainCount: COUNT(domains),
                   summaries: org.summaries,
                   slugEN: org.orgDetails.en.slug,

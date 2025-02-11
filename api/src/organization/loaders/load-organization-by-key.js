@@ -19,6 +19,7 @@ export const loadOrgByKey = ({ query, language, userKey, i18n }) =>
               _type: "organization",
               id: org._key,
               verified: org.verified,
+              externalId: org.externalId,
               domainCount: COUNT(orgDomains),
               summaries: org.summaries
             }, 
@@ -26,12 +27,8 @@ export const loadOrgByKey = ({ query, language, userKey, i18n }) =>
           )
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} running loadOrgByKey: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load organization(s). Please try again.`),
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadOrgByKey: ${err}`)
+      throw new Error(i18n._(t`Unable to load organization(s). Please try again.`))
     }
 
     const orgMap = {}
@@ -40,12 +37,8 @@ export const loadOrgByKey = ({ query, language, userKey, i18n }) =>
         orgMap[org._key] = org
       })
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} during loadOrgByKey: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load organization(s). Please try again.`),
-      )
+      console.error(`Cursor error occurred when user: ${userKey} during loadOrgByKey: ${err}`)
+      throw new Error(i18n._(t`Unable to load organization(s). Please try again.`))
     }
 
     return ids.map((id) => orgMap[id])
