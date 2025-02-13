@@ -66,7 +66,79 @@ def get_web_components_by_asset(asset):
             cve for cve in wc["WebComponentCves"] if cve["Cve"] in top25
         ]
 
+        componentVersions = wc["WebComponentVersion"].split(".", 2)
+        # Assign confidence levels to each CVE
+        for cve in wc["WebComponentCves"]:
+            print(cve["Cve"])
+            # if detected version includes patch, high confidence
+            if len(componentVersions) == 3:
+                cve["ConfidenceLevel"] = "high"
+            else:
+                # fetch affected versions of CVE
+                affected_versions = fetch_cve_affected_versions(
+                    cve["Cve"], wc["WebComponentName"]
+                )
+                for cpe in affected_versions:
+                    version_range = get_version_range(cpe)
+                    print(version_range)
+                    # compare minor and major version nums
+                    if len(componentVersions) == 2:
+                        _, minor = componentVersions
+                        # if int(minor)
+                    elif len(componentVersions) == 1:
+                        pass
+
     return data
+
+
+def fetch_cve_affected_versions(cve, comp_name):
+    url = f"https://services.nvd.nist.gov/rest/json/cves/2.0?cveId={cve}"
+    try:
+        res = requests.get(url)
+        # Check if the response is successful
+        if res.status_code == 200:
+            data = res.json()
+            found = []
+            configurations = data["vulnerabilities"][0]["cve"]["configurations"]
+            for item in configurations:
+                for node in item["nodes"]:
+                    for cpe in node["cpeMatch"]:
+                        if cpe["criteria"].find(comp_name.lower()) != -1:
+                            found.append(cpe)
+            return found
+        else:
+            return None
+    except Exception as e:
+        print("Error:", e)
+        return None
+
+
+def get_version_range(affected_versions):
+    versions = {"start": None, "end": None}
+
+    for key, inclusive in [
+        ("versionStartExcluding", False),
+        ("versionStartIncluding", True),
+    ]:
+        if affected_versions.get(key):
+            versions["start"] = {
+                "version": affected_versions[key],
+                "inclusive": inclusive,
+            }
+            break
+
+    for key, inclusive in [
+        ("versionEndExcluding", False),
+        ("versionEndIncluding", True),
+    ]:
+        if affected_versions.get(key):
+            versions["end"] = {
+                "version": affected_versions[key],
+                "inclusive": inclusive,
+            }
+            break
+
+    return versions
 
 
 def get_additional_findings_by_asset(asset):
