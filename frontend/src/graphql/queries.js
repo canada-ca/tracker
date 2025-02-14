@@ -632,22 +632,9 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
           }
         }
         vulnerabilities {
-          critical {
-            cve
-            cvss3Score
-          }
-          high {
-            cve
-            cvss3Score
-          }
-          medium {
-            cve
-            cvss3Score
-          }
-          low {
-            cve
-            cvss3Score
-          }
+          cve
+          severity
+          confidenceLevel
         }
       }
     }

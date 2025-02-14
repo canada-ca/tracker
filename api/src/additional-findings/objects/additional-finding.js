@@ -176,9 +176,20 @@ export const webComponentCveType = new GraphQLObjectType({
       description: `The severity of the CVE.`,
       resolve: ({ Cvss3Score }) => Cvss3Score,
     },
+    severity: {
+      type: GraphQLString,
+      description: `The severity of the CVE.`,
+      resolve: ({ Cvss3Score }) => {
+        const score = Number(Cvss3Score)
+        if (score >= 9) return 'critical'
+        else if (score >= 7 && score < 9) return 'high'
+        else if (score >= 4 && score < 7) return 'medium'
+        else return 'low'
+      },
+    },
     confidenceLevel: {
       type: GraphQLString,
-      description: '',
+      description: 'Level of confidence that finding is accurate.',
       resolve: ({ ConfidenceLevel }) => ConfidenceLevel,
     },
   }),
