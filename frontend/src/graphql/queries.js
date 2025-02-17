@@ -633,6 +633,7 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
         }
         vulnerabilities {
           cve
+          cvss3Score
           severity
           confidenceLevel
         }

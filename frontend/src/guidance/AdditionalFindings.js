@@ -10,6 +10,13 @@ import {
   Flex,
   Divider,
   Link,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
 } from '@chakra-ui/react'
 import { CheckIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
@@ -108,65 +115,61 @@ export function AdditionalFindings({ domain }) {
               >
                 <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
               </Link>
-              <Box px="2">
+              <Box>
                 {vulnerabilities.length > 0 ? (
-                  <>
-                    <Flex
-                      py="1"
-                      px="2"
-                      justifyContent="space-between"
-                      align="center"
-                      borderBottomColor="gray.900"
-                      borderWidth="1px"
-                    >
-                      <Text fontWeight="bold">
-                        <Trans>CVE ID</Trans>
-                      </Text>
-                      <Text fontWeight="bold">
-                        <Trans>Severity</Trans>
-                      </Text>
-                      <Text fontWeight="bold">
-                        <Trans>Confidence Level</Trans>
-                      </Text>
-                      <Text fontWeight="bold">
-                        <Trans>Affected Components</Trans>
-                      </Text>
-                      <Text fontWeight="bold">
-                        <Trans>Ignored</Trans>
-                      </Text>
-                    </Flex>
-                    {vulnerabilities.map(({ cve, severity, confidenceLevel }) => {
-                      const affectComponents = webComponents
-                        .filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve))
-                        .map(({ webComponentName, webComponentCategory, webComponentVersion }) => (
-                          <Text key={webComponentName} ml="2">
-                            {webComponentName} {webComponentCategory} {webComponentVersion},
-                          </Text>
-                        ))
+                  <TableContainer>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>
+                            <Trans>CVE ID</Trans>
+                          </Th>
+                          <Th>
+                            <Trans>Severity</Trans>
+                          </Th>
+                          <Th>
+                            <Trans>Confidence Level</Trans>
+                          </Th>
+                          <Th>
+                            <Trans>Affected Components</Trans>
+                          </Th>
+                          <Th textAlign="end">
+                            <Trans>Ignored</Trans>
+                          </Th>
+                          <Th />
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {vulnerabilities.map(({ cve, severity, cvss3Score, confidenceLevel }) => {
+                          const affectComponents = webComponents
+                            .filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve))
+                            .map(({ webComponentName, webComponentCategory, webComponentVersion }) => {
+                              return `${webComponentName} ${webComponentCategory} ${webComponentVersion}`
+                            })
+                            .join(',')
 
-                      return (
-                        <Flex
-                          py="1"
-                          px="2"
-                          key={cve}
-                          justifyContent="space-between"
-                          align="center"
-                          bg={cveSeverityOnHover[severity]}
-                          borderBottomColor="gray.900"
-                          borderWidth="1px"
-                        >
-                          <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal>
-                            {cve} <ExternalLinkIcon />
-                          </Link>
-                          <Text>{severities[severity]}</Text>
-                          <Text>{severities[confidenceLevel]}</Text>
-                          <Flex>{affectComponents}</Flex>
-                          <Text>{ignoredCves.includes(cve) && <CheckIcon color="black" />}</Text>
-                          <CveIgnorer cve={cve} isCveIgnored={ignoredCves?.includes(cve)} domainId={domainId} />
-                        </Flex>
-                      )
-                    })}
-                  </>
+                          return (
+                            <Tr key={cve} bg={cveSeverityOnHover[severity]}>
+                              <Td>
+                                <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal w="20%">
+                                  {cve} <ExternalLinkIcon />
+                                </Link>
+                              </Td>
+                              <Td>
+                                {severities[severity]} ({cvss3Score})
+                              </Td>
+                              <Td>{severities[confidenceLevel]}</Td>
+                              <Td>{affectComponents}</Td>
+                              <Td textAlign="end">{ignoredCves.includes(cve) && <CheckIcon color="black" />}</Td>
+                              <Td>
+                                <CveIgnorer cve={cve} isCveIgnored={ignoredCves?.includes(cve)} domainId={domainId} />
+                              </Td>
+                            </Tr>
+                          )
+                        })}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
                 ) : (
                   <Text fontWeight="bold" fontSize="xl">
                     <Trans>No Top 25 Vulnerabilites Detected</Trans>
