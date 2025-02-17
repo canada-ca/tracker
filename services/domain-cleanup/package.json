@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "arango-tools": "^0.6.0",
-    "dotenv-safe": "^8.2.0"
+    "dotenv-safe": "^9.1.0"
   },
   "devDependencies": {
     "eslint": "^8.40.0",
