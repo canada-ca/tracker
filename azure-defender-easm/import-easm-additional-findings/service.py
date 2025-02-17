@@ -84,8 +84,6 @@ def main():
     logger.info(f"Successfully fetched {len(domains)} domains")
 
     for domain in domains:
-        if domain["domain"] != "www.forces.ca":
-            continue
         logger.info(f"Processing domain {domain['domain']}")
         try:
             web_components = get_web_components_by_asset(domain["domain"])
