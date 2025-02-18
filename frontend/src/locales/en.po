@@ -675,6 +675,18 @@ msgstr "By default our scanners check domains ending in “.gc.ca” and “.can
 #~ msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 #~ msgstr "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 
+#: src/guidance/WebGuidance.js:139
+msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
+msgstr "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
+
+#: src/guidance/ScanDetails.js:102
+#~ msgid "CCS Injection Vulnerability:"
+#~ msgstr "CCS Injection Vulnerability:"
+
+#: src/guidance/EmailGuidance.js:321
+msgid "CNAME:"
+msgstr "CNAME:"
+
 #: src/app/SlideMessage.js:55
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
@@ -2910,6 +2922,10 @@ msgstr "New Password:"
 #: src/user/EditableUserPhoneNumber.js:175
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
+
+#: src/guidance/WebGuidance.js:136
+msgid "New Recommended TLS Ciphers"
+msgstr "New Recommended TLS Ciphers"
 
 #: src/admin/AuditLogTable.js:174
 msgid "New Value:"
