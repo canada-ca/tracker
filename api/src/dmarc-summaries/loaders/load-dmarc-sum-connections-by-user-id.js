@@ -319,7 +319,7 @@ export const loadDmarcSummaryConnectionsByUserId =
     let searchDomainFilter = aql``
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
-      searchDomainFilter = aql`FILTER userDomain.domain LIKE CONCAT("%", ${search}, "%")`
+      searchDomainFilter = aql`FILTER userDomain.domain LIKE LOWER(CONCAT("%", ${search}, "%"))`
     }
 
     let domainQueries
