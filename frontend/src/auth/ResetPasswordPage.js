@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { Box, Button, Heading, Text, useToast } from '@chakra-ui/react'
 import { object, ref, string } from 'yup'
 import { Formik } from 'formik'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
 import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
@@ -11,7 +11,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { RESET_PASSWORD } from '../graphql/mutations'
 
 export default function ResetPasswordPage() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const toast = useToast()
   const { resetToken } = useParams()
 
@@ -37,7 +37,7 @@ export default function ResetPasswordPage() {
     },
     onCompleted({ resetPassword }) {
       if (resetPassword.result.__typename === 'ResetPasswordResult') {
-        history.push('/sign-in')
+        navigate('/sign-in')
         toast({
           title: t`Password Updated`,
           description: t`You may now sign in with your new password`,

@@ -30,12 +30,16 @@ def filter_recent_data(data_list, last_seen_key, start_date):
         return [
             x
             for x in data_list
-            if datetime.strptime(x[last_seen_key].split("T")[0], "%Y-%m-%d").date()
-            >= start_date
+            if (
+                # There are some strange entries such as port '-1' which don't have a last seen date. Skip these.
+                x[last_seen_key]
+                and datetime.strptime(x[last_seen_key].split("T")[0], "%Y-%m-%d").date()
+                >= start_date
+            )
         ]
-    except AttributeError:
+    except AttributeError as e:
         logger.error(
-            f"Problem occured filtering list to recent entries. Returning full list..."
+            f"Problem occurred filtering list to recent entries. Returning full list... Error: {e}"
         )
         return data_list
 
@@ -45,9 +49,15 @@ def get_web_components_by_asset(asset):
     declare query_parameters(asset_name:string = '{asset}');
     EasmAssetWebComponent
     | where AssetName == asset_name
-    | where TimeGeneratedValue > ago(24h)
+    | where TimeGeneratedValue > ago(30d)
     | where WebComponentLastSeen > ago(30d)
-    | summarize arg_max(TimeGeneratedValue, WebComponentCves, WebComponentPorts) by WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentFirstSeen, WebComponentLastSeen
+    | summarize max_time = max(TimeGeneratedValue) by AssetName
+    | join kind=inner (
+        EasmAssetWebComponent
+        | where AssetName == asset_name
+        | where TimeGeneratedValue > ago(30d)
+        | where WebComponentLastSeen > ago(30d)
+    ) on $left.max_time == $right.TimeGeneratedValue
     | project WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentFirstSeen, WebComponentLastSeen, WebComponentCves, WebComponentPorts
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
@@ -75,21 +85,34 @@ def get_additional_findings_by_asset(asset):
     declare query_parameters(asset_name:string = '{asset}');
     EasmHostAsset
     | where AssetName == asset_name
-    | where TimeGeneratedValue > ago(24h)
+    | where TimeGeneratedValue > ago(30d)
     | order by TimeGeneratedValue desc
     | limit 1
     | project Locations, Ports, Headers
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
-    data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+    result_list = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
-    )[0]
+    )
 
-    data["Ports"] = filter_recent_data(
+    findings = {
+        "Locations": [],
+        "Ports": [],
+        "Headers": [],
+    }
+
+    if len(result_list) == 0:
+        return findings
+
+    data = result_list[0]
+
+    findings["Ports"] = filter_recent_data(
         data["Ports"], "PortStateLastSeen", thirty_days_ago
     )
-    data["Locations"] = filter_recent_data(
+    findings["Locations"] = filter_recent_data(
         data["Locations"], "LastSeen", thirty_days_ago
     )
 
-    return data
+    findings["Headers"] = data["Headers"]
+
+    return findings

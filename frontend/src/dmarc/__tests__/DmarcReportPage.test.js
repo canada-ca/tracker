@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -8,7 +8,6 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 import userEvent from '@testing-library/user-event'
-import { createMemoryHistory } from 'history'
 
 import DmarcReportPage from '../DmarcReportPage'
 
@@ -108,6 +107,19 @@ describe('<DmarcReportPage />', () => {
     ]
 
     it('renders header', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+            element: <DmarcReportPage />,
+          },
+        ],
+        {
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+          initialIndex: 0,
+        },
+      )
+
       const { getAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -119,14 +131,9 @@ describe('<DmarcReportPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
-                  initialIndex={0}
-                >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <DmarcReportPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -136,6 +143,19 @@ describe('<DmarcReportPage />', () => {
     })
 
     it('renders date selector', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+            element: <DmarcReportPage />,
+          },
+        ],
+        {
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+          initialIndex: 0,
+        },
+      )
+
       const { getAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -147,14 +167,9 @@ describe('<DmarcReportPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
-                  initialIndex={0}
-                >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <DmarcReportPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -164,6 +179,19 @@ describe('<DmarcReportPage />', () => {
     })
 
     it('renders bar graph', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+            element: <DmarcReportPage />,
+          },
+        ],
+        {
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+          initialIndex: 0,
+        },
+      )
+
       const { getByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -175,14 +203,9 @@ describe('<DmarcReportPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
-                  initialIndex={0}
-                >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <DmarcReportPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -192,6 +215,19 @@ describe('<DmarcReportPage />', () => {
     })
 
     it('renders tables', async () => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+            element: <DmarcReportPage />,
+          },
+        ],
+        {
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+          initialIndex: 0,
+        },
+      )
+
       const { getByRole, findByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -203,14 +239,9 @@ describe('<DmarcReportPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
-                  initialIndex={0}
-                >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <DmarcReportPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -224,10 +255,19 @@ describe('<DmarcReportPage />', () => {
 
     describe('changes period tables', () => {
       it('the url changes', async () => {
-        const history = createMemoryHistory({
-          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
-          initialIndex: 0,
-        })
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+              element: <DmarcReportPage />,
+            },
+          ],
+          {
+            initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+            initialIndex: 0,
+          },
+        )
+
         const { getByRole, findByRole } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
@@ -239,11 +279,9 @@ describe('<DmarcReportPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                      <DmarcReportPage />
-                    </Route>
-                  </Router>
+                  <RouterProvider router={router}>
+                    <DmarcReportPage />
+                  </RouterProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -255,18 +293,26 @@ describe('<DmarcReportPage />', () => {
           name: /Showing data for period/i,
         })
 
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
+        expect(router.state.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
 
         userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
 
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
+        expect(router.state.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
       })
 
       it('the data changes', async () => {
-        const history = createMemoryHistory({
-          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
-          initialIndex: 0,
-        })
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+              element: <DmarcReportPage />,
+            },
+          ],
+          {
+            initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+            initialIndex: 0,
+          },
+        )
         const { getByRole, findByRole, queryByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
@@ -278,11 +324,9 @@ describe('<DmarcReportPage />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                      <DmarcReportPage />
-                    </Route>
-                  </Router>
+                  <RouterProvider router={router}>
+                    <DmarcReportPage />
+                  </RouterProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -295,7 +339,7 @@ describe('<DmarcReportPage />', () => {
           name: /Showing data for period/i,
         })
 
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
+        expect(router.state.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
 
         // check current state of data
         expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).toBeInTheDocument()
@@ -311,7 +355,7 @@ describe('<DmarcReportPage />', () => {
         // change date
         userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
 
-        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
+        expect(router.state.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
 
         // page is loaded
         await findByRole('button', { name: /Fully Aligned by IP Address/i })
@@ -365,6 +409,19 @@ describe('<DmarcReportPage />', () => {
         },
       ]
 
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+            element: <DmarcReportPage />,
+          },
+        ],
+        {
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
+          initialIndex: 0,
+        },
+      )
+
       const { findByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -376,14 +433,9 @@ describe('<DmarcReportPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
-                  initialIndex={0}
-                >
-                  <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                    <DmarcReportPage />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <DmarcReportPage />
+                </RouterProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>

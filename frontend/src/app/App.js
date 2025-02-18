@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react'
-import { Link as RouteLink, Redirect, Switch, useLocation } from 'react-router-dom'
+import { Link as RouteLink, Routes, Route, Navigate } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { ErrorBoundary } from 'react-error-boundary'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
@@ -10,11 +9,8 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { SkipLink } from './SkipLink'
 import { FloatingMenu } from './FloatingMenu'
-import { PrivatePage } from './PrivatePage'
-import { Page } from './Page'
 
 import { LoadingMessage } from '../components/LoadingMessage'
-import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
 import { lazyWithRetry } from '../utilities/lazyWithRetry'
 
@@ -23,6 +19,8 @@ import { NotificationBanner } from './NotificationBanner'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 import { bool } from 'prop-types'
+import { Page } from './Page'
+import { PrivatePage } from './PrivatePage'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -49,7 +47,6 @@ export function App({ initialLoading, isLoginRequired }) {
   // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, hasAffiliation } = useUserVar()
   const { i18n } = useLingui()
-  const location = useLocation()
 
   const notificationBanner = () => {
     if (isLoggedIn()) {
@@ -168,20 +165,22 @@ export function App({ initialLoading, isLoginRequired }) {
         )}
       </Navigation>
 
-      <NotificationBanner status="warning" hideable initialHideState={window.env?.APP_IS_PRODUCTION === true}>
-        <Text fontWeight="medium">
-          <Trans>
-            You are current visiting a staging environment, used for testing purposes only. This is{' '}
-            <b>not the live production site.</b>
-            <br />
-            Visit the production site at{' '}
-            <Link href="https://tracker.canada.ca" isExternal={true} color="blue.500">
-              https://tracker.canada.ca
-            </Link>{' '}
-            (GC network only).
-          </Trans>
-        </Text>
-      </NotificationBanner>
+      {window.env?.APP_IS_PRODUCTION !== true ? (
+        <NotificationBanner status="warning" hideable>
+          <Text fontWeight="medium">
+            <Trans>
+              You are currently visiting a staging environment, used for testing purposes only. This is{' '}
+              <b>not the live production site.</b>
+              <br />
+              Visit the production site at{' '}
+              <Link href="https://tracker.canada.ca" isExternal={true} color="blue.500">
+                https://tracker.canada.ca
+              </Link>{' '}
+              (GC network only).
+            </Trans>
+          </Text>
+        </NotificationBanner>
+      ) : null}
 
       {notificationBanner()}
 
@@ -208,163 +207,204 @@ export function App({ initialLoading, isLoginRequired }) {
           <LoadingMessage alignSelf="center" mx="auto" />
         ) : (
           <Suspense fallback={<LoadingMessage />}>
-            <Switch>
-              <Page exact path="/" title={t`Home`}>
-                <LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} />
-              </Page>
-
-              <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
-                <CreateUserPage />
-              </Page>
-
-              <Page
-                path="/sign-in"
-                title={t`Sign In`}
-                render={() => {
-                  return isLoggedIn() ? (
-                    <Redirect
-                      to={{
-                        pathname: '/',
-                      }}
-                    />
-                  ) : (
-                    <SignInPage />
-                  )
-                }}
+            <Routes>
+              <Route
+                element={
+                  <Page title={t`Home`}>
+                    <LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} />
+                  </Page>
+                }
+                exact
+                path="/"
               />
 
-              <Page
+              <Route
+                element={
+                  <Page title={t`Create an Account`}>
+                    <CreateUserPage />
+                  </Page>
+                }
+                path="/create-user/:userOrgToken?"
+              />
+
+              <Route path="/sign-in" element={isLoggedIn() ? <Navigate to="/" /> : <SignInPage />} />
+
+              <Route
                 path="/authenticate/:sendMethod/:authenticateToken"
-                component={TwoFactorAuthenticatePage}
-                title={t`Authenticate`}
+                element={
+                  <Page title={t`Authenticate`}>
+                    <TwoFactorAuthenticatePage />
+                  </Page>
+                }
               />
 
-              <Page path="/forgot-password" component={ForgotPasswordPage} title={t`Forgot Password`} />
+              <Route
+                path="/forgot-password"
+                element={
+                  <Page title={t`Forgot Password`}>
+                    <ForgotPasswordPage />
+                  </Page>
+                }
+              />
 
-              <Page path="/reset-password/:resetToken" component={ResetPasswordPage} title={t`Reset Password`} />
+              <Route
+                path="/reset-password/:resetToken"
+                element={
+                  <Page title={t`Reset Password`}>
+                    <ResetPasswordPage />
+                  </Page>
+                }
+              />
 
-              <Page path="/terms-and-conditions" component={TermsConditionsPage} title={t`Terms & Conditions`} />
+              <Route
+                path="/terms-and-conditions"
+                element={
+                  <Page title={t`Terms & Conditions`}>
+                    <TermsConditionsPage />
+                  </Page>
+                }
+              />
 
-              <Page path="/contact-us" component={ContactUsPage} title={t`Contact Us`} />
+              <Route
+                path="/contact-us"
+                element={
+                  <Page title={t`Contact Us`}>
+                    <ContactUsPage />
+                  </Page>
+                }
+              />
 
-              <Page path="/guidance" component={ReadGuidancePage} title={t`Read guidance`} />
+              <Route
+                path="/guidance"
+                element={
+                  <Page title={t`Read guidance`}>
+                    <ReadGuidancePage />
+                  </Page>
+                }
+              />
 
-              <PrivatePage isLoginRequired={isLoginRequired} path="/organizations" title={t`Organizations`} exact>
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Route
+                path="/organizations"
+                exact
+                element={
+                  <PrivatePage
+                    condition={(isLoggedIn() && isEmailValidated()) || !isLoginRequired}
+                    title={t`Organizations`}
+                  >
                     <Organizations />
-                  </ErrorBoundary>
-                )}
-              </PrivatePage>
+                  </PrivatePage>
+                }
+              />
 
-              <PrivatePage
-                isLoginRequired={isLoginRequired}
+              <Route
                 path="/organizations/:orgSlug/:activeTab?"
-                setTitle={false}
                 exact
-              >
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <OrganizationDetails loginRequired={isLoginRequired} />
-                  </ErrorBoundary>
-                )}
-              </PrivatePage>
+                element={
+                  <PrivatePage condition={(isLoggedIn() && isEmailValidated()) || !isLoginRequired} setTitle={false}>
+                    <OrganizationDetails />
+                  </PrivatePage>
+                }
+              />
 
-              <Page path="/admin/:activeMenu?" title={t`Admin`}>
-                {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                  <AdminPage />
-                ) : (
-                  <Redirect
-                    to={{
-                      pathname: '/sign-in',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              </Page>
+              <Route
+                path="/admin/:activeMenu?"
+                element={
+                  <PrivatePage
+                    condition={isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE'}
+                    title={t`Admin`}
+                  >
+                    <AdminPage isLoginRequired={isLoginRequired} />
+                  </PrivatePage>
+                }
+              />
 
-              <PrivatePage isLoginRequired={isLoginRequired} path="/domains" title={t`Domains`} exact>
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Route
+                path="/domains"
+                exact
+                element={
+                  <PrivatePage condition={(isLoggedIn() && isEmailValidated()) || !isLoginRequired} title={t`Domains`}>
                     <DomainsPage />
-                  </ErrorBoundary>
-                )}
-              </PrivatePage>
+                  </PrivatePage>
+                }
+              />
 
-              <PrivatePage isLoginRequired={true} path="/domains/:domainSlug/:activeTab?" setTitle={false} exact>
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <GuidancePage />
-                  </ErrorBoundary>
-                )}
-              </PrivatePage>
-
-              <PrivatePage
-                isLoginRequired={true}
-                path="/domains/:domainSlug/dmarc-report/:period?/:year?"
-                setTitle={false}
+              <Route
+                path="/domains/:domainSlug/:activeTab?"
                 exact
-              >
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                element={
+                  <PrivatePage condition={isLoggedIn() && isEmailValidated()} setTitle={false}>
+                    <GuidancePage />
+                  </PrivatePage>
+                }
+              />
+
+              <Route
+                path="/domains/:domainSlug/dmarc-report/:period?/:year?"
+                exact
+                element={
+                  <PrivatePage condition={isLoggedIn() && isEmailValidated()} setTitle={false}>
                     <DmarcReportPage />
-                  </ErrorBoundary>
-                )}
-              </PrivatePage>
+                  </PrivatePage>
+                }
+              />
 
-              <PrivatePage isLoginRequired={true} path="/dmarc-summaries" title={t`DMARC Summaries`} exact>
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Route
+                path="/dmarc-summaries"
+                exact
+                element={
+                  <PrivatePage condition={isLoggedIn() && isEmailValidated()} title={t`DMARC Summaries`}>
                     <DmarcByDomainPage />
-                  </ErrorBoundary>
-                )}
-              </PrivatePage>
+                  </PrivatePage>
+                }
+              />
 
-              <Page path="/user" title={t`Your Account`}>
-                {isLoggedIn() ? (
-                  <UserPage username={currentUser.userName} />
-                ) : (
-                  <Redirect
-                    to={{
-                      pathname: '/sign-in',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              </Page>
+              <Route
+                path="/user"
+                element={
+                  <PrivatePage condition={isLoggedIn()} title={t`Your Account`}>
+                    <UserPage username={currentUser.userName} />
+                  </PrivatePage>
+                }
+              />
 
-              <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
-                {isLoggedIn() ? (
-                  <MyTrackerPage />
-                ) : (
-                  <Redirect
-                    to={{
-                      pathname: '/sign-in',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              </Page>
+              <Route
+                path="/my-tracker/:activeTab?"
+                element={
+                  <PrivatePage condition={isLoggedIn()} title={t`myTracker`}>
+                    <MyTrackerPage />
+                  </PrivatePage>
+                }
+              />
 
-              <Page path="/validate/:verifyToken" title={t`Email Verification`}>
-                {() => <EmailValidationPage />}
-              </Page>
+              <Route
+                path="/validate/:verifyToken"
+                element={
+                  <Page title={t`Email Verification`}>
+                    <EmailValidationPage />
+                  </Page>
+                }
+              />
 
-              <Page path="/create-organization" title={t`Create Organization`}>
-                {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                  <CreateOrganizationPage />
-                ) : (
-                  <Redirect
-                    to={{
-                      pathname: '/sign-in',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              </Page>
+              <Route
+                path="/create-organization"
+                element={
+                  <PrivatePage
+                    condition={isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE'}
+                    title={t`Create Organization`}
+                  >
+                    <CreateOrganizationPage />
+                  </PrivatePage>
+                }
+              />
 
-              <Page component={PageNotFound} title="404" />
-            </Switch>
+              <Route
+                element={
+                  <Page title="404">
+                    <PageNotFound />
+                  </Page>
+                }
+              />
+            </Routes>
           </Suspense>
         )}
       </Main>

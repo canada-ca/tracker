@@ -119,6 +119,7 @@ export const UPDATE_USER_PROFILE = gql`
     $tfaSendMethod: TFASendMethodEnum
     $insideUser: Boolean
     $receiveUpdateEmails: Boolean
+    $emailUpdateOptions: emailUpdatesInput
   ) {
     updateUserProfile(
       input: {
@@ -127,6 +128,7 @@ export const UPDATE_USER_PROFILE = gql`
         tfaSendMethod: $tfaSendMethod
         insideUser: $insideUser
         receiveUpdateEmails: $receiveUpdateEmails
+        emailUpdateOptions: $emailUpdateOptions
       }
     ) {
       result {
@@ -139,6 +141,10 @@ export const UPDATE_USER_PROFILE = gql`
             tfaSendMethod
             insideUser
             receiveUpdateEmails
+            emailUpdateOptions {
+              orgFootprint
+              progressReport
+            }
           }
         }
         ... on UpdateUserProfileError {
@@ -386,6 +392,9 @@ export const CLOSE_ACCOUNT_OTHER = gql`
         }
         ... on CloseAccountResult {
           status
+          user {
+            id
+          }
         }
       }
     }
@@ -493,6 +502,7 @@ export const UPDATE_ORGANIZATION = gql`
     $provinceFR: String
     $cityEN: String
     $cityFR: String
+    $externalId: String
   ) {
     updateOrganization(
       input: {
@@ -511,6 +521,7 @@ export const UPDATE_ORGANIZATION = gql`
         provinceFR: $provinceFR
         cityEN: $cityEN
         cityFR: $cityFR
+        externalId: $externalId
       }
     ) {
       result {
@@ -524,6 +535,7 @@ export const UPDATE_ORGANIZATION = gql`
           country
           province
           city
+          externalId
         }
         ... on OrganizationError {
           code
@@ -698,6 +710,52 @@ export const UNIGNORE_CVE = gql`
           ignoredCves
         }
         ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const DISMISS_MESSAGE = gql`
+  mutation DismissMessage($messageId: String!) {
+    dismissMessage(input: { messageId: $messageId }) {
+      result {
+        ... on DismissMessageResult {
+          status
+          user {
+            id
+            dismissedMessages {
+              messageId
+              dismissedAt
+            }
+          }
+        }
+        ... on DismissMessageError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const COMPLETE_TOUR = gql`
+  mutation CompleteTour($tourId: String!) {
+    completeTour(input: { tourId: $tourId }) {
+      result {
+        ... on CompleteTourResult {
+          status
+          user {
+            id
+            completedTours {
+              tourId
+              completedAt
+            }
+          }
+        }
+        ... on CompleteTourError {
           code
           description
         }

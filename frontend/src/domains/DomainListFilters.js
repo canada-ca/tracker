@@ -5,7 +5,15 @@ import React from 'react'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { array, func } from 'prop-types'
 
-export function DomainListFilters({ filters, setFilters, statusOptions, filterTagOptions, assetStateOptions = [] }) {
+export function DomainListFilters({
+  filters,
+  setFilters,
+  resetToFirstPage,
+  statusOptions,
+  filterTagOptions,
+  assetStateOptions = [],
+  ...props
+}) {
   const validationSchema = schemaToValidation({
     filterCategory: getRequirement('field'),
     comparison: getRequirement('field'),
@@ -47,7 +55,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
   }
 
   return (
-    <Box py="2">
+    <Box py="2" {...props}>
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -64,6 +72,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
               }),
             ).values(),
           ])
+          resetToFirstPage()
           resetForm()
         }}
       >
@@ -151,6 +160,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
 DomainListFilters.propTypes = {
   filters: array,
   setFilters: func,
+  resetToFirstPage: func,
   statusOptions: array,
   filterTagOptions: array,
   assetStateOptions: array,

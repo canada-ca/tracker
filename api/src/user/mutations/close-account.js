@@ -17,7 +17,7 @@ export const closeAccountSelf = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, collections, transaction, auth: { userRequired }, validators: { cleanseInput } },
+    { i18n, query, collections, transaction, request: { ip }, auth: { userRequired }, validators: { cleanseInput } },
   ) => {
     let submittedUserId
     if (args?.userId) {
@@ -82,6 +82,7 @@ export const closeAccountSelf = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: submittedUserId ? 'SUPER_ADMIN' : '',
+        ipAddress: ip,
       },
       action: 'delete',
       target: {
@@ -120,6 +121,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
+      request: { ip },
       auth: { checkSuperAdmin, userRequired },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -214,6 +216,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
         id: user._key,
         userName: user.userName,
         role: submittedUserId ? 'SUPER_ADMIN' : '',
+        ipAddress: ip,
       },
       action: 'delete',
       target: {
@@ -225,6 +228,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
     return {
       _type: 'regular',
       status: i18n._(t`Successfully closed account.`),
+      user: checkUser,
     }
   },
 })

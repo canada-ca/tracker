@@ -55,6 +55,10 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'wildcard-sibling',
       description: 'Label for tagging domains that have a wildcard sibling.',
     },
+    WILDCARD_ENTRY: {
+      value: 'wildcard-entry',
+      description: 'Label for tagging domains that have a wildcard entry.',
+    },
     SCAN_PENDING: {
       value: 'scan-pending',
       description: 'Label for tagging domains that have a pending web scan.',

@@ -66,6 +66,11 @@ export const organizationType = new GraphQLObjectType({
       description: 'Whether the organization is externally managed.',
       resolve: ({ externallyManaged }) => externallyManaged,
     },
+    externalId: {
+      type: GraphQLString,
+      description: 'String ID used to identify the organization in an external system.',
+      resolve: ({ externalId }) => externalId,
+    },
     summaries: {
       type: organizationSummaryType,
       description: 'Summaries based on scan types that are preformed on the given organizations domains.',
@@ -137,6 +142,7 @@ export const organizationType = new GraphQLObjectType({
           query,
           transaction,
           collections,
+          request: { ip },
           auth: { checkPermission, userRequired, verifiedRequired },
           loaders: { loadOrganizationDomainStatuses },
         },
@@ -173,6 +179,7 @@ export const organizationType = new GraphQLObjectType({
           'rcode',
           'blocked',
           'wildcardSibling',
+          'wildcardEntry',
           'hasEntrustCertificate',
           'top25Vulnerabilities',
         ]
@@ -231,6 +238,7 @@ export const organizationType = new GraphQLObjectType({
             id: user._key,
             userName: user.userName,
             role: permission,
+            ipAddress: ip,
           },
           action: 'export',
           target: {

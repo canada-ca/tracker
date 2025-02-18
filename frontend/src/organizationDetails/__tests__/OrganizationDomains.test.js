@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -55,7 +55,7 @@ describe('<OrganizationDomains />', () => {
           request: {
             query: PAGINATED_ORG_DOMAINS,
             variables: {
-              slug: 'tbs-sct-gc-ca',
+              slug: orgSlug,
               first: 50,
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
               search: '',
@@ -103,6 +103,19 @@ describe('<OrganizationDomains />', () => {
         },
       ]
 
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/organizations/:orgSlug/:activeTab?',
+            element: <OrganizationDomains orgSlug={orgSlug} />,
+          },
+        ],
+        {
+          initialEntries: ['/organizations/tbs-sct-gc-ca/domains'],
+          initialIndex: 0,
+        },
+      )
+
       const { getByText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -114,11 +127,9 @@ describe('<OrganizationDomains />', () => {
                   userName: null,
                 })}
               >
-                <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organization/:orgSlug">
-                    <OrganizationDomains orgSlug={orgSlug} />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <OrganizationDomains orgSlug={orgSlug} />
+                </RouterProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>

@@ -1,7 +1,6 @@
 import React from 'react'
-import { createMemoryHistory } from 'history'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -295,10 +294,22 @@ describe('<Organisations />', () => {
         },
       ]
 
-      const history = createMemoryHistory({
-        initialEntries: ['/organizations'],
-        initialIndex: 0,
-      })
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/organizations/:orgSlug',
+            element: <div>Org Details</div>,
+          },
+          {
+            path: '/organizations',
+            element: <Organizations />,
+          },
+        ],
+        {
+          initialEntries: ['/organizations'],
+          initialIndex: 0,
+        },
+      )
 
       // from ../helpers/matchMedia, more information there
       // define matchMedia object, required for tests which have components that use matchMedia (or if they're children use matchMedia)
@@ -330,13 +341,11 @@ describe('<Organisations />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <TourProvider>
-                    <Switch>
-                      <Route path="/organizations" render={() => <Organizations />} />
-                    </Switch>
-                  </TourProvider>
-                </Router>
+                <TourProvider>
+                  <RouterProvider router={router}>
+                    <Organizations />
+                  </RouterProvider>
+                </TourProvider>
               </I18nProvider>
             </ChakraProvider>
           </UserVarProvider>
@@ -346,7 +355,7 @@ describe('<Organisations />', () => {
       const cardLink = await findByRole('link', /organization one/i)
       userEvent.click(cardLink)
 
-      await waitFor(() => expect(history.location.pathname).toEqual('/organizations/organization-one'))
+      await waitFor(() => expect(router.state.location.pathname).toEqual('/organizations/organization-one'))
     })
 
     describe('when logged in', () => {
@@ -531,10 +540,22 @@ describe('<Organisations />', () => {
 
         const cache = createCache()
 
-        const history = createMemoryHistory({
-          initialEntries: ['/organizations'],
-          initialIndex: 0,
-        })
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/organizations/:orgSlug',
+              element: <div>Org Details</div>,
+            },
+            {
+              path: '/organizations',
+              element: <Organizations />,
+            },
+          ],
+          {
+            initialEntries: ['/organizations'],
+            initialIndex: 0,
+          },
+        )
 
         const { getByText, getAllByLabelText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
@@ -547,13 +568,11 @@ describe('<Organisations />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <TourProvider>
-                      <Switch>
-                        <Route path="/organizations" render={() => <Organizations />} />
-                      </Switch>
-                    </TourProvider>
-                  </Router>
+                  <TourProvider>
+                    <RouterProvider router={router}>
+                      <Organizations />
+                    </RouterProvider>
+                  </TourProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>
@@ -765,10 +784,22 @@ describe('<Organisations />', () => {
           },
         ]
 
-        const history = createMemoryHistory({
-          initialEntries: ['/organizations'],
-          initialIndex: 0,
-        })
+        const router = createMemoryRouter(
+          [
+            {
+              path: '/organizations/:orgSlug',
+              element: <div>Org Details</div>,
+            },
+            {
+              path: '/organizations',
+              element: <Organizations />,
+            },
+          ],
+          {
+            initialEntries: ['/organizations'],
+            initialIndex: 0,
+          },
+        )
 
         const { queryByText, getAllByLabelText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
@@ -781,13 +812,11 @@ describe('<Organisations />', () => {
             >
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <TourProvider>
-                      <Switch>
-                        <Route path="/organizations" render={() => <Organizations />} />
-                      </Switch>
-                    </TourProvider>
-                  </Router>
+                  <TourProvider>
+                    <RouterProvider router={router}>
+                      <Organizations />
+                    </RouterProvider>
+                  </TourProvider>
                 </I18nProvider>
               </ChakraProvider>
             </UserVarProvider>

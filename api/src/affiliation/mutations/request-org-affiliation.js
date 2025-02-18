@@ -33,6 +33,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      request: { ip },
       auth: { userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByKey },
       notify: { sendInviteRequestEmail },
@@ -221,6 +222,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
+        ipAddress: ip,
       },
       action: 'add',
       target: {

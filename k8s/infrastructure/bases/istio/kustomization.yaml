@@ -4,6 +4,4 @@ resources:
 # envoy-gzip.yaml is still breaking one-time scans, re-add once fixed
 - ecdh-curves-patch.yaml
 - envoy-security-headers-filter.yaml
-- istio-operator.yaml
-- istio-operator-deployment.yaml
 - ingress-gateway.yaml

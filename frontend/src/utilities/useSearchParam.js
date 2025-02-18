@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 function useSearchParam({ name, validOptions, defaultValue }) {
   const { search } = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const searchParams = React.useMemo(() => {
     return new URLSearchParams(search)
@@ -19,7 +19,7 @@ function useSearchParam({ name, validOptions, defaultValue }) {
       } else {
         searchParams.set(name, value)
       }
-      history.replace({ search: searchParams.toString() })
+      navigate({ search: searchParams.toString(), replace: true })
     },
     [searchParams, history, name, validOptions],
   )

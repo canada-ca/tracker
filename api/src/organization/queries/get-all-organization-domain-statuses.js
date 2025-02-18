@@ -35,6 +35,7 @@ export const getAllOrganizationDomainStatuses = {
       'domain',
       'orgName',
       'orgAcronym',
+      'orgExternalID',
       'ipAddresses',
       'https',
       'hsts',
@@ -48,6 +49,7 @@ export const getAllOrganizationDomainStatuses = {
       'rcode',
       'blocked',
       'wildcardSibling',
+      'wildcardEntry',
       'hasEntrustCertificate',
       'top25Vulnerabilities',
     ]

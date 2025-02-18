@@ -74,6 +74,11 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.wildcardEntry ${comparison} true
+          `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`${domainFilters}`
           } else if (filterValue === 'has-entrust-certificate') {
@@ -111,7 +116,7 @@ export const loadAllOrganizationDomainStatuses =
                   FOR wc IN finding.webComponents
                     FILTER LENGTH(wc.WebComponentCves) > 0
                     FOR vuln IN wc.WebComponentCves
-                      FILTER vuln.Cve NOT IN d.ignoredCves
+                      FILTER vuln.Cve NOT IN (d.ignoredCves || [])
                       RETURN vuln.Cve
                 )
             )[0]
@@ -119,12 +124,13 @@ export const loadAllOrganizationDomainStatuses =
               FOR v,e IN 1..1 INBOUND d._id claims
                 FILTER v.verified == true
                 LIMIT 1
-                RETURN TRANSLATE(${language}, v.orgDetails)
+                RETURN MERGE({ externalId: v.externalId }, TRANSLATE(${language}, v.orgDetails))
             )[0]
             RETURN {
               "domain": d.domain,
               "orgName": verifiedOrg.name,
               "orgAcronym": verifiedOrg.acronym,
+              "orgExternalID": verifiedOrg.externalId,
               "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,
@@ -138,6 +144,7 @@ export const loadAllOrganizationDomainStatuses =
               "rcode": d.rcode,
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
+              "wildcardEntry": d.wildcardEntry,
               "hasEntrustCertificate": d.hasEntrustCertificate,
               "top25Vulnerabilities": vulnerabilities
             }

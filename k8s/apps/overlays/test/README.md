@@ -1,6 +1,6 @@
 # Test
 
-The purpose of this overlay is to bring up a "non-prod" copy of the full application on GKE, for... you guessed it, testing purposes! This configuration will come up using a self signed certificate, but other than that it should be almost identical to production.
+The purpose of this overlay is to bring up a "non-prod" copy of the full application on GKE, for... you guessed it, testing purposes! This configuration will come up using a self-signed certificate, but other than that it should be almost identical to production.
 
 Since testing usually involves trying stuff that isn't committed to master yet, the commands to get things working are a little different from a normal deployment.
 
@@ -8,7 +8,7 @@ If you need some dev credentials for this test cluster, you can generate them wi
 
 ## Bringing up a test cluster on GKE
 
-Currently we are just creating the cluster with the following command.
+Currently, we are just creating the cluster with the following command.
 
 
 ```sh

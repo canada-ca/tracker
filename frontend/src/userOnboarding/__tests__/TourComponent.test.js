@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import { TourComponent } from '../components/TourComponent'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserVarProvider } from '../../utilities/userState'
-import { makeVar } from '@apollo/client'
+import { ApolloClient, makeVar } from '@apollo/client'
 import { I18nProvider } from '@lingui/react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { TourProvider } from '../contexts/TourContext'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural'
 import { fireEvent } from '@testing-library/dom'
+import { COMPLETE_TOUR } from '../../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -25,7 +26,6 @@ const i18n = setupI18n({
 jest.mock('../config/tourSteps', () => ({
   mainTourSteps: {
     landingPage: {
-      requiresAuth: false,
       steps: [
         {
           target: '.step-1',
@@ -42,17 +42,49 @@ jest.mock('../config/tourSteps', () => ({
   },
 }))
 
+const completedAt = new Date().toISOString()
+
+const successMock = [
+  {
+    request: {
+      query: COMPLETE_TOUR,
+      variables: { tourId: 'landingPage' },
+    },
+    result: {
+      data: {
+        completeTour: {
+          result: {
+            __typename: 'CompleteTourResult',
+            status: 'success',
+            user: {
+              id: 'users/someuser',
+              completedTours: [{ tourId: 'landingPage', completedAt }],
+            },
+          },
+        },
+      },
+    },
+  },
+]
+
 describe('TourComponent', () => {
   afterEach(() => {
-    localStorage.clear()
+    jest.clearAllMocks()
   })
-
-  it('renders the mocked landing page tour for users who have not seen it', async () => {
-    expect(localStorage.getItem('hasSeenTour_landingPage')).toBe(null)
+  it('renders and completes the mocked landing page tour for users who have not seen it', async () => {
+    const mutationSpy = jest.spyOn(ApolloClient.prototype, 'mutate')
 
     const { getByText, getByRole, queryByText } = render(
-      <MockedProvider mocks={[]} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+      <MockedProvider mocks={successMock} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({
+            jwt: null,
+            tfaSendMethod: null,
+            userName: 'test@example.com',
+            completedTours: [],
+            emailValidated: true,
+          })}
+        >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['']} initialIndex={0}>
@@ -67,9 +99,6 @@ describe('TourComponent', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-
-    // Element will exist but not be visible
-    expect(queryByText(/Landing Step 1/)).not.toBeNull()
 
     await waitFor(() => {
       expect(getByText(/Landing Step 1/)).toBeVisible()
@@ -91,18 +120,23 @@ describe('TourComponent', () => {
       expect(queryByText(/Landing Step 2/)).toBeNull()
     })
 
-    // Ensure that the tour has been marked as seen
-    expect(localStorage.getItem('hasSeenTour_landingPage')).toBe('true')
+    await waitFor(async () => {
+      // wait for the mutation promise to resolve
+      await mutationSpy.mock.results[0].value
+    })
+
+    expect(mutationSpy.mock.calls.length).toBe(1)
+    expect(COMPLETE_TOUR).toBeDefined()
+    expect(mutationSpy.mock.calls[0][0].mutation).toBe(COMPLETE_TOUR)
+    expect(mutationSpy.mock.calls[0][0].variables.tourId).toEqual('landingPage')
   })
 
   it('does not render the tour for users who have seen it', async () => {
-    localStorage.setItem('hasSeenTour_landingPage', 'true')
-
-    expect(localStorage.getItem('hasSeenTour_landingPage')).toBe('true')
-
     const { queryByText } = render(
       <MockedProvider mocks={[]} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, userName: 'test@example.com', completedTours: ['landingPage'] })}
+        >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['']} initialIndex={0}>
@@ -118,7 +152,28 @@ describe('TourComponent', () => {
       </MockedProvider>,
     )
 
-    // Element should not exist
+    expect(queryByText(/Landing Step 1/)).toBeNull()
+  })
+
+  it('does not render the tour for users who are not logged in', async () => {
+    const { queryByText } = render(
+      <MockedProvider mocks={[]} addTypename={false}>
+        <UserVarProvider userVar={makeVar({ jwt: null, userName: null })}>
+          <I18nProvider i18n={i18n}>
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['']} initialIndex={0}>
+                <TourProvider>
+                  <TourComponent />
+                  <p className="step-1">Test 1</p>
+                  <p className="step-2">Test 2</p>
+                </TourProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </I18nProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
     expect(queryByText(/Landing Step 1/)).toBeNull()
   })
 })

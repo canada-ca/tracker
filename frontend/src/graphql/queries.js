@@ -296,6 +296,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       rcode
       blocked
       wildcardSibling
+      wildcardEntry
       webScanPending
       cveDetected
       status {
@@ -513,7 +514,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     verifiedChainHasSha1Signature
                     verifiedChainHasLegacySymantecAnchor
                     passedValidation
-                    hasEntrustCertificate
                     certificateChain {
                       notValidBefore
                       notValidAfter
@@ -800,9 +800,9 @@ export const PAGINATED_ORG_DOMAINS = gql`
             rcode
             blocked
             wildcardSibling
+            wildcardEntry
             webScanPending
             userHasPermission
-            hasEntrustCertificate
             cveDetected
           }
         }
@@ -865,6 +865,7 @@ export const PAGINATED_DOMAINS = gql`
           rcode
           blocked
           wildcardSibling
+          wildcardEntry
           webScanPending
           status {
             ...RequiredDomainStatusFields
@@ -872,7 +873,6 @@ export const PAGINATED_DOMAINS = gql`
           archived
           hasDMARCReport
           userHasPermission
-          hasEntrustCertificate
           cveDetected
           __typename
         }
@@ -904,6 +904,10 @@ export const QUERY_CURRENT_USER = gql`
       emailValidated
       insideUser
       receiveUpdateEmails
+      emailUpdateOptions {
+        orgFootprint
+        progressReport
+      }
     }
     isUserAdmin
   }
@@ -1111,6 +1115,7 @@ export const ORGANIZATION_INFORMATION = gql`
       province
       city
       verified
+      externalId
     }
   }
 `
@@ -1142,6 +1147,7 @@ export const ADMIN_PAGE = gql`
           acronym
           slug
           name
+          verified
         }
       }
     }
@@ -1297,6 +1303,7 @@ export const MY_TRACKER_DOMAINS = gql`
             rcode
             blocked
             wildcardSibling
+            wildcardEntry
             webScanPending
           }
           cursor

@@ -502,6 +502,7 @@ export const loadOrgConnectionsByUserId =
                   _type: "organization",
                   id: org._key,
                   verified: org.verified,
+                  externalId: org.externalId,
                   domainCount: COUNT(orgDomains),
                   summaries: org.summaries
                 },

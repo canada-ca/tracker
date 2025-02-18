@@ -30,7 +30,7 @@ As is common with microservices projects, this repository is organized in the [m
 
 The [ci](ci/README.md) folder contains an image used in the CI process, but the main event is the next three folders:
 
-The [frontend](frontend/README.md) and [api](api/README.md) folders contain the two main parts parts of the application.
+The [frontend](frontend/README.md) and [api](api/README.md) folders contain the two main parts of the application.
 
 The [k8s](k8s/README.md) folder contain the Kubernetes configurations needed to continuously deploy the tracker on the cloud provider of your choice.
 
@@ -68,7 +68,7 @@ $ make platform env=<gke or aks>
 $ make app env=<gke or aks>
 ```
 
-Tracker is now deployed. To add coninuous deployment functionality via [Flux](https://fluxcd.io/) (this will ensure the Tracker deployment stays up to date with all the latest changes), follow the instructions listed below.
+Tracker is now deployed. To add continuous deployment functionality via [Flux](https://fluxcd.io/) (this will ensure the Tracker deployment stays up to date with all the latest changes), follow the instructions listed below.
 
 ### NOTE: Steps 1) and 2) are only required if the Tracker deployment should write back to this repository, updating image tags as necessary.
 

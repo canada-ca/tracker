@@ -1,3 +1,9 @@
+# This file is used to generate the Istio configuration for the cluster. Do not apply this file directly.
+# Update the value for the `tag` field to the desired version of Istio (which should match the version of istioctl used).
+# Ensure the Makefile's `make update-istio` command will use the expected version of istioctl on the system. Then run
+#   `make update-istio` to generate the Istio configuration (or manually run with the correct version of istioctl).
+# Apply the generated configuration by running `kubectl apply -k k8s/infrastructure/overlays/<ENVIRONMENT>/istio/platform`
+
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
@@ -6,7 +12,7 @@ metadata:
 spec:
   # https://istio.io/latest/news/releases/1.9.x/announcing-1.9/#mirroring-of-images-on-gcr-io
   hub: gcr.io/istio-release
-  tag: 1.20.3-distroless
+  tag: 1.24.2-distroless
   meshConfig:
     accessLogFile: /dev/stdout
     enableTracing: true

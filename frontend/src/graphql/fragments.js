@@ -11,6 +11,14 @@ export const Authorization = {
           tfaSendMethod
           emailValidated
           insideUser
+          dismissedMessages {
+            messageId
+            dismissedAt
+          }
+          completedTours {
+            tourId
+            completedAt
+          }
           affiliations(first: 1) {
             totalCount
           }

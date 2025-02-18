@@ -33,6 +33,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -115,7 +116,7 @@ export default function DmarcByDomainPage() {
         return (
           <Link
             as={RouteLink}
-            to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            to={`/domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             isExternal={false}
           >
             {`${value} `} <LinkIcon aria-hidden="true" />
@@ -269,9 +270,16 @@ export default function DmarcByDomainPage() {
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
-          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          <AffiliationFilterSwitch
+            isAffiliated={isAffiliated}
+            setIsAffiliated={setIsAffiliated}
+            resetToFirstPage={resetToFirstPage}
+          />
         </Flex>
       )}
+
+      <DmarcReportOutageBanner />
+
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls

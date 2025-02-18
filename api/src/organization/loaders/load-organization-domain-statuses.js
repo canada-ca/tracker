@@ -74,6 +74,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.wildcardEntry ${comparison} true
+          `
           } else if (filterValue === 'has-entrust-certificate') {
             domainFilters = aql`
             ${domainFilters}
@@ -128,7 +133,7 @@ export const loadOrganizationDomainStatuses =
                   FOR wc IN finding.webComponents
                     FILTER LENGTH(wc.WebComponentCves) > 0
                     FOR vuln IN wc.WebComponentCves
-                      FILTER vuln.Cve NOT IN v.ignoredCves
+                      FILTER vuln.Cve NOT IN (v.ignoredCves || [])
                       RETURN vuln.Cve
                 )
             )[0]
@@ -141,6 +146,7 @@ export const loadOrganizationDomainStatuses =
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
+              wildcardEntry: v.wildcardEntry,
               hasEntrustCertificate: v.hasEntrustCertificate,
               top25Vulnerabilities: vulnerabilities
             }

@@ -271,9 +271,11 @@ def process_msg(msg):
 
             dmarc_phase = processed_results.get("dmarc").get("phase")
             wildcard_sibling = processed_results.get("wildcard_sibling")
+            wildcard_entry = processed_results.get("wildcard_entry")
 
             domain.update({"phase": dmarc_phase})
             domain.update({"wildcardSibling": wildcard_sibling})
+            domain.update({"wildcardEntry": wildcard_entry})
             domain.update({"rcode": rcode})
             domain.update(
                 {"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")}

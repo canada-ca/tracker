@@ -5,7 +5,6 @@ import { t } from '@lingui/macro'
 export const loadDomainConnectionsByOrgId =
   ({ query, userKey, language, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
   async ({ orgId, permission, after, before, first, last, ownership, orderBy, search, filters = [] }) => {
-    const userDBId = `users/${userKey}`
     let afterTemplate = aql``
     let afterVar = aql``
 
@@ -289,13 +288,6 @@ export const loadDomainConnectionsByOrgId =
       }
     }
 
-    let sortString
-    if (typeof last !== 'undefined') {
-      sortString = aql`DESC`
-    } else {
-      sortString = aql`ASC`
-    }
-
     let domainFilters = aql``
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
@@ -375,6 +367,11 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.wildcardEntry ${comparison} true
+          `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`
             ${domainFilters}
@@ -406,15 +403,14 @@ export const loadDomainConnectionsByOrgId =
     }
 
     let domainQuery = aql``
-    let loopString = aql`FOR domain IN domains`
-    let totalCount = aql`LENGTH(domainKeys)`
+    let loopString = aql`FOR domain IN collectedDomains`
+    let totalCount = aql`LENGTH(collectedDomains)`
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
         LET searchedDomains = (
-          FOR domain IN domains
+          FOR domain IN collectedDomains
             FILTER LOWER(domain.domain) LIKE LOWER(${search})
-            FILTER domain._key IN domainKeys
             RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
         )
       `
@@ -428,63 +424,43 @@ export const loadDomainConnectionsByOrgId =
     }
 
     let ownershipOrgsOnly = aql`
-      LET claimKeys = (
-        FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {order: "bfs"}
-          RETURN v._key
-      )
+      FOR v, e IN 1..1 OUTBOUND ${orgId} claims
+        OPTIONS {order: "bfs"}
+        RETURN v
     `
     if (typeof ownership !== 'undefined') {
       if (ownership) {
         ownershipOrgsOnly = aql`
-          LET claimKeys = (
-            FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
-              OPTIONS {order: "bfs"}
-              RETURN v._key
-          )
+          FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
+            OPTIONS {order: "bfs"}
+            RETURN v
         `
       }
     }
 
     let requestedDomainInfo
     try {
-      let domainKeysQuery
+      let collectedDomains
       if (!loginRequiredBool) {
-        domainKeysQuery = aql`
-        LET domainKeys = (
+        collectedDomains = aql`
+        LET collectedDomains = (
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             OPTIONS {order: "bfs"}
             ${showArchivedDomains}
             ${domainFilters}
-            RETURN v._key
+            RETURN v
         )`
       } else {
-        domainKeysQuery = aql`
-        LET domainKeys = UNIQUE(FLATTEN(
-          LET superAdmin = (
-            FOR v, e IN 1 INBOUND ${userDBId} affiliations
-              OPTIONS {order: "bfs"}
-              FILTER e.permission == "super_admin"
-              RETURN e.permission
-          )
-          LET affiliationKeys = (
-            FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
-              OPTIONS {order: "bfs"}
-              RETURN v._key
-          )
-          LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
-          LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
+        collectedDomains = aql`
+        LET collectedDomains = UNIQUE(
           ${ownershipOrgsOnly}
-
-          LET orgKeys = INTERSECTION(keys, claimKeys)
-          RETURN claimKeys
-        ))`
+        )`
       }
 
       requestedDomainInfo = await query`
       WITH affiliations, domains, organizations, users
 
-      ${domainKeysQuery}
+      ${collectedDomains}
 
       ${domainQuery}
 
@@ -493,7 +469,6 @@ export const loadDomainConnectionsByOrgId =
 
       LET retrievedDomains = (
         ${loopString}
-          FILTER domain._key IN domainKeys
           LET claimVals = (
               FOR v, e IN 1..1 ANY domain._id claims
                 FILTER e._from == ${orgId}
@@ -513,17 +488,15 @@ export const loadDomainConnectionsByOrgId =
 
       LET hasNextPage = (LENGTH(
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 

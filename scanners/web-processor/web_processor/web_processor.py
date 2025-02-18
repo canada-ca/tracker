@@ -158,6 +158,12 @@ def process_tls_results(tls_results, web_server_present):
     except TypeError:
         pass
 
+    try:
+        if not tls_results["certificate_chain_info"]["received_chain_has_valid_order"]:
+            negative_tags.append("ssl25")
+    except TypeError:
+        pass
+
     if signature_algorithm is not None:
         for algorithm in (
             guidance["signature_algorithms"]["recommended"]
@@ -188,12 +194,15 @@ def process_tls_results(tls_results, web_server_present):
 
     # certificate status
     if (
-        len(tls_results.get("certificate_chain_info", {}).get("certificate_chain", []))
+        tls_results.get("certificate_chain_info", None)
+        and len(
+            tls_results.get("certificate_chain_info", {}).get("certificate_chain", [])
+        )
         > 0
     ):
         if any(
             tag in negative_tags
-            for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]
+            for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16", "ssl25"]
         ):
             certificate_status = "fail"
         else:

@@ -1,10 +1,10 @@
 import crypto from 'crypto'
-import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLBoolean } from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLBoolean, GraphQLList } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 import { affiliationConnection } from '../../../affiliation/objects'
-import { userPersonalType } from '../index'
+import { completedTour, dismissedMessage, userPersonalType } from '../index'
 import { TfaSendMethodEnum } from '../../../enums'
 import { decryptPhoneNumber } from '../../../validators'
 
@@ -59,6 +59,18 @@ describe('given the user object', () => {
 
       expect(demoType).toHaveProperty('affiliations')
       expect(demoType.affiliations.type).toMatchObject(affiliationConnection.connectionType)
+    })
+    it('has a dismissedMessages field', () => {
+      const demoType = userPersonalType.getFields()
+
+      expect(demoType).toHaveProperty('dismissedMessages')
+      expect(demoType.dismissedMessages.type).toMatchObject(new GraphQLList(dismissedMessage))
+    })
+    it('has a completedTours field', () => {
+      const demoType = userPersonalType.getFields()
+
+      expect(demoType).toHaveProperty('completedTours')
+      expect(demoType.completedTours.type).toMatchObject(new GraphQLList(completedTour))
     })
   })
   describe('testing the field resolvers', () => {
@@ -212,6 +224,68 @@ describe('given the user object', () => {
             },
           ),
         ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the dismissedMessages field', () => {
+      it('returns the resolved value', () => {
+        const demoType = userPersonalType.getFields()
+
+        const ts = Date.now()
+
+        expect(
+          demoType.dismissedMessages.resolve({
+            dismissedMessages: [
+              {
+                messageId: 'message1',
+                dismissedAt: ts,
+              },
+              {
+                messageId: 'message2',
+                dismissedAt: ts,
+              },
+            ],
+          }),
+        ).toEqual([
+          {
+            messageId: 'message1',
+            dismissedAt: ts,
+          },
+          {
+            messageId: 'message2',
+            dismissedAt: ts,
+          },
+        ])
+      })
+    })
+    describe('testing the completedTours field', () => {
+      it('returns the resolved value', () => {
+        const demoType = userPersonalType.getFields()
+
+        const ts = Date.now()
+
+        expect(
+          demoType.completedTours.resolve({
+            completedTours: [
+              {
+                tourId: 'tour1',
+                completedAt: ts,
+              },
+              {
+                tourId: 'tour2',
+                completedAt: ts,
+              },
+            ],
+          }),
+        ).toEqual([
+          {
+            tourId: 'tour1',
+            completedAt: ts,
+          },
+          {
+            tourId: 'tour2',
+            completedAt: ts,
+          },
+        ])
       })
     })
   })

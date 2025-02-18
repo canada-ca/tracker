@@ -1,4 +1,4 @@
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
@@ -6,6 +6,9 @@ import { affiliationOrgOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
+import { emailUpdateOptionsType } from './email-update-options'
+import { dismissedMessage } from './dismissed-message'
+import { completedTour } from './completed-tour'
 
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
@@ -56,6 +59,12 @@ export const userPersonalType = new GraphQLObjectType({
       description: 'Does the user want to receive update emails.',
       resolve: ({ receiveUpdateEmails }) => receiveUpdateEmails,
     },
+    emailUpdateOptions: {
+      type: emailUpdateOptionsType,
+      description:
+        'A number of different emails the user can optionally receive periodically that provide updates about their organization.',
+      resolve: ({ emailUpdateOptions }) => emailUpdateOptions,
+    },
     affiliations: {
       type: affiliationConnection.connectionType,
       description: 'Users affiliations to various organizations.',
@@ -77,6 +86,16 @@ export const userPersonalType = new GraphQLObjectType({
         })
         return affiliations
       },
+    },
+    dismissedMessages: {
+      type: new GraphQLList(dismissedMessage),
+      description: 'Messages that the user has dismissed.',
+      resolve: ({ dismissedMessages }) => dismissedMessages || [],
+    },
+    completedTours: {
+      type: new GraphQLList(completedTour),
+      description: 'Tours the user has completed.',
+      resolve: ({ completedTours }) => completedTours || [],
     },
   }),
   interfaces: [nodeInterface],

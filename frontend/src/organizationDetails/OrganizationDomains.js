@@ -106,10 +106,10 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: t`INACTIVE`, text: t`Inactive` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
-    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
+    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
-    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const assetStateOptions = [
@@ -126,6 +126,31 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     </LoadingMessage>
   ) : (
     <Box>
+      {orgSlug !== 'my-tracker' && (
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="A">
+            <DomainListFilters
+              className="domain-filters"
+              filters={filters}
+              setFilters={setFilters}
+              resetToFirstPage={resetToFirstPage}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+            />
+          </ABTestVariant>
+          <ABTestVariant name="B">
+            <DomainListFilters
+              className="domain-filters"
+              filters={filters}
+              setFilters={setFilters}
+              resetToFirstPage={resetToFirstPage}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+              assetStateOptions={assetStateOptions}
+            />
+          </ABTestVariant>
+        </ABTestWrapper>
+      )}
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -147,8 +172,8 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             rcode,
             blocked,
             wildcardSibling,
+            wildcardEntry,
             webScanPending,
-            hasEntrustCertificate,
             userHasPermission,
             cveDetected,
           },
@@ -167,8 +192,8 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               isArchived={archived}
               blocked={blocked}
               wildcardSibling={wildcardSibling}
+              wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
-              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
               mb="3"
@@ -226,9 +251,10 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
         <InfoBox
-          title={t`WILDCARD`}
-          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+          title={t`WILDCARD SIBLING`}
+          info={t`Tag used to show domains have a wildcard resolver as a sibling.`}
         />
+        <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
         <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
         <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
@@ -271,33 +297,12 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
       />
 
       {orgSlug !== 'my-tracker' && (
-        <Box className="domain-filters">
-          <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
-              <Trans>Filters:</Trans>
-            </Text>
-            <FilterList filters={filters} setFilters={setFilters} />
-          </Flex>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="A">
-              <DomainListFilters
-                filters={filters}
-                setFilters={setFilters}
-                statusOptions={orderByOptions}
-                filterTagOptions={filterTagOptions}
-              />
-            </ABTestVariant>
-            <ABTestVariant name="B">
-              <DomainListFilters
-                filters={filters}
-                setFilters={setFilters}
-                statusOptions={orderByOptions}
-                filterTagOptions={filterTagOptions}
-                assetStateOptions={assetStateOptions}
-              />
-            </ABTestVariant>
-          </ABTestWrapper>
-        </Box>
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+        </Flex>
       )}
 
       {domainList}

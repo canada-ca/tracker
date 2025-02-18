@@ -93,6 +93,7 @@ steps:
       - NATS_URL=$_NATS_URL
       - NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL=$_NOTIFICATION_TEST_TEMPLATE_ID
       - SERVICE_ACCOUNT_EMAIL=$_SERVICE_ACCOUNT_EMAIL
+      - TRACKER_PRODUCTION=true
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name

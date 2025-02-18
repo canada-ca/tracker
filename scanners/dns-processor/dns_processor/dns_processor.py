@@ -488,6 +488,7 @@ def process_results(results):
         "mx_records": results.get("mx_records", None),
         "ns_records": results.get("ns_records", None),
         "wildcard_sibling": results.get("wildcard_sibling", None),
+        "wildcard_entry": results.get("wildcard_entry", None),
         "dmarc": dmarc_results,
         "spf": spf_results,
         "dkim": dkim_results,

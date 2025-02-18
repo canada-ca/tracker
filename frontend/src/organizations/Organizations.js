@@ -241,13 +241,20 @@ export default function Organizations() {
                 aria-label="Show only verified organizations"
                 mx="2"
                 defaultChecked={isVerified}
-                onChange={(e) => setIsVerified(e.target.checked)}
+                onChange={(e) => {
+                  setIsVerified(e.target.checked)
+                  resetToFirstPage()
+                }}
               />
               <CheckCircleIcon color="blue.500" boxSize="icons.md" />
             </Flex>
           </Tooltip>
           {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />}
-          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          <AffiliationFilterSwitch
+            isAffiliated={isAffiliated}
+            setIsAffiliated={setIsAffiliated}
+            resetToFirstPage={resetToFirstPage}
+          />
         </Flex>
         {orgList}
         <RelayPaginationControls
