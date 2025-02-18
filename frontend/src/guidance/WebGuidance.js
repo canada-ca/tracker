@@ -160,7 +160,7 @@ export function WebGuidance({ webResults, timestamp }) {
               CCCS has updated their{' '}
               <Link
                 isExternal
-                href="https://www.cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab2"
+                href="https://www.cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#3.1"
                 color="blue.500"
               >
                 list of recommended TLS cipher suites and elliptic curves
