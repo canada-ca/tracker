@@ -124,7 +124,7 @@ export const loadAllOrganizationDomainStatuses =
               FOR v,e IN 1..1 INBOUND d._id claims
                 FILTER v.verified == true
                 LIMIT 1
-                RETURN TRANSLATE(${language}, v.orgDetails)
+                RETURN MERGE({ externalId: v.externalId }, TRANSLATE(${language}, v.orgDetails))
             )[0]
             RETURN {
               "domain": d.domain,

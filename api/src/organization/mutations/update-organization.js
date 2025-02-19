@@ -237,8 +237,8 @@ export const updateOrganization = new mutationWithClientMutationId({
       updatedOrgDetails.externallyManaged = args.externallyManaged
     }
 
-    if (permission === 'super_admin' && typeof args.externalId !== 'undefined') {
-      updatedOrgDetails.externalId = externalId
+    if (permission === 'super_admin') {
+      updatedOrgDetails.externalId = externalId || compareOrg?.externalId
     }
 
     // Setup Trans action
