@@ -149,7 +149,12 @@ export function AdditionalFindings({ domain }) {
                             .join(',')
 
                           return (
-                            <Tr key={cve} bg={cveSeverityOnHover[severity]}>
+                            <Tr
+                              key={cve}
+                              _hover={{ bg: cveSeverityOnHover[severity] }}
+                              transition="background 0.2s ease-in-out"
+                              rounded="md"
+                            >
                               <Td>
                                 <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal w="20%">
                                   {cve} <ExternalLinkIcon />
