@@ -30,23 +30,20 @@ export const additionalFinding = new GraphQLObjectType({
       resolve: ({ webComponents }) => webComponents,
     },
     vulnerabilities: {
-      type: vulnerabilitesType,
+      type: new GraphQLList(webComponentCveType),
       description: `The vulnerabilities the finding was discovered.`,
       resolve: ({ webComponents }) => {
-        const cves = []
+        const vulnerabilities = []
         for (const webComponent of webComponents) {
-          cves.push(...webComponent.WebComponentCves)
+          vulnerabilities.push(...webComponent.WebComponentCves)
         }
-        const jsonObject = cves.map(JSON.stringify)
+
+        const jsonObject = vulnerabilities.map(JSON.stringify)
         const uniqueSet = new Set(jsonObject)
-        const uniqueArray = Array.from(uniqueSet).map(JSON.parse)
+        const uniqueVulns = Array.from(uniqueSet).map(JSON.parse)
+        uniqueVulns.sort((a, b) => Number(a.Cvss3Score) - Number(b.Cvss3Score))
 
-        const critical = uniqueArray.filter((cve) => cve.Cvss3Score >= 9)
-        const high = uniqueArray.filter((cve) => cve.Cvss3Score >= 7 && cve.Cvss3Score < 9)
-        const medium = uniqueArray.filter((cve) => cve.Cvss3Score >= 4 && cve.Cvss3Score < 7)
-        const low = uniqueArray.filter((cve) => cve.Cvss3Score < 4)
-
-        return { critical, high, medium, low }
+        return uniqueVulns
       },
     },
   }),
@@ -156,32 +153,6 @@ export const webComponentPortType = new GraphQLObjectType({
   }),
 })
 
-export const vulnerabilitesType = new GraphQLObjectType({
-  name: 'Vulnerabilites',
-  fields: () => ({
-    critical: {
-      type: new GraphQLList(webComponentCveType),
-      description: `The criticality of the finding.`,
-      resolve: ({ critical }) => critical,
-    },
-    high: {
-      type: new GraphQLList(webComponentCveType),
-      description: `The criticality of the finding.`,
-      resolve: ({ high }) => high,
-    },
-    medium: {
-      type: new GraphQLList(webComponentCveType),
-      description: `The criticality of the finding.`,
-      resolve: ({ medium }) => medium,
-    },
-    low: {
-      type: new GraphQLList(webComponentCveType),
-      description: `The criticality of the finding.`,
-      resolve: ({ low }) => low,
-    },
-  }),
-})
-
 export const webComponentCveType = new GraphQLObjectType({
   name: 'WebComponentCVE',
   fields: () => ({
@@ -203,7 +174,23 @@ export const webComponentCveType = new GraphQLObjectType({
     cvss3Score: {
       type: GraphQLString,
       description: `The severity of the CVE.`,
-      resolve: ({ Cvss3Score }) => Cvss3Score,
+      resolve: ({ Cvss3Score }) => Number(Cvss3Score).toFixed(1),
+    },
+    severity: {
+      type: GraphQLString,
+      description: `The severity of the CVE.`,
+      resolve: ({ Cvss3Score }) => {
+        const score = Number(Cvss3Score)
+        if (score >= 9) return 'critical'
+        else if (score >= 7 && score < 9) return 'high'
+        else if (score >= 4 && score < 7) return 'medium'
+        else return 'low'
+      },
+    },
+    confidenceLevel: {
+      type: GraphQLString,
+      description: 'Level of confidence that finding is accurate.',
+      resolve: ({ ConfidenceLevel }) => ConfidenceLevel,
     },
   }),
 })

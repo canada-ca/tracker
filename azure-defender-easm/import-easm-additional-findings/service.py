@@ -63,7 +63,9 @@ def update_domain_cve_detected(domain, web_components):
     ignored_cves = domain["ignoredCves"] if domain["ignoredCves"] else []
     for wc in web_components:
         non_ignored_cves = [
-            cve for cve in wc["WebComponentCves"] if cve["Cve"] not in ignored_cves
+            cve
+            for cve in wc["WebComponentCves"]
+            if cve["Cve"] not in ignored_cves and cve["ConfidenceLevel"] == "high"
         ]
         if len(non_ignored_cves) > 0:
             cve_detected = True

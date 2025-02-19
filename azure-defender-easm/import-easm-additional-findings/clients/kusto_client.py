@@ -3,6 +3,7 @@ from azure.kusto.data.helpers import dataframe_from_result_table
 from datetime import datetime, date, timedelta
 import logging
 import os
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -76,7 +77,83 @@ def get_web_components_by_asset(asset):
             cve for cve in wc["WebComponentCves"] if cve["Cve"] in top25
         ]
 
+        componentVersions = wc["WebComponentVersion"].split(".", 2)
+        # Assign confidence levels to each CVE
+        for cve in wc["WebComponentCves"]:
+            cve["ConfidenceLevel"] = "unknown"
+            # if detected version includes patch, high confidence
+            if len(componentVersions) == 3:
+                cve["ConfidenceLevel"] = "high"
+            else:
+                # fetch affected versions of CVE
+                affected_versions = fetch_cve_affected_versions(
+                    cve["Cve"], wc["WebComponentName"]
+                )
+                for cpe in affected_versions:
+                    start, end = get_version_range(cpe).values()
+                    # compare minor and major version nums
+                    if len(componentVersions) == 2:
+                        major = int(componentVersions[0])
+                        minor = int(componentVersions[1])
+                        if start is not None:
+                            if major < int(start.split(".")[0]):
+                                continue
+                        if major > int(end.split(".")[0]):
+                            continue
+
+                        if minor < int(end.split(".")[1]):
+                            cve["ConfidenceLevel"] = "high"
+                        elif minor == int(end.split(".")[1]):
+                            cve["ConfidenceLevel"] = "medium"
+                    elif len(componentVersions) == 1:
+                        major = int(componentVersions[0])
+                        if start is not None:
+                            if major < int(start.split(".")[0]):
+                                continue
+                        if major < int(end.split(".")[0]):
+                            cve["ConfidenceLevel"] = "high"
+                        elif major == int(end.split(".")[0]):
+                            cve["ConfidenceLevel"] = "low"
+
     return data
+
+
+def fetch_cve_affected_versions(cve, comp_name):
+    url = f"https://services.nvd.nist.gov/rest/json/cves/2.0?cveId={cve}"
+    try:
+        res = requests.get(url)
+        # Check if the response is successful
+        if res.status_code == 200:
+            data = res.json()
+            found = []
+            configurations = data["vulnerabilities"][0]["cve"]["configurations"]
+            for item in configurations:
+                for node in item["nodes"]:
+                    for cpe in node["cpeMatch"]:
+                        if cpe["criteria"].find(comp_name.lower()) != -1:
+                            found.append(cpe)
+            return found
+        else:
+            return None
+    except Exception as e:
+        print("Error:", e)
+        return None
+
+
+def get_version_range(affected_versions):
+    versions = {"start": None, "end": None}
+
+    for key in ["versionStartExcluding", "versionStartIncluding"]:
+        if affected_versions.get(key):
+            versions["start"] = affected_versions[key]
+            break
+
+    for key in ["versionEndExcluding", "versionEndIncluding"]:
+        if affected_versions.get(key):
+            versions["end"] = affected_versions[key]
+            break
+
+    return versions
 
 
 def get_additional_findings_by_asset(asset):
