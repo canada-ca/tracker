@@ -153,7 +153,6 @@ export function AdditionalFindings({ domain }) {
                               key={cve}
                               _hover={{ bg: cveSeverityOnHover[severity] }}
                               transition="background 0.2s ease-in-out"
-                              rounded="md"
                             >
                               <Td>
                                 <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal w="20%">
@@ -165,7 +164,9 @@ export function AdditionalFindings({ domain }) {
                               </Td>
                               <Td>{severities[confidenceLevel]}</Td>
                               <Td>{affectComponents}</Td>
-                              <Td textAlign="end">{ignoredCves.includes(cve) && <CheckIcon color="black" />}</Td>
+                              <Td textAlign="center">
+                                {ignoredCves.includes(cve) && <CheckIcon color="black" boxSize="icons.md" />}
+                              </Td>
                               <Td>
                                 <CveIgnorer cve={cve} isCveIgnored={ignoredCves?.includes(cve)} domainId={domainId} />
                               </Td>
