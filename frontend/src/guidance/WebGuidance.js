@@ -5,8 +5,12 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  AlertDescription,
+  AlertTitle,
   Badge,
+  Box,
   Flex,
+  Link,
   Select,
   Text,
 } from '@chakra-ui/react'
@@ -16,6 +20,7 @@ import { WebTLSResults } from './WebTLSResults'
 import { WebConnectionResults } from './WebConnectionResults'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 import { string } from 'prop-types'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export function WebGuidance({ webResults, timestamp }) {
   const [selectedEndpoint, setSelectedEndpoint] = useState(webResults[0].ipAddress)
@@ -145,6 +150,26 @@ export function WebGuidance({ webResults, timestamp }) {
 
   return (
     <>
+      <NotificationBanner status="info" bannerId="updated-tls-guidance" hideable>
+        <Box>
+          <AlertTitle>
+            <Trans>New Recommended TLS Ciphers</Trans>
+          </AlertTitle>
+          <AlertDescription>
+            <Trans>
+              CCCS has updated their{' '}
+              <Link
+                isExternal
+                href="https://www.cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#3.1"
+                color="blue.500"
+              >
+                list of recommended TLS cipher suites and elliptic curves
+              </Link>
+              . Please review these findings and update your configurations accordingly.
+            </Trans>
+          </AlertDescription>
+        </Box>
+      </NotificationBanner>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
         <Text fontSize="lg">
           <Trans>
