@@ -663,6 +663,18 @@ msgstr "Par défaut, nos scanners vérifient les domaines se terminant par \".gc
 #~ msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 #~ msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par « .gc.ca » et « .canada.ca ». Si votre domaine se termine autrement, vous devez communiquer avec nous pour nous en aviser. Envoyez un courriel à l’équipe responsable de la cybersécurité du SCT pour confirmer que ce domaine vous appartient. "
 
+#: src/guidance/WebGuidance.js:139
+msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
+msgstr "CCC a mis à jour sa <0>liste de suites de chiffrement TLS et de courbes elliptiques recommandées</0>. Veuillez prendre connaissance de ces résultats et mettre à jour vos configurations en conséquence."
+
+#: src/guidance/ScanDetails.js:102
+#~ msgid "CCS Injection Vulnerability:"
+#~ msgstr "Vulnérabilité d'injection de CCS:"
+
+#: src/guidance/EmailGuidance.js:321
+msgid "CNAME:"
+msgstr "CNAME:"
+
 #: src/app/SlideMessage.js:55
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
@@ -2863,7 +2875,11 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/admin/AuditLogTable.js:174
+#: src/guidance/WebGuidance.js:136
+msgid "New Recommended TLS Ciphers"
+msgstr "Nouveaux codes TLS recommandés"
+
+#: src/admin/AuditLogTable.js:164
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
