@@ -471,6 +471,7 @@ def process_results(results):
         "domain": results["tls_result"]["request_domain"],
         "ip_address": results["tls_result"]["request_ip_address"],
         "server_location": results["tls_result"]["server_location"],
+        "can_connect_after_scan": results["tls_result"]["can_connect_after_scan"],
         "certificate_chain_info": results["tls_result"]["certificate_chain_info"],
         "supports_ecdh_key_exchange": results["tls_result"].get(
             "supports_ecdh_key_exchange", None
