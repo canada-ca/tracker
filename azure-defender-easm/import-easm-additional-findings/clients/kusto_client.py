@@ -4,6 +4,7 @@ from datetime import datetime, date, timedelta
 import logging
 import os
 import requests
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -45,7 +46,7 @@ def filter_recent_data(data_list, last_seen_key, start_date):
         return data_list
 
 
-def get_web_components_by_asset(asset):
+def get_web_components_by_asset(asset, fetched_cves):
     query = f"""
     declare query_parameters(asset_name:string = '{asset}');
     EasmAssetWebComponent
@@ -87,7 +88,7 @@ def get_web_components_by_asset(asset):
             else:
                 # fetch affected versions of CVE
                 affected_versions = fetch_cve_affected_versions(
-                    cve["Cve"], wc["WebComponentName"]
+                    cve["Cve"], wc["WebComponentName"], fetched_cves
                 )
                 for cpe in affected_versions:
                     start, end = get_version_range(cpe).values()
@@ -118,26 +119,37 @@ def get_web_components_by_asset(asset):
     return data
 
 
-def fetch_cve_affected_versions(cve, comp_name):
-    url = f"https://services.nvd.nist.gov/rest/json/cves/2.0?cveId={cve}"
+def fetch_cve_affected_versions(cve, comp_name, fetched_cves):
     try:
-        res = requests.get(url)
-        # Check if the response is successful
-        if res.status_code == 200:
-            data = res.json()
-            found = []
-            configurations = data["vulnerabilities"][0]["cve"]["configurations"]
-            for item in configurations:
-                for node in item["nodes"]:
-                    for cpe in node["cpeMatch"]:
-                        if cpe["criteria"].find(comp_name.lower()) != -1:
-                            found.append(cpe)
-            return found
-        else:
+        return fetched_cves[cve]
+    except KeyError:
+        logger.error(f"Data on {cve} has not been fetched yet")
+
+    res = {"status_code": 0}
+    attempts = 1
+    while res["status_code"] != 200 and attempts <= 3:
+        try:
+            res = requests.get(
+                f"https://services.nvd.nist.gov/rest/json/cves/2.0?cveId={cve}"
+            )
+            # Check if the response is successful
+            if res.status_code == 200:
+                data = res.json()
+                found = []
+                configurations = data["vulnerabilities"][0]["cve"]["configurations"]
+                for item in configurations:
+                    for node in item["nodes"]:
+                        for cpe in node["cpeMatch"]:
+                            if cpe["criteria"].find(comp_name.lower()) != -1:
+                                found.append(cpe)
+                fetched_cves[cve] = found
+                return found
+            else:
+                time.sleep(60)
+                attempts += 1
+        except Exception as e:
+            print("Error:", e)
             return None
-    except Exception as e:
-        print("Error:", e)
-        return None
 
 
 def get_version_range(affected_versions):

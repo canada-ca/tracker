@@ -78,6 +78,7 @@ def update_domain_cve_detected(domain, web_components):
 
 
 def main():
+    fetched_cves = {}
     try:
         domains = get_all_domains()
     except Exception as e:
@@ -88,7 +89,7 @@ def main():
     for domain in domains:
         logger.info(f"Processing domain {domain['domain']}")
         try:
-            web_components = get_web_components_by_asset(domain["domain"])
+            web_components = get_web_components_by_asset(domain["domain"], fetched_cves)
             additional_findings = get_additional_findings_by_asset(domain["domain"])
 
             insert_str = json.dumps(
