@@ -82,7 +82,7 @@ msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Erreur:</0> {0}"
 
-#: src/app/ReadGuidancePage.js:471
+#: src/app/ReadGuidancePage.js:494
 msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1>.</0>"
 
@@ -97,7 +97,7 @@ msgstr "<0>IPs:</0> {0}"
 
 #: src/guidance/AdditionalFindings.js:113
 #: src/guidance/EmailGuidance.js:158
-#: src/guidance/WebGuidance.js:150
+#: src/guidance/WebGuidance.js:175
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Dernière numérisation:</0> {0}"
 
@@ -323,7 +323,7 @@ msgstr "Portail Admin"
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
-#: src/app/ReadGuidancePage.js:333
+#: src/app/ReadGuidancePage.js:356
 msgid "Admins of an organization can add domains to their list."
 msgstr "Les administrateurs d'une organisation peuvent ajouter des domaines à leur liste."
 
@@ -490,7 +490,7 @@ msgstr "Une erreur s'est produite."
 msgid "and by applicable laws, policies, regulations and international agreements."
 msgstr "et par les lois, politiques, règlements et accords internationaux applicables."
 
-#: src/app/ReadGuidancePage.js:411
+#: src/app/ReadGuidancePage.js:434
 msgid "Another possibility is that your domain is not internet facing."
 msgstr "Il se peut aussi que votre domaine ne soit pas connecté à Internet."
 
@@ -633,7 +633,7 @@ msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de
 #: src/admin/AdminDomains.js:181
 #: src/domains/DomainCard.js:143
 #: src/domains/DomainsPage.js:132
-#: src/guidance/WebGuidance.js:97
+#: src/guidance/WebGuidance.js:102
 #: src/organizationDetails/OrganizationDomains.js:108
 msgid "Blocked"
 msgstr "Bloqué"
@@ -655,25 +655,13 @@ msgstr "BLOQUÉ"
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos services, vous reconnaissez avoir lu, compris et accepté d'être lié par les présentes conditions générales, et de vous conformer à toutes les lois et réglementations applicables. Nous vous recommandons de consulter périodiquement les Conditions générales afin de comprendre les mises à jour ou les modifications qui pourraient vous concerner. Si vous n'acceptez pas les présentes conditions générales, veuillez vous abstenir d'utiliser notre site Web, nos produits et nos services."
 
-#: src/app/ReadGuidancePage.js:401
+#: src/app/ReadGuidancePage.js:424
 msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to <0>TBS Cyber Security</0> to confirm your ownership of that domain."
 msgstr "Par défaut, nos scanners vérifient les domaines se terminant par \".gc.ca\" et \".canada.ca\". Si votre domaine ne fait pas partie de cette liste, vous devez nous contacter pour nous en informer. Envoyez un courriel à l’<0>équipe responsable de la cybersécurité du SCT</0> pour confirmer que vous êtes propriétaire de ce domaine."
 
 #: src/app/ReadGuidancePage.js:313
 #~ msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 #~ msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par « .gc.ca » et « .canada.ca ». Si votre domaine se termine autrement, vous devez communiquer avec nous pour nous en aviser. Envoyez un courriel à l’équipe responsable de la cybersécurité du SCT pour confirmer que ce domaine vous appartient. "
-
-#: src/guidance/WebGuidance.js:139
-msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
-msgstr "CCC a mis à jour sa <0>liste de suites de chiffrement TLS et de courbes elliptiques recommandées</0>. Veuillez prendre connaissance de ces résultats et mettre à jour vos configurations en conséquence."
-
-#: src/guidance/ScanDetails.js:102
-#~ msgid "CCS Injection Vulnerability:"
-#~ msgstr "Vulnérabilité d'injection de CCS:"
-
-#: src/guidance/EmailGuidance.js:321
-msgid "CNAME:"
-msgstr "CNAME:"
 
 #: src/app/SlideMessage.js:55
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
@@ -702,6 +690,10 @@ msgstr "Candidat"
 #: src/organizationDetails/OrganizationDomains.js:119
 msgid "CANDIDATE"
 msgstr "CANDIDAT"
+
+#: src/guidance/WebGuidance.js:159
+msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
+msgstr "CCC a mis à jour sa <0>liste de suites de chiffrement TLS et de courbes elliptiques recommandées</0>. Veuillez prendre connaissance de ces résultats et mettre à jour vos configurations en conséquence."
 
 #: src/guidance/ScanDetails.js:102
 #~ msgid "CCS Injection Vulnerability:"
@@ -1360,7 +1352,7 @@ msgstr "Domaine du message de bannière du protocole de transfert de courrier si
 msgid "Domain List"
 msgstr "Liste des domaines"
 
-#: src/app/ReadGuidancePage.js:503
+#: src/app/ReadGuidancePage.js:526
 msgid "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 msgstr "Exigences de configuration pour la gestion des sites Web et des services"
 
@@ -1495,7 +1487,7 @@ msgstr "Conseils par courriel"
 msgid "Email invitation sent"
 msgstr "Envoi d'une invitation par courriel"
 
-#: src/app/ReadGuidancePage.js:515
+#: src/app/ReadGuidancePage.js:538
 msgid "Email Management Services Configuration Requirements - Canada.ca"
 msgstr "Exigences en matière de configuration des services de gestion des courriels"
 
@@ -1503,7 +1495,7 @@ msgstr "Exigences en matière de configuration des services de gestion des courr
 msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
-#: src/app/ReadGuidancePage.js:261
+#: src/app/ReadGuidancePage.js:284
 msgid "Email Security:"
 msgstr "Sécurité du courrier électronique :"
 
@@ -1553,11 +1545,11 @@ msgstr "Envoi d'un courriel de vérification"
 msgid "Email:"
 msgstr "Courrier électronique:"
 
-#: src/guidance/WebGuidance.js:57
+#: src/guidance/WebGuidance.js:62
 msgid "Endpoint Summary"
 msgstr "Résumé du point d'aboutissement"
 
-#: src/guidance/WebGuidance.js:116
+#: src/guidance/WebGuidance.js:121
 msgid "Endpoint:"
 msgstr "Point d'aboutissement :"
 
@@ -1801,7 +1793,7 @@ msgstr "Première vue : {0}"
 #~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity."
 #~ msgstr "Si vous avez des questions ou des préoccupations, n’hésitez pas à communiquer avec l’équipe responsable de la cybersécurité du SCT."
 
-#: src/app/ReadGuidancePage.js:548
+#: src/app/ReadGuidancePage.js:571
 msgid "For any questions or concerns, please contact <0>TBS Cyber Security</0> ."
 msgstr "Si vous avez des questions ou des préoccupations, n’hésitez pas à communiquer avec l’<0>équipe responsable de la cybersécurité du SCT</0>."
 
@@ -1855,7 +1847,7 @@ msgstr "Cadres"
 msgid "French"
 msgstr "Français"
 
-#: src/app/ReadGuidancePage.js:308
+#: src/app/ReadGuidancePage.js:331
 msgid "Frequently Asked Questions"
 msgstr "Foire aux questions"
 
@@ -2038,7 +2030,7 @@ msgstr "Le nom d'hôte correspond : {0}"
 #~ msgid "Hostname Validated"
 #~ msgstr "Nom d'hôte validé"
 
-#: src/app/ReadGuidancePage.js:330
+#: src/app/ReadGuidancePage.js:353
 msgid "How can I edit my domain list?"
 msgstr "Comment puis-je modifier ma liste de domaines?"
 
@@ -2236,7 +2228,7 @@ msgstr "Immédiatement"
 #~ msgid "Implementation"
 #~ msgstr "Mise en œuvre"
 
-#: src/app/ReadGuidancePage.js:527
+#: src/app/ReadGuidancePage.js:550
 msgid "Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security"
 msgstr "Directives de mise en œuvre – protection du domaine de courrier (ITSP.40.065 v1.1) – Centre canadien pour la cybersécurité"
 
@@ -2244,11 +2236,11 @@ msgstr "Directives de mise en œuvre – protection du domaine de courrier (ITSP
 #~ msgid "Implementation:"
 #~ msgstr "Mise en œuvre:"
 
-#: src/app/ReadGuidancePage.js:241
+#: src/app/ReadGuidancePage.js:264
 msgid "Implementation: <0>Guidance on securely configuring network protocols (ITSP.40.062)</0>"
 msgstr "Mise en œuvre : <0>Conseils sur la configuration sécurisée des protocoles réseau (ITSP.40.062)</0>"
 
-#: src/app/ReadGuidancePage.js:284
+#: src/app/ReadGuidancePage.js:307
 msgid "Implementation: <0>Implementation guidance: email domain protection (ITSP.40.065 v1.1)</0>"
 msgstr "Mise en œuvre : <0>Conseils de mise en œuvre : protection du domaine de messagerie (ITSP.40.065 v1.1)</0>"
 
@@ -2517,7 +2509,7 @@ msgstr "Votre organisation n'utilise pas encore Tracker ?"
 msgid "Issuer:"
 msgstr "Émetteur :"
 
-#: src/app/ReadGuidancePage.js:315
+#: src/app/ReadGuidancePage.js:338
 msgid "It is not clear to me why a domain has failed?"
 msgstr "Je ne comprends pas pourquoi un domaine a échoué."
 
@@ -2638,11 +2630,11 @@ msgstr "Nous allons vous configurer pour que vous puissiez vérifier les informa
 msgid "Limitation of Liability"
 msgstr "Limitation de la responsabilité"
 
-#: src/app/ReadGuidancePage.js:198
+#: src/app/ReadGuidancePage.js:221
 msgid "Links to Review:"
 msgstr "Liens à revoir :"
 
-#: src/app/ReadGuidancePage.js:211
+#: src/app/ReadGuidancePage.js:234
 msgid "List of guidance tags"
 msgstr "Liste des balises d'orientation"
 
@@ -2764,7 +2756,7 @@ msgstr "Plus d'informations"
 msgid "Most Common Negative Findings"
 msgstr "Résultats négatifs les plus fréquents"
 
-#: src/app/ReadGuidancePage.js:535
+#: src/app/ReadGuidancePage.js:558
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Générateur de configuration SSL de Mozilla"
 
@@ -2776,7 +2768,7 @@ msgstr "L'authentification multifactorielle (MFA) est active par défaut et util
 msgid "Must Staple"
 msgstr "Agrafe obligatoire"
 
-#: src/app/ReadGuidancePage.js:467
+#: src/app/ReadGuidancePage.js:490
 msgid "My domain does not send emails, how can I get my domain's DMARC, DKIM, and SPF compliance checks to pass?"
 msgstr "Mon domaine n'envoie pas d'e-mails, comment puis-je faire passer les contrôles de conformité DMARC, DKIM et SPF de mon domaine ?"
 
@@ -2875,11 +2867,11 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/guidance/WebGuidance.js:136
+#: src/guidance/WebGuidance.js:156
 msgid "New Recommended TLS Ciphers"
 msgstr "Nouveaux codes TLS recommandés"
 
-#: src/admin/AuditLogTable.js:164
+#: src/admin/AuditLogTable.js:174
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
@@ -3146,7 +3138,7 @@ msgstr "Ancienne valeur :"
 msgid "Once access is given to your department by the TBS Cyber team, they will be able to invite and manage other users within the organization and manage the domain list."
 msgstr "Une fois que l’équipe responsable de la cybersécurité du SCT a donné l'accès à votre département, celui-ci pourra inviter et gérer d'autres utilisateurs au sein de l'organisation et gérer la liste du domaine."
 
-#: src/app/ReadGuidancePage.js:336
+#: src/app/ReadGuidancePage.js:359
 msgid "Only <0>TBS Cyber Security</0> can remove domains from your organization. Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 msgstr "Seul l’<0>équipe responsable de la cybersécurité du SCT</0> peut supprimer des domaines de votre organisation. Les domaines ne peuvent être supprimés de votre liste que 1) s'ils n'existent plus, c'est-à-dire s'ils sont supprimés du DNS et renvoient un code d'erreur NX DOMAIN (le nom de domaine n'existe pas) ; ou 2) si vous avez constaté qu'ils n'appartiennent pas à votre organisation."
 
@@ -3158,7 +3150,7 @@ msgstr "Ouvrir"
 msgid "Open the glossary."
 msgstr "Ouvrir le glossaire."
 
-#: src/app/ReadGuidancePage.js:420
+#: src/app/ReadGuidancePage.js:443
 msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des services WebSSL de SPC</0> ou utiliser <1>Let’sEncrypt</1>. Pour en apprendre davantage, veuillez vous reporter aux <2>Recommandations pour les certificats de serveur TLS</2>."
 
@@ -3366,7 +3358,7 @@ msgstr "Veuillez prévoir jusqu'à 24 heures pour que les résumés reflètent l
 msgid "Please choose your preferred language"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/app/ReadGuidancePage.js:318
+#: src/app/ReadGuidancePage.js:341
 msgid "Please contact <0>TBS Cyber Security</0> for help."
 msgstr "Veuillez communiquer avec l’<0>équipe responsable de la cybersécurité du SCT</0> pour obtenir de l’aide."
 
@@ -3460,7 +3452,7 @@ msgstr "Loi sur la protection de la vie privée."
 msgid "Privacy Notice Statement"
 msgstr "Déclaration de confidentialité"
 
-#: src/guidance/WebGuidance.js:102
+#: src/guidance/WebGuidance.js:107
 msgid "Private IP"
 msgstr "IP privé"
 
@@ -3480,7 +3472,7 @@ msgstr "PROD"
 msgid "Progress Report"
 msgstr "Rapport d'avancement"
 
-#: src/app/ReadGuidancePage.js:540
+#: src/app/ReadGuidancePage.js:563
 msgid "Protect domains that do not send email - GOV.UK (www.gov.uk)"
 msgstr "Protéger les domaines qui n'envoient pas de courrier électronique - GOV.UK (www.gov.uk)"
 
@@ -3566,7 +3558,7 @@ msgstr "Activité récente"
 msgid "Record:"
 msgstr "Record :"
 
-#: src/app/ReadGuidancePage.js:492
+#: src/app/ReadGuidancePage.js:515
 msgid "References:"
 msgstr "Références :"
 
@@ -3649,11 +3641,11 @@ msgstr "Analyse du sous-domaine demandé"
 #~ msgid "Requests for updates can be sent directly to <0>TBS Cyber Security</0>."
 #~ msgstr "Les demandes de mise à jour peuvent être envoyées directement à l’<0>équipe responsable de la cybersécurité du SCT</0>."
 
-#: src/app/ReadGuidancePage.js:266
+#: src/app/ReadGuidancePage.js:289
 msgid "Requirements: <0>Email Management Services Configuration Requirements</0>"
 msgstr "Exigences : <0>Configuration requise pour les services de gestion du courrier électronique</0>"
 
-#: src/app/ReadGuidancePage.js:223
+#: src/app/ReadGuidancePage.js:246
 msgid "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 msgstr "Exigences : <0>Exigences de configuration de la gestion des sites et services web</0>"
 
@@ -4290,6 +4282,10 @@ msgstr "Début de la visite"
 msgid "State: {lastPortStateTranslated}"
 msgstr "État : {lastPortStateTranslated}"
 
+#: src/app/ReadGuidancePage.js:205
+msgid "Static IP Address: <0>52.138.13.28</0>"
+msgstr "Adresse IP statique : <0>52.138.13.28</0>"
+
 #: src/domains/DomainListFilters.js:92
 #~ msgid "Status or tag"
 #~ msgstr "Statut ou étiquette"
@@ -4599,7 +4595,7 @@ msgstr "Le pourcentage de services en contact avec l'internet qui ont une politi
 msgid "The percentage of web-hosting services that strongly enforce HTTPS"
 msgstr "Le pourcentage de services d'hébergement web qui appliquent fortement le protocole HTTPS"
 
-#: src/app/ReadGuidancePage.js:458
+#: src/app/ReadGuidancePage.js:481
 msgid "The process of detecting DKIM selectors is not immediate. It may take more than 24 hours for the selectors to appear in Tracker after the conditions are met."
 msgstr "Le processus de détection des sélecteurs DKIM n'est pas immédiat. Il peut s'écouler plus de 24 heures avant que les sélecteurs n'apparaissent dans Tracker lorsque les conditions sont remplies."
 
@@ -4615,7 +4611,7 @@ msgstr "Résultats de la vérification DKIM du message. Il peut s'agir d'un succ
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "Résultats de la vérification DKIM du message. Il peut s'agir d'un succès, d'un échec, d'un résultat neutre, d'une erreur temporaire ou d'une erreur permanente."
 
-#: src/guidance/WebGuidance.js:187
+#: src/guidance/WebGuidance.js:212
 msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 msgstr "Le point d'extrémité sélectionné est une adresse IP privée. Tracker n'effectue pas d'analyse sur les adresses IP privées."
 
@@ -4715,7 +4711,7 @@ msgstr "Cette page affiche votre vue personnelle des domaines suivis. Tous les d
 #~ msgid "This page is dedicated to your personal view of tracker"
 #~ msgstr "Cette page est dédiée à votre avis personnel sur le tracker."
 
-#: src/guidance/WebGuidance.js:166
+#: src/guidance/WebGuidance.js:191
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "Ce service n'est pas un service d'hébergement Web et ne nécessite pas la conformité aux exigences de configuration de la gestion des sites et services Web."
 
@@ -4778,6 +4774,10 @@ msgstr "Résumé TLS"
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
 
+#: src/app/ReadGuidancePage.js:198
+msgid "To ensure accurate scanning results, update your firewall and DDOS protection settings to allow traffic from:"
+msgstr "Pour garantir des résultats d'analyse précis, mettez à jour les paramètres de votre pare-feu et de votre protection contre le DDOS afin d'autoriser le trafic en provenance de :"
+
 #: src/app/App.js:58
 msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une option d'authentification multifactorielle</0>."
@@ -4828,7 +4828,7 @@ msgstr "Le compte du traqueur a été fermé avec succès."
 #~ msgid "Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when 1) the domain has a DMARC RUA record which includes \"mailto:dmarc@cyber.gc.ca\"; and 2) the selector has been used to sign an email and passed DKIM validation. If the domain has not met these conditions, the selectors will not be added to Tracker."
 #~ msgstr "Tracker ajoute automatiquement des sélecteurs DKIM à l'aide des rapports DMARC. Les sélecteurs seront ajoutés à Tracker lorsque 1) le domaine possède un enregistrement DMARC RUA qui inclut \"mailto:dmarc@cyber.gc.ca\" ; et 2) le sélecteur a été utilisé pour signer un courriel et a passé la validation DKIM. Si le domaine ne remplit pas ces conditions, les sélecteurs ne seront pas ajoutés à Tracker."
 
-#: src/app/ReadGuidancePage.js:446
+#: src/app/ReadGuidancePage.js:469
 msgid "Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when 1) the domain has a DMARC RUA record which includes \"mailto:dmarc@cyber.gc.ca\"; and 2) the selector has been used to sign an email and passed DKIM validation. If your DKIM selectors or any DMARC information is missing, please email <0>TBS Cyber Security</0>."
 msgstr "Tracker ajoute automatiquement des sélecteurs DKIM à l'aide des rapports DMARC. Les sélecteurs seront ajoutés à Tracker lorsque 1) le domaine possède un enregistrement DMARC RUA qui inclut « mailto:dmarc@cyber.gc.ca » ; et 2) le sélecteur a été utilisé pour signer un e-mail et a passé la validation DKIM. Si vos sélecteurs DKIM ou toute autre information DMARC sont manquants, veuillez envoyer un courriel à <0>TBS Cyber Security</0>."
 
@@ -4864,7 +4864,7 @@ msgstr "Tracker gère désormais automatiquement vos sélecteurs DKIM."
 msgid "Tracker results refresh every 24 hours."
 msgstr "Les résultats de Suivi sont actualisés toutes les 24 heures."
 
-#: src/app/ReadGuidancePage.js:202
+#: src/app/ReadGuidancePage.js:225
 msgid "Tracker:"
 msgstr "Suivi :"
 
@@ -5346,7 +5346,7 @@ msgstr "Conseils sur le Web"
 msgid "Web Scan Results"
 msgstr "Résultats de l'analyse du Web"
 
-#: src/app/ReadGuidancePage.js:218
+#: src/app/ReadGuidancePage.js:241
 msgid "Web Security:"
 msgstr "Sécurité du Web :"
 
@@ -5387,11 +5387,11 @@ msgstr "Bienvenue, vous êtes connecté avec succès!"
 #~ msgid "What are these additional findings?"
 #~ msgstr "Quels sont ces résultats supplémentaires ?"
 
-#: src/app/ReadGuidancePage.js:397
+#: src/app/ReadGuidancePage.js:420
 msgid "What does it mean if a domain is “unreachable”?"
 msgstr "Que veut dire le message « inaccessible » en parlant d’un domaine?"
 
-#: src/app/ReadGuidancePage.js:417
+#: src/app/ReadGuidancePage.js:440
 msgid "Where can I get a GC-approved TLS certificate?"
 msgstr "Où puis-je obtenir un certificat TLS approuvé par le GC?"
 
@@ -5403,7 +5403,7 @@ msgstr "Où puis-je obtenir un certificat TLS approuvé par le GC?"
 msgid "Where necessary adjust IT Plans and budget estimates where work is expected."
 msgstr "Au besoin, adapter les plans de la TI et les estimations budgétaires là où des travaux sont attendus."
 
-#: src/app/ReadGuidancePage.js:353
+#: src/app/ReadGuidancePage.js:376
 msgid "While other tools are useful to work alongside Tracker, they do not specifically adhere to the configuration requirements specified in the <0>Email Management Service Configuration Requirements</0> and the <1>Web Site and Service Management Configuration Requirements</1>. For a list of allowed protocols, ciphers, and curves review the <2>ITSP.40.062 TLS guidance</2>."
 msgstr "Même si d’autres outils sont utiles en complément de Suivi, ils ne respectent pas précisément les exigences de configuration indiquées dans les <0>Exigences en matière de configuration des services de gestion des courriels</0> et les <1>Exigences de configuration de la gestion des sites Web et des services</1>. Pour une liste des protocoles, chiffrements et courbes autorisés, veuillez consulter les <2>Directives du protocole TLS ITSP.40.062</2>."
 
@@ -5411,15 +5411,15 @@ msgstr "Même si d’autres outils sont utiles en complément de Suivi, ils ne r
 #~ msgid "Why do other tools (<0>Hardenize</0>, <1>SSL Labs</1>, etc.) show positive results for a domain while Tracker shows negative results?"
 #~ msgstr "Pourquoi d’autres outils (<0>Hardenize</0>, <1>Laboratoires SSL</1>, etc.) affichent-ils des résultats positifs pour un domaine alors que Tracker affiche des résultats négatifs?"
 
-#: src/app/ReadGuidancePage.js:350
+#: src/app/ReadGuidancePage.js:373
 msgid "Why do other tools show positive results for a domain while Tracker shows negative results?"
 msgstr "Pourquoi d'autres outils affichent-ils des résultats positifs pour un domaine alors que Suivi affiche des résultats négatifs ?"
 
-#: src/app/ReadGuidancePage.js:443
+#: src/app/ReadGuidancePage.js:466
 msgid "Why does the guidance page not show the domain’s DKIM selectors even though they exist?"
 msgstr "Pourquoi la page d'orientation n'affiche-t-elle pas les sélecteurs DKIM du domaine alors qu'ils existent ?"
 
-#: src/app/ReadGuidancePage.js:206
+#: src/app/ReadGuidancePage.js:229
 msgid "Wiki"
 msgstr "Wiki"
 

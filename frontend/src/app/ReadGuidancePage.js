@@ -195,6 +195,29 @@ export default function ReadGuidancePage() {
           {/* 5 */}
           <ListItem>
             <Text>
+              <Trans>
+                To ensure accurate scanning results, update your firewall and DDOS protection settings to allow traffic
+                from:
+              </Trans>
+            </Text>
+            <UnorderedList px="2">
+              <ListItem>
+                <Trans>
+                  Static IP Address: <b>52.138.13.28</b>
+                </Trans>
+              </ListItem>
+              <ListItem>
+                User-Agent:{' '}
+                <b>
+                  "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0 Tracker-Suivi
+                  (+https://github.com/canada-ca/tracker)"
+                </b>
+              </ListItem>
+            </UnorderedList>
+          </ListItem>
+          {/* 6 */}
+          <ListItem>
+            <Text>
               <Trans>Links to Review:</Trans>
             </Text>
             <UnorderedList px="2">
