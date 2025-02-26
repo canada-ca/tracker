@@ -6,6 +6,7 @@ import logging
 
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
+from sslyze.connection_helpers.tls_connection import SslConnection
 from sslyze.errors import ServerHostnameCouldNotBeResolved
 from sslyze.plugins.certificate_info._certificate_utils import (
     get_common_names,
@@ -23,6 +24,7 @@ from sslyze import (
     PathValidationResult,
 )
 from sslyze.scanner.models import ServerScanResult
+from sslyze.server_connectivity import ServerConnectivityInfo
 from sslyze.server_setting import (
     ServerNetworkLocation,
     ServerNetworkConfiguration,
@@ -200,6 +202,7 @@ class TLSResult:
     session_renegotiation_support: SessionRenegotiationSupport | None = None
     supports_fallback_scsv: bool | None = None
     supports_tls_compression: bool | None = None
+    can_connect_after_scan: bool | None = None
     error: str | None = None
 
     def __init__(self, domain: str, ip_address: str = None):
@@ -264,6 +267,34 @@ class TLSResult:
         self.network_configuration = getattr(
             scan_results, "network_configuration", None
         )
+
+        after_scan_connectivity_info = ServerConnectivityInfo(
+            network_configuration=self.network_configuration,
+            server_location=self.server_location,
+            tls_probing_result=scan_results.connectivity_result,
+        )
+        after_scan_connection = None
+        if (
+            not scan_results.connectivity_result
+            or scan_results.connectivity_status == "ERROR"
+        ):
+            self.can_connect_after_scan = False
+        else:
+            try:
+                after_scan_connection = (
+                    after_scan_connectivity_info.get_preconfigured_tls_connection()
+                )
+                after_scan_connection.connect()
+                self.can_connect_after_scan = True
+            except Exception as e:
+                self.can_connect_after_scan = False
+                logger.error(
+                    f"Error connecting to server after scan for domain '{domain}' at IP '{ip_address}': {str(e)}"
+                )
+            finally:
+                if isinstance(after_scan_connection, SslConnection):
+                    after_scan_connection.close()
+
         self.scan_status = getattr(scan_results, "scan_status", None)
         self.accepted_cipher_suites = self.get_accepted_cipher_suites(scan_results)
         self.accepted_elliptic_curves = self.get_accepted_curves(scan_results)
