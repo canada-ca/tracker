@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { IGNORE_CVE, UNIGNORE_CVE } from '../graphql/mutations'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Divider, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Text, useToast } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import withSuperAdmin from '../app/withSuperAdmin'
 import PropTypes from 'prop-types'
@@ -111,8 +111,6 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
   })
 
   return (
-    <>
-      <Divider borderBottomColor="gray.900" />
       <Box>
         <Button variant="primary" mr="4" type="submit" isLoading={false} px={8} onClick={() => setShowConfirm(true)}>
           {isCveIgnored ? <Trans>Stop Ignoring CVE</Trans> : <Trans>Ignore CVE</Trans>}
@@ -161,7 +159,6 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
           </Box>
         )}
       </Box>
-    </>
   )
 }
 
