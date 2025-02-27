@@ -1,5 +1,5 @@
 FROM rust:1.84.1-bookworm AS crlite-builder
-RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev 006b178 --features=rustls/dangerous_configuration
+RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev dcb8a4d --features=rustls/dangerous_configuration
 
 #===============================================================================================
 #===============================================================================================
