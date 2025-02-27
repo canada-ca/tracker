@@ -127,7 +127,7 @@ def fetch_cve_affected_versions(cve, comp_name, fetched_cves):
 
     res = {"status_code": 0}
     attempts = 1
-    while res["status_code"] != 200 and attempts <= 3:
+    while attempts <= 3:
         try:
             res = requests.get(
                 f"https://services.nvd.nist.gov/rest/json/cves/2.0?cveId={cve}"
