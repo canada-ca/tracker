@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Heading, Text, Link, ListItem, OrderedList, UnorderedList, Divider } from '@chakra-ui/react'
+import { Box, Heading, Text, Link, ListItem, OrderedList, UnorderedList, Divider, Code } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 
 export default function ReadGuidancePage() {
@@ -196,22 +196,20 @@ export default function ReadGuidancePage() {
           <ListItem>
             <Text>
               <Trans>
-                To ensure accurate scanning results, update your firewall and DDOS protection settings to allow traffic
-                from:
+                To ensure accurate scanning results, configure your firewall and DDoS (Denial of Service) protection
+                settings to permit required scanning traffic. Work with your IT team and/or your SSC Service Delivery
+                Manager to add the scanning IP address (52.138.13.28) to your network's allow lists.
               </Trans>
             </Text>
-            <UnorderedList px="2">
+            <UnorderedList>
               <ListItem>
-                <Trans>
-                  Static IP Address: <b>52.138.13.28</b>
-                </Trans>
-              </ListItem>
-              <ListItem>
-                User-Agent:{' '}
-                <b>
-                  "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0 Tracker-Suivi
-                  (+https://github.com/canada-ca/tracker)"
-                </b>
+                <Text>
+                  <Trans>Our scan requests can be identified by the following User-Agent header:</Trans>{' '}
+                  <Code>
+                    Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0 Tracker-Suivi
+                    (+https://github.com/canada-ca/tracker)
+                  </Code>
+                </Text>
               </ListItem>
             </UnorderedList>
           </ListItem>
