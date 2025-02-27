@@ -91,30 +91,36 @@ def get_web_components_by_asset(asset, fetched_cves):
                     cve["Cve"], wc["WebComponentName"], fetched_cves
                 )
                 for cpe in affected_versions:
-                    start, end = get_version_range(cpe).values()
-                    # compare minor and major version nums
-                    if len(componentVersions) == 2:
-                        major = int(componentVersions[0])
-                        minor = int(componentVersions[1])
-                        if start is not None:
-                            if major < int(start.split(".")[0]):
+                    try:
+                        start, end = get_version_range(cpe).values()
+                        # compare minor and major version nums
+                        if len(componentVersions) == 2:
+                            major = int(componentVersions[0])
+                            minor = int(componentVersions[1])
+                            if start is not None:
+                                if major < int(start.split(".")[0]):
+                                    continue
+                            if major > int(end.split(".")[0]):
                                 continue
-                        if major > int(end.split(".")[0]):
-                            continue
 
-                        if minor < int(end.split(".")[1]):
-                            cve["ConfidenceLevel"] = "high"
-                        elif minor == int(end.split(".")[1]):
-                            cve["ConfidenceLevel"] = "medium"
-                    elif len(componentVersions) == 1:
-                        major = int(componentVersions[0])
-                        if start is not None:
-                            if major < int(start.split(".")[0]):
-                                continue
-                        if major < int(end.split(".")[0]):
-                            cve["ConfidenceLevel"] = "high"
-                        elif major == int(end.split(".")[0]):
-                            cve["ConfidenceLevel"] = "low"
+                            if minor < int(end.split(".")[1]):
+                                cve["ConfidenceLevel"] = "high"
+                            elif minor == int(end.split(".")[1]):
+                                cve["ConfidenceLevel"] = "medium"
+                        elif len(componentVersions) == 1:
+                            major = int(componentVersions[0])
+                            if start is not None:
+                                if major < int(start.split(".")[0]):
+                                    continue
+                            if major < int(end.split(".")[0]):
+                                cve["ConfidenceLevel"] = "high"
+                            elif major == int(end.split(".")[0]):
+                                cve["ConfidenceLevel"] = "low"
+                    except Exception as e:
+                        logger.error(
+                            f"Encountered problem while assigning confidence level for {cve['Cve']} on {asset}: {e}"
+                        )
+                        continue
 
     return data
 
