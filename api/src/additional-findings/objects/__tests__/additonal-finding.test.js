@@ -3,7 +3,6 @@ import {
   webConnectionType,
   webComponentLocationType,
   webComponentPortType,
-  vulnerabilitesType,
   webComponentCveType,
 } from '../additional-finding.js'
 import { GraphQLList, GraphQLString } from 'graphql'
@@ -28,7 +27,7 @@ describe('additionalFinding', () => {
     expect(fields.webComponents.type).toBeInstanceOf(GraphQLList)
     expect(fields.webComponents.description).toBe('The web components the finding was discovered.')
 
-    expect(fields.vulnerabilities.type).toBe(vulnerabilitesType)
+    expect(fields.vulnerabilities.type).toBeInstanceOf(GraphQLList)
     expect(fields.vulnerabilities.description).toBe('The vulnerabilities the finding was discovered.')
   })
 })
@@ -93,24 +92,6 @@ describe('webComponentPortType', () => {
 
     expect(fields.portStateLastSeen.type).toBe(GraphQLString)
     expect(fields.portStateLastSeen.description).toBe('The date the finding was discovered.')
-  })
-})
-
-describe('vulnerabilitesType', () => {
-  it('should have correct fields', () => {
-    const fields = vulnerabilitesType.getFields()
-
-    expect(fields.critical.type).toBeInstanceOf(GraphQLList)
-    expect(fields.critical.description).toBe('The criticality of the finding.')
-
-    expect(fields.high.type).toBeInstanceOf(GraphQLList)
-    expect(fields.high.description).toBe('The criticality of the finding.')
-
-    expect(fields.medium.type).toBeInstanceOf(GraphQLList)
-    expect(fields.medium.description).toBe('The criticality of the finding.')
-
-    expect(fields.low.type).toBeInstanceOf(GraphQLList)
-    expect(fields.low.description).toBe('The criticality of the finding.')
   })
 })
 
