@@ -85,7 +85,8 @@ export default function OrganizationDetails({ loginRequired }) {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      navigate(`/organizations/${orgSlug}/${tab}`)
+      const searchParams = new URLSearchParams(window.location.search)
+      navigate(`/organizations/${orgSlug}/${tab}?${searchParams.toString()}`)
     }
   }
 
