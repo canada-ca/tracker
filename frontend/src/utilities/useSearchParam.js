@@ -9,15 +9,31 @@ function useSearchParam({ name, validOptions, defaultValue }) {
     return new URLSearchParams(search)
   }, [search])
 
+  const parseVal = (value) => {
+    try {
+      return JSON.parse(value)
+    } catch {
+      return value
+    }
+  }
+
   const value = searchParams.get(name) || defaultValue
-  const searchValue = !validOptions || validOptions.includes(value) ? value : defaultValue
+  const searchValue = !validOptions || validOptions.includes(value) ? parseVal(value) : defaultValue
 
   const setSearchParams = React.useCallback(
     (value) => {
-      if (value == null || value === '' || (validOptions && !validOptions.includes(value))) {
-        searchParams.delete(name)
+      if (Array.isArray(value)) {
+        if (value == null || value.length === 0) {
+          searchParams.delete(name)
+        } else {
+          searchParams.set(name, JSON.stringify(value))
+        }
       } else {
-        searchParams.set(name, value)
+        if (value == null || value === '' || (validOptions && !validOptions.includes(value))) {
+          searchParams.delete(name)
+        } else {
+          searchParams.set(name, value)
+        }
       }
       navigate({ search: searchParams.toString(), replace: true })
     },
@@ -31,6 +47,8 @@ function useSearchParam({ name, validOptions, defaultValue }) {
       } else {
         setSearchParams(defaultValue)
       }
+    } else if (value === null || value.length === 0) {
+      setSearchParams(defaultValue)
     }
   }, [value, validOptions, defaultValue, setSearchParams, name])
 
