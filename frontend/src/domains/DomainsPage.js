@@ -37,6 +37,7 @@ import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import withSuperAdmin from '../app/withSuperAdmin'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+import useSearchParam from '../utilities/useSearchParam'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -47,7 +48,10 @@ export default function DomainsPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
-  const [filters, setFilters] = useState([])
+  const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
+    name: 'domain-filters',
+    defaultValue: [],
+  })
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,

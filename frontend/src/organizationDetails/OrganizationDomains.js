@@ -24,6 +24,7 @@ import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import useSearchParam from '../utilities/useSearchParam'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -31,9 +32,11 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(50)
-  const [filters, setFilters] = useState([
-    { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
-  ])
+
+  const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
+    name: 'domain-filters',
+    defaultValue: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
