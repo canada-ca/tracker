@@ -37,7 +37,7 @@ function useSearchParam({ name, validOptions, defaultValue }) {
       }
       navigate({ search: searchParams.toString(), replace: true })
     },
-    [searchParams, history, name, validOptions],
+    [searchParams, navigate, name, validOptions],
   )
 
   useEffect(() => {
