@@ -23,13 +23,13 @@ function useSearchParam({ name, validOptions, defaultValue }) {
   const setSearchParams = React.useCallback(
     (value) => {
       if (Array.isArray(value)) {
-        if (value == null || value.length === 0) {
+        if (!value || value.length === 0) {
           searchParams.delete(name)
         } else {
           searchParams.set(name, JSON.stringify(value))
         }
       } else {
-        if (value == null || value === '' || (validOptions && !validOptions.includes(value))) {
+        if (!value || (validOptions && !validOptions.includes(value))) {
           searchParams.delete(name)
         } else {
           searchParams.set(name, value)
@@ -41,16 +41,14 @@ function useSearchParam({ name, validOptions, defaultValue }) {
   )
 
   useEffect(() => {
-    if ((validOptions && !validOptions.includes(value)) || value === '') {
-      if (value != null) {
-        setSearchParams(null)
-      } else {
+    if (!validOptions || validOptions.includes(value)) {
+      if (value === null || value === '') {
         setSearchParams(defaultValue)
       }
-    } else if (value === null || value.length === 0) {
+    } else {
       setSearchParams(defaultValue)
     }
-  }, [value, validOptions, defaultValue, setSearchParams, name])
+  }, [value, validOptions, defaultValue, setSearchParams])
 
   return { searchValue, setSearchParams }
 }
