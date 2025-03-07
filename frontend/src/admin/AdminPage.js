@@ -73,7 +73,7 @@ export default function AdminPage() {
       })
       setSelectedOrg(data?.findMyOrganizations?.edges[0]?.node?.name || 'none')
     }
-  }, [activeMenu, history, data])
+  }, [activeMenu, navigate, data])
 
   if (error) {
     return <ErrorFallbackMessage error={error} />

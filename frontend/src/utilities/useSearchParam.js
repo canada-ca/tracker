@@ -9,30 +9,46 @@ function useSearchParam({ name, validOptions, defaultValue }) {
     return new URLSearchParams(search)
   }, [search])
 
+  const parseVal = (value) => {
+    try {
+      return JSON.parse(value)
+    } catch {
+      return value
+    }
+  }
+
   const value = searchParams.get(name) || defaultValue
-  const searchValue = !validOptions || validOptions.includes(value) ? value : defaultValue
+  const searchValue = !validOptions || validOptions.includes(value) ? parseVal(value) : defaultValue
 
   const setSearchParams = React.useCallback(
     (value) => {
-      if (value == null || value === '' || (validOptions && !validOptions.includes(value))) {
-        searchParams.delete(name)
+      if (Array.isArray(value)) {
+        if (!value || value.length === 0) {
+          searchParams.delete(name)
+        } else {
+          searchParams.set(name, JSON.stringify(value))
+        }
       } else {
-        searchParams.set(name, value)
+        if (!value || (validOptions && !validOptions.includes(value))) {
+          searchParams.delete(name)
+        } else {
+          searchParams.set(name, value)
+        }
       }
       navigate({ search: searchParams.toString(), replace: true })
     },
-    [searchParams, history, name, validOptions],
+    [searchParams, navigate, name, validOptions],
   )
 
   useEffect(() => {
-    if ((validOptions && !validOptions.includes(value)) || value === '') {
-      if (value != null) {
-        setSearchParams(null)
-      } else {
+    if (!validOptions || validOptions.includes(value)) {
+      if (value === null || value === '') {
         setSearchParams(defaultValue)
       }
+    } else {
+      setSearchParams(defaultValue)
     }
-  }, [value, validOptions, defaultValue, setSearchParams, name])
+  }, [value, validOptions, defaultValue, setSearchParams])
 
   return { searchValue, setSearchParams }
 }

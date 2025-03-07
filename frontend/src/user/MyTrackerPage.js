@@ -26,7 +26,7 @@ export default function OrganizationDetails() {
     if (!activeTab) {
       navigate(`/my-tracker/${defaultActiveTab}`, { replace: true })
     }
-  }, [activeTab, history, defaultActiveTab])
+  }, [activeTab, navigate, defaultActiveTab])
 
   if (loading) {
     return (
