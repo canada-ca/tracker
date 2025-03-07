@@ -67,7 +67,7 @@ export default function OrganizationDetails({ loginRequired }) {
     if (!activeTab || !tabNames.includes(activeTab)) {
       navigate(`/organizations/${orgSlug}/${defaultActiveTab}`, { replace: true })
     }
-  }, [activeTab, history, orgSlug, defaultActiveTab])
+  }, [activeTab, navigate, orgSlug, defaultActiveTab])
 
   if (loading) {
     return (

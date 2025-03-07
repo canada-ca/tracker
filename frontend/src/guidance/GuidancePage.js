@@ -90,7 +90,7 @@ function GuidancePage() {
     if (!activeTab) {
       navigate(`/domains/${domain}/${defaultActiveTab}`, { replace: true, state: location.state })
     }
-  }, [activeTab, history, domainName, defaultActiveTab])
+  }, [activeTab, navigate, domainName, defaultActiveTab])
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
