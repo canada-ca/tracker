@@ -57,7 +57,7 @@ function GuidancePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isLoggedIn, isEmailValidated } = useUserVar()
-  const { from } = location.state || { from: { pathname: '/domains' } }
+  const { from, searchParams } = location.state || { from: { pathname: '/domains', searchParams: '' } }
   const [orgInfo, setOrgInfo] = useState({})
 
   const {
@@ -82,15 +82,15 @@ function GuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      navigate(`/domains/${domain}/${tab}`, { replace: true })
+      navigate(`/domains/${domain}/${tab}`, { replace: true, state: location.state })
     }
   }
 
   useEffect(() => {
     if (!activeTab) {
-      navigate(`/domains/${domain}/${defaultActiveTab}`, { replace: true })
+      navigate(`/domains/${domain}/${defaultActiveTab}`, { replace: true, state: location.state })
     }
-  }, [activeTab, history, domainName, defaultActiveTab])
+  }, [activeTab, navigate, domainName, defaultActiveTab])
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
@@ -287,7 +287,7 @@ function GuidancePage() {
       <Flex flexDirection={{ base: 'column', md: 'row' }} alignItems="center" mb="4">
         <IconButton
           icon={<ArrowLeftIcon />}
-          onClick={() => navigate(from)}
+          onClick={() => navigate(`${from}${searchParams}`)}
           color="gray.900"
           fontSize="2xl"
           aria-label="back"

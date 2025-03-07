@@ -32,6 +32,7 @@ function DomainCard({
   const location = useLocation()
   const toast = useToast()
   const { isLoggedIn, isEmailValidated } = useUserVar()
+  const searchParams = new URLSearchParams(window.location.search)
 
   const [favouriteDomain] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
@@ -218,10 +219,8 @@ function DomainCard({
               className="view-results-button"
               variant="primary"
               as={RouteLink}
-              to={{
-                pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
-                state: { from: location.pathname },
-              }}
+              to={isLoggedIn() ? `/domains/${url}` : '/sign-in'}
+              state={{ from: location.pathname, searchParams: `?${searchParams.toString()}` }}
               px="10"
             >
               <Text whiteSpace="noWrap">
@@ -233,6 +232,7 @@ function DomainCard({
                 variant="primary"
                 as={RouteLink}
                 to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+                state={{ from: location.pathname }}
               >
                 <Text whiteSpace="noWrap">
                   <Trans>DMARC Report</Trans>

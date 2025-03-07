@@ -47,6 +47,7 @@ import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
+import useSearchParam from '../utilities/useSearchParam'
 
 export function AdminDomains({ orgSlug, orgId, verified, permission }) {
   const toast = useToast()
@@ -68,7 +69,10 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
     editingDomainId: '',
     editingDomainUrl: '',
   })
-  const [filters, setFilters] = useState([])
+  const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
+    name: 'domain-filters',
+    defaultValue: [],
+  })
 
   const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
   const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()

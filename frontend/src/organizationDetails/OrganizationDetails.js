@@ -67,7 +67,7 @@ export default function OrganizationDetails({ loginRequired }) {
     if (!activeTab || !tabNames.includes(activeTab)) {
       navigate(`/organizations/${orgSlug}/${defaultActiveTab}`, { replace: true })
     }
-  }, [activeTab, history, orgSlug, defaultActiveTab])
+  }, [activeTab, navigate, orgSlug, defaultActiveTab])
 
   if (loading) {
     return (
@@ -85,7 +85,8 @@ export default function OrganizationDetails({ loginRequired }) {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      navigate(`/organizations/${orgSlug}/${tab}`)
+      const searchParams = new URLSearchParams(window.location.search)
+      navigate(`/organizations/${orgSlug}/${tab}?${searchParams.toString()}`)
     }
   }
 
