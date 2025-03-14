@@ -6,7 +6,7 @@ cryptography==44.0.1
 dkimpy==1.0.5
 dnspython==2.6.1
 expiringdict==1.2.2
-filelock==3.8.0
+filelock==3.18.0
 idna==3.7
 nats-py==2.8.0
 publicsuffix2==2.20191221
