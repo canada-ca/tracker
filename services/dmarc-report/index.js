@@ -17,8 +17,10 @@ const {
   AZURE_CONN_STRING,
   DATABASE,
   SUMMARIES_CONTAINER,
-  UPDATE_ALL_DATES: updateAllDates = false,
+  UPDATE_ALL_DATES,
 } = process.env
+
+const updateAllDates = UPDATE_ALL_DATES === 'true'
 
 ;(async () => {
   const { collections, query, transaction } = await arangoConnection({
