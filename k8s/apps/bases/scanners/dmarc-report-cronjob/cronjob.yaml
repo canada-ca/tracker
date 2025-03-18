@@ -83,6 +83,8 @@ spec:
                     secretKeyRef:
                       name: dmarc
                       key: SUMMARIES_CONTAINER
+                - name: UPDATE_ALL_DATES
+                  value: "true"
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
