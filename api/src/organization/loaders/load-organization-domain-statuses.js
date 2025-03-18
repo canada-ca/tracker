@@ -5,7 +5,8 @@ export const loadOrganizationDomainStatuses =
   ({ query, userKey, i18n, language }) =>
   async ({ orgId, filters }) => {
     let domains
-    let domainFilters = aql`FILTER v.archived != true`
+    let domainFilters = aql``
+    let archivedFilter = aql`FILTER v.archived != true`
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -91,6 +92,8 @@ export const loadOrganizationDomainStatuses =
           `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`${domainFilters}`
+          } else if (filterValue === 'archived') {
+            archivedFilter = aql`FILTER v.archived ${comparison} true`
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -118,6 +121,7 @@ export const loadOrganizationDomainStatuses =
                 )
                 RETURN translatedTags
             )[0]
+            ${archivedFilter}
             ${domainFilters}
             LET ipAddresses = FIRST(
               FILTER v.latestDnsScan
