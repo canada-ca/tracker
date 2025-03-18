@@ -5,7 +5,8 @@ export const loadAllOrganizationDomainStatuses =
   ({ query, userKey, i18n, language }) =>
   async ({ filters }) => {
     let domains
-    let domainFilters = aql`FILTER d.archived != true`
+    let domainFilters = aql``
+    let archivedFilter = aql`FILTER d.archived != true`
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -91,6 +92,8 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'archived') {
+            archivedFilter = aql`FILTER d.archived ${comparison} true`
           }
         }
       })
@@ -101,6 +104,7 @@ export const loadAllOrganizationDomainStatuses =
         await query`
           WITH domains
           FOR d IN domains
+            ${archivedFilter}
             ${domainFilters}
             LET ipAddresses = FIRST(
               FILTER d.latestDnsScan
