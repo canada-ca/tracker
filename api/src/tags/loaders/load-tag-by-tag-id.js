@@ -20,7 +20,7 @@ export const loadTagByTagId = ({ query, userKey, i18n, language }) =>
       `
     } catch (err) {
       console.error(`Database error occurred when user: ${userKey} running loadTagByTagId: ${err}`)
-      throw new Error(i18n._(t`Unable to load tag. Please try again.`))
+      throw new Error(i18n._(t`Unable to load tag(s). Please try again.`))
     }
 
     const tagMap = {}
@@ -29,8 +29,8 @@ export const loadTagByTagId = ({ query, userKey, i18n, language }) =>
         tagMap[tag.tagId] = tag
       })
     } catch (err) {
-      console.error(`Cursor error occurred when user: ${userKey} running loadTagByTagId: ${err}`)
-      throw new Error(i18n._(t`Unable to load tag. Please try again.`))
+      console.error(`Cursor error occurred when user: ${userKey} during loadTagByTagId: ${err}`)
+      throw new Error(i18n._(t`Unable to load tag(s). Please try again.`))
     }
 
     return tags.map((tag) => tagMap[tag])
