@@ -3,11 +3,11 @@ import { tagType } from '../objects'
 
 export const findAllTags = {
   type: new GraphQLList(tagType),
-  description: '',
+  description: 'All dynamically generated tags users have access to.',
   args: {
     isVisible: {
       type: GraphQLBoolean,
-      description: '',
+      description: 'Indicates whether the tag is visible to users.',
     },
   },
   resolve: async (_, args, { userKey, loaders: { loadAllTags } }) => {

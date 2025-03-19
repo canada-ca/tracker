@@ -5,11 +5,11 @@ import { updateTagUnion } from '../unions'
 
 export const updateTag = new mutationWithClientMutationId({
   name: 'UpdateTag',
-  description: '',
+  description: 'Mutation used to update labels for tagging domains.',
   inputFields: () => ({
     tagId: {
       type: new GraphQLNonNull(GraphQLString),
-      description: '',
+      description: 'A unique identifier for the tag.',
     },
     labelEn: {
       type: GraphQLString,

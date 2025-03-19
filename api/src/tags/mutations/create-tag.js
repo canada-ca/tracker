@@ -9,7 +9,7 @@ export const createTag = new mutationWithClientMutationId({
   inputFields: () => ({
     tagId: {
       type: new GraphQLNonNull(GraphQLID),
-      description: '',
+      description: 'A unique identifier for the tag.',
     },
     labelEn: {
       type: new GraphQLNonNull(GraphQLString),
