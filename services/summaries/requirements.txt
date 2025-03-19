@@ -7,7 +7,7 @@ idna==3.7
 importlib_metadata==8.6.1
 iniconfig==2.0.0
 packaging==24.2
-pluggy==1.0.0
+pluggy==1.5.0
 pretend==1.0.9
 PyJWT==2.6.0
 pytest==8.3.5
