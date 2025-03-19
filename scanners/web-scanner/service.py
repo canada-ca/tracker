@@ -15,6 +15,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
+from nats.js.errors import KeyWrongLastSequenceError, KeyNotFoundError
+from nats.js.kv import KeyValue
 
 from scan.web_scanner import scan_web
 import nats
@@ -50,6 +52,7 @@ SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVER_LIST.split(",")
 
 SCAN_THREAD_COUNT = int(os.getenv("SCAN_THREAD_COUNT", 1))
+MAX_SLOTS_PER_IP = int(os.getenv("MAX_SLOTS_PER_IP", 2))
 
 
 def scan_web_and_catch(domain, ip_address):
@@ -94,6 +97,67 @@ def run_scan(msg):
     logger.info(f"Formatted results: {formatted_results}")
 
     return formatted_results
+
+
+async def try_acquire_ip_slot(kv: KeyValue, ip: str) -> bool:
+    max_retries = 3
+    retries = 0
+
+    while retries < max_retries:
+        try:
+            entry = await kv.get(ip)
+            count = int(entry.value.decode())
+
+            if count < MAX_SLOTS_PER_IP:
+                try:
+                    await kv.update(ip, str(count + 1).encode(), entry.revision)
+                    return True
+                except KeyWrongLastSequenceError:
+                    retries += 1
+                    await asyncio.sleep(0.1)
+                    continue
+                except Exception as e:
+                    logger.error(f"Unexpected error acquiring IP slot for {ip}: {e}")
+                    raise
+            else:
+                return False  # No slots available
+        except KeyNotFoundError:
+            await kv.create(ip, b"1")
+            return True
+        except Exception as e:
+            logging.error(f"Error acquiring IP slot for {ip}: {e}")
+            retries += 1
+            await asyncio.sleep(0.1)
+
+    return False  # Failed after max retries
+
+
+async def release_ip_slot(kv: KeyValue, ip: str) -> None:
+    error_retries = 0
+
+    while True:
+        try:
+            entry = await kv.get(ip)
+            count = int(entry.value.decode())
+
+            if count > 0:
+                try:
+                    await kv.update(ip, str(count - 1).encode(), entry.revision)
+                    return
+                except KeyWrongLastSequenceError:
+                    await asyncio.sleep(0.1)
+                    continue
+        except KeyNotFoundError:
+            return  # Key not found, nothing to release
+        except Exception as e:
+            error_retries += 1
+            logging.error(f"Unexpected error releasing IP slot for {ip}: {e}")
+            if error_retries > 10:
+                logger.critical(
+                    f"Error releasing IP slot for {ip}. Giving up after 10 retries. Error: {e}"
+                )
+                raise
+            await asyncio.sleep(0.1)
 
 
 async def scan_service():
@@ -141,6 +205,8 @@ async def scan_service():
     }
 
     await js.add_stream(**add_stream_options)
+
+    ip_kv = await js.create_key_value(bucket="WEB_SCANNER_IPS")
 
     pull_subscribe_options = {
         "stream": "SCANS",
@@ -238,6 +304,31 @@ async def scan_service():
                     logger.error(
                         f"Error while releasing semaphore for received message: {msg}: {e}"
                     )
+                continue
+
+            ip = json.loads(msg.data).get("ip_address")
+            if not ip:
+                logger.error(f"Invalid IP address in message: {msg}")
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
+                await msg.ack()
+                continue
+
+            if not await try_acquire_ip_slot(ip_kv, ip):
+                logger.debug(
+                    f"Unable to acquire slot for IP address: {ip}, requeuing..."
+                )
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
+                await msg.nak(delay=10)
                 continue
 
             try:
