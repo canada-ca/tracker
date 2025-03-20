@@ -1,6 +1,6 @@
 # Domain Ownership
 
-The purpose of this service is to get an domain ownership list from a GitHub repository available via an API.
+The purpose of this service is to get a domain ownership list from a GitHub repository available via an API.
 
 ## Install dependencies
 
@@ -34,7 +34,7 @@ GITHUB_REPO=<your github repo the file is located in>
 
 ### Local development
 
-The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have it's own .env file, and the value of the root password should align with the value of `DB_PASS` in the services `.env` file.
+The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have its own .env file, and the value of the root password should align with the value of `DB_PASS` in the services `.env` file.
 
 ```bash
 # Write the arango test credentials into an env file:

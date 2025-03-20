@@ -5,7 +5,8 @@ export const loadOrganizationDomainStatuses =
   ({ query, userKey, i18n, language }) =>
   async ({ orgId, filters }) => {
     let domains
-    let domainFilters = aql`FILTER v.archived != true`
+    let domainFilters = aql``
+    let archivedFilter = aql`FILTER v.archived != true`
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -74,6 +75,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.wildcardEntry ${comparison} true
+          `
           } else if (filterValue === 'has-entrust-certificate') {
             domainFilters = aql`
             ${domainFilters}
@@ -86,6 +92,8 @@ export const loadOrganizationDomainStatuses =
           `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`${domainFilters}`
+          } else if (filterValue === 'archived') {
+            archivedFilter = aql`FILTER v.archived ${comparison} true`
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -113,6 +121,7 @@ export const loadOrganizationDomainStatuses =
                 )
                 RETURN translatedTags
             )[0]
+            ${archivedFilter}
             ${domainFilters}
             LET ipAddresses = FIRST(
               FILTER v.latestDnsScan
@@ -128,7 +137,7 @@ export const loadOrganizationDomainStatuses =
                   FOR wc IN finding.webComponents
                     FILTER LENGTH(wc.WebComponentCves) > 0
                     FOR vuln IN wc.WebComponentCves
-                      FILTER vuln.Cve NOT IN v.ignoredCves
+                      FILTER vuln.Cve NOT IN (v.ignoredCves || [])
                       RETURN vuln.Cve
                 )
             )[0]
@@ -141,6 +150,7 @@ export const loadOrganizationDomainStatuses =
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
+              wildcardEntry: v.wildcardEntry,
               hasEntrustCertificate: v.hasEntrustCertificate,
               top25Vulnerabilities: vulnerabilities
             }

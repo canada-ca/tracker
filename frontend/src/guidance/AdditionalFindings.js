@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Accordion,
   AccordionItem,
@@ -9,19 +9,16 @@ import {
   Text,
   Flex,
   Divider,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Link,
-  SimpleGrid,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
 } from '@chakra-ui/react'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { CheckIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
 import { any, bool, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
@@ -30,15 +27,11 @@ import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import CveIgnorer from './CveIgnorer'
-import IgnoredCves from './IgnoredCves'
 
 export function AdditionalFindings({ domain }) {
   const { i18n } = useLingui()
-  const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
+  const severities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
-  const [activeCve, setActiveCve] = useState('')
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
 
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
@@ -80,33 +73,6 @@ export function AdditionalFindings({ domain }) {
     ({ webComponentCategory }) => !['Framework', 'DDOS Protection', 'CDN'].includes(webComponentCategory),
   )
 
-  const detectedIgnoredCves = Object.keys(vulnerabilitySeverities).reduce((acc, severity) => {
-    const currentVulns = vulnerabilities[severity].filter((vuln) => ignoredCves.includes(vuln.cve))
-    if (currentVulns.length > 0) acc[severity] = currentVulns
-
-    return acc
-  }, {})
-
-  const allDetectedCves = Object.keys(vulnerabilitySeverities).reduce((acc, severity) => {
-    return acc.concat(vulnerabilities[severity].map((vuln) => vuln.cve))
-  }, [])
-
-  const unignoredDetectedCves = Object.keys(vulnerabilitySeverities).reduce((acc, severity) => {
-    const filteredCves = vulnerabilities[severity].filter(({ cve }) => !ignoredCves.includes(cve))
-    if (filteredCves.length > 0) acc[severity] = filteredCves
-    return acc
-  }, {})
-
-  const undetectedIgnoredCves = ignoredCves.filter((cve) => !allDetectedCves.includes(cve))
-
-  const setActiveCveHandler = (cve) => {
-    setActiveCve({
-      cve,
-      affectedWebComps: webComponents.filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve)),
-    })
-    cveOnOpen()
-  }
-
   return (
     <>
       <Box>
@@ -116,9 +82,19 @@ export function AdditionalFindings({ domain }) {
           </Trans>
         </Text>
 
-        <Button variant="link" my="4" onClick={onOpen} fontSize="lg">
-          <Trans>What are these additional findings?</Trans>
-        </Button>
+        <Text fontSize="lg">
+          <Trans>
+            These findings are imported from Microsoft's{' '}
+            <Link
+              color="blue.500"
+              isExternal
+              href="https://learn.microsoft.com/en-us/azure/external-attack-surface-management/"
+            >
+              External Attack Surface Management <ExternalLinkIcon />
+            </Link>{' '}
+            tool. <b>Automated updates to these findings occur daily.</b>
+          </Trans>
+        </Text>
         <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5, 6]} w="100%">
           <AccordionItem>
             <Flex as={AccordionButton}>
@@ -139,52 +115,73 @@ export function AdditionalFindings({ domain }) {
               >
                 <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
               </Link>
-              <Box px="2">
-                {Object.keys(unignoredDetectedCves).length > 0 ? (
-                  Object.keys(vulnerabilitySeverities).map((severity) => {
-                    return (
-                      unignoredDetectedCves[severity]?.length > 0 && (
-                        <Box key={severity} mb="2">
-                          <Text>
-                            <b>{vulnerabilitySeverities[severity]}</b>
-                          </Text>
-                          <SimpleGrid columns={8}>
-                            {unignoredDetectedCves[severity].map(({ cve }) => {
-                              return (
-                                <Button
-                                  key={cve}
-                                  borderRadius="full"
-                                  m="1"
-                                  borderColor="black"
-                                  borderWidth="1px"
-                                  bg={severity}
-                                  fontWeight="normal"
-                                  size="sm"
-                                  _hover={{ bg: cveSeverityOnHover[severity] }}
-                                  onClick={() => {
-                                    setActiveCveHandler(cve)
-                                  }}
-                                >
-                                  {cve}
-                                </Button>
-                              )
-                            })}
-                          </SimpleGrid>
-                        </Box>
-                      )
-                    )
-                  })
+              <Box>
+                {vulnerabilities.length > 0 ? (
+                  <TableContainer>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>
+                            <Trans>CVE ID</Trans>
+                          </Th>
+                          <Th>
+                            <Trans>Severity</Trans>
+                          </Th>
+                          <Th>
+                            <Trans>Confidence Level</Trans>
+                          </Th>
+                          <Th>
+                            <Trans>Affected Components</Trans>
+                          </Th>
+                          <Th textAlign="end">
+                            <Trans>Ignored</Trans>
+                          </Th>
+                          <Th />
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {vulnerabilities.map(({ cve, severity, cvss3Score, confidenceLevel }) => {
+                          const affectComponents = webComponents
+                            .filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve))
+                            .map(({ webComponentName, webComponentCategory, webComponentVersion }) => {
+                              return `${webComponentName} ${webComponentCategory} ${webComponentVersion}`
+                            })
+                            .join(',')
+
+                          return (
+                            <Tr
+                              key={cve}
+                              _hover={{ bg: cveSeverityOnHover[severity] }}
+                              transition="background 0.2s ease-in-out"
+                            >
+                              <Td>
+                                <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal w="20%">
+                                  {cve} <ExternalLinkIcon />
+                                </Link>
+                              </Td>
+                              <Td>
+                                {severities[severity]} ({cvss3Score})
+                              </Td>
+                              <Td>{severities[confidenceLevel]}</Td>
+                              <Td>{affectComponents}</Td>
+                              <Td textAlign="center">
+                                {ignoredCves.includes(cve) && <CheckIcon color="black" boxSize="icons.md" />}
+                              </Td>
+                              <Td>
+                                <CveIgnorer cve={cve} isCveIgnored={ignoredCves?.includes(cve)} domainId={domainId} />
+                              </Td>
+                            </Tr>
+                          )
+                        })}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
                 ) : (
                   <Text fontWeight="bold" fontSize="xl">
                     <Trans>No Top 25 Vulnerabilites Detected</Trans>
                   </Text>
                 )}
               </Box>
-              <IgnoredCves
-                undetectedIgnoredCves={undetectedIgnoredCves}
-                detectedIgnoredCves={detectedIgnoredCves}
-                setActiveCveHandler={setActiveCveHandler}
-              />
             </AccordionPanel>
           </AccordionItem>
 
@@ -411,52 +408,6 @@ export function AdditionalFindings({ domain }) {
           </AccordionItem>
         </Accordion>
       </Box>
-
-      <Modal isOpen={cveIsOpen} onClose={cveOnClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{activeCve?.cve}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody fontSize="lg">
-            <Trans>Affected Components:</Trans>
-            {activeCve?.affectedWebComps?.map(({ webComponentName, webComponentCategory, webComponentVersion }) => (
-              <Text key={webComponentName} ml="2">
-                {webComponentName} {webComponentCategory} {webComponentVersion}
-              </Text>
-            ))}
-            <CveIgnorer cve={activeCve?.cve} isCveIgnored={ignoredCves?.includes(activeCve?.cve)} domainId={domainId} />
-          </ModalBody>
-          <ModalFooter>
-            <Link color="blue.500" href={`https://www.cve.org/CVERecord?id=${activeCve?.cve}`} isExternal>
-              <Trans>More info</Trans> <ExternalLinkIcon />
-            </Link>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Trans>Additional Findings</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody fontSize="lg">
-            <Trans>
-              These findings are imported from Microsoft's{' '}
-              <Link
-                color="blue.500"
-                isExternal
-                href="https://learn.microsoft.com/en-us/azure/external-attack-surface-management/"
-              >
-                External Attack Surface Management
-              </Link>{' '}
-              tool. Updates to these findings occur daily.
-            </Trans>
-          </ModalBody>
-          <ModalFooter />
-        </ModalContent>
-      </Modal>
     </>
   )
 }

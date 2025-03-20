@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -125,6 +125,19 @@ describe('<OrganizationAffiliations />', () => {
         },
       ]
 
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/organizations/:orgSlug/:activeTab?',
+            element: <OrganizationAffiliations orgSlug={orgSlug} />,
+          },
+        ],
+        {
+          initialEntries: ['/organizations/tbs-sct-gc-ca/users'],
+          initialIndex: 0,
+        },
+      )
+
       const { getByText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -136,11 +149,9 @@ describe('<OrganizationAffiliations />', () => {
                   userName: null,
                 })}
               >
-                <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
-                  <Route path="/organization/:orgSlug">
-                    <OrganizationAffiliations orgSlug={orgSlug} />
-                  </Route>
-                </MemoryRouter>
+                <RouterProvider router={router}>
+                  <OrganizationAffiliations orgSlug={orgSlug} />
+                </RouterProvider>
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>

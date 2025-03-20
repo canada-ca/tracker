@@ -6,7 +6,7 @@ metadata:
   labels:
     app: arangodb
 spec:
-  image: arangodb/arangodb:3.12.1
+  image: arangodb/arangodb:3.12.3
   environment: Production
   mode: Single
   tls:
@@ -46,6 +46,7 @@ spec:
     args:
       - --server.harden
       - --javascript.endpoints-allowlist="^https?://arangodb\.db(:8529)?(/|$)"
+    memoryReservation: 20
     resources:
       requests:
         cpu: 500m

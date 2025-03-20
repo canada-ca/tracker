@@ -23,8 +23,8 @@ function DomainCard({
   rcode,
   blocked,
   wildcardSibling,
+  wildcardEntry,
   webScanPending,
-  hasEntrustCertificate,
   userHasPermission,
   cveDetected,
   ...rest
@@ -32,6 +32,7 @@ function DomainCard({
   const location = useLocation()
   const toast = useToast()
   const { isLoggedIn, isEmailValidated } = useUserVar()
+  const searchParams = new URLSearchParams(window.location.search)
 
   const [favouriteDomain] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
@@ -146,13 +147,8 @@ function DomainCard({
             <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="B">
                 {wildcardSibling && (
-                  <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
-                    <Trans>Wildcard</Trans>*
-                  </Badge>
-                )}
-                {hasEntrustCertificate && (
-                  <Badge ml="2" colorScheme="blue" variant="subtle" alignSelf="center">
-                    <Trans>Entrust Certificate</Trans>
+                  <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+                    {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
                   </Badge>
                 )}
               </ABTestVariant>
@@ -223,10 +219,8 @@ function DomainCard({
               className="view-results-button"
               variant="primary"
               as={RouteLink}
-              to={{
-                pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
-                state: { from: location.pathname },
-              }}
+              to={isLoggedIn() ? `/domains/${url}` : '/sign-in'}
+              state={{ from: location.pathname, searchParams: `?${searchParams.toString()}` }}
               px="10"
             >
               <Text whiteSpace="noWrap">
@@ -238,6 +232,7 @@ function DomainCard({
                 variant="primary"
                 as={RouteLink}
                 to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+                state={{ from: location.pathname }}
               >
                 <Text whiteSpace="noWrap">
                   <Trans>DMARC Report</Trans>
@@ -288,8 +283,8 @@ DomainCard.propTypes = {
   isArchived: bool,
   blocked: bool,
   wildcardSibling: bool,
+  wildcardEntry: bool,
   webScanPending: bool,
-  hasEntrustCertificate: bool,
   userHasPermission: bool,
   assetState: string,
   cveDetected: bool,

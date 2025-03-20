@@ -8,3 +8,12 @@ Object.defineProperty(window, 'scrollBy', {
 window.alert = () => {}
 
 window.matchMedia = () => ({})
+
+// react-router-dom uses Remix router and since
+// Remix router is failing for some reason around the Request obj
+global['Request'] = jest.fn().mockImplementation(() => ({
+  signal: {
+    removeEventListener: () => {},
+    addEventListener: () => {},
+  },
+}))

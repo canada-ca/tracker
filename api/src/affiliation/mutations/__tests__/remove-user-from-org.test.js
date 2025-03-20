@@ -213,6 +213,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: admin._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: checkPermission({
                   i18n,
@@ -310,6 +311,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: admin._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
@@ -414,6 +416,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: admin._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
@@ -505,6 +508,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: admin._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: checkPermission({
                   i18n,
@@ -602,6 +606,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: admin._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
@@ -706,6 +711,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: admin._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
@@ -815,6 +821,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: admin._key,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: checkPermission({
                   i18n,
@@ -912,6 +919,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: admin._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
@@ -1016,6 +1024,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: admin._key,
+                request: { ip: '127.0.0.1' },
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
@@ -1125,6 +1134,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue(),
                 userRequired: jest.fn().mockReturnValue({
@@ -1205,6 +1215,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('user'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1287,6 +1298,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn().mockReturnValue({
@@ -1369,6 +1381,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1446,6 +1459,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('super_admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1524,6 +1538,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1597,6 +1612,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1675,6 +1691,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1753,6 +1770,7 @@ describe('given the removeUserFromOrg mutation', () => {
             collections: collectionNames,
             transaction: mockedTransaction,
             userKey: 123,
+            request: { ip: '127.0.0.1' },
             auth: {
               checkPermission: jest.fn().mockReturnValue('admin'),
               userRequired: jest.fn().mockReturnValue({
@@ -1835,6 +1853,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue(),
                 userRequired: jest.fn().mockReturnValue({
@@ -1915,6 +1934,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('user'),
                 userRequired: jest.fn().mockReturnValue({
@@ -1998,6 +2018,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn().mockReturnValue({
@@ -2081,6 +2102,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -2158,6 +2180,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('super_admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -2237,6 +2260,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -2312,6 +2336,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -2392,6 +2417,7 @@ describe('given the removeUserFromOrg mutation', () => {
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
+              request: { ip: '127.0.0.1' },
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn().mockReturnValue({
@@ -2472,6 +2498,7 @@ describe('given the removeUserFromOrg mutation', () => {
             collections: collectionNames,
             transaction: mockedTransaction,
             userKey: 123,
+            request: { ip: '127.0.0.1' },
             auth: {
               checkPermission: jest.fn().mockReturnValue('admin'),
               userRequired: jest.fn().mockReturnValue({

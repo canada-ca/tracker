@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from '../organizationDetails/OrganizationDomains'
@@ -16,7 +16,7 @@ import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
-  const history = useHistory()
+  const navigate = useNavigate()
   const tabNames = ['summary', 'dmarc_phases', 'domains']
   const defaultActiveTab = tabNames[0]
 
@@ -24,9 +24,9 @@ export default function OrganizationDetails() {
 
   useEffect(() => {
     if (!activeTab) {
-      history.replace(`/my-tracker/${defaultActiveTab}`)
+      navigate(`/my-tracker/${defaultActiveTab}`, { replace: true })
     }
-  }, [activeTab, history, defaultActiveTab])
+  }, [activeTab, navigate, defaultActiveTab])
 
   if (loading) {
     return (
@@ -43,7 +43,7 @@ export default function OrganizationDetails() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/my-tracker/${tab}`)
+      navigate(`/my-tracker/${tab}`, { replace: true })
     }
   }
 

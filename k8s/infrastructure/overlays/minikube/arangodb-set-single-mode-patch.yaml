@@ -5,7 +5,7 @@ metadata:
   namespace: db
 spec:
   metadata:
-  image: arangodb/arangodb:3.12.1
+  image: arangodb/arangodb:3.12.3
   environment: Development
   mode: Single
   tls:

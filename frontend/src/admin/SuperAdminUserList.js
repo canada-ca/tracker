@@ -66,8 +66,11 @@ export function SuperAdminUserList() {
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_OTHER, {
     refetchQueries: ['FindMyUsers'],
-    awaitRefetchQueries: true,
-
+    update(cache, { data: { closeAccountOther } }) {
+      if (closeAccountOther.result.__typename === 'CloseAccountResult') {
+        cache.evict({ id: cache.identify(closeAccountOther.result.user) })
+      }
+    },
     onError(error) {
       toast({
         title: t`Unable to close this account.`,
@@ -78,8 +81,8 @@ export function SuperAdminUserList() {
         position: 'top-left',
       })
     },
-    onCompleted({ closeAccount }) {
-      if (closeAccount.result.__typename === 'CloseAccountResult') {
+    onCompleted({ closeAccountOther }) {
+      if (closeAccountOther.result.__typename === 'CloseAccountResult') {
         toast({
           title: t`Account Closed Successfully`,
           description: t`Tracker account has been successfully closed.`,
@@ -89,10 +92,10 @@ export function SuperAdminUserList() {
           position: 'top-left',
         })
         closeAccountOnClose()
-      } else if (closeAccount.result.__typename === 'CloseAccountError') {
+      } else if (closeAccountOther.result.__typename === 'CloseAccountError') {
         toast({
           title: t`Unable to close the account.`,
-          description: closeAccount.result.description,
+          description: closeAccountOther.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -336,62 +339,6 @@ export function SuperAdminUserList() {
               </Flex>
               <AccordionPanel>{userAffiliations}</AccordionPanel>
             </Box>
-
-            <Modal isOpen={closeAccountIsOpen} onClose={closeAccountOnClose} motionPreset="slideInBottom">
-              <Formik
-                validateOnBlur={false}
-                initialValues={{
-                  matchEmail: '',
-                }}
-                initialTouched={{
-                  matchEmail: true,
-                }}
-                validationSchema={createValidationSchema(['matchEmail'], {
-                  matches: editUserRole.userName,
-                })}
-                onSubmit={async () => {
-                  await closeAccount({
-                    variables: { userId: editUserRole.userId },
-                  })
-                }}
-              >
-                {({ handleSubmit }) => (
-                  <form onSubmit={handleSubmit}>
-                    <ModalOverlay />
-                    <ModalContent pb={4}>
-                      <ModalHeader>
-                        <Trans>Close Account</Trans>
-                      </ModalHeader>
-                      <ModalCloseButton />
-                      <ModalBody>
-                        <Trans>
-                          This action CANNOT be reversed, are you sure you wish to to close the account{' '}
-                          {editUserRole.displayName}?
-                        </Trans>
-
-                        <Text mb="1rem">
-                          <Trans>
-                            Enter "{editUserRole.userName}" below to confirm removal. This field is case-sensitive.
-                          </Trans>
-                        </Text>
-
-                        <FormField name="matchEmail" label={t`User Email`} placeholder={editUserRole.userName} />
-                      </ModalBody>
-
-                      <ModalFooter>
-                        <Button variant="primaryOutline" mr="4" onClick={closeAccountOnClose}>
-                          <Trans>Cancel</Trans>
-                        </Button>
-
-                        <Button variant="primary" mr="4" type="submit" isLoading={loadingCloseAccount}>
-                          <Trans>Confirm</Trans>
-                        </Button>
-                      </ModalFooter>
-                    </ModalContent>
-                  </form>
-                )}
-              </Formik>
-            </Modal>
           </AccordionItem>
         )
       })
@@ -430,6 +377,61 @@ export function SuperAdminUserList() {
         isLoadingMore={isLoadingMore}
         totalRecords={totalCount}
       />
+      <Modal isOpen={closeAccountIsOpen} onClose={closeAccountOnClose} motionPreset="slideInBottom">
+        <Formik
+          validateOnBlur={false}
+          initialValues={{
+            matchEmail: '',
+          }}
+          initialTouched={{
+            matchEmail: true,
+          }}
+          validationSchema={createValidationSchema(['matchEmail'], {
+            matches: editUserRole.userName,
+          })}
+          onSubmit={async () => {
+            await closeAccount({
+              variables: { userId: editUserRole.userId },
+            })
+          }}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <ModalOverlay />
+              <ModalContent pb={4}>
+                <ModalHeader>
+                  <Trans>Close Account</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Trans>
+                    This action CANNOT be reversed, are you sure you wish to to close the account{' '}
+                    {editUserRole.displayName}?
+                  </Trans>
+
+                  <Text mb="1rem">
+                    <Trans>
+                      Enter "{editUserRole.userName}" below to confirm removal. This field is case-sensitive.
+                    </Trans>
+                  </Text>
+
+                  <FormField name="matchEmail" label={t`User Email`} placeholder={editUserRole.userName} />
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button variant="primaryOutline" mr="4" onClick={closeAccountOnClose}>
+                    <Trans>Cancel</Trans>
+                  </Button>
+
+                  <Button variant="primary" mr="4" type="submit" isLoading={loadingCloseAccount}>
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </form>
+          )}
+        </Formik>
+      </Modal>
     </Box>
   )
 }

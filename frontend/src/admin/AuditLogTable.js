@@ -140,7 +140,7 @@ export function AuditLogTable({ orgId = null }) {
                 return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
               }
               const resourceType = resourceFilters.find(({ value }) => target.resourceType.toUpperCase() === value)
-              action = actionFilters.find(({ value }) => action.toUpperCase() === value)
+              action = actionFilters.find(({ value }) => action?.toUpperCase() === value)
               if (reason === 'NONEXISTENT') {
                 reason = <Trans>This domain no longer exists</Trans>
               } else if (reason === 'WRONG_ORG') {
@@ -232,6 +232,7 @@ export function AuditLogTable({ orgId = null }) {
                     } else {
                       setActiveResourceFilters(activeResourceFilters.filter((tag) => tag !== value))
                     }
+                    resetToFirstPage()
                   }}
                 >
                   <Text mx="auto">{text}</Text>
@@ -263,6 +264,7 @@ export function AuditLogTable({ orgId = null }) {
                     } else {
                       setActiveActionFilters(activeActionFilters.filter((tag) => tag !== value))
                     }
+                    resetToFirstPage()
                   }}
                 >
                   <Text mx="auto">{text}</Text>
@@ -278,6 +280,7 @@ export function AuditLogTable({ orgId = null }) {
             onClick={() => {
               setActiveResourceFilters([])
               setActiveActionFilters([])
+              resetToFirstPage()
             }}
           >
             Clear

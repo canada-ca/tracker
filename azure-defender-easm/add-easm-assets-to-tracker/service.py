@@ -102,7 +102,7 @@ async def main():
             domains = [domain for domain in cursor]
             return len(domains) > 0
         except Exception as e:
-            logger.error(f"Error occured when checking if domain exists: {e}")
+            logger.error(f"Error occurred when checking if domain exists: {e}")
             return None
 
     # insert functions
@@ -131,7 +131,7 @@ async def main():
             logger.info(f"Successfully created domain: {domain}")
             return created_domain
         except Exception as e:
-            logger.error(f"Error occured when creating domain: {e}")
+            logger.error(f"Error occurred when creating domain: {e}")
             return None
 
     def create_claim(org_id, domain_id, domain_name, txn_col):
@@ -150,7 +150,7 @@ async def main():
             logger.info(f"Successfully created claim for domain: {domain_name}")
             return created_claim
         except Exception as e:
-            logger.error(f"Error occured when creating claim for {domain_name}", e)
+            logger.error(f"Error occurred when creating claim for {domain_name}", e)
             return None
 
     def log_activity(domain, org_key, txn_col):
@@ -185,7 +185,7 @@ async def main():
             logger.info(f"Successfully logged activity for domain: {domain}")
             return created_log
         except Exception as e:
-            logger.error(f"Error occured when logging activity for {domain}: {e}")
+            logger.error(f"Error occurred when logging activity for {domain}: {e}")
             return None
 
     # main logic
@@ -194,6 +194,7 @@ async def main():
             # check if domain exists in system
             domain_exists = get_domain_exists(domain)
             if domain_exists is None:
+                logger.error(f"Error occurred when checking if domain exists: {e}")
                 continue
             # if domain exists, skip
             elif domain_exists:

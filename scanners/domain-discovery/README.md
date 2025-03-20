@@ -12,7 +12,7 @@ pipenv run service
 ## Inputs and outputs
 
 When running the service subscribes to the topic specified with `SUBSCRIBE_TO`, which is `domains.*.discovery` by default.
-Publishing a message on that topic will trigger the service to run it's checks.
+Publishing a message on that topic will trigger the service to run its checks.
 
 ```
 nats pub domains.8017518.discovery '{"domain": "pensezcybersecurite.gc.ca", "domain_key": "8017518", "selectors": [], "orgId": "organizations/:key"}'

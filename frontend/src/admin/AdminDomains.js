@@ -27,7 +27,7 @@ import {
 import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
-import { number, string } from 'prop-types'
+import { bool, number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
 import { AdminDomainCard } from './AdminDomainCard'
@@ -47,8 +47,9 @@ import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
+import useSearchParam from '../utilities/useSearchParam'
 
-export function AdminDomains({ orgSlug, orgId }) {
+export function AdminDomains({ orgSlug, orgId, verified, permission }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -68,7 +69,10 @@ export function AdminDomains({ orgSlug, orgId }) {
     editingDomainId: '',
     editingDomainUrl: '',
   })
-  const [filters, setFilters] = useState([])
+  const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
+    name: 'domain-filters',
+    defaultValue: [],
+  })
 
   const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
   const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()
@@ -179,7 +183,8 @@ export function AdminDomains({ orgSlug, orgId }) {
     { value: t`INACTIVE`, text: t`Inactive` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
-    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
+    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
@@ -206,6 +211,7 @@ export function AdminDomains({ orgSlug, orgId }) {
               }),
             ).values(),
           ])
+          resetToFirstPage()
           resetForm()
         }}
       >
@@ -324,17 +330,19 @@ export function AdminDomains({ orgSlug, orgId }) {
             {index === 0 && <Divider borderBottomColor="gray.400" />}
             <Flex p="1" align="center" rounded="md" mb="1">
               <Stack direction="row" flexGrow="0" mr="2">
-                <IconButton
-                  data-testid={`remove-${index}`}
-                  onClick={() => {
-                    setSelectedRemoveProps({ domain, domainId, rcode })
-                    removeOnOpen()
-                  }}
-                  variant="danger"
-                  px="2"
-                  icon={<MinusIcon />}
-                  aria-label={'Remove ' + domain}
-                />
+                {(!verified || permission === 'SUPER_ADMIN' || rcode === 'NXDOMAIN') && (
+                  <IconButton
+                    data-testid={`remove-${index}`}
+                    onClick={() => {
+                      setSelectedRemoveProps({ domain, domainId, rcode })
+                      removeOnOpen()
+                    }}
+                    variant="danger"
+                    px="2"
+                    icon={<MinusIcon />}
+                    aria-label={'Remove ' + domain}
+                  />
+                )}
                 <IconButton
                   data-testid={`edit-${index}`}
                   variant="primary"
@@ -453,7 +461,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         />
       </Box>
       <Flex align="center" mb="2">
-        <FilterList filters={filters} setFilters={setFilters} />
+        <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls
@@ -592,6 +600,7 @@ export function AdminDomains({ orgSlug, orgId }) {
 AdminDomains.propTypes = {
   orgSlug: string.isRequired,
   orgId: string.isRequired,
+  verified: bool,
   domainsPerPage: number,
   permission: string,
 }

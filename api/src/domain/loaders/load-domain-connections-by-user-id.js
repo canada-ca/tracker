@@ -315,13 +315,6 @@ export const loadDomainConnectionsByUserId =
       }
     }
 
-    let sortString
-    if (typeof last !== 'undefined') {
-      sortString = aql`DESC`
-    } else {
-      sortString = aql`ASC`
-    }
-
     let domainFilters = aql``
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
@@ -400,6 +393,11 @@ export const loadDomainConnectionsByUserId =
             domainFilters = aql`
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
+          `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.wildcardEntry ${comparison} true
           `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`
@@ -503,9 +501,8 @@ export const loadDomainConnectionsByUserId =
       search = cleanseInput(search)
       domainQuery = aql`
         LET searchedDomains = (
-          FOR domain IN domains
+          FOR domain IN collectedDomains
             FILTER LOWER(domain.domain) LIKE LOWER(${search})
-            FILTER domain IN collectedDomains
             RETURN domain
         )
       `
@@ -536,14 +533,14 @@ export const loadDomainConnectionsByUserId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           ${hasNextPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           ${hasPreviousPageFilter}
-          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          LIMIT 1
           RETURN domain
       ) > 0 ? true : false)
 

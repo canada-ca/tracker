@@ -8,20 +8,6 @@ resources:
 - storage-classes.yaml
 - restrict-instance-metadata.yaml
 patchesStrategicMerge:
+  - arangodb-memory-limit-patch.yaml
   - arangodb-retain-storage-patch.yaml
   - ingress-gateway-tls-patch.yaml
-patchesJSON6902:
-- target:
-    group: install.istio.io
-    version: v1alpha1
-    kind: IstioOperator
-    name: istio-controlplane
-    namespace: istio-system
-  patch: |-
-    - op: add
-      path: /spec/components/ingressGateways/0/k8s/service/loadBalancerIP
-      value: 10.58.10.58
-    - op: add
-      path: /spec/components/ingressGateways/0/k8s/serviceAnnotations
-      value:
-        service.beta.kubernetes.io/azure-load-balancer-internal: "true"

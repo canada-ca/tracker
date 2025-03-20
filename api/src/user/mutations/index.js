@@ -1,5 +1,7 @@
 export * from './authenticate'
 export * from './close-account'
+export * from './complete-tour'
+export * from './dismiss-message'
 export * from './refresh-tokens'
 export * from './remove-phone-number'
 export * from './reset-password'

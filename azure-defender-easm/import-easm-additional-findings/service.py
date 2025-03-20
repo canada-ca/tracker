@@ -32,7 +32,7 @@ def get_all_domains():
     FOR domain IN domains
         FILTER domain.archived != True
         FILTER domain.rcode != "NXDOMAIN"
-        RETURN { "domain": domain.domain, "id": domain._id, "key": domain._key, "ignoredCves": domain.ignoredCves }
+        RETURN { "domain": domain.domain, "id": domain._id, "key": domain._key, "ignoredCves": domain.ignoredCves || [] }
     """
     cursor = db.aql.execute(query)
     return [domain for domain in cursor]
@@ -60,11 +60,12 @@ def remove_none_val_in_dict(dict):
 
 def update_domain_cve_detected(domain, web_components):
     cve_detected = False
+    ignored_cves = domain["ignoredCves"] if domain["ignoredCves"] else []
     for wc in web_components:
         non_ignored_cves = [
             cve
             for cve in wc["WebComponentCves"]
-            if cve["Cve"] not in domain["ignoredCves"]
+            if cve["Cve"] not in ignored_cves and cve["ConfidenceLevel"] == "high"
         ]
         if len(non_ignored_cves) > 0:
             cve_detected = True
@@ -77,6 +78,7 @@ def update_domain_cve_detected(domain, web_components):
 
 
 def main():
+    fetched_cves = {}
     try:
         domains = get_all_domains()
     except Exception as e:
@@ -87,7 +89,7 @@ def main():
     for domain in domains:
         logger.info(f"Processing domain {domain['domain']}")
         try:
-            web_components = get_web_components_by_asset(domain["domain"])
+            web_components = get_web_components_by_asset(domain["domain"], fetched_cves)
             additional_findings = get_additional_findings_by_asset(domain["domain"])
 
             insert_str = json.dumps(

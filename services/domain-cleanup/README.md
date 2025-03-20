@@ -31,7 +31,7 @@ DB_NAME=track_dmarc
 
 ### Local development
 
-The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have it's own .env file, and the value of the root password should align with the value of `DB_PASS` in the services `.env` file.
+The tests require a copy of [ArangoDB](https://www.arangodb.com/) to be running locally. ArangoDB should have its own .env file, and the value of the root password should align with the value of `DB_PASS` in the services `.env` file.
 
 ```bash
 # Write the arango test credentials into an env file:

@@ -37,6 +37,7 @@ import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import withSuperAdmin from '../app/withSuperAdmin'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+import useSearchParam from '../utilities/useSearchParam'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -47,7 +48,10 @@ export default function DomainsPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(50)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
-  const [filters, setFilters] = useState([])
+  const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
+    name: 'domain-filters',
+    defaultValue: [],
+  })
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -130,9 +134,10 @@ export default function DomainsPage() {
   const filterTagOptions = [
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
+    { value: `ARCHIVED`, text: t`Archived` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -209,6 +214,14 @@ export default function DomainsPage() {
     </LoadingMessage>
   ) : (
     <Box>
+      <DomainListFilters
+        className="filters"
+        filters={filters}
+        setFilters={setFilters}
+        resetToFirstPage={resetToFirstPage}
+        statusOptions={orderByOptions}
+        filterTagOptions={filterTagOptions}
+      />
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -228,8 +241,8 @@ export default function DomainsPage() {
             rcode,
             blocked,
             wildcardSibling,
+            wildcardEntry,
             webScanPending,
-            hasEntrustCertificate,
             userHasPermission,
             cveDetected,
           },
@@ -246,8 +259,8 @@ export default function DomainsPage() {
               rcode={rcode}
               blocked={blocked}
               wildcardSibling={wildcardSibling}
+              wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
-              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
               mb="3"
@@ -294,12 +307,12 @@ export default function DomainsPage() {
         <InfoBox title={t`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
         <InfoBox
-          title={t`WILDCARD`}
-          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+          title={t`WILDCARD SIBLING`}
+          info={t`Tag used to show domains have a wildcard resolver as a sibling.`}
         />
+        <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
         <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
-        <InfoBox title={t`ENTRUST`} info={t`Tag used to show domains that have an Entrust certificate.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -324,22 +337,18 @@ export default function DomainsPage() {
           totalRecords={totalCount}
         />
 
-        <Box className="filters">
-          <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
-              <Trans>Filters:</Trans>
-            </Text>
-            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-            {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
-            <FilterList filters={filters} setFilters={setFilters} />
-          </Flex>
-          <DomainListFilters
-            filters={filters}
-            setFilters={setFilters}
-            statusOptions={orderByOptions}
-            filterTagOptions={filterTagOptions}
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <AffiliationFilterSwitch
+            isAffiliated={isAffiliated}
+            setIsAffiliated={setIsAffiliated}
+            resetToFirstPage={resetToFirstPage}
           />
-        </Box>
+          {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
+          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+        </Flex>
 
         {domainList}
 

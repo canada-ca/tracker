@@ -4,7 +4,7 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter, Route } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
@@ -44,6 +44,21 @@ const mocks = [
   },
 ]
 
+const router = createMemoryRouter(
+  [
+    {
+      path: '/reset-password/:resetToken',
+      element: (
+        <AdminPanel orgSlug="test-org.slug" permission="ADMIN" orgId={rawOrgDomainListData.findOrganizationBySlug.id} />
+      ),
+    },
+  ],
+  {
+    initialEntries: ['/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe'],
+    initialIndex: 0,
+  },
+)
+
 describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
     const { getByText } = render(
@@ -51,17 +66,15 @@ describe('<AdminPanel />', () => {
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                <Route path="/admin">
-                  <TourProvider>
-                    <AdminPanel
-                      orgSlug="test-org.slug"
-                      permission="ADMIN"
-                      orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    />
-                  </TourProvider>
-                </Route>
-              </MemoryRouter>
+              <TourProvider>
+                <RouterProvider router={router}>
+                  <AdminPanel
+                    orgSlug="test-org.slug"
+                    permission="ADMIN"
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  />
+                </RouterProvider>
+              </TourProvider>
             </ChakraProvider>
           </I18nProvider>
         </UserVarProvider>

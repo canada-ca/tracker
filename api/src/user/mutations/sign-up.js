@@ -6,8 +6,9 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ms from 'ms'
+import { emailUpdateOptionsType } from '../objects/email-update-options'
 
-const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
+const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY, TRACKER_PRODUCTION } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -54,6 +55,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       transaction,
       uuidv4,
+      request: { ip },
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       notify: { sendAuthEmail },
@@ -67,6 +69,16 @@ export const signUp = new mutationWithClientMutationId({
     const confirmPassword = cleanseInput(args.confirmPassword)
     const signUpToken = cleanseInput(args.signUpToken)
     const rememberMe = args.rememberMe
+
+    const isProduction = TRACKER_PRODUCTION === 'true'
+    if (isProduction === false) {
+      console.warn(`User: ${userName} tried to sign up but did not meet requirements.`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`User is trying to register for a non-production environment.`),
+      }
+    }
 
     // Check to make sure password meets length requirement
     if (password.length < 12) {
@@ -106,6 +118,11 @@ export const signUp = new mutationWithClientMutationId({
     const refreshId = uuidv4()
     const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
+    // dynamically grabs email sub options
+    const emailUpdateOptions = Object.fromEntries(
+      Object.keys(emailUpdateOptionsType.getFields()).map((option) => [option, true]),
+    )
+
     // Create User Structure for insert
     const user = {
       displayName: displayName,
@@ -115,6 +132,7 @@ export const signUp = new mutationWithClientMutationId({
       emailValidated: false,
       insideUser: false,
       receiveUpdateEmails: true,
+      emailUpdateOptions,
       failedLoginAttempts: 0,
       tfaSendMethod: 'email',
       tfaCode: tfaCode,
@@ -237,6 +255,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       initiatedBy: {
         userName,
+        ipAddress: ip,
       },
       action: 'create',
       target: {

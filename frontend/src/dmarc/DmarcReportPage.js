@@ -16,7 +16,7 @@ import { LinkIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
-import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
@@ -30,11 +30,12 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { MonthSelect } from '../components/MonthSelect'
 import { NotificationBanner } from '../app/NotificationBanner'
+import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const fileName = `${domainSlug}_${period}-${year}`
-  const history = useHistory()
+  const navigate = useNavigate()
   const { i18n } = useLingui()
 
   useDocumentTitle(t`DMARC Report for ${domainSlug}`)
@@ -84,7 +85,7 @@ export default function DmarcReportPage() {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
-    history.replace(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
+    navigate(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`, { replace: true })
   }
 
   // Set DMARC bar graph Loading
@@ -662,6 +663,8 @@ export default function DmarcReportPage() {
           </Link>
         </Flex>
       </Box>
+
+      <DmarcReportOutageBanner />
 
       {graphDisplay}
 

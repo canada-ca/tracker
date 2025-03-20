@@ -1,7 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter, Route } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -95,11 +94,7 @@ describe('<AggregatedGuidanceSummary />', () => {
                 userName: null,
               })}
             >
-              <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                <Route path="/organizations/:orgSlug">
-                  <AggregatedGuidanceSummary orgSlug="tbs-sct-gc-ca" />
-                </Route>
-              </MemoryRouter>
+              <AggregatedGuidanceSummary orgSlug="tbs-sct-gc-ca" />
             </UserVarProvider>
           </MockedProvider>
         </I18nProvider>
@@ -132,11 +127,7 @@ describe('<AggregatedGuidanceSummary />', () => {
                 userName: null,
               })}
             >
-              <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                <Route path="/organizations/:orgSlug">
-                  <AggregatedGuidanceSummary orgSlug="tbs-sct-gc-ca" />
-                </Route>
-              </MemoryRouter>
+              <AggregatedGuidanceSummary orgSlug="tbs-sct-gc-ca" />
             </UserVarProvider>
           </MockedProvider>
         </I18nProvider>
@@ -181,11 +172,7 @@ describe('<AggregatedGuidanceSummary />', () => {
                 userName: null,
               })}
             >
-              <MemoryRouter initialEntries={['/organizations/tbs-sct-gc-ca']} initialIndex={0}>
-                <Route path="/organizations/:orgSlug">
-                  <AggregatedGuidanceSummary orgSlug="tbs-sct-gc-ca" />
-                </Route>
-              </MemoryRouter>
+              <AggregatedGuidanceSummary orgSlug="tbs-sct-gc-ca" />
             </UserVarProvider>
           </MockedProvider>
         </I18nProvider>

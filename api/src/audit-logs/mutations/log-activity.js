@@ -5,6 +5,7 @@ export const logActivity = async ({
   initiatedBy = {
     id: '',
     userName: '',
+    ipAddress: '', // IP address of user
     role: '', // permission level of user
     organization: '', // org affiliation of user
   },

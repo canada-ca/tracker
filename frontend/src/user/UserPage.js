@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
@@ -38,10 +38,12 @@ import { CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
 import { InsideUserSwitch } from './InsideUserSwitch'
 import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { EditableEmailUpdateOptions } from './EditableEmailUpdateOptions'
 
 export default function UserPage() {
   const toast = useToast()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { i18n } = useLingui()
   const { logout } = useUserVar()
 
@@ -67,7 +69,7 @@ export default function UserPage() {
           position: 'top-left',
         })
         closeAccountOnClose()
-        history.push('/')
+        navigate('/')
       } else if (closeAccount.result.__typename === 'CloseAccountError') {
         toast({
           title: i18n._(t`Unable to close the account.`),
@@ -126,6 +128,7 @@ export default function UserPage() {
     phoneValidated,
     insideUser,
     receiveUpdateEmails,
+    emailUpdateOptions,
   } = queryUserData?.userPage
 
   return (
@@ -155,8 +158,15 @@ export default function UserPage() {
             mb="8"
           />
 
+          <ABTestWrapper>
+            <ABTestVariant name="A">
+              <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
+            </ABTestVariant>
+            <ABTestVariant name="B">
+              <EditableEmailUpdateOptions emailUpdateOptions={emailUpdateOptions} />
+            </ABTestVariant>
+          </ABTestWrapper>
           <InsideUserSwitch insideUser={insideUser || false} />
-          <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
 
           <Flex mt="auto">
             <Button
@@ -168,7 +178,7 @@ export default function UserPage() {
               ml="auto"
               mb={2}
             >
-              <Trans> Close Account </Trans>
+              <Trans>Close Account</Trans>
             </Button>
           </Flex>
         </Box>

@@ -136,16 +136,18 @@ export const TopBanner = ({ initialLoading, ...props }) => {
               >
                 <Trans>Sign In</Trans>
               </Button>
-              <Button
-                className="create-account-button"
-                variant="primaryWhite"
-                as={RouteLink}
-                to="/create-user"
-                px="3"
-                display={{ base: 'none', md: 'inline' }}
-              >
-                <Trans>Create Account</Trans>
-              </Button>
+              {window.env?.APP_IS_PRODUCTION === true && (
+                <Button
+                  className="create-account-button"
+                  variant="primaryWhite"
+                  as={RouteLink}
+                  to="/create-user"
+                  px="3"
+                  display={{ base: 'none', md: 'inline' }}
+                >
+                  <Trans>Create Account</Trans>
+                </Button>
+              )}
             </>
           )}
         </Flex>

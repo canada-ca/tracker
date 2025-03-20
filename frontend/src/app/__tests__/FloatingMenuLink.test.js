@@ -1,10 +1,9 @@
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MemoryRouter, Route } from 'react-router-dom'
-import { fireEvent } from '@testing-library/dom'
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
@@ -26,9 +25,7 @@ describe('<FloatingMenuLink>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
@@ -44,31 +41,31 @@ describe('<FloatingMenuLink>', () => {
 
   describe('when the link is clicked', () => {
     it('redirects', async () => {
-      let wLocation
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/sign-in',
+            element: <div>Sign in page</div>,
+          },
+          {
+            path: '/',
+            element: <FloatingMenuLink to="/sign-in" text="Sign In" />,
+          },
+        ],
+        {
+          initialEntries: ['/'],
+          initialIndex: 0,
+        },
+      )
 
       const { getByText } = render(
         <MockedProvider>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <MemoryRouter initialEntries={['/']}>
-              <I18nProvider i18n={i18n}>
-                <ChakraProvider theme={theme}>
-                  <FloatingMenuLink to="/sign-in" text="Sign In" />
-                  <Route
-                    path="*"
-                    render={({ _history, location }) => {
-                      wLocation = location
-                      return null
-                    }}
-                  />
-                </ChakraProvider>
-              </I18nProvider>
-            </MemoryRouter>
+          <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+            <I18nProvider i18n={i18n}>
+              <ChakraProvider theme={theme}>
+                <RouterProvider router={router} />
+              </ChakraProvider>
+            </I18nProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -76,7 +73,7 @@ describe('<FloatingMenuLink>', () => {
       fireEvent.click(signInLink)
 
       await waitFor(() => {
-        expect(wLocation.pathname).toBe('/sign-in')
+        expect(router.state.location.pathname).toBe('/sign-in')
       })
     })
   })
