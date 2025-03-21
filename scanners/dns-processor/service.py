@@ -427,7 +427,7 @@ async def run():
         "durable": "dns_processor",
         "config": ConsumerConfig(
             ack_policy=AckPolicy.EXPLICIT,
-            max_deliver=1,
+            max_deliver=-1,
             max_waiting=100_000,
             ack_wait=90,
         ),
