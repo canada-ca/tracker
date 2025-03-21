@@ -407,10 +407,12 @@ async def run():
         "name": "SCANS",
         "subjects": [
             "scans.requests",
+            "scans.requests_priority",
             "scans.discovery",
             "scans.add_domain_to_easm",
             "scans.dns_scanner_results",
             "scans.dns_processor_results",
+            "scans.dns_processor_results_priority",
             "scans.web_scanner_results",
             "scans.web_processor_results",
         ],
@@ -460,10 +462,15 @@ async def run():
             for scan_data in scan_data_array:
                 logger.debug(f"Publishing results: {scan_data}")
                 try:
+                    original_headers = original_msg.headers
+                    subject = "scans.dns_processor_results"
+                    if original_headers.get("priority") == "high":
+                        subject = "scans.dns_processor_results_priority"
                     await js.publish(
                         stream="SCANS",
-                        subject="scans.dns_processor_results",
+                        subject=subject,
                         payload=json.dumps(scan_data).encode(),
+                        headers=original_headers,
                     )
                 except TimeoutError as e:
                     logger.error(
