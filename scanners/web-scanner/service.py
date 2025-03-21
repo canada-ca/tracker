@@ -451,7 +451,7 @@ async def scan_service():
                         f"Error while releasing semaphore for received message: {msg}: {e}"
                     )
                 #  Unable to acquire slot, requeue (Nak) message with delay
-                await msg.nak(delay=10)
+                await msg.nak(delay=3)
                 continue
 
             try:
