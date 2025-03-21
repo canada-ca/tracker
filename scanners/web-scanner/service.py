@@ -377,6 +377,7 @@ async def scan_service():
 
     with ThreadPoolExecutor() as executor:
         # Only check priority message once every second
+        # (to help prevent starvation from large blocks of the same IP address in the main queue)
         time_to_check_priority = time.time() + 1
         while True:
             if context.should_exit_time:
