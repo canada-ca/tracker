@@ -376,9 +376,9 @@ async def scan_service():
     logger.debug(f"Initial semaphore count: {sem.available()}")
 
     with ThreadPoolExecutor() as executor:
-        # Only check priority message once every second
+        # Only check priority message every 0.5 seconds
         # (to help prevent starvation from large blocks of the same IP address in the main queue)
-        time_to_check_priority = time.time() + 1
+        time_to_check_priority = time.time() + 0.5
         while True:
             if context.should_exit_time:
                 break
@@ -399,10 +399,10 @@ async def scan_service():
 
             msg = None
 
-            # Check for priority messages first (only once every second)
+            # Check for priority messages first
             now = time.time()
             if now > time_to_check_priority:
-                time_to_check_priority = now + 3
+                time_to_check_priority = now + 0.5
                 try:
                     logger.debug("Fetching priority message...")
                     msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
