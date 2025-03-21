@@ -376,6 +376,8 @@ async def scan_service():
     logger.debug(f"Initial semaphore count: {sem.available()}")
 
     with ThreadPoolExecutor() as executor:
+        # Only check priority message once every second
+        time_to_check_priority = time.time() + 1
         while True:
             if context.should_exit_time:
                 break
@@ -394,15 +396,20 @@ async def scan_service():
                 logger.error("Connection to NATS is closed.")
                 break
 
-            # Check for priority messages first
-            try:
-                logger.debug("Fetching priority message...")
-                msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
-                msg = msgs[0]
-                logger.debug(f"Received priority message: {msg}")
-            except NatsTimeoutError:
-                msg = None
-                logger.debug("No priority messages available...")
+            msg = None
+
+            # Check for priority messages first (only once every second)
+            now = time.time()
+            if now > time_to_check_priority:
+                time_to_check_priority = now + 3
+                try:
+                    logger.debug("Fetching priority message...")
+                    msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
+                    msg = msgs[0]
+                    logger.debug(f"Received priority message: {msg}")
+                except NatsTimeoutError:
+                    msg = None
+                    logger.debug("No priority messages available...")
 
             if not msg:
                 try:
