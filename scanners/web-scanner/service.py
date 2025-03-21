@@ -286,7 +286,7 @@ async def scan_service():
         "durable": "web_scanner",
         "config": ConsumerConfig(
             ack_policy=AckPolicy.EXPLICIT,
-            max_deliver=1,
+            max_deliver=-1,
             max_waiting=100_000,
             ack_wait=90,
         ),
@@ -297,7 +297,7 @@ async def scan_service():
         "durable": "web_scanner_priority",
         "config": ConsumerConfig(
             ack_policy=AckPolicy.EXPLICIT,
-            max_deliver=1,
+            max_deliver=-1,
             max_waiting=100_000,
             ack_wait=90,
         ),
