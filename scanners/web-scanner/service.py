@@ -94,6 +94,7 @@ def scan_web_and_catch(domain, ip_address):
 
 
 def run_scan(msg):
+    start_time = time.time()
     subject = msg.subject
     reply = msg.reply
     data = msg.data.decode()
@@ -108,6 +109,12 @@ def run_scan(msg):
     web_scan_key = payload.get("web_scan_key")
 
     scan_results = scan_web_and_catch(domain, ip_address)
+
+    end_time = time.time()
+    # Truncate to 2 decimal places for duration
+    duration_seconds = round(end_time - start_time, 2)
+
+    scan_results["duration"] = duration_seconds
 
     logger.info(
         f"Web results for '{domain}' at IP address '{str(ip_address)}': {json.dumps(scan_results)}"
