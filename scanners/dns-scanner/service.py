@@ -67,6 +67,7 @@ def to_json(msg):
 
 
 def run_scan(msg):
+    start_time = time.monotonic()
     subject = msg.subject
     reply = msg.reply
     data = msg.data.decode()
@@ -126,6 +127,12 @@ def run_scan(msg):
             "mx": {"error": "missing"},
             "dkim": {"error": "missing"},
         }
+
+    end_time = time.monotonic()
+    # Truncate to 2 decimal places for duration
+    duration_seconds = round(end_time - start_time, 2)
+
+    scan_results["duration_seconds"] = duration_seconds
 
     formatted_scan_data = {
         "results": scan_results,
