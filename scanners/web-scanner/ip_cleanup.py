@@ -73,7 +73,7 @@ async def cleanup_stale_slots(kv: KeyValue):
     try:
         keys = await kv.keys()
         now = int(time.time())
-        stale_threshold = 60  # Clean up slots older than 60 seconds
+        stale_threshold = 90  # Clean up slots older than 90 seconds
 
         for key in keys:
             try:
