@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import traceback
 
@@ -271,6 +272,8 @@ async def run():
     sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
 
     with ThreadPoolExecutor() as executor:
+        # Only check priority message every 0.5 seconds
+        time_to_check_priority = time.time() + 0.5
         while True:
             if context.should_exit:
                 break
@@ -286,15 +289,20 @@ async def run():
                 logger.error("Connection to NATS is closed.")
                 break
 
+            msg = None
+
             # Check for priority messages first
-            try:
-                logger.debug("Fetching priority message...")
-                msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
-                msg = msgs[0]
-                logger.debug(f"Received priority message: {msg}")
-            except NatsTimeoutError:
-                msg = None
-                logger.debug("No priority messages available...")
+            if time.time() > time_to_check_priority:
+                try:
+                    logger.debug("Fetching priority message...")
+                    msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
+                    msg = msgs[0]
+                    logger.debug(f"Received priority message: {msg}")
+                except NatsTimeoutError:
+                    msg = None
+                    logger.debug("No priority messages available...")
+                finally:
+                    time_to_check_priority = time.time() + 0.5
 
             if not msg:
                 try:
