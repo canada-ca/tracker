@@ -400,9 +400,7 @@ async def scan_service():
             msg = None
 
             # Check for priority messages first
-            now = time.time()
-            if now > time_to_check_priority:
-                time_to_check_priority = now + 0.5
+            if time.time() > time_to_check_priority:
                 try:
                     logger.debug("Fetching priority message...")
                     msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
@@ -411,6 +409,8 @@ async def scan_service():
                 except NatsTimeoutError:
                     msg = None
                     logger.debug("No priority messages available...")
+                finally:
+                    time_to_check_priority = time.time() + 0.5
 
             if not msg:
                 try:
