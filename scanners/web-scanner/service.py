@@ -114,7 +114,7 @@ def run_scan(msg):
     # Truncate to 2 decimal places for duration
     duration_seconds = round(end_time - start_time, 2)
 
-    scan_results["duration"] = duration_seconds
+    scan_results["duration_seconds"] = duration_seconds
 
     logger.info(
         f"Web results for '{domain}' at IP address '{str(ip_address)}': {json.dumps(scan_results)}"
@@ -478,7 +478,9 @@ async def scan_service():
         # Wait for all tasks to finish before shutting down
         while True:
             if ready_to_exit():
+                logger.debug("All tasks finished, or forced exit")
                 break
+            logger.debug("Waiting for all tasks to finish...")
             await asyncio.sleep(1)
 
     logger.info("Service is shutting down...")
