@@ -243,8 +243,8 @@ async def scan_service():
         logger.info("Re-subscribed to NATS...")
 
     def ready_to_exit():
-        # Force exit after 60 seconds
-        force_exit_seconds = 60
+        # Force exit after 90 seconds
+        force_exit_seconds = 90
         if time.time() - context.should_exit_time > force_exit_seconds:
             logger.info(f"Forcing exit after {force_exit_seconds} seconds...")
             return True
