@@ -94,7 +94,7 @@ def scan_web_and_catch(domain, ip_address):
 
 
 def run_scan(msg):
-    start_time = time.time()
+    start_time = time.monotonic()
     subject = msg.subject
     reply = msg.reply
     data = msg.data.decode()
@@ -110,7 +110,7 @@ def run_scan(msg):
 
     scan_results = scan_web_and_catch(domain, ip_address)
 
-    end_time = time.time()
+    end_time = time.monotonic()
     # Truncate to 2 decimal places for duration
     duration_seconds = round(end_time - start_time, 2)
 
@@ -245,7 +245,7 @@ async def scan_service():
     def ready_to_exit():
         # Force exit after 90 seconds
         force_exit_seconds = 90
-        if time.time() - context.should_exit_time > force_exit_seconds:
+        if time.monotonic() - context.should_exit_time > force_exit_seconds:
             logger.info(f"Forcing exit after {force_exit_seconds} seconds...")
             return True
         # Wait for all tasks to finish
@@ -317,7 +317,7 @@ async def scan_service():
         if context.should_exit_time:
             return
         logger.info(f"Got signal {sig_name}: exit")
-        context.should_exit_time = time.time()
+        context.should_exit_time = time.monotonic()
 
     for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
@@ -385,7 +385,7 @@ async def scan_service():
     with ThreadPoolExecutor() as executor:
         # Only check priority message every 0.5 seconds
         # (to help prevent starvation from large blocks of the same IP address in the main queue)
-        time_to_check_priority = time.time() + 0.5
+        time_to_check_priority = time.monotonic() + 0.5
         while True:
             if context.should_exit_time:
                 break
@@ -407,7 +407,7 @@ async def scan_service():
             msg = None
 
             # Check for priority messages first
-            if time.time() > time_to_check_priority:
+            if time.monotonic() > time_to_check_priority:
                 try:
                     logger.debug("Fetching priority message...")
                     msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
@@ -417,7 +417,7 @@ async def scan_service():
                     msg = None
                     logger.debug("No priority messages available...")
                 finally:
-                    time_to_check_priority = time.time() + 0.5
+                    time_to_check_priority = time.monotonic() + 0.5
 
             if not msg:
                 try:

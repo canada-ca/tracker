@@ -280,7 +280,7 @@ async def run():
 
     with ThreadPoolExecutor() as executor:
         # Only check priority message every 0.5 seconds
-        time_to_check_priority = time.time() + 0.5
+        time_to_check_priority = time.monotonic() + 0.5
         while True:
             if context.should_exit:
                 break
@@ -299,7 +299,7 @@ async def run():
             msg = None
 
             # Check for priority messages first
-            if time.time() > time_to_check_priority:
+            if time.monotonic() > time_to_check_priority:
                 try:
                     logger.debug("Fetching priority message...")
                     msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
@@ -309,7 +309,7 @@ async def run():
                     msg = None
                     logger.debug("No priority messages available...")
                 finally:
-                    time_to_check_priority = time.time() + 0.5
+                    time_to_check_priority = time.monotonic() + 0.5
 
             if not msg:
                 try:

@@ -238,6 +238,7 @@ def scan_domain(domain, dkim_selectors=None):
         # Run DKIM scan
         dkim_start_time = time.time()
         logger.info(f"Starting DKIM scanner for '{domain}'")
+        dkim_start_time = time.monotonic()
         dkim_scanner = DKIMScanner(domain, dkim_selectors)
         scan_result.dkim = dkim_scanner.run()
         logger.info(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
