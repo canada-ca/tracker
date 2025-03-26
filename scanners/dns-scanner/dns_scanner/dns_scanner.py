@@ -89,7 +89,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                     ):
                         result["wildcard_entry"] = True
                 except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
-                    logger.error(
+                    logger.info(
                         f"Error checking for wildcard status (MX record check) on {domain}: {e}"
                     )
                 except Exception as e:
@@ -107,7 +107,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                     result["wildcard_entry"] = True
 
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout) as e:
-        logger.error(f"Error checking for wildcard status on {domain}: {e}")
+        logger.info(f"Error checking for wildcard status on {domain}: {e}")
     except Exception as e:
         logger.error(f"Unknown error checking for wildcard status on {domain}: {e}")
 
@@ -208,7 +208,7 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Run DMARC scan
     dmarc_start_time = time.monotonic()
-    logger.info(f"Starting DMARC scanner for '{domain}'")
+    logger.debug(f"Starting DMARC scanner for '{domain}'")
     dmarc_scanner = DMARCScanner(domain)
     dmarc_scan_result = dmarc_scanner.run()
     scan_result.base_domain = dmarc_scan_result.get("base_domain", "")
@@ -216,7 +216,7 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result.mx_records = dmarc_scan_result.get("mx", {})
     scan_result.spf = dmarc_scan_result.get("spf", {})
     scan_result.dmarc = dmarc_scan_result.get("dmarc", {})
-    logger.info(f"DMARC scan elapsed time: {time.monotonic() - dmarc_start_time}")
+    logger.debug(f"DMARC scan elapsed time: {time.monotonic() - dmarc_start_time}")
 
     # If no MX records are found (with warnings), but there are CNAME records, check the CNAME target for MX records
     if (
@@ -236,12 +236,11 @@ def scan_domain(domain, dkim_selectors=None):
 
     try:
         # Run DKIM scan
-        dkim_start_time = time.time()
-        logger.info(f"Starting DKIM scanner for '{domain}'")
         dkim_start_time = time.monotonic()
+        logger.debug(f"Starting DKIM scanner for '{domain}'")
         dkim_scanner = DKIMScanner(domain, dkim_selectors)
         scan_result.dkim = dkim_scanner.run()
-        logger.info(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
+        logger.debug(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
     except TimeoutError:
         print("TIMEOUT")
 
