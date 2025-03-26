@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: summaries
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:master-b82fda2-1742496604 # {"$imagepolicy": "flux-system:summaries"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:master-aafcd60-1743013356 # {"$imagepolicy": "flux-system:summaries"}
           env:
             - name: DB_USER
               valueFrom:
