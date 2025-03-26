@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   envoy: # proxies localhost:3000 to containers based on rules in config
-    image: envoyproxy/envoy-alpine-dev
+    image: envoyproxy/envoy-alpine:v1.21.6
     network_mode: "host"
     entrypoint: envoy
     command: ["-c", "/etc/envoy-dev.yaml", "--service-cluster", "envoy"]
