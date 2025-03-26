@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
 from concurrent.futures import ThreadPoolExecutor
 
+from nats.aio.msg import Msg
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
 from nats.js.errors import KeyWrongLastSequenceError, KeyNotFoundError
@@ -57,31 +58,16 @@ SERVERS = SERVER_LIST.split(",")
 SCAN_THREAD_COUNT = int(os.getenv("SCAN_THREAD_COUNT", 1))
 MAX_SLOTS_PER_IP = int(os.getenv("MAX_SLOTS_PER_IP", 2))
 
+TASK_QUEUE = asyncio.Queue()
+SEMAPHORE = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
+EXECUTOR = ThreadPoolExecutor(max_workers=SCAN_THREAD_COUNT)
+SHUTDOWN_EVENT = asyncio.Event()
+
 instance_id = str(uuid.uuid4())
 
+running_tasks = set()
+
 logger.info(f"Starting web scanner service with instance ID: {instance_id}")
-
-
-class BoundedSemaphoreWithCount(asyncio.BoundedSemaphore):
-    def __init__(self, initial):
-        super().__init__(initial)
-        self._count = initial
-
-    async def acquire(self):
-        result = await super().acquire()
-        if result:
-            self._count -= 1
-            logger.debug(f"Acquired slot, count: {self._count}")
-        return result
-
-    def release(self):
-        super().release()
-        self._count += 1
-        logger.debug(f"Released slot, count: {self._count}")
-
-    def available(self):
-        # Number of available slots
-        return self._count
 
 
 def scan_web_and_catch(domain, ip_address):
@@ -242,19 +228,163 @@ async def scan_service():
         context.leaders_kv = await js.create_key_value(bucket="LEADERS")
         logger.info("Re-subscribed to NATS...")
 
-    def ready_to_exit():
-        # Force exit after 90 seconds
-        force_exit_seconds = 90
-        if time.monotonic() - context.should_exit_time > force_exit_seconds:
-            logger.info(f"Forcing exit after {force_exit_seconds} seconds...")
-            return True
-        # Wait for all tasks to finish
-        if sem.available() < SCAN_THREAD_COUNT:
-            logger.info(
-                f"Waiting for all tasks to finish...: sem={sem.available()} < SCAN_THREAD_COUNT={SCAN_THREAD_COUNT}"
-            )
-            return False
-        return True
+    async def work_consumer():
+        while not SHUTDOWN_EVENT.is_set():
+            try:
+                msg: Msg = await asyncio.wait_for(TASK_QUEUE.get(), timeout=1)
+            except asyncio.TimeoutError:
+                continue  # No tasks available. Check SHUTDOWN_EVENT and try again
+
+            task_success = False
+            task_cancelled = False
+
+            try:
+                async with SEMAPHORE:
+                    task = loop.run_in_executor(EXECUTOR, run_scan, msg)
+                    running_tasks.add(task)
+                    result = await task
+                    if isinstance(result, Exception):
+                        logger.error(
+                            f"Uncaught scan error for received message: {msg}: {result}"
+                        )
+                        running_tasks.discard(task)
+                        # Attempt to scan again
+                        task = loop.run_in_executor(EXECUTOR, run_scan, msg)
+                        running_tasks.add(task)
+                        result = await task
+                        if isinstance(result, Exception):
+                            logger.error(
+                                f"Uncaught scan error for received message after retry. Terminating message: {msg}: {result}"
+                            )
+                            running_tasks.discard(task)
+                            await msg.term()
+                            continue
+
+                    scan_data = result
+                    try:
+                        original_headers = msg.headers
+                        await js.publish(
+                            stream="SCANS",
+                            subject="scans.web_scanner_results",
+                            payload=json.dumps(scan_data).encode(),
+                            headers=original_headers,
+                        )
+                    except TimeoutError as e:
+                        logger.error(
+                            f"Timeout while publishing results: {scan_data}: for received message: {msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
+                        )
+                        continue
+
+                    task_success = True
+
+            except asyncio.CancelledError:
+                logger.error("Task cancelled...")
+                task_cancelled = True
+                continue
+            except Exception as e:
+                logger.error(f"Uncaught error while processing message: {msg}: {e}")
+            finally:
+                if task_cancelled:
+                    logger.error(
+                        "Task was cancelled, msg and IP slot cannot be cleaned up"
+                    )
+                else:
+                    try:
+                        if task_success:
+                            logger.debug(f"Acknowledging message: {msg}")
+                            await msg.ack()
+                    except Exception as e:
+                        logger.error(
+                            f"Error while acknowledging message for received message: {msg}: {e}"
+                        )
+
+                    try:
+                        ip_address = json.loads(msg.data).get("ip_address")
+                        await release_ip_slot(context.ip_kv, ip_address)
+                    except Exception as e:
+                        logger.error(
+                            f"Error while releasing IP slot for received message: {msg}: {e}"
+                        )
+
+                running_tasks.discard(task)
+                TASK_QUEUE.task_done()
+
+    async def work_producer():
+        # Only check priority message every 0.5 seconds
+        # (to help prevent starvation from large blocks of the same IP address in the main queue)
+        time_to_check_priority = time.monotonic() + 0.5
+
+        while not SHUTDOWN_EVENT.is_set():
+            # Only get new tasks if there are available slots in the semaphore (i.e. not all threads are busy)
+            async with SEMAPHORE:
+                msg = None
+
+                # Check for priority messages first
+                if time.monotonic() > time_to_check_priority:
+                    try:
+                        logger.debug("Fetching priority message...")
+                        msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
+                        msg = msgs[0]
+                        logger.debug(f"Received priority message: {msg}")
+                    except NatsTimeoutError:
+                        msg = None
+                        logger.debug("No priority messages available...")
+                    finally:
+                        time_to_check_priority = time.monotonic() + 0.5
+
+                if not msg:
+                    try:
+                        logger.debug("Fetching message...")
+                        msgs = await context.sub.fetch(batch=1, timeout=1)
+                        msg = msgs[0]
+                        logger.debug(f"Received message: {msg}")
+                    except NatsTimeoutError:
+                        logger.debug("No messages available...")
+                        continue
+
+                ip = json.loads(msg.data).get("ip_address")
+                if not ip:
+                    logger.error(f"Invalid IP address in message: {msg}")
+                    await msg.ack()
+                    continue
+
+                if not await try_acquire_ip_slot(context.ip_kv, ip):
+                    logger.debug(
+                        f"Unable to acquire slot for IP address: {ip}, requeuing..."
+                    )
+                    #  Unable to acquire slot, requeue (Nak) message with delay
+                    await msg.nak(delay=3)
+                    continue
+
+                try:
+                    await TASK_QUEUE.put(msg)
+                except Exception as e:
+                    logger.error(f"Error while queueing scans: {e}")
+
+    async def shutdown():
+        logger.info("Shutting down...")
+        SHUTDOWN_EVENT.set()
+
+        # Patiently wait for all tasks to finish (up to 90 seconds)
+        try:
+            await asyncio.wait_for(asyncio.gather(*running_tasks), timeout=3)
+        except asyncio.TimeoutError:
+            logger.error("Timeout waiting for tasks to finish...")
+
+        await nc.flush()
+        logger.info("Flushed NATS connection...")
+        await nc.close()
+        logger.info("Closed NATS connection...")
+
+    def ask_exit(sig_name):
+        if context.should_exit_time:
+            return
+        logger.info(f"Got signal {sig_name}: exit")
+        context.should_exit_time = time.time()
+        loop.create_task(shutdown())
+
+    for signal_name in {"SIGINT", "SIGTERM"}:
+        loop.add_signal_handler(getattr(signal, signal_name), ask_exit, signal_name)
 
     nc = await nats.connect(
         error_cb=error_cb,
@@ -295,7 +425,7 @@ async def scan_service():
             ack_policy=AckPolicy.EXPLICIT,
             max_deliver=-1,
             max_waiting=100_000,
-            ack_wait=90,
+            ack_wait=900,
         ),
     }
     priority_pull_subscribe_options = {
@@ -306,189 +436,22 @@ async def scan_service():
             ack_policy=AckPolicy.EXPLICIT,
             max_deliver=-1,
             max_waiting=100_000,
-            ack_wait=90,
+            ack_wait=900,
         ),
     }
 
     context.sub = await js.pull_subscribe(**pull_subscribe_options)
     context.priority_sub = await js.pull_subscribe(**priority_pull_subscribe_options)
 
-    async def ask_exit(sig_name):
-        if context.should_exit_time:
-            return
-        logger.info(f"Got signal {sig_name}: exit")
-        context.should_exit_time = time.monotonic()
-
-    for signal_name in {"SIGINT", "SIGTERM"}:
-        loop.add_signal_handler(
-            getattr(signal, signal_name),
-            lambda: asyncio.create_task(ask_exit(signal_name)),
-        )
-
     asyncio.create_task(leader_election_service(js, instance_id))
 
-    async def handle_finished_scan(fut, original_msg, semaphore):
-        try:
-            await fut
-            res = fut.result()
-            if isinstance(res, Exception):
-                logger.error(
-                    f"Uncaught scan error for received message: {original_msg}: {res}"
-                )
-                return
+    workers = [asyncio.create_task(work_consumer()) for _ in range(SCAN_THREAD_COUNT)]
+    producer = asyncio.create_task(work_producer())
 
-            scan_data = res
-            try:
-                original_headers = original_msg.headers
-                await js.publish(
-                    stream="SCANS",
-                    subject="scans.web_scanner_results",
-                    payload=json.dumps(scan_data).encode(),
-                    headers=original_headers,
-                )
-            except TimeoutError as e:
-                logger.error(
-                    f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
-                )
-                return
-
-            try:
-                logger.debug(f"Acknowledging message: {original_msg}")
-                await original_msg.ack()
-            except Exception as e:
-                logger.error(
-                    f"Error while acknowledging message for received message: {original_msg}: {e}"
-                )
-        finally:
-            # Ensure IP slot is released before releasing semaphore. NATS connection may be closed after releasing semaphore.
-            try:
-                logger.debug(f"Releasing IP slot for message: {original_msg}")
-                await release_ip_slot(
-                    context.ip_kv, json.loads(original_msg.data).get("ip_address")
-                )
-            except Exception as e:
-                logger.error(
-                    f"Error while releasing IP slot for received message: {original_msg}: {e}"
-                )
-            try:
-                logger.debug(f"Releasing semaphore for message: {original_msg}")
-                semaphore.release()
-            except Exception as e:
-                logger.error(
-                    f"Error while releasing semaphore for received message: {original_msg}: {e}"
-                )
-
-    sem = BoundedSemaphoreWithCount(SCAN_THREAD_COUNT)
-
-    logger.debug(f"Initial semaphore count: {sem.available()}")
-
-    with ThreadPoolExecutor() as executor:
-        # Only check priority message every 0.5 seconds
-        # (to help prevent starvation from large blocks of the same IP address in the main queue)
-        time_to_check_priority = time.monotonic() + 0.5
-        while True:
-            if context.should_exit_time:
-                break
-
-            if nc.is_closed:
-                logger.error("Connection to NATS is closed.")
-                break
-
-            await sem.acquire()
-
-            if context.should_exit_time:
-                sem.release()
-                break
-
-            if nc.is_closed:
-                logger.error("Connection to NATS is closed.")
-                break
-
-            msg = None
-
-            # Check for priority messages first
-            if time.monotonic() > time_to_check_priority:
-                try:
-                    logger.debug("Fetching priority message...")
-                    msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
-                    msg = msgs[0]
-                    logger.debug(f"Received priority message: {msg}")
-                except NatsTimeoutError:
-                    msg = None
-                    logger.debug("No priority messages available...")
-                finally:
-                    time_to_check_priority = time.monotonic() + 0.5
-
-            if not msg:
-                try:
-                    logger.debug("Fetching message...")
-                    msgs = await context.sub.fetch(batch=1, timeout=1)
-                    msg = msgs[0]
-                    logger.debug(f"Received message: {msg}")
-                except NatsTimeoutError:
-                    logger.debug("No messages available...")
-                    try:
-                        sem.release()
-                    except Exception as e:
-                        logger.error(
-                            f"Error while releasing semaphore for received message: {msg}: {e}"
-                        )
-                    continue
-
-            ip = json.loads(msg.data).get("ip_address")
-            if not ip:
-                logger.error(f"Invalid IP address in message: {msg}")
-                try:
-                    sem.release()
-                except Exception as e:
-                    logger.error(
-                        f"Error while releasing semaphore for received message: {msg}: {e}"
-                    )
-                await msg.ack()
-                continue
-
-            if not await try_acquire_ip_slot(context.ip_kv, ip):
-                logger.debug(
-                    f"Unable to acquire slot for IP address: {ip}, requeuing..."
-                )
-                try:
-                    sem.release()
-                except Exception as e:
-                    logger.error(
-                        f"Error while releasing semaphore for received message: {msg}: {e}"
-                    )
-                #  Unable to acquire slot, requeue (Nak) message with delay
-                await msg.nak(delay=3)
-                continue
-
-            try:
-                future = loop.run_in_executor(executor, run_scan, msg)
-                loop.create_task(
-                    handle_finished_scan(fut=future, original_msg=msg, semaphore=sem)
-                )
-            except Exception as e:
-                logger.error(f"Error while queueing scans, releasing semaphore: {e}")
-                try:
-                    await release_ip_slot(context.ip_kv, ip)
-                    sem.release()
-                except Exception as e:
-                    logger.error(
-                        f"Error while releasing semaphore for received message: {msg}: {e}"
-                    )
-        # Wait for all tasks to finish before shutting down
-        while True:
-            if ready_to_exit():
-                logger.debug("All tasks finished, or forced exit")
-                break
-            logger.debug("Waiting for all tasks to finish...")
-            await asyncio.sleep(1)
-
-    logger.info("Service is shutting down...")
-
-    await nc.flush()
-    logger.info("Flushed NATS connection...")
-    await nc.close()
-    logger.info("Closed NATS connection...")
+    try:
+        await asyncio.gather(*workers, producer, return_exceptions=True)
+    except asyncio.CancelledError:
+        logger.info("Service shut down")
 
 
 if __name__ == "__main__":
