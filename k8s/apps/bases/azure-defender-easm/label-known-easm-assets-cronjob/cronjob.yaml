@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: label-known-easm-assets
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-a889f10-1724779894 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-5b74631-1743087781 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
               env:
                 - name: DB_PASS
                   valueFrom:
