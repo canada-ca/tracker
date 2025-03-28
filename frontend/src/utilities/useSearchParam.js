@@ -23,7 +23,7 @@ function useSearchParam({ name, validOptions, defaultValue }) {
   const setSearchParams = React.useCallback(
     (value) => {
       if (Array.isArray(value)) {
-        if (!value || value.length === 0) {
+        if (!value) {
           searchParams.delete(name)
         } else {
           searchParams.set(name, JSON.stringify(value))
