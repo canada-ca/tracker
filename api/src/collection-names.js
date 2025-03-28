@@ -29,4 +29,5 @@ export const collectionNames = [
   'selectors',
   'domainsToSelectors',
   'organizationSummaries',
+  'tags',
 ]
