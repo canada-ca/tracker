@@ -9,7 +9,7 @@ notifications-python-client==8.0.1
 PyJWT==2.8.0
 pytest==7.4.4
 python-arango==7.3.4
-python-dotenv==0.20.0
+python-dotenv==1.1.0
 requests==2.32.2
 requests-toolbelt==1.0.0
 six==1.16.0
