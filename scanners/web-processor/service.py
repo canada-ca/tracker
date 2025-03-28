@@ -218,10 +218,10 @@ def process_msg(msg):
                 db.collection("domains").update(domain)
             except DocumentUpdateError as e:
                 error_str = str(e)
-                start_retry = time.time()
+                start_retry = time.monotonic()
                 document_updated = False
                 # Retry for 5 seconds in case another process is updating the same document
-                while time.time() - start_retry < 5:
+                while time.monotonic() - start_retry < 5:
                     try:
                         db.collection("domains").update(domain)
                         document_updated = True
@@ -286,10 +286,12 @@ async def processor_service():
         "name": "SCANS",
         "subjects": [
             "scans.requests",
+            "scans.requests_priority",
             "scans.discovery",
             "scans.add_domain_to_easm",
             "scans.dns_scanner_results",
             "scans.dns_processor_results",
+            "scans.dns_processor_results_priority",
             "scans.web_scanner_results",
             "scans.web_processor_results",
         ],
