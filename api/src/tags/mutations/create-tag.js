@@ -1,5 +1,5 @@
-import { GraphQLNonNull, GraphQLID, GraphQLBoolean, GraphQLString } from 'graphql'
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
+import { GraphQLNonNull, GraphQLBoolean, GraphQLString } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { createTagUnion } from '../unions'
 
@@ -113,11 +113,6 @@ export const createTag = new mutationWithClientMutationId({
         code: 400,
         description: i18n._(t`Tag label already in use, please choose another and try again.`),
       }
-    }
-
-    if (ownership === 'global') {
-      const isSuperAdmin = await checkSuperAdmin()
-      superAdminRequired({ user, isSuperAdmin })
     }
 
     // Setup Transaction
