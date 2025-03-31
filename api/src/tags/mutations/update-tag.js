@@ -130,7 +130,7 @@ export const updateTag = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update tag. Please try again.`))
     }
 
-    // Update domain
+    // Update tag
     const updatedTag = {
       label: {
         en: labelEn || compareTag.label.en,
@@ -159,7 +159,7 @@ export const updateTag = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update domain: ${tagId}, error: ${err}`,
+        `Transaction step error occurred when user: ${userKey} attempted to update tag: ${tagId}, error: ${err}`,
       )
       await trx.abort()
       throw new Error(i18n._(t`Unable to update tag. Please try again.`))
