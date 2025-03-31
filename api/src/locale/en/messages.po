@@ -135,7 +135,7 @@ msgstr "Authentication error. Please sign in."
 msgid "Cannot query additional findings without permission."
 msgstr "Cannot query additional findings without permission."
 
-#: src/organization/objects/organization.js:318
+#: src/organization/objects/organization.js:323
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
@@ -226,7 +226,7 @@ msgstr "No verified organization with the provided slug could be found."
 msgid "Organization has already been verified."
 msgstr "Organization has already been verified."
 
-#: src/organization/mutations/update-organization.js:179
+#: src/organization/mutations/update-organization.js:184
 msgid "Organization name already in use, please choose another and try again."
 msgstr "Organization name already in use, please choose another and try again."
 
@@ -385,7 +385,7 @@ msgstr "Permission Denied: Please contact organization admin for help with remov
 msgid "Permission Denied: Please contact organization admin for help with removing users."
 msgstr "Permission Denied: Please contact organization admin for help with removing users."
 
-#: src/organization/mutations/update-organization.js:150
+#: src/organization/mutations/update-organization.js:155
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
 msgstr "Permission Denied: Please contact organization admin for help with updating organization."
 
@@ -415,7 +415,7 @@ msgstr "Permission Denied: Please contact organization user for help with creati
 
 #: src/domain/queries/find-domain-by-domain.js:51
 #: src/organization/objects/organization-summary.js:188
-#: src/organization/objects/organization.js:153
+#: src/organization/objects/organization.js:158
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission Denied: Please contact organization user for help with retrieving this domain."
 
@@ -656,6 +656,10 @@ msgstr "Successfully verified organization: {0}."
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Successfully verified phone number, and set TFA send method to text."
 
+#: src/tags/mutations/update-tag.js:107
+msgid "Tag label already in use, please choose another and try again."
+msgstr "Tag label already in use, please choose another and try again."
+
 #: src/user/mutations/authenticate.js:66
 msgid "Token value incorrect, please sign in again."
 msgstr "Token value incorrect, please sign in again."
@@ -756,6 +760,15 @@ msgstr "Unable to create domains. Please try again."
 msgid "Unable to create organization. Please try again."
 msgstr "Unable to create organization. Please try again."
 
+#: src/tags/mutations/create-tag.js:87
+msgid "Unable to create tag, tagId already in use."
+msgstr "Unable to create tag, tagId already in use."
+
+#: src/tags/mutations/create-tag.js:108
+#: src/tags/mutations/create-tag.js:116
+msgid "Unable to create tag. Please try again."
+msgstr "Unable to create tag. Please try again."
+
 #: src/domain/mutations/request-discovery.js:86
 msgid "Unable to discover domains for unknown organization."
 msgstr "Unable to discover domains for unknown organization."
@@ -771,8 +784,8 @@ msgstr "Unable to dismiss message. Please try again."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Unable to dispatch one time scan. Please try again."
 
-#: src/organization/objects/organization.js:215
-#: src/organization/objects/organization.js:225
+#: src/organization/objects/organization.js:220
+#: src/organization/objects/organization.js:230
 msgid "Unable to export organization. Please try again."
 msgstr "Unable to export organization. Please try again."
 
@@ -1076,7 +1089,7 @@ msgid "Unable to load mail summary. Please try again."
 msgstr "Unable to load mail summary. Please try again."
 
 #: src/additional-findings/loaders/load-top-25-reports.js:29
-#: src/organization/loaders/load-all-organization-domain-statuses.js:154
+#: src/organization/loaders/load-all-organization-domain-statuses.js:155
 #: src/organization/loaders/load-organization-domain-statuses.js:157
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Unable to load organization domain statuses. Please try again."
@@ -1086,14 +1099,14 @@ msgstr "Unable to load organization domain statuses. Please try again."
 msgid "Unable to load organization summary data. Please try again."
 msgstr "Unable to load organization summary data. Please try again."
 
-#: src/organization/loaders/load-organization-by-key.js:33
-#: src/organization/loaders/load-organization-by-key.js:47
-#: src/organization/loaders/load-organization-by-slug.js:36
-#: src/organization/loaders/load-organization-by-slug.js:51
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:507
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:517
-#: src/organization/loaders/load-organization-connections-by-user-id.js:543
-#: src/organization/loaders/load-organization-connections-by-user-id.js:553
+#: src/organization/loaders/load-organization-by-key.js:31
+#: src/organization/loaders/load-organization-by-key.js:41
+#: src/organization/loaders/load-organization-by-slug.js:34
+#: src/organization/loaders/load-organization-by-slug.js:45
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:508
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:518
+#: src/organization/loaders/load-organization-connections-by-user-id.js:544
+#: src/organization/loaders/load-organization-connections-by-user-id.js:554
 msgid "Unable to load organization(s). Please try again."
 msgstr "Unable to load organization(s). Please try again."
 
@@ -1140,6 +1153,13 @@ msgstr "Unable to load SSL summary. Please try again."
 #: src/summaries/loaders/load-chart-summary-by-key.js:25
 msgid "Unable to load summary. Please try again."
 msgstr "Unable to load summary. Please try again."
+
+#: src/tags/loaders/load-all-tags.js:28
+#: src/tags/loaders/load-all-tags.js:36
+#: src/tags/loaders/load-tag-by-tag-id.js:23
+#: src/tags/loaders/load-tag-by-tag-id.js:33
+msgid "Unable to load tag(s). Please try again."
+msgstr "Unable to load tag(s). Please try again."
 
 #: src/domain/loaders/load-domain-tags-by-org-id.js:37
 msgid "Unable to load tags(s). Please try again."
@@ -1493,11 +1513,11 @@ msgstr "Unable to update domain that does not belong to the given organization."
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
-#: src/organization/mutations/update-organization.js:169
-#: src/organization/mutations/update-organization.js:195
-#: src/organization/mutations/update-organization.js:203
-#: src/organization/mutations/update-organization.js:253
-#: src/organization/mutations/update-organization.js:261
+#: src/organization/mutations/update-organization.js:174
+#: src/organization/mutations/update-organization.js:200
+#: src/organization/mutations/update-organization.js:208
+#: src/organization/mutations/update-organization.js:262
+#: src/organization/mutations/update-organization.js:270
 msgid "Unable to update organization. Please try again."
 msgstr "Unable to update organization. Please try again."
 
@@ -1535,13 +1555,25 @@ msgstr "Unable to update role: user does not belong to organization."
 msgid "Unable to update role: user unknown."
 msgstr "Unable to update role: user unknown."
 
+#: src/tags/mutations/update-tag.js:97
+#: src/tags/mutations/update-tag.js:122
+#: src/tags/mutations/update-tag.js:130
+#: src/tags/mutations/update-tag.js:165
+#: src/tags/mutations/update-tag.js:176
+msgid "Unable to update tag. Please try again."
+msgstr "Unable to update tag. Please try again."
+
 #: src/domain/mutations/update-domain.js:101
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
 
-#: src/organization/mutations/update-organization.js:135
+#: src/organization/mutations/update-organization.js:140
 msgid "Unable to update unknown organization."
 msgstr "Unable to update unknown organization."
+
+#: src/tags/mutations/update-tag.js:79
+msgid "Unable to update unknown tag."
+msgstr "Unable to update unknown tag."
 
 #: src/affiliation/mutations/update-user-role.js:128
 #: src/affiliation/mutations/update-user-role.js:150
