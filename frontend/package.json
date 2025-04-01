@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@babel/runtime": "^7.18.6",
+    "@babel/runtime": "^7.27.0",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/system": "^2.6.2",
