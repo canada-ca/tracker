@@ -2,6 +2,7 @@ import { GraphQLNonNull, GraphQLBoolean, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { updateTagUnion } from '../unions'
+import { TagOwnershipEnums } from '../../enums'
 
 export const updateTag = new mutationWithClientMutationId({
   name: 'UpdateTag',
@@ -30,6 +31,10 @@ export const updateTag = new mutationWithClientMutationId({
     isVisible: {
       description: 'Value used to decide if users should see the tag.',
       type: GraphQLBoolean,
+    },
+    ownership: {
+      description: '',
+      type: TagOwnershipEnums,
     },
   }),
   outputFields: () => ({
@@ -65,6 +70,7 @@ export const updateTag = new mutationWithClientMutationId({
     const labelFr = cleanseInput(args.labelFr)
     const descriptionEn = cleanseInput(args.descriptionEn)
     const descriptionFr = cleanseInput(args.descriptionFr)
+    const ownership = cleanseInput(args.ownership)
 
     // Check to see if tag exists
     const currentTag = await loadTagByTagId.load(tagId)
@@ -141,6 +147,7 @@ export const updateTag = new mutationWithClientMutationId({
         fr: descriptionFr || compareTag.description.fr,
       },
       visible: typeof args.isVisible !== 'undefined' ? args.isVisible : compareTag.visible,
+      ownership: ownership || compareTag.ownership,
     }
 
     // Setup Transaction
