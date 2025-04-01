@@ -71,6 +71,43 @@ export const organizationType = new GraphQLObjectType({
       description: 'String ID used to identify the organization in an external system.',
       resolve: ({ externalId }) => externalId,
     },
+    availableTags: {
+      type: new GraphQLList(GraphQLString),
+      description: '',
+      args: {
+        includeGlobal: {
+          type: GraphQLBoolean,
+          description: '',
+        },
+        includePending: {
+          type: GraphQLBoolean,
+          description: '',
+        },
+        sortDirection: {
+          type: new GraphQLNonNull(OrderDirection),
+          description: 'The direction in which to sort the data.',
+        },
+      },
+      resolve: async (
+        { tags },
+        args,
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
+      ) => {
+        if (loginRequiredBool) {
+          const user = await userRequired()
+          verifiedRequired({ user })
+        }
+
+        const orgTags = await loadTagsByOrg({
+          orgTags: tags,
+          ...args,
+        })
+
+        console.info(`User: ${userKey} successfully retrieved their org's tags.`)
+
+        return orgTags
+      },
+    },
     summaries: {
       type: organizationSummaryType,
       description: 'Summaries based on scan types that are preformed on the given organizations domains.',
