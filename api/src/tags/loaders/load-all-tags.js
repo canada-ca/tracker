@@ -21,6 +21,7 @@ export const loadAllTags =
             "label": label,
             "description": TRANSLATE(${language}, tag.description),
             "visible": tag.visible,
+            "ownership": tag.ownership,
           }
       `
     } catch (err) {
