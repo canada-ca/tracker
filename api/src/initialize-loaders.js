@@ -66,7 +66,7 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey, loadChartSummariesByPeriod } from './summaries/loaders'
 import { loadDnsConnectionsByDomainId, loadMxRecordDiffByDomainId } from './dns-scan'
-import { loadAllTags, loadTagByTagId } from './tags'
+import { loadAllTags, loadTagByTagId, loadTagsByOrg } from './tags'
 
 export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
@@ -82,6 +82,12 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       language,
     }),
     loadTagByTagId: loadTagByTagId({
+      query,
+      userKey,
+      i18n,
+      language,
+    }),
+    loadTagsByOrg: loadTagsByOrg({
       query,
       userKey,
       i18n,
