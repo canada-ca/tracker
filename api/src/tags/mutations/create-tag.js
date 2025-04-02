@@ -86,16 +86,6 @@ export const createTag = new mutationWithClientMutationId({
     }
 
     const tag = await loadTagByTagId.load(insertTag.tagId)
-    if (typeof tag !== 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to create a tag: ${insertTag.tagId}, however a tag with that identifier already exists.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to create tag, tagId already in use.`),
-      }
-    }
 
     // Check to see if any tags already have the label in use
     let tagLabelCheckCursor
@@ -113,10 +103,8 @@ export const createTag = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to create tag. Please try again.`))
     }
 
-    if (tagLabelCheckCursor.count > 0) {
-      console.error(
-        `User: ${userKey} attempted to create a tag: ${insertTag.tagId} however the label is already in use.`,
-      )
+    if ((typeof tag !== 'undefined' || tagLabelCheckCursor.count > 0) && !['org', 'pending'].includes(ownership)) {
+      console.error(`User: ${userKey} attempted to create a tag: ${insertTag.tagId} however the tag already exists.`)
       return {
         _type: 'error',
         code: 400,
@@ -155,7 +143,7 @@ export const createTag = new mutationWithClientMutationId({
         }
 
         const permission = await checkPermission({ orgId })
-        if (permission !== 'super_admin') {
+        if (permission !== 'super_admin' && typeof tag === 'undefined') {
           insertTag.ownership = 'pending'
           console.warn(
             `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
