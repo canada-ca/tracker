@@ -23,7 +23,6 @@ import {
   loadDomainConnectionsByOrgId,
   loadDomainConnectionsByUserId,
   loadDkimSelectorsByDomainId,
-  loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
   loadAggregateGuidanceTagByTagId,
@@ -197,7 +196,6 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       i18n,
       auth: { loginRequiredBool },
     }),
-    loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),
     loadDnsConnectionsByDomainId: loadDnsConnectionsByDomainId({
       query,
       db,
