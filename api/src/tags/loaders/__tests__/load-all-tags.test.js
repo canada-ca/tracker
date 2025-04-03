@@ -41,12 +41,14 @@ describe('given a loadAllTags dataloader', () => {
         label: { en: 'Web', fr: 'Web' },
         description: { en: '', fr: '' },
         visible: false,
+        ownership: 'global',
       })
       await collections.tags.save({
         tagId: 'new',
         label: { en: 'New', fr: 'Nouveau' },
         description: { en: '', fr: '' },
         visible: true,
+        ownership: 'global',
       })
     })
     afterEach(async () => {

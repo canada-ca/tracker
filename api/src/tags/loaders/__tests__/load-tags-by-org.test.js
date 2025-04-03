@@ -4,12 +4,12 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { loadTagByTagId } from '../index'
+import { loadTagsByOrg } from '../index'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a loadTagByTagId dataloader', () => {
+describe('given a loadTagsByOrg dataloader', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleOutput = []
@@ -31,7 +31,6 @@ describe('given a loadTagByTagId dataloader', () => {
           password: rootPass,
           url,
         },
-
         schema: dbschema,
       }))
     })
@@ -48,7 +47,14 @@ describe('given a loadTagByTagId dataloader', () => {
         label: { en: 'New', fr: 'Nouveau' },
         description: { en: '', fr: '' },
         visible: true,
-        ownership: 'global',
+        ownership: 'pending',
+      })
+      await collections.tags.save({
+        tagId: 'test',
+        label: { en: 'Test', fr: 'Test' },
+        description: { en: '', fr: '' },
+        visible: true,
+        ownership: 'org',
       })
     })
     afterEach(async () => {
@@ -71,53 +77,76 @@ describe('given a loadTagByTagId dataloader', () => {
         },
       })
     })
-    describe('provided a single id', () => {
-      it('returns a single tag', async () => {
-        // Get User From db
-        const expectedCursor = await query`
+    it('returns only org tags', async () => {
+      // Get User From db
+      const expectedCursor = await query`
             FOR tag IN tags
-              FILTER tag.tagId == 'new'
+              FILTER tag.tagId IN ['test', 'new']
+              FILTER tag.ownership != 'pending'
+              LET label = TRANSLATE('en', tag.label)
+              SORT label ASC
               RETURN {
-                _type: "tag",
                 "tagId": tag.tagId,
-                "label": TRANSLATE('en', tag.label),
+                "label": label,
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
-            }
+                "ownership": tag.ownership,
+              }
           `
-        const expectedTag = await expectedCursor.next()
+      const expectedTags = await expectedCursor.all()
 
-        const loader = loadTagByTagId({ query, language: 'en', i18n })
-        const tag = await loader.load(expectedTag.tagId)
-
-        expect(tag).toEqual(expectedTag)
+      const loader = loadTagsByOrg({ query, language: 'en', i18n })
+      const tags = await loader({
+        orgTags: ['test', 'new'],
+        includeGlobal: false,
+        includePending: false,
+        sortDirection: 'ASC',
       })
+
+      expect(tags).toEqual(expectedTags)
     })
-    describe('given a list of ids', () => {
-      it('returns a list of tags', async () => {
-        const tagIds = []
-        const expectedTags = []
-        const expectedCursor = await query`
+    it('returns pending tags', async () => {
+      const expectedCursor = await query`
             FOR tag IN tags
+              FILTER tag.tagId IN ['test', 'new']
+              LET label = TRANSLATE('en', tag.label)
+              SORT label ASC
               RETURN {
-                _type: "tag",
                 "tagId": tag.tagId,
-                "label": TRANSLATE('en', tag.label),
+                "label": label,
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
-            }
+                "ownership": tag.ownership,
+              }
           `
+      const expectedTags = await expectedCursor.all()
 
-        while (expectedCursor.hasMore) {
-          const tempTag = await expectedCursor.next()
-          tagIds.push(tempTag.tagId)
-          expectedTags.push(tempTag)
-        }
+      const loader = loadTagsByOrg({ query, language: 'en', i18n })
+      const tags = await loader({ orgTags: ['test', 'new'], includePending: true, sortDirection: 'ASC' })
 
-        const loader = loadTagByTagId({ query, language: 'en', i18n })
-        const tags = await loader.loadMany(tagIds)
-        expect(tags).toEqual(expectedTags)
-      })
+      expect(tags).toEqual(expectedTags)
+    })
+    it('returns global tags', async () => {
+      const expectedCursor = await query`
+            FOR tag IN tags
+              FILTER tag.tagId IN ['test', 'new'] OR tag.ownership == 'global'
+              FILTER tag.ownership != 'pending'
+              LET label = TRANSLATE('en', tag.label)
+              SORT label ASC
+              RETURN {
+                "tagId": tag.tagId,
+                "label": label,
+                "description": TRANSLATE('en', tag.description),
+                "visible": tag.visible,
+                "ownership": tag.ownership,
+              }
+          `
+      const expectedTags = await expectedCursor.all()
+
+      const loader = loadTagsByOrg({ query, language: 'en', i18n })
+      const tags = await loader({ orgTags: ['test', 'new'], includeGlobal: true, sortDirection: 'ASC' })
+
+      expect(tags).toEqual(expectedTags)
     })
   })
   describe('given an unsuccessful load', () => {
@@ -138,7 +167,7 @@ describe('given a loadTagByTagId dataloader', () => {
     describe('database error is raised', () => {
       it('returns an error', async () => {
         const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadTagByTagId({
+        const loader = loadTagsByOrg({
           query: mockedQuery,
           language: 'en',
           userKey: '1234',
@@ -146,25 +175,25 @@ describe('given a loadTagByTagId dataloader', () => {
         })
 
         try {
-          await loader.load('1')
+          await loader({ isVisible: false })
         } catch (err) {
           expect(err).toEqual(new Error('Unable to load tag(s). Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running loadTagByTagId: Error: Database error occurred.`,
+          `Database error occurred while user: 1234 was trying to query tags in loadTagsByOrg, Error: Database error occurred.`,
         ])
       })
     })
     describe('cursor error is raised', () => {
       it('returns an error', async () => {
         const cursor = {
-          forEach() {
+          all() {
             throw new Error('Cursor error occurred.')
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = loadTagByTagId({
+        const loader = loadTagsByOrg({
           query: mockedQuery,
           language: 'en',
           userKey: '1234',
@@ -172,13 +201,13 @@ describe('given a loadTagByTagId dataloader', () => {
         })
 
         try {
-          await loader.load('1')
+          await loader({ isVisible: false })
         } catch (err) {
           expect(err).toEqual(new Error('Unable to load tag(s). Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 during loadTagByTagId: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: 1234 was trying to gather tags in loadTagsByOrg, Error: Cursor error occurred.`,
         ])
       })
     })

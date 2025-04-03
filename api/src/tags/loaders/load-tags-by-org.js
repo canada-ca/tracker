@@ -31,7 +31,7 @@ export const loadTagsByOrg =
           }
       `
     } catch (err) {
-      console.error(`Database error occurred while user: ${userKey} was trying to query tags in loadAllTags, ${err}`)
+      console.error(`Database error occurred while user: ${userKey} was trying to query tags in loadTagsByOrg, ${err}`)
       throw new Error(i18n._(t`Unable to load tag(s). Please try again.`))
     }
 
@@ -39,7 +39,7 @@ export const loadTagsByOrg =
     try {
       tagInfo = await cursor.all()
     } catch (err) {
-      console.error(`Cursor error occurred while user: ${userKey} was trying to gather tags in loadAllTags, ${err}`)
+      console.error(`Cursor error occurred while user: ${userKey} was trying to gather tags in loadTagsByOrg, ${err}`)
       throw new Error(i18n._(t`Unable to load tag(s). Please try again.`))
     }
 
