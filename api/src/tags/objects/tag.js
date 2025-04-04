@@ -1,4 +1,5 @@
 import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
+import { TagOwnershipEnums } from '../../enums/tag-ownership'
 
 export const tagType = new GraphQLObjectType({
   name: 'Tag',
@@ -22,6 +23,11 @@ export const tagType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Indicates whether the tag is visible to users.',
       resolve: ({ visible }) => visible,
+    },
+    ownership: {
+      type: TagOwnershipEnums,
+      description: '',
+      resolve: ({ ownership }) => ownership,
     },
   }),
 })
