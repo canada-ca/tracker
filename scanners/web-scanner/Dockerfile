@@ -1,4 +1,4 @@
-FROM rust:1.84.1-bookworm AS crlite-builder
+FROM rust:1.86.0-bookworm AS crlite-builder
 RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev dcb8a4d --features=rustls/dangerous_configuration
 
 #===============================================================================================
