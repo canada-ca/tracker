@@ -208,8 +208,12 @@ async def main():
             try:
                 resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
             except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+                logger.info(f"Domain: {domain} does not have a valid DNS entry")
                 continue
             except Exception as e:
+                logger.error(
+                    f"Could not confirm if domain: {domain} has a valid DNS entry"
+                )
                 continue
 
             # setup transaction
