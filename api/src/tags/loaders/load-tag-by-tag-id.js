@@ -17,6 +17,7 @@ export const loadTagByTagId = ({ query, userKey, i18n, language }) =>
             "description": TRANSLATE(${language}, tag.description),
             "visible": tag.visible,
             "ownership": tag.ownership,
+            "organizations": tag.organizations,
           }
       `
     } catch (err) {
