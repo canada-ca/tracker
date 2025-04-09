@@ -3,8 +3,8 @@ import { t } from '@lingui/macro'
 
 export const loadTagsByOrg =
   ({ query, userKey, i18n, language }) =>
-  async ({ orgTags, includeGlobal, includePending, sortDirection }) => {
-    let ownershipFilter = aql`FILTER tag.tagId IN ${orgTags}`
+  async ({ orgId, includeGlobal, includePending, sortDirection }) => {
+    let ownershipFilter = aql`FILTER ${orgId} IN tag.organizations`
     if (includeGlobal) {
       ownershipFilter = aql`${ownershipFilter} OR tag.ownership == "global"`
     }
@@ -28,6 +28,7 @@ export const loadTagsByOrg =
             "description": TRANSLATE(${language}, tag.description),
             "visible": tag.visible,
             "ownership": tag.ownership,
+            "organizations": tag.organizations,
           }
       `
     } catch (err) {
