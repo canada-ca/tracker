@@ -83,6 +83,7 @@ export const createTag = new mutationWithClientMutationId({
       },
       visible: args?.isVisible || false,
       ownership,
+      organizations: [],
     }
 
     const tag = await loadTagByTagId.load(insertTag.tagId)
@@ -148,7 +149,7 @@ export const createTag = new mutationWithClientMutationId({
           console.warn(
             `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
           )
-        } else if (!['admin', 'owner'].includes(permission)) {
+        } else if (!['super_admin', 'admin', 'owner'].includes(permission)) {
           console.warn(
             `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
           )
@@ -158,25 +159,11 @@ export const createTag = new mutationWithClientMutationId({
             description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
           }
         }
-        // add tagId to org tags
-        const updatedOrgDetails = {
-          tags: [...org?.tags, tagId],
-        }
-        try {
-          await trx.step(
-            async () =>
-              await query`
-            WITH organizations
-            UPSERT { _key: ${org._key} }
-              INSERT ${updatedOrgDetails}
-              UPDATE ${updatedOrgDetails}
-              IN organizations
-          `,
-          )
-        } catch (err) {
-          console.error(`Transaction error occurred while upserting org: ${org}, err: ${err}`)
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to update organization. Please try again.`))
+
+        if (typeof tag !== 'undefined') {
+          insertTag.organizations = [...tag.organizations, orgId]
+        } else {
+          insertTag.organizations = [orgId]
         }
       }
     }
@@ -187,7 +174,7 @@ export const createTag = new mutationWithClientMutationId({
           query`
             UPSERT { tagId: ${insertTag.tagId} }
               INSERT ${insertTag}
-              UPDATE { }
+              UPDATE ${insertTag}
               IN tags
               RETURN NEW
           `,
