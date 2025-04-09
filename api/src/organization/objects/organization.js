@@ -90,7 +90,7 @@ export const organizationType = new GraphQLObjectType({
         },
       },
       resolve: async (
-        { _id, tags },
+        { _id, _key },
         args,
         {
           userKey,
@@ -112,7 +112,7 @@ export const organizationType = new GraphQLObjectType({
         }
 
         const orgTags = await loadTagsByOrg({
-          orgTags: tags,
+          orgId: _key,
           ...args,
         })
 
