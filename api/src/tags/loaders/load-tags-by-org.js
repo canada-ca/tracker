@@ -4,9 +4,9 @@ import { t } from '@lingui/macro'
 export const loadTagsByOrg =
   ({ query, userKey, i18n, language }) =>
   async ({ orgId, includeGlobal, includePending, sortDirection }) => {
-    let ownershipFilter = aql`FILTER ${orgId} IN tag.organizations`
+    let globalFilter = aql`FILTER tag.ownership != "global"`
     if (includeGlobal) {
-      ownershipFilter = aql`${ownershipFilter} OR tag.ownership == "global"`
+      globalFilter = aql``
     }
 
     let pendingFilter = aql`FILTER tag.ownership != "pending"`
@@ -18,8 +18,9 @@ export const loadTagsByOrg =
     try {
       cursor = await query`
         FOR tag IN tags
-          ${ownershipFilter}
+          FILTER ${orgId} IN tag.organizations
           ${pendingFilter}
+          ${globalFilter}
           LET label = TRANSLATE(${language}, tag.label)
           SORT label ${sortDirection}
           RETURN {

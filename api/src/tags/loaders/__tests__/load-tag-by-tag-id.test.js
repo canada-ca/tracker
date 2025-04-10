@@ -83,7 +83,9 @@ describe('given a loadTagByTagId dataloader', () => {
                 "label": TRANSLATE('en', tag.label),
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
-            }
+                "ownership": tag.ownership,
+                "organizations": tag.organizations,
+              }
           `
         const expectedTag = await expectedCursor.next()
 
