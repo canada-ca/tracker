@@ -81,6 +81,8 @@ describe('given a loadAllTags dataloader', () => {
                 "label": TRANSLATE('en', tag.label),
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
+                "ownership": tag.ownership,
+                "organizations": tag.organizations,
             }
           `
       const expectedTags = await expectedCursor.all()
@@ -100,6 +102,8 @@ describe('given a loadAllTags dataloader', () => {
                 "label": label,
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
+                "ownership": tag.ownership,
+                "organizations": tag.organizations,
             }
           `
       const expectedTags = await expectedCursor.all()

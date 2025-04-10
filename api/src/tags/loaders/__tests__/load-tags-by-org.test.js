@@ -48,6 +48,7 @@ describe('given a loadTagsByOrg dataloader', () => {
         description: { en: '', fr: '' },
         visible: true,
         ownership: 'pending',
+        organizations: ['test'],
       })
       await collections.tags.save({
         tagId: 'test',
@@ -55,6 +56,7 @@ describe('given a loadTagsByOrg dataloader', () => {
         description: { en: '', fr: '' },
         visible: true,
         ownership: 'org',
+        organizations: ['test'],
       })
     })
     afterEach(async () => {
@@ -81,8 +83,9 @@ describe('given a loadTagsByOrg dataloader', () => {
       // Get User From db
       const expectedCursor = await query`
             FOR tag IN tags
-              FILTER tag.tagId IN ['test', 'new']
+              FILTER 'test' IN tag.organizations
               FILTER tag.ownership != 'pending'
+              FILTER tag.ownership != "global"
               LET label = TRANSLATE('en', tag.label)
               SORT label ASC
               RETURN {
@@ -91,13 +94,14 @@ describe('given a loadTagsByOrg dataloader', () => {
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
                 "ownership": tag.ownership,
+                "organizations": tag.organizations,
               }
           `
       const expectedTags = await expectedCursor.all()
 
       const loader = loadTagsByOrg({ query, language: 'en', i18n })
       const tags = await loader({
-        orgTags: ['test', 'new'],
+        orgId: 'test',
         includeGlobal: false,
         includePending: false,
         sortDirection: 'ASC',
@@ -108,7 +112,8 @@ describe('given a loadTagsByOrg dataloader', () => {
     it('returns pending tags', async () => {
       const expectedCursor = await query`
             FOR tag IN tags
-              FILTER tag.tagId IN ['test', 'new']
+              FILTER 'test' IN tag.organizations
+              FILTER tag.ownership != "global"
               LET label = TRANSLATE('en', tag.label)
               SORT label ASC
               RETURN {
@@ -117,19 +122,20 @@ describe('given a loadTagsByOrg dataloader', () => {
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
                 "ownership": tag.ownership,
+                "organizations": tag.organizations,
               }
           `
       const expectedTags = await expectedCursor.all()
 
       const loader = loadTagsByOrg({ query, language: 'en', i18n })
-      const tags = await loader({ orgTags: ['test', 'new'], includePending: true, sortDirection: 'ASC' })
+      const tags = await loader({ orgId: 'test', includePending: true, sortDirection: 'ASC' })
 
       expect(tags).toEqual(expectedTags)
     })
     it('returns global tags', async () => {
       const expectedCursor = await query`
             FOR tag IN tags
-              FILTER tag.tagId IN ['test', 'new'] OR tag.ownership == 'global'
+              FILTER 'test' IN tag.organizations
               FILTER tag.ownership != 'pending'
               LET label = TRANSLATE('en', tag.label)
               SORT label ASC
@@ -139,12 +145,13 @@ describe('given a loadTagsByOrg dataloader', () => {
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
                 "ownership": tag.ownership,
+                "organizations": tag.organizations,
               }
           `
       const expectedTags = await expectedCursor.all()
 
       const loader = loadTagsByOrg({ query, language: 'en', i18n })
-      const tags = await loader({ orgTags: ['test', 'new'], includeGlobal: true, sortDirection: 'ASC' })
+      const tags = await loader({ orgId: 'test', includeGlobal: true, sortDirection: 'ASC' })
 
       expect(tags).toEqual(expectedTags)
     })
