@@ -6,13 +6,9 @@ import urllib3
 
 import logging
 import requests
-
-# from requests._internal_utils import to_native_string
 from requests.adapters import HTTPAdapter
 from requests import Response, PreparedRequest
 from dataclasses import dataclass, field
-
-from requests.utils import requote_uri
 
 logger = logging.getLogger(__name__)
 
@@ -217,7 +213,7 @@ def request_connection(
     uri = uri or prepared_request.url
     split_uri = urlsplit(uri)
     scheme = split_uri.scheme
-    host = host or split_uri.hostname
+    host = split_uri.hostname
     response = None
     context = (
         f"while requesting {uri}"
