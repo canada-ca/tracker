@@ -11,7 +11,7 @@ pluggy==1.5.0
 pretend==1.0.9
 PyJWT==2.6.0
 pytest==8.3.5
-python-arango==8.1.5
+python-arango==8.1.7
 python-dotenv==1.1.0
 requests==2.32.0
 requests-toolbelt==0.10.1
