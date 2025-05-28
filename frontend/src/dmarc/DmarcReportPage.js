@@ -30,7 +30,6 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { MonthSelect } from '../components/MonthSelect'
 import { NotificationBanner } from '../app/NotificationBanner'
-import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -664,7 +663,6 @@ export default function DmarcReportPage() {
         </Flex>
       </Box>
 
-      <DmarcReportOutageBanner />
 
       {graphDisplay}
 
