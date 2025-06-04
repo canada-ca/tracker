@@ -140,9 +140,9 @@ def process_spf(spf_results):
         spf_tags.append("spf2")
         return get_spf_tag_status(spf_tags)
 
-    # Check all tag
-    # "all": "neutral"
-    all_tag = spf_results.get("parsed", {}).get("all", None)
+    # Check all tag (renamed as spf_default)
+    # "spf_default": "neutral"
+    all_tag = spf_results.get("parsed", {}).get("spf_default", None)
     # "record": "v=spf1 redirect=transition._spf.canada.ca",
     spf_record = spf_results.get("record", None)
 
@@ -171,8 +171,8 @@ def process_spf(spf_results):
         spf_tags.append("spf9")
 
     # Look up limit check
-    # "dns_lookups": 3,
-    dns_lookups = spf_results.get("dns_lookups", 0)
+    # "lookups": 3,
+    dns_lookups = spf_results.get("lookups", 0)
     if dns_lookups > 10:
         spf_tags.append("spf11")
 
@@ -432,12 +432,9 @@ def process_results(results):
         "negative_tags": dmarc_tags["negative_tags"],
     }
 
-    spf_record = spf.get("record", None)
     spf_results = {
         "status": spf_status,
-        "record": spf_record,
-        "lookups": spf.get("dns_lookups", None),
-        "spf_default": spf.get("parsed", {}).get("all", None),
+        **spf,
         "neutral_tags": spf_tags["neutral_tags"],
         "positive_tags": spf_tags["positive_tags"],
         "negative_tags": spf_tags["negative_tags"],
