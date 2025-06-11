@@ -14,7 +14,7 @@ pycparser==2.21
 pydantic==2.4.0
 pydantic_core==2.10.0
 python-dotenv==0.21.0
-requests==2.32.3
+requests==2.32.4
 requests-toolbelt==0.10.1
 service-identity==24.1.0
 sslyze==6.1.0
