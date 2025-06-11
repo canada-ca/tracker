@@ -7,6 +7,6 @@ notifications-python-client==8.0.1
 PyJWT==2.8.0
 python-arango==7.3.4
 python-dotenv==0.20.0
-requests==2.32.3
+requests==2.32.4
 requests-toolbelt==1.0.0
 urllib3==2.2.2
