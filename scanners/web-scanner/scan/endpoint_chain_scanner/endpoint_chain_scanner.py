@@ -120,6 +120,8 @@ class SessionOverrideRedirectWithIP(requests.Session):
                 redirect_with_hostname = redirect_target.replace(
                     self.ip_override_map[host], host
                 )
+            else:
+                redirect_with_hostname = redirect_target
         elif parsed.hostname in self.ip_override_map:
             # If hostname is in override map, replace with IP address to send directly to specified IP address
             redirect_target = original_redirect_target.replace(
