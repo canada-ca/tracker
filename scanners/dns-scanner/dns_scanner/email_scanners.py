@@ -228,11 +228,9 @@ class DMARCScanner:
                 logger.debug(
                     f'Following redirect in SPF record for "all" mechanism: {self.domain}'
                 )
-                spf_res["parsed"]["spf_default"] = redirect.get("parsed", {}).get(
-                    "spf_default", None
-                )
+                spf_res["spf_default"] = redirect.get("spf_default", None)
             else:
-                spf_res["parsed"]["spf_default"] = parsed_spf.get("all", None)
+                spf_res["spf_default"] = parsed_spf.get("all", None)
 
             spf_res["parsed"].pop("all", None)
 
