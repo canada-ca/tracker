@@ -99,16 +99,6 @@ def update_asset_labels():
             logger.error(e)
             continue
 
-    for org in verified_orgs:
-        # Get org domains
-        try:
-            logger.info(f"Getting domains for org {org['key']}")
-            org_domains = get_org_domains(org["id"])
-            logger.info(f"Found {len(org_domains)} domains")
-        except Exception as e:
-            logger.error(e)
-            continue
-
         # Extract root domains
         try:
             unique_roots = extract_root_domains(org_domains)
