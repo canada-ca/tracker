@@ -4,6 +4,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs'
+import { headers } from 'nats'
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
@@ -126,14 +127,20 @@ export const requestScan = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to request a one time scan. Please try again.`))
     }
 
+    const hdrs = headers()
+    hdrs.set('priority', 'high')
+
     await publish({
-      channel: 'scans.requests',
+      channel: 'scans.requests_priority',
       msg: {
         domain: domain.domain,
         domain_key: domain._key,
         hash: domain.hash,
         user_key: null, // only used for One Time Scans
         shared_id: null, // only used for One Time Scans
+      },
+      options: {
+        headers: hdrs,
       },
     })
 
