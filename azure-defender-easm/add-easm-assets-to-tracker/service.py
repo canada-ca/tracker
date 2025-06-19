@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import json
 from datetime import datetime, timezone
 from arango import ArangoClient
@@ -105,6 +106,20 @@ async def main():
             logger.error(f"Error occurred when checking if domain exists: {e}")
             return None
 
+    def extract_root_domains(subdomains):
+        root_domains_set = set()
+        for subdomain in subdomains:
+            parts = subdomain.split(".")
+            if len(parts) > 1:
+                root_domain = ".".join(parts[-3:])
+                match = re.match(r"^([^.]+)\.(gc|canada)\.ca$", root_domain)
+                if match:
+                    full_root_domain = match.group(0)
+                    root_domains_set.add(full_root_domain)
+
+        unique_root_domains = list(root_domains_set)
+        return unique_root_domains
+
     # insert functions
     def create_domain(domain: str, txn_col):
         insert_domain = {
@@ -208,8 +223,12 @@ async def main():
             try:
                 resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
             except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+                logger.info(f"Domain: {domain} does not have a valid DNS entry")
                 continue
             except Exception as e:
+                logger.error(
+                    f"Could not confirm if domain: {domain} has a valid DNS entry"
+                )
                 continue
 
             # setup transaction
@@ -277,6 +296,15 @@ async def main():
                 txn_db.abort_transaction()
                 continue
 
+    # Get all unlabelled assets once
+    try:
+        unlabelled_assets = set(get_unlabelled_assets())
+    except Exception as e:
+        logger.error(f"Error fetching unlabelled assets: {e}")
+        unlabelled_assets = set()
+
+    org_domain_roots = {}
+
     verified_orgs = get_verified_orgs()
     for org in verified_orgs:
         org_key = org["key"]
@@ -290,9 +318,24 @@ async def main():
             )
             continue
 
+        # Extract root domains
+        try:
+            unique_roots = extract_root_domains(domains)
+            org_domain_roots[org_key] = unique_roots
+        except Exception as e:
+            logger.error(e)
+            unique_roots = []
+
         try:
             labelled_assets = get_labelled_org_assets_from_org_key(org_key)
             new_domains = list(set(labelled_assets) - set(domains))
+
+            for asset in list(unlabelled_assets):
+                asset_root = extract_root_domains([asset])
+                if asset_root and asset_root[0] in unique_roots:
+                    new_domains.append(asset)
+                    unlabelled_assets.discard(asset)
+
             await add_discovered_domain(new_domains, org_id)
         except Exception as e:
             logger.error(
@@ -300,10 +343,10 @@ async def main():
             )
             continue
 
+    # After all orgs, add remaining unlabelled assets to unclaimed org
     try:
-        unlabelled_assets = get_unlabelled_assets()
         unclaimed_domains = get_org_domains(UNCLAIMED_ID)
-        new_domains = list(set(unlabelled_assets) - set(unclaimed_domains))
+        new_domains = list(unlabelled_assets - set(unclaimed_domains))
         await add_discovered_domain(new_domains, UNCLAIMED_ID)
     except Exception as e:
         logger.error(f"Error when attempting to add new assets to unclaimed org: {e}")

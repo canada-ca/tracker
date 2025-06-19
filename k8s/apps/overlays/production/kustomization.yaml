@@ -32,7 +32,6 @@ replicas:
 patchesStrategicMerge:
   - frontend-production-env-patch.yaml
   - update-selectors-enable-selector-removal-patch.yaml
-  - easm-to-tracker-sync-suspend-patch.yaml
   - api-production-env-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component

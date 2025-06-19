@@ -33,7 +33,6 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { DmarcReportOutageBanner } from './DmarcReportOutageBanner'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -278,7 +277,6 @@ export default function DmarcByDomainPage() {
         </Flex>
       )}
 
-      <DmarcReportOutageBanner />
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}

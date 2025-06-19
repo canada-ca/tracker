@@ -3,7 +3,7 @@ attrs==23.2.0
 certifi==2024.7.4
 cffi==1.17.0
 charset-normalizer==2.1.1
-cryptography==44.0.1
+cryptography==44.0.3
 idna==3.7
 nassl==5.3.0
 nats-py==2.8.0
@@ -14,7 +14,7 @@ pycparser==2.21
 pydantic==2.4.0
 pydantic_core==2.10.0
 python-dotenv==0.21.0
-requests==2.32.3
+requests==2.32.4
 requests-toolbelt==0.10.1
 service-identity==24.1.0
 sslyze==6.1.0

@@ -5,7 +5,7 @@ metadata:
   namespace: azure-defender-easm
 spec:
   timeZone: America/Toronto
-  schedule: "00 7 * * 5"
+  schedule: "00 5 * * *"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: label-known-easm-assets
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-5b74631-1743087781 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-66f28bd-1743697569 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
               env:
                 - name: DB_PASS
                   valueFrom:

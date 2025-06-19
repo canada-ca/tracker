@@ -17,10 +17,10 @@ pyleri==1.4.1
 PyNaCl==1.5.0
 python-arango==8.1.6
 python-dotenv==0.21.0
-requests==2.32.3
+requests==2.32.4
 requests-file==1.5.1
 requests-toolbelt==1.0.0
 six==1.16.0
 timeout-decorator==0.5.0
 tldextract==3.4.0
-urllib3==2.2.2
+urllib3==2.4.0

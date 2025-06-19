@@ -29,6 +29,7 @@ def get_labelled_org_assets_from_org_key(org_key):
     declare query_parameters(orgKey:string = '["{org_key}"]');
     EasmAsset
     | where TimeGeneratedValue > ago(24h)
+    | where AssetLastSeen > ago(30d)
     | where AssetType == 'HOST'
     | where Labels == orgKey
     | where AssetName !startswith '*.'
@@ -52,6 +53,7 @@ def get_unlabelled_assets():
     query = f"""
     EasmAsset
     | where TimeGeneratedValue > ago(24h)
+    | where AssetLastSeen > ago(30d)
     | where AssetType == 'HOST'
     | where Labels == '[]'
     | where AssetName !startswith '*.'

@@ -1,7 +1,7 @@
 import re
 import ssl
 from typing import Optional, Union
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urljoin, urlparse
 import urllib3
 
 import logging
@@ -30,19 +30,21 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 @dataclass
 class HTTPConnection:
+    url: str
     status_code: int
     redirect_to: str
     headers: dict
     blocked_category: str = None
 
     def __init__(self, http_response: Response):
+        self.url = http_response.url
         self.redirect_to = http_response.headers.get("location", None)
         self.status_code = http_response.status_code
         self.headers = dict(http_response.headers)
         if http_response.status_code == 403:
             content = http_response.text
             category_search = re.search(
-                "ATTENTION: Access Denied[\s\S]+Category: (.*)[\s\S]+Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat",
+                r"ATTENTION: Access Denied[\s\S]+Category: (.*)[\s\S]+Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat",
                 content,
             )
             if category_search:
@@ -86,6 +88,89 @@ class HTTPSConnectionRequest(HTTPConnectionRequest):
     scheme: str = "https"
 
 
+class SessionOverrideRedirectWithIP(requests.Session):
+    def __init__(self, ip_override_map):
+        self.ip_override_map = ip_override_map or {}
+        super().__init__()
+
+    def get_redirect_target(self, resp):
+        original_redirect_target = super().get_redirect_target(resp=resp)
+        parsed = urlparse(original_redirect_target)
+
+        if original_redirect_target and not parsed.netloc:
+            resp._is_relative_redirect = True
+        else:
+            resp._is_relative_redirect = False
+        resp._original_redirect_target = original_redirect_target
+
+        redirect_target = original_redirect_target
+        redirect_with_hostname = redirect_target
+
+        if not redirect_target:
+            pass
+        elif not parsed.netloc:
+            # Redirect is relative. Build out the full URL.
+            redirect_target = urljoin(resp.url, original_redirect_target)
+            host = resp.request.headers.get("Host")
+            # Ensure the original host is saved for the redirect for metadata
+            if (
+                host in self.ip_override_map
+                and host != urlparse(redirect_target).hostname
+            ):
+                redirect_with_hostname = redirect_target.replace(
+                    self.ip_override_map[host], host
+                )
+            else:
+                redirect_with_hostname = redirect_target
+        elif parsed.hostname in self.ip_override_map:
+            # If hostname is in override map, replace with IP address to send directly to specified IP address
+            redirect_target = original_redirect_target.replace(
+                parsed.hostname, self.ip_override_map[parsed.hostname]
+            )
+
+        resp._redirect_with_hostname = redirect_with_hostname
+        return redirect_target
+
+    def resolve_redirects(
+        self,
+        resp,
+        req,
+        stream=False,
+        timeout=None,
+        verify=True,
+        cert=None,
+        proxies=None,
+        yield_requests=False,
+        **adapter_kwargs,
+    ):
+        # Call the parent method to get the generator
+        redirect_generator = super().resolve_redirects(
+            resp,
+            req,
+            stream,
+            timeout,
+            verify,
+            cert,
+            proxies,
+            yield_requests,
+            **adapter_kwargs,
+        )
+
+        for prepared_request in redirect_generator:
+            if not hasattr(resp, "_redirect_with_hostname"):
+                # This shouldn't happen. Log it.
+                logger.error(
+                    f"Redirect target {resp._original_redirect_target} does not have a '_redirect_with_hostname' attribute. This should not happen."
+                )
+            else:
+                prepared_request._url_with_hostname = resp._redirect_with_hostname
+                prepared_request.headers["Host"] = urlparse(
+                    resp._redirect_with_hostname
+                ).hostname
+
+            yield prepared_request
+
+
 class AnyTlsVersionAdapter(HTTPAdapter):
     def init_poolmanager(self, *args, **pool_kwargs):
         ssl_context = ssl.create_default_context()
@@ -118,12 +203,13 @@ class HostHeaderSSLAdapter(AnyTlsVersionAdapter):
             connection_pool_kwargs.pop("assert_hostname", None)
             connection_pool_kwargs.pop("server_hostname", None)
 
-        return super(HostHeaderSSLAdapter, self).send(request, **kwargs)
+        return super().send(request, **kwargs)
 
 
 def request_connection(
     uri: Optional[str] = None,
-    ip_address: Optional[str] = None,
+    host: Optional[str] = None,
+    session: [requests.Session] = None,
     prepared_request: Optional[PreparedRequest] = None,
 ):
     uri = uri or prepared_request.url
@@ -137,100 +223,110 @@ def request_connection(
         else f"while requesting {uri} during redirect"
     )
 
-    with requests.Session() as session:
-        session.verify = False
-        try:
-            if scheme.lower() == "https" and ip_address:
-                session.mount("https://", HostHeaderSSLAdapter())
-            else:
-                session.mount("https://", AnyTlsVersionAdapter())
-
-            if prepared_request:
-                req = prepared_request
-            else:
-                if ip_address:
-                    req = session.prepare_request(
-                        requests.Request(
-                            "GET",
-                            f"{scheme.lower()}://{ip_address}",
-                            headers={"Host": host, **DEFAULT_REQUEST_HEADERS},
-                        )
-                    )
-                else:
-                    req = session.prepare_request(
-                        requests.Request(
-                            "GET",
-                            f"{scheme.lower()}://{host}",
-                            headers={**DEFAULT_REQUEST_HEADERS},
-                        )
-                    )
-
-            response = session.send(req, allow_redirects=False, timeout=TIMEOUT)
-
-            if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(uri=uri, http_response=response)
-            elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(uri=uri, http_response=response)
-            return {"connection": connection, "response": response}
-
-        except requests.exceptions.ConnectTimeout as e:
-            logger.info(f"Connection timeout error {context}: {str(e)}")
-            if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(
-                    uri=uri, error=CONNECTION_TIMEOUT_ERROR
+    try:
+        if prepared_request:
+            req = prepared_request
+        else:
+            req = session.prepare_request(
+                requests.Request(
+                    "GET",
+                    uri,
+                    headers={"Host": host, **DEFAULT_REQUEST_HEADERS},
                 )
-            elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(
-                    uri=uri, error=CONNECTION_TIMEOUT_ERROR
-                )
-            return {"connection": connection, "response": response}
-        except requests.exceptions.ReadTimeout as e:
-            logger.info(f"Read timeout error {context}: {str(e)}")
-            if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
-            elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
-            return {"connection": connection, "response": response}
-        except requests.exceptions.Timeout as e:
-            logger.info(f"Timeout error {context}: {str(e)}")
-            if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
-            elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
-            return {"connection": connection, "response": response}
+            )
 
-        except requests.exceptions.ConnectionError as e:
-            logger.info(f"Connection error {context}: {str(e)}")
-            if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_ERROR)
-            elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_ERROR)
-            return {"connection": connection, "response": response}
+        response = session.send(req, allow_redirects=False, timeout=TIMEOUT)
 
-        except BaseException as e:
-            logger.error(f"Unknown error {context}: {str(e)}")
-            if scheme.lower() == "http":
-                connection = HTTPConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
-            elif scheme.lower() == "https":
-                connection = HTTPSConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
-            return {"connection": connection, "response": response}
+        if scheme.lower() == "http":
+            connection = HTTPConnectionRequest(uri=uri, http_response=response)
+        elif scheme.lower() == "https":
+            connection = HTTPSConnectionRequest(uri=uri, http_response=response)
+        return {"connection": connection, "response": response}
+
+    except requests.exceptions.ConnectTimeout as e:
+        logger.info(f"Connection timeout error {context}: {str(e)}")
+        if scheme.lower() == "http":
+            connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
+        elif scheme.lower() == "https":
+            connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
+        return {"connection": connection, "response": response}
+    except requests.exceptions.ReadTimeout as e:
+        logger.info(f"Read timeout error {context}: {str(e)}")
+        if scheme.lower() == "http":
+            connection = HTTPConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
+        elif scheme.lower() == "https":
+            connection = HTTPSConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
+        return {"connection": connection, "response": response}
+    except requests.exceptions.Timeout as e:
+        logger.info(f"Timeout error {context}: {str(e)}")
+        if scheme.lower() == "http":
+            connection = HTTPConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
+        elif scheme.lower() == "https":
+            connection = HTTPSConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
+        return {"connection": connection, "response": response}
+
+    except requests.exceptions.ConnectionError as e:
+        logger.info(f"Connection error {context}: {str(e)}")
+        if scheme.lower() == "http":
+            connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_ERROR)
+        elif scheme.lower() == "https":
+            connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_ERROR)
+        return {"connection": connection, "response": response}
+
+    except BaseException as e:
+        logger.error(f"Unknown error {context}: {str(e)}")
+        if scheme.lower() == "http":
+            connection = HTTPConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
+        elif scheme.lower() == "https":
+            connection = HTTPSConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
+        return {"connection": connection, "response": response}
 
 
-def get_connection_chain(uri, ip_address):
+def get_connection_chain(uri, ip_override_map):
     connections: list[Union[HTTPConnectionRequest, HTTPSConnectionRequest]] = []
 
-    connection_request = request_connection(uri=uri, ip_address=ip_address)
-    connection = connection_request.get("connection")
-    connections.append(connection)
-    response = connection_request.get("response")
+    with SessionOverrideRedirectWithIP(ip_override_map=ip_override_map) as session:
+        session.verify = False
+        session.mount(
+            "https://",
+            HostHeaderSSLAdapter(),
+        )
 
-    while response and response.next and len(connections) < 10:
-        # delete 'Host' header as it is retained from original request if ip_address it set
-        response.next.headers.pop("Host", None)
-        connection_request = request_connection(prepared_request=response.next)
+        hostname = urlsplit(uri).hostname
+
+        send_uri = uri
+        if hostname in ip_override_map:
+            ip_address = ip_override_map[hostname]
+            send_uri = uri.replace(hostname, ip_address, 1)
+
+        req = session.prepare_request(
+            requests.Request(
+                "GET",
+                send_uri,
+                headers={"Host": hostname, **DEFAULT_REQUEST_HEADERS},
+            )
+        )
+
+        connection_request = request_connection(
+            uri=uri, prepared_request=req, session=session
+        )
         connection = connection_request.get("connection")
         connections.append(connection)
         response = connection_request.get("response")
+
+        while response and response.next and len(connections) < 10:
+            req = response.next
+            if req._url_with_hostname:
+                url = req._url_with_hostname
+            else:
+                url = req.url
+
+            connection_request = request_connection(
+                uri=url, prepared_request=req, session=session
+            )
+            connection = connection_request.get("connection")
+            connections.append(connection)
+            response = connection_request.get("response")
 
     return connections
 
@@ -249,7 +345,10 @@ class ChainResult:
         self.scheme = scheme
         self.domain = domain
         self.uri = f"{self.scheme}://{self.domain}"
-        self.connections = get_connection_chain(uri=self.uri, ip_address=ip_address)
+        ip_override_map = {domain: ip_address}
+        self.connections = get_connection_chain(
+            uri=self.uri, ip_override_map=ip_override_map
+        )
 
         for i in range(len(self.connections) - 1):
             cur_conn = self.connections[i]
