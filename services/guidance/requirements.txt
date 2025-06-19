@@ -11,4 +11,4 @@ requests-toolbelt==1.0.0
 setuptools-scm==8.0.4
 tomli==2.0.1
 typing_extensions==4.9.0
-urllib3==2.2.2
+urllib3==2.5.0
