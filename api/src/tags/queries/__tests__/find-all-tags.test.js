@@ -1,18 +1,26 @@
 import { findAllTags } from '../find-all-tags'
 
 describe('findAllTags', () => {
-  let loadAllTags, userKey, context
+  let loadAllTags, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, userKey, context
 
   beforeEach(() => {
     loadAllTags = jest.fn()
+    userRequired = jest.fn()
+    verifiedRequired = jest.fn()
+    checkSuperAdmin = jest.fn()
+    superAdminRequired = jest.fn()
     userKey = 'test-user'
-    context = { userKey, loaders: { loadAllTags } }
+    context = {
+      userKey,
+      loaders: { loadAllTags },
+      auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
+    }
   })
 
   it('should return tags when loadAllTags is successful', async () => {
     const tags = [
-      { tagId: '1', label: 'Tag1', description: 'Description1', visible: true },
-      { tagId: '2', label: 'Tag2', description: 'Description2', visible: false },
+      { tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global' },
+      { tagId: '2', label: 'Tag2', description: 'Description2', visible: false, ownership: 'global' },
     ]
     loadAllTags.mockResolvedValue(tags)
 
@@ -23,7 +31,7 @@ describe('findAllTags', () => {
   })
 
   it('should apply visible filter when isVisible is true', async () => {
-    const tags = [{ tagId: '1', label: 'Tag1', description: 'Description1', visible: true }]
+    const tags = [{ tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global' }]
     loadAllTags.mockResolvedValue(tags)
 
     const result = await findAllTags.resolve(null, { isVisible: true }, context)
@@ -33,7 +41,7 @@ describe('findAllTags', () => {
   })
 
   it('should log a message when tags are successfully retrieved', async () => {
-    const tags = [{ tagId: '1', label: 'Tag1', description: 'Description1', visible: true }]
+    const tags = [{ tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global' }]
     loadAllTags.mockResolvedValue(tags)
     console.info = jest.fn()
 
