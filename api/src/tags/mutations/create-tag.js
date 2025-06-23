@@ -8,10 +8,6 @@ export const createTag = new mutationWithClientMutationId({
   name: 'CreateTag',
   description: 'Mutation used to create a new label for tagging domains.',
   inputFields: () => ({
-    tagId: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'A unique identifier for the tag.',
-    },
     labelEn: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'English label that will be displayed.',
@@ -58,7 +54,7 @@ export const createTag = new mutationWithClientMutationId({
       userKey,
       auth: { userRequired, verifiedRequired, checkPermission, checkSuperAdmin, superAdminRequired },
       loaders: { loadTagByTagId, loadOrgByKey },
-      validators: { cleanseInput },
+      validators: { cleanseInput, slugify },
     },
   ) => {
     // Get User
@@ -66,7 +62,6 @@ export const createTag = new mutationWithClientMutationId({
     verifiedRequired({ user })
 
     // Cleanse input
-    const tagId = cleanseInput(args.tagId)
     const labelEn = cleanseInput(args.labelEn)
     const labelFr = cleanseInput(args.labelFr)
     const descriptionEn = cleanseInput(args.descriptionEn)
@@ -75,7 +70,7 @@ export const createTag = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     const insertTag = {
-      tagId: tagId.toLowerCase(),
+      tagId: slugify(`${labelEn}_${labelFr}`),
       label: { en: labelEn, fr: labelFr },
       description: {
         en: descriptionEn || '',
@@ -88,28 +83,12 @@ export const createTag = new mutationWithClientMutationId({
 
     const tag = await loadTagByTagId.load(insertTag.tagId)
 
-    // Check to see if any tags already have the label in use
-    let tagLabelCheckCursor
-    try {
-      tagLabelCheckCursor = await query`
-          WITH tags
-          FOR tag IN tags
-            FILTER (tag.label.en == ${labelEn}) OR (tag.label.fr == ${labelFr})
-            RETURN tag
-        `
-    } catch (err) {
-      console.error(
-        `Database error occurred during name check when user: ${userKey} attempted to create tag: ${insertTag.tagId}, ${err}`,
-      )
-      throw new Error(i18n._(t`Unable to create tag. Please try again.`))
-    }
-
-    if ((typeof tag !== 'undefined' || tagLabelCheckCursor.count > 0) && !['org', 'pending'].includes(ownership)) {
-      console.error(`User: ${userKey} attempted to create a tag: ${insertTag.tagId} however the tag already exists.`)
+    if (typeof tag !== 'undefined' && !['org', 'pending'].includes(ownership)) {
+      console.warn(`User: ${userKey} attempted to create a tag that already exists: ${insertTag.tagId}`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Tag label already in use, please choose another and try again.`),
+        description: i18n._(t`Tag label already in use. Please try again with a different label.`),
       }
     }
 
@@ -144,12 +123,8 @@ export const createTag = new mutationWithClientMutationId({
         }
 
         const permission = await checkPermission({ orgId })
-        if (permission !== 'super_admin' && typeof tag === 'undefined') {
-          insertTag.ownership = 'pending'
-          console.warn(
-            `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
-          )
-        } else if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+
+        if (!['super_admin', 'admin', 'owner'].includes(permission)) {
           console.warn(
             `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
           )
@@ -159,6 +134,8 @@ export const createTag = new mutationWithClientMutationId({
             description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
           }
         }
+
+        if (permission !== 'super_admin' && typeof tag === 'undefined') insertTag.ownership = 'pending'
 
         if (typeof tag !== 'undefined') {
           insertTag.organizations = [...tag.organizations, orgId]
