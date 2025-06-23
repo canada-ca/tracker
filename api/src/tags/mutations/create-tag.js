@@ -29,11 +29,11 @@ export const createTag = new mutationWithClientMutationId({
       type: GraphQLBoolean,
     },
     ownership: {
-      description: '',
+      description: 'Ownership of the tag, can be `global`, `org`, or `pending`.',
       type: new GraphQLNonNull(TagOwnershipEnums),
     },
     orgId: {
-      description: '',
+      description: 'The global id of the organization to be affiliated with the tag.',
       type: GraphQLID,
     },
   }),

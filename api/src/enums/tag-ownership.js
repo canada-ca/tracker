@@ -5,16 +5,16 @@ export const TagOwnershipEnums = new GraphQLEnumType({
   values: {
     GLOBAL: {
       value: 'global',
-      description: '',
+      description: 'Visible to all users, not affiliated with any organization.',
     },
     ORG: {
       value: 'org',
-      description: '',
+      description: 'Visible to all users affiliated with an organization.',
     },
     PENDING: {
       value: 'pending',
-      description: '',
+      description: 'Visible to admins, but not yet affiliated with any organization.',
     },
   },
-  description: '',
+  description: 'Enum representing the ownership of a tag, determining its visibility and affiliation.',
 })
