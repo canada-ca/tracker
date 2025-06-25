@@ -97,10 +97,19 @@ class SessionOverrideRedirectWithIP(requests.Session):
         original_redirect_target = super().get_redirect_target(resp=resp)
         parsed = urlparse(original_redirect_target)
 
-        if original_redirect_target and not parsed.netloc:
+        if not original_redirect_target:
+            resp._is_relative_redirect = False
+            resp._is_schema_relative_redirect = False
+        elif original_redirect_target.startswith('//'):
+            resp._is_relative_redirect = False
+            resp._is_schema_relative_redirect = True
+        elif not parsed.netloc:
             resp._is_relative_redirect = True
+            resp._is_schema_relative_redirect = False
         else:
             resp._is_relative_redirect = False
+            resp._is_schema_relative_redirect = False
+
         resp._original_redirect_target = original_redirect_target
 
         redirect_target = original_redirect_target
@@ -108,7 +117,7 @@ class SessionOverrideRedirectWithIP(requests.Session):
 
         if not redirect_target:
             pass
-        elif not parsed.netloc:
+        elif resp._is_relative_redirect:
             # Redirect is relative. Build out the full URL.
             redirect_target = urljoin(resp.url, original_redirect_target)
             host = resp.request.headers.get("Host")
@@ -122,6 +131,23 @@ class SessionOverrideRedirectWithIP(requests.Session):
                 )
             else:
                 redirect_with_hostname = redirect_target
+        elif resp._is_schema_relative_redirect:
+            # Schema-relative redirect: //example.com/path
+            current_scheme = urlparse(resp.url).scheme
+            redirect_target = f"{current_scheme}:{original_redirect_target}"
+
+            redirect_parsed = urlparse(redirect_target)
+
+            # Handle IP override mapping
+            if redirect_parsed.hostname in self.ip_override_map:
+                redirect_target = redirect_target.replace(
+                    redirect_parsed.hostname,
+                    self.ip_override_map[redirect_parsed.hostname],
+                    1
+                )
+
+            # Ensure the original host is saved for the redirect for metadata
+            redirect_with_hostname = f"{current_scheme}:{original_redirect_target}"
         elif parsed.hostname in self.ip_override_map:
             # If hostname is in override map, replace with IP address to send directly to specified IP address
             redirect_target = original_redirect_target.replace(
@@ -244,21 +270,21 @@ def request_connection(
         return {"connection": connection, "response": response}
 
     except requests.exceptions.ConnectTimeout as e:
-        logger.info(f"Connection timeout error {context}: {str(e)}")
+        logger.info(f"Connection timeout error {context}: {repr(e)}")
         if scheme.lower() == "http":
             connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
         elif scheme.lower() == "https":
             connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
         return {"connection": connection, "response": response}
     except requests.exceptions.ReadTimeout as e:
-        logger.info(f"Read timeout error {context}: {str(e)}")
+        logger.info(f"Read timeout error {context}: {repr(e)}")
         if scheme.lower() == "http":
             connection = HTTPConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
         elif scheme.lower() == "https":
             connection = HTTPSConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
         return {"connection": connection, "response": response}
     except requests.exceptions.Timeout as e:
-        logger.info(f"Timeout error {context}: {str(e)}")
+        logger.info(f"Timeout error {context}: {repr(e)}")
         if scheme.lower() == "http":
             connection = HTTPConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
         elif scheme.lower() == "https":
@@ -266,7 +292,7 @@ def request_connection(
         return {"connection": connection, "response": response}
 
     except requests.exceptions.ConnectionError as e:
-        logger.info(f"Connection error {context}: {str(e)}")
+        logger.info(f"Connection error {context}: {repr(e)}")
         if scheme.lower() == "http":
             connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_ERROR)
         elif scheme.lower() == "https":
@@ -274,7 +300,7 @@ def request_connection(
         return {"connection": connection, "response": response}
 
     except BaseException as e:
-        logger.error(f"Unknown error {context}: {str(e)}")
+        logger.error(f"Unknown error {context}: {repr(e)}")
         if scheme.lower() == "http":
             connection = HTTPConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
         elif scheme.lower() == "https":
