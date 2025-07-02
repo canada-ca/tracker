@@ -27,7 +27,7 @@ import {
 import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
-import { bool, number, string } from 'prop-types'
+import { array, bool, number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
 import { AdminDomainCard } from './AdminDomainCard'
@@ -49,7 +49,7 @@ import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
 
-export function AdminDomains({ orgSlug, orgId, verified, permission }) {
+export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -175,12 +175,10 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
   if (error) return <ErrorFallbackMessage error={error} />
 
   const filterTagOptions = [
-    { value: t`NEW`, text: t`New` },
-    { value: t`PROD`, text: t`Prod` },
-    { value: t`STAGING`, text: t`Staging` },
-    { value: t`TEST`, text: t`Test` },
-    { value: t`WEB`, text: t`Web` },
-    { value: t`INACTIVE`, text: t`Inactive` },
+    ...availableTags?.map(({ tagId, label }) => ({
+      value: tagId,
+      text: label.toUpperCase(),
+    })),
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
@@ -490,6 +488,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
         validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
+        availableTags={availableTags}
         {...modalProps}
       />
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
@@ -601,6 +600,7 @@ AdminDomains.propTypes = {
   orgSlug: string.isRequired,
   orgId: string.isRequired,
   verified: bool,
+  availableTags: array,
   domainsPerPage: number,
   permission: string,
 }

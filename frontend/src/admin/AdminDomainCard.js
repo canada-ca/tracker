@@ -1,7 +1,7 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { array, bool, string } from 'prop-types'
-import { Flex, ListItem, Tag, TagLabel, Text } from '@chakra-ui/react'
+import { Flex, ListItem, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...rest }) {
@@ -20,12 +20,14 @@ export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...r
           {url}
         </Text>
         <Flex>
-          {tags?.map((tag, idx) => {
+          {tags?.map(({ label, description }, idx) => {
             return (
               <Tag key={idx} mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  {tag}
-                </TagLabel>
+                <Tooltip label={description} fontSize="md" placement="top">
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    {label.toUpperCase()}
+                  </TagLabel>
+                </Tooltip>
               </Tag>
             )
           })}
