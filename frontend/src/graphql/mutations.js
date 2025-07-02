@@ -182,7 +182,7 @@ export const CREATE_DOMAIN = gql`
   mutation CreateDomain(
     $orgId: ID!
     $domain: DomainScalar!
-    $tags: [InputTag]
+    $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums!
   ) {
@@ -192,7 +192,13 @@ export const CREATE_DOMAIN = gql`
           id
           domain
           lastRan
-          claimTags
+          claimTags {
+            tagId
+            label
+            description
+            isVisible
+            ownership
+          }
           assetState
           archived
           rcode
@@ -264,7 +270,7 @@ export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!
     $orgId: ID!
-    $tags: [InputTag]
+    $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
@@ -284,7 +290,13 @@ export const UPDATE_DOMAIN = gql`
           id
           domain
           lastRan
-          claimTags
+          claimTags {
+            tagId
+            label
+            description
+            isVisible
+            ownership
+          }
           assetState
           archived
           rcode
