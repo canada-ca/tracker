@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: update-selectors
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:master-7714899-1749647753 # {"$imagepolicy": "flux-system:update-selectors"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:master-aaeb632-1751565636 # {"$imagepolicy": "flux-system:update-selectors"}
               env:
                 - name: ARANGO_DB_USER
                   valueFrom:
