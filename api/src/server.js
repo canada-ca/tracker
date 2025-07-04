@@ -16,11 +16,13 @@ import { createComplexityLimitRule } from 'graphql-validation-complexity'
 
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
+import { FilterValueScalar } from './scalars/filter-value'
 
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
     mutation: createMutationSchema(),
+    types: [FilterValueScalar],
   })
 
 const createValidationRules = (maxDepth, complexityCost, scalarCost, objectCost, listFactor) => {

@@ -3,7 +3,7 @@ import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectT
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { domainStatus } from './domain-status'
-import { AssetStateEnums, DomainTagLabel, PeriodEnums } from '../../enums'
+import { AssetStateEnums, PeriodEnums } from '../../enums'
 import { nodeInterface } from '../../node'
 import { CveID, Domain, Selectors, Year } from '../../scalars'
 import { dmarcSummaryType } from '../../dmarc-summaries/objects'
@@ -16,6 +16,7 @@ import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
 import { mxRecordConnection } from '../../dns-scan/objects/mx-record-connection'
 import { additionalFinding } from '../../additional-findings/objects/additional-finding'
+import { tagType } from '../../tags/objects'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -371,8 +372,20 @@ export const domainType = new GraphQLObjectType({
     },
     claimTags: {
       description: 'List of labelled tags users of an organization have applied to the claimed domain.',
-      type: new GraphQLList(DomainTagLabel),
-      resolve: ({ claimTags }) => claimTags,
+      type: new GraphQLList(tagType),
+      args: {
+        isVisible: {
+          type: GraphQLBoolean,
+          description: 'Filter tags to only those that are visible.',
+          defaultValue: true,
+        },
+      },
+      resolve: async ({ claimTags }, args, { loaders: { loadTagByTagId } }) => {
+        const loadedTags = await loadTagByTagId.loadMany(claimTags)
+        return loadedTags.filter((tag) => {
+          return args.isVisible ? tag.visible : true
+        })
+      },
     },
     userHasPermission: {
       description:

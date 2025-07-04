@@ -103,11 +103,24 @@ describe('<OrganizationDomains />', () => {
         },
       ]
 
+      const availableTags = [
+        {
+          tagId: 'tag1',
+          label: 'Tag 1',
+          description: 'Description for Tag 1',
+        },
+        {
+          tagId: 'tag2',
+          label: 'Tag 2',
+          description: 'Description for Tag 2',
+        },
+      ]
+
       const router = createMemoryRouter(
         [
           {
             path: '/organizations/:orgSlug/:activeTab?',
-            element: <OrganizationDomains orgSlug={orgSlug} />,
+            element: <OrganizationDomains orgSlug={orgSlug} availableTags={availableTags} />,
           },
         ],
         {
@@ -128,7 +141,7 @@ describe('<OrganizationDomains />', () => {
                 })}
               >
                 <RouterProvider router={router}>
-                  <OrganizationDomains orgSlug={orgSlug} />
+                  <OrganizationDomains orgSlug={orgSlug} availableTags={availableTags} />
                 </RouterProvider>
               </UserVarProvider>
             </MockedProvider>

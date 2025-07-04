@@ -1,10 +1,9 @@
-import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
-import { inputTag } from '../inputs/domain-tag'
 import { AssetStateEnums } from '../../enums'
 
 export const updateDomain = new mutationWithClientMutationId({
@@ -21,7 +20,7 @@ export const updateDomain = new mutationWithClientMutationId({
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
-      type: new GraphQLList(inputTag),
+      type: new GraphQLList(GraphQLString),
     },
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
@@ -48,14 +47,13 @@ export const updateDomain = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      language,
       collections,
       transaction,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByKey, loadOrgByKey },
+      loaders: { loadDomainByKey, loadOrgByKey, loadTagByTagId },
     },
   ) => {
     // Get User
@@ -69,7 +67,17 @@ export const updateDomain = new mutationWithClientMutationId({
 
     let tags
     if (typeof args.tags !== 'undefined') {
-      tags = args.tags
+      tags = await loadTagByTagId.loadMany(
+        args.tags.map((tag) => {
+          return cleanseInput(tag)
+        }),
+      )
+      tags = tags
+        .filter(({ visible, ownership, organizations }) => {
+          // Filter out tags that are not visible or do not belong to the org
+          return visible && (ownership === 'global' || organizations.some((org) => org === orgId))
+        })
+        .map((tag) => tag.tagId)
     } else {
       tags = null
     }
@@ -310,9 +318,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     return {
       ...returnDomain,
-      claimTags: claimToInsert.tags.map((tag) => {
-        return tag[language]
-      }),
+      claimTags: claimToInsert.tags,
       assetState,
     }
   },

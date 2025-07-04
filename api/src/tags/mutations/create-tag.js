@@ -76,7 +76,7 @@ export const createTag = new mutationWithClientMutationId({
         en: descriptionEn || '',
         fr: descriptionFr || '',
       },
-      visible: args?.isVisible || false,
+      visible: args?.isVisible || true,
       ownership,
       organizations: [],
     }

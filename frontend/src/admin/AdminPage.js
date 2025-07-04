@@ -70,6 +70,7 @@ export default function AdminPage() {
         slug: data?.findMyOrganizations?.edges[0]?.node?.slug,
         id: data?.findMyOrganizations?.edges[0]?.node?.id,
         verified: data?.findMyOrganizations?.edges[0]?.node?.verified,
+        availableTags: data?.findMyOrganizations?.edges[0]?.node?.availableTags || [],
       })
       setSelectedOrg(data?.findMyOrganizations?.edges[0]?.node?.name || 'none')
     }
@@ -179,6 +180,7 @@ export default function AdminPage() {
             orgSlug={orgDetails.slug}
             orgId={orgDetails.id}
             verified={orgDetails.verified}
+            availableTags={orgDetails.availableTags}
             permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
             mr="4"
           />
