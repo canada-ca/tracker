@@ -26,7 +26,7 @@ import { domainSearchTip } from '../domains/DomainsPage'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 
-export function OrganizationDomains({ orgSlug, orgName, userHasPermission, availableTags }) {
+export function OrganizationDomains({ orgSlug, orgName, userHasPermission, availableTags = [] }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
