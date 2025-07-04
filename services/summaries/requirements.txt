@@ -14,7 +14,7 @@ pytest==8.3.5
 python-arango==8.1.7
 python-dotenv==1.1.0
 requests==2.32.4
-requests-toolbelt==0.10.1
+requests-toolbelt==1.0.0
 tomli==2.0.1
 urllib3==2.5.0
 zipp==3.21.0
