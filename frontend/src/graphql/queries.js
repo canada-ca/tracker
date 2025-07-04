@@ -1335,5 +1335,3 @@ export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
     getAllVerifiedRuaDomains
   }
 `
-
-// export const GET_
