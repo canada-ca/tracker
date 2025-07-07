@@ -185,6 +185,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const adminDomainList = loading ? (
@@ -459,7 +460,12 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
         />
       </Box>
       <Flex align="center" mb="2">
-        <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+        <FilterList
+          filters={filters}
+          setFilters={setFilters}
+          resetToFirstPage={resetToFirstPage}
+          filterTagOptions={filterTagOptions}
+        />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls

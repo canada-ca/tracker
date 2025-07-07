@@ -110,6 +110,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const assetStateOptions = [
@@ -301,7 +302,12 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
-          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+          <FilterList
+            filters={filters}
+            setFilters={setFilters}
+            resetToFirstPage={resetToFirstPage}
+            filterTagOptions={filterTagOptions}
+          />
         </Flex>
       )}
 

@@ -135,11 +135,6 @@ export function DomainListFilters({
                       <Trans>Status/Tag/State</Trans>
                     </option>
                     {filterValues(values)}
-                    {values.filterCategory === 'TAGS' && (
-                      <option value="CVE_DETECTED">
-                        <Trans>SPIN Top 25</Trans>
-                      </option>
-                    )}
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterValue}

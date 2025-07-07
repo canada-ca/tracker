@@ -138,6 +138,7 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
+    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -347,7 +348,12 @@ export default function DomainsPage() {
             resetToFirstPage={resetToFirstPage}
           />
           {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
-          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+          <FilterList
+            filters={filters}
+            setFilters={setFilters}
+            resetToFirstPage={resetToFirstPage}
+            filterTagOptions={filterTagOptions}
+          />
         </Flex>
 
         {domainList}
