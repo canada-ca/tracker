@@ -259,13 +259,24 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
       name
+      availableTags(sortDirection: ASC, includeGlobal: true) {
+        tagId
+        label
+        description
+      }
       domains(first: $first, after: $after, search: $search, filters: $filters) {
         edges {
           node {
             id
             domain
             lastRan
-            claimTags
+            claimTags(isVisible: true) {
+              tagId
+              label
+              description
+              isVisible
+              ownership
+            }
             assetState
             archived
             ignoreRua
@@ -679,6 +690,11 @@ export const ORG_DETAILS_PAGE = gql`
           ...RequiredSummaryFields
         }
       }
+      availableTags(sortDirection: ASC, includeGlobal: true) {
+        tagId
+        label
+        description
+      }
     }
   }
   ${Summary.fragments.requiredFields}
@@ -782,7 +798,13 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ...RequiredDomainStatusFields
             }
             hasDMARCReport
-            claimTags
+            claimTags(isVisible: true) {
+              tagId
+              label
+              description
+              isVisible
+              ownership
+            }
             assetState
             archived
             rcode
@@ -1136,6 +1158,12 @@ export const ADMIN_PAGE = gql`
           slug
           name
           verified
+          availableTags(sortDirection: ASC, includeGlobal: true) {
+            tagId
+            label
+            description
+            isVisible
+          }
         }
       }
     }

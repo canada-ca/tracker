@@ -55,6 +55,7 @@ describe('<AdminDomains />', () => {
                   orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                   orgSlug="test-org.slug"
                   domainsPerPage={4}
+                  availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                 />
               </MemoryRouter>
             </I18nProvider>
@@ -96,6 +97,7 @@ describe('<AdminDomains />', () => {
                   orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                   orgSlug={'test-org.slug'}
                   domainsPerPage={4}
+                  availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                 />
               </MemoryRouter>
             </I18nProvider>
@@ -135,7 +137,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
-              tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
+              tags: ['tag1'],
               archived: false,
             },
           },
@@ -169,6 +171,7 @@ describe('<AdminDomains />', () => {
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
+                    availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -225,7 +228,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
-              tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
+              tags: ['tag1'],
               archived: false,
               assetState: 'APPROVED',
             },
@@ -261,6 +264,7 @@ describe('<AdminDomains />', () => {
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
+                    availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -320,7 +324,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
-              tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
+              tags: ['tag1'],
 
               archived: false,
               assetState: 'APPROVED',
@@ -357,6 +361,7 @@ describe('<AdminDomains />', () => {
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
+                    availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -450,6 +455,7 @@ describe('<AdminDomains />', () => {
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
+                    availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -531,6 +537,7 @@ describe('<AdminDomains />', () => {
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
+                    availableTags={rawOrgDomainListData.findOrganizationBySlug.availableTags}
                   />
                 </MemoryRouter>
               </I18nProvider>

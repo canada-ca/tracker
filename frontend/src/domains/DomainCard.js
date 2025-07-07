@@ -1,6 +1,19 @@
 import React, { memo } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Badge, Box, Button, Flex, IconButton, ListItem, Stack, Tag, TagLabel, Text, useToast } from '@chakra-ui/react'
+import {
+  Badge,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  ListItem,
+  Stack,
+  Tag,
+  TagLabel,
+  Text,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
@@ -163,12 +176,14 @@ function DomainCard({
         <Flex>
           <Box mr="auto" className="user-tags">
             <Flex flexWrap="wrap">
-              {tags?.map((tag, idx) => {
+              {tags?.map(({ label, description }, idx) => {
                 return (
                   <Tag key={idx} my="1" mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      {tag}
-                    </TagLabel>
+                    <Tooltip label={description} fontSize="md" placement="top">
+                      <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                        {label.toUpperCase()}
+                      </TagLabel>
+                    </Tooltip>
                   </Tag>
                 )
               })}

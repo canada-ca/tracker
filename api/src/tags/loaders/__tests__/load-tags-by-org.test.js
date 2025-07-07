@@ -36,14 +36,14 @@ describe('given a loadTagsByOrg dataloader', () => {
     })
     beforeEach(async () => {
       await collections.tags.save({
-        tagId: 'web',
+        tagId: 'web-web',
         label: { en: 'Web', fr: 'Web' },
         description: { en: '', fr: '' },
         visible: false,
         ownership: 'global',
       })
       await collections.tags.save({
-        tagId: 'new',
+        tagId: 'new-nouveau',
         label: { en: 'New', fr: 'Nouveau' },
         description: { en: '', fr: '' },
         visible: true,
@@ -51,7 +51,7 @@ describe('given a loadTagsByOrg dataloader', () => {
         organizations: ['test'],
       })
       await collections.tags.save({
-        tagId: 'test',
+        tagId: 'test-test',
         label: { en: 'Test', fr: 'Test' },
         description: { en: '', fr: '' },
         visible: true,
@@ -83,9 +83,8 @@ describe('given a loadTagsByOrg dataloader', () => {
       // Get User From db
       const expectedCursor = await query`
             FOR tag IN tags
+              FILTER tag.visible == true
               FILTER 'test' IN tag.organizations
-              FILTER tag.ownership != 'pending'
-              FILTER tag.ownership != "global"
               LET label = TRANSLATE('en', tag.label)
               SORT label ASC
               RETURN {
@@ -112,8 +111,8 @@ describe('given a loadTagsByOrg dataloader', () => {
     it('returns pending tags', async () => {
       const expectedCursor = await query`
             FOR tag IN tags
-              FILTER 'test' IN tag.organizations
-              FILTER tag.ownership != "global"
+              FILTER tag.visible == true
+              FILTER 'test' IN tag.organizations OR tag.ownership == "pending"
               LET label = TRANSLATE('en', tag.label)
               SORT label ASC
               RETURN {
@@ -135,8 +134,8 @@ describe('given a loadTagsByOrg dataloader', () => {
     it('returns global tags', async () => {
       const expectedCursor = await query`
             FOR tag IN tags
-              FILTER 'test' IN tag.organizations
-              FILTER tag.ownership != 'pending'
+              FILTER tag.visible == true
+              FILTER 'test' IN tag.organizations OR tag.ownership == "global"
               LET label = TRANSLATE('en', tag.label)
               SORT label ASC
               RETURN {
