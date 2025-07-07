@@ -90,25 +90,13 @@ export const organizationType = new GraphQLObjectType({
         },
       },
       resolve: async (
-        { _id, _key },
+        { _key },
         args,
-        {
-          userKey,
-          auth: { userRequired, loginRequiredBool, verifiedRequired, checkPermission },
-          loaders: { loadTagsByOrg },
-        },
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
-        }
-
-        const permission = await checkPermission({ orgId: _id })
-        if (!permission) {
-          console.error(
-            `User "${userKey}" attempted to retrieve available domain tags for organization "${_id}". Permission: ${permission}`,
-          )
-          throw new Error(t`Permission Denied: Please contact organization user for help with retrieving tags.`)
         }
 
         const orgTags = await loadTagsByOrg({
