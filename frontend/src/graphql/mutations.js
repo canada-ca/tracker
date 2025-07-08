@@ -776,4 +776,114 @@ export const COMPLETE_TOUR = gql`
   }
 `
 
+export const CREATE_GLOBAL_TAG = gql`
+  mutation CreateGlobalTag(
+    $labelEn: String!
+    $labelFr: String!
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+  ) {
+    createTag(
+      input: {
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: GLOBAL
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const CREATE_ORG_TAG = gql`
+  mutation CreateOrgTag(
+    $orgId: ID!
+    $labelEn: String!
+    $labelFr: String!
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+  ) {
+    createTag(
+      input: {
+        orgId: $orgId
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: ORG
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_TAG = gql`
+  mutation UpdateTag(
+    $tagId: String!
+    $labelEn: String
+    $labelFr: String
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+    $ownership: TagOwnershipEnum
+  ) {
+    updateTag(
+      input: {
+        tagId: $tagId
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: $ownership
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
