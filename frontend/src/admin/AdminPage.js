@@ -98,8 +98,8 @@ export default function AdminPage() {
   } else {
     options = []
     data.findMyOrganizations?.edges.forEach((edge) => {
-      const { slug, name, id, verified } = edge.node
-      options.push({ label: name, value: { slug: slug, id: id, verified: verified } })
+      const { slug, name, id, verified, availableTags } = edge.node
+      options.push({ label: name, value: { slug: slug, id: id, verified: verified, availableTags } })
     })
     dropdown = (
       <Dropdown

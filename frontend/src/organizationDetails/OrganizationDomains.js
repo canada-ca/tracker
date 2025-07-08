@@ -75,6 +75,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
     variables: queryVariables,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore',
   })
 
   const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(

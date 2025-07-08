@@ -259,11 +259,6 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
       name
-      availableTags(sortDirection: ASC, includeGlobal: true) {
-        tagId
-        label
-        description
-      }
       domains(first: $first, after: $after, search: $search, filters: $filters) {
         edges {
           node {
