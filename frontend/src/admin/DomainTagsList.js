@@ -1,0 +1,327 @@
+import React, { useState } from 'react'
+import {
+  Badge,
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  Grid,
+  IconButton,
+  Select,
+  Switch,
+  Text,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react'
+import { FIND_ALL_TAGS } from '../graphql/queries'
+import { useMutation, useQuery } from '@apollo/client'
+import { CREATE_GLOBAL_TAG, UPDATE_TAG } from '../graphql/mutations'
+import { t, Trans } from '@lingui/macro'
+import { EditIcon, PlusSquareIcon } from '@chakra-ui/icons'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { Formik } from 'formik'
+import { FormField } from '../components/fields/FormField'
+
+export const DomainTagsList = () => {
+  // Use an object to track which tag is being edited
+  const [editingTags, setEditingTags] = useState({})
+  const [isCreatingTag, setIsCreatingTag] = useState(false)
+  const toast = useToast()
+
+  const { loading, error, data } = useQuery(FIND_ALL_TAGS, {
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
+  const [updateTag, { updateLoading }] = useMutation(UPDATE_TAG, {
+    onError(error) {
+      toast({
+        title: t`An error occurred.`,
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ updateTag }) {
+      if (updateTag.result.__typename === 'Tag') {
+        toast({
+          title: t`Tag created`,
+          description: t`${updateTag.result.tag} was added to`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (updateTag.result.__typename === 'TagError') {
+        toast({
+          title: t`Unable to create new global tag.`,
+          description: updateTag.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: `Incorrect updateTag.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect updateTag.result typename.')
+      }
+    },
+  })
+
+  const [createGlobalTag, { loading: createLoading }] = useMutation(CREATE_GLOBAL_TAG, {
+    onError(error) {
+      toast({
+        title: t`An error occurred.`,
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ createGlobalTag }) {
+      if (createGlobalTag.result.__typename === 'Tag') {
+        toast({
+          title: t`Tag created`,
+          description: t`${createGlobalTag.result.tag} was added to`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (createGlobalTag.result.__typename === 'TagError') {
+        toast({
+          title: t`Unable to create new global tag.`,
+          description: createGlobalTag.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: `Incorrect createGlobalTag.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect createGlobalTag.result typename.')
+      }
+    },
+  })
+
+  if (loading) return <LoadingMessage />
+  if (error) return <ErrorFallbackMessage />
+
+  const ownershipBadgeColour = (ownership) => {
+    switch (ownership) {
+      case 'GLOBAL':
+        return 'weak'
+      case 'ORG':
+        return 'info'
+      default:
+        return 'primary'
+    }
+  }
+
+  const tagForm = ({ isLoading, mutation, tagId = '', visible = true, ownership = '' }) => {
+    return (
+      <Formik
+        validateOnBlur={false}
+        initialValues={{
+          labelEn: '',
+          labelFr: '',
+          descriptionEn: '',
+          descriptionFr: '',
+          visible,
+          ownership,
+        }}
+        initialTouched={{
+          labelEn: true,
+        }}
+        // validationSchema={}
+        onSubmit={async (values) => {
+          if (mutation === 'create') {
+            const { labelEn, labelFr, descriptionEn, descriptionFr, visible, _ownership } = values
+            await createGlobalTag({
+              variables: {
+                labelEn,
+                labelFr,
+                descriptionEn,
+                descriptionFr,
+                visible,
+                // ownership,
+              },
+            })
+          } else if (mutation === 'update') {
+            const { labelEn, labelFr, descriptionEn, descriptionFr, visible, ownership } = values
+            await updateTag({
+              variables: {
+                tagId,
+                labelEn,
+                labelFr,
+                descriptionEn,
+                descriptionFr,
+                visible,
+                ownership,
+              },
+            })
+          }
+        }}
+      >
+        {({ handleSubmit, handleReset, handleChange }) => (
+          <form onSubmit={handleSubmit}>
+            <Grid gridTemplateColumns="repeat(4, 1fr)" gridRowGap="0.5rem" gridColumnGap="1.5rem" mx="1rem" mb="1.5rem">
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <FormField name="labelEn" label={t`Label (EN)`} />
+              </Box>
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <FormField name="labelFr" label={t`Label (FR)`} />
+              </Box>
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <FormField name="descriptionEn" label={t`Description (EN)`} />
+              </Box>
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <FormField name="descriptionFr" label={t`Description (FR)`} />
+              </Box>
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <Flex p="1" align="center">
+                  <Switch
+                    isFocusable={true}
+                    id="visible"
+                    name="visible"
+                    aria-label="visible"
+                    mx="2"
+                    defaultChecked={visible}
+                    onChange={handleChange}
+                  />
+                  <Badge variant="outline" color="gray.900" p="1.5">
+                    <Trans>Visible</Trans>
+                  </Badge>
+                </Flex>
+              </Box>
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <Select id="ownership" name="ownership" onChange={handleChange}>
+                  <option value="" hidden>
+                    <Trans>Ownership</Trans>
+                  </option>
+                  <option value="GLOBAL">Global</option>
+                  <option value="ORG">Organization</option>
+                </Select>
+              </Box>
+              <Button
+                variant="danger"
+                type="reset"
+                onClick={handleReset}
+                gridColumn={{ base: '1 / 3', md: '1 / 2' }}
+                isLoading={isLoading}
+              >
+                <Trans>Clear</Trans>
+              </Button>
+              <Button
+                variant="primaryOutline"
+                type="button"
+                onClick={() => setIsCreatingTag(false)}
+                gridColumn={{ base: '3 / 5', md: '3 / 4' }}
+                isLoading={isLoading}
+              >
+                <Trans>Close</Trans>
+              </Button>
+              <Button variant="primary" type="submit" gridColumn={{ base: '1 / 5', md: '4 / 5' }} isLoading={isLoading}>
+                <Trans>Confirm</Trans>
+              </Button>
+            </Grid>
+          </form>
+        )}
+      </Formik>
+    )
+  }
+
+  return (
+    <Box>
+      <Box mb="4">
+        <Button
+          variant="primary"
+          onClick={() => setIsCreatingTag(!isCreatingTag)}
+          rightIcon={<PlusSquareIcon boxSize="icons.lg" />}
+          mb="2"
+        >
+          Add Tag
+        </Button>
+        <Collapse in={isCreatingTag}>{tagForm({ isLoading: createLoading, mutation: 'create' })}</Collapse>
+      </Box>
+
+      {data.findAllTags.map(({ tagId, label, description, isVisible, ownership, _organizations }) => {
+        return (
+          <Box key={tagId}>
+            <Flex align="center" mb="2">
+              <IconButton
+                icon={<EditIcon boxSize="icons.md" />}
+                variant="primary"
+                onClick={() => setEditingTags((prev) => ({ ...prev, [tagId]: !prev[tagId] }))}
+                mr="2"
+              />
+              <Flex
+                w="100%"
+                align="center"
+                justifyContent="space-between"
+                bg="gray.100"
+                px="2"
+                py="1"
+                rounded="md"
+                borderWidth="1px"
+                borderColor="black"
+              >
+                <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`} placement="right">
+                  <Text fontWeight="bold">{label.toUpperCase()}</Text>
+                </Tooltip>
+                <Badge
+                  variant="solid"
+                  bg={isVisible ? 'strong' : 'weak'}
+                  pt={1}
+                  mr={{ md: '1rem' }}
+                  justifySelf={{ base: 'start', md: 'end' }}
+                >
+                  <Trans>Visible</Trans>
+                </Badge>
+                <Badge
+                  variant="solid"
+                  bg={ownershipBadgeColour(ownership)}
+                  pt={1}
+                  mr={{ md: '1rem' }}
+                  justifySelf={{ base: 'start', md: 'end' }}
+                >
+                  {ownership}
+                </Badge>
+              </Flex>
+            </Flex>
+            <Collapse in={!!editingTags[tagId]}>
+              {tagForm({ isLoading: updateLoading, mutation: 'update', visible: isVisible, ownership, tagId })}
+            </Collapse>
+          </Box>
+        )
+      })}
+    </Box>
+  )
+}
