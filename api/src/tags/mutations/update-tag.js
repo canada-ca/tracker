@@ -53,7 +53,7 @@ export const updateTag = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      validators: { cleanseInput },
+      validators: { cleanseInput, slugify },
       loaders: { loadTagByTagId },
     },
   ) => {
@@ -86,32 +86,16 @@ export const updateTag = new mutationWithClientMutationId({
       }
     }
 
-    // Check to see if any tags already have the label in use
-    if (labelEn !== '' || labelFr !== '') {
-      let tagLabelCheckCursor
-      try {
-        tagLabelCheckCursor = await query`
-          WITH tags
-          FOR tag IN tags
-            FILTER (tag.label.en == ${labelEn}) OR (tag.label.fr == ${labelFr})
-            RETURN tag
-        `
-      } catch (err) {
-        console.error(
-          `Database error occurred during name check when user: ${userKey} attempted to update tag: ${currentTag.tagId}, ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to update tag. Please try again.`))
-      }
+    const updatedTagId = slugify(`${labelEn}-${labelFr}`)
 
-      if (tagLabelCheckCursor.count > 0) {
-        console.error(
-          `User: ${userKey} attempted to change the label of tag: ${currentTag.tagId} however it is already in use.`,
-        )
-        return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(t`Tag label already in use, please choose another and try again.`),
-        }
+    const existingTag = await loadTagByTagId.load(updatedTagId)
+
+    if (typeof existingTag !== 'undefined' && !['org', 'pending'].includes(ownership)) {
+      console.warn(`User: ${userKey} attempted to create a tag that already exists: ${updatedTagId}`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Tag label already in use. Please try again with a different label.`),
       }
     }
 
@@ -138,6 +122,7 @@ export const updateTag = new mutationWithClientMutationId({
 
     // Update tag
     const updatedTag = {
+      tagId: updatedTagId,
       label: {
         en: labelEn || compareTag.label.en,
         fr: labelFr || compareTag.label.fr,
@@ -185,7 +170,7 @@ export const updateTag = new mutationWithClientMutationId({
 
     // Clear dataloader and load updated tag
     await loadTagByTagId.clear(currentTag.tagId)
-    const returnTag = await loadTagByTagId.load(currentTag.tagId)
+    const returnTag = await loadTagByTagId.load(updatedTag.tagId)
 
     console.info(`User: ${userKey} successfully updated tag: ${tagId}.`)
 
