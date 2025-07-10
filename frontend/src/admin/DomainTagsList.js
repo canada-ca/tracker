@@ -17,7 +17,7 @@ import { FIND_ALL_TAGS } from '../graphql/queries'
 import { useMutation, useQuery } from '@apollo/client'
 import { CREATE_GLOBAL_TAG, UPDATE_TAG } from '../graphql/mutations'
 import { t, Trans } from '@lingui/macro'
-import { EditIcon, PlusSquareIcon } from '@chakra-ui/icons'
+import { EditIcon, PlusSquareIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { Formik } from 'formik'
@@ -44,6 +44,7 @@ export const DomainTagsList = () => {
   })
 
   const [updateTag, { updateLoading }] = useMutation(UPDATE_TAG, {
+    refetchQueries: ['FindAllTags'],
     onError(error) {
       toast({
         title: t`An error occurred.`,
@@ -88,6 +89,7 @@ export const DomainTagsList = () => {
   })
 
   const [createGlobalTag, { loading: createLoading }] = useMutation(CREATE_GLOBAL_TAG, {
+    refetchQueries: ['FindAllTags'],
     onError(error) {
       toast({
         title: t`An error occurred.`,
@@ -108,6 +110,7 @@ export const DomainTagsList = () => {
           isClosable: true,
           position: 'top-left',
         })
+        setIsCreatingTag(false)
       } else if (createGlobalTag.result.__typename === 'TagError') {
         toast({
           title: t`Unable to create new global tag.`,
@@ -154,39 +157,52 @@ export const DomainTagsList = () => {
           labelFr: '',
           descriptionEn: '',
           descriptionFr: '',
-          visible,
+          isVisible: visible,
           ownership,
         }}
         initialTouched={{
           labelEn: true,
         }}
         // validationSchema={}
-        onSubmit={async (values) => {
+        onSubmit={async (values, formikHelpers) => {
           if (mutation === 'create') {
-            const { labelEn, labelFr, descriptionEn, descriptionFr, visible, _ownership } = values
-            await createGlobalTag({
-              variables: {
-                labelEn,
-                labelFr,
-                descriptionEn,
-                descriptionFr,
-                visible,
-                // ownership,
-              },
-            })
+            await createGlobalTag({ variables: { ...values } })
           } else if (mutation === 'update') {
-            const { labelEn, labelFr, descriptionEn, descriptionFr, visible, ownership } = values
-            await updateTag({
+            console.log(JSON.stringify(values))
+            // Update the organization (only include fields that have values)
+            const propertiesWithValues = {}
+
+            // Extract only the entries that have truthy values
+            Object.entries(values).forEach((entry) => {
+              const [key, value] = entry
+              if ((key === 'isVisible' && value !== visible) || value) propertiesWithValues[key] = value
+            })
+
+            // Handle case where user does not supply any fields to update
+            if (Object.keys(propertiesWithValues).length === 0) {
+              toast({
+                title: t`Tag not updated`,
+                description: t`No values were supplied when attempting to update organization details.`,
+                status: 'warning',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
+
+              return
+            }
+
+            const updateResponse = await updateTag({
               variables: {
                 tagId,
-                labelEn,
-                labelFr,
-                descriptionEn,
-                descriptionFr,
-                visible,
-                ownership,
+                ...propertiesWithValues,
               },
             })
+            // Close and reset form if successfully updated organization
+            if (updateResponse.data.updateTag.result.__typename === 'Tag') {
+              setEditingTags(!!editingTags[tagId])
+              formikHelpers.resetForm()
+            }
           }
         }}
       >
@@ -209,9 +225,9 @@ export const DomainTagsList = () => {
                 <Flex p="1" align="center">
                   <Switch
                     isFocusable={true}
-                    id="visible"
-                    name="visible"
-                    aria-label="visible"
+                    id="isVisible"
+                    name="isVisible"
+                    aria-label="isVisible"
                     mx="2"
                     defaultChecked={visible}
                     onChange={handleChange}
@@ -222,7 +238,7 @@ export const DomainTagsList = () => {
                 </Flex>
               </Box>
               <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                <Select id="ownership" name="ownership" onChange={handleChange}>
+                <Select id="ownership" name="ownership" defaultValue={ownership} onChange={handleChange}>
                   <option value="" hidden>
                     <Trans>Ownership</Trans>
                   </option>
@@ -293,22 +309,18 @@ export const DomainTagsList = () => {
                 borderWidth="1px"
                 borderColor="black"
               >
-                <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`} placement="right">
-                  <Text fontWeight="bold">{label.toUpperCase()}</Text>
-                </Tooltip>
-                <Badge
-                  variant="solid"
-                  bg={isVisible ? 'strong' : 'weak'}
-                  pt={1}
-                  mr={{ md: '1rem' }}
-                  justifySelf={{ base: 'start', md: 'end' }}
-                >
-                  <Trans>Visible</Trans>
-                </Badge>
+                <Flex align="center">
+                  <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`} placement="right">
+                    <Text fontWeight="bold" mr="2">
+                      {label.toUpperCase()}
+                    </Text>
+                  </Tooltip>
+                  {!isVisible && <ViewOffIcon boxSize="icons.md" />}
+                </Flex>
+
                 <Badge
                   variant="solid"
                   bg={ownershipBadgeColour(ownership)}
-                  pt={1}
                   mr={{ md: '1rem' }}
                   justifySelf={{ base: 'start', md: 'end' }}
                 >
