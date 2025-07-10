@@ -71,6 +71,7 @@ export const updateTag = new mutationWithClientMutationId({
     const descriptionEn = cleanseInput(args.descriptionEn)
     const descriptionFr = cleanseInput(args.descriptionFr)
     const ownership = cleanseInput(args.ownership)
+    const isVisible = args.isVisible
 
     // Check to see if tag exists
     const currentTag = await loadTagByTagId.load(tagId)
@@ -83,19 +84,6 @@ export const updateTag = new mutationWithClientMutationId({
         _type: 'error',
         code: 400,
         description: i18n._(t`Unable to update unknown tag.`),
-      }
-    }
-
-    const updatedTagId = slugify(`${labelEn}-${labelFr}`)
-
-    const existingTag = await loadTagByTagId.load(updatedTagId)
-
-    if (typeof existingTag !== 'undefined' && !['org', 'pending'].includes(ownership)) {
-      console.warn(`User: ${userKey} attempted to create a tag that already exists: ${updatedTagId}`)
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Tag label already in use. Please try again with a different label.`),
       }
     }
 
@@ -120,6 +108,21 @@ export const updateTag = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update tag. Please try again.`))
     }
 
+    const updatedTagId = slugify(`${labelEn || compareTag.label.en}-${labelFr || compareTag.label.fr}`)
+
+    if (tagId !== updatedTagId) {
+      const existingTag = await loadTagByTagId.load(updatedTagId)
+
+      if (typeof existingTag !== 'undefined' && !['org', 'pending'].includes(ownership)) {
+        console.warn(`User: ${userKey} attempted to create a tag that already exists: ${updatedTagId}`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+        }
+      }
+    }
+
     // Update tag
     const updatedTag = {
       tagId: updatedTagId,
@@ -131,7 +134,7 @@ export const updateTag = new mutationWithClientMutationId({
         en: descriptionEn || compareTag.description.en,
         fr: descriptionFr || compareTag.description.fr,
       },
-      visible: typeof args.isVisible !== 'undefined' ? args.isVisible : compareTag.visible,
+      visible: typeof isVisible !== 'undefined' ? isVisible : compareTag.visible,
       ownership: ownership || compareTag.ownership,
     }
 
