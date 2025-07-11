@@ -22,12 +22,21 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { Formik } from 'formik'
 import { FormField } from '../components/fields/FormField'
+import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 
 export const DomainTagsList = () => {
   // Use an object to track which tag is being edited
   const [editingTags, setEditingTags] = useState({})
   const [isCreatingTag, setIsCreatingTag] = useState(false)
   const toast = useToast()
+
+  const fieldRequirement = getRequirement('field')
+  const validationSchema = schemaToValidation({
+    labelEn: fieldRequirement,
+    labelFr: fieldRequirement,
+    isVisible: fieldRequirement,
+    ownership: fieldRequirement,
+  })
 
   const { loading, error, data } = useQuery(FIND_ALL_TAGS, {
     onError: (error) => {
@@ -163,7 +172,7 @@ export const DomainTagsList = () => {
         initialTouched={{
           labelEn: true,
         }}
-        // validationSchema={}
+        validationSchema={mutation === 'create' ? validationSchema : null}
         onSubmit={async (values, formikHelpers) => {
           if (mutation === 'create') {
             await createGlobalTag({ variables: { ...values } })
@@ -238,7 +247,7 @@ export const DomainTagsList = () => {
                 </Flex>
               </Box>
               <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                <Select id="ownership" name="ownership" defaultValue={ownership} onChange={handleChange}>
+                <Select id="ownership" name="ownership" defaultValue={ownership} isRequired onChange={handleChange}>
                   <option value="" hidden>
                     <Trans>Ownership</Trans>
                   </option>
