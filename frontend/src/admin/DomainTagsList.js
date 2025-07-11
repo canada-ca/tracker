@@ -67,8 +67,8 @@ export const DomainTagsList = () => {
     onCompleted({ updateTag }) {
       if (updateTag.result.__typename === 'Tag') {
         toast({
-          title: t`Tag created`,
-          description: t`${updateTag.result.tag} was added to`,
+          title: t`Tag updated`,
+          description: t`${updateTag.result.tagId} was successfully updated.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -113,7 +113,7 @@ export const DomainTagsList = () => {
       if (createGlobalTag.result.__typename === 'Tag') {
         toast({
           title: t`Tag created`,
-          description: t`${createGlobalTag.result.tag} was added to`,
+          description: t`${createGlobalTag.result.tag} was added to tag list.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
