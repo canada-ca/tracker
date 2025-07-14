@@ -177,7 +177,6 @@ export const DomainTagsList = () => {
           if (mutation === 'create') {
             await createGlobalTag({ variables: { ...values } })
           } else if (mutation === 'update') {
-            console.log(JSON.stringify(values))
             // Update the organization (only include fields that have values)
             const propertiesWithValues = {}
 
