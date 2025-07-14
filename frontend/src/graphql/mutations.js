@@ -776,13 +776,14 @@ export const COMPLETE_TOUR = gql`
   }
 `
 
-export const CREATE_GLOBAL_TAG = gql`
-  mutation CreateGlobalTag(
+export const CREATE_TAG = gql`
+  mutation CreateTag(
     $labelEn: String!
     $labelFr: String!
     $descriptionEn: String
     $descriptionFr: String
     $isVisible: Boolean
+    $ownership: TagOwnershipEnums
   ) {
     createTag(
       input: {
@@ -791,7 +792,7 @@ export const CREATE_GLOBAL_TAG = gql`
         descriptionEn: $descriptionEn
         descriptionFr: $descriptionFr
         isVisible: $isVisible
-        ownership: GLOBAL
+        ownership: $ownership
       }
     ) {
       result {

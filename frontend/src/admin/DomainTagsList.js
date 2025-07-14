@@ -97,7 +97,7 @@ export const DomainTagsList = () => {
     },
   })
 
-  const [createGlobalTag, { loading: createLoading }] = useMutation(CREATE_GLOBAL_TAG, {
+  const [createTag, { loading: createLoading }] = useMutation(CREATE_GLOBAL_TAG, {
     refetchQueries: ['FindAllTags'],
     onError(error) {
       toast({
@@ -109,21 +109,21 @@ export const DomainTagsList = () => {
         position: 'top-left',
       })
     },
-    onCompleted({ createGlobalTag }) {
-      if (createGlobalTag.result.__typename === 'Tag') {
+    onCompleted({ createTag }) {
+      if (createTag.result.__typename === 'Tag') {
         toast({
           title: t`Tag created`,
-          description: t`${createGlobalTag.result.tag} was added to tag list.`,
+          description: t`${createTag.result.tag} was added to tag list.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
         setIsCreatingTag(false)
-      } else if (createGlobalTag.result.__typename === 'TagError') {
+      } else if (createTag.result.__typename === 'TagError') {
         toast({
           title: t`Unable to create new global tag.`,
-          description: createGlobalTag.result.description,
+          description: createTag.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -132,13 +132,13 @@ export const DomainTagsList = () => {
       } else {
         toast({
           title: t`Incorrect send method received.`,
-          description: `Incorrect createGlobalTag.result typename.`,
+          description: `Incorrect createTag.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-        console.log('Incorrect createGlobalTag.result typename.')
+        console.log('Incorrect createTag.result typename.')
       }
     },
   })
@@ -175,7 +175,7 @@ export const DomainTagsList = () => {
         validationSchema={mutation === 'create' ? validationSchema : null}
         onSubmit={async (values, formikHelpers) => {
           if (mutation === 'create') {
-            await createGlobalTag({ variables: { ...values } })
+            await createTag({ variables: { ...values } })
           } else if (mutation === 'update') {
             // Update the organization (only include fields that have values)
             const propertiesWithValues = {}
