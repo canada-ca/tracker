@@ -177,10 +177,6 @@ export const updateTag = new mutationWithClientMutationId({
 
     console.info(`User: ${userKey} successfully updated tag: ${tagId}.`)
 
-    returnTag.id = returnTag._key
-
-    return {
-      ...returnTag,
-    }
+    return returnTag
   },
 })
