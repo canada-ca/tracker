@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { FIND_ALL_TAGS } from '../graphql/queries'
 import { useMutation, useQuery } from '@apollo/client'
-import { CREATE_GLOBAL_TAG, UPDATE_TAG } from '../graphql/mutations'
+import { CREATE_TAG, UPDATE_TAG } from '../graphql/mutations'
 import { t, Trans } from '@lingui/macro'
 import { EditIcon, PlusSquareIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -97,7 +97,7 @@ export const DomainTagsList = () => {
     },
   })
 
-  const [createTag, { loading: createLoading }] = useMutation(CREATE_GLOBAL_TAG, {
+  const [createTag, { loading: createLoading }] = useMutation(CREATE_TAG, {
     refetchQueries: ['FindAllTags'],
     onError(error) {
       toast({
@@ -246,13 +246,18 @@ export const DomainTagsList = () => {
                 </Flex>
               </Box>
               <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                <Select id="ownership" name="ownership" defaultValue={ownership} isRequired onChange={handleChange}>
-                  <option value="" hidden>
-                    <Trans>Ownership</Trans>
-                  </option>
-                  <option value="GLOBAL">Global</option>
-                  <option value="ORG">Organization</option>
-                </Select>
+                <Flex align="center">
+                  <Text mr="2" fontWeight="bold">
+                    <Trans>Ownership:</Trans>
+                  </Text>
+                  <Select id="ownership" name="ownership" defaultValue={ownership} isRequired onChange={handleChange}>
+                    <option value="" hidden>
+                      <Trans>Select an ownership level</Trans>
+                    </option>
+                    <option value="GLOBAL">Global</option>
+                    <option value="ORG">Organization</option>
+                  </Select>
+                </Flex>
               </Box>
               <Button
                 variant="danger"
@@ -301,6 +306,7 @@ export const DomainTagsList = () => {
           <Box key={tagId}>
             <Flex align="center" mb="2">
               <IconButton
+                aria-label={`edit tag`}
                 icon={<EditIcon boxSize="icons.md" />}
                 variant="primary"
                 onClick={() => setEditingTags((prev) => ({ ...prev, [tagId]: !prev[tagId] }))}
