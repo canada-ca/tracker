@@ -10,7 +10,7 @@ steps:
   
   - name: mikewilliamson/wait-for
     id: wait_testdb
-    args: ["testdb:8529"]
+    args: ["arangodb:8529"]
 
   - name: "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci"
     id: test-results
