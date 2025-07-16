@@ -166,7 +166,6 @@ def get_users(org_id, db):
     return cursor
 
 def detect_decay(db):
-    
     decays = {} # Dictionary to hold domains and their decayed statuses for each org
     orgs = [] # List to hold org documents, used for email notifs
 

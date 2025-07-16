@@ -592,20 +592,16 @@ def test_db_data(arango_db):
 
 
 def test_ignore_domain():
-    #assert ignore_domain(None) is True, "Should return True for None"
     assert ignore_domain({"archived": True}) is True, "Should return True for archived domain"
     assert ignore_domain({"blocked": True}) is True, "Should return True for blocked domain"
     assert ignore_domain({"rcode": "NXDOMAIN"}) is True, "Should return True for NXDOMAIN"
     assert ignore_domain({"archived": False, "blocked": False, "rcode": "NOERROR"}) is False, "Should return False for valid domain"
 
 def test_get_all_dns_scans(arango_db):
-    #assert len(list(get_all_dns_scans(None))) == [], "Should return empty list for None"
     assert len(list(get_all_dns_scans("domains/1", arango_db))) == 2, "Should return 2 dns scans for domains/1"
     assert len(list(get_all_dns_scans("domains/2", arango_db))) == 2, "Should return 2 dns scans for domains/2"
 
 def test_get_all_web_scans(arango_db):
-    #assert list(get_all_web_scans(None, arango_db)) == [], "Should return empty list for None"
-
     web_docs1 = list(get_all_web_scans("domains/1", arango_db))
     assert len(web_docs1) == 2, "Should return 2 web docs for domains/1"
     assert len(web_docs1[0].get("scans")) == 1
@@ -631,13 +627,9 @@ def test_finalize_web_scans():
     ]) == {"https_status": "fail", "hsts_status": "fail", "certificate_status": "pass", "protocol_status": "pass", "cipher_status": "info", "curve_status": "pass"}
 
 def test_get_users(arango_db):
-    #assert len(get_users(None, arango_db)) == 0, "Should return empty list for None"
     assert len(list(get_users("organizations/1", arango_db))) == 2, "Should return 2 users for organizations/1"
 
 def test_detect_decay(arango_db):
-    # Test that archived, blocked, or NXDOMAIN domains are ignored
-    # Test that unverified organizations are ignored
-    # Test when domain has no web scans its skipped - COME BACK TO THIS
     # Test that decays are detected correctly, use decays dict
     decays = detect_decay(arango_db)
 

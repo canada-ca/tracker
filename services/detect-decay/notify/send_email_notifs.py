@@ -43,4 +43,3 @@ def send_email_notifs(org, domains, org_users):
         except Exception as e:
             logging.error(f"Failed to send email notification to {display_name}: {e}")
     return responses
-    
