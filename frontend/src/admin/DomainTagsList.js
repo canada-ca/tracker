@@ -5,6 +5,7 @@ import {
   Button,
   Collapse,
   Flex,
+  FormLabel,
   Grid,
   IconButton,
   Select,
@@ -247,9 +248,9 @@ export const DomainTagsList = () => {
               </Box>
               <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                 <Flex align="center">
-                  <Text mr="2" fontWeight="bold">
+                  <FormLabel htmlFor="ownership" mr="2" fontWeight="bold">
                     <Trans>Ownership:</Trans>
-                  </Text>
+                  </FormLabel>
                   <Select id="ownership" name="ownership" defaultValue={ownership} isRequired onChange={handleChange}>
                     <option value="" hidden>
                       <Trans>Select an ownership level</Trans>
@@ -329,7 +330,7 @@ export const DomainTagsList = () => {
                       {label.toUpperCase()}
                     </Text>
                   </Tooltip>
-                  {!isVisible && <ViewOffIcon boxSize="icons.md" />}
+                  {!isVisible && <ViewOffIcon aria-label="tag-invisible" boxSize="icons.md" />}
                 </Flex>
 
                 <Badge
