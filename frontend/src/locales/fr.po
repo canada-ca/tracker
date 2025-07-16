@@ -4783,7 +4783,7 @@ msgstr "Cette page affiche votre vue personnelle des domaines suivis. Tous les d
 
 #: src/guidance/WebGuidance.js:182
 msgid "This service does <0>not host web content</0> and is not subject to the Web Sites and Services Management Configuration Requirements."
-msgstr "Ce service n'héberge pas de contenu web</0> et n'est pas soumis aux exigences de configuration de la gestion des sites et services web."
+msgstr "Ce service <0>n'héberge pas de contenu web</0> et n'est pas soumis aux exigences de configuration de la gestion des sites et services web."
 
 #: src/guidance/WebGuidance.js:191
 #~ msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
