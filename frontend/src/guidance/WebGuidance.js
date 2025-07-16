@@ -177,23 +177,14 @@ export function WebGuidance({ webResults, timestamp }) {
           </Trans>
         </Text>
         {!isWebHosting && (
-          <Flex
-            fontSize="lg"
-            fontWeight="bold"
-            px="2"
-            py="1"
-            textAlign="center"
-            borderWidth="1px"
-            borderColor="black"
-            rounded="md"
-          >
+          <NotificationBanner>
             <Text>
               <Trans>
-                This service is not web-hosting and does not require compliance with the Web Sites and Services
+                This service does <b>not host web content</b> and is not subject to the Web Sites and Services
                 Management Configuration Requirements.
               </Trans>
             </Text>
-          </Flex>
+          </NotificationBanner>
         )}
         {endPointSummary}
         {endpointSelect}
