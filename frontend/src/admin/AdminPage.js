@@ -18,6 +18,7 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
+import { DomainTagsList } from './DomainTagsList'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -202,6 +203,12 @@ export default function AdminPage() {
         <AuditLogTable />
       </ErrorBoundary>
     )
+  } else if (activeMenu === 'domain-tags' && data?.isUserSuperAdmin) {
+    adminPanel = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DomainTagsList />
+      </ErrorBoundary>
+    )
   } else {
     adminPanel = orgPanel
   }
@@ -225,6 +232,7 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
           <option value="organizations">{t`Organizations`}</option>
           <option value="users">{t`Users`}</option>
           <option value="audit-logs">{t`Audit Logs`}</option>
+          <option value="domain-tags">{t`Domain Tags`}</option>
         </Select>
       </Flex>
     </label>

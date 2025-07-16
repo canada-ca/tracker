@@ -262,11 +262,11 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof tags !== 'undefined' && JSON.stringify(claim.tags) !== JSON.stringify(tags)) {
+    if (JSON.stringify(claim.tags) !== JSON.stringify(claimToInsert.tags)) {
       updatedProperties.push({
         name: 'tags',
         oldValue: claim.tags,
-        newValue: tags,
+        newValue: claimToInsert.tags,
       })
     }
 

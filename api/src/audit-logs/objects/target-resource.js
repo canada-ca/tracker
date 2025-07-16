@@ -40,8 +40,7 @@ export const targetResourceType = new GraphQLObjectType({
     },
     resourceType: {
       type: ResourceTypeEnums,
-      description:
-        'Type of resource that was modified: user, domain, or organization.',
+      description: 'Type of resource that was modified: user, domain, or organization.',
       resolve: ({ resourceType }) => resourceType,
     },
     updatedProperties: {
@@ -58,14 +57,9 @@ export const targetResourceType = new GraphQLObjectType({
             oldValue: {
               type: GraphQLString,
               description: 'Old value of updated property.',
-              resolve: ({ name, oldValue }, _, { language }) => {
-                if (name === 'selectors') {
+              resolve: ({ name, oldValue }) => {
+                if (name === 'selectors' || name === 'tags') {
                   return JSON.stringify(oldValue)
-                } else if (name === 'tags') {
-                  const translatedTags = oldValue.map((x) => {
-                    return x[`${language}`]
-                  })
-                  return JSON.stringify(translatedTags)
                 }
                 return oldValue
               },
@@ -73,14 +67,9 @@ export const targetResourceType = new GraphQLObjectType({
             newValue: {
               type: GraphQLString,
               description: 'New value of updated property.',
-              resolve: ({ name, newValue }, _, { language }) => {
-                if (name === 'selectors') {
+              resolve: ({ name, newValue }) => {
+                if (name === 'selectors' || name === 'tags') {
                   return JSON.stringify(newValue)
-                } else if (name === 'tags') {
-                  const translatedTags = newValue.map((x) => {
-                    return x[`${language}`]
-                  })
-                  return JSON.stringify(translatedTags)
                 }
                 return newValue
               },

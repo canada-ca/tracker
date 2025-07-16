@@ -1330,3 +1330,19 @@ export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
     getAllVerifiedRuaDomains
   }
 `
+
+export const FIND_ALL_TAGS = gql`
+  query FindAllTags {
+    findAllTags(isVisible: false) {
+      tagId
+      label
+      description
+      isVisible
+      ownership
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`

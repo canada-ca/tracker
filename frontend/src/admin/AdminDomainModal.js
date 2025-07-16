@@ -135,6 +135,19 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
         console.log('Incorrect updateDomain.result typename.')
       }
     },
+    update: (cache, { data }) => {
+      if (data.updateDomain.result.__typename !== 'Domain') return
+
+      const updateDomainId = cache.identify(data.updateDomain.result)
+      cache.modify({
+        id: updateDomainId,
+        fields: {
+          claimTags() {
+            return data.updateDomain.result.claimTags
+          },
+        },
+      })
+    },
   })
 
   const addableTags = (values, helper) => {
@@ -237,9 +250,16 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                       <Box>
                         <Text fontWeight="bold">Tags:</Text>
                         <SimpleGrid columns={3} spacing={2}>
-                          {values.tags?.map(({ tagId, label, description }, idx) => {
+                          {values.tags?.map(({ tagId, label, description, _ownership }, idx) => {
+                            // console.log(ownership)
                             return (
-                              <Tag key={idx} borderRadius="full" py="2" px="3">
+                              <Tag
+                                key={idx}
+                                borderRadius="full"
+                                py="2"
+                                px="3"
+                                // bg={ownership === 'org' ? 'blue' : 'red'}
+                              >
                                 <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`}>
                                   <TagLabel>{label.toUpperCase()}</TagLabel>
                                 </Tooltip>
