@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dmarc-dev-squid-config
+  namespace: scanners
+data:
+  squid.conf: |
+    http_port 3128
+    acl cosmos_db dstdomain .documents.azure.com
+    acl cosmos_db dstdomain .cosmos.azure.com
+    acl SSL_ports port 443
+    acl Safe_ports port 80
+    acl Safe_ports port 443
+    acl CONNECT method CONNECT
+    http_access allow CONNECT SSL_ports cosmos_db
+    http_access allow cosmos_db
+    http_access deny all
+    cache deny all
+    access_log /var/log/squid/access.log
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dmarc-dev-proxy
+  namespace: scanners
+spec:
+  activeDeadlineSeconds: 1800 # Auto-shutdown after 30 min
+  containers:
+  - name: squid
+    image: ubuntu/squid:latest
+    ports:
+    - containerPort: 3128
+    volumeMounts:
+    - name: dmarc-dev-squid-config
+      mountPath: /etc/squid/squid.conf
+      subPath: squid.conf
+  volumes:
+  - name: dmarc-dev-squid-config
+    configMap:
+      name: dmarc-dev-squid-config
