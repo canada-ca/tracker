@@ -783,7 +783,7 @@ export const CREATE_TAG = gql`
     $descriptionEn: String
     $descriptionFr: String
     $isVisible: Boolean
-    $ownership: TagOwnershipEnums
+    $ownership: TagOwnershipEnums!
   ) {
     createTag(
       input: {
