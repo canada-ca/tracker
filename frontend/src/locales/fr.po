@@ -32,7 +32,7 @@ msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
 #. placeholder {0}: createTag.result.tag
-#: src/admin/DomainTagsList.js:116
+#: src/admin/TagForm.js:83
 msgid "{0} was added to tag list."
 msgstr "{0} a été ajouté à la liste des balises."
 
@@ -42,7 +42,7 @@ msgid "{0} was created"
 msgstr "{0} a été créée"
 
 #. placeholder {0}: updateTag.result.tagId
-#: src/admin/DomainTagsList.js:71
+#: src/admin/TagForm.js:38
 msgid "{0} was successfully updated."
 msgstr "{0} a été mis à jour avec succès."
 
@@ -304,6 +304,10 @@ msgstr "Ajouter un domaine"
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
+#: src/admin/DomainTagsList.js:58
+msgid "Add Tag"
+msgstr "Ajouter un tag"
+
 #: src/admin/UserListModal.js:219
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
@@ -502,8 +506,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/auth/TwoFactorAuthenticatePage.js:28
 #: src/admin/UserListModal.js:50
 #: src/admin/UserListModal.js:140
-#: src/admin/DomainTagsList.js:59
-#: src/admin/DomainTagsList.js:104
+#: src/admin/TagForm.js:26
+#: src/admin/TagForm.js:71
 #: src/admin/AdminDomains.js:133
 #: src/admin/AdminDomainModal.js:50
 #: src/admin/AdminDomainModal.js:96
@@ -836,8 +840,8 @@ msgstr "Ville (FR)"
 msgid "City:"
 msgstr "Ville:"
 
+#: src/admin/TagForm.js:230
 #: src/admin/OrganizationInformation.js:330
-#: src/admin/DomainTagsList.js:269
 msgid "Clear"
 msgstr "Dégager"
 
@@ -862,8 +866,8 @@ msgid "Click to view detailed scan results and guidance."
 msgstr "Cliquez pour voir les résultats détaillés de l'examen et les conseils."
 
 #: src/app/FloatingMenu.js:267
+#: src/admin/TagForm.js:248
 #: src/admin/OrganizationInformation.js:339
-#: src/admin/DomainTagsList.js:278
 msgid "Close"
 msgstr "Fermer"
 
@@ -919,10 +923,10 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/guidance/CveIgnorer.js:157
 #: src/domains/SubdomainDiscoveryButton.js:92
 #: src/admin/UserListModal.js:277
+#: src/admin/TagForm.js:251
 #: src/admin/SuperAdminUserList.js:427
 #: src/admin/OrganizationInformation.js:347
 #: src/admin/OrganizationInformation.js:445
-#: src/admin/DomainTagsList.js:281
 #: src/admin/AdminDomains.js:569
 #: src/admin/AdminDomainModal.js:335
 msgid "Confirm"
@@ -1156,11 +1160,11 @@ msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie 
 msgid "Deploy SPF records for all domains;"
 msgstr "Déployer les enregistrements SPF pour tous les domaines."
 
-#: src/admin/DomainTagsList.js:227
+#: src/admin/TagForm.js:184
 msgid "Description (EN)"
 msgstr "Description (EN)"
 
-#: src/admin/DomainTagsList.js:230
+#: src/admin/TagForm.js:187
 msgid "Description (FR)"
 msgstr "Description (FR)"
 
@@ -1956,6 +1960,11 @@ msgstr "Pour commencer"
 msgid "Getting top 25 report"
 msgstr "Obtenir un rapport sur les 25 principales"
 
+#: src/admin/TagForm.js:215
+#: src/admin/DomainTagsList.js:45
+msgid "Global"
+msgstr "Mondial"
+
 #: src/components/InfoPanel.js:19
 msgid "Glossary"
 msgstr "Glossaire"
@@ -2401,9 +2410,9 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/auth/CreateUserPage.js:61
 #: src/admin/UserListModal.js:80
 #: src/admin/UserListModal.js:125
+#: src/admin/TagForm.js:55
+#: src/admin/TagForm.js:101
 #: src/admin/SuperAdminUserList.js:106
-#: src/admin/DomainTagsList.js:88
-#: src/admin/DomainTagsList.js:134
 #: src/admin/AdminDomains.js:163
 #: src/admin/AdminDomainModal.js:80
 #: src/admin/AdminDomainModal.js:128
@@ -2637,11 +2646,11 @@ msgstr "Type de clé :"
 msgid "L-30-D"
 msgstr "30-D-J"
 
-#: src/admin/DomainTagsList.js:221
+#: src/admin/TagForm.js:178
 msgid "Label (EN)"
 msgstr "Label (EN)"
 
-#: src/admin/DomainTagsList.js:224
+#: src/admin/TagForm.js:181
 msgid "Label (FR)"
 msgstr "Label (FR)"
 
@@ -3118,8 +3127,8 @@ msgstr "Aucun utilisateur"
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
+#: src/admin/TagForm.js:147
 #: src/admin/OrganizationInformation.js:261
-#: src/admin/DomainTagsList.js:193
 msgid "No values were supplied when attempting to update organization details."
 msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des détails de l'organisation."
 
@@ -3233,6 +3242,8 @@ msgstr "Ouvrir le glossaire."
 msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des services WebSSL de SPC</0> ou utiliser <1>Let’sEncrypt</1>. Pour en apprendre davantage, veuillez vous reporter aux <2>Recommandations pour les certificats de serveur TLS</2>."
 
+#: src/admin/TagForm.js:218
+#: src/admin/DomainTagsList.js:46
 #: src/admin/AuditLogTable.js:79
 #: src/admin/AuditLogTable.js:126
 msgid "Organization"
@@ -3329,7 +3340,7 @@ msgstr "nos conditions générales sur le site Web du SCT"
 msgid "OWNER"
 msgstr "PROPRIÉTAIRE"
 
-#: src/admin/DomainTagsList.js:251
+#: src/admin/TagForm.js:208
 msgid "Ownership:"
 msgstr "Propriété :"
 
@@ -3969,7 +3980,7 @@ msgstr "Sélectionnez une organisation"
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
-#: src/admin/DomainTagsList.js:255
+#: src/admin/TagForm.js:212
 msgid "Select an ownership level"
 msgstr "Sélectionner un niveau de propriété"
 
@@ -4506,15 +4517,15 @@ msgstr "Les étiquettes désignées par le système apparaissent ici."
 msgid "Tag"
 msgstr "Tag"
 
-#: src/admin/DomainTagsList.js:115
+#: src/admin/TagForm.js:82
 msgid "Tag created"
 msgstr "Tag créé"
 
-#: src/admin/DomainTagsList.js:192
+#: src/admin/TagForm.js:146
 msgid "Tag not updated"
 msgstr "Etiquette non mise à jour"
 
-#: src/admin/DomainTagsList.js:70
+#: src/admin/TagForm.js:37
 msgid "Tag updated"
 msgstr "Tag mis à jour"
 
@@ -5038,8 +5049,8 @@ msgstr "Impossible de créer un compte, veuillez réessayer."
 msgid "Unable to create new domain."
 msgstr "Impossible de créer un nouveau domaine."
 
-#: src/admin/DomainTagsList.js:79
-#: src/admin/DomainTagsList.js:125
+#: src/admin/TagForm.js:46
+#: src/admin/TagForm.js:92
 msgid "Unable to create new global tag."
 msgstr "Impossible de créer une nouvelle balise globale."
 
@@ -5389,7 +5400,7 @@ msgstr "Voir les résultats"
 msgid "View summaries of your organization's web and email security compliance."
 msgstr "Consultez les résumés de la conformité de votre organisation en matière de sécurité du web et du courrier électronique."
 
-#: src/admin/DomainTagsList.js:244
+#: src/admin/TagForm.js:201
 msgid "Visible"
 msgstr "Visible"
 
