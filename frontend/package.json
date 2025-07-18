@@ -43,7 +43,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.21.2",
     "formik": "^2.2.9",
-    "framer-motion": "^4.1.17",
+    "framer-motion": "^12.23.6",
     "intro.js": "^7.2.0",
     "intro.js-react": "^1.0.0",
     "isomorphic-unfetch": "^3.1.0",
