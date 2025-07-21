@@ -4831,7 +4831,7 @@ msgstr "The results of DKIM verification of the message. Can be pass, fail, neut
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 
-#: src/guidance/WebGuidance.js:212
+#: src/guidance/WebGuidance.js:203
 msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 msgstr "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 
@@ -4940,9 +4940,13 @@ msgstr "This page displays your personal view of tracked domains. All domains ma
 #~ msgid "This page is dedicated to your personal view of tracker"
 #~ msgstr "This page is dedicated to your personal view of tracker"
 
+#: src/guidance/WebGuidance.js:182
+msgid "This service does <0>not host web content</0> and is not subject to the Web Sites and Services Management Configuration Requirements."
+msgstr "This service does <0>not host web content</0> and is not subject to the Web Sites and Services Management Configuration Requirements."
+
 #: src/guidance/WebGuidance.js:191
-msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
-msgstr "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
+#~ msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
+#~ msgstr "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 
 #: src/userOnboarding/config/tourSteps.js:169
 msgid "This tab displays a list of your favourited domains."
