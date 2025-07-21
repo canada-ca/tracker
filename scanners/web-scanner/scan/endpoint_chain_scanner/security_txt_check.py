@@ -73,7 +73,7 @@ def fetch_security_txt(domain: str, ip_address: Optional[str] = None) -> list:
         for path in paths:
             result: FetchResult = {
                 "path": path,
-                "url": f"https://{target}{path}",
+                "url": f"https://{host}{path}",
                 "status_code": None,
                 "fields": {},
                 "is_valid": False,
@@ -100,12 +100,10 @@ def fetch_security_txt(domain: str, ip_address: Optional[str] = None) -> list:
                     result["redirect_location"] = location
                     result["redirected"] = True
                     if path == "/security.txt" and location:
-                        expected = f"/.well-known/security.txt"
-                        loc_parsed = urlparse(location)
-                        if loc_parsed.path == expected or location == expected:
-                            redirected_url = f"https://{target}{expected}" if not loc_parsed.netloc else location
+                        expected_url = f"https://{host}/.well-known/security.txt"
+                        if location == expected_url:
                             redirected_resp = session.get(
-                                redirected_url,
+                                location,
                                 headers={"Host": host, **DEFAULT_REQUEST_HEADERS},
                                 timeout=TIMEOUT,
                                 allow_redirects=False,
@@ -118,7 +116,7 @@ def fetch_security_txt(domain: str, ip_address: Optional[str] = None) -> list:
                             result["raw"] = redirect_parsed["raw"]
                             result["error"] = redirect_parsed["error"]
                         else:
-                            result["error"] = f"Redirect from /security.txt is not to /.well-known/security.txt: {location}"
+                            result["error"] = f"Redirect from /security.txt is not to {expected_url}: {location}"
                             result["is_valid"] = False
                     else:
                         result["error"] = f"Redirect not allowed for {path}: {location}"
