@@ -23,7 +23,6 @@ import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
 import { isEqual } from 'lodash-es'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 function DomainCard({
   id,
@@ -132,15 +131,11 @@ function DomainCard({
           <Text fontSize="lg" fontWeight="bold">
             {url}
           </Text>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {assetState && (
-                <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center" className="asset-state">
-                  {assetStateLabels[assetState]}
-                </Badge>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          {assetState && (
+            <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center" className="asset-state">
+              {assetStateLabels[assetState]}
+            </Badge>
+          )}
           <Flex ml="auto" className="system-tags">
             {rcode === 'NXDOMAIN' && (
               <Badge colorScheme="red" variant="subtle" alignSelf="center">
@@ -157,15 +152,11 @@ function DomainCard({
                 <Trans>Blocked</Trans>
               </Badge>
             )}
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                {wildcardSibling && (
-                  <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
-                    {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
-                  </Badge>
-                )}
-              </ABTestVariant>
-            </ABTestWrapper>
+            {wildcardSibling && (
+              <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+                {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
+              </Badge>
+            )}
             {webScanPending && (
               <Badge ml="2" colorScheme="blue" variant="outline" alignSelf="center">
                 <Trans>Scan Pending</Trans>
