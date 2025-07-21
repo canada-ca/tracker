@@ -70,7 +70,7 @@ export const createTag = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     const insertTag = {
-      tagId: slugify(`${labelEn}_${labelFr}`),
+      tagId: slugify(`${labelEn}-${labelFr}`),
       label: { en: labelEn, fr: labelFr },
       description: {
         en: descriptionEn || '',
