@@ -11,6 +11,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 import { DomainTagsList } from './DomainTagsList'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, availableTags }) {
   return (
@@ -24,9 +25,13 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
           <Tab borderTopWidth="4px" className="admin-users-tab">
             <Trans>Users</Trans>
           </Tab>
-          <Tab borderTopWidth="4px" className="admin-activity-tab">
-            <Trans>Tags</Trans>
-          </Tab>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <Tab borderTopWidth="4px" className="admin-activity-tab">
+                <Trans>Tags</Trans>
+              </Tab>
+            </ABTestVariant>
+          </ABTestWrapper>
           <Tab borderTopWidth="4px" className="admin-activity-tab">
             <Trans>Activity</Trans>
           </Tab>
@@ -55,12 +60,16 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
               />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <Divider borderColor="gray.50" />
-              <DomainTagsList orgId={orgId} />
-            </ErrorBoundary>
-          </TabPanel>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <TabPanel>
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                  <Divider borderColor="gray.50" />
+                  <DomainTagsList orgId={orgId} />
+                </ErrorBoundary>
+              </TabPanel>
+            </ABTestVariant>
+          </ABTestWrapper>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <AuditLogTable orgId={orgId} />
