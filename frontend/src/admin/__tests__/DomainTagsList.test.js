@@ -8,7 +8,7 @@ import { en } from 'make-plural/plurals'
 import { render, screen, waitFor, fireEvent, within } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { DomainTagsList } from '../DomainTagsList'
-import { FIND_ALL_TAGS } from '../../graphql/queries'
+import { DOMAIN_TAGS } from '../../graphql/queries'
 import { CREATE_TAG, UPDATE_TAG } from '../../graphql/mutations'
 import { UserVarProvider } from '../../utilities/userState'
 import '@testing-library/jest-dom'
@@ -80,7 +80,7 @@ const mockTags = [
 const mocks = [
   {
     request: {
-      query: FIND_ALL_TAGS,
+      query: DOMAIN_TAGS,
     },
     result: {
       data: {
@@ -135,7 +135,7 @@ const mocks = [
 const noTagsMocks = [
   {
     request: {
-      query: FIND_ALL_TAGS,
+      query: DOMAIN_TAGS,
     },
     result: {
       data: {
@@ -214,7 +214,7 @@ describe('DomainTagsList', () => {
   it('renders error state', async () => {
     const errorMock = [
       {
-        request: { query: FIND_ALL_TAGS },
+        request: { query: DOMAIN_TAGS },
         error: new Error('GraphQL error: Failed to fetch'),
       },
     ]
