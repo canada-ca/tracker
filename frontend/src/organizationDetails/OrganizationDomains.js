@@ -23,7 +23,6 @@ import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission, availableTags = [] }) {
@@ -129,29 +128,15 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
   ) : (
     <Box>
       {orgSlug !== 'my-tracker' && (
-        <ABTestWrapper insiderVariantName="B">
-          <ABTestVariant name="A">
-            <DomainListFilters
-              className="domain-filters"
-              filters={filters}
-              setFilters={setFilters}
-              resetToFirstPage={resetToFirstPage}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-            />
-          </ABTestVariant>
-          <ABTestVariant name="B">
-            <DomainListFilters
-              className="domain-filters"
-              filters={filters}
-              setFilters={setFilters}
-              resetToFirstPage={resetToFirstPage}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-              assetStateOptions={assetStateOptions}
-            />
-          </ABTestVariant>
-        </ABTestWrapper>
+        <DomainListFilters
+          className="domain-filters"
+          filters={filters}
+          setFilters={setFilters}
+          resetToFirstPage={resetToFirstPage}
+          statusOptions={orderByOptions}
+          filterTagOptions={filterTagOptions}
+          assetStateOptions={assetStateOptions}
+        />
       )}
       <ListOf
         elements={nodes}

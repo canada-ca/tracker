@@ -31,7 +31,6 @@ import { FAVOURITE_DOMAIN } from '../graphql/mutations'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { AdditionalFindings } from './AdditionalFindings'
 
 import { ListOf } from '../components/ListOf'
@@ -302,15 +301,11 @@ function GuidancePage() {
           </Badge>
         )}
 
-        <ABTestWrapper insiderVariantName="B">
-          <ABTestVariant name="B">
-            {wildcardSibling && (
-              <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
-                {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
-              </Badge>
-            )}
-          </ABTestVariant>
-        </ABTestWrapper>
+        {wildcardSibling && (
+          <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+            {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
+          </Badge>
+        )}
 
         {isLoggedIn() && (
           <IconButton

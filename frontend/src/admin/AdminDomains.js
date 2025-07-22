@@ -43,11 +43,11 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
-import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
   const toast = useToast()
@@ -238,13 +238,9 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
                     <option value="TAGS">
                       <Trans>Tag</Trans>
                     </option>
-                    <ABTestWrapper insiderVariantName="B">
-                      <ABTestVariant name="B">
-                        <option value="ASSET_STATE">
-                          <Trans>Asset State</Trans>
-                        </option>
-                      </ABTestVariant>
-                    </ABTestWrapper>
+                    <option value="ASSET_STATE">
+                      <Trans>Asset State</Trans>
+                    </option>
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.comparison}
@@ -281,25 +277,21 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
                       })
                     ) : (
                       <>
-                        <ABTestWrapper insiderVariantName="B">
-                          <ABTestVariant name="B">
-                            <option value="APPROVED">
-                              <Trans>Approved</Trans>
-                            </option>
-                            <option value="DEPENDENCY">
-                              <Trans>Dependency</Trans>
-                            </option>
-                            <option value="MONITOR_ONLY">
-                              <Trans>Monitor Only</Trans>
-                            </option>
-                            <option value="CANDIDATE">
-                              <Trans>Candidate</Trans>
-                            </option>
-                            <option value="REQUIRES_INVESTIGATION">
-                              <Trans>Requires Investigation</Trans>
-                            </option>
-                          </ABTestVariant>
-                        </ABTestWrapper>
+                        <option value="APPROVED">
+                          <Trans>Approved</Trans>
+                        </option>
+                        <option value="DEPENDENCY">
+                          <Trans>Dependency</Trans>
+                        </option>
+                        <option value="MONITOR_ONLY">
+                          <Trans>Monitor Only</Trans>
+                        </option>
+                        <option value="CANDIDATE">
+                          <Trans>Candidate</Trans>
+                        </option>
+                        <option value="REQUIRES_INVESTIGATION">
+                          <Trans>Requires Investigation</Trans>
+                        </option>
                       </>
                     )}
                   </Select>
@@ -430,11 +422,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
                 }}
               />
             </InputGroup>
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <InfoButton bg="gray.50" onToggle={onToggle} />
-              </ABTestVariant>
-            </ABTestWrapper>
+            <InfoButton bg="gray.50" onToggle={onToggle} />
             <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit" ml="auto">
               <AddIcon mr={2} aria-hidden="true" />
               <Trans>Add Domain</Trans>

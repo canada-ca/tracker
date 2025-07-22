@@ -35,7 +35,6 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, availableTags, ...props }) {
   const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
@@ -279,45 +278,40 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                       </Box>
                     )}
                   />
-                  <ABTestWrapper insiderVariantName="B">
-                    <ABTestVariant name="B">
-                      <FormControl>
-                        <FormLabel htmlFor="assetState" fontWeight="bold">
-                          <Tooltip
-                            label={t`Select a state that best describes the asset in relation to your organization.`}
-                          >
-                            <Flex align="center">
-                              <Trans>Asset State</Trans>{' '}
-                              <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <Select
-                          name="assetState"
-                          id="assetState"
-                          borderColor="black"
-                          onChange={handleChange}
-                          defaultValue={assetState}
-                        >
-                          <option value="APPROVED">
-                            <Trans>Approved</Trans>
-                          </option>
-                          <option value="DEPENDENCY">
-                            <Trans>Dependency</Trans>
-                          </option>
-                          <option value="MONITOR_ONLY">
-                            <Trans>Monitor Only</Trans>
-                          </option>
-                          <option value="CANDIDATE">
-                            <Trans>Candidate</Trans>
-                          </option>
-                          <option value="REQUIRES_INVESTIGATION">
-                            <Trans>Requires Investigation</Trans>
-                          </option>
-                        </Select>
-                      </FormControl>
-                    </ABTestVariant>
-                  </ABTestWrapper>
+                  <FormControl>
+                    <FormLabel htmlFor="assetState" fontWeight="bold">
+                      <Tooltip
+                        label={t`Select a state that best describes the asset in relation to your organization.`}
+                      >
+                        <Flex align="center">
+                          <Trans>Asset State</Trans> <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
+                        </Flex>
+                      </Tooltip>
+                    </FormLabel>
+                    <Select
+                      name="assetState"
+                      id="assetState"
+                      borderColor="black"
+                      onChange={handleChange}
+                      defaultValue={assetState}
+                    >
+                      <option value="APPROVED">
+                        <Trans>Approved</Trans>
+                      </option>
+                      <option value="DEPENDENCY">
+                        <Trans>Dependency</Trans>
+                      </option>
+                      <option value="MONITOR_ONLY">
+                        <Trans>Monitor Only</Trans>
+                      </option>
+                      <option value="CANDIDATE">
+                        <Trans>Candidate</Trans>
+                      </option>
+                      <option value="REQUIRES_INVESTIGATION">
+                        <Trans>Requires Investigation</Trans>
+                      </option>
+                    </Select>
+                  </FormControl>
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
