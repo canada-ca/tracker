@@ -2,6 +2,7 @@ import { GraphQLNonNull, GraphQLBoolean, GraphQLString, GraphQLID } from 'graphq
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { updateTagUnion } from '../unions'
+import { TagOwnershipEnums } from '../../enums'
 import { logActivity } from '../../audit-logs'
 
 export const updateTag = new mutationWithClientMutationId({
@@ -31,6 +32,10 @@ export const updateTag = new mutationWithClientMutationId({
     isVisible: {
       description: 'Value used to decide if users should see the tag.',
       type: GraphQLBoolean,
+    },
+    ownership: {
+      type: TagOwnershipEnums,
+      description: 'Ownership of the tag, can be `global`, `org`, or `pending`.',
     },
     orgId: {
       description: 'The global id of the organization to be affiliated with the tag.',
@@ -68,6 +73,7 @@ export const updateTag = new mutationWithClientMutationId({
     const labelFr = cleanseInput(args.labelFr)
     const descriptionEn = cleanseInput(args.descriptionEn)
     const descriptionFr = cleanseInput(args.descriptionFr)
+    const ownership = cleanseInput(args.ownership)
     const isVisible = args.isVisible
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
@@ -193,6 +199,7 @@ export const updateTag = new mutationWithClientMutationId({
         fr: descriptionFr || compareTag.description.fr,
       },
       visible: typeof isVisible !== 'undefined' ? isVisible : compareTag.visible,
+      ownership: ownership || compareTag.ownership,
     }
 
     // Setup Transaction
@@ -268,6 +275,13 @@ export const updateTag = new mutationWithClientMutationId({
         name: 'visible',
         oldValue: compareTag.visible,
         newValue: isVisible,
+      })
+    }
+    if (typeof ownership !== 'undefined') {
+      updatedProperties.push({
+        name: 'ownership',
+        oldValue: compareTag.ownership,
+        newValue: ownership,
       })
     }
 
