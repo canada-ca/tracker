@@ -206,7 +206,7 @@ export default function AdminPage() {
   } else if (activeMenu === 'domain-tags' && data?.isUserSuperAdmin) {
     adminPanel = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DomainTagsList />
+        <DomainTagsList createOwnership="GLOBAL" />
       </ErrorBoundary>
     )
   } else {

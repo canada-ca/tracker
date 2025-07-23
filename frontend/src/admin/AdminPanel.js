@@ -65,7 +65,7 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
               <TabPanel>
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <Divider borderColor="gray.50" />
-                  <DomainTagsList orgId={orgId} />
+                  <DomainTagsList orgId={orgId} createOwnership="ORG" />
                 </ErrorBoundary>
               </TabPanel>
             </ABTestVariant>

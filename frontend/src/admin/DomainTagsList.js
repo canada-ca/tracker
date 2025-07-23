@@ -9,7 +9,7 @@ import { TagForm } from './TagForm'
 import { t, Trans } from '@lingui/macro'
 import { string } from 'prop-types'
 
-export const DomainTagsList = ({ orgId }) => {
+export const DomainTagsList = ({ orgId, createOwnership }) => {
   const [tagFormState, setTagFormState] = useState({ editingTags: {}, isCreatingTag: false })
   const toast = useToast()
 
@@ -128,7 +128,12 @@ export const DomainTagsList = ({ orgId }) => {
           <Trans>Add Tag</Trans>
         </Button>
         <Collapse in={tagFormState.isCreatingTag}>
-          <TagForm mutation="create" tagFormState={tagFormState} setTagFormState={setTagFormState} />
+          <TagForm
+            mutation="create"
+            tagFormState={tagFormState}
+            setTagFormState={setTagFormState}
+            ownership={createOwnership}
+          />
         </Collapse>
       </Box>
       {tagList}
@@ -138,4 +143,5 @@ export const DomainTagsList = ({ orgId }) => {
 
 DomainTagsList.propTypes = {
   orgId: string,
+  createOwnership: string,
 }
