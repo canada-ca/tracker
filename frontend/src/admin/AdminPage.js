@@ -228,7 +228,12 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
         <Text fontSize="lg" fontWeight="bold" mr="2">
           <Trans>Super Admin Menu:</Trans>
         </Text>
-        <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
+        <Select
+          borderColor="black"
+          w="20%"
+          defaultValue={activeMenu}
+          onChange={(e) => changeActiveMenu(e.target.value)}
+        >
           <option value="organizations">{t`Organizations`}</option>
           <option value="users">{t`Users`}</option>
           <option value="audit-logs">{t`Audit Logs`}</option>

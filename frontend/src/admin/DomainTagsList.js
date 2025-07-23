@@ -37,6 +37,8 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
         return 'weak'
       case 'ORG':
         return 'info'
+      case 'PENDING':
+        return 'strong'
       default:
         return 'primary'
     }
@@ -45,6 +47,7 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
   const ownershipLabel = {
     GLOBAL: t`Global`,
     ORG: t`Organization`,
+    PENDING: t`Pending`,
   }
 
   let tagList
@@ -55,7 +58,7 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
       </Text>
     )
   } else {
-    tagList = data.findAllTags.map(({ tagId, label, description, isVisible, ownership, _organizations }) => {
+    tagList = data.findAllTags.map(({ tagId, label, description, isVisible, ownership, organizations }) => {
       return (
         <Box key={tagId}>
           <Flex align="center" mb="2">
@@ -88,9 +91,13 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
                     {label.toUpperCase()}
                   </Text>
                 </Tooltip>
+                {ownership !== 'GLOBAL' && (
+                  <Text fontWeight="bold" mr="2">
+                    ({organizations.map(({ acronym }) => acronym).join(', ')})
+                  </Text>
+                )}
                 {!isVisible && <ViewOffIcon aria-label="tag-invisible" boxSize="icons.md" />}
               </Flex>
-
               <Badge
                 variant="solid"
                 bg={ownershipBadgeColour(ownership)}

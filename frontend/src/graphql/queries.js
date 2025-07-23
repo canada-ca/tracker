@@ -1342,6 +1342,7 @@ export const DOMAIN_TAGS = gql`
       organizations {
         id
         name
+        acronym
       }
     }
   }
