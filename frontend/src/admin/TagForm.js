@@ -9,7 +9,7 @@ import { getRequirement, schemaToValidation } from '../utilities/fieldRequiremen
 import { bool, string, func } from 'prop-types'
 import withSuperAdmin from '../app/withSuperAdmin'
 
-export function TagForm({ mutation, tagId = '', visible = true, ownership, setTagFormState }) {
+export function TagForm({ mutation, tagId = '', visible = true, ownership, setTagFormState, orgId }) {
   const toast = useToast()
 
   const fieldRequirement = getRequirement('field')
@@ -123,6 +123,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
         descriptionFr: '',
         isVisible: visible,
         ownership,
+        orgId,
       }}
       initialTouched={{
         labelEn: true,
@@ -130,7 +131,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
       validationSchema={mutation === 'create' ? validationSchema : null}
       onSubmit={async (values, formikHelpers) => {
         if (mutation === 'create') {
-          await createTag({ variables: { ...values } })
+          await createTag({ variables: values })
         } else if (mutation === 'update') {
           // Update the organization (only include fields that have values)
           const propertiesWithValues = {}
@@ -270,4 +271,5 @@ TagForm.propTypes = {
   visible: bool,
   ownership: string,
   setTagFormState: func,
+  orgId: string,
 }

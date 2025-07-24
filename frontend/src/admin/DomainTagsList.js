@@ -15,6 +15,7 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
 
   const { loading, error, data } = useQuery(DOMAIN_TAGS, {
     variables: { orgId },
+    errorPolicy: 'ignore',
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
@@ -91,7 +92,7 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
                     {label.toUpperCase()}
                   </Text>
                 </Tooltip>
-                {ownership !== 'GLOBAL' && (
+                {organizations && ownership !== 'GLOBAL' && (
                   <Text fontWeight="bold" mr="2">
                     ({organizations.map(({ acronym }) => acronym).join(', ')})
                   </Text>
@@ -140,6 +141,7 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
             tagFormState={tagFormState}
             setTagFormState={setTagFormState}
             ownership={createOwnership}
+            orgId={orgId}
           />
         </Collapse>
       </Box>

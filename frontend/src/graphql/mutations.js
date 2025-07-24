@@ -784,6 +784,7 @@ export const CREATE_TAG = gql`
     $descriptionFr: String
     $isVisible: Boolean
     $ownership: TagOwnershipEnums!
+    $orgId: ID
   ) {
     createTag(
       input: {
@@ -793,43 +794,7 @@ export const CREATE_TAG = gql`
         descriptionFr: $descriptionFr
         isVisible: $isVisible
         ownership: $ownership
-      }
-    ) {
-      result {
-        ... on Tag {
-          tagId
-          label
-          description
-          isVisible
-          ownership
-        }
-        ... on TagError {
-          code
-          description
-        }
-      }
-    }
-  }
-`
-
-export const CREATE_ORG_TAG = gql`
-  mutation CreateOrgTag(
-    $orgId: ID!
-    $labelEn: String!
-    $labelFr: String!
-    $descriptionEn: String
-    $descriptionFr: String
-    $isVisible: Boolean
-  ) {
-    createTag(
-      input: {
         orgId: $orgId
-        labelEn: $labelEn
-        labelFr: $labelFr
-        descriptionEn: $descriptionEn
-        descriptionFr: $descriptionFr
-        isVisible: $isVisible
-        ownership: ORG
       }
     ) {
       result {
