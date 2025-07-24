@@ -138,7 +138,7 @@ export const updateTag = new mutationWithClientMutationId({
         }
       }
 
-      permission = await checkPermission({ orgId })
+      permission = await checkPermission({ orgId: org._id })
       if (!['super_admin', 'admin', 'owner'].includes(permission)) {
         console.warn(
           `User: ${userKey} attempted to update a tag in: ${org.slug}, however they do not have permission to do so.`,

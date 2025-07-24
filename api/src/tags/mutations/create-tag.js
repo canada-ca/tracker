@@ -123,7 +123,7 @@ export const createTag = new mutationWithClientMutationId({
         }
       }
 
-      permission = await checkPermission({ orgId })
+      permission = await checkPermission({ orgId: org._id })
 
       if (!['super_admin', 'admin', 'owner'].includes(permission)) {
         console.warn(
