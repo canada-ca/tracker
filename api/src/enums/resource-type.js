@@ -15,6 +15,10 @@ export const ResourceTypeEnums = new GraphQLEnumType({
       value: 'domain',
       description: 'A domain affiliated with an organization.',
     },
+    TAG: {
+      value: 'tag',
+      description: 'A tag used for organizing domains.',
+    },
   },
   description: 'Keywords used to describe resources that can be modified.',
 })
