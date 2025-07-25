@@ -7,8 +7,9 @@ import { Formik } from 'formik'
 import { FormField } from '../components/fields/FormField'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { bool, string, func } from 'prop-types'
+import withSuperAdmin from '../app/withSuperAdmin'
 
-export function TagForm({ mutation, tagId = '', visible = true, ownership = '', setTagFormState }) {
+export function TagForm({ mutation, tagId = '', visible = true, ownership, setTagFormState, orgId }) {
   const toast = useToast()
 
   const fieldRequirement = getRequirement('field')
@@ -122,6 +123,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership = '', 
         descriptionFr: '',
         isVisible: visible,
         ownership,
+        orgId,
       }}
       initialTouched={{
         labelEn: true,
@@ -129,7 +131,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership = '', 
       validationSchema={mutation === 'create' ? validationSchema : null}
       onSubmit={async (values, formikHelpers) => {
         if (mutation === 'create') {
-          await createTag({ variables: { ...values } })
+          await createTag({ variables: values })
         } else if (mutation === 'update') {
           // Update the organization (only include fields that have values)
           const propertiesWithValues = {}
@@ -202,24 +204,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership = '', 
                 </Badge>
               </Flex>
             </Box>
-            <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-              <Flex align="center">
-                <FormLabel htmlFor="ownership" mr="2" fontWeight="bold">
-                  <Trans>Ownership:</Trans>
-                </FormLabel>
-                <Select id="ownership" name="ownership" defaultValue={ownership} isRequired onChange={handleChange}>
-                  <option value="" hidden>
-                    <Trans>Select an ownership level</Trans>
-                  </option>
-                  <option value="GLOBAL">
-                    <Trans>Global</Trans>
-                  </option>
-                  <option value="ORG">
-                    <Trans>Organization</Trans>
-                  </option>
-                </Select>
-              </Flex>
-            </Box>
+            <OwnershipSelect ownership={ownership} handleChange={handleChange} />
             <Button
               variant="danger"
               type="reset"
@@ -257,10 +242,34 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership = '', 
   )
 }
 
+const OwnershipSelect = withSuperAdmin(({ ownership, handleChange }) => {
+  return (
+    <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+      <Flex align="center">
+        <FormLabel htmlFor="ownership" mr="2" fontWeight="bold">
+          <Trans>Ownership:</Trans>
+        </FormLabel>
+        <Select id="ownership" name="ownership" defaultValue={ownership} isRequired onChange={handleChange}>
+          <option value="" hidden>
+            <Trans>Select an ownership level</Trans>
+          </option>
+          <option value="GLOBAL">
+            <Trans>Global</Trans>
+          </option>
+          <option value="ORG">
+            <Trans>Organization</Trans>
+          </option>
+        </Select>
+      </Flex>
+    </Box>
+  )
+})
+
 TagForm.propTypes = {
   mutation: string,
   tagId: string,
   visible: bool,
   ownership: string,
   setTagFormState: func,
+  orgId: string,
 }
