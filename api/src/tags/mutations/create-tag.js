@@ -188,12 +188,12 @@ export const createTag = new mutationWithClientMutationId({
       },
       action: 'add',
       target: {
-        resource: insertTag.tagId,
+        resource: insertTag.tagId, // name of resource being acted upon
         organization: org && {
           id: org._key,
           name: org.name,
-        }, // name of resource being acted upon
-        resourceType: 'tag', // user, org, domain
+        },
+        resourceType: 'tag',
       },
     })
 

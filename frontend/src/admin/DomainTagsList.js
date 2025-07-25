@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Badge, Box, Button, Collapse, Flex, IconButton, Text, Tooltip, useToast } from '@chakra-ui/react'
+import { Badge, Box, Button, Collapse, Flex, IconButton, Text, useToast } from '@chakra-ui/react'
 import { DOMAIN_TAGS } from '../graphql/queries'
 import { useQuery } from '@apollo/client'
 import { EditIcon, PlusSquareIcon, ViewOffIcon } from '@chakra-ui/icons'
@@ -87,18 +87,19 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
               borderColor="black"
             >
               <Flex align="center">
-                <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`} placement="right">
-                  <Text fontWeight="bold" mr="2">
-                    {label.toUpperCase()}
-                  </Text>
-                </Tooltip>
+                <Text fontWeight="bold" mr="2">
+                  {label.toUpperCase()}
+                </Text>
                 {organizations && ownership !== 'GLOBAL' && (
                   <Text fontWeight="bold" mr="2">
                     ({organizations.map(({ acronym }) => acronym).join(', ')})
                   </Text>
                 )}
-                {!isVisible && <ViewOffIcon aria-label="tag-invisible" boxSize="icons.md" />}
+                {!isVisible && <ViewOffIcon aria-label="tag-invisible" boxSize="icons.md" mr="2" />}
               </Flex>
+              <Text mx="auto" fontSize="md">
+                {description}
+              </Text>
               <Badge
                 variant="solid"
                 bg={ownershipBadgeColour(ownership)}
@@ -117,6 +118,7 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
               tagId={tagId}
               tagFormState={tagFormState}
               setTagFormState={setTagFormState}
+              orgId={orgId || organizations[0]?.id}
             />
           </Collapse>
         </Box>

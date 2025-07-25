@@ -823,6 +823,7 @@ export const UPDATE_TAG = gql`
     $descriptionFr: String
     $isVisible: Boolean
     $ownership: TagOwnershipEnums
+    $orgId: ID
   ) {
     updateTag(
       input: {
@@ -833,6 +834,7 @@ export const UPDATE_TAG = gql`
         descriptionFr: $descriptionFr
         isVisible: $isVisible
         ownership: $ownership
+        orgId: $orgId
       }
     ) {
       result {
