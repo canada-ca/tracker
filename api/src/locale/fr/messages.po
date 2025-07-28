@@ -131,11 +131,11 @@ msgstr "`{argSet}` sur la connexion `VerifiedOrganization` ne peut être inféri
 msgid "Authentication error. Please sign in."
 msgstr "Erreur d'authentification. Veuillez vous connecter."
 
-#: src/domain/objects/domain.js:278
+#: src/domain/objects/domain.js:279
 msgid "Cannot query additional findings without permission."
 msgstr "Il n'est pas possible de demander des résultats supplémentaires sans autorisation."
 
-#: src/organization/objects/organization.js:373
+#: src/organization/objects/organization.js:361
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus."
 
@@ -144,16 +144,16 @@ msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autor
 msgid "Cannot query audit logs on organization without admin permission or higher."
 msgstr "Impossible d'interroger les journaux d'audit sur l'organisation sans l'autorisation d'administrateur ou plus."
 
-#: src/domain/objects/domain.js:167
+#: src/domain/objects/domain.js:168
 msgid "Cannot query dns scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse DNS sans autorisation."
 
-#: src/domain/objects/domain.js:64
+#: src/domain/objects/domain.js:65
 msgid "Cannot query domain selectors without permission."
 msgstr "Impossible d'interroger les sélecteurs de domaine sans autorisation."
 
-#: src/domain/objects/domain.js:209
-#: src/domain/objects/domain.js:255
+#: src/domain/objects/domain.js:210
+#: src/domain/objects/domain.js:256
 msgid "Cannot query web scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse web sans autorisation."
 
@@ -368,7 +368,9 @@ msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour 
 msgid "Permission Denied: Please contact organization admin for help with archiving domains."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur l'archivage des domaines."
 
-#: src/tags/mutations/create-tag.js:134
+#: src/tags/mutations/update-tag.js:149
+#: src/tags/mutations/update-tag.js:160
+#: src/tags/mutations/create-tag.js:135
 msgid "Permission Denied: Please contact organization admin for help with creating tag."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la création d'un tag."
 
@@ -409,7 +411,7 @@ msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisat
 msgid "Permission Denied: Please contact organization admin for help with user role changes."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs."
 
-#: src/domain/mutations/create-domain.js:112
+#: src/domain/mutations/create-domain.js:120
 msgid "Permission Denied: Please contact organization user for help with creating domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la création du domaine."
 
@@ -418,10 +420,10 @@ msgid "Permission Denied: Please contact organization user for help with creatin
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la création de domaines."
 
 #: src/organization/objects/organization.js:111
-msgid "Permission Denied: Please contact organization user for help with retrieving tags."
-msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide afin de récupérer les étiquettes."
+#~ msgid "Permission Denied: Please contact organization user for help with retrieving tags."
+#~ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide afin de récupérer les étiquettes."
 
-#: src/organization/objects/organization.js:208
+#: src/organization/objects/organization.js:196
 #: src/organization/objects/organization-summary.js:188
 #: src/domain/queries/find-domain-by-domain.js:51
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
@@ -432,7 +434,7 @@ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/domain/mutations/update-domain.js:129
+#: src/domain/mutations/update-domain.js:137
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
@@ -452,6 +454,10 @@ msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu
 #: src/domain/mutations/request-scan.js:67
 #~ msgid "Permission Denied: Please contact super admin for help with scanning this domain."
 #~ msgstr "Permission refusée : Veuillez contacter le super administrateur pour obtenir de l'aide sur l'analyse de ce domaine."
+
+#: src/tags/mutations/update-tag.js:171
+msgid "Permission Denied: Please contact super admin for help with updating tag."
+msgstr "Autorisation refusée : veuillez contacter l'administrateur principal pour obtenir de l'aide concernant la mise à jour de la balise."
 
 #: src/organization/mutations/verify-organization.js:68
 msgid "Permission Denied: Please contact super admin for help with verifying this organization."
@@ -676,10 +682,11 @@ msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Le numéro de téléphone a été vérifié avec succès, et la méthode d'envoi de la TFA a été réglée sur le texte."
 
 #: src/tags/mutations/update-tag.js:113
-msgid "Tag label already in use, please choose another and try again."
-msgstr "L'étiquette est déjà utilisée, veuillez en choisir une autre et réessayer."
+#~ msgid "Tag label already in use, please choose another and try again."
+#~ msgstr "L'étiquette est déjà utilisée, veuillez en choisir une autre et réessayer."
 
-#: src/tags/mutations/create-tag.js:91
+#: src/tags/mutations/update-tag.js:185
+#: src/tags/mutations/create-tag.js:93
 msgid "Tag label already in use. Please try again with a different label."
 msgstr "L'étiquette est déjà utilisée. Veuillez réessayer avec une autre étiquette."
 
@@ -756,20 +763,20 @@ msgstr "Impossible de fermer le compte. Veuillez réessayer."
 msgid "Unable to confirm completion of the tour. Please try again."
 msgstr "Impossible de confirmer l'achèvement de la visite. Veuillez réessayer."
 
-#: src/domain/mutations/create-domain.js:98
+#: src/domain/mutations/create-domain.js:106
 msgid "Unable to create domain in unknown organization."
 msgstr "Impossible de créer un domaine dans une organisation inconnue."
 
-#: src/domain/mutations/create-domain.js:169
+#: src/domain/mutations/create-domain.js:177
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Impossible de créer le domaine, l'organisation l'a déjà réclamé."
 
-#: src/domain/mutations/create-domain.js:151
 #: src/domain/mutations/create-domain.js:159
-#: src/domain/mutations/create-domain.js:191
-#: src/domain/mutations/create-domain.js:200
-#: src/domain/mutations/create-domain.js:220
+#: src/domain/mutations/create-domain.js:167
+#: src/domain/mutations/create-domain.js:199
+#: src/domain/mutations/create-domain.js:208
 #: src/domain/mutations/create-domain.js:228
+#: src/domain/mutations/create-domain.js:236
 msgid "Unable to create domain. Please try again."
 msgstr "Impossible de créer un domaine. Veuillez réessayer."
 
@@ -783,11 +790,11 @@ msgstr "Impossible de créer des domaines. Veuillez réessayer."
 msgid "Unable to create organization. Please try again."
 msgstr "Impossible de créer une organisation. Veuillez réessayer."
 
-#: src/tags/mutations/create-tag.js:121
+#: src/tags/mutations/create-tag.js:122
 msgid "Unable to create tag in unknown organization."
 msgstr "Impossible de créer une étiquette dans une organisation inconnue."
 
-#: src/tags/mutations/create-tag.js:111
+#: src/tags/mutations/create-tag.js:112
 msgid "Unable to create tag, tagId already in use."
 msgstr "Impossible de créer une balise, tagId déjà utilisé."
 
@@ -811,8 +818,8 @@ msgstr "Impossible de rejeter le message. Veuillez réessayer."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Impossible d'envoyer un scan unique. Veuillez réessayer."
 
-#: src/organization/objects/organization.js:270
-#: src/organization/objects/organization.js:280
+#: src/organization/objects/organization.js:258
+#: src/organization/objects/organization.js:268
 msgid "Unable to export organization. Please try again."
 msgstr "Impossible d'exporter l'organisation. Veuillez réessayer."
 
@@ -1070,8 +1077,8 @@ msgstr "Impossible de charger le domaine. Veuillez réessayer."
 
 #: src/user/loaders/load-my-tracker-by-user-id.js:33
 #: src/domain/loaders/load-domain-connections-by-user-id.js:570
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:516
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:526
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:512
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:522
 msgid "Unable to load domain(s). Please try again."
 msgstr "Impossible de charger le(s) domaine(s). Veuillez réessayer."
 
@@ -1114,7 +1121,7 @@ msgstr "Impossible de charger le(s) journal(s). Veuillez réessayer."
 msgid "Unable to load mail summary. Please try again."
 msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 
-#: src/organization/loaders/load-organization-domain-statuses.js:161
+#: src/organization/loaders/load-organization-domain-statuses.js:154
 #: src/organization/loaders/load-all-organization-domain-statuses.js:159
 #: src/additional-findings/loaders/load-top-25-reports.js:29
 msgid "Unable to load organization domain statuses. Please try again."
@@ -1180,12 +1187,12 @@ msgstr "Impossible de charger le résumé SSL. Veuillez réessayer."
 msgid "Unable to load summary. Please try again."
 msgstr "Impossible de charger le résumé. Veuillez réessayer."
 
-#: src/tags/loaders/load-tags-by-org.js:37
-#: src/tags/loaders/load-tags-by-org.js:45
+#: src/tags/loaders/load-tags-by-org.js:36
+#: src/tags/loaders/load-tags-by-org.js:44
 #: src/tags/loaders/load-tag-by-tag-id.js:25
 #: src/tags/loaders/load-tag-by-tag-id.js:35
-#: src/tags/loaders/load-all-tags.js:30
-#: src/tags/loaders/load-all-tags.js:38
+#: src/tags/loaders/load-all-tags.js:36
+#: src/tags/loaders/load-all-tags.js:44
 msgid "Unable to load tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s). Veuillez réessayer."
 
@@ -1397,8 +1404,8 @@ msgstr "Impossible de demander une invitation. Veuillez réessayer."
 msgid "Unable to reset password. Please try again."
 msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 
-#: src/domain/objects/domain.js:323
-#: src/domain/objects/domain.js:358
+#: src/domain/objects/domain.js:324
+#: src/domain/objects/domain.js:359
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
@@ -1517,21 +1524,21 @@ msgstr "Impossible de défavoriser le domaine. Veuillez réessayer."
 msgid "Unable to unfavourite unknown domain."
 msgstr "Impossible de défavoriser un domaine inconnu."
 
-#: src/domain/mutations/update-domain.js:228
+#: src/domain/mutations/update-domain.js:236
 msgid "Unable to update domain edge. Please try again."
 msgstr "Impossible de mettre à jour le bord du domaine. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:115
+#: src/domain/mutations/update-domain.js:123
 msgid "Unable to update domain in an unknown org."
 msgstr "Impossible de mettre à jour le domaine dans un org inconnu."
 
-#: src/domain/mutations/update-domain.js:156
+#: src/domain/mutations/update-domain.js:164
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée."
 
-#: src/domain/mutations/update-domain.js:146
-#: src/domain/mutations/update-domain.js:185
-#: src/domain/mutations/update-domain.js:239
+#: src/domain/mutations/update-domain.js:154
+#: src/domain/mutations/update-domain.js:193
+#: src/domain/mutations/update-domain.js:247
 msgid "Unable to update domain. Please try again."
 msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 
@@ -1577,15 +1584,22 @@ msgstr "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas �
 msgid "Unable to update role: user unknown."
 msgstr "Impossible de mettre à jour le rôle : utilisateur inconnu."
 
-#: src/tags/mutations/update-tag.js:103
-#: src/tags/mutations/update-tag.js:128
-#: src/tags/mutations/update-tag.js:136
-#: src/tags/mutations/update-tag.js:172
-#: src/tags/mutations/update-tag.js:183
+#: src/tags/mutations/update-tag.js:137
+msgid "Unable to update tag in unknown organization."
+msgstr "Impossible de mettre à jour la balise dans une organisation inconnue."
+
+#: src/tags/mutations/update-tag.js:127
+msgid "Unable to update tag, tagId already in use."
+msgstr "Impossible de mettre à jour la balise, l'identifiant de balise est déjà utilisé."
+
+#: src/tags/mutations/update-tag.js:104
+#: src/tags/mutations/update-tag.js:112
+#: src/tags/mutations/update-tag.js:224
+#: src/tags/mutations/update-tag.js:235
 msgid "Unable to update tag. Please try again."
 msgstr "Impossible de mettre à jour la balise. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:101
+#: src/domain/mutations/update-domain.js:109
 msgid "Unable to update unknown domain."
 msgstr "Impossible de mettre à jour un domaine inconnu."
 
@@ -1593,7 +1607,7 @@ msgstr "Impossible de mettre à jour un domaine inconnu."
 msgid "Unable to update unknown organization."
 msgstr "Impossible de mettre à jour une organisation inconnue."
 
-#: src/tags/mutations/update-tag.js:85
+#: src/tags/mutations/update-tag.js:90
 msgid "Unable to update unknown tag."
 msgstr "Impossible de mettre à jour une étiquette inconnue."
 
