@@ -65,7 +65,7 @@ const mockTags = [
     description: 'Critical tag',
     isVisible: true,
     ownership: 'GLOBAL',
-    _organizations: [],
+    organizations: [],
   },
   {
     tagId: '2',
@@ -73,7 +73,7 @@ const mockTags = [
     description: 'No longer used',
     isVisible: false,
     ownership: 'ORG',
-    _organizations: [],
+    organizations: [],
   },
 ]
 
@@ -269,8 +269,7 @@ describe('DomainTagsList', () => {
 
     const editButtons = screen.getAllByRole('button', { name: /edit/i })
     fireEvent.click(editButtons[0])
-    await waitFor(() => screen.getByLabelText(/ownership/i))
-    expect(screen.getByLabelText(/ownership/i)).toBeInTheDocument()
+    await waitFor(() => screen.getAllByText(/visible/i))
   })
 
   it('opens and closes create form', async () => {

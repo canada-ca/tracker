@@ -28,16 +28,18 @@ export const findAllTags = {
     const user = await userRequired()
     verifiedRequired({ user })
 
-    if (!args.orgId) {
+    let orgKey = null
+    if (args.orgId) {
+      const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+      // Get Org from db
+      const org = await loadOrgByKey.load(orgId)
+      orgKey = org?._key
+    } else {
       const isSuperAdmin = await checkSuperAdmin()
       superAdminRequired({ user, isSuperAdmin })
     }
 
-    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    // Get Org from db
-    const org = await loadOrgByKey.load(orgId)
-
-    const tags = await loadAllTags({ ...args, orgId: org?._key })
+    const tags = await loadAllTags({ ...args, orgId: orgKey })
     console.info(`User: ${userKey} successfully retrieved tags.`)
     return tags
   },
