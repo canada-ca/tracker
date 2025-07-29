@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from datetime import datetime, timedelta, timezone, time
+from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
 from dotenv import load_dotenv
 from notify.send_email_notifs import send_email_notifs
@@ -12,6 +12,8 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
+START_HOUR = int(os.getenv("START_HOUR"))  
+START_MINUTE = int(os.getenv("START_MINUTE"))  
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -23,18 +25,22 @@ def ignore_domain(domain):
         or domain.get("rcode") == "NXDOMAIN"
     )
 
-# Returns all dns scans that ran after 8pm yesterday + the last dns scan that ran before this time
+# Returns a timestamp in ISO format for the given hour and minute
+def get_timestamp(hr, min):
+    return (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=hr, minute=min, second=0, microsecond=0).isoformat(timespec='microseconds')
+
+# Returns all dns scans that ran in the past 24hrs + the last dns scan that ran before this time
 def get_all_dns_scans(domain_id, db):
-    yesterday_8pm = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=20, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds')
-    dnsScans_after8 = db.aql.execute(
+    one_day_ago = get_timestamp(START_HOUR, START_MINUTE)
+    dns_scans = db.aql.execute(
         """
         WITH domains, dns
-        FOR dnsScan, dnsE IN 1 OUTBOUND @domain_id domainsDNS
-            FILTER dnsScan.timestamp > @yesterday_8pm
-            RETURN dnsScan
+        FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
+            FILTER dnsV.timestamp > @one_day_ago
+            RETURN dnsV
         """,
         bind_vars={"domain_id": domain_id, 
-                   "yesterday_8pm": yesterday_8pm},
+                   "one_day_ago": one_day_ago},
     )
 
     all_dns_scans = db.aql.execute(
@@ -44,30 +50,29 @@ def get_all_dns_scans(domain_id, db):
             SORT dnsScanV.timestamp DESC
             LIMIT @num
             RETURN {
-                "timestamp": dnsScanV.timestamp,
                 "dmarc_status": dnsScanV.dmarc.status,
                 "spf_status": dnsScanV.spf.status,
                 "dkim_status": dnsScanV.dkim.status,
             }
         """,
         bind_vars={"domain_id": domain_id, 
-                   "num": len(list(dnsScans_after8)) + 1},
+                   "num": len(list(dns_scans)) + 1},
     )
 
     return all_dns_scans
 
-# Returns all web scans that ran after 8pm yesterday + the last web scan that ran before this time
+# Returns all web scans that ran in the past 24hrs + the last web scan that ran before this time
 def get_all_web_scans(domain_id, db):
-    yesterday_8pm = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=20, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds')
-    webScans_after8 = db.aql.execute(
+    one_day_ago = get_timestamp(START_HOUR, START_MINUTE)
+    web_scans = db.aql.execute(
         """
         WITH domains, web
         FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
-            FILTER webV.timestamp > @yesterday_8pm
+            FILTER webV.timestamp > @one_day_ago
             RETURN webV
         """,
         bind_vars={"domain_id": domain_id, 
-                   "yesterday_8pm": yesterday_8pm},
+                   "one_day_ago": one_day_ago},
     )
 
     all_web_scans = db.aql.execute(
@@ -80,7 +85,6 @@ def get_all_web_scans(domain_id, db):
                 FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
                     FILTER webScanV.status == "complete"
                     RETURN {
-                        "timestamp": webScanV.results.timestamp,
 			            "https_status": webScanV.results.connectionResults.httpsStatus,
                         "hsts_status": webScanV.results.connectionResults.hstsStatus,
                         "certificate_status": webScanV.results.tlsResult.certificateStatus,
@@ -95,7 +99,7 @@ def get_all_web_scans(domain_id, db):
             }
         """,
         bind_vars={"domain_id": domain_id, 
-                   "num": len(list(webScans_after8)) + 1},
+                   "num": len(list(web_scans)) + 1},
     )
     
     return all_web_scans

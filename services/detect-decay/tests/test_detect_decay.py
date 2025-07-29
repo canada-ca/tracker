@@ -10,6 +10,8 @@ from detect_decay import *
 DB_URL = os.getenv("DB_URL", "http://localhost:8529")
 DB_USER = os.getenv("DB_USER", "root")
 DB_PASS = os.getenv("DB_PASS", "test")
+START_HOUR = int(os.getenv("START_HOUR"))  
+START_MINUTE = int(os.getenv("START_MINUTE"))
 
 @pytest.fixture()
 def arango_db():
@@ -114,7 +116,7 @@ def arango_db():
         {"_from": "organizations/2", "_to": "domains/4", "assetState": "approved"},
     ]
     now = datetime.now(timezone.utc).isoformat(timespec='microseconds')
-    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=17, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds')
+    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=START_HOUR, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds')
     dns = [
         {
             "_id": "dns/11",

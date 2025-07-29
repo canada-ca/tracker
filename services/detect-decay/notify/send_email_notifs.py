@@ -22,9 +22,9 @@ def send_email_notifs(org, domains, org_users):
     
     domains = custom_format(domains)
     responses = []
+    # Send email to each org owner/admin
     for user in org_users:
         email = user["userName"]
-        display_name = user["displayName"]
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
@@ -37,9 +37,9 @@ def send_email_notifs(org, domains, org_users):
                     "domains": domains,
                 },
             )           
-            logging.info(f"Email sent to {display_name} with response: {response}")
-            responses.append(response)
+            logging.info(f"Email sent to {email} in {org_name_en} with response: {response}")
+            responses.append(response) # For testing purposes
 
         except Exception as e:
-            logging.error(f"Failed to send email notification to {display_name}: {e}")
+            logging.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
     return responses
