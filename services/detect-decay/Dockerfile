@@ -32,7 +32,7 @@ WORKDIR /decay
 
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY detect-decay.py ./
+COPY detect_decay.py ./
 
 RUN useradd -ms /bin/bash decay
 USER decay
