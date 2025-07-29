@@ -3,7 +3,6 @@ FROM python:3.13.3-slim-bookworm AS python-builder
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DEBIAN_FRONTEND noninteractive
-
 WORKDIR /working/install
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -27,7 +26,6 @@ FROM python:3.13.3-slim-bookworm
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DEBIAN_FRONTEND noninteractive
-
 WORKDIR /decay
 
 COPY --from=python-builder /working/install/lib /usr/local/lib
