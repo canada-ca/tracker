@@ -130,7 +130,7 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     dns_answer_return_types = []
-    for query_type in [dns.rdatatype.SOA, dns.rdatatype.NS, dns.rdatatype.A]:
+    for query_type in [dns.rdatatype.A, dns.rdatatype.SOA, dns.rdatatype.NS]:
         rtype = get_dns_return_type(domain, query_type)
         if rtype == "NOERROR":
             dns_answer_return_types.append(rtype)
@@ -141,7 +141,6 @@ def scan_domain(domain, dkim_selectors=None):
         elif rtype == "NXDOMAIN":
             scan_result.rcode = rtype
             scan_result.record_exists = False
-            return scan_result.__dict__
         elif rtype == "SERVFAIL":
             dns_answer_return_types.append(rtype)
         else:
