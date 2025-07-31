@@ -1,0 +1,62 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: start_testdb
+    entrypoint: /bin/sh
+    args:
+      [
+        "-c",
+        "docker run --net cloudbuild --name arangodb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1",
+      ]
+  
+  - name: mikewilliamson/wait-for
+    id: wait_testdb
+    args: ["arangodb:8529"]
+
+  - name: "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci"
+    id: test-results
+    dir: services/detect-decay
+    entrypoint: /bin/sh
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+    env:
+      - DB_URL=http://arangodb:8529
+      - DB_USER=root
+      - DB_PASS=test
+      - START_HOUR=$_START_HOUR
+      - START_MINUTE=$_START_MINUTE
+      - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
+      - NOTIFICATION_API_URL=$_NOTIFICATION_API_URL
+      - EMAIL_TEMPLATE_ID=$_EMAIL_TEMPLATE_ID
+  
+  - name: "gcr.io/cloud-builders/docker"
+    id: generate-image-name
+    entrypoint: "bash"
+    dir: services/detect-decay
+    args:
+      - "-c"
+      - |
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/detect-decay:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+  
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-results
+    entrypoint: "bash"
+    dir: services/detect-decay
+    args:
+      - "-c"
+      - |
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-results-if-master
+    entrypoint: "bash"
+    dir: services/detect-decay
+    args:
+      - "-c"
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi

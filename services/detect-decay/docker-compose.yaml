@@ -1,0 +1,6 @@
+version: '3'
+services:
+  detect-decay:
+    build: .
+    env_file: .env
+    network_mode: "host"
