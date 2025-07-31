@@ -63,7 +63,7 @@ spec:
                     secretKeyRef:
                       key: password
                       name: arangodb
-              image: arangodb:3.12.3
+              image: docker.io/library/arangodb:3.12.3
               name: dump
               volumeMounts:
                 - mountPath: /tmp/dump
