@@ -1332,8 +1332,8 @@ export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
 `
 
 export const DOMAIN_TAGS = gql`
-  query FindAllTags($orgId: ID) {
-    findAllTags(orgId: $orgId, isVisible: false) {
+  query FindAllTags($orgId: ID, $isVisible: Boolean) {
+    findAllTags(orgId: $orgId, isVisible: $isVisible) {
       tagId
       label
       description
