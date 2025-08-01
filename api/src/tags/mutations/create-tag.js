@@ -78,24 +78,25 @@ export const createTag = new mutationWithClientMutationId({
         en: descriptionEn || '',
         fr: descriptionFr || '',
       },
-      visible: args?.isVisible || true,
+      visible: args?.isVisible ?? true,
       ownership,
       organizations: [],
     }
 
     const tag = await loadTagByTagId.load(insertTag.tagId)
 
-    if (typeof tag !== 'undefined' && !['org', 'pending'].includes(ownership)) {
-      console.warn(`User: ${userKey} attempted to create a tag that already exists: ${insertTag.tagId}`)
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+    const isSuperAdmin = await checkSuperAdmin()
+    if (ownership === 'global') {
+      superAdminRequired({ user, isSuperAdmin })
+      if (typeof tag !== 'undefined') {
+        console.warn(`User: ${userKey} attempted to create a tag that already exists: ${insertTag.tagId}`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+        }
       }
     }
-
-    const isSuperAdmin = await checkSuperAdmin()
-    if (ownership === 'global') superAdminRequired({ user, isSuperAdmin })
 
     // Setup Transaction
     const trx = await transaction(collections)
@@ -112,6 +113,7 @@ export const createTag = new mutationWithClientMutationId({
           description: i18n._(t`Unable to create tag, tagId already in use.`),
         }
       }
+
       // Check to see if org exists
       org = await loadOrgByKey.load(orgId)
       if (typeof org === 'undefined') {
@@ -124,7 +126,6 @@ export const createTag = new mutationWithClientMutationId({
       }
 
       permission = await checkPermission({ orgId: org._id })
-
       if (!['super_admin', 'admin', 'owner'].includes(permission)) {
         console.warn(
           `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
@@ -138,10 +139,19 @@ export const createTag = new mutationWithClientMutationId({
 
       if (permission !== 'super_admin' && typeof tag === 'undefined') insertTag.ownership = 'pending'
 
-      if (typeof tag !== 'undefined') {
+      if (typeof tag === 'undefined') {
+        insertTag.organizations = [orgId]
+      } else if (!tag.organizations.includes(orgId)) {
         insertTag.organizations = [...tag.organizations, orgId]
       } else {
-        insertTag.organizations = [orgId]
+        console.warn(
+          `User: ${userKey} attempted to create a tag in org:${orgId} that already exists: ${insertTag.tagId}`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+        }
       }
     }
 

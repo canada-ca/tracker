@@ -77,20 +77,6 @@ export const updateTag = new mutationWithClientMutationId({
     const isVisible = args.isVisible
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
-    // Check to see if tag exists
-    const currentTag = await loadTagByTagId.load(tagId)
-
-    if (typeof currentTag === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to update tag: ${tagId}, however there is no tag associated with that id.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to update unknown tag.`),
-      }
-    }
-
     let tagCursor
     try {
       tagCursor = await query`
@@ -112,6 +98,17 @@ export const updateTag = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update tag. Please try again.`))
     }
 
+    if (typeof compareTag === 'undefined') {
+      console.warn(
+        `User: ${userKey} attempted to update tag: ${tagId}, however there is no tag associated with that id.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update unknown tag.`),
+      }
+    }
+
     const isSuperAdmin = await checkSuperAdmin()
     if (['global', 'pending'].includes(compareTag.ownership)) superAdminRequired({ user, isSuperAdmin })
 
@@ -124,7 +121,7 @@ export const updateTag = new mutationWithClientMutationId({
         return {
           _type: 'error',
           code: 400,
-          description: i18n._(t`Unable to update tag, tagId already in use.`),
+          description: i18n._(t`Unable to update tag, orgId is invalid.`),
         }
       }
       // Check to see if org exists
@@ -236,7 +233,7 @@ export const updateTag = new mutationWithClientMutationId({
     }
 
     // Clear dataloader and load updated tag
-    await loadTagByTagId.clear(currentTag.tagId)
+    await loadTagByTagId.clear(updatedTag.tagId)
     const returnTag = await loadTagByTagId.load(updatedTag.tagId)
 
     console.info(`User: ${userKey} successfully updated tag: ${tagId}.`)
@@ -295,7 +292,7 @@ export const updateTag = new mutationWithClientMutationId({
         role: isSuperAdmin ? 'super_admin' : permission,
         ipAddress: request.ip,
       },
-      action: 'add',
+      action: 'update',
       target: {
         resource: updatedTag.tagId,
         updatedProperties,
