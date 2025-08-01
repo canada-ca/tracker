@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Badge, Box, Button, Collapse, Flex, IconButton, Text, useToast } from '@chakra-ui/react'
+import { Badge, Box, Button, Collapse, Flex, IconButton, Switch, Text, useToast } from '@chakra-ui/react'
 import { DOMAIN_TAGS } from '../graphql/queries'
 import { useQuery } from '@apollo/client'
-import { EditIcon, PlusSquareIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { EditIcon, PlusSquareIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TagForm } from './TagForm'
@@ -11,10 +11,11 @@ import { string } from 'prop-types'
 
 export const DomainTagsList = ({ orgId, createOwnership }) => {
   const [tagFormState, setTagFormState] = useState({ editingTags: {}, isCreatingTag: false })
+  const [onlyVisible, setOnlyVisible] = useState(true)
   const toast = useToast()
 
   const { loading, error, data } = useQuery(DOMAIN_TAGS, {
-    variables: { orgId },
+    variables: { orgId, isVisible: onlyVisible },
     errorPolicy: 'ignore',
     onError: (error) => {
       const [_, message] = error.message.split(': ')
@@ -129,14 +130,30 @@ export const DomainTagsList = ({ orgId, createOwnership }) => {
   return (
     <Box>
       <Box mb="4">
-        <Button
-          variant="primary"
-          onClick={() => setTagFormState((prev) => ({ ...prev, isCreatingTag: !prev.isCreatingTag }))}
-          rightIcon={<PlusSquareIcon boxSize="icons.lg" />}
-          mb="2"
-        >
-          <Trans>Add Tag</Trans>
-        </Button>
+        <Flex align="center" mb="2" justifyContent="space-between">
+          <Button
+            variant="primary"
+            onClick={() => setTagFormState((prev) => ({ ...prev, isCreatingTag: !prev.isCreatingTag }))}
+            rightIcon={<PlusSquareIcon boxSize="icons.lg" />}
+            mb="2"
+          >
+            <Trans>Add Tag</Trans>
+          </Button>
+          <Flex align="center">
+            <ViewOffIcon boxSize="icons.lg" color="gray.900" />
+            <Switch
+              isFocusable={true}
+              aria-label="Show only verified organizations"
+              mx="2"
+              defaultChecked={onlyVisible}
+              onChange={(e) => {
+                setOnlyVisible(e.target.checked)
+              }}
+            />
+            <ViewIcon boxSize="icons.lg" color="gray.900" />
+          </Flex>
+        </Flex>
+
         <Collapse in={tagFormState.isCreatingTag}>
           <TagForm
             mutation="create"
