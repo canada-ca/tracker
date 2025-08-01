@@ -147,6 +147,10 @@ msgstr "<0>Last Scanned:</0> {0}"
 #~ msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 #~ msgstr "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 
+#: src/admin/TagForm.js:119
+msgid "<0>Note:</0> Tags must not include data that would reclassify the asset above <1>Unclassified, Low Integrity, Low Availability (ULL)</1>"
+msgstr "<0>Note:</0> Tags must not include data that would reclassify the asset above <1>Unclassified, Low Integrity, Low Availability (ULL)</1>"
+
 #: src/guidance/EmailGuidance.js:356
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Preference:</0> {preference}"
@@ -332,7 +336,7 @@ msgstr "Add Domain"
 msgid "Add Domain Details"
 msgstr "Add Domain Details"
 
-#: src/admin/DomainTagsList.js:138
+#: src/admin/DomainTagsList.js:140
 msgid "Add Tag"
 msgstr "Add Tag"
 
@@ -876,7 +880,7 @@ msgstr "City (FR)"
 msgid "City:"
 msgstr "City:"
 
-#: src/admin/TagForm.js:215
+#: src/admin/TagForm.js:222
 #: src/admin/OrganizationInformation.js:330
 msgid "Clear"
 msgstr "Clear"
@@ -902,7 +906,7 @@ msgid "Click to view detailed scan results and guidance."
 msgstr "Click to view detailed scan results and guidance."
 
 #: src/app/FloatingMenu.js:267
-#: src/admin/TagForm.js:233
+#: src/admin/TagForm.js:240
 #: src/admin/OrganizationInformation.js:339
 msgid "Close"
 msgstr "Close"
@@ -959,7 +963,7 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/guidance/CveIgnorer.js:157
 #: src/domains/SubdomainDiscoveryButton.js:92
 #: src/admin/UserListModal.js:277
-#: src/admin/TagForm.js:236
+#: src/admin/TagForm.js:243
 #: src/admin/SuperAdminUserList.js:427
 #: src/admin/OrganizationInformation.js:347
 #: src/admin/OrganizationInformation.js:445
@@ -1196,11 +1200,11 @@ msgstr "Deploy initial DMARC records with policy of none; and"
 msgid "Deploy SPF records for all domains;"
 msgstr "Deploy SPF records for all domains;"
 
-#: src/admin/TagForm.js:186
+#: src/admin/TagForm.js:193
 msgid "Description (EN)"
 msgstr "Description (EN)"
 
-#: src/admin/TagForm.js:189
+#: src/admin/TagForm.js:196
 msgid "Description (FR)"
 msgstr "Description (FR)"
 
@@ -2024,8 +2028,8 @@ msgstr "Getting Started"
 msgid "Getting top 25 report"
 msgstr "Getting top 25 report"
 
-#: src/admin/TagForm.js:257
-#: src/admin/DomainTagsList.js:49
+#: src/admin/TagForm.js:265
+#: src/admin/DomainTagsList.js:50
 msgid "Global"
 msgstr "Global"
 
@@ -2710,11 +2714,11 @@ msgstr "Key type:"
 msgid "L-30-D"
 msgstr "L-30-D"
 
-#: src/admin/TagForm.js:180
+#: src/admin/TagForm.js:187
 msgid "Label (EN)"
 msgstr "Label (EN)"
 
-#: src/admin/TagForm.js:183
+#: src/admin/TagForm.js:190
 msgid "Label (FR)"
 msgstr "Label (FR)"
 
@@ -3186,7 +3190,7 @@ msgstr "No scan data for this organization."
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
-#: src/admin/DomainTagsList.js:58
+#: src/admin/DomainTagsList.js:59
 msgid "No Tags"
 msgstr "No Tags"
 
@@ -3203,7 +3207,7 @@ msgstr "No users"
 msgid "No Users"
 msgstr "No Users"
 
-#: src/admin/TagForm.js:149
+#: src/admin/TagForm.js:156
 #: src/admin/OrganizationInformation.js:261
 msgid "No values were supplied when attempting to update organization details."
 msgstr "No values were supplied when attempting to update organization details."
@@ -3318,8 +3322,8 @@ msgstr "Open the glossary."
 msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 msgstr "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 
-#: src/admin/TagForm.js:260
-#: src/admin/DomainTagsList.js:50
+#: src/admin/TagForm.js:269
+#: src/admin/DomainTagsList.js:51
 #: src/admin/AuditLogTable.js:79
 #: src/admin/AuditLogTable.js:127
 msgid "Organization"
@@ -3416,7 +3420,7 @@ msgstr "our Terms and Conditions on the TBS website"
 msgid "OWNER"
 msgstr "OWNER"
 
-#: src/admin/TagForm.js:250
+#: src/admin/TagForm.js:258
 msgid "Ownership:"
 msgstr "Ownership:"
 
@@ -3479,7 +3483,7 @@ msgstr "Passwords must match"
 msgid "pct:"
 msgstr "pct:"
 
-#: src/admin/DomainTagsList.js:51
+#: src/admin/DomainTagsList.js:52
 msgid "Pending"
 msgstr "Pending"
 
@@ -4068,7 +4072,7 @@ msgstr "Select an organization"
 msgid "Select an organization to view admin options"
 msgstr "Select an organization to view admin options"
 
-#: src/admin/TagForm.js:254
+#: src/admin/TagForm.js:262
 msgid "Select an ownership level"
 msgstr "Select an ownership level"
 
@@ -4612,7 +4616,7 @@ msgstr "Tag"
 msgid "Tag created"
 msgstr "Tag created"
 
-#: src/admin/TagForm.js:148
+#: src/admin/TagForm.js:155
 msgid "Tag not updated"
 msgstr "Tag not updated"
 
@@ -5178,12 +5182,17 @@ msgstr "Unable to create new domain."
 
 #: src/admin/TagForm.js:47
 #: src/admin/TagForm.js:93
-msgid "Unable to create new global tag."
-msgstr "Unable to create new global tag."
+#~ msgid "Unable to create new global tag."
+#~ msgstr "Unable to create new global tag."
 
 #: src/createOrganization/CreateOrganizationPage.js:63
 msgid "Unable to create new organization."
 msgstr "Unable to create new organization."
+
+#: src/admin/TagForm.js:47
+#: src/admin/TagForm.js:93
+msgid "Unable to create new tag."
+msgstr "Unable to create new tag."
 
 #: src/auth/CreateUserPage.js:28
 msgid "Unable to create your account, please try again."
@@ -5527,7 +5536,7 @@ msgstr "View Results"
 msgid "View summaries of your organization's web and email security compliance."
 msgstr "View summaries of your organization's web and email security compliance."
 
-#: src/admin/TagForm.js:203
+#: src/admin/TagForm.js:210
 msgid "Visible"
 msgstr "Visible"
 

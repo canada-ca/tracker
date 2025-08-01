@@ -368,9 +368,9 @@ msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour 
 msgid "Permission Denied: Please contact organization admin for help with archiving domains."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur l'archivage des domaines."
 
-#: src/tags/mutations/update-tag.js:149
-#: src/tags/mutations/update-tag.js:160
-#: src/tags/mutations/create-tag.js:135
+#: src/tags/mutations/update-tag.js:146
+#: src/tags/mutations/update-tag.js:157
+#: src/tags/mutations/create-tag.js:136
 msgid "Permission Denied: Please contact organization admin for help with creating tag."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la création d'un tag."
 
@@ -455,7 +455,7 @@ msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu
 #~ msgid "Permission Denied: Please contact super admin for help with scanning this domain."
 #~ msgstr "Permission refusée : Veuillez contacter le super administrateur pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/tags/mutations/update-tag.js:171
+#: src/tags/mutations/update-tag.js:168
 msgid "Permission Denied: Please contact super admin for help with updating tag."
 msgstr "Autorisation refusée : veuillez contacter l'administrateur principal pour obtenir de l'aide concernant la mise à jour de la balise."
 
@@ -685,8 +685,9 @@ msgstr "Le numéro de téléphone a été vérifié avec succès, et la méthode
 #~ msgid "Tag label already in use, please choose another and try again."
 #~ msgstr "L'étiquette est déjà utilisée, veuillez en choisir une autre et réessayer."
 
-#: src/tags/mutations/update-tag.js:185
-#: src/tags/mutations/create-tag.js:93
+#: src/tags/mutations/update-tag.js:182
+#: src/tags/mutations/create-tag.js:96
+#: src/tags/mutations/create-tag.js:153
 msgid "Tag label already in use. Please try again with a different label."
 msgstr "L'étiquette est déjà utilisée. Veuillez réessayer avec une autre étiquette."
 
@@ -790,16 +791,16 @@ msgstr "Impossible de créer des domaines. Veuillez réessayer."
 msgid "Unable to create organization. Please try again."
 msgstr "Impossible de créer une organisation. Veuillez réessayer."
 
-#: src/tags/mutations/create-tag.js:122
+#: src/tags/mutations/create-tag.js:124
 msgid "Unable to create tag in unknown organization."
 msgstr "Impossible de créer une étiquette dans une organisation inconnue."
 
-#: src/tags/mutations/create-tag.js:112
+#: src/tags/mutations/create-tag.js:113
 msgid "Unable to create tag, tagId already in use."
 msgstr "Impossible de créer une balise, tagId déjà utilisé."
 
-#: src/tags/mutations/create-tag.js:162
-#: src/tags/mutations/create-tag.js:170
+#: src/tags/mutations/create-tag.js:172
+#: src/tags/mutations/create-tag.js:180
 msgid "Unable to create tag. Please try again."
 msgstr "Impossible de créer une balise. Veuillez réessayer."
 
@@ -1584,18 +1585,22 @@ msgstr "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas �
 msgid "Unable to update role: user unknown."
 msgstr "Impossible de mettre à jour le rôle : utilisateur inconnu."
 
-#: src/tags/mutations/update-tag.js:137
+#: src/tags/mutations/update-tag.js:134
 msgid "Unable to update tag in unknown organization."
 msgstr "Impossible de mettre à jour la balise dans une organisation inconnue."
 
-#: src/tags/mutations/update-tag.js:127
-msgid "Unable to update tag, tagId already in use."
-msgstr "Impossible de mettre à jour la balise, l'identifiant de balise est déjà utilisé."
+#: src/tags/mutations/update-tag.js:124
+msgid "Unable to update tag, orgId is invalid."
+msgstr "Impossible de mettre à jour la balise, l'orgId est invalide."
 
-#: src/tags/mutations/update-tag.js:104
-#: src/tags/mutations/update-tag.js:112
-#: src/tags/mutations/update-tag.js:224
-#: src/tags/mutations/update-tag.js:235
+#: src/tags/mutations/update-tag.js:127
+#~ msgid "Unable to update tag, tagId already in use."
+#~ msgstr "Impossible de mettre à jour la balise, l'identifiant de balise est déjà utilisé."
+
+#: src/tags/mutations/update-tag.js:90
+#: src/tags/mutations/update-tag.js:98
+#: src/tags/mutations/update-tag.js:221
+#: src/tags/mutations/update-tag.js:232
 msgid "Unable to update tag. Please try again."
 msgstr "Impossible de mettre à jour la balise. Veuillez réessayer."
 
@@ -1607,7 +1612,7 @@ msgstr "Impossible de mettre à jour un domaine inconnu."
 msgid "Unable to update unknown organization."
 msgstr "Impossible de mettre à jour une organisation inconnue."
 
-#: src/tags/mutations/update-tag.js:90
+#: src/tags/mutations/update-tag.js:108
 msgid "Unable to update unknown tag."
 msgstr "Impossible de mettre à jour une étiquette inconnue."
 
