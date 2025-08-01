@@ -77,6 +77,7 @@ export function AuditLogTable({ orgId = null }) {
     { value: 'DOMAIN', text: t`Domain` },
     { value: 'USER', text: t`User` },
     { value: 'ORGANIZATION', text: t`Organization` },
+    { value: 'TAG', text: t`Tag` },
   ]
   const actionFilters = [
     { value: 'CREATE', text: t`Create` },

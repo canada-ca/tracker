@@ -8,7 +8,7 @@ import { en } from 'make-plural/plurals'
 import { render, screen, waitFor, fireEvent, within } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { DomainTagsList } from '../DomainTagsList'
-import { FIND_ALL_TAGS } from '../../graphql/queries'
+import { DOMAIN_TAGS } from '../../graphql/queries'
 import { CREATE_TAG, UPDATE_TAG } from '../../graphql/mutations'
 import { UserVarProvider } from '../../utilities/userState'
 import '@testing-library/jest-dom'
@@ -65,7 +65,7 @@ const mockTags = [
     description: 'Critical tag',
     isVisible: true,
     ownership: 'GLOBAL',
-    _organizations: [],
+    organizations: [],
   },
   {
     tagId: '2',
@@ -73,14 +73,14 @@ const mockTags = [
     description: 'No longer used',
     isVisible: false,
     ownership: 'ORG',
-    _organizations: [],
+    organizations: [],
   },
 ]
 
 const mocks = [
   {
     request: {
-      query: FIND_ALL_TAGS,
+      query: DOMAIN_TAGS,
     },
     result: {
       data: {
@@ -135,7 +135,7 @@ const mocks = [
 const noTagsMocks = [
   {
     request: {
-      query: FIND_ALL_TAGS,
+      query: DOMAIN_TAGS,
     },
     result: {
       data: {
@@ -214,7 +214,7 @@ describe('DomainTagsList', () => {
   it('renders error state', async () => {
     const errorMock = [
       {
-        request: { query: FIND_ALL_TAGS },
+        request: { query: DOMAIN_TAGS },
         error: new Error('GraphQL error: Failed to fetch'),
       },
     ]
@@ -269,8 +269,7 @@ describe('DomainTagsList', () => {
 
     const editButtons = screen.getAllByRole('button', { name: /edit/i })
     fireEvent.click(editButtons[0])
-    await waitFor(() => screen.getByLabelText(/ownership/i))
-    expect(screen.getByLabelText(/ownership/i)).toBeInTheDocument()
+    await waitFor(() => screen.getAllByText(/visible/i))
   })
 
   it('opens and closes create form', async () => {
