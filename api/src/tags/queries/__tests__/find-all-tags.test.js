@@ -1,7 +1,7 @@
 import { findAllTags } from '../find-all-tags'
 
 describe('findAllTags', () => {
-  let loadAllTags, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, userKey, context
+  let loadAllTags, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, userKey, context, cleanseInput
 
   beforeEach(() => {
     loadAllTags = jest.fn()
@@ -9,24 +9,34 @@ describe('findAllTags', () => {
     verifiedRequired = jest.fn()
     checkSuperAdmin = jest.fn()
     superAdminRequired = jest.fn()
+    cleanseInput = jest.fn()
+
     userKey = 'test-user'
     context = {
       userKey,
       loaders: { loadAllTags },
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
+      validators: { cleanseInput },
     }
   })
 
   it('should return tags when loadAllTags is successful', async () => {
     const tags = [
-      { tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global' },
-      { tagId: '2', label: 'Tag2', description: 'Description2', visible: false, ownership: 'global' },
+      { tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global', organizations: [] },
+      {
+        tagId: '2',
+        label: 'Tag2',
+        description: 'Description2',
+        visible: false,
+        ownership: 'global',
+        organizations: [],
+      },
     ]
     loadAllTags.mockResolvedValue(tags)
 
     const result = await findAllTags.resolve(null, { isVisible: false }, context)
 
-    expect(loadAllTags).toHaveBeenCalledWith({ isVisible: false })
+    expect(loadAllTags).toHaveBeenCalledWith({ isVisible: false, orgId: null })
     expect(result).toEqual(tags)
   })
 
@@ -36,7 +46,7 @@ describe('findAllTags', () => {
 
     const result = await findAllTags.resolve(null, { isVisible: true }, context)
 
-    expect(loadAllTags).toHaveBeenCalledWith({ isVisible: true })
+    expect(loadAllTags).toHaveBeenCalledWith({ isVisible: true, orgId: null })
     expect(result).toEqual(tags)
   })
 
