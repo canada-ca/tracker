@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: dmarc-report
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:master-5a1e1a2-1746111621 # {"$imagepolicy": "flux-system:dmarc-report"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:master-e167a17-1753186288 # {"$imagepolicy": "flux-system:dmarc-report"}
               env:
                 - name: DB_NAME
                   valueFrom:

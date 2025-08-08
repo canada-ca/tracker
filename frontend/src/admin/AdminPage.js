@@ -18,6 +18,7 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
+import { DomainTagsList } from './DomainTagsList'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -70,6 +71,7 @@ export default function AdminPage() {
         slug: data?.findMyOrganizations?.edges[0]?.node?.slug,
         id: data?.findMyOrganizations?.edges[0]?.node?.id,
         verified: data?.findMyOrganizations?.edges[0]?.node?.verified,
+        availableTags: data?.findMyOrganizations?.edges[0]?.node?.availableTags || [],
       })
       setSelectedOrg(data?.findMyOrganizations?.edges[0]?.node?.name || 'none')
     }
@@ -96,8 +98,8 @@ export default function AdminPage() {
   } else {
     options = []
     data.findMyOrganizations?.edges.forEach((edge) => {
-      const { slug, name, id, verified } = edge.node
-      options.push({ label: name, value: { slug: slug, id: id, verified: verified } })
+      const { slug, name, id, verified, availableTags } = edge.node
+      options.push({ label: name, value: { slug: slug, id: id, verified: verified, availableTags } })
     })
     dropdown = (
       <Dropdown
@@ -179,6 +181,7 @@ export default function AdminPage() {
             orgSlug={orgDetails.slug}
             orgId={orgDetails.id}
             verified={orgDetails.verified}
+            availableTags={orgDetails.availableTags}
             permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
             mr="4"
           />
@@ -198,6 +201,12 @@ export default function AdminPage() {
     adminPanel = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <AuditLogTable />
+      </ErrorBoundary>
+    )
+  } else if (activeMenu === 'domain-tags' && data?.isUserSuperAdmin) {
+    adminPanel = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DomainTagsList />
       </ErrorBoundary>
     )
   } else {
@@ -223,6 +232,7 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
           <option value="organizations">{t`Organizations`}</option>
           <option value="users">{t`Users`}</option>
           <option value="audit-logs">{t`Audit Logs`}</option>
+          <option value="domain-tags">{t`Domain Tags`}</option>
         </Select>
       </Flex>
     </label>

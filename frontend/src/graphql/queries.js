@@ -265,7 +265,13 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             id
             domain
             lastRan
-            claimTags
+            claimTags(isVisible: true) {
+              tagId
+              label
+              description
+              isVisible
+              ownership
+            }
             assetState
             archived
             ignoreRua
@@ -679,6 +685,11 @@ export const ORG_DETAILS_PAGE = gql`
           ...RequiredSummaryFields
         }
       }
+      availableTags(sortDirection: ASC, includeGlobal: true) {
+        tagId
+        label
+        description
+      }
     }
   }
   ${Summary.fragments.requiredFields}
@@ -782,7 +793,13 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ...RequiredDomainStatusFields
             }
             hasDMARCReport
-            claimTags
+            claimTags(isVisible: true) {
+              tagId
+              label
+              description
+              isVisible
+              ownership
+            }
             assetState
             archived
             rcode
@@ -1137,6 +1154,12 @@ export const ADMIN_PAGE = gql`
           slug
           name
           verified
+          availableTags(sortDirection: ASC, includeGlobal: true) {
+            tagId
+            label
+            description
+            isVisible
+          }
         }
       }
     }
@@ -1306,5 +1329,21 @@ export const MY_TRACKER_DOMAINS = gql`
 export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
   query GetAllVerifiedRuaDomains {
     getAllVerifiedRuaDomains
+  }
+`
+
+export const FIND_ALL_TAGS = gql`
+  query FindAllTags {
+    findAllTags(isVisible: false) {
+      tagId
+      label
+      description
+      isVisible
+      ownership
+      organizations {
+        id
+        name
+      }
+    }
   }
 `

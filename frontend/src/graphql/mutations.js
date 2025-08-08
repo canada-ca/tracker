@@ -183,7 +183,7 @@ export const CREATE_DOMAIN = gql`
   mutation CreateDomain(
     $orgId: ID!
     $domain: DomainScalar!
-    $tags: [InputTag]
+    $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums!
   ) {
@@ -193,7 +193,13 @@ export const CREATE_DOMAIN = gql`
           id
           domain
           lastRan
-          claimTags
+          claimTags {
+            tagId
+            label
+            description
+            isVisible
+            ownership
+          }
           assetState
           archived
           rcode
@@ -265,7 +271,7 @@ export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!
     $orgId: ID!
-    $tags: [InputTag]
+    $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
@@ -285,7 +291,13 @@ export const UPDATE_DOMAIN = gql`
           id
           domain
           lastRan
-          claimTags
+          claimTags {
+            tagId
+            label
+            description
+            isVisible
+            ownership
+          }
           assetState
           archived
           rcode
@@ -757,6 +769,117 @@ export const COMPLETE_TOUR = gql`
           }
         }
         ... on CompleteTourError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const CREATE_TAG = gql`
+  mutation CreateTag(
+    $labelEn: String!
+    $labelFr: String!
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+    $ownership: TagOwnershipEnums!
+  ) {
+    createTag(
+      input: {
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: $ownership
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const CREATE_ORG_TAG = gql`
+  mutation CreateOrgTag(
+    $orgId: ID!
+    $labelEn: String!
+    $labelFr: String!
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+  ) {
+    createTag(
+      input: {
+        orgId: $orgId
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: ORG
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_TAG = gql`
+  mutation UpdateTag(
+    $tagId: String!
+    $labelEn: String
+    $labelFr: String
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+    $ownership: TagOwnershipEnums
+  ) {
+    updateTag(
+      input: {
+        tagId: $tagId
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: $ownership
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
           code
           description
         }

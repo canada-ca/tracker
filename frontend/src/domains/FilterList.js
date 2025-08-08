@@ -5,7 +5,7 @@ import { Tag, TagCloseButton, TagLabel, TagRightIcon } from '@chakra-ui/tag'
 import { t } from '@lingui/macro'
 import { array, func } from 'prop-types'
 
-export function FilterList({ filters, setFilters, resetToFirstPage }) {
+export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOptions }) {
   const statuses = {
     HTTPS_STATUS: `HTTPS`,
     HSTS_STATUS: `HSTS`,
@@ -27,11 +27,12 @@ export function FilterList({ filters, setFilters, resetToFirstPage }) {
   }
 
   const displayTagFilterName = (filterValue) => {
-    switch (filterValue) {
-      case 'CVE_DETECTED':
-        return t`SPIN Top 25`
-      default:
-        return filterValue
+    const tag = filterTagOptions.find((tag) => tag.value === filterValue)
+    if (tag) {
+      return tag.text
+    } else {
+      console.warn(`Unknown tag filter value: ${filterValue}`)
+      return filterValue
     }
   }
 
@@ -90,4 +91,5 @@ FilterList.propTypes = {
   filters: array.isRequired,
   setFilters: func.isRequired,
   resetToFirstPage: func.isRequired,
+  filterTagOptions: array.isRequired,
 }

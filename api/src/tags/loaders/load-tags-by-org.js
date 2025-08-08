@@ -1,0 +1,48 @@
+import { aql } from 'arangojs'
+import { t } from '@lingui/macro'
+
+export const loadTagsByOrg =
+  ({ query, userKey, i18n, language }) =>
+  async ({ orgId, includeGlobal, includePending, sortDirection }) => {
+    let globalFilter = aql``
+    if (includeGlobal) {
+      globalFilter = aql`OR tag.ownership == "global"`
+    }
+
+    let pendingFilter = aql``
+    if (includePending) {
+      pendingFilter = aql`OR tag.ownership == "pending"`
+    }
+
+    let cursor
+    try {
+      cursor = await query`
+        FOR tag IN tags
+          FILTER tag.visible == true
+          FILTER ${orgId} IN tag.organizations ${globalFilter} ${pendingFilter}
+          LET label = TRANSLATE(${language}, tag.label)
+          SORT label ${sortDirection}
+          RETURN {
+            "tagId": tag.tagId,
+            "label": label,
+            "description": TRANSLATE(${language}, tag.description),
+            "visible": tag.visible,
+            "ownership": tag.ownership,
+            "organizations": tag.organizations,
+          }
+      `
+    } catch (err) {
+      console.error(`Database error occurred while user: ${userKey} was trying to query tags in loadTagsByOrg, ${err}`)
+      throw new Error(i18n._(t`Unable to load tag(s). Please try again.`))
+    }
+
+    let tagInfo
+    try {
+      tagInfo = await cursor.all()
+    } catch (err) {
+      console.error(`Cursor error occurred while user: ${userKey} was trying to gather tags in loadTagsByOrg, ${err}`)
+      throw new Error(i18n._(t`Unable to load tag(s). Please try again.`))
+    }
+
+    return tagInfo
+  }

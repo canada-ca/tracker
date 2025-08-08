@@ -38,6 +38,7 @@ def send_email_notifs(org, domains, org_users):
     
     domains_en = custom_format(domains)
     domains_fr = custom_format(translate_to_fr(domains))
+    
     responses = []
     # Send email to each org owner/admin
     for user in org_users:
@@ -55,7 +56,7 @@ def send_email_notifs(org, domains, org_users):
                     "domains_fr": domains_fr,
                 },
             )           
-            logging.info(f"Email sent to {email} {user['_id']} in {org_name_en} with response: {json.dumps(response, indent=2)}")
+            logging.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
             responses.append(response) # For testing purposes
 
         except Exception as e:

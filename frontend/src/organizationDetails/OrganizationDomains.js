@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { bool, string } from 'prop-types'
+import { array, bool, string } from 'prop-types'
 
 import { DomainCard } from '../domains/DomainCard'
 import { ListOf } from '../components/ListOf'
@@ -23,10 +23,9 @@ import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import useSearchParam from '../utilities/useSearchParam'
 
-export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
+export function OrganizationDomains({ orgSlug, orgName, userHasPermission, availableTags = [] }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
@@ -75,6 +74,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     variables: queryVariables,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore',
   })
 
   const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
@@ -101,18 +101,16 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   ]
 
   const filterTagOptions = [
-    { value: t`NEW`, text: t`New` },
-    { value: t`PROD`, text: t`Prod` },
-    { value: t`STAGING`, text: t`Staging` },
-    { value: t`TEST`, text: t`Test` },
-    { value: t`WEB`, text: t`Web` },
-    { value: t`INACTIVE`, text: t`Inactive` },
+    ...availableTags.map(({ tagId, label }) => {
+      return { value: tagId, text: label.toUpperCase() }
+    }),
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const assetStateOptions = [
@@ -130,29 +128,15 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   ) : (
     <Box>
       {orgSlug !== 'my-tracker' && (
-        <ABTestWrapper insiderVariantName="B">
-          <ABTestVariant name="A">
-            <DomainListFilters
-              className="domain-filters"
-              filters={filters}
-              setFilters={setFilters}
-              resetToFirstPage={resetToFirstPage}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-            />
-          </ABTestVariant>
-          <ABTestVariant name="B">
-            <DomainListFilters
-              className="domain-filters"
-              filters={filters}
-              setFilters={setFilters}
-              resetToFirstPage={resetToFirstPage}
-              statusOptions={orderByOptions}
-              filterTagOptions={filterTagOptions}
-              assetStateOptions={assetStateOptions}
-            />
-          </ABTestVariant>
-        </ABTestWrapper>
+        <DomainListFilters
+          className="domain-filters"
+          filters={filters}
+          setFilters={setFilters}
+          resetToFirstPage={resetToFirstPage}
+          statusOptions={orderByOptions}
+          filterTagOptions={filterTagOptions}
+          assetStateOptions={assetStateOptions}
+        />
       )}
       <ListOf
         elements={nodes}
@@ -304,7 +288,12 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
-          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+          <FilterList
+            filters={filters}
+            setFilters={setFilters}
+            resetToFirstPage={resetToFirstPage}
+            filterTagOptions={filterTagOptions}
+          />
         </Flex>
       )}
 
@@ -327,4 +316,4 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   )
 }
 
-OrganizationDomains.propTypes = { orgSlug: string, orgName: string, userHasPermission: bool }
+OrganizationDomains.propTypes = { orgSlug: string, orgName: string, userHasPermission: bool, availableTags: array }

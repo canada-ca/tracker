@@ -41,12 +41,14 @@ describe('given a loadAllTags dataloader', () => {
         label: { en: 'Web', fr: 'Web' },
         description: { en: '', fr: '' },
         visible: false,
+        ownership: 'global',
       })
       await collections.tags.save({
         tagId: 'new',
         label: { en: 'New', fr: 'Nouveau' },
         description: { en: '', fr: '' },
         visible: true,
+        ownership: 'global',
       })
     })
     afterEach(async () => {
@@ -79,6 +81,8 @@ describe('given a loadAllTags dataloader', () => {
                 "label": TRANSLATE('en', tag.label),
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
+                "ownership": tag.ownership,
+                "organizations": tag.organizations,
             }
           `
       const expectedTags = await expectedCursor.all()
@@ -98,6 +102,8 @@ describe('given a loadAllTags dataloader', () => {
                 "label": label,
                 "description": TRANSLATE('en', tag.description),
                 "visible": tag.visible,
+                "ownership": tag.ownership,
+                "organizations": tag.organizations,
             }
           `
       const expectedTags = await expectedCursor.all()

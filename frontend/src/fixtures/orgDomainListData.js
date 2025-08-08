@@ -2,6 +2,20 @@ export const rawOrgDomainListData = {
   findOrganizationBySlug: {
     id: 'testid=',
     name: 'Test Organization',
+    availableTags: [
+      {
+        tagId: 'tag1',
+        label: 'Tag One',
+        description: 'This is the first tag',
+        __typename: 'Tag',
+      },
+      {
+        tagId: 'tag2',
+        label: 'Tag Two',
+        description: 'This is the second tag',
+        __typename: 'Tag',
+      },
+    ],
     domains: {
       edges: [
         {
@@ -71,6 +85,20 @@ export const rawOrgDomainListDataEmpty = {
   findOrganizationBySlug: {
     id: 'testid=',
     name: 'Test Organization',
+    availableTags: [
+      {
+        tagId: 'tag1',
+        label: 'Tag One',
+        description: 'This is the first tag',
+        __typename: 'Tag',
+      },
+      {
+        tagId: 'tag2',
+        label: 'Tag Two',
+        description: 'This is the second tag',
+        __typename: 'Tag',
+      },
+    ],
     domains: {
       edges: [],
       pageInfo: {

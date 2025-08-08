@@ -1,15 +1,6 @@
-import { GraphQLInputObjectType, GraphQLEnumType } from 'graphql'
-import { AssetStateEnums, ComparisonEnums, DomainOrderField, DomainTagLabel, StatusEnum } from '../../enums'
-
-const filterValueEnumsVals = {}
-const filterValueEnums = [...StatusEnum.getValues(), ...DomainTagLabel.getValues(), ...AssetStateEnums.getValues()]
-filterValueEnums.forEach(
-  ({ name, value, description }) =>
-    (filterValueEnumsVals[name] = {
-      value,
-      description,
-    }),
-)
+import { GraphQLInputObjectType } from 'graphql'
+import { ComparisonEnums, DomainOrderField } from '../../enums'
+import { FilterValueScalar } from '../../scalars/filter-value'
 
 export const domainFilter = new GraphQLInputObjectType({
   name: 'DomainFilter',
@@ -24,11 +15,7 @@ export const domainFilter = new GraphQLInputObjectType({
       description: 'First value equals or does not equal second value.',
     },
     filterValue: {
-      type: new GraphQLEnumType({
-        name: 'filterValueEnums',
-        values: filterValueEnumsVals,
-        description: '',
-      }),
+      type: FilterValueScalar,
       description: 'Status type or tag label.',
     },
   }),

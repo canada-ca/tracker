@@ -1,0 +1,47 @@
+{
+  "mode": "disable",
+  "sync": false,
+  "autoBackup": false,
+  "passthrough": "",
+  "theme": "",
+  "container": {},
+  "commands": {
+    "setProxy": "",
+    "setTabProxy": "",
+    "includeHost": "",
+    "excludeHost": ""
+  },
+  "data": [
+    {
+      "active": true,
+      "title": "Cosmos Dev Proxy",
+      "type": "http",
+      "hostname": "localhost",
+      "port": "3128",
+      "username": "",
+      "password": "",
+      "cc": "",
+      "city": "",
+      "color": "#ee82ee",
+      "pac": "",
+      "pacString": "",
+      "proxyDNS": true,
+      "include": [
+        {
+          "type": "wildcard",
+          "title": "",
+          "pattern": "*.documents.azure.com",
+          "active": true
+        },
+        {
+          "type": "wildcard",
+          "title": "",
+          "pattern": "*.cosmos.azure.com",
+          "active": true
+        }
+      ],
+      "exclude": [],
+      "tabProxy": []
+    }
+  ]
+}

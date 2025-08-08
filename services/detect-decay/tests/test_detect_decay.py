@@ -117,6 +117,7 @@ def arango_db():
     ]
     now = datetime.now(timezone.utc).isoformat(timespec='microseconds')
     past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=20, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds')
+
     dns = [
         {
             "_id": "dns/11",
@@ -649,9 +650,6 @@ def test_detect_decay(arango_db):
     assert len(decays["organizations/1"]["domain2.gc.ca"]) == 2, "Should return 2 decays for domain2.gc.ca"
     assert "HTTPS Configuration" in decays["organizations/1"]["domain2.gc.ca"]
     assert "SPF" in decays["organizations/1"]["domain2.gc.ca"]
-    
+
     responses = output[1]
     assert len(responses[0]) == 2, "Should return 2 responses for org 1 users"
-
-    
-

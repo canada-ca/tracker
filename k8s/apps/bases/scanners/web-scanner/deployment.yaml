@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: web-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner:master-1adb7c6-1746644048 # {"$imagepolicy": "flux-system:web-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner:master-e1e6d3b-1753376326 # {"$imagepolicy": "flux-system:web-scanner"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
