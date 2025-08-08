@@ -144,6 +144,7 @@ export const UPDATE_USER_PROFILE = gql`
             emailUpdateOptions {
               orgFootprint
               progressReport
+              detectDecay
             }
           }
         }

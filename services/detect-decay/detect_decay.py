@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import copy
 from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
 from dotenv import load_dotenv
@@ -148,6 +149,7 @@ def finalize_web_scans(scans):
     return final_results                  
 
 def handle_email_notifs(decays, orgs, db):
+    results = []
     for org, domains in decays.items():
         for o in orgs:
             if o["_id"] == org:
@@ -155,7 +157,8 @@ def handle_email_notifs(decays, orgs, db):
                 break
         org_users = get_users(org_doc["_id"], db)
         if domains:
-            send_email_notifs(org_doc, domains, org_users)
+            results.append(send_email_notifs(org_doc, domains, org_users))
+    return results # For testing purposes
 
 def get_users(org_id, db):
     cursor = db.aql.execute(
@@ -163,6 +166,7 @@ def get_users(org_id, db):
         WITH organizations, users
         FOR v, e IN 1 OUTBOUND @org_id affiliations
             FILTER e.permission == "admin" OR e.permission == "owner"
+            FILTER v.receiveUpdateEmails == true
             RETURN v
         """,
         bind_vars={"org_id": org_id},
@@ -264,8 +268,9 @@ def detect_decay(db):
             logging.error(f"Error processing org {org['_id']}: {e}")
 
     logging.info(f"{decays}")
-    handle_email_notifs(decays, orgs, db)
-    return decays
+    decays_copy = copy.deepcopy(decays) # Send copy to email function so it can be modified, keep og for testing
+    responses = handle_email_notifs(decays_copy, orgs, db)
+    return [decays, responses] # For testing purposes
 
 if __name__ == "__main__":
     logging.info("Detect decay service started")

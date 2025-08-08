@@ -31,6 +31,7 @@ const mocks = [
         emailUpdateOptions: {
           orgFootprint: true,
           progressReport: false,
+          detectDecay: false,
         },
       },
     },
@@ -43,6 +44,7 @@ const mocks = [
               emailUpdateOptions: {
                 orgFootprint: true,
                 progressReport: false,
+                detectDecay: false,
               },
             },
           },
@@ -54,7 +56,7 @@ const mocks = [
 
 describe('EditableEmailSubscriptionOptions', () => {
   const mockLogin = jest.fn()
-  const mockCurrentUser = { emailUpdateOptions: { orgFootprint: false, progressReport: false } }
+  const mockCurrentUser = { emailUpdateOptions: { orgFootprint: false, progressReport: false, detectDecay: false } }
 
   beforeEach(() => {
     useUserVar.mockReturnValue({
@@ -68,7 +70,7 @@ describe('EditableEmailSubscriptionOptions', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <I18nProvider i18n={i18n}>
           <ChakraProvider>
-            <EditableEmailUpdateOptions emailUpdateOptions={{ orgFootprint: false, progressReport: false }} />
+            <EditableEmailUpdateOptions emailUpdateOptions={{ orgFootprint: false, progressReport: false, detectDecay: false }} />
           </ChakraProvider>
         </I18nProvider>
       </MockedProvider>,
@@ -81,7 +83,7 @@ describe('EditableEmailSubscriptionOptions', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <I18nProvider i18n={i18n}>
           <ChakraProvider>
-            <EditableEmailUpdateOptions emailUpdateOptions={{ orgFootprint: false, progressReport: false }} />
+            <EditableEmailUpdateOptions emailUpdateOptions={{ orgFootprint: false, progressReport: false, detectDecay: false }} />
           </ChakraProvider>
         </I18nProvider>
       </MockedProvider>,
@@ -95,7 +97,7 @@ describe('EditableEmailSubscriptionOptions', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <I18nProvider i18n={i18n}>
           <ChakraProvider>
-            <EditableEmailUpdateOptions emailUpdateOptions={{ orgFootprint: false, progressReport: false }} />
+            <EditableEmailUpdateOptions emailUpdateOptions={{ orgFootprint: false, progressReport: false, detectDecay: false }} />
           </ChakraProvider>
         </I18nProvider>
       </MockedProvider>,
@@ -107,7 +109,7 @@ describe('EditableEmailSubscriptionOptions', () => {
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
         ...mockCurrentUser,
-        emailUpdateOptions: { orgFootprint: true, progressReport: false },
+        emailUpdateOptions: { orgFootprint: true, progressReport: false, detectDecay: false },
       })
     })
   })
