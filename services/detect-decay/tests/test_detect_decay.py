@@ -116,7 +116,7 @@ def arango_db():
         {"_from": "organizations/2", "_to": "domains/4", "assetState": "approved"},
     ]
     now = datetime.now(timezone.utc).isoformat(timespec='microseconds')
-    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=START_HOUR, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds')
+    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=17, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds')
     dns = [
         {
             "_id": "dns/11",
@@ -391,17 +391,20 @@ def arango_db():
         {   # Org 1 Owner
             "_id": "users/1",
             "displayName": "user1",
-            "userName": "Sara.Jaffer@tbs-sct.gc.ca"
+            "userName": "Sara.Jaffer@tbs-sct.gc.ca",
+            "receiveEmailUpdates": True,
         },
         {   # Org 1 Admin
             "_id": "users/2",
             "displayName": "user2",
-            "userName": "Sara.Jaffer@tbs-sct.gc.ca"
+            "userName": "Sara.Jaffer@tbs-sct.gc.ca",
+            "receiveEmailUpdates": True,
         },
         {   # Org 1 User
             "_id": "users/3",
             "displayName": "user3",
-            "userName": "Sara.Jaffer@tbs-sct.gc.ca"
+            "userName": "Sara.Jaffer@tbs-sct.gc.ca",
+            "receiveEmailUpdates": True,
         }
     ]
     affiliations = [
@@ -633,7 +636,8 @@ def test_get_users(arango_db):
 
 def test_detect_decay(arango_db):
     # Test that decays are detected correctly, use decays dict
-    decays = detect_decay(arango_db)
+    output = detect_decay(arango_db)
+    decays = output[0]
 
     assert len(decays.keys()) == 1, "Should return 1 org"
     assert len(decays["organizations/1"].keys()) == 2, "Should return 2 domains with decays for org 1"
@@ -647,11 +651,7 @@ def test_detect_decay(arango_db):
     assert "SPF" in decays["organizations/1"]["domain2.gc.ca"]
     
     # Test that send_email_notifs returns 2 responses for org 1 owner and admin
-    responses = send_email_notifs(
-        org=arango_db.collection("organizations").get("organizations/1"),
-        domains=decays["organizations/1"],
-        org_users=get_users("organizations/1", arango_db)
-    )
-    assert len(responses) == 2, "Should return 2 responses for org 1 users"
+    responses = output[1]
+    assert len(responses[0]) == 2, "Should return 2 responses for org 1 users"
     
 
