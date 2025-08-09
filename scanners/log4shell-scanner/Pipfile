@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "==2.32.2"
+requests = "==2.32.4"
 asyncio-nats-client = "*"
 python-dotenv = "*"
 
