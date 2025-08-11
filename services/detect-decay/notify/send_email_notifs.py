@@ -37,7 +37,7 @@ def send_email_notifs(org, domains, org_users):
         return d
 
     domains_en = custom_format(domains)
-    domains_fr = translate_to_fr(custom_format(domains))  # Assuming translate_to_fr is defined elsewhere
+    domains_fr = custom_format(translate_to_fr(domains))
     responses = []
     # Send email to each org owner/admin
     for user in org_users:
