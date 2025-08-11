@@ -12,8 +12,8 @@ PyJWT==2.10.1
 pytest==8.4.1
 python-arango==8.2.0
 python-dotenv==1.1.0
-requests==2.32.3
+requests==2.32.4
 requests-toolbelt==1.0.0
 setuptools==80.9.0
-urllib3==2.4.0
+urllib3==2.5.0
 zipp==3.23.0
