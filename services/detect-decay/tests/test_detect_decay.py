@@ -393,18 +393,21 @@ def arango_db():
             "displayName": "user1",
             "userName": "Sara.Jaffer@tbs-sct.gc.ca",
             "receiveEmailUpdates": True,
+            "emailUpdateOptions": {"detectDecay": True}
         },
         {   # Org 1 Admin
             "_id": "users/2",
             "displayName": "user2",
             "userName": "Sara.Jaffer@tbs-sct.gc.ca",
             "receiveEmailUpdates": True,
+            "emailUpdateOptions": {"detectDecay": True}
         },
         {   # Org 1 User
             "_id": "users/3",
             "displayName": "user3",
             "userName": "Sara.Jaffer@tbs-sct.gc.ca",
             "receiveEmailUpdates": True,
+            "emailUpdateOptions": {"detectDecay": True}
         }
     ]
     affiliations = [

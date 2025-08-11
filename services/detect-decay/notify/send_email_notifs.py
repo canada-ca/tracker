@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 from notify.notify_client import notify_client
 
 
@@ -54,7 +55,7 @@ def send_email_notifs(org, domains, org_users):
                     "domains_fr": domains_fr,
                 },
             )           
-            logging.info(f"Email sent to {email} in {org_name_en} with response: {response}")
+            logging.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
             responses.append(response) # For testing purposes
 
         except Exception as e:
