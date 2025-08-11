@@ -105,6 +105,15 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
         <Badge variant="outline" color="gray.900" p="1">
           <Trans>Progress Report</Trans>
         </Badge>
+
+        {emailUpdateOptions.detectDecay ? (
+          <RadioCheckedIcon boxSize="icons.lg" mr="2" />
+        ) : (
+          <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
+        )}
+        <Badge variant="outline" color="gray.900" p="1" mr="4">
+          <Trans>Recent Activity</Trans>
+        </Badge>
         <Button variant="primary" ml="auto" onClick={onOpen} fontSize="sm" px="3">
           <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
@@ -123,6 +132,7 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                   emailUpdateOptions: {
                     orgFootprint: values.orgFootprint,
                     progressReport: values.progressReport,
+                    detectDecay: values.detectDecay,
                   },
                 },
               })
@@ -176,6 +186,27 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                       </label>
                       <Badge variant="outline" color="gray.900" p="1">
                         <Trans>Progress Report</Trans>
+                      </Badge>
+                    </Flex>
+                    <Flex align="center">
+                      <Tooltip
+                        label={t`For organization admins interested in receiving email updates on new changes to their organization's compliance statuses.`}
+                      >
+                        <QuestionOutlineIcon tabIndex={0} />
+                      </Tooltip>
+                      <label>
+                        <Switch
+                          name="detectDecay"
+                          isFocusable={true}
+                          id="detectDecay"
+                          aria-label="Recent Activity"
+                          mx="2"
+                          defaultChecked={emailUpdateOptions.detectDecay}
+                          onChange={handleChange}
+                        />
+                      </label>
+                      <Badge variant="outline" color="gray.900" p="1">
+                        <Trans>Recent Activity</Trans>
                       </Badge>
                     </Flex>
                   </Stack>
