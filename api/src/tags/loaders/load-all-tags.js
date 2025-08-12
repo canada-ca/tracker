@@ -3,10 +3,15 @@ import { t } from '@lingui/macro'
 
 export const loadAllTags =
   ({ query, userKey, i18n, language }) =>
-  async ({ isVisible }) => {
+  async ({ isVisible, orgId }) => {
     let visibleFilter = aql``
     if (isVisible) {
       visibleFilter = aql`FILTER tag.visible == true`
+    }
+
+    let orgFilter = aql``
+    if (orgId) {
+      orgFilter = aql`FILTER ${orgId} IN tag.organizations`
     }
 
     let cursor
@@ -14,6 +19,7 @@ export const loadAllTags =
       cursor = await query`
         FOR tag IN tags
           ${visibleFilter}
+          ${orgFilter}
           LET label = TRANSLATE(${language}, tag.label)
           SORT label ASC
           RETURN {
