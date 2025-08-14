@@ -8,7 +8,7 @@ async function createSummary({ arangoCtx, date, domain, summaryData }) {
   const summaryCursor = await trx.step(
     () => arangoCtx.query`
       WITH dmarcSummaries
-      INSERT ${summaryData} INTO dmarcSummaries
+      INSERT MERGE(${summaryData}, { lastUpdated: DATE_ISO8601(DATE_NOW()) } ) INTO dmarcSummaries
       RETURN NEW
     `,
   )

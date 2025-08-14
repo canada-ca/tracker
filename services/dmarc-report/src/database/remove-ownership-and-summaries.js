@@ -1,34 +1,26 @@
-async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
-  // Generate list of collections names
+async function removeOwnershipAndSummaries({ arangoCtx, domain }) {
   const collectionStrings = Object.keys(arangoCtx.collections)
-  // setup Transaction
   const trx = await arangoCtx.transaction(collectionStrings)
 
   try {
     await trx.step(
       () => arangoCtx.query`
-      WITH domains, organizations, ownership
-      LET domainId = FIRST(
-        FOR domain IN domains
-          FILTER domain.domain == ${domain}
-          RETURN domain._id
-      )
-      LET orgId = FIRST(
-        FOR org IN organizations
-          FILTER org.orgDetails.en.acronym == ${orgAcronymEn}
-          RETURN org._id
-      )
-      FOR owner IN ownership
-        FILTER owner._from == orgId
-        FILTER owner._to == domainId
-        REMOVE { _key: owner._key } IN ownership
+      FOR domain IN domains
+        FILTER domain.domain == ${domain}
+        UPDATE domain WITH { dmarcOwnership: { orgAcronym: null, lastUpdated: DATE_ISO8601(DATE_NOW()) }, sendsEmail: "unknown" } IN domains
     `,
     )
+  } catch (err) {
+    console.error(
+      `Transaction step error occurred for dmarc summaries service when removing ownership from domain ${domain}: ${err}`,
+    )
+    await trx.abort()
+    return
+  }
 
-    // remove dmarcSummaries and dmarcSummaryEdges
+  try {
     await trx.step(
       () => arangoCtx.query`
-      WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
           FILTER domain.domain == ${domain}
@@ -51,8 +43,11 @@ async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
     `,
     )
   } catch (err) {
-    console.error(`Transaction step error occurred for dmarc summaries service when removing ownership data: ${err}`)
+    console.error(
+      `Transaction step error occurred for dmarc summaries service when removing summaries from domain ${domain}: ${err}`,
+    )
     await trx.abort()
+    return
   }
 
   try {
@@ -64,5 +59,5 @@ async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
 }
 
 module.exports = {
-  removeOwnership,
+  removeOwnershipAndSummaries,
 }
