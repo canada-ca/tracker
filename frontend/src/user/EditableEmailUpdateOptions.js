@@ -112,7 +112,7 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
           <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
         )}
         <Badge variant="outline" color="gray.900" p="1" mr="4">
-          <Trans>Recent Activity</Trans>
+          <Trans>Decay Detection</Trans>
         </Badge>
         <Button variant="primary" ml="auto" onClick={onOpen} fontSize="sm" px="3">
           <EditIcon color="white" mr="2" boxSize="1rem" />
@@ -199,14 +199,14 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
                           name="detectDecay"
                           isFocusable={true}
                           id="detectDecay"
-                          aria-label="Recent Activity"
+                          aria-label="Decay Detection"
                           mx="2"
                           defaultChecked={emailUpdateOptions.detectDecay}
                           onChange={handleChange}
                         />
                       </label>
                       <Badge variant="outline" color="gray.900" p="1">
-                        <Trans>Recent Activity</Trans>
+                        <Trans>Decay Detection</Trans>
                       </Badge>
                     </Flex>
                   </Stack>
