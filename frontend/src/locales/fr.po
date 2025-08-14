@@ -1117,6 +1117,11 @@ msgstr "Données:"
 msgid "DDOS Protection"
 msgstr "Protection DDOS"
 
+#: src/user/EditableEmailUpdateOptions.js:115
+#: src/user/EditableEmailUpdateOptions.js:209
+msgid "Decay Detection"
+msgstr "Détection de dégradation"
+
 #: src/utilities/months.js:15
 #: src/components/MonthSelect.js:55
 msgid "December"
@@ -3653,9 +3658,7 @@ msgid "Received Chain Has Valid Order"
 msgstr "La chaîne reçue a un ordre valide"
 
 #: src/user/EditableEmailUpdateOptions.js:97
-#: src/user/EditableEmailUpdateOptions.js:115
 #: src/user/EditableEmailUpdateOptions.js:167
-#: src/user/EditableEmailUpdateOptions.js:209
 msgid "Recent Activity"
 msgstr "Activité récente"
 
