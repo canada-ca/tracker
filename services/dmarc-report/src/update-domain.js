@@ -1,24 +1,8 @@
-const { loadCheckDomain, loadOrgOwner, loadArangoDates } = require('./loaders')
-const {
-  createOwnership,
-  removeOwnership,
-  removeSummary,
-  createSummary,
-  upsertSummary,
-  updateDomainMailStatus,
-} = require('./database')
+const { loadCheckDomain, loadArangoDates } = require('./loaders')
+const { removeSummary, createSummary, upsertSummary, updateDomainMailStatus } = require('./database')
 const { calculatePercentages } = require('./utils')
 
-async function updateDomain({
-  arangoCtx,
-  domain,
-  orgAcronym,
-  orgAcronymEn,
-  queryResults,
-  currentDate,
-  cosmosDates,
-  updateAllDates,
-}) {
+async function updateDomain({ arangoCtx, domain, orgAcronym, queryResults, currentDate, cosmosDates, updateAllDates }) {
   // check to see if domain exists
   const checkDomain = await loadCheckDomain({ arangoCtx, domain })
   if (!checkDomain) {
@@ -28,26 +12,15 @@ async function updateDomain({
 
   console.info(`\tWorking on domain: ${domain}`)
 
-  // get the current owner of the domain
-  const orgOwner = await loadOrgOwner({
-    arangoCtx,
-    domain,
-  })
+  const dmarcOwner = checkDomain.dmarcOwnership?.orgAcronym
 
   // if the domain is not owned create ownership
-  if (!orgOwner) {
-    console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`)
-    await createOwnership({ arangoCtx, domain, orgAcronymEn })
+  if (!dmarcOwner) {
+    console.info(`\t\tUnowned domain. Assigning ${domain} ownership to: ${String(orgAcronym)}`)
   }
   // if the domain is owned by another org, remove ownership and assign a new one
-  else if (orgOwner !== orgAcronymEn) {
-    console.info(`\t\tRemoving ${domain} ownership from: ${orgOwner}`)
-    await removeOwnership({ arangoCtx, domain, orgAcronymEn: orgOwner })
-
-    console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`)
-    await createOwnership({ arangoCtx, domain, orgAcronymEn })
-  } else {
-    console.info(`\t\tOwnership of ${domain} is already assigned to ${String(orgAcronym)}`)
+  else if (dmarcOwner !== orgAcronym) {
+    console.info(`\t\tChanging ownership of ${domain} from ${String(dmarcOwner)} to ${String(orgAcronym)}`)
   }
 
   const arangoDates = await loadArangoDates({ arangoCtx, domain })
@@ -169,12 +142,15 @@ async function updateDomain({
     summaryDataToInput.categoryPercentages = categoryPercentages
     summaryDataToInput.totalMessages = totalMessages
 
+    const sourceLastUpdated = summaryData?._ts * 1000 || null // _ts stored as seconds, need ms
+
     if (arangoDates.indexOf(arangoDate) === -1) {
       console.info(`\t\tInitializing ${arangoDate} for ${domain}`)
       await createSummary({
         arangoCtx,
         domain,
         date: arangoDate,
+        sourceLastUpdated,
         summaryData: summaryDataToInput,
       })
     } else if ([currentDate, 'thirtyDays'].includes(arangoDate) || updateAllDates) {
@@ -183,6 +159,7 @@ async function updateDomain({
         arangoCtx,
         domain,
         date: arangoDate,
+        sourceLastUpdated,
         summaryData: summaryDataToInput,
       })
     }
