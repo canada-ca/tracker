@@ -2,7 +2,6 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...rest }) {
   const assetStateLabels = {
@@ -33,15 +32,11 @@ export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...r
           })}
         </Flex>
         <Flex ml="auto">
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {assetState && (
-                <Tag colorScheme="blue" mx="1">
-                  <TagLabel fontWeight="bold">{assetStateLabels[assetState]}</TagLabel>
-                </Tag>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          {assetState && (
+            <Tag colorScheme="blue" mx="1">
+              <TagLabel fontWeight="bold">{assetStateLabels[assetState]}</TagLabel>
+            </Tag>
+          )}
           {rcode === 'NXDOMAIN' && (
             <Tag colorScheme="red" mr="auto" alignSelf="center">
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
