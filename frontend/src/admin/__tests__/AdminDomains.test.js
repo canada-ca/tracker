@@ -137,7 +137,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
-              tags: ['tag1'],
+              tags: [],
               archived: false,
             },
           },
@@ -228,7 +228,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
-              tags: ['tag1'],
+              tags: [],
               archived: false,
               assetState: 'APPROVED',
             },
@@ -324,8 +324,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
-              tags: ['tag1'],
-
+              tags: [],
               archived: false,
               assetState: 'APPROVED',
             },
