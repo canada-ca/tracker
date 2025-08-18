@@ -69,8 +69,8 @@ export const updateTag = new mutationWithClientMutationId({
 
     // Cleanse input
     const tagId = cleanseInput(args.tagId)
-    const labelEn = cleanseInput(args.labelEn)
-    const labelFr = cleanseInput(args.labelFr)
+    const labelEn = cleanseInput(args.labelEn)?.toLowerCase()
+    const labelFr = cleanseInput(args.labelFr)?.toLowerCase()
     const descriptionEn = cleanseInput(args.descriptionEn)
     const descriptionFr = cleanseInput(args.descriptionFr)
     const ownership = cleanseInput(args.ownership)
@@ -143,7 +143,7 @@ export const updateTag = new mutationWithClientMutationId({
         return {
           _type: 'error',
           code: 400,
-          description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
+          description: i18n._(t`Permission Denied: Please contact organization admin for help with updating tag.`),
         }
       }
 
@@ -154,7 +154,7 @@ export const updateTag = new mutationWithClientMutationId({
         return {
           _type: 'error',
           code: 400,
-          description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
+          description: i18n._(t`Permission Denied: Please contact organization admin for help with updating tag.`),
         }
       }
 

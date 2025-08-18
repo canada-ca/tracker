@@ -64,8 +64,8 @@ export const createTag = new mutationWithClientMutationId({
     verifiedRequired({ user })
 
     // Cleanse input
-    const labelEn = cleanseInput(args.labelEn)
-    const labelFr = cleanseInput(args.labelFr)
+    const labelEn = cleanseInput(args.labelEn).toLowerCase()
+    const labelFr = cleanseInput(args.labelFr).toLowerCase()
     const descriptionEn = cleanseInput(args.descriptionEn)
     const descriptionFr = cleanseInput(args.descriptionFr)
     const ownership = cleanseInput(args.ownership)
