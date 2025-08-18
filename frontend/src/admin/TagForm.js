@@ -44,7 +44,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
         })
       } else if (updateTag.result.__typename === 'TagError') {
         toast({
-          title: t`Unable to create new tag.`,
+          title: t`Unable to update tag.`,
           description: updateTag.result.description,
           status: 'error',
           duration: 9000,
@@ -113,6 +113,16 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
 
   const isLoading = createLoading || updateLoading
 
+  const initial = {
+    labelEn: '',
+    labelFr: '',
+    descriptionEn: '',
+    descriptionFr: '',
+    isVisible: visible,
+    ownership,
+    orgId,
+  }
+
   return (
     <Box>
       <Text mb="2">
@@ -123,15 +133,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
       </Text>
       <Formik
         validateOnBlur={false}
-        initialValues={{
-          labelEn: '',
-          labelFr: '',
-          descriptionEn: '',
-          descriptionFr: '',
-          isVisible: visible,
-          ownership,
-          orgId,
-        }}
+        initialValues={initial}
         initialTouched={{
           labelEn: true,
         }}
@@ -140,13 +142,13 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
           if (mutation === 'create') {
             await createTag({ variables: values })
           } else if (mutation === 'update') {
-            // Update the organization (only include fields that have values)
+            // Only include fields that have changed from initial values
             const propertiesWithValues = {}
-
-            // Extract only the entries that have truthy values
-            Object.entries(values).forEach((entry) => {
-              const [key, value] = entry
-              if ((key === 'isVisible' && value !== visible) || value) propertiesWithValues[key] = value
+            Object.entries(values).forEach(([key, value]) => {
+              // Only include if value is different from initial
+              if (value !== initial[key] && value !== '' && value !== undefined) {
+                propertiesWithValues[key] = value
+              }
             })
 
             // Handle case where user does not supply any fields to update
