@@ -368,8 +368,6 @@ msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour 
 msgid "Permission Denied: Please contact organization admin for help with archiving domains."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur l'archivage des domaines."
 
-#: src/tags/mutations/update-tag.js:146
-#: src/tags/mutations/update-tag.js:157
 #: src/tags/mutations/create-tag.js:136
 msgid "Permission Denied: Please contact organization admin for help with creating tag."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la création d'un tag."
@@ -394,6 +392,11 @@ msgstr "Autorisation refusée : Veuillez contacter l'administrateur de l'organis
 #: src/organization/mutations/update-organization.js:155
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
+
+#: src/tags/mutations/update-tag.js:146
+#: src/tags/mutations/update-tag.js:157
+msgid "Permission Denied: Please contact organization admin for help with updating tag."
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour de la balise."
 
 #: src/affiliation/mutations/update-user-role.js:170
 #: src/affiliation/mutations/update-user-role.js:193

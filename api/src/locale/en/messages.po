@@ -368,8 +368,6 @@ msgstr "Permission Denied: Please contact org owner to transfer ownership."
 msgid "Permission Denied: Please contact organization admin for help with archiving domains."
 msgstr "Permission Denied: Please contact organization admin for help with archiving domains."
 
-#: src/tags/mutations/update-tag.js:146
-#: src/tags/mutations/update-tag.js:157
 #: src/tags/mutations/create-tag.js:136
 msgid "Permission Denied: Please contact organization admin for help with creating tag."
 msgstr "Permission Denied: Please contact organization admin for help with creating tag."
@@ -394,6 +392,11 @@ msgstr "Permission Denied: Please contact organization admin for help with remov
 #: src/organization/mutations/update-organization.js:155
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
 msgstr "Permission Denied: Please contact organization admin for help with updating organization."
+
+#: src/tags/mutations/update-tag.js:146
+#: src/tags/mutations/update-tag.js:157
+msgid "Permission Denied: Please contact organization admin for help with updating tag."
+msgstr "Permission Denied: Please contact organization admin for help with updating tag."
 
 #: src/affiliation/mutations/update-user-role.js:170
 #: src/affiliation/mutations/update-user-role.js:193
