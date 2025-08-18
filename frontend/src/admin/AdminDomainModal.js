@@ -181,7 +181,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
       return availableTags.filter((option) => option.tagId == label.tagId)[0]
     })
     if (mutation === 'create' && tags.filter(({ tagId }) => tagId === 'new-nouveau').length === 0) {
-      tags.push(availableTags[0])
+      tags.push(availableTags.filter(({ tagId }) => tagId === 'new-nouveau')[0])
     }
     return tags
   }
