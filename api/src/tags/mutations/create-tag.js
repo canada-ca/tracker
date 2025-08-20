@@ -3,6 +3,7 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { createTagUnion } from '../unions'
 import { TagOwnershipEnums } from '../../enums'
+import { logActivity } from '../../audit-logs'
 
 export const createTag = new mutationWithClientMutationId({
   name: 'CreateTag',
@@ -48,6 +49,7 @@ export const createTag = new mutationWithClientMutationId({
     args,
     {
       i18n,
+      request,
       query,
       collections,
       transaction,
@@ -62,8 +64,8 @@ export const createTag = new mutationWithClientMutationId({
     verifiedRequired({ user })
 
     // Cleanse input
-    const labelEn = cleanseInput(args.labelEn)
-    const labelFr = cleanseInput(args.labelFr)
+    const labelEn = cleanseInput(args.labelEn).toLowerCase()
+    const labelFr = cleanseInput(args.labelFr).toLowerCase()
     const descriptionEn = cleanseInput(args.descriptionEn)
     const descriptionFr = cleanseInput(args.descriptionFr)
     const ownership = cleanseInput(args.ownership)
@@ -76,30 +78,30 @@ export const createTag = new mutationWithClientMutationId({
         en: descriptionEn || '',
         fr: descriptionFr || '',
       },
-      visible: args?.isVisible || true,
+      visible: args?.isVisible ?? true,
       ownership,
       organizations: [],
     }
 
     const tag = await loadTagByTagId.load(insertTag.tagId)
 
-    if (typeof tag !== 'undefined' && !['org', 'pending'].includes(ownership)) {
-      console.warn(`User: ${userKey} attempted to create a tag that already exists: ${insertTag.tagId}`)
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Tag label already in use. Please try again with a different label.`),
-      }
-    }
-
+    const isSuperAdmin = await checkSuperAdmin()
     if (ownership === 'global') {
-      const isSuperAdmin = await checkSuperAdmin()
       superAdminRequired({ user, isSuperAdmin })
+      if (typeof tag !== 'undefined') {
+        console.warn(`User: ${userKey} attempted to create a tag that already exists: ${insertTag.tagId}`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+        }
+      }
     }
 
     // Setup Transaction
     const trx = await transaction(collections)
 
+    let permission, org
     if (ownership === 'org') {
       if (typeof orgId === 'undefined') {
         console.warn(
@@ -110,37 +112,45 @@ export const createTag = new mutationWithClientMutationId({
           code: 400,
           description: i18n._(t`Unable to create tag, tagId already in use.`),
         }
+      }
+
+      // Check to see if org exists
+      org = await loadOrgByKey.load(orgId)
+      if (typeof org === 'undefined') {
+        console.warn(`User: ${userKey} attempted to create a tag to an organization: ${orgId} that does not exist.`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Unable to create tag in unknown organization.`),
+        }
+      }
+
+      permission = await checkPermission({ orgId: org._id })
+      if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+        console.warn(
+          `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
+        }
+      }
+
+      if (permission !== 'super_admin' && typeof tag === 'undefined') insertTag.ownership = 'pending'
+
+      if (typeof tag === 'undefined') {
+        insertTag.organizations = [orgId]
+      } else if (!tag.organizations.includes(orgId)) {
+        insertTag.organizations = [...tag.organizations, orgId]
       } else {
-        // Check to see if org exists
-        const org = await loadOrgByKey.load(orgId)
-        if (typeof org === 'undefined') {
-          console.warn(`User: ${userKey} attempted to create a tag to an organization: ${orgId} that does not exist.`)
-          return {
-            _type: 'error',
-            code: 400,
-            description: i18n._(t`Unable to create tag in unknown organization.`),
-          }
-        }
-
-        const permission = await checkPermission({ orgId })
-
-        if (!['super_admin', 'admin', 'owner'].includes(permission)) {
-          console.warn(
-            `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
-          )
-          return {
-            _type: 'error',
-            code: 400,
-            description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
-          }
-        }
-
-        if (permission !== 'super_admin' && typeof tag === 'undefined') insertTag.ownership = 'pending'
-
-        if (typeof tag !== 'undefined') {
-          insertTag.organizations = [...tag.organizations, orgId]
-        } else {
-          insertTag.organizations = [orgId]
+        console.warn(
+          `User: ${userKey} attempted to create a tag in org:${orgId} that already exists: ${insertTag.tagId}`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
         }
       }
     }
@@ -176,8 +186,27 @@ export const createTag = new mutationWithClientMutationId({
 
     console.info(`User: ${userKey} successfully created tag ${returnTag.tagId}`)
 
-    return {
-      ...returnTag,
-    }
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: isSuperAdmin ? 'super_admin' : permission,
+        ipAddress: request.ip,
+      },
+      action: 'add',
+      target: {
+        resource: insertTag.tagId, // name of resource being acted upon
+        organization: org && {
+          id: org._key,
+          name: org.name,
+        },
+        resourceType: 'tag',
+      },
+    })
+
+    return returnTag
   },
 })

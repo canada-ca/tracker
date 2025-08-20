@@ -180,7 +180,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
       return availableTags.filter((option) => option.tagId == label.tagId)[0]
     })
     if (mutation === 'create' && tags.filter(({ tagId }) => tagId === 'new-nouveau').length === 0) {
-      tags.push(availableTags[0])
+      const newTag = availableTags.filter(({ tagId }) => tagId === 'new-nouveau')[0]
+      newTag && tags.push(newTag)
     }
     return tags
   }
@@ -249,16 +250,9 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                       <Box>
                         <Text fontWeight="bold">Tags:</Text>
                         <SimpleGrid columns={3} spacing={2}>
-                          {values.tags?.map(({ tagId, label, description, _ownership }, idx) => {
-                            // console.log(ownership)
+                          {values.tags?.map(({ tagId, label, description }, idx) => {
                             return (
-                              <Tag
-                                key={idx}
-                                borderRadius="full"
-                                py="2"
-                                px="3"
-                                // bg={ownership === 'org' ? 'blue' : 'red'}
-                              >
+                              <Tag key={idx} borderRadius="full" py="2" px="3">
                                 <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`}>
                                   <TagLabel>{label.toUpperCase()}</TagLabel>
                                 </Tooltip>
