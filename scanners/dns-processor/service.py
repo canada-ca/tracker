@@ -280,6 +280,14 @@ def process_msg(msg):
             domain.update(
                 {"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")}
             )
+
+            dns_negative_tags = (
+                processed_results.get("spf", {"negative_tags": []}).get("negative_tags", []) +
+                processed_results.get("dmarc", {"negative_tags": []}).get("negative_tags", []) + 
+                processed_results.get("dkim", {"negative_tags": []}).get("negative_tags", [])
+            )
+            domain.update({"negativeTags": {"dns": dns_negative_tags}})
+
             domain.update({"webScanPending": True})
 
             all_ips_private = True
