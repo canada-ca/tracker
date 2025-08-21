@@ -97,7 +97,7 @@ export const loadOrganizationDomainStatuses =
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION(claimTags, ${filterValue}) ${comparison} true
+            FILTER POSITION(e.tags, ${filterValue}) ${comparison} true
           `
           }
         } else if (filterCategory === 'asset-state') {
