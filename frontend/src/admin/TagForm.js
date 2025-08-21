@@ -81,7 +81,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
       if (createTag.result.__typename === 'Tag') {
         toast({
           title: t`Tag created`,
-          description: t`${createTag.result.tag} was added to tag list.`,
+          description: t`${createTag.result.tagId} was added to tag list.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -168,6 +168,7 @@ export function TagForm({ mutation, tagId = '', visible = true, ownership, setTa
             const updateResponse = await updateTag({
               variables: {
                 tagId,
+                orgId,
                 ...propertiesWithValues,
               },
             })
