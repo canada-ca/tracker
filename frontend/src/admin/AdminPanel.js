@@ -25,6 +25,9 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
           <Tab borderTopWidth="4px" className="admin-users-tab">
             <Trans>Users</Trans>
           </Tab>
+          <Tab borderTopWidth="4px" className="admin-activity-tab">
+            <Trans>Activity</Trans>
+          </Tab>
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               <Tab borderTopWidth="4px" className="admin-activity-tab">
@@ -32,9 +35,6 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
               </Tab>
             </ABTestVariant>
           </ABTestWrapper>
-          <Tab borderTopWidth="4px" className="admin-activity-tab">
-            <Trans>Activity</Trans>
-          </Tab>
         </TabList>
 
         <TabPanels>
@@ -60,6 +60,11 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
               />
             </ErrorBoundary>
           </TabPanel>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <AuditLogTable orgId={orgId} />
+            </ErrorBoundary>
+          </TabPanel>
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               <TabPanel>
@@ -70,11 +75,6 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
               </TabPanel>
             </ABTestVariant>
           </ABTestWrapper>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <AuditLogTable orgId={orgId} />
-            </ErrorBoundary>
-          </TabPanel>
         </TabPanels>
       </Tabs>
     </Stack>
