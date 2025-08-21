@@ -406,7 +406,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
             >
               <Trans>Search: </Trans>
             </Text>
-            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }}>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
               <InputLeftElement aria-hidden="true">
                 <PlusSquareIcon color="gray.300" />
               </InputLeftElement>

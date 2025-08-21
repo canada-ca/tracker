@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { array, bool, string } from 'prop-types'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -10,6 +10,8 @@ import { UserList } from './UserList'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { DomainTagsList } from './DomainTagsList'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, availableTags }) {
   return (
@@ -26,6 +28,13 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
           <Tab borderTopWidth="4px" className="admin-activity-tab">
             <Trans>Activity</Trans>
           </Tab>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <Tab borderTopWidth="4px" className="admin-activity-tab">
+                <Trans>Tags</Trans>
+              </Tab>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabList>
 
         <TabPanels>
@@ -56,6 +65,16 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId, verified, a
               <AuditLogTable orgId={orgId} />
             </ErrorBoundary>
           </TabPanel>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <TabPanel>
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                  <Divider borderColor="gray.50" />
+                  <DomainTagsList orgId={orgId} createOwnership="ORG" />
+                </ErrorBoundary>
+              </TabPanel>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabPanels>
       </Tabs>
     </Stack>
