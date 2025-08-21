@@ -43,7 +43,7 @@ async function dmarcReport({ ownerships, arangoCtx, currentDate, cosmosDates, co
     const batchSize = 60
 
     for (let i = 0; i < ownerships[orgAcronym].length; i += batchSize) {
-      // Batch update domains, process 20 at a time
+      // Batch update domains, process 60 at a time
       const domains = ownerships[orgAcronym].slice(i, i + batchSize)
 
       console.log(`Checking ${domains.length} domains for ${orgAcronym}: ${domains}`)

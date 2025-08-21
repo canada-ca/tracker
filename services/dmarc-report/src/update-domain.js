@@ -46,6 +46,7 @@ async function updateDomain({ arangoCtx, domain, orgAcronym, queryResults, curre
     const arangoDate = date === 'thirty_days' ? 'thirtyDays' : date
     const summaryData = domainData.find((resource) => resource.id === date)
     let summaryDataToInput
+
     if (!summaryData) {
       summaryDataToInput = {
         categoryTotals: {
@@ -141,6 +142,7 @@ async function updateDomain({ arangoCtx, domain, orgAcronym, queryResults, curre
     const { totalMessages, categoryPercentages } = calculatePercentages({ ...summaryDataToInput.categoryTotals })
     summaryDataToInput.categoryPercentages = categoryPercentages
     summaryDataToInput.totalMessages = totalMessages
+    summaryDataToInput.sourceDataExists = !!summaryData
 
     const sourceLastUpdated = summaryData?._ts * 1000 || null // _ts stored as seconds, need ms
 

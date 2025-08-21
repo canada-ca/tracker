@@ -1,4 +1,4 @@
-async function createSummary({ arangoCtx, date, domain, summaryData }) {
+async function createSummary({ arangoCtx, date, sourceLastUpdated, domain, summaryData }) {
   // Generate list of collections names
   const collectionStrings = Object.keys(arangoCtx.collections)
   // setup Transaction
@@ -8,7 +8,7 @@ async function createSummary({ arangoCtx, date, domain, summaryData }) {
   const summaryCursor = await trx.step(
     () => arangoCtx.query`
       WITH dmarcSummaries
-      INSERT MERGE(${summaryData}, { lastUpdated: DATE_ISO8601(DATE_NOW()) } ) INTO dmarcSummaries
+      INSERT MERGE(${summaryData}, { lastUpdated: DATE_ISO8601(DATE_NOW()), sourceLastUpdated: DATE_ISO8601(${sourceLastUpdated}) } ) INTO dmarcSummaries
       RETURN NEW
     `,
   )
