@@ -169,7 +169,7 @@ export const organizationSummaryType = new GraphQLObjectType({
         },
       },
       resolve: async (
-        { _id, organization, negative_tags },
+        { organization, negative_tags },
         args,
         {
           userKey,

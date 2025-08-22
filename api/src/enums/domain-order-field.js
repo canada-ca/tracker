@@ -56,5 +56,9 @@ export const DomainOrderField = new GraphQLEnumType({
       value: 'asset-state',
       description: 'Order domains by asset state.',
     },
+    GUIDANCE_TAG: {
+      value: 'guidance-tag',
+      description: 'Scanner findings.',
+    },
   },
 })
