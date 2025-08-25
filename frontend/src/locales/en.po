@@ -776,6 +776,10 @@ msgstr "Certificate Chain"
 msgid "Certificate chain info could not be found during the scan."
 msgstr "Certificate chain info could not be found during the scan."
 
+#: src/summaries/TierTwoSummaries.js:46
+msgid "Certificate is valid and configured to use strong protocols, ciphers, and curves"
+msgstr "Certificate is valid and configured to use strong protocols, ciphers, and curves"
+
 #: src/organizationDetails/OrganizationDomains.js:217
 #: src/domains/DomainsPage.js:293
 #: src/domains/DomainCard.js:206
@@ -958,7 +962,7 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserEmail.js:136
 #: src/user/EditableUserDisplayName.js:168
-#: src/user/EditableEmailUpdateOptions.js:186
+#: src/user/EditableEmailUpdateOptions.js:217
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/guidance/CveIgnorer.js:157
 #: src/domains/SubdomainDiscoveryButton.js:92
@@ -1152,6 +1156,11 @@ msgstr "Data:"
 #: src/guidance/AdditionalFindings.js:266
 msgid "DDOS Protection"
 msgstr "DDOS Protection"
+
+#: src/user/EditableEmailUpdateOptions.js:115
+#: src/user/EditableEmailUpdateOptions.js:209
+msgid "Decay Detection"
+msgstr "Decay Detection"
 
 #: src/utilities/months.js:15
 #: src/components/MonthSelect.js:55
@@ -1535,7 +1544,7 @@ msgstr "Each organization’s domain list should include every internet-facing s
 #: src/user/EditableUserPassword.js:112
 #: src/user/EditableUserEmail.js:91
 #: src/user/EditableUserDisplayName.js:109
-#: src/user/EditableEmailUpdateOptions.js:110
+#: src/user/EditableEmailUpdateOptions.js:119
 msgid "Edit"
 msgstr "Edit"
 
@@ -1551,7 +1560,7 @@ msgstr "Edit Domain Details"
 msgid "Edit Email"
 msgstr "Edit Email"
 
-#: src/user/EditableEmailUpdateOptions.js:134
+#: src/user/EditableEmailUpdateOptions.js:144
 msgid "Edit Email Update Preferences"
 msgstr "Edit Email Update Preferences"
 
@@ -1926,11 +1935,15 @@ msgstr "For details related to terms pertaining to privacy, please refer to"
 #~ msgstr "For in-depth implementation guidance:"
 
 #: src/user/EmailUpdatesSwitch.js:64
-#: src/user/EditableEmailUpdateOptions.js:141
+#: src/user/EditableEmailUpdateOptions.js:151
 msgid "For organization admins interested in receiving email updates on new activity in their organizations."
 msgstr "For organization admins interested in receiving email updates on new activity in their organizations."
 
-#: src/user/EditableEmailUpdateOptions.js:162
+#: src/user/EditableEmailUpdateOptions.js:193
+msgid "For organization admins interested in receiving email updates on new changes to their organization's compliance statuses."
+msgstr "For organization admins interested in receiving email updates on new changes to their organization's compliance statuses."
+
+#: src/user/EditableEmailUpdateOptions.js:172
 msgid "For organization admins interested in receiving monthly email updates how their organization is progressing to 100% compliance."
 msgstr "For organization admins interested in receiving monthly email updates how their organization is progressing to 100% compliance."
 
@@ -3656,7 +3669,7 @@ msgid "PROD"
 msgstr "PROD"
 
 #: src/user/EditableEmailUpdateOptions.js:106
-#: src/user/EditableEmailUpdateOptions.js:178
+#: src/user/EditableEmailUpdateOptions.js:188
 msgid "Progress Report"
 msgstr "Progress Report"
 
@@ -3740,7 +3753,7 @@ msgid "Received Chain Has Valid Order"
 msgstr "Received Chain Has Valid Order"
 
 #: src/user/EditableEmailUpdateOptions.js:97
-#: src/user/EditableEmailUpdateOptions.js:157
+#: src/user/EditableEmailUpdateOptions.js:167
 msgid "Recent Activity"
 msgstr "Recent Activity"
 

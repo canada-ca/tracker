@@ -740,6 +740,10 @@ msgstr "Chaîne de certificats"
 msgid "Certificate chain info could not be found during the scan."
 msgstr "Les informations sur la chaîne de certificats n'ont pas pu être trouvées pendant l'analyse."
 
+#: src/summaries/TierTwoSummaries.js:46
+msgid "Certificate is valid and configured to use strong protocols, ciphers, and curves"
+msgstr "Le certificat est valide et configuré pour utiliser des protocoles, des chiffrements et des courbes robustes."
+
 #: src/organizationDetails/OrganizationDomains.js:217
 #: src/domains/DomainsPage.js:293
 #: src/domains/DomainCard.js:206
@@ -922,7 +926,7 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserEmail.js:136
 #: src/user/EditableUserDisplayName.js:168
-#: src/user/EditableEmailUpdateOptions.js:186
+#: src/user/EditableEmailUpdateOptions.js:217
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/guidance/CveIgnorer.js:157
 #: src/domains/SubdomainDiscoveryButton.js:92
@@ -1116,6 +1120,11 @@ msgstr "Données:"
 #: src/guidance/AdditionalFindings.js:266
 msgid "DDOS Protection"
 msgstr "Protection DDOS"
+
+#: src/user/EditableEmailUpdateOptions.js:115
+#: src/user/EditableEmailUpdateOptions.js:209
+msgid "Decay Detection"
+msgstr "Détection de dégradation"
 
 #: src/utilities/months.js:15
 #: src/components/MonthSelect.js:55
@@ -1491,7 +1500,7 @@ msgstr "La liste des domaines de chaque organisation doit inclure tous les servi
 #: src/user/EditableUserPassword.js:112
 #: src/user/EditableUserEmail.js:91
 #: src/user/EditableUserDisplayName.js:109
-#: src/user/EditableEmailUpdateOptions.js:110
+#: src/user/EditableEmailUpdateOptions.js:119
 msgid "Edit"
 msgstr "Edit"
 
@@ -1507,7 +1516,7 @@ msgstr "Modifier les détails d'un domaine"
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
-#: src/user/EditableEmailUpdateOptions.js:134
+#: src/user/EditableEmailUpdateOptions.js:144
 msgid "Edit Email Update Preferences"
 msgstr "Modifier les préférences de mise à jour des courriels"
 
@@ -1870,11 +1879,15 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 #~ msgstr "Pour des conseils approfondis sur la mise en œuvre:"
 
 #: src/user/EmailUpdatesSwitch.js:64
-#: src/user/EditableEmailUpdateOptions.js:141
+#: src/user/EditableEmailUpdateOptions.js:151
 msgid "For organization admins interested in receiving email updates on new activity in their organizations."
 msgstr "Pour les administrateurs d'organisations qui souhaitent recevoir des mises à jour par courrier électronique sur les nouvelles activités de leur organisation."
 
-#: src/user/EditableEmailUpdateOptions.js:162
+#: src/user/EditableEmailUpdateOptions.js:193
+msgid "For organization admins interested in receiving email updates on new changes to their organization's compliance statuses."
+msgstr "Pour les administrateurs d’organisation qui souhaitent recevoir des mises à jour par courriel sur les nouveaux changements apportés aux statuts de conformité de leur organisation."
+
+#: src/user/EditableEmailUpdateOptions.js:172
 msgid "For organization admins interested in receiving monthly email updates how their organization is progressing to 100% compliance."
 msgstr "Pour les administrateurs d'organisations qui souhaitent recevoir des mises à jour mensuelles par courrier électronique sur la progression de leur organisation vers une conformité à 100 %."
 
@@ -3577,7 +3590,7 @@ msgid "PROD"
 msgstr "PROD"
 
 #: src/user/EditableEmailUpdateOptions.js:106
-#: src/user/EditableEmailUpdateOptions.js:178
+#: src/user/EditableEmailUpdateOptions.js:188
 msgid "Progress Report"
 msgstr "Rapport d'avancement"
 
@@ -3657,7 +3670,7 @@ msgid "Received Chain Has Valid Order"
 msgstr "La chaîne reçue a un ordre valide"
 
 #: src/user/EditableEmailUpdateOptions.js:97
-#: src/user/EditableEmailUpdateOptions.js:157
+#: src/user/EditableEmailUpdateOptions.js:167
 msgid "Recent Activity"
 msgstr "Activité récente"
 

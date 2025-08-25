@@ -43,7 +43,7 @@ export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }
     {
       id: 'tls',
       title: t`TLS Summary`,
-      description: `Certificate is valid and configured to use strong protocols, ciphers, and curves`,
+      description: t`Certificate is valid and configured to use strong protocols, ciphers, and curves`,
       data: ssl,
     },
   ]
