@@ -59,19 +59,32 @@ export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOpt
         return (
           <>
             <TagLabel>{displayTagFilterName(guidanceTagOptions, filterValue)}</TagLabel>
-            <TagRightIcon color={'weak'} as={WarningIcon} />
+            <TagRightIcon color="weak" as={WarningIcon} />
           </>
         )
-      default:
+      default: {
+        let color, icon
+        switch (filterValue) {
+          case 'PASS':
+            color = 'strong'
+            icon = CheckCircleIcon
+            break
+          case 'FAIL':
+            color = 'weak'
+            icon = WarningIcon
+            break
+          default:
+            color = 'info'
+            icon = InfoIcon
+            break
+        }
         return (
           <>
             <TagLabel>{statuses[filterCategory]}</TagLabel>
-            <TagRightIcon
-              color={filterValue === 'PASS' ? 'strong' : filterValue === 'FAIL' ? 'weak' : 'info'}
-              as={filterValue === 'PASS' ? CheckCircleIcon : filterValue === 'FAIL' ? WarningIcon : InfoIcon}
-            />
+            <TagRightIcon color={color} as={icon} />
           </>
         )
+      }
     }
   }
 
