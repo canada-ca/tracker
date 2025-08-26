@@ -48,17 +48,5 @@ export const DomainOrderField = new GraphQLEnumType({
       value: 'spf-status',
       description: 'Order domains by spf status.',
     },
-    TAGS: {
-      value: 'tags',
-      description: 'Order domains by tags.',
-    },
-    ASSET_STATE: {
-      value: 'asset-state',
-      description: 'Order domains by asset state.',
-    },
-    GUIDANCE_TAG: {
-      value: 'guidance-tag',
-      description: 'Scanner findings.',
-    },
   },
 })
