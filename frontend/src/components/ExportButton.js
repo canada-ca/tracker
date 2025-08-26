@@ -22,6 +22,15 @@ export function ExportButton({ jsonData, fileName, dataFunction, children = t`Ex
   const { onOpen, onClose, isOpen } = useDisclosure()
   const firstFieldRef = React.useRef(null)
 
+  function sanitizeFileName(name) {
+    // Remove invalid characters
+    let sanitized = name.replace(/[/\\:*?"<>|]+/g, '')
+    // Trim whitespace and limit length
+    sanitized = sanitized.trim().substring(0, 100)
+    // Fallback to default if empty
+    return sanitized || fileName
+  }
+
   const download = async (name) => {
     try {
       let data
@@ -31,9 +40,10 @@ export function ExportButton({ jsonData, fileName, dataFunction, children = t`Ex
         data = await dataFunction()
       }
 
+      const sanitizedName = sanitizeFileName(name)
       const a = document.createElement('a')
       a.href = 'data:text/csv;charset=utf-8,' + encodeURI(data)
-      a.download = `${name}.csv`
+      a.download = `${sanitizedName}.csv`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
