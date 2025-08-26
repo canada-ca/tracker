@@ -919,6 +919,7 @@ export const QUERY_CURRENT_USER = gql`
       emailUpdateOptions {
         orgFootprint
         progressReport
+        detectDecay
       }
     }
     isUserAdmin
