@@ -31,7 +31,7 @@ msgstr "{0} Constatations"
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
-#. placeholder {0}: createTag.result.tag
+#. placeholder {0}: createTag.result.tagId
 #: src/admin/TagForm.js:84
 msgid "{0} was added to tag list."
 msgstr "{0} a été ajouté à la liste des balises."
@@ -292,7 +292,7 @@ msgstr "Action"
 msgid "Action:"
 msgstr "Action :"
 
-#: src/admin/AdminPanel.js:36
+#: src/admin/AdminPanel.js:29
 msgid "Activity"
 msgstr "Activité"
 
@@ -304,7 +304,7 @@ msgstr "Ajouter"
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/admin/AdminDomainModal.js:233
+#: src/admin/AdminDomainModal.js:234
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
@@ -557,7 +557,7 @@ msgstr "Appliquez des filtres pour affiner les résultats de votre recherche de 
 #: src/domains/DomainCard.js:111
 #: src/admin/AdminDomains.js:281
 #: src/admin/AdminDomains.js:571
-#: src/admin/AdminDomainModal.js:299
+#: src/admin/AdminDomainModal.js:293
 #: src/admin/AdminDomainCard.js:8
 msgid "Approved"
 msgstr "Approuvé"
@@ -571,7 +571,7 @@ msgstr "APPROUVÉE"
 msgid "April"
 msgstr "Avril"
 
-#: src/admin/AdminDomainModal.js:358
+#: src/admin/AdminDomainModal.js:352
 msgid "Archive domain"
 msgstr "Archiver ce domaine"
 
@@ -614,7 +614,7 @@ msgstr "Évaluer l’état actuel."
 
 #: src/domains/DomainListFilters.js:108
 #: src/admin/AdminDomains.js:242
-#: src/admin/AdminDomainModal.js:287
+#: src/admin/AdminDomainModal.js:281
 msgid "Asset State"
 msgstr "État des actifs"
 
@@ -705,6 +705,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les services <0>email<1/></0> et <2>web<3/></2>. Suivez l'évolution de la sécurité des sites gouvernementaux."
 
 #: src/user/UserPage.js:225
+#: src/components/ExportButton.js:83
 #: src/admin/SuperAdminUserList.js:423
 msgid "Cancel"
 msgstr "Annuler"
@@ -715,7 +716,7 @@ msgstr "Annuler"
 #: src/domains/DomainCard.js:114
 #: src/admin/AdminDomains.js:290
 #: src/admin/AdminDomains.js:581
-#: src/admin/AdminDomainModal.js:308
+#: src/admin/AdminDomainModal.js:302
 #: src/admin/AdminDomainCard.js:11
 msgid "Candidate"
 msgstr "Candidat"
@@ -848,7 +849,7 @@ msgstr "Ville (FR)"
 msgid "City:"
 msgstr "Ville:"
 
-#: src/admin/TagForm.js:224
+#: src/admin/TagForm.js:225
 #: src/admin/OrganizationInformation.js:330
 msgid "Clear"
 msgstr "Dégager"
@@ -874,7 +875,7 @@ msgid "Click to view detailed scan results and guidance."
 msgstr "Cliquez pour voir les résultats détaillés de l'examen et les conseils."
 
 #: src/app/FloatingMenu.js:267
-#: src/admin/TagForm.js:242
+#: src/admin/TagForm.js:243
 #: src/admin/OrganizationInformation.js:339
 msgid "Close"
 msgstr "Fermer"
@@ -931,12 +932,12 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/guidance/CveIgnorer.js:157
 #: src/domains/SubdomainDiscoveryButton.js:92
 #: src/admin/UserListModal.js:277
-#: src/admin/TagForm.js:245
+#: src/admin/TagForm.js:246
 #: src/admin/SuperAdminUserList.js:427
 #: src/admin/OrganizationInformation.js:347
 #: src/admin/OrganizationInformation.js:445
 #: src/admin/AdminDomains.js:557
-#: src/admin/AdminDomainModal.js:329
+#: src/admin/AdminDomainModal.js:323
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -1149,7 +1150,7 @@ msgstr "Supprimer"
 #: src/domains/DomainCard.js:112
 #: src/admin/AdminDomains.js:284
 #: src/admin/AdminDomains.js:573
-#: src/admin/AdminDomainModal.js:302
+#: src/admin/AdminDomainModal.js:296
 #: src/admin/AdminDomainCard.js:9
 msgid "Dependency"
 msgstr "Dépendance"
@@ -1173,11 +1174,11 @@ msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie 
 msgid "Deploy SPF records for all domains;"
 msgstr "Déployer les enregistrements SPF pour tous les domaines."
 
-#: src/admin/TagForm.js:195
+#: src/admin/TagForm.js:196
 msgid "Description (EN)"
 msgstr "Description (EN)"
 
-#: src/admin/TagForm.js:198
+#: src/admin/TagForm.js:199
 msgid "Description (FR)"
 msgstr "Description (FR)"
 
@@ -1492,6 +1493,10 @@ msgstr "Vous n'avez pas de compte ? <0>S'inscrire</0>"
 msgid "Don't show again"
 msgstr "Ne plus montrer"
 
+#: src/components/ExportButton.js:91
+msgid "Download"
+msgstr "Télécharger"
+
 #: src/app/ReadGuidancePage.js:103
 msgid "Each organization’s domain list should include every internet-facing service. It is the responsibility of organization admins to manage the current list and identify new domains to add."
 msgstr "La liste des domaines de chaque organisation doit inclure tous les services en contact avec l'internet. Il incombe aux administrateurs de l'organisation de gérer la liste actuelle et d'identifier les nouveaux domaines à ajouter."
@@ -1508,7 +1513,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/admin/AdminDomainModal.js:233
+#: src/admin/AdminDomainModal.js:234
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -1733,7 +1738,7 @@ msgstr "Exporter la liste des RUA"
 msgid "Export SPIN Top 25"
 msgstr "Exporter les AMOPS 25 principales"
 
-#: src/components/ExportButton.js:8
+#: src/components/ExportButton.js:21
 msgid "Export to CSV"
 msgstr "Exportation vers CSV"
 
@@ -1798,6 +1803,10 @@ msgstr "Aperçu des fonctionnalités"
 #: src/components/MonthSelect.js:15
 msgid "February"
 msgstr "Février"
+
+#: src/components/ExportButton.js:74
+msgid "File name:"
+msgstr "Nom du fichier :"
 
 #: src/components/AffiliationFilterSwitch.js:12
 msgid "Filter list to affiliated resources only."
@@ -1977,7 +1986,7 @@ msgstr "Pour commencer"
 msgid "Getting top 25 report"
 msgstr "Obtenir un rapport sur les 25 principales"
 
-#: src/admin/TagForm.js:267
+#: src/admin/TagForm.js:268
 #: src/admin/DomainTagsList.js:50
 msgid "Global"
 msgstr "Mondial"
@@ -2295,7 +2304,7 @@ msgstr "Si votre organisation n'a pas d'utilisateurs affiliés à Suivi, contact
 msgid "Ignore CVE"
 msgstr "Ignorer le CVE"
 
-#: src/admin/AdminDomainModal.js:388
+#: src/admin/AdminDomainModal.js:382
 msgid "Ignore RUA"
 msgstr "Ignorer la RUA"
 
@@ -2661,11 +2670,11 @@ msgstr "Type de clé :"
 msgid "L-30-D"
 msgstr "30-D-J"
 
-#: src/admin/TagForm.js:189
+#: src/admin/TagForm.js:190
 msgid "Label (EN)"
 msgstr "Label (EN)"
 
-#: src/admin/TagForm.js:192
+#: src/admin/TagForm.js:193
 msgid "Label (FR)"
 msgstr "Label (FR)"
 
@@ -2835,7 +2844,7 @@ msgstr "Surveiller les rapports DMARC."
 #: src/domains/DomainCard.js:113
 #: src/admin/AdminDomains.js:287
 #: src/admin/AdminDomains.js:577
-#: src/admin/AdminDomainModal.js:305
+#: src/admin/AdminDomainModal.js:299
 #: src/admin/AdminDomainCard.js:10
 msgid "Monitor Only"
 msgstr "Moniteur uniquement"
@@ -2943,11 +2952,11 @@ msgstr "NOUVEAU"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage:"
 
-#: src/admin/AdminDomainModal.js:239
+#: src/admin/AdminDomainModal.js:240
 msgid "New Domain URL"
 msgstr "Nouvelle URL de domaine"
 
-#: src/admin/AdminDomainModal.js:239
+#: src/admin/AdminDomainModal.js:240
 msgid "New Domain URL:"
 msgstr "Nouvelle URL de domaine:"
 
@@ -3188,11 +3197,11 @@ msgstr "Non mis en œuvre"
 #~ msgid "Note:"
 #~ msgstr "Avis important :"
 
-#: src/admin/AdminDomainModal.js:366
+#: src/admin/AdminDomainModal.js:360
 msgid "Note: This could affect results for multiple organizations"
 msgstr "Note : Cela pourrait affecter les résultats de plusieurs organisations"
 
-#: src/admin/AdminDomainModal.js:364
+#: src/admin/AdminDomainModal.js:358
 msgid "Note: This will affect results for {orgCount} organizations"
 msgstr "Note : Ceci affectera les résultats pour les organisations {orgCount}."
 
@@ -3258,7 +3267,7 @@ msgstr "Ouvrir le glossaire."
 msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des services WebSSL de SPC</0> ou utiliser <1>Let’sEncrypt</1>. Pour en apprendre davantage, veuillez vous reporter aux <2>Recommandations pour les certificats de serveur TLS</2>."
 
-#: src/admin/TagForm.js:271
+#: src/admin/TagForm.js:272
 #: src/admin/DomainTagsList.js:51
 #: src/admin/AuditLogTable.js:79
 #: src/admin/AuditLogTable.js:127
@@ -3356,7 +3365,7 @@ msgstr "nos conditions générales sur le site Web du SCT"
 msgid "OWNER"
 msgstr "PROPRIÉTAIRE"
 
-#: src/admin/TagForm.js:260
+#: src/admin/TagForm.js:261
 msgid "Ownership:"
 msgstr "Propriété :"
 
@@ -3476,7 +3485,7 @@ msgstr "Numéro de téléphone:"
 msgid "Phone Validated"
 msgstr "Téléphone validé"
 
-#: src/admin/AdminDomainModal.js:322
+#: src/admin/AdminDomainModal.js:316
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Veuillez prévoir jusqu'à 24 heures pour que les résumés reflètent les changements éventuels."
 
@@ -3551,7 +3560,7 @@ msgstr "Positif"
 #~ msgid "Prevent this domain from being scanned and being counted in any summaries."
 #~ msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
 
-#: src/admin/AdminDomainModal.js:344
+#: src/admin/AdminDomainModal.js:338
 msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
 msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté dans les résumés."
 
@@ -3777,7 +3786,7 @@ msgstr "Exigences : <0>Exigences de configuration de la gestion des sites et ser
 #: src/domains/DomainCard.js:115
 #: src/admin/AdminDomains.js:293
 #: src/admin/AdminDomains.js:585
-#: src/admin/AdminDomainModal.js:311
+#: src/admin/AdminDomainModal.js:305
 #: src/admin/AdminDomainCard.js:12
 msgid "Requires Investigation"
 msgstr "Nécessité d'une enquête"
@@ -3985,7 +3994,7 @@ msgstr "Voir les en-têtes"
 msgid "Select a reason for removing this domain"
 msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 
-#: src/admin/AdminDomainModal.js:284
+#: src/admin/AdminDomainModal.js:278
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Sélectionnez l'état qui décrit le mieux l'actif par rapport à votre organisation."
 
@@ -3998,7 +4007,7 @@ msgstr "Sélectionnez une organisation"
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
-#: src/admin/TagForm.js:264
+#: src/admin/TagForm.js:265
 msgid "Select an ownership level"
 msgstr "Sélectionner un niveau de propriété"
 
@@ -4612,7 +4621,7 @@ msgstr "Balise utilisée pour afficher les domaines dont le code rcode est NXDOM
 #~ msgid "Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling)."
 #~ msgstr "Balise utilisée pour afficher les domaines qui peuvent provenir d'un sous-domaine générique (un résolveur générique existe en tant que frère ou sœur)."
 
-#: src/admin/AdminPanel.js:31
+#: src/admin/AdminPanel.js:34
 msgid "Tags"
 msgstr "Balises"
 
@@ -5430,7 +5439,7 @@ msgstr "Voir les résultats"
 msgid "View summaries of your organization's web and email security compliance."
 msgstr "Consultez les résumés de la conformité de votre organisation en matière de sécurité du web et du courrier électronique."
 
-#: src/admin/TagForm.js:212
+#: src/admin/TagForm.js:213
 msgid "Visible"
 msgstr "Visible"
 
