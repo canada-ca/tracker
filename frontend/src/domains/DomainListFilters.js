@@ -113,7 +113,7 @@ export function DomainListFilters({
                     <ABTestWrapper insiderVariantName="B">
                       <ABTestVariant name="B">
                         <option value="GUIDANCE_TAG">
-                          <Trans>Scanner Finding</Trans>
+                          <Trans>Negative Finding</Trans>
                         </option>
                       </ABTestVariant>
                     </ABTestWrapper>
