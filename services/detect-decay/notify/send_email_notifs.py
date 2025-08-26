@@ -39,10 +39,21 @@ def send_email_notifs(org, domains, org_users):
     domains_en = custom_format(domains)
     domains_fr = custom_format(translate_to_fr(domains))
     responses = []
+
+    dry_run_email_mode = os.getenv("DRY_RUN_EMAIL_MODE")
+    dry_run_log_mode = os.getenv("DRY_RUN_LOG_MODE")
+    tracker_email = os.getenv("SERVICE_ACCOUNT_EMAIL")
+
     # Send email to each org owner/admin
     for user in org_users:
         email = user["userName"]
+        if dry_run_log_mode == "true":
+            logging.info(f"DRY RUN Enabled: would send email to {email} in {org_name_en} with these decays:\n{json.dumps(domains, indent=2)}")
+            responses.append({})
+            continue
         try:
+            if dry_run_email_mode == "true":
+                email = tracker_email
             response = notify_client.send_email_notification(
                 email_address=email,
                 template_id=os.getenv("EMAIL_TEMPLATE_ID"),
