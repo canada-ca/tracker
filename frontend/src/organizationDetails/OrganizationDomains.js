@@ -25,7 +25,13 @@ import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
 
-export function OrganizationDomains({ orgSlug, orgName, userHasPermission, availableTags = [] }) {
+export function OrganizationDomains({
+  orgSlug,
+  orgName,
+  userHasPermission,
+  availableTags = [],
+  negativeFindings = [],
+}) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
@@ -121,6 +127,13 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
     { value: t`REQUIRES_INVESTIGATION`, text: t`Requires Investigation` },
   ]
 
+  const guidanceTagOptions = negativeFindings?.map(({ tagId, tagName }) => {
+    const getTagCategoryFromId = (id) => {
+      return id.split(/[0-9]/)[0].toUpperCase()
+    }
+    return { value: tagId, text: `${getTagCategoryFromId(tagId)}: ${tagName}` }
+  })
+
   const domainList = loading ? (
     <LoadingMessage>
       <Trans>Domains</Trans>
@@ -136,6 +149,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
           statusOptions={orderByOptions}
           filterTagOptions={filterTagOptions}
           assetStateOptions={assetStateOptions}
+          guidanceTagOptions={guidanceTagOptions}
         />
       )}
       <ListOf
@@ -293,6 +307,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
             setFilters={setFilters}
             resetToFirstPage={resetToFirstPage}
             filterTagOptions={filterTagOptions}
+            guidanceTagOptions={guidanceTagOptions}
           />
         </Flex>
       )}
@@ -316,4 +331,10 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission, avail
   )
 }
 
-OrganizationDomains.propTypes = { orgSlug: string, orgName: string, userHasPermission: bool, availableTags: array }
+OrganizationDomains.propTypes = {
+  orgSlug: string,
+  orgName: string,
+  userHasPermission: bool,
+  availableTags: array,
+  negativeFindings: array,
+}

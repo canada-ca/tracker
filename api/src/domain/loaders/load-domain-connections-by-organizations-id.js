@@ -398,6 +398,11 @@ export const loadDomainConnectionsByOrgId =
           ${domainFilters}
           FILTER e.assetState ${comparison} ${filterValue}
         `
+        } else if (filterCategory === 'guidance-tag') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
+        `
         }
       })
     }
@@ -446,6 +451,7 @@ export const loadDomainConnectionsByOrgId =
         LET collectedDomains = (
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             OPTIONS {order: "bfs"}
+            LET negativeTags = APPEND(v.negativeTags.dns, v.negativeTags.web)
             ${showArchivedDomains}
             ${domainFilters}
             RETURN v

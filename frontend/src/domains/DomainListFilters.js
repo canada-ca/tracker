@@ -1,9 +1,10 @@
+import React from 'react'
 import { Box, Button, Flex, Select, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Formik } from 'formik'
-import React from 'react'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { array, func } from 'prop-types'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function DomainListFilters({
   filters,
@@ -12,6 +13,7 @@ export function DomainListFilters({
   statusOptions,
   filterTagOptions,
   assetStateOptions = [],
+  guidanceTagOptions = [],
   ...props
 }) {
   const validationSchema = schemaToValidation({
@@ -21,36 +23,36 @@ export function DomainListFilters({
   })
 
   const filterValues = (values) => {
-    if (values.filterCategory === 'TAGS') {
-      return filterTagOptions.map(({ value, text }, idx) => {
+    const mapFilters = (options) => {
+      return options.map(({ value, text }, idx) => {
         return (
           <option key={idx} value={value}>
             {text}
           </option>
         )
       })
-    } else if (values.filterCategory === 'ASSET_STATE') {
-      return assetStateOptions.map(({ value, text }, idx) => {
+    }
+    switch (values.filterCategory) {
+      case 'TAGS':
+        return mapFilters(filterTagOptions)
+      case 'ASSET_STATE':
+        return mapFilters(assetStateOptions)
+      case 'GUIDANCE_TAG':
+        return mapFilters(guidanceTagOptions)
+      default:
         return (
-          <option key={idx} value={value}>
-            {text}
-          </option>
+          <>
+            <option value="PASS">
+              <Trans>Pass</Trans>
+            </option>
+            <option value="INFO">
+              <Trans>Info</Trans>
+            </option>
+            <option value="FAIL">
+              <Trans>Fail</Trans>
+            </option>
+          </>
         )
-      })
-    } else {
-      return (
-        <>
-          <option value="PASS">
-            <Trans>Pass</Trans>
-          </option>
-          <option value="INFO">
-            <Trans>Info</Trans>
-          </option>
-          <option value="FAIL">
-            <Trans>Fail</Trans>
-          </option>
-        </>
-      )
     }
   }
 
@@ -91,7 +93,7 @@ export function DomainListFilters({
                     }}
                   >
                     <option hidden value="">
-                      <Trans>Value</Trans>
+                      <Trans>Category</Trans>
                     </option>
                     {statusOptions.map(({ value, text }, idx) => {
                       return (
@@ -108,6 +110,13 @@ export function DomainListFilters({
                         <Trans>Asset State</Trans>
                       </option>
                     )}
+                    <ABTestWrapper insiderVariantName="B">
+                      <ABTestVariant name="B">
+                        <option value="GUIDANCE_TAG">
+                          <Trans>Negative Finding</Trans>
+                        </option>
+                      </ABTestVariant>
+                    </ABTestWrapper>
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterCategory}
@@ -132,7 +141,7 @@ export function DomainListFilters({
                 <Box maxW="25%" mx="1">
                   <Select aria-label="filterValue" name="filterValue" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
-                      <Trans>Status/Tag/State</Trans>
+                      <Trans>Value</Trans>
                     </option>
                     {filterValues(values)}
                   </Select>
@@ -159,4 +168,5 @@ DomainListFilters.propTypes = {
   statusOptions: array,
   filterTagOptions: array,
   assetStateOptions: array,
+  guidanceTagOptions: array,
 }

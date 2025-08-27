@@ -1,5 +1,5 @@
 import { GraphQLInputObjectType } from 'graphql'
-import { ComparisonEnums, DomainOrderField } from '../../enums'
+import { ComparisonEnums, DomainFilterCategory } from '../../enums'
 import { FilterValueScalar } from '../../scalars/filter-value'
 
 export const domainFilter = new GraphQLInputObjectType({
@@ -7,7 +7,7 @@ export const domainFilter = new GraphQLInputObjectType({
   description: 'This object is used to provide filtering options when querying org-claimed domains.',
   fields: () => ({
     filterCategory: {
-      type: DomainOrderField,
+      type: DomainFilterCategory,
       description: 'Category of filter to be applied.',
     },
     comparison: {

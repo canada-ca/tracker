@@ -198,6 +198,7 @@ export default function OrganizationDetails({ loginRequired }) {
                 orgName={orgName}
                 userHasPermission={data?.organization?.userHasPermission}
                 availableTags={data?.organization?.availableTags || []}
+                negativeFindings={data?.organization?.summaries?.negativeFindings?.guidanceTags}
               />
             </ErrorBoundary>
           </TabPanel>

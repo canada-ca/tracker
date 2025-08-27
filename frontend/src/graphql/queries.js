@@ -684,6 +684,13 @@ export const ORG_DETAILS_PAGE = gql`
         mail {
           ...RequiredSummaryFields
         }
+        negativeFindings(orderBy: { direction: DESC, field: TAG_COUNT }) {
+          guidanceTags {
+            tagId
+            tagName
+          }
+          totalCount
+        }
       }
       availableTags(sortDirection: ASC, includeGlobal: true) {
         tagId

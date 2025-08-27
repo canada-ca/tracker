@@ -5,7 +5,7 @@ import { Tag, TagCloseButton, TagLabel, TagRightIcon } from '@chakra-ui/tag'
 import { t } from '@lingui/macro'
 import { array, func } from 'prop-types'
 
-export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOptions }) {
+export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOptions, guidanceTagOptions }) {
   const statuses = {
     HTTPS_STATUS: `HTTPS`,
     HSTS_STATUS: `HSTS`,
@@ -26,13 +26,13 @@ export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOpt
     REQUIRES_INVESTIGATION: t`Requires Investigation`,
   }
 
-  const displayTagFilterName = (filterValue) => {
-    const tag = filterTagOptions.find((tag) => tag.value === filterValue)
+  const displayTagFilterName = (options, value) => {
+    const tag = options.find((tag) => tag.value === value)
     if (tag) {
       return tag.text
     } else {
-      console.warn(`Unknown tag filter value: ${filterValue}`)
-      return filterValue
+      console.warn(`Unknown tag filter value: ${value}`)
+      return value
     }
   }
 
@@ -50,20 +50,41 @@ export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOpt
   }
 
   const displayTag = (filterCategory, filterValue) => {
-    if (filterCategory === 'TAGS') {
-      return <TagLabel>{displayTagFilterName(filterValue)}</TagLabel>
-    } else if (filterCategory === 'ASSET_STATE') {
-      return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
-    } else {
-      return (
-        <>
-          <TagLabel>{statuses[filterCategory]}</TagLabel>
-          <TagRightIcon
-            color={filterValue === 'PASS' ? 'strong' : filterValue === 'FAIL' ? 'weak' : 'info'}
-            as={filterValue === 'PASS' ? CheckCircleIcon : filterValue === 'FAIL' ? WarningIcon : InfoIcon}
-          />
-        </>
-      )
+    switch (filterCategory) {
+      case 'TAGS':
+        return <TagLabel>{displayTagFilterName(filterTagOptions, filterValue)}</TagLabel>
+      case 'ASSET_STATE':
+        return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
+      case 'GUIDANCE_TAG':
+        return (
+          <>
+            <TagLabel>{displayTagFilterName(guidanceTagOptions, filterValue)}</TagLabel>
+            <TagRightIcon color="weak" as={WarningIcon} />
+          </>
+        )
+      default: {
+        let color, icon
+        switch (filterValue) {
+          case 'PASS':
+            color = 'strong'
+            icon = CheckCircleIcon
+            break
+          case 'FAIL':
+            color = 'weak'
+            icon = WarningIcon
+            break
+          default:
+            color = 'info'
+            icon = InfoIcon
+            break
+        }
+        return (
+          <>
+            <TagLabel>{statuses[filterCategory]}</TagLabel>
+            <TagRightIcon color={color} as={icon} />
+          </>
+        )
+      }
     }
   }
 
@@ -71,7 +92,14 @@ export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOpt
     <>
       {filters.map(({ filterCategory, comparison, filterValue }, idx) => {
         return (
-          <Tag fontSize="lg" borderWidth="1px" borderColor="gray.300" key={idx} m="1" bg={tagBgColour(filterValue)}>
+          <Tag
+            fontSize="lg"
+            borderWidth="1px"
+            borderColor="gray.300"
+            key={idx}
+            m="1"
+            bg={filterCategory === 'GUIDANCE_TAG' ? 'weakMuted' : tagBgColour(filterValue)}
+          >
             {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
             {displayTag(filterCategory, filterValue)}
             <TagCloseButton
@@ -92,4 +120,5 @@ FilterList.propTypes = {
   setFilters: func.isRequired,
   resetToFirstPage: func.isRequired,
   filterTagOptions: array.isRequired,
+  guidanceTagOptions: array,
 }
