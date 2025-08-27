@@ -105,6 +105,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER e.assetState ${comparison} ${filterValue}
           `
+        } else if (filterCategory === 'guidance-tag') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
+        `
         }
       })
     }
@@ -115,6 +120,7 @@ export const loadOrganizationDomainStatuses =
           WITH claims, domains, organizations
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             ${archivedFilter}
+            LET negativeTags = APPEND(v.negativeTags.dns, v.negativeTags.web) 
             ${domainFilters}
             LET ipAddresses = FIRST(
               FILTER v.latestDnsScan
