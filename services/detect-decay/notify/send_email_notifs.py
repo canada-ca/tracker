@@ -62,7 +62,7 @@ def send_email_notifs(org, domains, org_users):
             logging.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
             responses.append(response) # For testing purposes
         except Exception as e:
-                logging.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
+            logging.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
     else:
         # Send email to each org owner/admin
         for user in org_users:
