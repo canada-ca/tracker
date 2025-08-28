@@ -4,19 +4,39 @@ import logging
 import copy
 from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
-from dotenv import load_dotenv
 from notify.send_email_notifs import send_email_notifs
 
-load_dotenv()
-
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv("DB_NAME")
-DB_URL = os.getenv("DB_URL")
-START_HOUR = int(os.getenv("DETECT_DECAY_START_HOUR"))  
-START_MINUTE = int(os.getenv("DETECT_DECAY_START_MINUTE"))  
+from config import DB_USER, DB_PASS, DB_NAME, DB_URL, START_HOUR, START_MINUTE, DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+if DRY_RUN_EMAIL_MODE and DRY_RUN_LOG_MODE:
+    logger.error("Both Dry Run Email mode and Dry Run Log mode cannot be enabled at the same time. Please check your environment variables.")
+    sys.exit(1)
+elif DRY_RUN_EMAIL_MODE:
+    logger.info(f"Dry Run Email mode is enabled - emails will only be sent to the tracker service account email")
+elif DRY_RUN_LOG_MODE:
+    logger.info(f"Dry Run Log mode is enabled - no emails will be sent")
+else:
+    logger.info(f"Dry Run modes are disabled - emails will be sent to org owners/admins")
+
+missing_envs = []
+if not DB_USER:
+    missing_envs.append("DB_USER")
+if not DB_PASS:
+    missing_envs.append("DB_PASS")
+if not DB_NAME:
+    missing_envs.append("DB_NAME")
+if not DB_URL:
+    missing_envs.append("DB_URL")
+if not START_HOUR and START_HOUR != 0:
+    missing_envs.append("DETECT_DECAY_START_HOUR")
+if not START_MINUTE and START_MINUTE != 0:
+    missing_envs.append("DETECT_DECAY_START_MINUTE")
+if missing_envs:
+    logger.error(f"Missing required environment variables: {', '.join(missing_envs)}")
+    sys.exit(1)
 
 def ignore_domain(domain):
     return (
@@ -180,9 +200,9 @@ def detect_decay(db):
     # Loop through each org
     for org in db.collection("organizations"):
         if org.get("verified") is False:
-            logging.info(f"Skipping unverified org: {org['orgDetails']['en']['name']}")
+            logger.info(f"Skipping unverified org: {org['orgDetails']['en']['name']}")
             continue
-        logging.info(f"Checking {org['orgDetails']['en']['name']} for decays...")
+        logger.info(f"Checking {org['orgDetails']['en']['name']} for decays...")
         orgs.append(org)
         try:
             domains_dict = {}
@@ -192,7 +212,7 @@ def detect_decay(db):
             # Loop through each domain
             for claim in claims:
                 domain = db.collection("domains").get({"_id": claim["_to"]})
-                logging.info(f"Checking {domain['_id']} for decays...")
+                logger.info(f"Checking {domain['_id']} for decays...")
 
                 # Check that domain isn't archived, blocked, or NXDOMAIN
                 if not ignore_domain(domain):
@@ -240,7 +260,7 @@ def detect_decay(db):
                                 decayed_statuses.append("Curves")
                         
                     except Exception as e: 
-                        logging.error(f"Error fetching web scans for {domain['_id']}: {e}")
+                        logger.error(f"Error fetching web scans for {domain['_id']}: {e}")
 
                     # Get dns scans
                     try:
@@ -254,7 +274,7 @@ def detect_decay(db):
                                 decayed_statuses.append("DKIM")
                     
                     except Exception as e:
-                        logging.error(f"Error fetching dns scans for {domain['_id']}: {e}")
+                        logger.error(f"Error fetching dns scans for {domain['_id']}: {e}")
                         continue
                     
                     # Only add if there are actually decayed statuses
@@ -265,17 +285,17 @@ def detect_decay(db):
                 decays[org["_id"]] = domains_dict
 
         except Exception as e:
-            logging.error(f"Error processing org {org['_id']}: {e}")
+            logger.error(f"Error processing org {org['_id']}: {e}")
 
-    logging.info(f"{decays}")
+    logger.info(f"{decays}")
     decays_copy = copy.deepcopy(decays)
     responses = handle_email_notifs(decays_copy, orgs, db)
     return [decays, responses]
 
 if __name__ == "__main__":
-    logging.info("Detect decay service started")
+    logger.info("Detect decay service started")
     # Establish DB connection
     client = ArangoClient(hosts=DB_URL)
     db = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
     detect_decay(db)
-    logging.info(f"Detect decay service shutting down...")
+    logger.info(f"Detect decay service shutting down...")

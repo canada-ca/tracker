@@ -2,6 +2,7 @@ import logging
 import os
 import json
 from notify.notify_client import notify_client
+from config import DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
 
 
 def send_email_notifs(org, domains, org_users):
@@ -40,11 +41,9 @@ def send_email_notifs(org, domains, org_users):
     domains_fr = custom_format(translate_to_fr(domains))
     responses = []
 
-    dry_run_email_mode = os.getenv("DETECT_DECAY_DRY_RUN_EMAIL_MODE", "false")
-    dry_run_log_mode = os.getenv("DETECT_DECAY_DRY_RUN_LOG_MODE", "false")
     tracker_email = os.getenv("SERVICE_ACCOUNT_EMAIL")
 
-    if dry_run_email_mode == "true":
+    if DRY_RUN_EMAIL_MODE:
         email = tracker_email
         try:
             response = notify_client.send_email_notification(
@@ -67,7 +66,7 @@ def send_email_notifs(org, domains, org_users):
         # Send email to each org owner/admin
         for user in org_users:
             email = user["userName"]
-            if dry_run_log_mode == "true":
+            if DRY_RUN_LOG_MODE:
                 logging.info(f"DRY RUN Enabled: would send email to {email} in {org_name_en} with these decays:\n{json.dumps(domains, indent=2)}")
                 responses.append({})
                 continue
