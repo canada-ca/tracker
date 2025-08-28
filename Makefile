@@ -89,6 +89,11 @@ scan:
 		kubectl delete job domain-dispatcher-manual -n scanners --ignore-not-found &&
 		kubectl create job domain-dispatcher-manual --from=cronjob/domain-dispatcher -n scanners
 
+.PHONY: detect-decay
+detect-decay:
+		kubectl delete job detect-decay-manual -n scanners --ignore-not-found &&
+		kubectl create job detect-decay-manual --from=cronjob/detect-decay -n scanners
+
 .PHONY: scanners
 scanners:
 		kustomize build scanners | kubectl apply -f -

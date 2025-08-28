@@ -40,8 +40,8 @@ def send_email_notifs(org, domains, org_users):
     domains_fr = custom_format(translate_to_fr(domains))
     responses = []
 
-    dry_run_email_mode = os.getenv("DRY_RUN_EMAIL_MODE", "false")
-    dry_run_log_mode = os.getenv("DRY_RUN_LOG_MODE", "false")
+    dry_run_email_mode = os.getenv("DETECT_DECAY_DRY_RUN_EMAIL_MODE", "false")
+    dry_run_log_mode = os.getenv("DETECT_DECAY_DRY_RUN_LOG_MODE", "false")
     tracker_email = os.getenv("SERVICE_ACCOUNT_EMAIL")
 
     if dry_run_email_mode == "true":
@@ -49,7 +49,7 @@ def send_email_notifs(org, domains, org_users):
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
-                template_id=os.getenv("EMAIL_TEMPLATE_ID"),
+                template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
                 personalisation={
                     "org_name_en": org_name_en,
                     "org_name_fr": org_name_fr,
@@ -74,7 +74,7 @@ def send_email_notifs(org, domains, org_users):
             try:
                 response = notify_client.send_email_notification(
                     email_address=email,
-                    template_id=os.getenv("EMAIL_TEMPLATE_ID"),
+                    template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
                     personalisation={
                         "org_name_en": org_name_en,
                         "org_name_fr": org_name_fr,
