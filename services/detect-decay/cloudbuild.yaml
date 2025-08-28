@@ -21,6 +21,7 @@ steps:
       - DB_URL=http://arangodb:8529
       - DB_USER=root
       - DB_PASS=test
+      - DB_NAME=track_dmarc
       - DETECT_DECAY_START_HOUR=$_DETECT_DECAY_START_HOUR
       - DETECT_DECAY_START_MINUTE=$_DETECT_DECAY_START_MINUTE
       - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
