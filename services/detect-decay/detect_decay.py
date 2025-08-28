@@ -13,8 +13,8 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
-START_HOUR = int(os.getenv("START_HOUR"))  
-START_MINUTE = int(os.getenv("START_MINUTE"))  
+START_HOUR = int(os.getenv("DETECT_DECAY_START_HOUR"))  
+START_MINUTE = int(os.getenv("DETECT_DECAY_START_MINUTE"))  
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

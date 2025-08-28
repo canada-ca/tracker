@@ -10,8 +10,8 @@ from detect_decay import *
 DB_URL = os.getenv("DB_URL", "http://localhost:8529")
 DB_USER = os.getenv("DB_USER", "root")
 DB_PASS = os.getenv("DB_PASS", "test")
-START_HOUR = int(os.getenv("START_HOUR"))  
-START_MINUTE = int(os.getenv("START_MINUTE"))
+START_HOUR = int(os.getenv("DETECT_DECAY_START_HOUR"))  
+START_MINUTE = int(os.getenv("DETECT_DECAY_START_MINUTE"))
 
 @pytest.fixture()
 def arango_db():
