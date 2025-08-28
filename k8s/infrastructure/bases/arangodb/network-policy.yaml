@@ -138,6 +138,12 @@ spec:
           podSelector:
             matchLabels:
               job: super-admin
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: detect-decay
   egress:
     # again, talk amongst themselves.
     - to:
