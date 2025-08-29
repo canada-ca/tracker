@@ -1,4 +1,4 @@
-async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
+async function upsertSummary({ arangoCtx, date, sourceLastUpdated, domain, summaryData }) {
   // get current summary info
   const edgeCursor = await arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
@@ -28,8 +28,8 @@ async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
           UPSERT { _key: summary._key }
-            INSERT ${summaryData}
-            UPDATE ${summaryData}
+            INSERT MERGE(${summaryData}, { lastUpdated: DATE_ISO8601(DATE_NOW()), sourceLastUpdated: DATE_ISO8601(${sourceLastUpdated}) } )
+            UPDATE MERGE(${summaryData}, { lastUpdated: DATE_ISO8601(DATE_NOW()), sourceLastUpdated: DATE_ISO8601(${sourceLastUpdated}) } )
             IN dmarcSummaries
           RETURN NEW
       `,
