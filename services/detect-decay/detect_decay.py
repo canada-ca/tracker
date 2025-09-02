@@ -172,7 +172,7 @@ def handle_email_notifs(decays, orgs, db):
     results = []
     for org, domains in decays.items():
         for o in orgs:
-            if o["_id"] == org:
+            if o['orgDetails']['en']['name'] == org:
                 org_doc = o
                 break
         org_users = get_users(org_doc["_id"], db)
@@ -212,7 +212,7 @@ def detect_decay(db):
             # Loop through each domain
             for claim in claims:
                 domain = db.collection("domains").get({"_id": claim["_to"]})
-                logger.info(f"Checking {domain['_id']} for decays...")
+                logger.info(f"Checking {domain['domain']} for decays...")
 
                 # Check that domain isn't archived, blocked, or NXDOMAIN
                 if not ignore_domain(domain):
@@ -260,7 +260,7 @@ def detect_decay(db):
                                 decayed_statuses.append("Curves")
                         
                     except Exception as e: 
-                        logger.error(f"Error fetching web scans for {domain['_id']}: {e}")
+                        logger.error(f"Error fetching web scans for {domain['domain']}: {e}")
 
                     # Get dns scans
                     try:
@@ -274,20 +274,23 @@ def detect_decay(db):
                                 decayed_statuses.append("DKIM")
                     
                     except Exception as e:
-                        logger.error(f"Error fetching dns scans for {domain['_id']}: {e}")
+                        logger.error(f"Error fetching dns scans for {domain['domain']}: {e}")
                         continue
                     
                     # Only add if there are actually decayed statuses
                     if len(decayed_statuses) != 0:
                         domains_dict[domain["domain"]] = decayed_statuses
+                        logger.info(f"Decays detected for {domain['domain']}: {decayed_statuses}")
                         
             if domains_dict:
-                decays[org["_id"]] = domains_dict
+                decays[org['orgDetails']['en']['name']] = domains_dict
 
         except Exception as e:
-            logger.error(f"Error processing org {org['_id']}: {e}")
+            logger.error(f"Error processing org {org['orgDetails']['en']['name']}: {e}")
 
-    logger.info(f"{decays}")
+    logger.info(f"Decay Results: {decays}")
+    logger.info(f"Decay Results Summary: Total Orgs with Decays = {len(decays)}, Total Domains with Decays = {sum(len(domains) for domains in decays.values())}")
+    logger.info(f"Orgs Summary: { {org: len(domains) for org, domains in decays.items()} }")
     decays_copy = copy.deepcopy(decays)
     responses = handle_email_notifs(decays_copy, orgs, db)
     return [decays, responses]
