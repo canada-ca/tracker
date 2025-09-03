@@ -101,11 +101,11 @@ def get_all_web_scans(domain_id, db):
         WITH domains, web, webScan
         FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb 
             SORT webV.timestamp DESC
-            LIMIT @num
             LET scans = (
                 FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
                     FILTER webScanV.status == "complete"
                     RETURN {
+                        "status": webScanV.status,
 			            "https_status": webScanV.results.connectionResults.httpsStatus,
                         "hsts_status": webScanV.results.connectionResults.hstsStatus,
                         "certificate_status": webScanV.results.tlsResult.certificateStatus,
@@ -114,6 +114,8 @@ def get_all_web_scans(domain_id, db):
                         "curve_status": webScanV.results.tlsResult.curveStatus,
 		            }
             )
+            FILTER COUNT(scans) > 0 AND scans[*].status ANY != "complete"
+            LIMIT @num
             RETURN {
                 "web_id": webV._id,
                 "scans": scans
@@ -122,7 +124,6 @@ def get_all_web_scans(domain_id, db):
         bind_vars={"domain_id": domain_id, 
                    "num": len(list(web_scans)) + 1},
     )
-    
     return all_web_scans
 
 # Returns a single status given a list of multiple statuses

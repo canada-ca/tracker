@@ -26,6 +26,7 @@ def send_email_notifs(org, domains, org_users):
         return "\n\n".join(lines)
     
     def translate_to_fr(d):
+        translated_decays = {}
         translations = {
             "HTTPS Configuration": "Configuration HTTPS",
             "HSTS Implementation": "Mis en œuvre de HSTS",
@@ -34,11 +35,10 @@ def send_email_notifs(org, domains, org_users):
             "Ciphers": "Chiffres",
             "Curves": "Courbes",
         }
-        for k, v in d.items():
-            for i, status in enumerate(v):
-                if status in translations:
-                    v[i] = translations[status]
-        return d
+        for domain, statuses in d.items():
+            translated_statuses = [translations.get(status, status) for status in statuses]
+            translated_decays[domain] = translated_statuses
+        return translated_decays
 
     domains_en = custom_format(domains)
     domains_fr = custom_format(translate_to_fr(domains))
