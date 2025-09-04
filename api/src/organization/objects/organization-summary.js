@@ -169,24 +169,12 @@ export const organizationSummaryType = new GraphQLObjectType({
         },
       },
       resolve: async (
-        { organization, negative_tags },
+        { negative_tags },
         args,
-        {
-          userKey,
-          auth: { checkPermission, userRequired, verifiedRequired },
-          loaders: { loadGuidanceTagSummaryConnectionsByTagId },
-        },
+        { auth: { userRequired, verifiedRequired }, loaders: { loadGuidanceTagSummaryConnectionsByTagId } },
       ) => {
         const user = await userRequired()
         verifiedRequired({ user })
-
-        const permission = await checkPermission({ orgId: organization })
-        if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
-          console.error(
-            `User "${userKey}" attempted to access aggregated guidance for organization "${organization}". Permission: ${permission}`,
-          )
-          throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
-        }
 
         const guidanceTags = await loadGuidanceTagSummaryConnectionsByTagId({
           guidanceTags: negative_tags,
