@@ -1,9 +1,8 @@
 import logging
-import os
 import sys
 import json
 from notify.notify_client import notify_client
-from config import DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
+from config import DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE, SERVICE_ACCOUNT_EMAIL, EMAIL_TEMPLATE_ID
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -44,14 +43,14 @@ def send_email_notifs(org, domains, org_users):
     domains_fr = custom_format(translate_to_fr(domains))
     responses = []
 
-    tracker_email = os.getenv("SERVICE_ACCOUNT_EMAIL")
+    tracker_email = SERVICE_ACCOUNT_EMAIL
 
     if DRY_RUN_EMAIL_MODE:
         email = tracker_email
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
-                template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
+                template_id=EMAIL_TEMPLATE_ID,
                 personalisation={
                     "org_name_en": org_name_en,
                     "org_name_fr": org_name_fr,
@@ -76,7 +75,7 @@ def send_email_notifs(org, domains, org_users):
             try:
                 response = notify_client.send_email_notification(
                     email_address=email,
-                    template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
+                    template_id=EMAIL_TEMPLATE_ID,
                     personalisation={
                         "org_name_en": org_name_en,
                         "org_name_fr": org_name_fr,
