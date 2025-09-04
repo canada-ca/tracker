@@ -1,9 +1,11 @@
 import logging
-import os
+import sys
 import json
 from notify.notify_client import notify_client
-from config import DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
+from config import DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE, SERVICE_ACCOUNT_EMAIL, EMAIL_TEMPLATE_ID
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def send_email_notifs(org, domains, org_users):
     org_name_en = org["orgDetails"]["en"]["name"]
@@ -23,6 +25,7 @@ def send_email_notifs(org, domains, org_users):
         return "\n\n".join(lines)
     
     def translate_to_fr(d):
+        translated_decays = {}
         translations = {
             "HTTPS Configuration": "Configuration HTTPS",
             "HSTS Implementation": "Mis en œuvre de HSTS",
@@ -31,24 +34,23 @@ def send_email_notifs(org, domains, org_users):
             "Ciphers": "Chiffres",
             "Curves": "Courbes",
         }
-        for k, v in d.items():
-            for i, status in enumerate(v):
-                if status in translations:
-                    v[i] = translations[status]
-        return d
+        for domain, statuses in d.items():
+            translated_statuses = [translations.get(status, status) for status in statuses]
+            translated_decays[domain] = translated_statuses
+        return translated_decays
 
     domains_en = custom_format(domains)
     domains_fr = custom_format(translate_to_fr(domains))
     responses = []
 
-    tracker_email = os.getenv("SERVICE_ACCOUNT_EMAIL")
+    tracker_email = SERVICE_ACCOUNT_EMAIL
 
     if DRY_RUN_EMAIL_MODE:
         email = tracker_email
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
-                template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
+                template_id=EMAIL_TEMPLATE_ID,
                 personalisation={
                     "org_name_en": org_name_en,
                     "org_name_fr": org_name_fr,
@@ -58,22 +60,22 @@ def send_email_notifs(org, domains, org_users):
                     "domains_fr": domains_fr,
                 },
             )           
-            logging.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
+            logger.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
             responses.append(response) # For testing purposes
         except Exception as e:
-            logging.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
+            logger.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
     else:
         # Send email to each org owner/admin
         for user in org_users:
             email = user["userName"]
             if DRY_RUN_LOG_MODE:
-                logging.info(f"DRY RUN Enabled: would send email to {email} in {org_name_en} with these decays:\n{json.dumps(domains, indent=2)}")
+                logger.info(f"DRY RUN Enabled: would send email to {email} in {org_name_en} with these decays:\n{json.dumps(domains, indent=2)}")
                 responses.append({})
                 continue
             try:
                 response = notify_client.send_email_notification(
                     email_address=email,
-                    template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
+                    template_id=EMAIL_TEMPLATE_ID,
                     personalisation={
                         "org_name_en": org_name_en,
                         "org_name_fr": org_name_fr,
@@ -83,9 +85,9 @@ def send_email_notifs(org, domains, org_users):
                         "domains_fr": domains_fr,
                     },
                 )           
-                logging.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
+                logger.info(f"Email sent to {email} in {org_name_en} with response: {json.dumps(response, indent=2)}")
                 responses.append(response) # For testing purposes
 
             except Exception as e:
-                logging.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
+                logger.error(f"Failed to send email notification to {email} in {org_name_en}: {e}")
     return responses

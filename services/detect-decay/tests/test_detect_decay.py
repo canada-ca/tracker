@@ -1,17 +1,9 @@
 import pytest
 from datetime import datetime, timedelta, timezone
-import os
 from arango import ArangoClient
-from dotenv import load_dotenv
-load_dotenv()
 from detect_decay import *
+from config import DB_URL, DB_USER, DB_PASS, START_HOUR, START_MINUTE
 
-
-DB_URL = os.getenv("DB_URL", "http://localhost:8529")
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASS = os.getenv("DB_PASS", "test")
-START_HOUR = int(os.getenv("DETECT_DECAY_START_HOUR"))  
-START_MINUTE = int(os.getenv("DETECT_DECAY_START_MINUTE"))
 
 @pytest.fixture()
 def arango_db():
@@ -115,8 +107,8 @@ def arango_db():
         {"_from": "organizations/1", "_to": "domains/3", "assetState": "approved"},
         {"_from": "organizations/2", "_to": "domains/4", "assetState": "approved"},
     ]
-    now = datetime.now(timezone.utc).isoformat(timespec='microseconds')
-    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=17, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds')
+    now = datetime.now(timezone.utc).replace(hour=START_HOUR, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds')
+    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=START_HOUR, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds')
     dns = [
         {
             "_id": "dns/11",
@@ -643,15 +635,15 @@ def test_detect_decay(arango_db):
     decays = output[0]
 
     assert len(decays.keys()) == 1, "Should return 1 org"
-    assert len(decays["organizations/1"].keys()) == 2, "Should return 2 domains with decays for org 1"
-    assert "domain1.gc.ca" in decays["organizations/1"]
-    assert "domain2.gc.ca" in decays["organizations/1"]
-    assert len(decays["organizations/1"]["domain1.gc.ca"]) == 2, "Should return 2 decays for domain1.gc.ca"
-    assert "Certificates" in decays["organizations/1"]["domain1.gc.ca"]
-    assert "DMARC" in decays["organizations/1"]["domain1.gc.ca"]
-    assert len(decays["organizations/1"]["domain2.gc.ca"]) == 2, "Should return 2 decays for domain2.gc.ca"
-    assert "HTTPS Configuration" in decays["organizations/1"]["domain2.gc.ca"]
-    assert "SPF" in decays["organizations/1"]["domain2.gc.ca"]
+    assert len(decays["Org 1"].keys()) == 2, "Should return 2 domains with decays for org 1"
+    assert "domain1.gc.ca" in decays["Org 1"]
+    assert "domain2.gc.ca" in decays["Org 1"]
+    assert len(decays["Org 1"]["domain1.gc.ca"]) == 2, "Should return 2 decays for domain1.gc.ca"
+    assert "Certificates" in decays["Org 1"]["domain1.gc.ca"]
+    assert "DMARC" in decays["Org 1"]["domain1.gc.ca"]
+    assert len(decays["Org 1"]["domain2.gc.ca"]) == 2, "Should return 2 decays for domain2.gc.ca"
+    assert "HTTPS Configuration" in decays["Org 1"]["domain2.gc.ca"]
+    assert "SPF" in decays["Org 1"]["domain2.gc.ca"]
     
     # Test that send_email_notifs returns 2 responses for org 1 owner and admin
     responses = output[1]
