@@ -95,7 +95,6 @@ def get_all_web_scans(domain_id, db):
         bind_vars={"domain_id": domain_id, 
                    "one_day_ago": one_day_ago},
     )
-    #num_web_scans = len(list(web_scans))
     all_web_scans = db.aql.execute(
         """
         WITH domains, web, webScan
@@ -124,7 +123,6 @@ def get_all_web_scans(domain_id, db):
         bind_vars={"domain_id": domain_id, 
                    "num": len(list(web_scans)) + 1},
     )
-    #print(num_web_scans)
     return all_web_scans
 
 # Returns a single status given a list of multiple statuses
