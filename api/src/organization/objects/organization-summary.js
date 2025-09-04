@@ -2,7 +2,6 @@ import { GraphQLObjectType } from 'graphql'
 
 import { categorizedSummaryType } from '../../summaries'
 import { GraphQLDate } from 'graphql-scalars'
-import { t } from '@lingui/macro'
 import { guidanceTagOrder, guidanceTagConnection } from '../../guidance-tag'
 
 const calculatePercentage = (numerator, denominator) => {
