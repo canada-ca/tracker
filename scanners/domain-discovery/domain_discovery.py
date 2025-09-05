@@ -93,7 +93,7 @@ def process_subdomains(results, orgId):
                     {
                         "_from": orgId,
                         "_to": domainInsert["_id"],
-                        "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
+                        "tags": ['new-nouveau'],
                     }
                 )
             except Exception as e:

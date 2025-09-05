@@ -23,7 +23,7 @@ const untagNewDomainsService = async ({ query, log }) => {
         WITH claims
         FOR c IN claims
           FILTER c._key IN ${oldClaimKeys}
-          UPDATE c WITH { tags: REMOVE_VALUE(c.tags, { en: "NEW", fr: "NOUVEAU" }) } IN claims
+          UPDATE c WITH { tags: REMOVE_VALUE(c.tags, 'new-nouveau') } IN claims
       `
   } catch (err) {
     console.error(`Error while untagging new claims, error: ${err})`)

@@ -118,10 +118,10 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     const tags = []
     if (tagNewDomains) {
-      tags.push({ en: 'NEW', fr: 'NOUVEAU' })
+      tags.push('new-nouveau')
     }
     if (tagStagingDomains) {
-      tags.push({ en: 'STAGING', fr: 'DÉV' })
+      tags.push('staging-dév')
     }
 
     const updatedProperties = []

@@ -153,7 +153,7 @@ async def main():
         insert_claim = {
             "_from": org_id,
             "_to": domain_id,
-            "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
+            "tags": ['new-nouveau'],
             "firstSeen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
                 :-3
             ]
@@ -185,7 +185,7 @@ async def main():
                     {
                         "name": "tags",
                         "oldValue": [],
-                        "newValue": [{"en": "NEW", "fr": "NOUVEAU"}],
+                        "newValue": ['new-nouveau'],
                     }
                 ],
                 "organization": {"id": org_key},
