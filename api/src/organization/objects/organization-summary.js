@@ -170,10 +170,15 @@ export const organizationSummaryType = new GraphQLObjectType({
       resolve: async (
         { negative_tags },
         args,
-        { auth: { userRequired, verifiedRequired }, loaders: { loadGuidanceTagSummaryConnectionsByTagId } },
+        {
+          auth: { loginRequiredBool, userRequired, verifiedRequired },
+          loaders: { loadGuidanceTagSummaryConnectionsByTagId },
+        },
       ) => {
-        const user = await userRequired()
-        verifiedRequired({ user })
+        if (loginRequiredBool) {
+          const user = await userRequired()
+          verifiedRequired({ user })
+        }
 
         const guidanceTags = await loadGuidanceTagSummaryConnectionsByTagId({
           guidanceTags: negative_tags,
