@@ -145,7 +145,7 @@ export default function DomainsPage() {
     return (
       <Flex>
         <ExportButton
-          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+          fileName={`Tracker_all_domains_${new Date().toLocaleDateString('en-CA')}`}
           dataFunction={async () => {
             toast({
               title: t`Getting domain statuses`,
