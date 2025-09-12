@@ -104,7 +104,7 @@ export const organizationType = new GraphQLObjectType({
           ...args,
         })
 
-        console.info(`User: ${userKey} successfully retrieved their org's tags.`)
+        console.debug(`User: ${userKey} successfully retrieved their org's tags.`)
 
         return orgTags
       },
