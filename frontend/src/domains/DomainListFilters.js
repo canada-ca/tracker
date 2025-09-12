@@ -38,7 +38,7 @@ export function DomainListFilters({
       case 'ASSET_STATE':
         return mapFilters(assetStateOptions)
       case 'GUIDANCE_TAG':
-        return mapFilters(guidanceTagOptions)
+        return mapFilters(guidanceTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [])
       default:
         return (
           <>
