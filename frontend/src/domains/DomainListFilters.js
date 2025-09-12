@@ -34,7 +34,7 @@ export function DomainListFilters({
     }
     switch (values.filterCategory) {
       case 'TAGS':
-        return mapFilters(filterTagOptions)
+        return mapFilters(filterTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [])
       case 'ASSET_STATE':
         return mapFilters(assetStateOptions)
       case 'GUIDANCE_TAG':
