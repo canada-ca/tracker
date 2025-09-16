@@ -2,6 +2,7 @@ import subprocess
 import logging
 import os
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from arango import ArangoClient
 from dotenv import load_dotenv
@@ -94,6 +95,11 @@ def process_subdomains(results, orgId):
                         "_from": orgId,
                         "_to": domainInsert["_id"],
                         "tags": ['new-nouveau'],
+                        "assetState": "approved",
+                        "firstSeen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
+                :-3
+            ]
+            + "Z",
                     }
                 )
             except Exception as e:
