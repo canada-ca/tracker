@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 import { bulkModifyDomainsUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import { AssetStateEnums } from '../../enums'
 
 export const addOrganizationsDomains = new mutationWithClientMutationId({
   name: 'AddOrganizationsDomains',
@@ -25,6 +26,10 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     tagStagingDomains: {
       type: GraphQLBoolean,
       description: 'New domains will be tagged with STAGING.',
+    },
+    assetState: {
+      type: AssetStateEnums,
+      description: "State each new domain will be given to define its relation to the org's attack surface",
     },
     audit: {
       type: GraphQLBoolean,
@@ -82,6 +87,8 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     } else {
       tagStagingDomains = false
     }
+
+    const assetState = cleanseInput(args.assetState) || 'approved'
 
     let audit
     if (typeof args.audit !== 'undefined') {
@@ -233,6 +240,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${insertedDomain._id},
               tags: ${tags},
+              assetState: ${assetState},
             } INTO claims
           `,
           )
