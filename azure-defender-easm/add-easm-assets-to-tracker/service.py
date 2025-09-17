@@ -154,6 +154,7 @@ async def main():
             "_from": org_id,
             "_to": domain_id,
             "tags": ['new-nouveau'],
+            "assetState": "approved",
             "firstSeen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
                 :-3
             ]
