@@ -88,33 +88,42 @@ export function EditableEmailUpdateOptions({ emailUpdateOptions, ...props }) {
       </Heading>
 
       <Flex align="center" borderWidth="1px" borderColor="gray.500" rounded="md" p="1">
-        {emailUpdateOptions.orgFootprint ? (
-          <RadioCheckedIcon boxSize="icons.lg" mr="2" />
-        ) : (
-          <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
-        )}
-        <Badge variant="outline" color="gray.900" p="1" mr="4">
-          <Trans>Recent Activity</Trans>
-        </Badge>
+        <Flex wrap="wrap" gap="0.5rem">
+          <Box as="span">
+            {emailUpdateOptions.orgFootprint ? (
+              <RadioCheckedIcon boxSize="icons.lg" mr="2" />
+            ) : (
+              <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
+            )}
+            <Badge variant="outline" color="gray.900" p="1" mr="4">
+              <Trans>Recent Activity</Trans>
+            </Badge>
+          </Box>
 
-        {emailUpdateOptions.progressReport ? (
-          <RadioCheckedIcon boxSize="icons.lg" mr="2" />
-        ) : (
-          <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
-        )}
-        <Badge variant="outline" color="gray.900" p="1">
-          <Trans>Progress Report</Trans>
-        </Badge>
+          <Box as="span">
+            {emailUpdateOptions.progressReport ? (
+              <RadioCheckedIcon boxSize="icons.lg" mr="2" />
+            ) : (
+              <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
+            )}
+            <Badge variant="outline" color="gray.900" p="1" mr="4">
+              <Trans>Progress Report</Trans>
+            </Badge>
+          </Box>
 
-        {emailUpdateOptions.detectDecay ? (
-          <RadioCheckedIcon boxSize="icons.lg" mr="2" />
-        ) : (
-          <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
-        )}
-        <Badge variant="outline" color="gray.900" p="1" mr="4">
-          <Trans>Decay Detection</Trans>
-        </Badge>
-        <Button variant="primary" ml="auto" onClick={onOpen} fontSize="sm" px="3">
+          <Box as="span">
+            {emailUpdateOptions.detectDecay ? (
+              <RadioCheckedIcon boxSize="icons.lg" mr="2" />
+            ) : (
+              <RadioUncheckedIcon boxSize="icons.lg" mr="2" />
+            )}
+            <Badge variant="outline" color="gray.900" p="1" mr="4">
+              <Trans>Decay Detection</Trans>
+            </Badge>
+          </Box>
+        </Flex>
+
+        <Button variant="primary" ml="auto" onClick={onOpen} fontSize="sm" px="3" flexShrink={0}>
           <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
