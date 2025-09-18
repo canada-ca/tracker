@@ -175,7 +175,7 @@ export default function DomainsPage() {
           mr="2"
         />
         <ExportButton
-          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString()}`}
+          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString('en-CA')}`}
           dataFunction={async () => {
             toast({
               title: t`Getting top 25 report`,
