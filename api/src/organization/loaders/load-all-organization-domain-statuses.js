@@ -124,17 +124,16 @@ export const loadAllOrganizationDomainStatuses =
                       RETURN vuln.Cve
                 )
             )[0]
-            LET verifiedOrg = (
+            LET verifiedOrgs = (
               FOR v,e IN 1..1 INBOUND d._id claims
                 FILTER v.verified == true
-                LIMIT 1
-                RETURN MERGE({ externalId: v.externalId }, TRANSLATE(${language}, v.orgDetails))
-            )[0]
+                RETURN MERGE({ externalId: v.externalId || null }, TRANSLATE(${language}, v.orgDetails))
+            )
             RETURN {
               "domain": d.domain,
-              "orgName": verifiedOrg.name,
-              "orgAcronym": verifiedOrg.acronym,
-              "orgExternalID": verifiedOrg.externalId,
+              "orgNames": verifiedOrgs[*].name,
+              "orgAcronyms": verifiedOrgs[*].acronym,
+              "orgExternalIDs": verifiedOrgs[*].externalId,
               "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,
