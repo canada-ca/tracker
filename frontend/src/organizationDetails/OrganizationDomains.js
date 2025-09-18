@@ -212,7 +212,7 @@ export function OrganizationDomains({
           ml="auto"
           my="2"
           mt={{ base: '4', md: 0 }}
-          fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+          fileName={`${orgName}_${new Date().toLocaleDateString('en-CA')}_Tracker`}
           dataFunction={async () => {
             const result = await getOrgDomainStatuses()
             return result.data?.findOrganizationBySlug?.toCsv
