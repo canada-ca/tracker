@@ -87,6 +87,7 @@ export function OrganizationDomains({
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
       variables: { orgSlug, filters },
+      fetchPolicy: 'no-cache',
     },
   )
 
