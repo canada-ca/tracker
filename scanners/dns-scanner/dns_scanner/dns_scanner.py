@@ -141,6 +141,7 @@ def scan_domain(domain, dkim_selectors=None):
         elif rtype == "NXDOMAIN":
             scan_result.rcode = rtype
             scan_result.record_exists = False
+            dns_answer_return_types.append(rtype)
         elif rtype == "SERVFAIL":
             dns_answer_return_types.append(rtype)
         else:
