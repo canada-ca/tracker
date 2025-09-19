@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: authorizationpolicies.security.istio.io
 spec:
   group: security.istio.io
@@ -116,6 +116,13 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              notServiceAccounts:
+                                description: Optional.
+                                items:
+                                  maxLength: 320
+                                  type: string
+                                maxItems: 16
+                                type: array
                               principals:
                                 description: Optional.
                                 items:
@@ -131,8 +138,22 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              serviceAccounts:
+                                description: Optional.
+                                items:
+                                  maxLength: 320
+                                  type: string
+                                maxItems: 16
+                                type: array
                             type: object
+                            x-kubernetes-validations:
+                            - message: Cannot set serviceAccounts with namespaces
+                                or principals
+                              rule: |-
+                                (has(self.serviceAccounts) || has(self.notServiceAccounts)) ? (!has(self.principals) &&
+                                !has(self.notPrincipals) && !has(self.namespaces) && !has(self.notNamespaces)) : true
                         type: object
+                      maxItems: 512
                       type: array
                     to:
                       description: Optional.
@@ -206,6 +227,7 @@ spec:
                         type: object
                       type: array
                   type: object
+                maxItems: 512
                 type: array
               selector:
                 description: Optional.
@@ -216,14 +238,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -255,11 +277,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -290,17 +307,13 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -320,6 +333,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -336,8 +355,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -469,6 +486,13 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              notServiceAccounts:
+                                description: Optional.
+                                items:
+                                  maxLength: 320
+                                  type: string
+                                maxItems: 16
+                                type: array
                               principals:
                                 description: Optional.
                                 items:
@@ -484,8 +508,22 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              serviceAccounts:
+                                description: Optional.
+                                items:
+                                  maxLength: 320
+                                  type: string
+                                maxItems: 16
+                                type: array
                             type: object
+                            x-kubernetes-validations:
+                            - message: Cannot set serviceAccounts with namespaces
+                                or principals
+                              rule: |-
+                                (has(self.serviceAccounts) || has(self.notServiceAccounts)) ? (!has(self.principals) &&
+                                !has(self.notPrincipals) && !has(self.namespaces) && !has(self.notNamespaces)) : true
                         type: object
+                      maxItems: 512
                       type: array
                     to:
                       description: Optional.
@@ -559,6 +597,7 @@ spec:
                         type: object
                       type: array
                   type: object
+                maxItems: 512
                 type: array
               selector:
                 description: Optional.
@@ -569,14 +608,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -608,11 +647,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -643,17 +677,13 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -673,6 +703,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -689,8 +725,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -741,8 +775,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: destinationrules.networking.istio.io
 spec:
   group: networking.istio.io
@@ -874,10 +908,6 @@ spec:
                                 idleTimeout:
                                   description: The idle timeout for TCP connections.
                                   type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid duration greater than
-                                      1ms
-                                    rule: duration(self) >= duration('1ms')
                                 maxConnectionDuration:
                                   description: The maximum duration of a connection.
                                   type: string
@@ -1039,9 +1069,7 @@ spec:
                                     type: object
                                   type: array
                                 enabled:
-                                  description: enable locality load balancing, this
-                                    is DestinationRule-level and will override mesh
-                                    wide settings in entirety.
+                                  description: Enable locality load balancing.
                                   nullable: true
                                   type: boolean
                                 failover:
@@ -1159,7 +1187,7 @@ spec:
                             minHealthPercent:
                               description: Outlier detection will be enabled as long
                                 as the associated load balancing pool has at least
-                                min_health_percent hosts in healthy mode.
+                                `minHealthPercent` hosts in healthy mode.
                               format: int32
                               type: integer
                             splitExternalLocalOriginErrors:
@@ -1242,10 +1270,6 @@ spec:
                                       idleTimeout:
                                         description: The idle timeout for TCP connections.
                                         type: string
-                                        x-kubernetes-validations:
-                                        - message: must be a valid duration greater
-                                            than 1ms
-                                          rule: duration(self) >= duration('1ms')
                                       maxConnectionDuration:
                                         description: The maximum duration of a connection.
                                         type: string
@@ -1411,9 +1435,7 @@ spec:
                                           type: object
                                         type: array
                                       enabled:
-                                        description: enable locality load balancing,
-                                          this is DestinationRule-level and will override
-                                          mesh wide settings in entirety.
+                                        description: Enable locality load balancing.
                                         nullable: true
                                         type: boolean
                                       failover:
@@ -1535,7 +1557,7 @@ spec:
                                   minHealthPercent:
                                     description: Outlier detection will be enabled
                                       as long as the associated load balancing pool
-                                      has at least min_health_percent hosts in healthy
+                                      has at least `minHealthPercent` hosts in healthy
                                       mode.
                                     format: int32
                                     type: integer
@@ -1772,9 +1794,6 @@ spec:
                           idleTimeout:
                             description: The idle timeout for TCP connections.
                             type: string
-                            x-kubernetes-validations:
-                            - message: must be a valid duration greater than 1ms
-                              rule: duration(self) >= duration('1ms')
                           maxConnectionDuration:
                             description: The maximum duration of a connection.
                             type: string
@@ -1932,8 +1951,7 @@ spec:
                               type: object
                             type: array
                           enabled:
-                            description: enable locality load balancing, this is DestinationRule-level
-                              and will override mesh wide settings in entirety.
+                            description: Enable locality load balancing.
                             nullable: true
                             type: boolean
                           failover:
@@ -2047,7 +2065,7 @@ spec:
                         type: integer
                       minHealthPercent:
                         description: Outlier detection will be enabled as long as
-                          the associated load balancing pool has at least min_health_percent
+                          the associated load balancing pool has at least `minHealthPercent`
                           hosts in healthy mode.
                         format: int32
                         type: integer
@@ -2129,10 +2147,6 @@ spec:
                                 idleTimeout:
                                   description: The idle timeout for TCP connections.
                                   type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid duration greater than
-                                      1ms
-                                    rule: duration(self) >= duration('1ms')
                                 maxConnectionDuration:
                                   description: The maximum duration of a connection.
                                   type: string
@@ -2294,9 +2308,7 @@ spec:
                                     type: object
                                   type: array
                                 enabled:
-                                  description: enable locality load balancing, this
-                                    is DestinationRule-level and will override mesh
-                                    wide settings in entirety.
+                                  description: Enable locality load balancing.
                                   nullable: true
                                   type: boolean
                                 failover:
@@ -2414,7 +2426,7 @@ spec:
                             minHealthPercent:
                               description: Outlier detection will be enabled as long
                                 as the associated load balancing pool has at least
-                                min_health_percent hosts in healthy mode.
+                                `minHealthPercent` hosts in healthy mode.
                               format: int32
                               type: integer
                             splitExternalLocalOriginErrors:
@@ -2585,14 +2597,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -2618,6 +2630,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -2634,8 +2652,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -2791,10 +2807,6 @@ spec:
                                 idleTimeout:
                                   description: The idle timeout for TCP connections.
                                   type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid duration greater than
-                                      1ms
-                                    rule: duration(self) >= duration('1ms')
                                 maxConnectionDuration:
                                   description: The maximum duration of a connection.
                                   type: string
@@ -2956,9 +2968,7 @@ spec:
                                     type: object
                                   type: array
                                 enabled:
-                                  description: enable locality load balancing, this
-                                    is DestinationRule-level and will override mesh
-                                    wide settings in entirety.
+                                  description: Enable locality load balancing.
                                   nullable: true
                                   type: boolean
                                 failover:
@@ -3076,7 +3086,7 @@ spec:
                             minHealthPercent:
                               description: Outlier detection will be enabled as long
                                 as the associated load balancing pool has at least
-                                min_health_percent hosts in healthy mode.
+                                `minHealthPercent` hosts in healthy mode.
                               format: int32
                               type: integer
                             splitExternalLocalOriginErrors:
@@ -3159,10 +3169,6 @@ spec:
                                       idleTimeout:
                                         description: The idle timeout for TCP connections.
                                         type: string
-                                        x-kubernetes-validations:
-                                        - message: must be a valid duration greater
-                                            than 1ms
-                                          rule: duration(self) >= duration('1ms')
                                       maxConnectionDuration:
                                         description: The maximum duration of a connection.
                                         type: string
@@ -3328,9 +3334,7 @@ spec:
                                           type: object
                                         type: array
                                       enabled:
-                                        description: enable locality load balancing,
-                                          this is DestinationRule-level and will override
-                                          mesh wide settings in entirety.
+                                        description: Enable locality load balancing.
                                         nullable: true
                                         type: boolean
                                       failover:
@@ -3452,7 +3456,7 @@ spec:
                                   minHealthPercent:
                                     description: Outlier detection will be enabled
                                       as long as the associated load balancing pool
-                                      has at least min_health_percent hosts in healthy
+                                      has at least `minHealthPercent` hosts in healthy
                                       mode.
                                     format: int32
                                     type: integer
@@ -3689,9 +3693,6 @@ spec:
                           idleTimeout:
                             description: The idle timeout for TCP connections.
                             type: string
-                            x-kubernetes-validations:
-                            - message: must be a valid duration greater than 1ms
-                              rule: duration(self) >= duration('1ms')
                           maxConnectionDuration:
                             description: The maximum duration of a connection.
                             type: string
@@ -3849,8 +3850,7 @@ spec:
                               type: object
                             type: array
                           enabled:
-                            description: enable locality load balancing, this is DestinationRule-level
-                              and will override mesh wide settings in entirety.
+                            description: Enable locality load balancing.
                             nullable: true
                             type: boolean
                           failover:
@@ -3964,7 +3964,7 @@ spec:
                         type: integer
                       minHealthPercent:
                         description: Outlier detection will be enabled as long as
-                          the associated load balancing pool has at least min_health_percent
+                          the associated load balancing pool has at least `minHealthPercent`
                           hosts in healthy mode.
                         format: int32
                         type: integer
@@ -4046,10 +4046,6 @@ spec:
                                 idleTimeout:
                                   description: The idle timeout for TCP connections.
                                   type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid duration greater than
-                                      1ms
-                                    rule: duration(self) >= duration('1ms')
                                 maxConnectionDuration:
                                   description: The maximum duration of a connection.
                                   type: string
@@ -4211,9 +4207,7 @@ spec:
                                     type: object
                                   type: array
                                 enabled:
-                                  description: enable locality load balancing, this
-                                    is DestinationRule-level and will override mesh
-                                    wide settings in entirety.
+                                  description: Enable locality load balancing.
                                   nullable: true
                                   type: boolean
                                 failover:
@@ -4331,7 +4325,7 @@ spec:
                             minHealthPercent:
                               description: Outlier detection will be enabled as long
                                 as the associated load balancing pool has at least
-                                min_health_percent hosts in healthy mode.
+                                `minHealthPercent` hosts in healthy mode.
                               format: int32
                               type: integer
                             splitExternalLocalOriginErrors:
@@ -4502,14 +4496,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -4535,6 +4529,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -4551,8 +4551,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -4708,10 +4706,6 @@ spec:
                                 idleTimeout:
                                   description: The idle timeout for TCP connections.
                                   type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid duration greater than
-                                      1ms
-                                    rule: duration(self) >= duration('1ms')
                                 maxConnectionDuration:
                                   description: The maximum duration of a connection.
                                   type: string
@@ -4873,9 +4867,7 @@ spec:
                                     type: object
                                   type: array
                                 enabled:
-                                  description: enable locality load balancing, this
-                                    is DestinationRule-level and will override mesh
-                                    wide settings in entirety.
+                                  description: Enable locality load balancing.
                                   nullable: true
                                   type: boolean
                                 failover:
@@ -4993,7 +4985,7 @@ spec:
                             minHealthPercent:
                               description: Outlier detection will be enabled as long
                                 as the associated load balancing pool has at least
-                                min_health_percent hosts in healthy mode.
+                                `minHealthPercent` hosts in healthy mode.
                               format: int32
                               type: integer
                             splitExternalLocalOriginErrors:
@@ -5076,10 +5068,6 @@ spec:
                                       idleTimeout:
                                         description: The idle timeout for TCP connections.
                                         type: string
-                                        x-kubernetes-validations:
-                                        - message: must be a valid duration greater
-                                            than 1ms
-                                          rule: duration(self) >= duration('1ms')
                                       maxConnectionDuration:
                                         description: The maximum duration of a connection.
                                         type: string
@@ -5245,9 +5233,7 @@ spec:
                                           type: object
                                         type: array
                                       enabled:
-                                        description: enable locality load balancing,
-                                          this is DestinationRule-level and will override
-                                          mesh wide settings in entirety.
+                                        description: Enable locality load balancing.
                                         nullable: true
                                         type: boolean
                                       failover:
@@ -5369,7 +5355,7 @@ spec:
                                   minHealthPercent:
                                     description: Outlier detection will be enabled
                                       as long as the associated load balancing pool
-                                      has at least min_health_percent hosts in healthy
+                                      has at least `minHealthPercent` hosts in healthy
                                       mode.
                                     format: int32
                                     type: integer
@@ -5606,9 +5592,6 @@ spec:
                           idleTimeout:
                             description: The idle timeout for TCP connections.
                             type: string
-                            x-kubernetes-validations:
-                            - message: must be a valid duration greater than 1ms
-                              rule: duration(self) >= duration('1ms')
                           maxConnectionDuration:
                             description: The maximum duration of a connection.
                             type: string
@@ -5766,8 +5749,7 @@ spec:
                               type: object
                             type: array
                           enabled:
-                            description: enable locality load balancing, this is DestinationRule-level
-                              and will override mesh wide settings in entirety.
+                            description: Enable locality load balancing.
                             nullable: true
                             type: boolean
                           failover:
@@ -5881,7 +5863,7 @@ spec:
                         type: integer
                       minHealthPercent:
                         description: Outlier detection will be enabled as long as
-                          the associated load balancing pool has at least min_health_percent
+                          the associated load balancing pool has at least `minHealthPercent`
                           hosts in healthy mode.
                         format: int32
                         type: integer
@@ -5963,10 +5945,6 @@ spec:
                                 idleTimeout:
                                   description: The idle timeout for TCP connections.
                                   type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid duration greater than
-                                      1ms
-                                    rule: duration(self) >= duration('1ms')
                                 maxConnectionDuration:
                                   description: The maximum duration of a connection.
                                   type: string
@@ -6128,9 +6106,7 @@ spec:
                                     type: object
                                   type: array
                                 enabled:
-                                  description: enable locality load balancing, this
-                                    is DestinationRule-level and will override mesh
-                                    wide settings in entirety.
+                                  description: Enable locality load balancing.
                                   nullable: true
                                   type: boolean
                                 failover:
@@ -6248,7 +6224,7 @@ spec:
                             minHealthPercent:
                               description: Outlier detection will be enabled as long
                                 as the associated load balancing pool has at least
-                                min_health_percent hosts in healthy mode.
+                                `minHealthPercent` hosts in healthy mode.
                               format: int32
                               type: integer
                             splitExternalLocalOriginErrors:
@@ -6419,14 +6395,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -6452,6 +6428,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -6468,8 +6450,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -6520,8 +6500,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: envoyfilters.networking.istio.io
 spec:
   group: networking.istio.io
@@ -6679,7 +6659,7 @@ spec:
                               additionalProperties:
                                 type: string
                               description: Match on the node metadata supplied by
-                                a proxy when connecting to Istio Pilot.
+                                a proxy when connecting to istiod.
                               type: object
                             proxyVersion:
                               description: A regular expression in golang regex format
@@ -6711,6 +6691,9 @@ spec:
                               description: Match a specific virtual host in a route
                                 configuration and apply the patch to the virtual host.
                               properties:
+                                domainName:
+                                  description: Match a domain name in a virtual host.
+                                  type: string
                                 name:
                                   description: The VirtualHosts objects generated
                                     by Istio are named as host:port, where the host
@@ -6812,11 +6795,6 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
               workloadSelector:
@@ -6829,7 +6807,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -6838,7 +6816,8 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or workloadSelector can be set
-              rule: (has(self.workloadSelector)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.workloadSelector) ? 1 : 0) + (has(self.targetRefs)
+                ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -6858,6 +6837,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -6874,8 +6859,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -6926,8 +6909,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: gateways.networking.istio.io
 spec:
   group: networking.istio.io
@@ -7023,6 +7006,13 @@ spec:
                             of the secret that holds the TLS certs including the CA
                             certificates.
                           type: string
+                        credentialNames:
+                          description: Same as CredentialName but for multiple certificates.
+                          items:
+                            type: string
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         httpsRedirect:
                           description: If set to true, the load balancer will send
                             a 301 redirect for all http connections, asking the clients
@@ -7077,6 +7067,25 @@ spec:
                           items:
                             type: string
                           type: array
+                        tlsCertificates:
+                          description: Only one of `server_certificate`, `private_key`,
+                            `ca_certificates` or `credential_name` or `credential_names`
+                            or `tls_certificates` should be specified.
+                          items:
+                            properties:
+                              caCertificates:
+                                description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
+                                type: string
+                              privateKey:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                              serverCertificate:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                            type: object
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         verifyCertificateHash:
                           description: An optional list of hex-encoded SHA-256 hashes
                             of the authorized client certificates.
@@ -7090,6 +7099,19 @@ spec:
                             type: string
                           type: array
                       type: object
+                      x-kubernetes-validations:
+                      - message: only one of credentialNames or tlsCertificates can
+                          be set
+                        rule: '(has(self.tlsCertificates) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or credentialNames can
+                          be set
+                        rule: '(has(self.credentialName) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or tlsCertificates can
+                          be set
+                        rule: '(has(self.credentialNames) ? 1 : 0) + (has(self.tlsCertificates)
+                          ? 1 : 0) <= 1'
                   required:
                   - port
                   - hosts
@@ -7115,6 +7137,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -7131,8 +7159,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -7252,6 +7278,13 @@ spec:
                             of the secret that holds the TLS certs including the CA
                             certificates.
                           type: string
+                        credentialNames:
+                          description: Same as CredentialName but for multiple certificates.
+                          items:
+                            type: string
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         httpsRedirect:
                           description: If set to true, the load balancer will send
                             a 301 redirect for all http connections, asking the clients
@@ -7306,6 +7339,25 @@ spec:
                           items:
                             type: string
                           type: array
+                        tlsCertificates:
+                          description: Only one of `server_certificate`, `private_key`,
+                            `ca_certificates` or `credential_name` or `credential_names`
+                            or `tls_certificates` should be specified.
+                          items:
+                            properties:
+                              caCertificates:
+                                description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
+                                type: string
+                              privateKey:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                              serverCertificate:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                            type: object
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         verifyCertificateHash:
                           description: An optional list of hex-encoded SHA-256 hashes
                             of the authorized client certificates.
@@ -7319,6 +7371,19 @@ spec:
                             type: string
                           type: array
                       type: object
+                      x-kubernetes-validations:
+                      - message: only one of credentialNames or tlsCertificates can
+                          be set
+                        rule: '(has(self.tlsCertificates) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or credentialNames can
+                          be set
+                        rule: '(has(self.credentialName) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or tlsCertificates can
+                          be set
+                        rule: '(has(self.credentialNames) ? 1 : 0) + (has(self.tlsCertificates)
+                          ? 1 : 0) <= 1'
                   required:
                   - port
                   - hosts
@@ -7344,6 +7409,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -7360,8 +7431,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -7481,6 +7550,13 @@ spec:
                             of the secret that holds the TLS certs including the CA
                             certificates.
                           type: string
+                        credentialNames:
+                          description: Same as CredentialName but for multiple certificates.
+                          items:
+                            type: string
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         httpsRedirect:
                           description: If set to true, the load balancer will send
                             a 301 redirect for all http connections, asking the clients
@@ -7535,6 +7611,25 @@ spec:
                           items:
                             type: string
                           type: array
+                        tlsCertificates:
+                          description: Only one of `server_certificate`, `private_key`,
+                            `ca_certificates` or `credential_name` or `credential_names`
+                            or `tls_certificates` should be specified.
+                          items:
+                            properties:
+                              caCertificates:
+                                description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
+                                type: string
+                              privateKey:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                              serverCertificate:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                            type: object
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         verifyCertificateHash:
                           description: An optional list of hex-encoded SHA-256 hashes
                             of the authorized client certificates.
@@ -7548,6 +7643,19 @@ spec:
                             type: string
                           type: array
                       type: object
+                      x-kubernetes-validations:
+                      - message: only one of credentialNames or tlsCertificates can
+                          be set
+                        rule: '(has(self.tlsCertificates) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or credentialNames can
+                          be set
+                        rule: '(has(self.credentialName) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or tlsCertificates can
+                          be set
+                        rule: '(has(self.credentialNames) ? 1 : 0) + (has(self.tlsCertificates)
+                          ? 1 : 0) <= 1'
                   required:
                   - port
                   - hosts
@@ -7573,6 +7681,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -7589,8 +7703,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -7641,8 +7753,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: peerauthentications.security.istio.io
 spec:
   group: security.istio.io
@@ -7725,22 +7837,22 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
             type: object
             x-kubernetes-validations:
             - message: portLevelMtls requires selector
-              rule: (has(self.selector) && has(self.selector.matchLabels) && self.selector.matchLabels.size()
-                > 0) || !has(self.portLevelMtls)
+              rule: 'has(self.portLevelMtls) ? (((has(self.selector) && has(self.selector.matchLabels))
+                ? self.selector.matchLabels : {}).size() > 0) : true'
           status:
             properties:
               conditions:
@@ -7760,6 +7872,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -7776,8 +7894,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -7884,22 +8000,22 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
             type: object
             x-kubernetes-validations:
             - message: portLevelMtls requires selector
-              rule: (has(self.selector) && has(self.selector.matchLabels) && self.selector.matchLabels.size()
-                > 0) || !has(self.portLevelMtls)
+              rule: 'has(self.portLevelMtls) ? (((has(self.selector) && has(self.selector.matchLabels))
+                ? self.selector.matchLabels : {}).size() > 0) : true'
           status:
             properties:
               conditions:
@@ -7919,6 +8035,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -7935,8 +8057,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -7987,8 +8107,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: proxyconfigs.networking.istio.io
 spec:
   group: networking.istio.io
@@ -8038,14 +8158,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -8069,6 +8189,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -8085,8 +8211,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -8137,8 +8261,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: requestauthentications.security.istio.io
 spec:
   group: security.istio.io
@@ -8222,7 +8346,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: url must have scheme http:// or https://
-                        rule: url(self).getScheme() in ['http', 'https']
+                        rule: url(self).getScheme() in ["http", "https"]
                     jwksUri:
                       description: URL of the provider's public key set to validate
                         signature of the JWT.
@@ -8231,7 +8355,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: url must have scheme http:// or https://
-                        rule: url(self).getScheme() in ['http', 'https']
+                        rule: url(self).getScheme() in ["http", "https"]
                     outputClaimToHeaders:
                       description: This field specifies a list of operations to copy
                         the claim to HTTP headers on a successfully verified token.
@@ -8268,7 +8392,8 @@ spec:
                   type: object
                   x-kubernetes-validations:
                   - message: only one of jwks or jwksUri can be set
-                    rule: (has(self.jwksUri)?1:0)+(has(self.jwks_uri)?1:0)+(has(self.jwks)?1:0)<=1
+                    rule: '(has(self.jwksUri) ? 1 : 0) + (has(self.jwks_uri) ? 1 :
+                      0) + (has(self.jwks) ? 1 : 0) <= 1'
                 maxItems: 4096
                 type: array
               selector:
@@ -8280,14 +8405,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -8319,11 +8444,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -8354,17 +8474,13 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -8384,6 +8500,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -8400,8 +8522,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -8509,7 +8629,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: url must have scheme http:// or https://
-                        rule: url(self).getScheme() in ['http', 'https']
+                        rule: url(self).getScheme() in ["http", "https"]
                     jwksUri:
                       description: URL of the provider's public key set to validate
                         signature of the JWT.
@@ -8518,7 +8638,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: url must have scheme http:// or https://
-                        rule: url(self).getScheme() in ['http', 'https']
+                        rule: url(self).getScheme() in ["http", "https"]
                     outputClaimToHeaders:
                       description: This field specifies a list of operations to copy
                         the claim to HTTP headers on a successfully verified token.
@@ -8555,7 +8675,8 @@ spec:
                   type: object
                   x-kubernetes-validations:
                   - message: only one of jwks or jwksUri can be set
-                    rule: (has(self.jwksUri)?1:0)+(has(self.jwks_uri)?1:0)+(has(self.jwks)?1:0)<=1
+                    rule: '(has(self.jwksUri) ? 1 : 0) + (has(self.jwks_uri) ? 1 :
+                      0) + (has(self.jwks) ? 1 : 0) <= 1'
                 maxItems: 4096
                 type: array
               selector:
@@ -8567,14 +8688,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -8606,11 +8727,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -8641,17 +8757,13 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -8671,6 +8783,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -8687,8 +8805,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -8739,8 +8855,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: serviceentries.networking.istio.io
 spec:
   group: networking.istio.io
@@ -8804,11 +8920,11 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: UDS must be an absolute path or abstract socket
-                        rule: 'self.startsWith(''unix://'') ? (self.substring(7,8)
-                          == ''/'' || self.substring(7,8) == ''@'') : true'
+                        rule: 'self.startsWith("unix://") ? (self.substring(7, 8)
+                          == "/" || self.substring(7, 8) == "@") : true'
                       - message: UDS may not be a dir
-                        rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'')
-                          : true'
+                        rule: 'self.startsWith("unix://") ? !self.endsWith("/") :
+                          true'
                     labels:
                       additionalProperties:
                         type: string
@@ -8837,7 +8953,7 @@ spec:
                       type: object
                       x-kubernetes-validations:
                       - message: port name must be valid
-                        rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                        rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
                     serviceAccount:
                       description: The service account associated with the workload
                         if a sidecar is present in the workload.
@@ -8853,7 +8969,7 @@ spec:
                   - message: Address is required
                     rule: has(self.address) || has(self.network)
                   - message: UDS may not include ports
-                    rule: '(has(self.address) && self.address.startsWith(''unix://''))
+                    rule: '(has(self.address) ? self.address : "").startsWith("unix://")
                       ? !has(self.ports) : true'
                 maxItems: 4096
                 type: array
@@ -8868,7 +8984,7 @@ spec:
                   type: string
                   x-kubernetes-validations:
                   - message: hostname cannot be wildcard
-                    rule: self != '*'
+                    rule: self != "*"
                 maxItems: 256
                 minItems: 1
                 type: array
@@ -8948,7 +9064,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -8959,18 +9075,19 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of WorkloadSelector or Endpoints can be set
-              rule: (has(self.workloadSelector)?1:0)+(has(self.endpoints)?1:0)<=1
+              rule: '(has(self.workloadSelector) ? 1 : 0) + (has(self.endpoints) ?
+                1 : 0) <= 1'
             - message: CIDR addresses are allowed only for NONE/STATIC resolution
                 types
-              rule: '!(has(self.addresses) && self.addresses.exists(k, k.contains(''/''))
-                && (has(self.resolution) && self.resolution != ''STATIC'' && self.resolution
-                != ''NONE''))'
+              rule: '!((has(self.addresses) ? self.addresses : []).exists(k, k.contains("/"))
+                && !((has(self.resolution) ? self.resolution : "NONE") in ["STATIC",
+                "NONE"]))'
             - message: NONE mode cannot set endpoints
-              rule: '(!has(self.resolution) || self.resolution == ''NONE'') ? !has(self.endpoints)
-                : true'
+              rule: '((has(self.resolution) ? self.resolution : "NONE") == "NONE")
+                ? !has(self.endpoints) : true'
             - message: DNS_ROUND_ROBIN mode cannot have multiple endpoints
-              rule: '(has(self.resolution) && self.resolution == ''DNS_ROUND_ROBIN'')
-                ? (!has(self.endpoints) || size(self.endpoints) == 1) : true'
+              rule: '((has(self.resolution) ? self.resolution : "") == "DNS_ROUND_ROBIN")
+                ? ((has(self.endpoints) ? self.endpoints : []).size() <= 1) : true'
           status:
             properties:
               conditions:
@@ -8990,6 +9107,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -9006,8 +9129,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -9097,11 +9218,11 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: UDS must be an absolute path or abstract socket
-                        rule: 'self.startsWith(''unix://'') ? (self.substring(7,8)
-                          == ''/'' || self.substring(7,8) == ''@'') : true'
+                        rule: 'self.startsWith("unix://") ? (self.substring(7, 8)
+                          == "/" || self.substring(7, 8) == "@") : true'
                       - message: UDS may not be a dir
-                        rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'')
-                          : true'
+                        rule: 'self.startsWith("unix://") ? !self.endsWith("/") :
+                          true'
                     labels:
                       additionalProperties:
                         type: string
@@ -9130,7 +9251,7 @@ spec:
                       type: object
                       x-kubernetes-validations:
                       - message: port name must be valid
-                        rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                        rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
                     serviceAccount:
                       description: The service account associated with the workload
                         if a sidecar is present in the workload.
@@ -9146,7 +9267,7 @@ spec:
                   - message: Address is required
                     rule: has(self.address) || has(self.network)
                   - message: UDS may not include ports
-                    rule: '(has(self.address) && self.address.startsWith(''unix://''))
+                    rule: '(has(self.address) ? self.address : "").startsWith("unix://")
                       ? !has(self.ports) : true'
                 maxItems: 4096
                 type: array
@@ -9161,7 +9282,7 @@ spec:
                   type: string
                   x-kubernetes-validations:
                   - message: hostname cannot be wildcard
-                    rule: self != '*'
+                    rule: self != "*"
                 maxItems: 256
                 minItems: 1
                 type: array
@@ -9241,7 +9362,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -9252,18 +9373,19 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of WorkloadSelector or Endpoints can be set
-              rule: (has(self.workloadSelector)?1:0)+(has(self.endpoints)?1:0)<=1
+              rule: '(has(self.workloadSelector) ? 1 : 0) + (has(self.endpoints) ?
+                1 : 0) <= 1'
             - message: CIDR addresses are allowed only for NONE/STATIC resolution
                 types
-              rule: '!(has(self.addresses) && self.addresses.exists(k, k.contains(''/''))
-                && (has(self.resolution) && self.resolution != ''STATIC'' && self.resolution
-                != ''NONE''))'
+              rule: '!((has(self.addresses) ? self.addresses : []).exists(k, k.contains("/"))
+                && !((has(self.resolution) ? self.resolution : "NONE") in ["STATIC",
+                "NONE"]))'
             - message: NONE mode cannot set endpoints
-              rule: '(!has(self.resolution) || self.resolution == ''NONE'') ? !has(self.endpoints)
-                : true'
+              rule: '((has(self.resolution) ? self.resolution : "NONE") == "NONE")
+                ? !has(self.endpoints) : true'
             - message: DNS_ROUND_ROBIN mode cannot have multiple endpoints
-              rule: '(has(self.resolution) && self.resolution == ''DNS_ROUND_ROBIN'')
-                ? (!has(self.endpoints) || size(self.endpoints) == 1) : true'
+              rule: '((has(self.resolution) ? self.resolution : "") == "DNS_ROUND_ROBIN")
+                ? ((has(self.endpoints) ? self.endpoints : []).size() <= 1) : true'
           status:
             properties:
               conditions:
@@ -9283,6 +9405,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -9299,8 +9427,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -9390,11 +9516,11 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: UDS must be an absolute path or abstract socket
-                        rule: 'self.startsWith(''unix://'') ? (self.substring(7,8)
-                          == ''/'' || self.substring(7,8) == ''@'') : true'
+                        rule: 'self.startsWith("unix://") ? (self.substring(7, 8)
+                          == "/" || self.substring(7, 8) == "@") : true'
                       - message: UDS may not be a dir
-                        rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'')
-                          : true'
+                        rule: 'self.startsWith("unix://") ? !self.endsWith("/") :
+                          true'
                     labels:
                       additionalProperties:
                         type: string
@@ -9423,7 +9549,7 @@ spec:
                       type: object
                       x-kubernetes-validations:
                       - message: port name must be valid
-                        rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                        rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
                     serviceAccount:
                       description: The service account associated with the workload
                         if a sidecar is present in the workload.
@@ -9439,7 +9565,7 @@ spec:
                   - message: Address is required
                     rule: has(self.address) || has(self.network)
                   - message: UDS may not include ports
-                    rule: '(has(self.address) && self.address.startsWith(''unix://''))
+                    rule: '(has(self.address) ? self.address : "").startsWith("unix://")
                       ? !has(self.ports) : true'
                 maxItems: 4096
                 type: array
@@ -9454,7 +9580,7 @@ spec:
                   type: string
                   x-kubernetes-validations:
                   - message: hostname cannot be wildcard
-                    rule: self != '*'
+                    rule: self != "*"
                 maxItems: 256
                 minItems: 1
                 type: array
@@ -9534,7 +9660,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -9545,18 +9671,19 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of WorkloadSelector or Endpoints can be set
-              rule: (has(self.workloadSelector)?1:0)+(has(self.endpoints)?1:0)<=1
+              rule: '(has(self.workloadSelector) ? 1 : 0) + (has(self.endpoints) ?
+                1 : 0) <= 1'
             - message: CIDR addresses are allowed only for NONE/STATIC resolution
                 types
-              rule: '!(has(self.addresses) && self.addresses.exists(k, k.contains(''/''))
-                && (has(self.resolution) && self.resolution != ''STATIC'' && self.resolution
-                != ''NONE''))'
+              rule: '!((has(self.addresses) ? self.addresses : []).exists(k, k.contains("/"))
+                && !((has(self.resolution) ? self.resolution : "NONE") in ["STATIC",
+                "NONE"]))'
             - message: NONE mode cannot set endpoints
-              rule: '(!has(self.resolution) || self.resolution == ''NONE'') ? !has(self.endpoints)
-                : true'
+              rule: '((has(self.resolution) ? self.resolution : "NONE") == "NONE")
+                ? !has(self.endpoints) : true'
             - message: DNS_ROUND_ROBIN mode cannot have multiple endpoints
-              rule: '(has(self.resolution) && self.resolution == ''DNS_ROUND_ROBIN'')
-                ? (!has(self.endpoints) || size(self.endpoints) == 1) : true'
+              rule: '((has(self.resolution) ? self.resolution : "") == "DNS_ROUND_ROBIN")
+                ? ((has(self.endpoints) ? self.endpoints : []).size() <= 1) : true'
           status:
             properties:
               conditions:
@@ -9576,6 +9703,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -9592,8 +9725,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -9646,8 +9777,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: sidecars.networking.istio.io
 spec:
   group: networking.istio.io
@@ -9783,9 +9914,6 @@ spec:
                       idleTimeout:
                         description: The idle timeout for TCP connections.
                         type: string
-                        x-kubernetes-validations:
-                        - message: must be a valid duration greater than 1ms
-                          rule: duration(self) >= duration('1ms')
                       maxConnectionDuration:
                         description: The maximum duration of a connection.
                         type: string
@@ -9909,9 +10037,6 @@ spec:
                             idleTimeout:
                               description: The idle timeout for TCP connections.
                               type: string
-                              x-kubernetes-validations:
-                              - message: must be a valid duration greater than 1ms
-                                rule: duration(self) >= duration('1ms')
                             maxConnectionDuration:
                               description: The maximum duration of a connection.
                               type: string
@@ -10001,6 +10126,13 @@ spec:
                             of the secret that holds the TLS certs including the CA
                             certificates.
                           type: string
+                        credentialNames:
+                          description: Same as CredentialName but for multiple certificates.
+                          items:
+                            type: string
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         httpsRedirect:
                           description: If set to true, the load balancer will send
                             a 301 redirect for all http connections, asking the clients
@@ -10055,6 +10187,25 @@ spec:
                           items:
                             type: string
                           type: array
+                        tlsCertificates:
+                          description: Only one of `server_certificate`, `private_key`,
+                            `ca_certificates` or `credential_name` or `credential_names`
+                            or `tls_certificates` should be specified.
+                          items:
+                            properties:
+                              caCertificates:
+                                description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
+                                type: string
+                              privateKey:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                              serverCertificate:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                            type: object
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         verifyCertificateHash:
                           description: An optional list of hex-encoded SHA-256 hashes
                             of the authorized client certificates.
@@ -10068,6 +10219,19 @@ spec:
                             type: string
                           type: array
                       type: object
+                      x-kubernetes-validations:
+                      - message: only one of credentialNames or tlsCertificates can
+                          be set
+                        rule: '(has(self.tlsCertificates) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or credentialNames can
+                          be set
+                        rule: '(has(self.credentialName) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or tlsCertificates can
+                          be set
+                        rule: '(has(self.credentialNames) ? 1 : 0) + (has(self.tlsCertificates)
+                          ? 1 : 0) <= 1'
                   required:
                   - port
                   type: object
@@ -10116,7 +10280,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -10142,6 +10306,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -10158,8 +10328,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -10321,9 +10489,6 @@ spec:
                       idleTimeout:
                         description: The idle timeout for TCP connections.
                         type: string
-                        x-kubernetes-validations:
-                        - message: must be a valid duration greater than 1ms
-                          rule: duration(self) >= duration('1ms')
                       maxConnectionDuration:
                         description: The maximum duration of a connection.
                         type: string
@@ -10447,9 +10612,6 @@ spec:
                             idleTimeout:
                               description: The idle timeout for TCP connections.
                               type: string
-                              x-kubernetes-validations:
-                              - message: must be a valid duration greater than 1ms
-                                rule: duration(self) >= duration('1ms')
                             maxConnectionDuration:
                               description: The maximum duration of a connection.
                               type: string
@@ -10539,6 +10701,13 @@ spec:
                             of the secret that holds the TLS certs including the CA
                             certificates.
                           type: string
+                        credentialNames:
+                          description: Same as CredentialName but for multiple certificates.
+                          items:
+                            type: string
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         httpsRedirect:
                           description: If set to true, the load balancer will send
                             a 301 redirect for all http connections, asking the clients
@@ -10593,6 +10762,25 @@ spec:
                           items:
                             type: string
                           type: array
+                        tlsCertificates:
+                          description: Only one of `server_certificate`, `private_key`,
+                            `ca_certificates` or `credential_name` or `credential_names`
+                            or `tls_certificates` should be specified.
+                          items:
+                            properties:
+                              caCertificates:
+                                description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
+                                type: string
+                              privateKey:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                              serverCertificate:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                            type: object
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         verifyCertificateHash:
                           description: An optional list of hex-encoded SHA-256 hashes
                             of the authorized client certificates.
@@ -10606,6 +10794,19 @@ spec:
                             type: string
                           type: array
                       type: object
+                      x-kubernetes-validations:
+                      - message: only one of credentialNames or tlsCertificates can
+                          be set
+                        rule: '(has(self.tlsCertificates) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or credentialNames can
+                          be set
+                        rule: '(has(self.credentialName) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or tlsCertificates can
+                          be set
+                        rule: '(has(self.credentialNames) ? 1 : 0) + (has(self.tlsCertificates)
+                          ? 1 : 0) <= 1'
                   required:
                   - port
                   type: object
@@ -10654,7 +10855,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -10680,6 +10881,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -10696,8 +10903,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -10859,9 +11064,6 @@ spec:
                       idleTimeout:
                         description: The idle timeout for TCP connections.
                         type: string
-                        x-kubernetes-validations:
-                        - message: must be a valid duration greater than 1ms
-                          rule: duration(self) >= duration('1ms')
                       maxConnectionDuration:
                         description: The maximum duration of a connection.
                         type: string
@@ -10985,9 +11187,6 @@ spec:
                             idleTimeout:
                               description: The idle timeout for TCP connections.
                               type: string
-                              x-kubernetes-validations:
-                              - message: must be a valid duration greater than 1ms
-                                rule: duration(self) >= duration('1ms')
                             maxConnectionDuration:
                               description: The maximum duration of a connection.
                               type: string
@@ -11077,6 +11276,13 @@ spec:
                             of the secret that holds the TLS certs including the CA
                             certificates.
                           type: string
+                        credentialNames:
+                          description: Same as CredentialName but for multiple certificates.
+                          items:
+                            type: string
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         httpsRedirect:
                           description: If set to true, the load balancer will send
                             a 301 redirect for all http connections, asking the clients
@@ -11131,6 +11337,25 @@ spec:
                           items:
                             type: string
                           type: array
+                        tlsCertificates:
+                          description: Only one of `server_certificate`, `private_key`,
+                            `ca_certificates` or `credential_name` or `credential_names`
+                            or `tls_certificates` should be specified.
+                          items:
+                            properties:
+                              caCertificates:
+                                description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
+                                type: string
+                              privateKey:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                              serverCertificate:
+                                description: REQUIRED if mode is `SIMPLE` or `MUTUAL`.
+                                type: string
+                            type: object
+                          maxItems: 2
+                          minItems: 1
+                          type: array
                         verifyCertificateHash:
                           description: An optional list of hex-encoded SHA-256 hashes
                             of the authorized client certificates.
@@ -11144,6 +11369,19 @@ spec:
                             type: string
                           type: array
                       type: object
+                      x-kubernetes-validations:
+                      - message: only one of credentialNames or tlsCertificates can
+                          be set
+                        rule: '(has(self.tlsCertificates) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or credentialNames can
+                          be set
+                        rule: '(has(self.credentialName) ? 1 : 0) + (has(self.credentialNames)
+                          ? 1 : 0) <= 1'
+                      - message: only one of credentialName or tlsCertificates can
+                          be set
+                        rule: '(has(self.credentialNames) ? 1 : 0) + (has(self.tlsCertificates)
+                          ? 1 : 0) <= 1'
                   required:
                   - port
                   type: object
@@ -11192,7 +11430,7 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard is not supported in selector
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which the configuration should be applied.
                     maxProperties: 256
@@ -11218,6 +11456,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -11234,8 +11478,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -11286,8 +11528,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: telemetries.telemetry.istio.io
 spec:
   group: telemetry.istio.io
@@ -11443,11 +11685,11 @@ spec:
                               type: object
                               x-kubernetes-validations:
                               - message: value must be set when operation is UPSERT
-                                rule: '((has(self.operation) ? self.operation : '''')
-                                  == ''UPSERT'') ? self.value != '''' : true'
+                                rule: '((has(self.operation) ? self.operation : "")
+                                  == "UPSERT") ? (self.value != "") : true'
                               - message: value must not be set when operation is REMOVE
-                                rule: '((has(self.operation) ? self.operation : '''')
-                                  == ''REMOVE'') ? !has(self.value) : true'
+                                rule: '((has(self.operation) ? self.operation : "")
+                                  == "REMOVE") ? !has(self.value) : true'
                             description: Optional.
                             type: object
                         type: object
@@ -11481,14 +11723,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -11520,11 +11762,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -11555,11 +11792,6 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
               tracing:
@@ -11632,6 +11864,11 @@ spec:
                       description: Controls span reporting.
                       nullable: true
                       type: boolean
+                    enableIstioTags:
+                      description: Determines whether or not trace spans generated
+                        by Envoy will include Istio specific tags.
+                      nullable: true
+                      type: boolean
                     match:
                       description: Allows tailoring of behavior to specific conditions.
                       properties:
@@ -11674,7 +11911,8 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -11694,6 +11932,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -11710,8 +11954,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -11891,11 +12133,11 @@ spec:
                               type: object
                               x-kubernetes-validations:
                               - message: value must be set when operation is UPSERT
-                                rule: '((has(self.operation) ? self.operation : '''')
-                                  == ''UPSERT'') ? self.value != '''' : true'
+                                rule: '((has(self.operation) ? self.operation : "")
+                                  == "UPSERT") ? (self.value != "") : true'
                               - message: value must not be set when operation is REMOVE
-                                rule: '((has(self.operation) ? self.operation : '''')
-                                  == ''REMOVE'') ? !has(self.value) : true'
+                                rule: '((has(self.operation) ? self.operation : "")
+                                  == "REMOVE") ? !has(self.value) : true'
                             description: Optional.
                             type: object
                         type: object
@@ -11929,14 +12171,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -11968,11 +12210,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -12003,11 +12240,6 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
               tracing:
@@ -12080,6 +12312,11 @@ spec:
                       description: Controls span reporting.
                       nullable: true
                       type: boolean
+                    enableIstioTags:
+                      description: Determines whether or not trace spans generated
+                        by Envoy will include Istio specific tags.
+                      nullable: true
+                      type: boolean
                     match:
                       description: Allows tailoring of behavior to specific conditions.
                       properties:
@@ -12122,7 +12359,8 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -12142,6 +12380,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -12158,8 +12402,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -12210,8 +12452,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: virtualservices.networking.istio.io
 spec:
   group: networking.istio.io
@@ -12896,6 +13138,13 @@ spec:
                             request.
                           format: int32
                           type: integer
+                        backoff:
+                          description: Specifies the minimum duration between retry
+                            attempts.
+                          type: string
+                          x-kubernetes-validations:
+                          - message: must be a valid duration greater than 1ms
+                            rule: duration(self) >= duration('1ms')
                         perTryTimeout:
                           description: Timeout per attempt for a given request, including
                             the initial call and any retries.
@@ -12903,6 +13152,11 @@ spec:
                           x-kubernetes-validations:
                           - message: must be a valid duration greater than 1ms
                             rule: duration(self) >= duration('1ms')
+                        retryIgnorePreviousHosts:
+                          description: Flag to specify whether the retries should
+                            ignore previously tried hosts during retry.
+                          nullable: true
+                          type: boolean
                         retryOn:
                           description: Specifies the conditions under which retry
                             takes place.
@@ -13206,6 +13460,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -13222,8 +13482,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -13932,6 +14190,13 @@ spec:
                             request.
                           format: int32
                           type: integer
+                        backoff:
+                          description: Specifies the minimum duration between retry
+                            attempts.
+                          type: string
+                          x-kubernetes-validations:
+                          - message: must be a valid duration greater than 1ms
+                            rule: duration(self) >= duration('1ms')
                         perTryTimeout:
                           description: Timeout per attempt for a given request, including
                             the initial call and any retries.
@@ -13939,6 +14204,11 @@ spec:
                           x-kubernetes-validations:
                           - message: must be a valid duration greater than 1ms
                             rule: duration(self) >= duration('1ms')
+                        retryIgnorePreviousHosts:
+                          description: Flag to specify whether the retries should
+                            ignore previously tried hosts during retry.
+                          nullable: true
+                          type: boolean
                         retryOn:
                           description: Specifies the conditions under which retry
                             takes place.
@@ -14242,6 +14512,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -14258,8 +14534,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -14968,6 +15242,13 @@ spec:
                             request.
                           format: int32
                           type: integer
+                        backoff:
+                          description: Specifies the minimum duration between retry
+                            attempts.
+                          type: string
+                          x-kubernetes-validations:
+                          - message: must be a valid duration greater than 1ms
+                            rule: duration(self) >= duration('1ms')
                         perTryTimeout:
                           description: Timeout per attempt for a given request, including
                             the initial call and any retries.
@@ -14975,6 +15256,11 @@ spec:
                           x-kubernetes-validations:
                           - message: must be a valid duration greater than 1ms
                             rule: duration(self) >= duration('1ms')
+                        retryIgnorePreviousHosts:
+                          description: Flag to specify whether the retries should
+                            ignore previously tried hosts during retry.
+                          nullable: true
+                          type: boolean
                         retryOn:
                           description: Specifies the conditions under which retry
                             takes place.
@@ -15278,6 +15564,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -15294,8 +15586,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -15346,8 +15636,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: wasmplugins.extensions.istio.io
 spec:
   group: extensions.istio.io
@@ -15472,14 +15762,14 @@ spec:
                       type: string
                       x-kubernetes-validations:
                       - message: wildcard not allowed in label value match
-                        rule: '!self.contains(''*'')'
+                        rule: '!self.contains("*")'
                     description: One or more labels that indicate a specific set of
                       pods/VMs on which a policy should be applied.
                     maxProperties: 4096
                     type: object
                     x-kubernetes-validations:
                     - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains('*'))
+                      rule: self.all(key, !key.contains("*"))
                     - message: key must not be empty
                       rule: self.all(key, key.size() != 0)
                 type: object
@@ -15516,11 +15806,6 @@ spec:
                 - kind
                 - name
                 type: object
-                x-kubernetes-validations:
-                - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                    gateway.networking.k8s.io/Gateway
-                  rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                    [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
               targetRefs:
                 description: Optional.
                 items:
@@ -15551,11 +15836,6 @@ spec:
                   - kind
                   - name
                   type: object
-                  x-kubernetes-validations:
-                  - message: Support kinds are core/Service, networking.istio.io/ServiceEntry,
-                      gateway.networking.k8s.io/Gateway
-                    rule: '[self.group, self.kind] in [[''core'',''Service''], ['''',''Service''],
-                      [''gateway.networking.k8s.io'',''Gateway''], [''networking.istio.io'',''ServiceEntry'']]'
                 maxItems: 16
                 type: array
               type:
@@ -15574,10 +15854,9 @@ spec:
                 type: string
                 x-kubernetes-validations:
                 - message: url must have schema one of [http, https, file, oci]
-                  rule: 'isURL(self) ? (url(self).getScheme() in ['''', ''http'',
-                    ''https'', ''oci'', ''file'']) : (isURL(''http://'' + self) &&
-                    url(''http://'' +self).getScheme() in ['''', ''http'', ''https'',
-                    ''oci'', ''file''])'
+                  rule: |-
+                    isURL(self) ? (url(self).getScheme() in ["", "http", "https", "oci", "file"]) : (isURL("http://" + self) &&
+                    url("http://" + self).getScheme() in ["", "http", "https", "oci", "file"])
               verificationKey:
                 type: string
               vmConfig:
@@ -15611,7 +15890,7 @@ spec:
                       type: object
                       x-kubernetes-validations:
                       - message: value may only be set when valueFrom is INLINE
-                        rule: '(has(self.valueFrom) ? self.valueFrom : '''') != ''HOST''
+                        rule: '(has(self.valueFrom) ? self.valueFrom : "") != "HOST"
                           || !has(self.value)'
                     maxItems: 256
                     type: array
@@ -15624,7 +15903,8 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: only one of targetRefs or selector can be set
-              rule: (has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
           status:
             properties:
               conditions:
@@ -15644,6 +15924,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -15660,8 +15946,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -15714,8 +15998,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: workloadentries.networking.istio.io
 spec:
   group: networking.istio.io
@@ -15759,10 +16043,10 @@ spec:
                 type: string
                 x-kubernetes-validations:
                 - message: UDS must be an absolute path or abstract socket
-                  rule: 'self.startsWith(''unix://'') ? (self.substring(7,8) == ''/''
-                    || self.substring(7,8) == ''@'') : true'
+                  rule: 'self.startsWith("unix://") ? (self.substring(7, 8) == "/"
+                    || self.substring(7, 8) == "@") : true'
                 - message: UDS may not be a dir
-                  rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'') : true'
+                  rule: 'self.startsWith("unix://") ? !self.endsWith("/") : true'
               labels:
                 additionalProperties:
                   type: string
@@ -15791,7 +16075,7 @@ spec:
                 type: object
                 x-kubernetes-validations:
                 - message: port name must be valid
-                  rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                  rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
               serviceAccount:
                 description: The service account associated with the workload if a
                   sidecar is present in the workload.
@@ -15807,8 +16091,8 @@ spec:
             - message: Address is required
               rule: has(self.address) || has(self.network)
             - message: UDS may not include ports
-              rule: '(has(self.address) && self.address.startsWith(''unix://'')) ?
-                !has(self.ports) : true'
+              rule: '(has(self.address) ? self.address : "").startsWith("unix://")
+                ? !has(self.ports) : true'
           status:
             properties:
               conditions:
@@ -15828,6 +16112,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -15844,8 +16134,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -15915,10 +16203,10 @@ spec:
                 type: string
                 x-kubernetes-validations:
                 - message: UDS must be an absolute path or abstract socket
-                  rule: 'self.startsWith(''unix://'') ? (self.substring(7,8) == ''/''
-                    || self.substring(7,8) == ''@'') : true'
+                  rule: 'self.startsWith("unix://") ? (self.substring(7, 8) == "/"
+                    || self.substring(7, 8) == "@") : true'
                 - message: UDS may not be a dir
-                  rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'') : true'
+                  rule: 'self.startsWith("unix://") ? !self.endsWith("/") : true'
               labels:
                 additionalProperties:
                   type: string
@@ -15947,7 +16235,7 @@ spec:
                 type: object
                 x-kubernetes-validations:
                 - message: port name must be valid
-                  rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                  rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
               serviceAccount:
                 description: The service account associated with the workload if a
                   sidecar is present in the workload.
@@ -15963,8 +16251,8 @@ spec:
             - message: Address is required
               rule: has(self.address) || has(self.network)
             - message: UDS may not include ports
-              rule: '(has(self.address) && self.address.startsWith(''unix://'')) ?
-                !has(self.ports) : true'
+              rule: '(has(self.address) ? self.address : "").startsWith("unix://")
+                ? !has(self.ports) : true'
           status:
             properties:
               conditions:
@@ -15984,6 +16272,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -16000,8 +16294,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -16071,10 +16363,10 @@ spec:
                 type: string
                 x-kubernetes-validations:
                 - message: UDS must be an absolute path or abstract socket
-                  rule: 'self.startsWith(''unix://'') ? (self.substring(7,8) == ''/''
-                    || self.substring(7,8) == ''@'') : true'
+                  rule: 'self.startsWith("unix://") ? (self.substring(7, 8) == "/"
+                    || self.substring(7, 8) == "@") : true'
                 - message: UDS may not be a dir
-                  rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'') : true'
+                  rule: 'self.startsWith("unix://") ? !self.endsWith("/") : true'
               labels:
                 additionalProperties:
                   type: string
@@ -16103,7 +16395,7 @@ spec:
                 type: object
                 x-kubernetes-validations:
                 - message: port name must be valid
-                  rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                  rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
               serviceAccount:
                 description: The service account associated with the workload if a
                   sidecar is present in the workload.
@@ -16119,8 +16411,8 @@ spec:
             - message: Address is required
               rule: has(self.address) || has(self.network)
             - message: UDS may not include ports
-              rule: '(has(self.address) && self.address.startsWith(''unix://'')) ?
-                !has(self.ports) : true'
+              rule: '(has(self.address) ? self.address : "").startsWith("unix://")
+                ? !has(self.ports) : true'
           status:
             properties:
               conditions:
@@ -16140,6 +16432,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -16156,8 +16454,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -16208,8 +16504,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: workloadgroups.networking.istio.io
 spec:
   group: networking.istio.io
@@ -16268,12 +16564,16 @@ spec:
                       - tcpSocket
                     - required:
                       - exec
+                    - required:
+                      - grpc
                 - required:
                   - httpGet
                 - required:
                   - tcpSocket
                 - required:
                   - exec
+                - required:
+                  - grpc
                 properties:
                   exec:
                     description: Health is determined by how the command that is executed
@@ -16294,6 +16594,21 @@ spec:
                     format: int32
                     minimum: 0
                     type: integer
+                  grpc:
+                    description: GRPC call is made and response/error is used to determine
+                      health.
+                    properties:
+                      port:
+                        description: Port on which the endpoint lives.
+                        maximum: 4294967295
+                        minimum: 0
+                        type: integer
+                        x-kubernetes-validations:
+                        - message: port must be between 1-65535
+                          rule: 0 < self && self <= 65535
+                      service:
+                        type: string
+                    type: object
                   httpGet:
                     description: '`httpGet` is performed to a given endpoint and the
                       status/able to connect determines health.'
@@ -16328,7 +16643,7 @@ spec:
                         type: string
                         x-kubernetes-validations:
                         - message: scheme must be one of [HTTP, HTTPS]
-                          rule: self in ['', 'HTTP', 'HTTPS']
+                          rule: self in ["", "HTTP", "HTTPS"]
                     required:
                     - port
                     type: object
@@ -16381,11 +16696,10 @@ spec:
                     type: string
                     x-kubernetes-validations:
                     - message: UDS must be an absolute path or abstract socket
-                      rule: 'self.startsWith(''unix://'') ? (self.substring(7,8) ==
-                        ''/'' || self.substring(7,8) == ''@'') : true'
+                      rule: 'self.startsWith("unix://") ? (self.substring(7, 8) ==
+                        "/" || self.substring(7, 8) == "@") : true'
                     - message: UDS may not be a dir
-                      rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'')
-                        : true'
+                      rule: 'self.startsWith("unix://") ? !self.endsWith("/") : true'
                   labels:
                     additionalProperties:
                       type: string
@@ -16414,7 +16728,7 @@ spec:
                     type: object
                     x-kubernetes-validations:
                     - message: port name must be valid
-                      rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                      rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
                   serviceAccount:
                     description: The service account associated with the workload
                       if a sidecar is present in the workload.
@@ -16428,7 +16742,7 @@ spec:
                 type: object
                 x-kubernetes-validations:
                 - message: UDS may not include ports
-                  rule: '(has(self.address) && self.address.startsWith(''unix://''))
+                  rule: '(has(self.address) ? self.address : "").startsWith("unix://")
                     ? !has(self.ports) : true'
             required:
             - template
@@ -16452,6 +16766,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -16468,8 +16788,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -16554,12 +16872,16 @@ spec:
                       - tcpSocket
                     - required:
                       - exec
+                    - required:
+                      - grpc
                 - required:
                   - httpGet
                 - required:
                   - tcpSocket
                 - required:
                   - exec
+                - required:
+                  - grpc
                 properties:
                   exec:
                     description: Health is determined by how the command that is executed
@@ -16580,6 +16902,21 @@ spec:
                     format: int32
                     minimum: 0
                     type: integer
+                  grpc:
+                    description: GRPC call is made and response/error is used to determine
+                      health.
+                    properties:
+                      port:
+                        description: Port on which the endpoint lives.
+                        maximum: 4294967295
+                        minimum: 0
+                        type: integer
+                        x-kubernetes-validations:
+                        - message: port must be between 1-65535
+                          rule: 0 < self && self <= 65535
+                      service:
+                        type: string
+                    type: object
                   httpGet:
                     description: '`httpGet` is performed to a given endpoint and the
                       status/able to connect determines health.'
@@ -16614,7 +16951,7 @@ spec:
                         type: string
                         x-kubernetes-validations:
                         - message: scheme must be one of [HTTP, HTTPS]
-                          rule: self in ['', 'HTTP', 'HTTPS']
+                          rule: self in ["", "HTTP", "HTTPS"]
                     required:
                     - port
                     type: object
@@ -16667,11 +17004,10 @@ spec:
                     type: string
                     x-kubernetes-validations:
                     - message: UDS must be an absolute path or abstract socket
-                      rule: 'self.startsWith(''unix://'') ? (self.substring(7,8) ==
-                        ''/'' || self.substring(7,8) == ''@'') : true'
+                      rule: 'self.startsWith("unix://") ? (self.substring(7, 8) ==
+                        "/" || self.substring(7, 8) == "@") : true'
                     - message: UDS may not be a dir
-                      rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'')
-                        : true'
+                      rule: 'self.startsWith("unix://") ? !self.endsWith("/") : true'
                   labels:
                     additionalProperties:
                       type: string
@@ -16700,7 +17036,7 @@ spec:
                     type: object
                     x-kubernetes-validations:
                     - message: port name must be valid
-                      rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                      rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
                   serviceAccount:
                     description: The service account associated with the workload
                       if a sidecar is present in the workload.
@@ -16714,7 +17050,7 @@ spec:
                 type: object
                 x-kubernetes-validations:
                 - message: UDS may not include ports
-                  rule: '(has(self.address) && self.address.startsWith(''unix://''))
+                  rule: '(has(self.address) ? self.address : "").startsWith("unix://")
                     ? !has(self.ports) : true'
             required:
             - template
@@ -16738,6 +17074,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -16754,8 +17096,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -16840,12 +17180,16 @@ spec:
                       - tcpSocket
                     - required:
                       - exec
+                    - required:
+                      - grpc
                 - required:
                   - httpGet
                 - required:
                   - tcpSocket
                 - required:
                   - exec
+                - required:
+                  - grpc
                 properties:
                   exec:
                     description: Health is determined by how the command that is executed
@@ -16866,6 +17210,21 @@ spec:
                     format: int32
                     minimum: 0
                     type: integer
+                  grpc:
+                    description: GRPC call is made and response/error is used to determine
+                      health.
+                    properties:
+                      port:
+                        description: Port on which the endpoint lives.
+                        maximum: 4294967295
+                        minimum: 0
+                        type: integer
+                        x-kubernetes-validations:
+                        - message: port must be between 1-65535
+                          rule: 0 < self && self <= 65535
+                      service:
+                        type: string
+                    type: object
                   httpGet:
                     description: '`httpGet` is performed to a given endpoint and the
                       status/able to connect determines health.'
@@ -16900,7 +17259,7 @@ spec:
                         type: string
                         x-kubernetes-validations:
                         - message: scheme must be one of [HTTP, HTTPS]
-                          rule: self in ['', 'HTTP', 'HTTPS']
+                          rule: self in ["", "HTTP", "HTTPS"]
                     required:
                     - port
                     type: object
@@ -16953,11 +17312,10 @@ spec:
                     type: string
                     x-kubernetes-validations:
                     - message: UDS must be an absolute path or abstract socket
-                      rule: 'self.startsWith(''unix://'') ? (self.substring(7,8) ==
-                        ''/'' || self.substring(7,8) == ''@'') : true'
+                      rule: 'self.startsWith("unix://") ? (self.substring(7, 8) ==
+                        "/" || self.substring(7, 8) == "@") : true'
                     - message: UDS may not be a dir
-                      rule: 'self.startsWith(''unix://'') ? !self.endsWith(''/'')
-                        : true'
+                      rule: 'self.startsWith("unix://") ? !self.endsWith("/") : true'
                   labels:
                     additionalProperties:
                       type: string
@@ -16986,7 +17344,7 @@ spec:
                     type: object
                     x-kubernetes-validations:
                     - message: port name must be valid
-                      rule: self.all(key, size(key) < 63 && key.matches('^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$'))
+                      rule: self.all(key, size(key) < 63 && key.matches("^[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?$"))
                   serviceAccount:
                     description: The service account associated with the workload
                       if a sidecar is present in the workload.
@@ -17000,7 +17358,7 @@ spec:
                 type: object
                 x-kubernetes-validations:
                 - message: UDS may not include ports
-                  rule: '(has(self.address) && self.address.startsWith(''unix://''))
+                  rule: '(has(self.address) ? self.address : "").startsWith("unix://")
                     ? !has(self.ports) : true'
             required:
             - template
@@ -17024,6 +17382,12 @@ spec:
                       description: Human-readable message indicating details about
                         last transition.
                       type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
                     reason:
                       description: Unique, one-word, CamelCase reason for the condition's
                         last transition.
@@ -17040,8 +17404,6 @@ spec:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Resource Generation to which the Reconciled Condition
-                  refers.
                 x-kubernetes-int-or-string: true
               validationMessages:
                 description: Includes any errors or warnings detected by Istio's analyzers.
@@ -17094,8 +17456,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -17114,8 +17476,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-reader
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: base-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
     release: istio
   name: istio-reader-service-account
   namespace: istio-system
@@ -17130,8 +17492,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod
   namespace: istio-system
@@ -17146,8 +17508,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-reader
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istio-reader-clusterrole-istio-system
 rules:
@@ -17175,6 +17537,7 @@ rules:
   - replicationcontrollers
   - namespaces
   - secrets
+  - configmaps
   verbs:
   - get
   - list
@@ -17261,8 +17624,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-clusterrole-istio-system
 rules:
@@ -17415,12 +17778,20 @@ rules:
   - create
 - apiGroups:
   - gateway.networking.k8s.io
+  - gateway.networking.x-k8s.io
   resources:
   - '*'
   verbs:
   - get
   - watch
   - list
+- apiGroups:
+  - gateway.networking.x-k8s.io
+  resources:
+  - xbackendtrafficpolicies/status
+  verbs:
+  - update
+  - patch
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
@@ -17482,8 +17853,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-gateway-controller-istio-system
 rules:
@@ -17491,6 +17862,30 @@ rules:
   - apps
   resources:
   - deployments
+  verbs:
+  - get
+  - watch
+  - list
+  - update
+  - patch
+  - create
+  - delete
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - get
+  - watch
+  - list
+  - update
+  - patch
+  - create
+  - delete
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
   verbs:
   - get
   - watch
@@ -17534,8 +17929,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-reader
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istio-reader-clusterrole-istio-system
 roleRef:
@@ -17557,8 +17952,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-clusterrole-istio-system
 roleRef:
@@ -17580,8 +17975,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-gateway-controller-istio-system
 roleRef:
@@ -17603,8 +17998,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     istio: istiod
     istio.io/rev: default
     release: istio
@@ -17665,8 +18060,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -17716,6 +18111,7 @@ data:
           {{- end }}
         {{- end }}
         {{ $nativeSidecar := (or (and (not (isset .ObjectMeta.Annotations `sidecar.istio.io/nativeSidecar`)) (eq (env "ENABLE_NATIVE_SIDECARS" "false") "true")) (eq (index .ObjectMeta.Annotations `sidecar.istio.io/nativeSidecar`) "true")) }}
+        {{ $tproxy := (eq (annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode) `TPROXY`) }}
         {{- $containers := list }}
         {{- range $index, $container := .Spec.Containers }}{{ if not (eq $container.Name "istio-proxy") }}{{ $containers = append $containers $container.Name }}{{end}}{{- end}}
         metadata:
@@ -17743,7 +18139,7 @@ data:
             sidecar.istio.io/interceptionMode: "{{ annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode }}",
             {{ with annotation .ObjectMeta `traffic.sidecar.istio.io/includeOutboundIPRanges` .Values.global.proxy.includeIPRanges }}traffic.sidecar.istio.io/includeOutboundIPRanges: "{{.}}",{{ end }}
             {{ with annotation .ObjectMeta `traffic.sidecar.istio.io/excludeOutboundIPRanges` .Values.global.proxy.excludeIPRanges }}traffic.sidecar.istio.io/excludeOutboundIPRanges: "{{.}}",{{ end }}
-            {{ with annotation .ObjectMeta `traffic.sidecar.istio.io/includeInboundPorts` .Values.global.proxy.includeInboundPorts }}traffic.sidecar.istio.io/includeInboundPorts: "{{.}}",{{ end }}
+            traffic.sidecar.istio.io/includeInboundPorts: "{{ annotation .ObjectMeta `traffic.sidecar.istio.io/includeInboundPorts` .Values.global.proxy.includeInboundPorts }}",
             traffic.sidecar.istio.io/excludeInboundPorts: "{{ excludeInboundPort (annotation .ObjectMeta `status.sidecar.istio.io/port` .Values.global.proxy.statusPort) (annotation .ObjectMeta `traffic.sidecar.istio.io/excludeInboundPorts` .Values.global.proxy.excludeInboundPorts) }}",
             {{ if or (isset .ObjectMeta.Annotations `traffic.sidecar.istio.io/includeOutboundPorts`) (ne (valueOrDefault .Values.global.proxy.includeOutboundPorts "") "") }}
             traffic.sidecar.istio.io/includeOutboundPorts: "{{ annotation .ObjectMeta `traffic.sidecar.istio.io/includeOutboundPorts` .Values.global.proxy.includeOutboundPorts }}",
@@ -17752,6 +18148,7 @@ data:
             traffic.sidecar.istio.io/excludeOutboundPorts: "{{ annotation .ObjectMeta `traffic.sidecar.istio.io/excludeOutboundPorts` .Values.global.proxy.excludeOutboundPorts }}",
             {{- end }}
             {{ with index .ObjectMeta.Annotations `traffic.sidecar.istio.io/kubevirtInterfaces` }}traffic.sidecar.istio.io/kubevirtInterfaces: "{{.}}",{{ end }}
+            {{ with index .ObjectMeta.Annotations `istio.io/reroute-virtual-interfaces` }}istio.io/reroute-virtual-interfaces: "{{.}}",{{ end }}
             {{ with index .ObjectMeta.Annotations `traffic.sidecar.istio.io/excludeInterfaces` }}traffic.sidecar.istio.io/excludeInterfaces: "{{.}}",{{ end }}
         {{- end }}
           }
@@ -17759,6 +18156,12 @@ data:
           {{- $holdProxy := and
               (or .ProxyConfig.HoldApplicationUntilProxyStarts.GetValue .Values.global.proxy.holdApplicationUntilProxyStarts)
               (not $nativeSidecar) }}
+          {{- $noInitContainer := and
+              (eq (annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode) `NONE`)
+              (not $nativeSidecar) }}
+          {{ if $noInitContainer }}
+          initContainers: []
+          {{ else -}}
           initContainers:
           {{ if ne (annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode) `NONE` }}
           {{ if .Values.pilot.cni.enabled -}}
@@ -17778,7 +18181,7 @@ data:
             - "-z"
             - {{ .MeshConfig.ProxyInboundListenPort | default "15006" | quote }}
             - "-u"
-            - {{ .ProxyUID | default "1337" | quote }}
+            - {{ if $tproxy }} "1337" {{ else }} {{ .ProxyUID | default "1337" | quote }} {{ end }}
             - "-m"
             - "{{ annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode }}"
             - "-i"
@@ -17804,6 +18207,10 @@ data:
             {{ if (isset .ObjectMeta.Annotations `traffic.sidecar.istio.io/kubevirtInterfaces`) -}}
             - "-k"
             - "{{ index .ObjectMeta.Annotations `traffic.sidecar.istio.io/kubevirtInterfaces` }}"
+            {{ end -}}
+            {{ if (isset .ObjectMeta.Annotations `istio.io/reroute-virtual-interfaces`) -}}
+            - "-k"
+            - "{{ index .ObjectMeta.Annotations `istio.io/reroute-virtual-interfaces` }}"
             {{ end -}}
              {{ if (isset .ObjectMeta.Annotations `traffic.sidecar.istio.io/excludeInterfaces`) -}}
             - "-c"
@@ -17847,10 +18254,11 @@ data:
               runAsUser: 0
             {{- else }}
               readOnlyRootFilesystem: true
-              runAsGroup: {{ .ProxyGID | default "1337" }}
-              runAsUser: {{ .ProxyUID | default "1337" }}
+              runAsGroup: {{ if $tproxy }} 1337 {{ else }} {{ .ProxyGID | default "1337" }} {{ end }}
+              runAsUser: {{ if $tproxy }} 1337 {{ else }} {{ .ProxyUID | default "1337" }} {{ end }}
               runAsNonRoot: true
             {{- end }}
+          {{ end -}}
           {{ end -}}
           {{ if not $nativeSidecar }}
           containers:
@@ -17984,9 +18392,9 @@ data:
             - name: ISTIO_META_NETWORK
               value: "{{ .Values.global.network }}"
             {{- end }}
-            {{- if .DeploymentMeta.Name }}
+            {{- with (index .ObjectMeta.Labels `service.istio.io/workload-name` | default .DeploymentMeta.Name) }}
             - name: ISTIO_META_WORKLOAD_NAME
-              value: "{{ .DeploymentMeta.Name }}"
+              value: "{{ . }}"
             {{ end }}
             {{- if and .TypeMeta.APIVersion .DeploymentMeta.Name }}
             - name: ISTIO_META_OWNER
@@ -18067,13 +18475,14 @@ data:
                 - ALL
               privileged: {{ .Values.global.proxy.privileged }}
               readOnlyRootFilesystem: true
-              runAsGroup: {{ .ProxyGID | default "1337" }}
-              {{ if or (eq (annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode) `TPROXY`) (eq (annotation .ObjectMeta `sidecar.istio.io/capNetBindService` .Values.global.proxy.capNetBindService) `true`) -}}
+              {{ if or ($tproxy) (eq (annotation .ObjectMeta `sidecar.istio.io/capNetBindService` .Values.global.proxy.capNetBindService) `true`) -}}
               runAsNonRoot: false
               runAsUser: 0
+              runAsGroup: 1337
               {{- else -}}
               runAsNonRoot: true
               runAsUser: {{ .ProxyUID | default "1337" }}
+              runAsGroup: {{ .ProxyGID | default "1337" }}
               {{- end }}
               {{- end }}
             resources:
@@ -18167,8 +18576,16 @@ data:
                   audience: {{ .Values.global.sds.token.aud }}
           {{- if eq .Values.global.pilotCertProvider "istiod" }}
           - name: istiod-ca-cert
+          {{- if eq (.Values.pilot.env).ENABLE_CLUSTER_TRUST_BUNDLE_API true }}
+            projected:
+              sources:
+              - clusterTrustBundle:
+                  name: istio.io:istiod-ca:{{ .Values.global.trustBundleName | default "root-cert" }}
+                  path: root-cert.pem
+          {{- else }}
             configMap:
               name: istio-ca-root-cert
+          {{- end }}
           {{- end }}
           {{- if .Values.global.mountMtlsCerts }}
           # Use the key and cert mounted to /etc/certs/ for the in-cluster mTLS communications.
@@ -18206,13 +18623,16 @@ data:
           labels:
             service.istio.io/canonical-name: {{ index .ObjectMeta.Labels `service.istio.io/canonical-name` | default (index .ObjectMeta.Labels `app.kubernetes.io/name`) | default (index .ObjectMeta.Labels `app`) | default .DeploymentMeta.Name  | quote }}
             service.istio.io/canonical-revision: {{ index .ObjectMeta.Labels `service.istio.io/canonical-revision` | default (index .ObjectMeta.Labels `app.kubernetes.io/version`) | default (index .ObjectMeta.Labels `version`) | default "latest"  | quote }}
-          annotations: {
-            istio.io/rev: {{ .Revision | default "default" | quote }},
-            {{- if eq (len $containers) 1 }}
-            kubectl.kubernetes.io/default-logs-container: "{{ index $containers 0 }}",
-            kubectl.kubernetes.io/default-container: "{{ index $containers 0 }}",
-            {{ end }}
-          }
+          annotations:
+            istio.io/rev: {{ .Revision | default "default" | quote }}
+            {{- if ge (len $containers) 1 }}
+            {{- if not (isset .ObjectMeta.Annotations `kubectl.kubernetes.io/default-logs-container`) }}
+            kubectl.kubernetes.io/default-logs-container: "{{ index $containers 0 }}"
+            {{- end }}
+            {{- if not (isset .ObjectMeta.Annotations `kubectl.kubernetes.io/default-container`) }}
+            kubectl.kubernetes.io/default-container: "{{ index $containers 0 }}"
+            {{- end }}
+            {{- end }}
         spec:
           securityContext:
           {{- if .Values.gateways.securityContext }}
@@ -18430,8 +18850,16 @@ data:
                   audience: {{ .Values.global.sds.token.aud }}
           {{- if eq .Values.global.pilotCertProvider "istiod" }}
           - name: istiod-ca-cert
+          {{- if eq (.Values.pilot.env).ENABLE_CLUSTER_TRUST_BUNDLE_API true }}
+            projected:
+              sources:
+              - clusterTrustBundle:
+                  name: istio.io:istiod-ca:{{ .Values.global.trustBundleName | default "root-cert" }}
+                  path: root-cert.pem
+          {{- else }}
             configMap:
               name: istio-ca-root-cert
+          {{- end }}
           {{- end }}
           {{- if .Values.global.mountMtlsCerts }}
           # Use the key and cert mounted to /etc/certs/ for the in-cluster mTLS communications.
@@ -18801,8 +19229,16 @@ data:
                   audience: {{ .Values.global.sds.token.aud }}
           {{- if eq .Values.global.pilotCertProvider "istiod" }}
           - name: istiod-ca-cert
+          {{- if eq (.Values.pilot.env).ENABLE_CLUSTER_TRUST_BUNDLE_API true }}
+            projected:
+              sources:
+              - clusterTrustBundle:
+                  name: istio.io:istiod-ca:{{ .Values.global.trustBundleName | default "root-cert" }}
+                  path: root-cert.pem
+          {{- else }}
             configMap:
               name: istio-ca-root-cert
+          {{- end }}
           {{- end }}
           {{- if .Values.global.mountMtlsCerts }}
           # Use the key and cert mounted to /etc/certs/ for the in-cluster mTLS communications.
@@ -18950,6 +19386,9 @@ data:
                 {{- if .Values.global.logAsJson }}
                 - --log_as_json
                 {{- end }}
+                {{- if .Values.global.proxy.outlierLogPath }}
+                - --outlierLogPath={{ .Values.global.proxy.outlierLogPath }}
+                {{- end}}
                 env:
                 - name: ISTIO_META_SERVICE_ACCOUNT
                   valueFrom:
@@ -19027,6 +19466,10 @@ data:
                 {{- else if (valueOrDefault .MeshConfig.TrustDomain .Values.global.trustDomain) }}
                 - name: ISTIO_META_MESH_ID
                   value: "{{ (valueOrDefault .MeshConfig.TrustDomain .Values.global.trustDomain) }}"
+                {{- end }}
+                {{- with (valueOrDefault .MeshConfig.TrustDomain .Values.global.trustDomain) }}
+                - name: TRUST_DOMAIN
+                  value: "{{ . }}"
                 {{- end }}
                 {{- if .Values.global.waypoint.resources }}
                 resources:
@@ -19110,9 +19553,17 @@ data:
                       audience: istio-ca
                       expirationSeconds: 43200
                       path: istio-token
-              - configMap:
+              - name: istiod-ca-cert
+              {{- if eq (.Values.pilot.env).ENABLE_CLUSTER_TRUST_BUNDLE_API true }}
+                projected:
+                  sources:
+                  - clusterTrustBundle:
+                      name: istio.io:istiod-ca:root-cert
+                      path: root-cert.pem
+              {{- else }}
+                configMap:
                   name: istio-ca-root-cert
-                name: istiod-ca-cert
+              {{- end }}
               {{- if .Values.global.imagePullSecrets }}
               imagePullSecrets:
                 {{- range .Values.global.imagePullSecrets }}
@@ -19161,6 +19612,53 @@ data:
           {{- end }}
           type: {{ .ServiceType | quote }}
         ---
+        apiVersion: autoscaling/v2
+        kind: HorizontalPodAutoscaler
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+                  .InfrastructureLabels
+                  (strdict
+                  "gateway.networking.k8s.io/gateway-name" .Name
+                  ) | nindent 4 }}
+          ownerReferences:
+            - apiVersion: gateway.networking.k8s.io/v1beta1
+              kind: Gateway
+              name: {{.Name}}
+              uid: "{{.UID}}"
+        spec:
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name:  {{.DeploymentName | quote}}
+          maxReplicas: 1
+        ---
+        apiVersion: policy/v1
+        kind: PodDisruptionBudget
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+                  .InfrastructureLabels
+                  (strdict
+                  "gateway.networking.k8s.io/gateway-name" .Name
+                  ) | nindent 4 }}
+          ownerReferences:
+            - apiVersion: gateway.networking.k8s.io/v1beta1
+              kind: Gateway
+              name: {{.Name}}
+              uid: "{{.UID}}"
+        spec:
+          selector:
+            matchLabels:
+              gateway.networking.k8s.io/gateway-name: {{.Name|quote}}
       kube-gateway: |
         apiVersion: v1
         kind: ServiceAccount
@@ -19463,8 +19961,16 @@ data:
                       audience: {{ .Values.global.sds.token.aud }}
               {{- if eq .Values.global.pilotCertProvider "istiod" }}
               - name: istiod-ca-cert
+              {{- if eq ((.Values.pilot).env).ENABLE_CLUSTER_TRUST_BUNDLE_API true }}
+                projected:
+                  sources:
+                  - clusterTrustBundle:
+                      name: istio.io:istiod-ca:root-cert
+                      path: root-cert.pem
+              {{- else }}
                 configMap:
                   name: istio-ca-root-cert
+              {{- end }}
               {{- end }}
               {{- if .Values.global.imagePullSecrets }}
               imagePullSecrets:
@@ -19507,6 +20013,53 @@ data:
           {{- end }}
           type: {{ .ServiceType | quote }}
         ---
+        apiVersion: autoscaling/v2
+        kind: HorizontalPodAutoscaler
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+                  .InfrastructureLabels
+                  (strdict
+                  "gateway.networking.k8s.io/gateway-name" .Name
+                  ) | nindent 4 }}
+          ownerReferences:
+            - apiVersion: gateway.networking.k8s.io/v1beta1
+              kind: Gateway
+              name: {{.Name}}
+              uid: "{{.UID}}"
+        spec:
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name:  {{.DeploymentName | quote}}
+          maxReplicas: 1
+        ---
+        apiVersion: policy/v1
+        kind: PodDisruptionBudget
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+                  .InfrastructureLabels
+                  (strdict
+                  "gateway.networking.k8s.io/gateway-name" .Name
+                  ) | nindent 4 }}
+          ownerReferences:
+            - apiVersion: gateway.networking.k8s.io/v1beta1
+              kind: Gateway
+              name: {{.Name}}
+              uid: "{{.UID}}"
+        spec:
+          selector:
+            matchLabels:
+              gateway.networking.k8s.io/gateway-name: {{.Name|quote}}
   values: |-
     {
       "gateways": {
@@ -19621,7 +20174,8 @@ data:
         "cni": {
           "enabled": false,
           "provider": "default"
-        }
+        },
+        "env": {}
       },
       "revision": "",
       "sidecarInjectorWebhook": {
@@ -19642,13 +20196,296 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
     release: istio
   name: istio-sidecar-injector
+  namespace: istio-system
+
+---
+apiVersion: v1
+data:
+  merged-values: |-
+    {
+      "affinity": {},
+      "autoscaleBehavior": {},
+      "autoscaleEnabled": true,
+      "autoscaleMax": 5,
+      "autoscaleMin": 1,
+      "base": {
+        "enableIstioConfigCRDs": true
+      },
+      "cni": {
+        "enabled": false,
+        "provider": "default"
+      },
+      "configMap": true,
+      "cpu": {
+        "targetAverageUtilization": 80
+      },
+      "defaultRevision": "",
+      "deploymentLabels": {},
+      "enabled": true,
+      "env": {},
+      "envVarFrom": [],
+      "experimental": {
+        "stableValidationPolicy": false
+      },
+      "extraContainerArgs": [],
+      "gatewayClasses": {},
+      "gateways": {
+        "istio-egressgateway": {},
+        "istio-ingressgateway": {},
+        "seccompProfile": {},
+        "securityContext": {}
+      },
+      "global": {
+        "caAddress": "",
+        "caName": "",
+        "certSigners": [],
+        "configCluster": false,
+        "configValidation": true,
+        "defaultPodDisruptionBudget": {
+          "enabled": true
+        },
+        "defaultResources": {
+          "requests": {
+            "cpu": "10m"
+          }
+        },
+        "externalIstiod": false,
+        "hub": "gcr.io/istio-release",
+        "imagePullPolicy": "",
+        "imagePullSecrets": [],
+        "istioNamespace": "istio-system",
+        "istiod": {
+          "enableAnalysis": false
+        },
+        "logAsJson": false,
+        "logging": {
+          "level": "default:info"
+        },
+        "meshID": "",
+        "meshNetworks": {},
+        "mountMtlsCerts": false,
+        "multiCluster": {
+          "clusterName": "",
+          "enabled": false
+        },
+        "network": "",
+        "omitSidecarInjectorConfigMap": false,
+        "operatorManageWebhooks": false,
+        "pilotCertProvider": "istiod",
+        "priorityClassName": "",
+        "proxy": {
+          "autoInject": "enabled",
+          "clusterDomain": "cluster.local",
+          "componentLogLevel": "misc:error",
+          "excludeIPRanges": "",
+          "excludeInboundPorts": "",
+          "excludeOutboundPorts": "",
+          "image": "proxyv2",
+          "includeIPRanges": "*",
+          "includeInboundPorts": "*",
+          "includeOutboundPorts": "",
+          "logLevel": "warning",
+          "outlierLogPath": "",
+          "privileged": false,
+          "readinessFailureThreshold": 4,
+          "readinessInitialDelaySeconds": 0,
+          "readinessPeriodSeconds": 15,
+          "resources": {
+            "limits": {
+              "cpu": "2000m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "128Mi"
+            }
+          },
+          "startupProbe": {
+            "enabled": true,
+            "failureThreshold": 600
+          },
+          "statusPort": 15020,
+          "tracer": "none"
+        },
+        "proxy_init": {
+          "forceApplyIptables": false,
+          "image": "proxyv2"
+        },
+        "remotePilotAddress": "",
+        "sds": {
+          "token": {
+            "aud": "istio-ca"
+          }
+        },
+        "sts": {
+          "servicePort": 0
+        },
+        "tag": "1.24.2-distroless",
+        "variant": "",
+        "waypoint": {
+          "affinity": {},
+          "nodeSelector": {},
+          "resources": {
+            "limits": {
+              "cpu": "2",
+              "memory": "1Gi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "128Mi"
+            }
+          },
+          "tolerations": [],
+          "topologySpreadConstraints": []
+        }
+      },
+      "hub": "",
+      "image": "pilot",
+      "initContainers": [],
+      "ipFamilies": [],
+      "ipFamilyPolicy": "",
+      "istiodRemote": {
+        "enabled": false,
+        "injectionCABundle": "",
+        "injectionPath": "/inject",
+        "injectionURL": ""
+      },
+      "jwksResolverExtraRootCA": "",
+      "keepaliveMaxServerConnectionAge": "30m",
+      "memory": {},
+      "meshConfig": {
+        "accessLogEncoding": "JSON",
+        "accessLogFile": "/dev/stdout",
+        "defaultConfig": {
+          "tracing": {
+            "sampling": 100
+          }
+        },
+        "enablePrometheusMerge": true,
+        "enableTracing": true
+      },
+      "nodeSelector": {},
+      "ownerName": "",
+      "pilot": {
+        "cni": {
+          "enabled": false
+        },
+        "enabled": true
+      },
+      "podAnnotations": {},
+      "podLabels": {},
+      "replicaCount": 1,
+      "resources": {
+        "requests": {
+          "cpu": "500m",
+          "memory": "2048Mi"
+        }
+      },
+      "revision": "",
+      "revisionTags": [],
+      "rollingMaxSurge": "100%",
+      "rollingMaxUnavailable": "25%",
+      "seccompProfile": {},
+      "serviceAccountAnnotations": {},
+      "serviceAnnotations": {},
+      "sidecarInjectorWebhook": {
+        "alwaysInjectSelector": [],
+        "defaultTemplates": [],
+        "enableNamespacesByDefault": false,
+        "injectedAnnotations": {},
+        "neverInjectSelector": [],
+        "reinvocationPolicy": "Never",
+        "rewriteAppHTTPProbe": true,
+        "templates": {}
+      },
+      "sidecarInjectorWebhookAnnotations": {},
+      "tag": "",
+      "taint": {
+        "enabled": false,
+        "namespace": ""
+      },
+      "telemetry": {
+        "enabled": true,
+        "v2": {
+          "enabled": true,
+          "prometheus": {
+            "enabled": true
+          },
+          "stackdriver": {
+            "enabled": false
+          }
+        }
+      },
+      "tolerations": [],
+      "topologySpreadConstraints": [],
+      "traceSampling": 1,
+      "trustedZtunnelName": "",
+      "trustedZtunnelNamespace": "",
+      "variant": "",
+      "volumeMounts": [],
+      "volumes": [],
+      "ztunnel": {
+        "resourceName": "ztunnel"
+      }
+    }
+  original-values: |-
+    {
+      "defaultRevision": "",
+      "gateways": {
+        "istio-egressgateway": {},
+        "istio-ingressgateway": {}
+      },
+      "global": {
+        "configValidation": true,
+        "hub": "gcr.io/istio-release",
+        "istioNamespace": "istio-system",
+        "tag": "1.24.2-distroless"
+      },
+      "meshConfig": {
+        "accessLogEncoding": "JSON",
+        "accessLogFile": "/dev/stdout",
+        "defaultConfig": {
+          "tracing": {
+            "sampling": 100
+          }
+        },
+        "enableTracing": true
+      },
+      "pilot": {
+        "cni": {
+          "enabled": false
+        },
+        "enabled": true
+      },
+      "ztunnel": {
+        "resourceName": "ztunnel"
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    kubernetes.io/description: This ConfigMap contains the Helm values used during
+      chart rendering. This ConfigMap is rendered for debugging purposes and external
+      tooling; modifying these values has no effect.
+  labels:
+    app.kubernetes.io/instance: istio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: istiod
+    app.kubernetes.io/part-of: istio
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
+    install.operator.istio.io/owning-resource: unknown
+    istio.io/rev: default
+    operator.istio.io/component: Pilot
+    release: istio
+  name: values
   namespace: istio-system
 
 ---
@@ -19661,8 +20498,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -19820,10 +20657,11 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
+    istio.io/dataplane-mode: none
     istio.io/rev: default
     operator.istio.io/component: IngressGateways
     release: istio
@@ -19852,12 +20690,13 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: istio-ingressgateway
         app.kubernetes.io/part-of: istio
-        app.kubernetes.io/version: 1.24.2
+        app.kubernetes.io/version: 1.0.0
         chart: gateways
-        helm.sh/chart: istio-ingress-1.24.2
+        helm.sh/chart: istio-ingress-1.0.0
         heritage: Tiller
         install.operator.istio.io/owning-resource: unknown
         istio: ingressgateway
+        istio.io/dataplane-mode: none
         istio.io/rev: default
         operator.istio.io/component: IngressGateways
         release: istio
@@ -20061,8 +20900,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: pilot
     istio.io/rev: default
@@ -20090,8 +20929,8 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: istiod
         app.kubernetes.io/part-of: istio
-        app.kubernetes.io/version: 1.24.2
-        helm.sh/chart: istiod-1.24.2
+        app.kubernetes.io/version: 1.0.0
+        helm.sh/chart: istiod-1.0.0
         install.operator.istio.io/owning-resource: unknown
         istio: pilot
         istio.io/dataplane-mode: none
@@ -20121,6 +20960,8 @@ spec:
         - --keepaliveMaxServerConnectionAge
         - 30m
         env:
+        - name: ENABLE_NATIVE_SIDECARS
+          value: "true"
         - name: REVISION
           value: default
         - name: PILOT_CERT_PROVIDER
@@ -20153,6 +20994,7 @@ spec:
         - name: GOMEMLIMIT
           valueFrom:
             resourceFieldRef:
+              divisor: "1"
               resource: limits.memory
         - name: GOMAXPROCS
           valueFrom:
@@ -20258,8 +21100,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -20284,8 +21126,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: pilot
     istio.io/rev: default
@@ -20308,8 +21150,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: IngressGateways
@@ -20336,8 +21178,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod
   namespace: istio-system
@@ -20384,8 +21226,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: IngressGateways
@@ -20410,8 +21252,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod
   namespace: istio-system
@@ -20434,8 +21276,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -20468,8 +21310,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -20502,8 +21344,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istio-ingress-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -20535,8 +21377,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.24.2
-    helm.sh/chart: istiod-1.24.2
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: pilot
     istio.io/rev: default

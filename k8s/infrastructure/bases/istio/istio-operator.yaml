@@ -51,6 +51,9 @@ spec:
           rollingUpdate:
             maxSurge: 100%
             maxUnavailable: 50%
+        env:
+          - name: ENABLE_NATIVE_SIDECARS
+            value: "true"
     ingressGateways:
     - name: istio-ingressgateway
       enabled: true
