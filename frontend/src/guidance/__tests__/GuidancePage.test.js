@@ -167,7 +167,7 @@ describe('<GuidancePage />', () => {
     )
 
     await waitFor(() => {
-      expect(getByText(/Error while retrieving scan data/)).toBeInTheDocument()
+      expect(getByText(/Unable to retrieve scan data for/)).toBeInTheDocument()
     })
     expect(getByText('Test 2')).toBeInTheDocument()
     const requestAccessButtons = getAllByRole('button', { name: /Request Invite/ })
