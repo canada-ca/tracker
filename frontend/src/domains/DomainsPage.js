@@ -57,6 +57,7 @@ export default function DomainsPage() {
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
       variables: { filters },
+      fetchPolicy: 'no-cache',
       onError(error) {
         toast({
           title: error.message,
@@ -72,6 +73,7 @@ export default function DomainsPage() {
 
   const [getTop25Report, { loading: top25ReportLoading }] = useLazyQuery(GET_TOP_25_REPORT, {
     variables: { filters },
+    fetchPolicy: 'no-cache',
     onError(error) {
       toast({
         title: error.message,
