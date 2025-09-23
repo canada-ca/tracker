@@ -68,9 +68,9 @@ spec:
                       name: scanners
                       key: SERVICE_ACCOUNT_EMAIL
                 - name: DETECT_DECAY_DRY_RUN_LOG_MODE
-                  value: "true"
-                - name: DETECT_DECAY_DRY_RUN_EMAIL_MODE
                   value: "false"
+                - name: DETECT_DECAY_DRY_RUN_EMAIL_MODE
+                  value: "true"
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
