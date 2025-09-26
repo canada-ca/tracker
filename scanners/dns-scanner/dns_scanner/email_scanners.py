@@ -207,6 +207,25 @@ class DMARCScanner:
                 },
             }
 
+        effective_policy_source = None
+        effective_policy = None
+
+        p_policy = scan_result["dmarc"].get("tags", {}).get("p", {}).get("value", None)
+        sp_policy = (
+            scan_result["dmarc"].get("tags", {}).get("sp", {}).get("value", None)
+        )
+
+        if p_policy and sp_policy:
+            if self.domain == scan_result.get("dmarc", {}).get("location", ""):
+                effective_policy_source = "p"
+                effective_policy = p_policy
+            else:
+                effective_policy_source = "sp"
+                effective_policy = sp_policy
+
+        scan_result["dmarc"]["effective_policy_source"] = effective_policy_source
+        scan_result["dmarc"]["effective_policy"] = effective_policy
+
         def fix_spf_recursive_record_data(spf_res):
             parsed_spf = spf_res.get("parsed", {})
 
