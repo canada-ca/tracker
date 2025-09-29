@@ -8,6 +8,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 START_HOUR = int(os.getenv("DETECT_DECAY_START_HOUR"))  
 START_MINUTE = int(os.getenv("DETECT_DECAY_START_MINUTE"))
+MINIMUM_SCANS = int(os.getenv("DETECT_DECAY_MINIMUM_SCANS"))
 DRY_RUN_EMAIL_MODE = os.getenv("DETECT_DECAY_DRY_RUN_EMAIL_MODE", "false") == "true"
 DRY_RUN_LOG_MODE = os.getenv("DETECT_DECAY_DRY_RUN_LOG_MODE", "false") == "true"
 SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")

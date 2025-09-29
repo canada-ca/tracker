@@ -47,6 +47,8 @@ spec:
                   value: "7"
                 - name: DETECT_DECAY_START_MINUTE
                   value: "0"
+                - name: DETECT_DECAY_MINIMUM_SCANS
+                  value: "5"
                 - name: NOTIFICATION_API_URL
                   valueFrom:
                     secretKeyRef:
