@@ -54,7 +54,7 @@ def get_timestamp(days, hr, min):
 
 # Returns all dns scans that ran in the past 24hrs + the last dns scan that ran before this time
 def get_all_dns_scans(domain_id, db):
-    time_period_start = get_timestamp(MINIMUM_SCANS, START_HOUR, START_MINUTE)
+    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
     dns_scans = db.aql.execute(
         """
         WITH domains, dns
@@ -86,7 +86,7 @@ def get_all_dns_scans(domain_id, db):
 
 # Returns all web scans that ran in the past 24hrs + the last web scan that ran before this time
 def get_all_web_scans(domain_id, db):
-    time_period_start = get_timestamp(MINIMUM_SCANS, START_HOUR, START_MINUTE)
+    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
     web_scans = db.aql.execute(
         """
         WITH domains, web

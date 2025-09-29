@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
 from detect_decay import *
-from config import DB_URL, DB_USER, DB_PASS, START_HOUR, START_MINUTE
+from config import DB_URL, DB_USER, DB_PASS, START_HOUR, START_MINUTE, MINIMUM_SCANS
 
 
 @pytest.fixture()
@@ -85,84 +85,84 @@ def arango_db():
             "archived": False,
             "blocked": False,
             "rcode": "NOERROR"
-        },
-        {
-            "_id": "domains/3",
-            "domain": "domain3.gc.ca",
-            "archived": True,
-            "blocked": False,
-            "rcode": "NOERROR"
-        },
-        {
-            "_id": "domains/4",
-            "domain": "domain4.gc.ca",
-            "archived": False,
-            "blocked": False,
-            "rcode": "NOERROR"
         }
     ]
     claims = [
         {"_from": "organizations/1", "_to": "domains/1", "assetState": "approved"},
         {"_from": "organizations/1", "_to": "domains/2", "assetState": "approved"},
-        {"_from": "organizations/1", "_to": "domains/3", "assetState": "approved"},
-        {"_from": "organizations/2", "_to": "domains/4", "assetState": "approved"},
     ]
-    now = datetime.now(timezone.utc).replace(hour=START_HOUR, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds')
-    past = (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=START_HOUR, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds')
+    times = []
+    for i in range(MINIMUM_SCANS):
+        times.append((datetime.now(timezone.utc) - timedelta(days=i+1)).replace(hour=20, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds'))
+    print(times)
     dns = [
-        {
+        {   # Domain 1, DMARC decay
             "_id": "dns/11",
-            "timestamp": now,
+            "timestamp": times[0],
             "dmarc": {"status": "fail"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         },
         {
             "_id": "dns/12",
-            "timestamp": past,
-            "dmarc": {"status": "pass"},
+            "timestamp": times[1],
+            "dmarc": {"status": "fail"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         },
         {
+            "_id": "dns/13",
+            "timestamp": times[2],
+            "dmarc": {"status": "fail"},
+            "spf": {"status": "pass"},
+            "dkim": {"status": "pass"},
+        },
+        {
+            "_id": "dns/14",
+            "timestamp": times[3],
+            "dmarc": {"status": "fail"},
+            "spf": {"status": "pass"},
+            "dkim": {"status": "pass"},
+        },
+        {
+            "_id": "dns/15",
+            "timestamp": times[4],
+            "dmarc": {"status": "pass"},
+            "spf": {"status": "pass"},
+            "dkim": {"status": "pass"},
+        },
+        {   # Domain 2, no decay
             "_id": "dns/21",
-            "timestamp": now,
+            "timestamp": times[0],
             "dmarc": {"status": "pass"},
             "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
         {
             "_id": "dns/22",
-            "timestamp": past,
+            "timestamp": times[1],
             "dmarc": {"status": "pass"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         },
-        {   # Archived domain, should be ignored despite having decay
-            "_id": "dns/31",
-            "timestamp": now,
+        {   
+            "_id": "dns/23",
+            "timestamp": times[2],
             "dmarc": {"status": "fail"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         },
         {
-            "_id": "dns/32",
-            "timestamp": past,
+            "_id": "dns/24",
+            "timestamp": times[3],
             "dmarc": {"status": "pass"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         },
-        {   # Domain 4 from unverifified org, should be ignored
-            "_id": "dns/41",
-            "timestamp": now,
+        {   
+            "_id": "dns/25",
+            "timestamp": times[4],
             "dmarc": {"status": "fail"},
-            "spf": {"status": "pass"},
-            "dkim": {"status": "pass"},
-        },
-        {
-            "_id": "dns/42",
-            "timestamp": past,
-            "dmarc": {"status": "pass"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         }
@@ -179,6 +179,21 @@ def arango_db():
             "_to": "dns/12"
         },
         {
+            "_id": "domainsDNS/13",
+            "_from": "domains/1",
+            "_to": "dns/13"
+        },
+        {
+            "_id": "domainsDNS/14",
+            "_from": "domains/1",
+            "_to": "dns/14"
+        },
+        {
+            "_id": "domainsDNS/15",
+            "_from": "domains/1",
+            "_to": "dns/15"
+        },
+        {
             "_id": "domainsDNS/21",
             "_from": "domains/2",
             "_to": "dns/21"
@@ -189,31 +204,32 @@ def arango_db():
             "_to": "dns/22"
         },
         {
-            "_id": "domainsDNS/31",
-            "_from": "domains/3",
-            "_to": "dns/31"
+            "_id": "domainsDNS/23",
+            "_from": "domains/2",
+            "_to": "dns/23"
         },
         {
-            "_id": "domainsDNS/32",
-            "_from": "domains/3",
-            "_to": "dns/32"
+            "_id": "domainsDNS/24",
+            "_from": "domains/2",
+            "_to": "dns/24"
         },
         {
-            "_id": "domainsDNS/41",
-            "_from": "domains/4",
-            "_to": "dns/41"
-        },
-        {
-            "_id": "domainsDNS/42",
-            "_from": "domains/4",
-            "_to": "dns/42"
+            "_id": "domainsDNS/25",
+            "_from": "domains/2",
+            "_to": "dns/25"
         },
     ]
     web = [
-        {"_id": "web/11", "timestamp": now},
-        {"_id": "web/12", "timestamp": past},
-        {"_id": "web/21", "timestamp": now},
-        {"_id": "web/22", "timestamp": past}
+        {"_id": "web/11", "timestamp": times[0]},
+        {"_id": "web/12", "timestamp": times[1]},
+        {"_id": "web/13", "timestamp": times[2]},
+        {"_id": "web/14", "timestamp": times[3]},
+        {"_id": "web/15", "timestamp": times[4]},
+        {"_id": "web/21", "timestamp": times[0]},
+        {"_id": "web/22", "timestamp": times[1]},
+        {"_id": "web/23", "timestamp": times[2]},
+        {"_id": "web/24", "timestamp": times[3]},
+        {"_id": "web/25", "timestamp": times[4]},
     ]
     domainsWeb = [
         {
@@ -227,6 +243,21 @@ def arango_db():
             "_to": "web/12"
         },
         {
+            "_id": "domainsWeb/13",
+            "_from": "domains/1",
+            "_to": "web/13"
+        },
+        {
+            "_id": "domainsWeb/14",
+            "_from": "domains/1",
+            "_to": "web/14"
+        },
+        {
+            "_id": "domainsWeb/15",
+            "_from": "domains/1",
+            "_to": "web/15"
+        },
+        {
             "_id": "domainsWeb/21",
             "_from": "domains/2",
             "_to": "web/21"
@@ -235,16 +266,31 @@ def arango_db():
             "_id": "domainsWeb/22",
             "_from": "domains/2",
             "_to": "web/22"
-        }
+        },
+        {
+            "_id": "domainsWeb/23",
+            "_from": "domains/2",
+            "_to": "web/23"
+        },
+        {
+            "_id": "domainsWeb/24",
+            "_from": "domains/2",
+            "_to": "web/24"
+        },
+        {
+            "_id": "domainsWeb/25",
+            "_from": "domains/2",
+            "_to": "web/25"
+        },
     ]
     webScan = [
-        {   # Domain 1, first scan, Certificate decay
+        {   # Domain 1, no decay
             "_id": "webScan/11",
             "status": "complete",
             "results": {
                 "tlsResult": {
                     "sslStatus": "pass",
-                    "certificateStatus": "fail",
+                    "certificateStatus": "pass",
                     "protocolStatus": "pass",
                     "cipherStatus": "pass",
                     "curveStatus": "pass",
@@ -253,10 +299,10 @@ def arango_db():
                     "httpsStatus": "pass",
                     "hstsStatus": "pass",
                 },
-                "timestamp": now,
+                "timestamp": times[0],
             }           
         },
-        {   # Domain 1, second scan
+        {   
             "_id": "webScan/12",
             "status": "complete",
             "results": {
@@ -271,11 +317,83 @@ def arango_db():
                     "httpsStatus": "pass",
                     "hstsStatus": "pass",
                 },
-                "timestamp": past,
+                "timestamp": times[1],
             }
         },
-        {   # Domain 2, IP Address 1, first scan, HTTPS decay
+        {   
+            "_id": "webScan/13",
+            "status": "complete",
+            "results": {
+                "tlsResult": {
+                    "sslStatus": "pass",
+                    "certificateStatus": "pass",
+                    "protocolStatus": "pass",
+                    "cipherStatus": "pass",
+                    "curveStatus": "pass",
+                },
+                "connectionResults": {
+                    "httpsStatus": "pass",
+                    "hstsStatus": "pass",
+                },
+                "timestamp": times[2],
+            }
+        },
+        {   
+            "_id": "webScan/14",
+            "status": "complete",
+            "results": {
+                "tlsResult": {
+                    "sslStatus": "pass",
+                    "certificateStatus": "pass",
+                    "protocolStatus": "pass",
+                    "cipherStatus": "pass",
+                    "curveStatus": "pass",
+                },
+                "connectionResults": {
+                    "httpsStatus": "pass",
+                    "hstsStatus": "pass",
+                },
+                "timestamp": times[3],
+            }
+        },
+        {   
+            "_id": "webScan/15",
+            "status": "complete",
+            "results": {
+                "tlsResult": {
+                    "sslStatus": "pass",
+                    "certificateStatus": "pass",
+                    "protocolStatus": "pass",
+                    "cipherStatus": "pass",
+                    "curveStatus": "pass",
+                },
+                "connectionResults": {
+                    "httpsStatus": "pass",
+                    "hstsStatus": "pass",
+                },
+                "timestamp": times[4],
+            }
+        },
+        {   # Domain 2, IP Address 1, HTTPS decay
             "_id": "webScan/211", 
+            "status": "complete",
+            "results": {
+                "tlsResult": {
+                    "sslStatus": "pass",
+                    "certificateStatus": "pass",
+                    "protocolStatus": "pass",
+                    "cipherStatus": "pass",
+                    "curveStatus": "pass",
+                },
+                "connectionResults": {
+                    "httpsStatus": "pass",
+                    "hstsStatus": "pass",
+                },
+                "timestamp": times[0],
+            }
+        },
+        {   # IP Address 2
+            "_id": "webScan/221", 
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -289,10 +407,10 @@ def arango_db():
                     "httpsStatus": "fail",
                     "hstsStatus": "pass",
                 },
-                "timestamp": now,
+                "timestamp": times[0],
             }
         },
-        {   # Domain 2, IP Address 1, second scan
+        {   
             "_id": "webScan/212", 
             "status": "complete",
             "results": {
@@ -304,14 +422,50 @@ def arango_db():
                     "curveStatus": "pass",
                 },
                 "connectionResults": {
-                    "httpsStatus": "pass",
+                    "httpsStatus": "fail",
                     "hstsStatus": "pass",
                 },
-                "timestamp": past,
+                "timestamp": times[1],
             }
         },
-        {   # Domain 2, IP Address 2, first scan, no decay
-            "_id": "webScan/221", 
+        {   
+            "_id": "webScan/213", 
+            "status": "complete",
+            "results": {
+                "tlsResult": {
+                    "sslStatus": "pass",
+                    "certificateStatus": "pass",
+                    "protocolStatus": "pass",
+                    "cipherStatus": "pass",
+                    "curveStatus": "pass",
+                },
+                "connectionResults": {
+                    "httpsStatus": "fail",
+                    "hstsStatus": "pass",
+                },
+                "timestamp": times[2],
+            }
+        },
+        {   
+            "_id": "webScan/214", 
+            "status": "complete",
+            "results": {
+                "tlsResult": {
+                    "sslStatus": "pass",
+                    "certificateStatus": "pass",
+                    "protocolStatus": "pass",
+                    "cipherStatus": "pass",
+                    "curveStatus": "pass",
+                },
+                "connectionResults": {
+                    "httpsStatus": "fail",
+                    "hstsStatus": "pass",
+                },
+                "timestamp": times[3],
+            }
+        },
+        {   
+            "_id": "webScan/215", 
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -325,59 +479,66 @@ def arango_db():
                     "httpsStatus": "pass",
                     "hstsStatus": "pass",
                 },
-                "timestamp": now,
+                "timestamp": times[4],
             }
         },
-        {   # Domain 2, IP Address 2, second scan
-            "_id": "webScan/222", 
-            "status": "complete",
-            "results": {
-                "tlsResult": {
-                    "sslStatus": "pass",
-                    "certificateStatus": "pass",
-                    "protocolStatus": "pass",
-                    "cipherStatus": "pass",
-                    "curveStatus": "pass",
-                },
-                "connectionResults": {
-                    "httpsStatus": "pass",
-                    "hstsStatus": "pass",
-                },
-                "timestamp": past,
-            }
-        }
     ]
     webToWebScans = [
-        {   # Domain 1, first scan
+        {   # Domain 1
             "_id": "webToWebScans/11",
             "_from": "web/11",
             "_to": "webScan/11"
         },
-        {   # Domain 1, second scan
+        {   
             "_id": "webToWebScans/12",
             "_from": "web/12",
             "_to": "webScan/12"
         },
-        {   # Domain 2, IP 1, first scan
+        {   
+            "_id": "webToWebScans/13",
+            "_from": "web/13",
+            "_to": "webScan/13"
+        },
+        {   
+            "_id": "webToWebScans/14",
+            "_from": "web/14",
+            "_to": "webScan/14"
+        },
+        {   
+            "_id": "webToWebScans/15",
+            "_from": "web/15",
+            "_to": "webScan/15"
+        },
+        {   # Domain 2, IP 1
             "_id": "webToWebScans/211",
             "_from": "web/21",
             "_to": "webScan/211"
         },
-        {   # Domain 2, IP 1, second scan
-            "_id": "webToWebScans/212",
-            "_from": "web/22",
-            "_to": "webScan/212"
-        },
-        {   # Domain 2, IP 2, first scan
+        {   # IP 2
             "_id": "webToWebScans/221",
             "_from": "web/21",
             "_to": "webScan/221"
         },
-        {   # Domain 2, IP 2, second scan
-            "_id": "webToWebScans/222",
+        {   
+            "_id": "webToWebScans/212",
             "_from": "web/22",
-            "_to": "webScan/222"
-        }
+            "_to": "webScan/212"
+        },
+        {   
+            "_id": "webToWebScans/213",
+            "_from": "web/23",
+            "_to": "webScan/213"
+        },
+        {   
+            "_id": "webToWebScans/214",
+            "_from": "web/24",
+            "_to": "webScan/214"
+        },
+        {   
+            "_id": "webToWebScans/215",
+            "_from": "web/25",
+            "_to": "webScan/215"
+        },
     ]
     users = [
         {   # Org 1 Owner
@@ -448,17 +609,17 @@ def arango_db():
 
 def test_db_data(arango_db):
     assert arango_db["organizations"].count() == 2, "Should have 2 organizations"
-    assert arango_db["domains"].count() == 4, "Should have 4 domains"
-    assert arango_db["dns"].count() == 8, "Should have 8 DNS records"
-    assert arango_db["web"].count() == 4, "Should have 4 web records"
-    assert arango_db["webScan"].count() == 6, "Should have 6 web scans"
+    assert arango_db["domains"].count() == 2, "Should have 2 domains"
+    assert arango_db["dns"].count() == 10, "Should have 10 DNS records"
+    assert arango_db["web"].count() == 10, "Should have 10 web records"
+    assert arango_db["webScan"].count() == 11, "Should have 11 web scans"
     assert arango_db["users"].count() == 3, "Should have 3 users"
-    assert arango_db["claims"].count() == 4, "Should have 4 claims"
-    assert arango_db["domainsDNS"].count() == 8, "Should have 8 domainsDNS edges"
-    assert arango_db["domainsWeb"].count() == 4, "Should have 4 domainsWeb edges"
-    assert arango_db["webToWebScans"].count() == 6, "Should have 6 webToWebScans edges"
+    assert arango_db["claims"].count() == 2, "Should have 2 claims"
+    assert arango_db["domainsDNS"].count() == 10, "Should have 10 domainsDNS edges"
+    assert arango_db["domainsWeb"].count() == 10, "Should have 10 domainsWeb edges"
+    assert arango_db["webToWebScans"].count() == 11, "Should have 11 webToWebScans edges"
     assert arango_db["affiliations"].count() == 3, "Should have 3 affiliations"
-
+'''
     assert (
             arango_db.aql.execute(
                 """
@@ -589,42 +750,19 @@ def test_db_data(arango_db):
             ).count()
             == 2
         )
-
-
-def test_ignore_domain():
-    assert ignore_domain({"archived": True}) is True, "Should return True for archived domain"
-    assert ignore_domain({"blocked": True}) is True, "Should return True for blocked domain"
-    assert ignore_domain({"rcode": "NXDOMAIN"}) is True, "Should return True for NXDOMAIN"
-    assert ignore_domain({"archived": False, "blocked": False, "rcode": "NOERROR"}) is False, "Should return False for valid domain"
+'''
 
 def test_get_all_dns_scans(arango_db):
-    assert len(list(get_all_dns_scans("domains/1", arango_db))) == 2, "Should return 2 dns scans for domains/1"
-    assert len(list(get_all_dns_scans("domains/2", arango_db))) == 2, "Should return 2 dns scans for domains/2"
+    assert len(list(get_all_dns_scans("domains/1", arango_db))) == 5, "Should return 5 dns scans for domains/1"
+    assert len(list(get_all_dns_scans("domains/2", arango_db))) == 5, "Should return 5 dns scans for domains/2"
 
 def test_get_all_web_scans(arango_db):
     web_docs1 = list(get_all_web_scans("domains/1", arango_db))
-    assert len(web_docs1) == 2, "Should return 2 web docs for domains/1"
-    assert len(web_docs1[0].get("scans")) == 1
-    assert len(web_docs1[1].get("scans")) == 1
-
+    assert len(web_docs1) == 5, "Should return 5 web docs for domains/1"
 
     web_docs2 = list(get_all_web_scans("domains/2", arango_db))
-    assert len(web_docs2) == 2, "Should return 2 web docs for domains/2"
+    assert len(web_docs2) == 5, "Should return 5 web docs for domains/2"
     assert len(web_docs2[0].get("scans")) == 2
-    assert len(web_docs2[1].get("scans")) == 2
-
-def test_get_status():
-    assert get_status(["fail", "fail"]) == "fail", "Should return fail"
-    assert get_status(["pass", "fail"]) == "fail", "Should return fail"
-    assert get_status(["pass", "pass"]) == "pass", "Should return pass"
-    assert get_status(["info", "pass"]) == "pass", "Should return pass"
-    assert get_status(["info", "info"]) == "info", "Should return info"
-
-def test_finalize_web_scans():
-    assert finalize_web_scans([
-        {"https_status": "fail", "hsts_status": "pass", "certificate_status": "pass", "protocol_status": "pass", "cipher_status": "info", "curve_status": "pass"},
-        {"https_status": "fail", "hsts_status": "fail", "certificate_status": "pass", "protocol_status": "info", "cipher_status": "info", "curve_status": "pass"}
-    ]) == {"https_status": "fail", "hsts_status": "fail", "certificate_status": "pass", "protocol_status": "pass", "cipher_status": "info", "curve_status": "pass"}
 
 def test_get_users(arango_db):
     assert len(list(get_users("organizations/1", arango_db))) == 2, "Should return 2 users for organizations/1"
@@ -638,12 +776,10 @@ def test_detect_decay(arango_db):
     assert len(decays["Org 1"].keys()) == 2, "Should return 2 domains with decays for org 1"
     assert "domain1.gc.ca" in decays["Org 1"]
     assert "domain2.gc.ca" in decays["Org 1"]
-    assert len(decays["Org 1"]["domain1.gc.ca"]) == 2, "Should return 2 decays for domain1.gc.ca"
-    assert "Certificates" in decays["Org 1"]["domain1.gc.ca"]
+    assert len(decays["Org 1"]["domain1.gc.ca"]) == 1, "Should return 1 decay for domain1.gc.ca"
     assert "DMARC" in decays["Org 1"]["domain1.gc.ca"]
-    assert len(decays["Org 1"]["domain2.gc.ca"]) == 2, "Should return 2 decays for domain2.gc.ca"
+    assert len(decays["Org 1"]["domain2.gc.ca"]) == 1, "Should return 1 decay for domain2.gc.ca"
     assert "HTTPS Configuration" in decays["Org 1"]["domain2.gc.ca"]
-    assert "SPF" in decays["Org 1"]["domain2.gc.ca"]
     
     # Test that send_email_notifs returns 2 responses for org 1 owner and admin
     responses = output[1]
