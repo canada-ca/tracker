@@ -255,7 +255,7 @@ def detect_decay(db):
                                 final_results = finalize_web_scans(scans)                                                  
                             final_web_scans.append(final_results)
 
-                        for i in range(len(final_web_scans) - MINIMUM_SCANS - 1):
+                        for i in range(len(final_web_scans) - (MINIMUM_SCANS - 1)):
                             if find_decay(MINIMUM_SCANS, "https_status", final_web_scans, i):
                                 decayed_statuses.append("HTTPS Configuration")
                             if find_decay(MINIMUM_SCANS, "hsts_status", final_web_scans, i):
@@ -267,7 +267,7 @@ def detect_decay(db):
                             if find_decay(MINIMUM_SCANS, "cipher_status", final_web_scans, i):
                                 decayed_statuses.append("Ciphers")
                             if find_decay(MINIMUM_SCANS, "curve_status", final_web_scans, i):
-                                decayed_statuses.append("Curves")
+                                decayed_statuses.append("Curves")                           
                         
                     except Exception as e: 
                         logger.error(f"Error fetching web scans for {domain['domain']}: {e}")
@@ -275,7 +275,7 @@ def detect_decay(db):
                     # Get dns scans
                     try:
                         all_dns_scans = list(get_all_dns_scans(domain["_id"], db))
-                        for i in range(len(all_dns_scans) - 1):
+                        for i in range(len(all_dns_scans) - (MINIMUM_SCANS - 1)):
                             if find_decay(MINIMUM_SCANS, "dmarc_status", all_dns_scans, i):
                                 decayed_statuses.append("DMARC")
                             if find_decay(MINIMUM_SCANS, "spf_status", all_dns_scans, i):

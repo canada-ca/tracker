@@ -4,7 +4,6 @@ from arango import ArangoClient
 from detect_decay import *
 from config import DB_URL, DB_USER, DB_PASS, START_HOUR, START_MINUTE, MINIMUM_SCANS
 
-
 @pytest.fixture()
 def arango_db():
     # Connect to arango system DB and create test DB
@@ -91,10 +90,11 @@ def arango_db():
         {"_from": "organizations/1", "_to": "domains/1", "assetState": "approved"},
         {"_from": "organizations/1", "_to": "domains/2", "assetState": "approved"},
     ]
+
     times = []
     for i in range(MINIMUM_SCANS):
         times.append((datetime.now(timezone.utc) - timedelta(days=i+1)).replace(hour=20, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds'))
-    print(times)
+
     dns = [
         {   # Domain 1, DMARC decay
             "_id": "dns/11",
@@ -619,138 +619,6 @@ def test_db_data(arango_db):
     assert arango_db["domainsWeb"].count() == 10, "Should have 10 domainsWeb edges"
     assert arango_db["webToWebScans"].count() == 11, "Should have 11 webToWebScans edges"
     assert arango_db["affiliations"].count() == 3, "Should have 3 affiliations"
-'''
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'organizations/1' claims
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 3
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'organizations/2' claims
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 1
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'organizations/1' affiliations
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 3
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'domains/1' domainsDNS
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'domains/2' domainsDNS
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'domains/3' domainsDNS
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'domains/4' domainsDNS
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'domains/1' domainsWeb
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'domains/2' domainsWeb
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'web/11' webToWebScans
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 1
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'web/12' webToWebScans
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 1
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'web/21' webToWebScans
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-    assert (
-            arango_db.aql.execute(
-                """
-                FOR v, e IN 1..1 OUTBOUND 'web/22' webToWebScans
-                    RETURN v
-                """,
-                count=True,
-            ).count()
-            == 2
-        )
-'''
 
 def test_get_all_dns_scans(arango_db):
     assert len(list(get_all_dns_scans("domains/1", arango_db))) == 5, "Should return 5 dns scans for domains/1"
