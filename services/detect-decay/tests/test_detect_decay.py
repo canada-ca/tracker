@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
 from detect_decay import *
-from config import DB_URL, DB_USER, DB_PASS, START_HOUR, START_MINUTE, MINIMUM_SCANS
+from config import DB_URL, DB_USER, DB_PASS, MINIMUM_SCANS
 
 @pytest.fixture()
 def arango_db():
@@ -93,7 +93,7 @@ def arango_db():
 
     times = []
     for i in range(MINIMUM_SCANS):
-        times.append((datetime.now(timezone.utc) - timedelta(days=i+1)).replace(hour=20, minute=START_MINUTE, second=0, microsecond=0).isoformat(timespec='microseconds'))
+        times.append((datetime.now(timezone.utc) - timedelta(days=i+1)).replace(hour=20, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds'))
 
     dns = [
         {   # Domain 1, DMARC decay
