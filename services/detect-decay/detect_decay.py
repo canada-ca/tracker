@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
 from notify.send_email_notifs import send_email_notifs
 
-from config import DB_USER, DB_PASS, DB_NAME, DB_URL, START_HOUR, START_MINUTE, DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
+from config import DB_USER, DB_PASS, DB_NAME, DB_URL, START_HOUR, START_MINUTE, MINIMUM_SCANS, DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,6 +34,8 @@ if not START_HOUR and START_HOUR != 0:
     missing_envs.append("DETECT_DECAY_START_HOUR")
 if not START_MINUTE and START_MINUTE != 0:
     missing_envs.append("DETECT_DECAY_START_MINUTE")
+if not MINIMUM_SCANS and MINIMUM_SCANS != 0:
+    missing_envs.append("DETECT_DECAY_MINIMUM_SCANS")
 if missing_envs:
     logger.error(f"Missing required environment variables: {', '.join(missing_envs)}")
     sys.exit(1)
@@ -47,21 +49,21 @@ def ignore_domain(domain):
     )
 
 # Returns a timestamp in ISO format for the given hour and minute
-def get_timestamp(hr, min):
-    return (datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=hr, minute=min, second=0, microsecond=0).isoformat(timespec='microseconds')
+def get_timestamp(days, hr, min):
+    return (datetime.now(timezone.utc) - timedelta(days=days)).replace(hour=hr, minute=min, second=0, microsecond=0).isoformat(timespec='microseconds')
 
 # Returns all dns scans that ran in the past 24hrs + the last dns scan that ran before this time
 def get_all_dns_scans(domain_id, db):
-    one_day_ago = get_timestamp(START_HOUR, START_MINUTE)
+    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
     dns_scans = db.aql.execute(
         """
         WITH domains, dns
         FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
-            FILTER dnsV.timestamp > @one_day_ago
+            FILTER dnsV.timestamp > @time_period_start
             RETURN dnsV
         """,
         bind_vars={"domain_id": domain_id, 
-                   "one_day_ago": one_day_ago},
+                   "time_period_start": time_period_start},
     )
 
     all_dns_scans = db.aql.execute(
@@ -84,16 +86,16 @@ def get_all_dns_scans(domain_id, db):
 
 # Returns all web scans that ran in the past 24hrs + the last web scan that ran before this time
 def get_all_web_scans(domain_id, db):
-    one_day_ago = get_timestamp(START_HOUR, START_MINUTE)
+    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
     web_scans = db.aql.execute(
         """
         WITH domains, web
         FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
-            FILTER webV.timestamp > @one_day_ago
+            FILTER webV.timestamp > @time_period_start
             RETURN webV
         """,
         bind_vars={"domain_id": domain_id, 
-                   "one_day_ago": one_day_ago},
+                   "time_period_start": time_period_start},
     )
     all_web_scans = db.aql.execute(
         """
@@ -150,7 +152,7 @@ def finalize_web_scans(scans):
         cipher_statuses.append(scan["cipher_status"])
         curve_statuses.append(scan["curve_status"])
 
-    # Since there are multiple IPs, and there are web scans for each, they need to be combined into one final result
+    # Since there are multiple web scans for each IP, they need to be combined into one final result
     https = get_status(https_statuses)
     hsts = get_status(hsts_statuses)
     certificate = get_status(certificate_statuses)
@@ -192,6 +194,14 @@ def get_users(org_id, db):
         bind_vars={"org_id": org_id},
     )
     return cursor
+
+def find_decay(min_scans, status, scans, i):
+    if min_scans == 1:
+        return scans[i][status] == "pass"
+    elif scans[i][status] == "fail":
+        return find_decay(min_scans - 1, status, scans, i + 1)
+    else:
+        return False
 
 def detect_decay(db):
     decays = {} # Dictionary to hold domains and their decayed statuses for each org
@@ -245,19 +255,19 @@ def detect_decay(db):
                                 final_results = finalize_web_scans(scans)                                                  
                             final_web_scans.append(final_results)
 
-                        for i in range(len(final_web_scans) - 1):
-                            if final_web_scans[i]["https_status"] == "fail" and final_web_scans[i + 1]["https_status"] == "pass":
+                        for i in range(len(final_web_scans) - (MINIMUM_SCANS - 1)):
+                            if find_decay(MINIMUM_SCANS, "https_status", final_web_scans, i):
                                 decayed_statuses.append("HTTPS Configuration")
-                            if final_web_scans[i]["hsts_status"] == "fail" and final_web_scans[i + 1]["hsts_status"] == "pass":
+                            if find_decay(MINIMUM_SCANS, "hsts_status", final_web_scans, i):
                                 decayed_statuses.append("HSTS Implementation")
-                            if final_web_scans[i]["certificate_status"] == "fail" and final_web_scans[i + 1]["certificate_status"] == "pass":
+                            if find_decay(MINIMUM_SCANS, "certificate_status", final_web_scans, i):
                                 decayed_statuses.append("Certificates")
-                            if final_web_scans[i]["protocol_status"] == "fail" and final_web_scans[i + 1]["protocol_status"] == "pass":
+                            if find_decay(MINIMUM_SCANS, "protocol_status", final_web_scans, i):
                                 decayed_statuses.append("Protocols")
-                            if final_web_scans[i]["cipher_status"] == "fail" and final_web_scans[i + 1]["cipher_status"] == "pass":
+                            if find_decay(MINIMUM_SCANS, "cipher_status", final_web_scans, i):
                                 decayed_statuses.append("Ciphers")
-                            if final_web_scans[i]["curve_status"] == "fail" and final_web_scans[i + 1]["curve_status"] == "pass":
-                                decayed_statuses.append("Curves")
+                            if find_decay(MINIMUM_SCANS, "curve_status", final_web_scans, i):
+                                decayed_statuses.append("Curves")                           
                         
                     except Exception as e: 
                         logger.error(f"Error fetching web scans for {domain['domain']}: {e}")
@@ -265,12 +275,12 @@ def detect_decay(db):
                     # Get dns scans
                     try:
                         all_dns_scans = list(get_all_dns_scans(domain["_id"], db))
-                        for i in range(len(all_dns_scans) - 1):
-                            if all_dns_scans[i]["dmarc_status"] == "fail" and all_dns_scans[i + 1]["dmarc_status"] == "pass":
+                        for i in range(len(all_dns_scans) - (MINIMUM_SCANS - 1)):
+                            if find_decay(MINIMUM_SCANS, "dmarc_status", all_dns_scans, i):
                                 decayed_statuses.append("DMARC")
-                            if all_dns_scans[i]["spf_status"] == "fail" and all_dns_scans[i + 1]["spf_status"] == "pass":
+                            if find_decay(MINIMUM_SCANS, "spf_status", all_dns_scans, i):
                                 decayed_statuses.append("SPF")
-                            if all_dns_scans[i]["dkim_status"] == "fail" and all_dns_scans[i + 1]["dkim_status"] == "pass":
+                            if find_decay(MINIMUM_SCANS, "dkim_status", all_dns_scans, i):
                                 decayed_statuses.append("DKIM")
                     
                     except Exception as e:
