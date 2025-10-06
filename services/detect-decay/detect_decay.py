@@ -52,61 +52,73 @@ def ignore_domain(domain):
 def get_timestamp(days, hr, min):
     return (datetime.now(timezone.utc) - timedelta(days=days)).replace(hour=hr, minute=min, second=0, microsecond=0).isoformat(timespec='microseconds')
 
-# Returns all dns scans that ran in the past 24hrs + the last dns scan that ran before this time
 def get_all_dns_scans(domain_id, db):
-    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
+    time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
+    # Attempt to get the last MINIMUM_SCANS scans
     dns_scans = db.aql.execute(
         """
         WITH domains, dns
         FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
-            FILTER dnsV.timestamp > @time_period_start
-            RETURN dnsV
-        """,
-        bind_vars={"domain_id": domain_id, 
-                   "time_period_start": time_period_start},
-    )
-
-    all_dns_scans = db.aql.execute(
-        """
-        WITH domains, dns
-        FOR dnsScanV, dnsScanE IN 1 OUTBOUND @domain_id domainsDNS
-            SORT dnsScanV.timestamp DESC
-            LIMIT @num
+            SORT dnsV.timestamp DESC
+            LIMIT @min_scans
             RETURN {
-                "dmarc_status": dnsScanV.dmarc.status,
-                "spf_status": dnsScanV.spf.status,
-                "dkim_status": dnsScanV.dkim.status,
+                "timestamp": dnsV.timestamp,
+                "dmarc_status": dnsV.dmarc.status,
+                "spf_status": dnsV.spf.status,
+                "dkim_status": dnsV.dkim.status,
             }
         """,
         bind_vars={"domain_id": domain_id, 
-                   "num": len(list(dns_scans)) + 1},
+                   "min_scans": MINIMUM_SCANS},
     )
+    x = 0
+    for scan in dns_scans:
+        if scan["timestamp"] <= time_period_start:
+            break
+        else:
+            x += 1
+    if x == MINIMUM_SCANS: # Scans all within the same 24hrs, need to account for potential missing scans
+        remaining_scans = db.aql.execute(
+            """
+            WITH domains, dns
+            FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
+                FILTER dnsV.timestamp > @time_period_start
+                RETURN dnsV
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "time_period_start": time_period_start},
+        )
+        dns_scans = db.aql.execute(
+            """
+            WITH domains, dns
+            FOR dnsScanV, dnsScanE IN 1 OUTBOUND @domain_id domainsDNS
+                SORT dnsScanV.timestamp DESC
+                LIMIT @num
+                RETURN {
+                    "dmarc_status": dnsScanV.dmarc.status,
+                    "spf_status": dnsScanV.spf.status,
+                    "dkim_status": dnsScanV.dkim.status,
+                }
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "num": len(list(remaining_scans)) + 1},
+        )
 
-    return all_dns_scans
+    return dns_scans
 
-# Returns all web scans that ran in the past 24hrs + the last web scan that ran before this time
 def get_all_web_scans(domain_id, db):
-    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
+    time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
     web_scans = db.aql.execute(
         """
         WITH domains, web
         FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
-            FILTER webV.timestamp > @time_period_start
-            RETURN webV
-        """,
-        bind_vars={"domain_id": domain_id, 
-                   "time_period_start": time_period_start},
-    )
-    all_web_scans = db.aql.execute(
-        """
-        WITH domains, web, webScan
-        FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb 
             SORT webV.timestamp DESC
             LET scans = (
                 FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
                     FILTER webScanV.status == "complete"
                     RETURN {
                         "status": webScanV.status,
+                        "timestamp": webScanV.timestamp,
 			            "https_status": webScanV.results.connectionResults.httpsStatus,
                         "hsts_status": webScanV.results.connectionResults.hstsStatus,
                         "certificate_status": webScanV.results.tlsResult.certificateStatus,
@@ -116,16 +128,61 @@ def get_all_web_scans(domain_id, db):
 		            }
             )
             FILTER COUNT(scans) > 0 AND scans[*].status ALL == "complete"
-            LIMIT @num
+            LIMIT @min_scans
             RETURN {
                 "web_id": webV._id,
                 "scans": scans
             }
         """,
         bind_vars={"domain_id": domain_id, 
-                   "num": len(list(web_scans)) + 1},
+                   "min_scans": MINIMUM_SCANS},
     )
-    return all_web_scans
+    x = 0
+    for web in web_scans:
+        if web["timestamp"] <= time_period_start:
+            break
+        else:
+            x += 1
+    if x == MINIMUM_SCANS:
+        remaining_scans = db.aql.execute(
+            """
+            WITH domains, web, webScan
+            FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
+                FILTER webV.timestamp > @time_period_start
+                RETURN webV
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "time_period_start": time_period_start},
+        )
+        web_scans = db.aql.execute(
+            """
+            WITH domains, web, webScan
+            FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb 
+                SORT webV.timestamp DESC
+                LET scans = (
+                    FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
+                        FILTER webScanV.status == "complete"
+                        RETURN {
+                            "status": webScanV.status,
+			                "https_status": webScanV.results.connectionResults.httpsStatus,
+                            "hsts_status": webScanV.results.connectionResults.hstsStatus,
+                            "certificate_status": webScanV.results.tlsResult.certificateStatus,
+                            "protocol_status": webScanV.results.tlsResult.protocolStatus,
+                            "cipher_status": webScanV.results.tlsResult.cipherStatus,
+                            "curve_status": webScanV.results.tlsResult.curveStatus,
+		                }
+                )
+                FILTER COUNT(scans) > 0 AND scans[*].status ALL == "complete"
+                LIMIT @num
+                RETURN {
+                    "web_id": webV._id,
+                    "scans": scans
+                }
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "num": len(list(remaining_scans)) + 1},
+        )
+    return web_scans
 
 # Returns a single status given a list of multiple statuses
 def get_status(statuses):
