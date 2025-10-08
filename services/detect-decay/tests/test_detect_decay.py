@@ -84,7 +84,7 @@ def arango_db():
             "archived": False,
             "blocked": False,
             "rcode": "NOERROR"
-        }
+        },
     ]
     claims = [
         {"_from": "organizations/1", "_to": "domains/1", "assetState": "approved"},
@@ -94,6 +94,11 @@ def arango_db():
     times = []
     for i in range(MINIMUM_SCANS):
         times.append((datetime.now(timezone.utc) - timedelta(days=i+1)).replace(hour=20, minute=0, second=0, microsecond=0).isoformat(timespec='microseconds'))
+
+    # Make timestamps different for scans that happen in the same day
+    def change_minute(dt, minute):
+        new = dt
+        return new.replace(minute=minute, second=0, microsecond=0).isoformat(timespec='microseconds')
 
     dns = [
         {   # Domain 1, DMARC decay
@@ -131,41 +136,49 @@ def arango_db():
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         },
-        {   # Domain 2, no decay
+        {   # Domain 2, SPF decay
             "_id": "dns/21",
+            "timestamp": change_minute(datetime.fromisoformat(times[0]), 1),
+            "dmarc": {"status": "pass"},
+            "spf": {"status": "pass"},
+            "dkim": {"status": "pass"},
+        },
+        {
+            "_id": "dns/22",
             "timestamp": times[0],
             "dmarc": {"status": "pass"},
             "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
-        {
-            "_id": "dns/22",
-            "timestamp": times[1],
-            "dmarc": {"status": "pass"},
-            "spf": {"status": "pass"},
-            "dkim": {"status": "pass"},
-        },
         {   
             "_id": "dns/23",
-            "timestamp": times[2],
+            "timestamp": times[1],
             "dmarc": {"status": "fail"},
-            "spf": {"status": "pass"},
+            "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
         {
             "_id": "dns/24",
-            "timestamp": times[3],
+            "timestamp": times[2],
             "dmarc": {"status": "pass"},
-            "spf": {"status": "pass"},
+            "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
         {   
             "_id": "dns/25",
+            "timestamp": times[3],
+            "dmarc": {"status": "fail"},
+            "spf": {"status": "fail"},
+            "dkim": {"status": "pass"},
+        },
+        {   
+            "_id": "dns/26",
             "timestamp": times[4],
             "dmarc": {"status": "fail"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         }
+        
     ]
     domainsDNS = [
         {
@@ -218,6 +231,11 @@ def arango_db():
             "_from": "domains/2",
             "_to": "dns/25"
         },
+        {
+            "_id": "domainsDNS/26",
+            "_from": "domains/2",
+            "_to": "dns/26"
+        },
     ]
     web = [
         {"_id": "web/11", "timestamp": times[0]},
@@ -225,11 +243,11 @@ def arango_db():
         {"_id": "web/13", "timestamp": times[2]},
         {"_id": "web/14", "timestamp": times[3]},
         {"_id": "web/15", "timestamp": times[4]},
-        {"_id": "web/21", "timestamp": times[0]},
-        {"_id": "web/22", "timestamp": times[1]},
-        {"_id": "web/23", "timestamp": times[2]},
-        {"_id": "web/24", "timestamp": times[3]},
-        {"_id": "web/25", "timestamp": times[4]},
+        {"_id": "web/21", "timestamp": change_minute(datetime.fromisoformat(times[0]), 1)},
+        {"_id": "web/22", "timestamp": times[0]},
+        {"_id": "web/23", "timestamp": times[1]},
+        {"_id": "web/24", "timestamp": times[2]},
+        {"_id": "web/25", "timestamp": times[3]},
     ]
     domainsWeb = [
         {
@@ -282,15 +300,20 @@ def arango_db():
             "_from": "domains/2",
             "_to": "web/25"
         },
+        {
+            "_id": "domainsWeb/26",
+            "_from": "domains/2",
+            "_to": "web/26"
+        },
     ]
     webScan = [
-        {   # Domain 1, no decay
+        {   # Domain 1, Certs decay
             "_id": "webScan/11",
             "status": "complete",
             "results": {
                 "tlsResult": {
                     "sslStatus": "pass",
-                    "certificateStatus": "pass",
+                    "certificateStatus": "fail",
                     "protocolStatus": "pass",
                     "cipherStatus": "pass",
                     "curveStatus": "pass",
@@ -308,7 +331,7 @@ def arango_db():
             "results": {
                 "tlsResult": {
                     "sslStatus": "pass",
-                    "certificateStatus": "pass",
+                    "certificateStatus": "fail",
                     "protocolStatus": "pass",
                     "cipherStatus": "pass",
                     "curveStatus": "pass",
@@ -326,7 +349,7 @@ def arango_db():
             "results": {
                 "tlsResult": {
                     "sslStatus": "pass",
-                    "certificateStatus": "pass",
+                    "certificateStatus": "fail",
                     "protocolStatus": "pass",
                     "cipherStatus": "pass",
                     "curveStatus": "pass",
@@ -344,7 +367,7 @@ def arango_db():
             "results": {
                 "tlsResult": {
                     "sslStatus": "pass",
-                    "certificateStatus": "pass",
+                    "certificateStatus": "fail",
                     "protocolStatus": "pass",
                     "cipherStatus": "pass",
                     "curveStatus": "pass",
@@ -389,7 +412,7 @@ def arango_db():
                     "httpsStatus": "pass",
                     "hstsStatus": "pass",
                 },
-                "timestamp": times[0],
+                "timestamp": change_minute(datetime.fromisoformat(times[0]), 1),
             }
         },
         {   # IP Address 2
@@ -407,7 +430,7 @@ def arango_db():
                     "httpsStatus": "fail",
                     "hstsStatus": "pass",
                 },
-                "timestamp": times[0],
+                "timestamp": change_minute(datetime.fromisoformat(times[0]), 1),
             }
         },
         {   
@@ -425,7 +448,7 @@ def arango_db():
                     "httpsStatus": "fail",
                     "hstsStatus": "pass",
                 },
-                "timestamp": times[1],
+                "timestamp": times[0],
             }
         },
         {   
@@ -443,7 +466,7 @@ def arango_db():
                     "httpsStatus": "fail",
                     "hstsStatus": "pass",
                 },
-                "timestamp": times[2],
+                "timestamp": times[1],
             }
         },
         {   
@@ -461,7 +484,7 @@ def arango_db():
                     "httpsStatus": "fail",
                     "hstsStatus": "pass",
                 },
-                "timestamp": times[3],
+                "timestamp": times[2],
             }
         },
         {   
@@ -479,7 +502,7 @@ def arango_db():
                     "httpsStatus": "pass",
                     "hstsStatus": "pass",
                 },
-                "timestamp": times[4],
+                "timestamp": times[3],
             }
         },
     ]
@@ -610,19 +633,19 @@ def arango_db():
 def test_db_data(arango_db):
     assert arango_db["organizations"].count() == 2, "Should have 2 organizations"
     assert arango_db["domains"].count() == 2, "Should have 2 domains"
-    assert arango_db["dns"].count() == 10, "Should have 10 DNS records"
+    assert arango_db["dns"].count() == 11, "Should have 10 DNS records"
     assert arango_db["web"].count() == 10, "Should have 10 web records"
     assert arango_db["webScan"].count() == 11, "Should have 11 web scans"
     assert arango_db["users"].count() == 3, "Should have 3 users"
     assert arango_db["claims"].count() == 2, "Should have 2 claims"
-    assert arango_db["domainsDNS"].count() == 10, "Should have 10 domainsDNS edges"
-    assert arango_db["domainsWeb"].count() == 10, "Should have 10 domainsWeb edges"
+    assert arango_db["domainsDNS"].count() == 11, "Should have 11 domainsDNS edges"
+    assert arango_db["domainsWeb"].count() == 11, "Should have 11 domainsWeb edges"
     assert arango_db["webToWebScans"].count() == 11, "Should have 11 webToWebScans edges"
     assert arango_db["affiliations"].count() == 3, "Should have 3 affiliations"
 
 def test_get_all_dns_scans(arango_db):
     assert len(list(get_all_dns_scans("domains/1", arango_db))) == 5, "Should return 5 dns scans for domains/1"
-    assert len(list(get_all_dns_scans("domains/2", arango_db))) == 5, "Should return 5 dns scans for domains/2"
+    assert len(list(get_all_dns_scans("domains/2", arango_db))) == 6, "Should return 6 dns scans for domains/2"
 
 def test_get_all_web_scans(arango_db):
     web_docs1 = list(get_all_web_scans("domains/1", arango_db))
@@ -644,10 +667,13 @@ def test_detect_decay(arango_db):
     assert len(decays["Org 1"].keys()) == 2, "Should return 2 domains with decays for org 1"
     assert "domain1.gc.ca" in decays["Org 1"]
     assert "domain2.gc.ca" in decays["Org 1"]
-    assert len(decays["Org 1"]["domain1.gc.ca"]) == 1, "Should return 1 decay for domain1.gc.ca"
+    assert len(decays["Org 1"]["domain1.gc.ca"]) == 2, "Should return 2 decay for domain1.gc.ca"
     assert "DMARC" in decays["Org 1"]["domain1.gc.ca"]
-    assert len(decays["Org 1"]["domain2.gc.ca"]) == 1, "Should return 1 decay for domain2.gc.ca"
+    assert "Certificates" in decays["Org 1"]["domain1.gc.ca"]
+    assert len(decays["Org 1"]["domain2.gc.ca"]) == 2, "Should return 2 decay for domain2.gc.ca"
+    assert "SPF" in decays["Org 1"]["domain2.gc.ca"]
     assert "HTTPS Configuration" in decays["Org 1"]["domain2.gc.ca"]
+    
     
     # Test that send_email_notifs returns 2 responses for org 1 owner and admin
     responses = output[1]
