@@ -54,7 +54,7 @@ def get_timestamp(days, hr, min):
 
 def get_all_dns_scans(domain_id, db):
     time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
-    past_day = db.aql.execute(
+    past_day_cursor = db.aql.execute(
         """
         WITH domains, dns
         FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
@@ -64,7 +64,8 @@ def get_all_dns_scans(domain_id, db):
         bind_vars={"domain_id": domain_id, 
                    "time_period_start": time_period_start},
     )
-    if len(list(past_day)) > 1:
+    past_day = list(past_day_cursor)
+    if len(past_day) > 1:
         dns_scans = db.aql.execute(
             """
             WITH domains, dns
@@ -78,7 +79,7 @@ def get_all_dns_scans(domain_id, db):
                 }
             """,
             bind_vars={"domain_id": domain_id, 
-                       "num": len(list(past_day)) + (MINIMUM_SCANS - 1)},
+                       "num": len(past_day) + (MINIMUM_SCANS - 1)},
         )
     else:
         dns_scans = db.aql.execute(
@@ -101,7 +102,7 @@ def get_all_dns_scans(domain_id, db):
 
 def get_all_web_scans(domain_id, db):
     time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
-    past_day = db.aql.execute(
+    past_day_cursor = db.aql.execute(
             """
             WITH domains, web, webScan
             FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
@@ -111,7 +112,8 @@ def get_all_web_scans(domain_id, db):
             bind_vars={"domain_id": domain_id, 
                        "time_period_start": time_period_start},
     )
-    if len(list(past_day)) > 1:
+    past_day = list(past_day_cursor)
+    if len(past_day) > 1:
         web_scans = db.aql.execute(
             """
             WITH domains, web
@@ -138,7 +140,7 @@ def get_all_web_scans(domain_id, db):
                 }
             """,
             bind_vars={"domain_id": domain_id, 
-                       "num": len(list(past_day)) + (MINIMUM_SCANS - 1)},
+                       "num": len(past_day) + (MINIMUM_SCANS - 1)},
         )
     else:
         web_scans = db.aql.execute(
