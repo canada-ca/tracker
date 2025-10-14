@@ -5,7 +5,7 @@ import os
 import logging
 
 import dns.resolver
-from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer
+from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer, LifetimeTimeout
 from dns.exception import Timeout
 
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
@@ -205,6 +205,32 @@ def scan_domain(domain, dkim_selectors=None):
 
     if cname_record is not None:
         scan_result.cname_record = str(cname_record.response.answer[0])
+
+    soa_result = {
+        "rcode": None,
+        "record": None,
+    }
+    soa_record = None
+
+    try:
+        soa_record = resolver.resolve(qname=domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+    except NXDOMAIN as e:
+        logger.debug(f"Domain {domain} does not exist: {e}")
+        soa_result["rcode"] = "NXDOMAIN"
+    except LifetimeTimeout as e:
+        logger.error(f"Timeout while resolving SOA record for {domain}: {e}")
+    except Exception as e:
+        logger.error(f"Unknown error resolving SOA record: {e}")
+
+    if soa_record is not None and soa_record.response:
+        try:
+            soa_result["rcode"] = dns.rcode.to_text(soa_record.response.rcode())
+            if len(soa_record.response.answer) > 0:
+                soa_result["record"] = str(soa_record.response.answer[0])
+        except Exception as e:
+            logger.error(f"Unknown error processing SOA record for {domain}: {e}")
+
+    scan_result.soa = soa_result
 
     # Run DMARC scan
     dmarc_start_time = time.monotonic()
