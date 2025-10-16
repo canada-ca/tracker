@@ -70,8 +70,8 @@ def get_all_dns_scans(domain_id, db):
                    "time_period_start": time_period_start},
     )
     past_day = list(past_day_cursor)
-    last_scan = past_day[len(past_day)-1]
-    if "fail" in last_scan.values():
+    earliest_scan = past_day[len(past_day)-1]
+    if "fail" in earliest_scan.values():
         dns_scans = db.aql.execute(
             """
             WITH domains, dns
@@ -123,9 +123,9 @@ def get_all_web_scans(domain_id, db):
                        "time_period_start": time_period_start},
     )
     past_day = list(past_day_cursor)
-    last_scan = past_day[len(past_day)-1]
+    earliest_scan = past_day[len(past_day)-1]
     possible_decay = False
-    for s in last_scan["scans"]:
+    for s in earliest_scan["scans"]:
         if "fail" in s.values():
             possible_decay = True
             break
@@ -231,13 +231,12 @@ def get_users(org_id, db):
     )
     return cursor
 
-def find_decay(min_scans, status, scans, i):
-    if min_scans == 1:
-        return scans[i][status] == "pass"
-    elif scans[i][status] == "fail":
-        return find_decay(min_scans - 1, status, scans, i + 1)
-    else:
+def find_decay(statuses, i):
+    if len(statuses) < MINIMUM_SCANS:
         return False
+    recent_all_failed = all(status == "fail" for status in statuses[i:MINIMUM_SCANS-1+i])
+    previous_passed = statuses[MINIMUM_SCANS-1+i] == "pass"
+    return recent_all_failed and previous_passed
 
 def detect_decay(db):
     decays = {} # Dictionary to hold domains and their decayed statuses for each org
@@ -292,17 +291,17 @@ def detect_decay(db):
                             final_web_scans.append(final_results)
                         if len(final_web_scans) >= MINIMUM_SCANS:
                             for i in range(len(final_web_scans) - (MINIMUM_SCANS - 1)):
-                                if find_decay(MINIMUM_SCANS, "https_status", final_web_scans, i):
+                                if find_decay([scans["https_status"] for scans in final_web_scans], i):
                                     decayed_statuses.append("HTTPS Configuration")
-                                if find_decay(MINIMUM_SCANS, "hsts_status", final_web_scans, i):
+                                if find_decay([scans["hsts_status"] for scans in final_web_scans], i):
                                     decayed_statuses.append("HSTS Implementation")
-                                if find_decay(MINIMUM_SCANS, "certificate_status", final_web_scans, i):
+                                if find_decay([scans["certificate_status"] for scans in final_web_scans], i):
                                     decayed_statuses.append("Certificates")
-                                if find_decay(MINIMUM_SCANS, "protocol_status", final_web_scans, i):
+                                if find_decay([scans["protocol_status"] for scans in final_web_scans], i):
                                     decayed_statuses.append("Protocols")
-                                if find_decay(MINIMUM_SCANS, "cipher_status", final_web_scans, i):
+                                if find_decay([scans["cipher_status"] for scans in final_web_scans], i):
                                     decayed_statuses.append("Ciphers")
-                                if find_decay(MINIMUM_SCANS, "curve_status", final_web_scans, i):
+                                if find_decay([scans["curve_status"] for scans in final_web_scans], i):
                                     decayed_statuses.append("Curves")                           
                         
                     except Exception as e: 
@@ -313,11 +312,11 @@ def detect_decay(db):
                         all_dns_scans = list(get_all_dns_scans(domain["_id"], db))
                         if len(all_dns_scans) >= MINIMUM_SCANS:
                             for i in range(len(all_dns_scans) - (MINIMUM_SCANS - 1)):
-                                if find_decay(MINIMUM_SCANS, "dmarc_status", all_dns_scans, i):
+                                if find_decay([scans["dmarc_status"] for scans in all_dns_scans], i):
                                     decayed_statuses.append("DMARC")
-                                if find_decay(MINIMUM_SCANS, "spf_status", all_dns_scans, i):
+                                if find_decay([scans["spf_status"] for scans in all_dns_scans], i):
                                     decayed_statuses.append("SPF")
-                                if find_decay(MINIMUM_SCANS, "dkim_status", all_dns_scans, i):
+                                if find_decay([scans["dkim_status"] for scans in all_dns_scans], i):
                                     decayed_statuses.append("DKIM")
                     
                     except Exception as e:
