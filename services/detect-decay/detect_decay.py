@@ -52,80 +52,116 @@ def ignore_domain(domain):
 def get_timestamp(days, hr, min):
     return (datetime.now(timezone.utc) - timedelta(days=days)).replace(hour=hr, minute=min, second=0, microsecond=0).isoformat(timespec='microseconds')
 
-# Returns all dns scans that ran in the past 24hrs + the last dns scan that ran before this time
 def get_all_dns_scans(domain_id, db):
-    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
-    dns_scans = db.aql.execute(
+    time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
+    past_day_cursor = db.aql.execute(
         """
         WITH domains, dns
         FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
             FILTER dnsV.timestamp > @time_period_start
-            RETURN dnsV
+            SORT dnsV.timestamp DESC
+            RETURN {
+                    "dmarc_status": dnsV.dmarc.status,
+                    "spf_status": dnsV.spf.status,
+                    "dkim_status": dnsV.dkim.status,
+            }
         """,
         bind_vars={"domain_id": domain_id, 
                    "time_period_start": time_period_start},
     )
+    past_day = list(past_day_cursor)
+    earliest_scan = past_day[len(past_day)-1]
+    if "fail" in earliest_scan.values():
+        dns_scans = db.aql.execute(
+            """
+            WITH domains, dns
+            FOR dnsV, dnsE IN 1 OUTBOUND @domain_id domainsDNS
+                SORT dnsV.timestamp DESC
+                LIMIT @num
+                RETURN {
+                    "dmarc_status": dnsV.dmarc.status,
+                    "spf_status": dnsV.spf.status,
+                    "dkim_status": dnsV.dkim.status,
+                }
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "num": len(past_day) + (MINIMUM_SCANS - 1)},
+        )
+    else:
+        dns_scans = past_day_cursor
 
-    all_dns_scans = db.aql.execute(
-        """
-        WITH domains, dns
-        FOR dnsScanV, dnsScanE IN 1 OUTBOUND @domain_id domainsDNS
-            SORT dnsScanV.timestamp DESC
-            LIMIT @num
-            RETURN {
-                "dmarc_status": dnsScanV.dmarc.status,
-                "spf_status": dnsScanV.spf.status,
-                "dkim_status": dnsScanV.dkim.status,
-            }
-        """,
-        bind_vars={"domain_id": domain_id, 
-                   "num": len(list(dns_scans)) + 1},
-    )
+    return dns_scans
 
-    return all_dns_scans
-
-# Returns all web scans that ran in the past 24hrs + the last web scan that ran before this time
 def get_all_web_scans(domain_id, db):
-    time_period_start = get_timestamp(MINIMUM_SCANS-1, START_HOUR, START_MINUTE)
-    web_scans = db.aql.execute(
-        """
-        WITH domains, web
-        FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
-            FILTER webV.timestamp > @time_period_start
-            RETURN webV
-        """,
-        bind_vars={"domain_id": domain_id, 
-                   "time_period_start": time_period_start},
+    time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
+    past_day_cursor = db.aql.execute(
+            """
+            WITH domains, web, webScan
+            FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
+                FILTER webV.timestamp > @time_period_start
+                SORT webV.timestamp DESC
+                LET scans = (
+                    FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
+                        FILTER webScanV.status == "complete"
+                        RETURN {
+                            "status": webScanV.status,
+                            "https_status": webScanV.results.connectionResults.httpsStatus,
+                            "hsts_status": webScanV.results.connectionResults.hstsStatus,
+                            "certificate_status": webScanV.results.tlsResult.certificateStatus,
+                            "protocol_status": webScanV.results.tlsResult.protocolStatus,
+                            "cipher_status": webScanV.results.tlsResult.cipherStatus,
+                            "curve_status": webScanV.results.tlsResult.curveStatus,
+                        }
+                )
+                FILTER COUNT(scans) > 0 AND scans[*].status ALL == "complete"
+                RETURN {
+                    "web_id": webV._id,
+                    "scans": scans
+                }
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "time_period_start": time_period_start},
     )
-    all_web_scans = db.aql.execute(
-        """
-        WITH domains, web, webScan
-        FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb 
-            SORT webV.timestamp DESC
-            LET scans = (
-                FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
-                    FILTER webScanV.status == "complete"
-                    RETURN {
-                        "status": webScanV.status,
-			            "https_status": webScanV.results.connectionResults.httpsStatus,
-                        "hsts_status": webScanV.results.connectionResults.hstsStatus,
-                        "certificate_status": webScanV.results.tlsResult.certificateStatus,
-                        "protocol_status": webScanV.results.tlsResult.protocolStatus,
-                        "cipher_status": webScanV.results.tlsResult.cipherStatus,
-                        "curve_status": webScanV.results.tlsResult.curveStatus,
-		            }
-            )
-            FILTER COUNT(scans) > 0 AND scans[*].status ALL == "complete"
-            LIMIT @num
-            RETURN {
-                "web_id": webV._id,
-                "scans": scans
-            }
-        """,
-        bind_vars={"domain_id": domain_id, 
-                   "num": len(list(web_scans)) + 1},
-    )
-    return all_web_scans
+    past_day = list(past_day_cursor)
+    earliest_scan = past_day[len(past_day)-1]
+    possible_decay = False
+    for s in earliest_scan["scans"]:
+        if "fail" in s.values():
+            possible_decay = True
+            break
+    if possible_decay:
+        web_scans = db.aql.execute(
+            """
+            WITH domains, web
+            FOR webV, webE IN 1 OUTBOUND @domain_id domainsWeb
+                SORT webV.timestamp DESC
+                LET scans = (
+                    FOR webScanV, webScanE IN 1 OUTBOUND webV._id webToWebScans
+                        FILTER webScanV.status == "complete"
+                        RETURN {
+                            "status": webScanV.status,
+                            "https_status": webScanV.results.connectionResults.httpsStatus,
+                            "hsts_status": webScanV.results.connectionResults.hstsStatus,
+                            "certificate_status": webScanV.results.tlsResult.certificateStatus,
+                            "protocol_status": webScanV.results.tlsResult.protocolStatus,
+                            "cipher_status": webScanV.results.tlsResult.cipherStatus,
+                            "curve_status": webScanV.results.tlsResult.curveStatus,
+                        }
+                )
+                FILTER COUNT(scans) > 0 AND scans[*].status ALL == "complete"
+                LIMIT @num
+                RETURN {
+                    "web_id": webV._id,
+                    "scans": scans
+                }
+            """,
+            bind_vars={"domain_id": domain_id, 
+                       "num": len(past_day) + (MINIMUM_SCANS - 1)},
+        )
+    else:
+        web_scans = past_day_cursor
+    
+    return web_scans
 
 # Returns a single status given a list of multiple statuses
 def get_status(statuses):
@@ -195,13 +231,12 @@ def get_users(org_id, db):
     )
     return cursor
 
-def find_decay(min_scans, status, scans, i):
-    if min_scans == 1:
-        return scans[i][status] == "pass"
-    elif scans[i][status] == "fail":
-        return find_decay(min_scans - 1, status, scans, i + 1)
-    else:
+def find_decay(statuses, i):
+    if len(statuses) < MINIMUM_SCANS:
         return False
+    recent_all_failed = all(status == "fail" for status in statuses[i:MINIMUM_SCANS-1+i])
+    previous_passed = statuses[MINIMUM_SCANS-1+i] == "pass"
+    return recent_all_failed and previous_passed
 
 def detect_decay(db):
     decays = {} # Dictionary to hold domains and their decayed statuses for each org
@@ -254,20 +289,20 @@ def detect_decay(db):
                             else:
                                 final_results = finalize_web_scans(scans)                                                  
                             final_web_scans.append(final_results)
-
-                        for i in range(len(final_web_scans) - (MINIMUM_SCANS - 1)):
-                            if find_decay(MINIMUM_SCANS, "https_status", final_web_scans, i):
-                                decayed_statuses.append("HTTPS Configuration")
-                            if find_decay(MINIMUM_SCANS, "hsts_status", final_web_scans, i):
-                                decayed_statuses.append("HSTS Implementation")
-                            if find_decay(MINIMUM_SCANS, "certificate_status", final_web_scans, i):
-                                decayed_statuses.append("Certificates")
-                            if find_decay(MINIMUM_SCANS, "protocol_status", final_web_scans, i):
-                                decayed_statuses.append("Protocols")
-                            if find_decay(MINIMUM_SCANS, "cipher_status", final_web_scans, i):
-                                decayed_statuses.append("Ciphers")
-                            if find_decay(MINIMUM_SCANS, "curve_status", final_web_scans, i):
-                                decayed_statuses.append("Curves")                           
+                        if len(final_web_scans) >= MINIMUM_SCANS:
+                            for i in range(len(final_web_scans) - (MINIMUM_SCANS - 1)):
+                                if find_decay([scans["https_status"] for scans in final_web_scans], i):
+                                    decayed_statuses.append("HTTPS Configuration")
+                                if find_decay([scans["hsts_status"] for scans in final_web_scans], i):
+                                    decayed_statuses.append("HSTS Implementation")
+                                if find_decay([scans["certificate_status"] for scans in final_web_scans], i):
+                                    decayed_statuses.append("Certificates")
+                                if find_decay([scans["protocol_status"] for scans in final_web_scans], i):
+                                    decayed_statuses.append("Protocols")
+                                if find_decay([scans["cipher_status"] for scans in final_web_scans], i):
+                                    decayed_statuses.append("Ciphers")
+                                if find_decay([scans["curve_status"] for scans in final_web_scans], i):
+                                    decayed_statuses.append("Curves")                           
                         
                     except Exception as e: 
                         logger.error(f"Error fetching web scans for {domain['domain']}: {e}")
@@ -275,13 +310,14 @@ def detect_decay(db):
                     # Get dns scans
                     try:
                         all_dns_scans = list(get_all_dns_scans(domain["_id"], db))
-                        for i in range(len(all_dns_scans) - (MINIMUM_SCANS - 1)):
-                            if find_decay(MINIMUM_SCANS, "dmarc_status", all_dns_scans, i):
-                                decayed_statuses.append("DMARC")
-                            if find_decay(MINIMUM_SCANS, "spf_status", all_dns_scans, i):
-                                decayed_statuses.append("SPF")
-                            if find_decay(MINIMUM_SCANS, "dkim_status", all_dns_scans, i):
-                                decayed_statuses.append("DKIM")
+                        if len(all_dns_scans) >= MINIMUM_SCANS:
+                            for i in range(len(all_dns_scans) - (MINIMUM_SCANS - 1)):
+                                if find_decay([scans["dmarc_status"] for scans in all_dns_scans], i):
+                                    decayed_statuses.append("DMARC")
+                                if find_decay([scans["spf_status"] for scans in all_dns_scans], i):
+                                    decayed_statuses.append("SPF")
+                                if find_decay([scans["dkim_status"] for scans in all_dns_scans], i):
+                                    decayed_statuses.append("DKIM")
                     
                     except Exception as e:
                         logger.error(f"Error fetching dns scans for {domain['domain']}: {e}")
