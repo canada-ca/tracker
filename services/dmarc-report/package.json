@@ -28,7 +28,7 @@
     "https-proxy-agent": "^7.0.6",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.4",
-    "octokit": "^3.1.2"
+    "octokit": "^5.0.4"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
