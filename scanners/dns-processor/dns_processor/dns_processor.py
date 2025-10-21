@@ -481,6 +481,7 @@ def process_results(results):
         "cname_record": results.get("cname_record", None),
         "mx_records": results.get("mx_records", None),
         "ns_records": results.get("ns_records", None),
+        "soa": results.get("soa", None),
         "wildcard_sibling": results.get("wildcard_sibling", None),
         "wildcard_entry": results.get("wildcard_entry", None),
         "dmarc": dmarc_results,
