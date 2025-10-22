@@ -268,9 +268,10 @@ async def run():
         for newDomain in results:
             domain_key = newDomain["_key"]
             try:
-                await nc.publish(
-                    "scans.requests",
-                    json.dumps(
+                await js.publish(
+                    stream="SCANS",
+                    subject="scans.requests",
+                    payload=json.dumps(
                         {
                             "domain": newDomain["domain"],
                             "selectors": [],
