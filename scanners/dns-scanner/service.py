@@ -18,9 +18,9 @@ from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
 from nats.errors import TimeoutError as NatsTimeoutError
 
-from dns_scanner.dns_scanner import scan_domain
-
 load_dotenv()
+
+from dns_scanner.dns_scanner import scan_domain
 
 LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
 
