@@ -5,7 +5,8 @@ import os
 import logging
 
 import dns.resolver
-from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer, LifetimeTimeout
+import dns.name
+from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer
 from dns.exception import Timeout
 
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
@@ -19,6 +20,7 @@ TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 class DNSScanResult:
     domain: str
     base_domain: str = None
+    zone_root: str = None
     record_exists: bool = None
     rcode: str = None
     resolve_chain: list[list[str]] = None
@@ -31,6 +33,42 @@ class DNSScanResult:
     dmarc: dict = None
     wildcard_sibling: bool = None
     wildcard_entry: bool = None
+
+
+def find_zone_root(domain, resolver=None):
+    try:
+        if resolver is None:
+            resolver = dns.resolver.get_default_resolver()
+
+        name = dns.name.from_text(domain)
+
+        # Walk up the domain hierarchy
+        while name != dns.name.root:
+            logger.debug(f"Checking for SOA at {name}")
+            try:
+                answers = resolver.resolve(name, 'SOA')
+                logger.debug(f"Found SOA for {domain} at {name}: {answers[0]}")
+                zone_root = str(name).rstrip('.')
+                return zone_root
+            except NoAnswer:
+                # Go up one level
+                logger.debug(f"No SOA found at {name}, moving to parent")
+                name = name.parent()
+            except (NXDOMAIN, NoNameservers) as e:
+                # Go up one level
+                logger.debug(f"Domain does not exist at {name}: {e}, moving to parent")
+                name = name.parent()
+            except Timeout as e:
+                logger.error(f"Timeout while checking SOA at {name}: {e}")
+                name = name.parent()
+            except Exception as e:
+                logger.error(f"Error checking SOA at {name}: {e}")
+                name = name.parent()
+
+        return None
+    except Exception as e:
+        logger.error(f"Error in find_zone_root for {domain}: {e}")
+        return None
 
 
 def get_dns_return_type(domain, query_type):
@@ -206,21 +244,8 @@ def scan_domain(domain, dkim_selectors=None):
     if cname_record is not None:
         scan_result.cname_record = str(cname_record.response.answer[0])
 
-    soa_result = {
-        "rcode": None,
-        "record": None,
-    }
-    soa_record = None
-
-    try:
-        soa_record = resolver.resolve(qname=domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
-    except NXDOMAIN as e:
-        logger.debug(f"Domain {domain} does not exist: {e}")
-        soa_result["rcode"] = "NXDOMAIN"
-    except LifetimeTimeout as e:
-        logger.error(f"Timeout while resolving SOA record for {domain}: {e}")
-    except Exception as e:
-        logger.error(f"Unknown error resolving SOA record: {e}")
+    zone_root = find_zone_root(domain)
+    scan_result.zone_root = zone_root
 
     if soa_record is not None and soa_record.response:
         try:
