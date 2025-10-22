@@ -481,7 +481,7 @@ def process_results(results):
         "cname_record": results.get("cname_record", None),
         "mx_records": results.get("mx_records", None),
         "ns_records": results.get("ns_records", None),
-        "zone_root": results.get("zone_root", None),
+        "zone_apex": results.get("zone_apex", None),
         "zone_dnssec_enabled": results.get("zone_dnssec_enabled", None),
         "wildcard_sibling": results.get("wildcard_sibling", None),
         "wildcard_entry": results.get("wildcard_entry", None),

@@ -23,7 +23,7 @@ DNSSEC_NAMESERVER_URL= os.getenv("DNSSEC_NAMESERVER_URL")
 class DNSScanResult:
     domain: str
     base_domain: str = None
-    zone_root: str = None
+    zone_apex: str = None
     record_exists: bool = None
     rcode: str = None
     resolve_chain: list[list[str]] = None
@@ -38,7 +38,7 @@ class DNSScanResult:
     wildcard_entry: bool = None
 
 
-def find_zone_root(domain, resolver=None):
+def find_zone_apex(domain, resolver=None):
     try:
         if resolver is None:
             resolver = dns.resolver.get_default_resolver()
@@ -51,8 +51,8 @@ def find_zone_root(domain, resolver=None):
             try:
                 answers = resolver.resolve(name, 'SOA')
                 logger.debug(f"Found SOA for {domain} at {name}: {answers[0]}")
-                zone_root = str(name).rstrip('.')
-                return zone_root
+                zone_apex = str(name).rstrip('.')
+                return zone_apex
             except NoAnswer:
                 # Go up one level
                 logger.debug(f"No SOA found at {name}, moving to parent")
@@ -70,7 +70,7 @@ def find_zone_root(domain, resolver=None):
 
         return None
     except Exception as e:
-        logger.error(f"Error in find_zone_root for {domain}: {e}")
+        logger.error(f"Error in find_zone_apex for {domain}: {e}")
         return None
 
 
@@ -276,10 +276,10 @@ def scan_domain(domain, dkim_selectors=None):
     if cname_record is not None:
         scan_result.cname_record = str(cname_record.response.answer[0])
 
-    zone_root = find_zone_root(domain)
-    scan_result.zone_root = zone_root
+    zone_apex = find_zone_apex(domain)
+    scan_result.zone_apex = zone_apex
 
-    if not zone_root:
+    if not zone_apex:
         logger.debug(f"Skipping DNSSEC check for {domain} - No zone apex found")
         zone_dnssec_enabled = None
     elif not DNSSEC_NAMESERVER_URL:
