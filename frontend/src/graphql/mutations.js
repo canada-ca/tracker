@@ -855,4 +855,36 @@ export const UPDATE_TAG = gql`
   }
 `
 
+export const UPDATE_DOMAINS_BY_DOMAIN_IDS = gql`
+  mutation UpdateDomainsByDomainIds($orgId: ID!, $tags: [String]!, $domainIds: [ID]!) {
+    updateDomainsByDomainIds(input: { orgId: $orgId, tags: $tags, domainIds: $domainIds }) {
+      result {
+        ... on DomainBulkResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_DOMAINS_BY_FILTERS = gql`
+  mutation UpdateDomainsByFilters($orgId: ID!, $tags: [String]!, $filters: [DomainFilter], $search: String) {
+    updateDomainsByFilters(input: { orgId: $orgId, tags: $tags, filters: $filters, search: $search }) {
+      result {
+        ... on DomainBulkResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
