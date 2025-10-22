@@ -48,7 +48,7 @@ import { DomainUpdateList } from './DomainUpdateList'
 import { AdminDomainList } from './AdminDomainList'
 
 export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
-  const [showUpdateList, setShowUpdateList] = useState(true)
+  const [showUpdateList, setShowUpdateList] = useState(false)
   const toast = useToast()
   const { i18n } = useLingui()
 
