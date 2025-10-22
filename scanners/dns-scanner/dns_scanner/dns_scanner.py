@@ -247,16 +247,6 @@ def scan_domain(domain, dkim_selectors=None):
     zone_apex = find_zone_apex(domain)
     scan_result.zone_apex = zone_apex
 
-    if soa_record is not None and soa_record.response:
-        try:
-            soa_result["rcode"] = dns.rcode.to_text(soa_record.response.rcode())
-            if len(soa_record.response.answer) > 0:
-                soa_result["record"] = str(soa_record.response.answer[0])
-        except Exception as e:
-            logger.error(f"Unknown error processing SOA record for {domain}: {e}")
-
-    scan_result.soa = soa_result
-
     # Run DMARC scan
     dmarc_start_time = time.monotonic()
     logger.info(f"Starting DMARC scanner for '{domain}'")
