@@ -12,7 +12,7 @@ metadata:
 spec:
   # https://istio.io/latest/news/releases/1.9.x/announcing-1.9/#mirroring-of-images-on-gcr-io
   hub: gcr.io/istio-release
-  tag: 1.24.2-distroless
+  tag: 1.25.5-distroless
   meshConfig:
     accessLogFile: /dev/stdout
     enableTracing: true
