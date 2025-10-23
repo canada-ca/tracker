@@ -16,6 +16,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    from dotenv import load_dotenv
+    load_dotenv()
+
     from dns_scanner.dns_scanner import scan_domain
 
     log_levels = ["WARNING", "INFO", "DEBUG"]

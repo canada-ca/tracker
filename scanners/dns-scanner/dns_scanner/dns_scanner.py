@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from dataclasses import dataclass
 import time
 import re
@@ -14,6 +16,7 @@ from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
+DNSSEC_NAMESERVER_URL= os.getenv("DNSSEC_NAMESERVER_URL")
 
 
 @dataclass
@@ -91,6 +94,35 @@ def get_dns_return_type(domain, query_type):
             f"Error while checking if domain '{domain}' exists with query type '${dns.rdatatype.to_text(query_type)}': {e}"
         )
         return None
+
+
+@lru_cache(maxsize=10_000)
+def minimal_dnssec_check(domain, nameserver_url, _ttl_marker=None):
+    """
+    Check if the domain is CAPABLE of signing records by sending a DNSSEC enabled DNSKEY query to a DNSSEC aware nameserver
+    _ttl_marker is strictly used to force cache invalidation after TTL
+    """
+    try:
+        q = dns.message.make_query(domain, dns.rdatatype.DNSKEY, want_dnssec=True)
+        resp = dns.query.https(q, where=nameserver_url, timeout=TIMEOUT)
+        if resp.rcode() != dns.rcode.NOERROR:
+            return None
+    except Timeout:
+        logger.error(
+            f"Timeout while running minimal DNSSEC check for domain '{domain}."
+        )
+        return None
+    except Exception as e:
+        logger.error(f"Error while running minimal DNSSEC check for domain '{domain}': {e}")
+        return None
+    # Check if AD (Authenticated Data) flag is set, showing that the data is DNSSEC validated
+    return bool(resp.flags & dns.flags.AD)
+
+
+def dnssec_check_with_ttl(domain, nameserver_url, ttl=3600):
+    # Create TTL buckets to force cache invalidation at "ttl" intervals"
+    _ttl_marker = int(time.time() / ttl)
+    return minimal_dnssec_check(domain, nameserver_url, _ttl_marker)
 
 
 def format_answers(ans):
@@ -246,6 +278,17 @@ def scan_domain(domain, dkim_selectors=None):
 
     zone_apex = find_zone_apex(domain)
     scan_result.zone_apex = zone_apex
+
+    if not zone_apex:
+        logger.debug(f"Skipping DNSSEC check for {domain} - No zone apex found")
+        zone_dnssec_enabled = None
+    elif not DNSSEC_NAMESERVER_URL:
+        logger.debug(f"Skipping DNSSEC check for {domain} - DNSSEC_NAMESERVER_URL not set")
+        zone_dnssec_enabled = None
+    else:
+        zone_dnssec_enabled = dnssec_check_with_ttl(domain=zone_apex, nameserver_url=DNSSEC_NAMESERVER_URL)
+
+    scan_result.zone_dnssec_enabled = zone_dnssec_enabled
 
     # Run DMARC scan
     dmarc_start_time = time.monotonic()
