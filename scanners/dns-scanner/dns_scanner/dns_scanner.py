@@ -286,7 +286,7 @@ def scan_domain(domain, dkim_selectors=None):
         logger.debug(f"Skipping DNSSEC check for {domain} - DNSSEC_NAMESERVER_URL not set")
         zone_dnssec_enabled = None
     else:
-        zone_dnssec_enabled = minimal_dnssec_check(domain=zone_apex, nameserver_url=DNSSEC_NAMESERVER_URL)
+        zone_dnssec_enabled = dnssec_check_with_ttl(domain=zone_apex, nameserver_url=DNSSEC_NAMESERVER_URL)
 
     scan_result.zone_dnssec_enabled = zone_dnssec_enabled
 
