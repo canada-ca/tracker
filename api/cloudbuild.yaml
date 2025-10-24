@@ -12,19 +12,19 @@ steps:
     id: wait_arango
     args: ['arangodb:8529']
 
-  - name: node:20
+  - name: node:20-alpine
     id: install
     dir: api
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: node:20
+  - name: node:20-alpine
     id: lint
     dir: api
     entrypoint: npm
     args: ['run', lint]
 
-  - name: node:20
+  - name: node:20-alpine
     id: lingui-extract
     dir: api
     entrypoint: ash
@@ -33,7 +33,7 @@ steps:
       - |
         npm run extract | tee /workspace/lingui-extract-output.txt
 
-  - name: node:20
+  - name: node:20-alpine
     id: lingui-translation-check
     dir: api
     entrypoint: ash
@@ -50,13 +50,13 @@ steps:
           exit 1
         fi
 
-  - name: node:20
+  - name: node:20-alpine
     id: lingui-compile
     dir: api
     entrypoint: npm
     args: ['run', 'compile']
 
-  - name: node:20
+  - name: node:20-alpine
     id: test
     dir: api
     entrypoint: npm
