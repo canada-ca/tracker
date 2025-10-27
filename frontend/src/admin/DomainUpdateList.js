@@ -202,10 +202,16 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
           <Tr>
             <Th w="15%" minW="40px" maxW="60px">
               <Flex>
-                <Checkbox borderColor="gray.900" isChecked={selectAll} onChange={handleSelectAll} mr="2" />
-                <Text>
+                <Checkbox
+                  id="select-all-checkbox"
+                  borderColor="gray.900"
+                  isChecked={selectAll}
+                  onChange={handleSelectAll}
+                  mr="2"
+                />
+                <label htmlFor="select-all-checkbox">
                   <Trans>Select All</Trans>
-                </Text>
+                </label>
               </Flex>
             </Th>
             <Th>
