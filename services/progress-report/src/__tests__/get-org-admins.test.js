@@ -42,10 +42,9 @@ describe('given the getOrgAdmins function', () => {
     // eslint-disable-next-line no-unused-vars
     let org, user, affiliation
     beforeEach(async () => {
-      org = await collections.organizations.save({})
+      org = await collections.organizations.save({}) 
       user = await collections.users.save({
         userName: 'user@test.ca',
-        receiveUpdateEmails: true,
         insideUser: true,
       })
       affiliation = await collections.affiliations.save({
@@ -56,9 +55,7 @@ describe('given the getOrgAdmins function', () => {
     })
     it('returns the org admins', async () => {
       const orgAdmins = await getOrgAdmins({ query, orgId: org._id })
-
-      const expectedOrgAdmins = [{ ...user, userName: 'user@test.ca', receiveUpdateEmails: true, insideUser: true }]
-
+      const expectedOrgAdmins = [{ ...user, userName: 'user@test.ca', insideUser: true }]
       expect(orgAdmins).toEqual(expectedOrgAdmins)
     })
   })
