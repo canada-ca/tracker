@@ -49,6 +49,11 @@ describe('<UserPage />', () => {
             tfaSendMethod: tfaSendMethod,
             phoneValidated: phoneValidated,
             emailValidated: emailValidated,
+            emailUpdateOptions: {
+              orgFootprint: true,
+              progressReport: true,
+              detectDecay: true,
+            },
           },
           isUserAdmin: false,
         },
@@ -71,6 +76,11 @@ describe('<UserPage />', () => {
             tfaSendMethod: 'NONE',
             phoneValidated: phoneValidated,
             emailValidated: emailValidated,
+            emailUpdateOptions: {
+              orgFootprint: true,
+              progressReport: true,
+              detectDecay: true,
+            },
           },
           isUserAdmin: true,
         },
