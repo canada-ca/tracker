@@ -565,6 +565,31 @@ export default function ReadGuidancePage() {
           </ListItem>
         </OrderedList>
       </Box>
+      <Heading id="sla" tabIndex="-1">
+        <Trans>Service Level Agreement</Trans>
+      </Heading>
+      <Divider borderBottomColor="gray.900" mb="2" />
+      <Box px="4" pb="4">
+        <Text>
+          <Trans>
+            <b>Help Desk</b>: All enquiries submitted via generic mailboxs{' '}
+            <Link
+              color="blue.500"
+              href={`mailto:${i18n.locale === 'fr' ? 'suivi@tbs-sct.gc.ca' : 'tracker@tbs-sct.gc.ca'}`}
+            >
+              tracker@tbs-sct.gc.ca
+            </Link>{' '}
+            will be responded to within 10 business days.
+          </Trans>
+        </Text>
+        <Text>
+          <Trans>
+            <b>Application Availability</b>: This cloud-based web application is to be 95% fully operational from 8:00
+            AM to 4:00 PM Eatern time on regular business days.
+          </Trans>
+        </Text>
+      </Box>
+
       <Text mb="8">
         <Trans>
           For any questions or concerns, please contact{' '}
