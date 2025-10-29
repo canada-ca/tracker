@@ -572,7 +572,7 @@ export default function ReadGuidancePage() {
       <Box px="4" pb="4">
         <Text>
           <Trans>
-            <b>Help Desk</b>: All enquiries submitted via generic mailboxs{' '}
+            <b>Help Desk</b>: All enquiries submitted via generic mailboxes{' '}
             <Link
               color="blue.500"
               href={`mailto:${i18n.locale === 'fr' ? 'suivi@tbs-sct.gc.ca' : 'tracker@tbs-sct.gc.ca'}`}
@@ -585,7 +585,7 @@ export default function ReadGuidancePage() {
         <Text>
           <Trans>
             <b>Application Availability</b>: This cloud-based web application is to be 95% fully operational from 8:00
-            AM to 4:00 PM Eatern time on regular business days.
+            AM to 4:00 PM Eastern time on regular business days.
           </Trans>
         </Text>
       </Box>

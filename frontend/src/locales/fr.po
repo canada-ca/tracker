@@ -88,7 +88,7 @@ msgid "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden you
 msgstr "<0><1>Conseil de recherche : Caractère générique <2>%</2></1></0><3>Utilisez <4>%</4> pour élargir votre recherche:</3><5><6><7>Démarrez avec <8>%</8></7> : Recherchez <9><10>%exemple.gc. ca</10></9> pour trouver des sous-domaines comme <11>\"sub.exemple.gc.ca.\"</11></6><12><13>Finissez avec <14>%</14></13> : Recherchez <15><16>exemple%</16> </15>pour trouver des domaines comme <17>\"exemple. gc.ca\"</17> ou <18>\"exemple.canada.ca.\"</18></12><19><20>Utiliser les deux</20> : Recherche <21><22>%exemple%</22> </21>pour trouver tout ce qui contient \"exemple\", comme<23>\" sub.exemple.gc.ca\"</23> ou <24>\"exemple.canada.ca.\"</24></19></5><25>Cela vous aide à localiser rapidement les domaines et sous-domaines apparentés.</25>"
 
 #: src/app/ReadGuidancePage.js:586
-msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eatern time on regular business days."
+msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eastern time on regular business days."
 msgstr "<0>Disponibilité de l'application</0>: Cette application Web en nuage doit être opérationnelle à 95 % de 8 h à 16 h (heure de l'Est) pendant les jours ouvrables réguliers."
 
 #: src/user/EditableUserPhoneNumber.js:169
@@ -107,7 +107,7 @@ msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1
 msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1>.</0>"
 
 #: src/app/ReadGuidancePage.js:574
-msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxs <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
+msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxes <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
 msgstr "<0>Service d'assistance</0> : Toutes les demandes soumises via les boîtes aux lettres génériques <1>suivi@tbs-sct.gc.ca</1> recevront une réponse dans un délai de 10 jours ouvrables."
 
 #: src/guidance/EmailGuidance.js:346

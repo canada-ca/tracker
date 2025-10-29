@@ -112,8 +112,12 @@ msgid "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden you
 msgstr "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden your search:</3><5><6><7>Start with <8>%</8></7>: Search <9><10>%example.gc.ca</10></9> to find subdomains like <11>\"sub.example.gc.ca.\"</11></6><12><13>End with <14>%</14></13>: Search <15><16>example%</16> </15>to find domains like <17>\"example.gc.ca\"</17> or <18>\"example.canada.ca.\"</18></12><19><20>Use both</20>: Search <21><22>%example%</22> </21>to find anything containing \"example\", like<23>\"sub.example.gc.ca\"</23> or <24>\"example.canada.ca.\"</24></19></5><25>This helps you quickly locate related domains and subdomains.</25>"
 
 #: src/app/ReadGuidancePage.js:586
-msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eatern time on regular business days."
-msgstr "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eatern time on regular business days."
+msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eastern time on regular business days."
+msgstr "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eastern time on regular business days."
+
+#: src/app/ReadGuidancePage.js:586
+#~ msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eatern time on regular business days."
+#~ msgstr "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eatern time on regular business days."
 
 #: src/user/EditableUserPhoneNumber.js:169
 msgid "<0>Current Phone Number:</0> {detailValue}"
@@ -131,8 +135,12 @@ msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1
 msgstr "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 
 #: src/app/ReadGuidancePage.js:574
-msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxs <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
-msgstr "<0>Help Desk</0>: All enquiries submitted via generic mailboxs <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
+msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxes <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
+msgstr "<0>Help Desk</0>: All enquiries submitted via generic mailboxes <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
+
+#: src/app/ReadGuidancePage.js:574
+#~ msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxs <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
+#~ msgstr "<0>Help Desk</0>: All enquiries submitted via generic mailboxs <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
 
 #: src/app/ReadGuidancePage.js:574
 #~ msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxs tracker@tbs-sct.gc.ca, suivi@tbs-sct.gc.ca will be responded to within 10 business days."
