@@ -22,7 +22,7 @@ def send_email_notifs(org, domains, org_users):
     def custom_format(d):
         lines = []
         for domain, statuses in d.items():
-            link = get_link(domain)
+            link = get_link(domain, statuses)
             joined = "\n• ".join(f"{s} " for s in statuses)
             lines.append(f'[{domain}]({link}) \n• {joined}')
         return "\n\n".join(lines)
