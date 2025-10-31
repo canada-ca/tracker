@@ -140,14 +140,6 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
       // and all domains across all pages except the unchecked one are selected
       setSelectAll(false)
       // Simulate all domains selected except the one just unchecked
-      // We can't know all domain IDs from all pages, so we use a special flag
-      // Instead, we can set a special state to indicate "all except" and handle in handleConfirmSubmit
-      // But for now, we assume all visible domains are selected except the unchecked one
-      // If you have access to all domain IDs, you could do:
-      // setSelectedIds(new Set(allDomainIds.filter(d => d !== id)))
-      // But since we only have current page, we add the current page's checked domains to selectedIds
-      // and remove the unchecked one
-      // Instead, we set a flag to indicate this special case
       setSelectedIds(() => {
         // This will select all currently visible domains except the unchecked one
         const visibleIds = new Set(domains.map((d) => d.id))
