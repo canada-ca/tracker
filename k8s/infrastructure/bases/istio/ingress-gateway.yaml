@@ -26,8 +26,6 @@ spec:
       tls:
         mode: SIMPLE
         credentialName: ingress-cert
-        privateKey: sds
-        serverCertificate: sds
         minProtocolVersion: TLSV1_2 # ITPIN 6.1.3 implements TLS 1.2, or subsequent versions
         maxProtocolVersion: TLSV1_2
         cipherSuites: # ITPIN 6.1.3 uses supported cryptographic algorithms
