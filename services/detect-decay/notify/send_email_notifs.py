@@ -13,8 +13,11 @@ def send_email_notifs(org, domains, org_users):
     org_acronym_en = org["orgDetails"]["en"]["acronym"]
     org_acronym_fr = org["orgDetails"]["fr"]["acronym"]
     
-    def get_link(domain):
-        return f"https://tracker.canada.ca/domains/{domain}/web-guidance"
+    def get_link(domain, statuses):
+        web_statuses = ["HTTPS Configuration", "HSTS Implementation", "Certificates", "Protocols", "Ciphers", "Curves"]
+        if any(status in statuses for status in web_statuses):
+            return f"https://tracker.canada.ca/domains/{domain}/web-guidance"
+        return f"https://tracker.canada.ca/domains/{domain}/email-guidance"
 
     def custom_format(d):
         lines = []
