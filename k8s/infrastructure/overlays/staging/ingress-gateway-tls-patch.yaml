@@ -26,8 +26,6 @@ spec:
       tls:
         mode: SIMPLE
         credentialName: ingress-cert-frompfx
-        privateKey: sds
-        serverCertificate: sds
         minProtocolVersion: TLSV1_2
         maxProtocolVersion: TLSV1_2
         cipherSuites:

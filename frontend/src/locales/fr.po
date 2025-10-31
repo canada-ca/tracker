@@ -87,6 +87,10 @@ msgstr "{totalRecords} total artículo(s)"
 msgid "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden your search:</3><5><6><7>Start with <8>%</8></7>: Search <9><10>%example.gc.ca</10></9> to find subdomains like <11>\"sub.example.gc.ca.\"</11></6><12><13>End with <14>%</14></13>: Search <15><16>example%</16> </15>to find domains like <17>\"example.gc.ca\"</17> or <18>\"example.canada.ca.\"</18></12><19><20>Use both</20>: Search <21><22>%example%</22> </21>to find anything containing \"example\", like<23>\"sub.example.gc.ca\"</23> or <24>\"example.canada.ca.\"</24></19></5><25>This helps you quickly locate related domains and subdomains.</25>"
 msgstr "<0><1>Conseil de recherche : Caractère générique <2>%</2></1></0><3>Utilisez <4>%</4> pour élargir votre recherche:</3><5><6><7>Démarrez avec <8>%</8></7> : Recherchez <9><10>%exemple.gc. ca</10></9> pour trouver des sous-domaines comme <11>\"sub.exemple.gc.ca.\"</11></6><12><13>Finissez avec <14>%</14></13> : Recherchez <15><16>exemple%</16> </15>pour trouver des domaines comme <17>\"exemple. gc.ca\"</17> ou <18>\"exemple.canada.ca.\"</18></12><19><20>Utiliser les deux</20> : Recherche <21><22>%exemple%</22> </21>pour trouver tout ce qui contient \"exemple\", comme<23>\" sub.exemple.gc.ca\"</23> ou <24>\"exemple.canada.ca.\"</24></19></5><25>Cela vous aide à localiser rapidement les domaines et sous-domaines apparentés.</25>"
 
+#: src/app/ReadGuidancePage.js:586
+msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eastern time on regular business days."
+msgstr "<0>Disponibilité de l'application</0>: Cette application Web en nuage doit être opérationnelle à 95 % de 8 h à 16 h (heure de l'Est) pendant les jours ouvrables réguliers."
+
 #: src/user/EditableUserPhoneNumber.js:169
 msgid "<0>Current Phone Number:</0> {detailValue}"
 msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
@@ -101,6 +105,10 @@ msgstr "<0>Erreur:</0> {0}"
 #: src/app/ReadGuidancePage.js:492
 msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1>.</0>"
+
+#: src/app/ReadGuidancePage.js:574
+msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxes <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
+msgstr "<0>Service d'assistance</0> : Toutes les demandes soumises via les boîtes aux lettres génériques <1>suivi@tbs-sct.gc.ca</1> recevront une réponse dans un délai de 10 jours ouvrables."
 
 #: src/guidance/EmailGuidance.js:346
 #: src/guidance/EmailGuidance.js:433
@@ -244,7 +252,7 @@ msgid "Account"
 msgstr "Compte"
 
 #: src/admin/SuperAdminUserList.js:87
-#: src/user/UserPage.js:64
+#: src/user/UserPage.js:62
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
@@ -254,7 +262,7 @@ msgstr "Compte créé"
 
 #: src/app/App.js:152
 #: src/app/FloatingMenu.js:177
-#: src/user/UserPage.js:113
+#: src/user/UserPage.js:111
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
@@ -337,7 +345,7 @@ msgstr "ADMIN"
 #~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 #~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle, <0>s'il vous plaît activer MFA</0>."
 
-#: src/user/UserPage.js:138
+#: src/user/UserPage.js:135
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
@@ -369,27 +377,27 @@ msgstr "Affiliations :"
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Vous avez déjà un compte ? <0>Connecter</0>"
 
-#: src/admin/AdminDomains.js:555
+#: src/admin/AdminDomains.js:571
 #: src/organizationDetails/OrganizationDomains.js:262
 msgid "An asset confirmed to belong to the organization."
 msgstr "Se confirma que un activo pertenece a la organización."
 
-#: src/admin/AdminDomains.js:558
+#: src/admin/AdminDomains.js:574
 #: src/organizationDetails/OrganizationDomains.js:265
 msgid "An asset that is owned by a third party and supports the operation of organization-owned assets."
 msgstr "Activo propiedad de un tercero que sirve de apoyo al funcionamiento de los activos propiedad de la organización."
 
-#: src/admin/AdminDomains.js:562
+#: src/admin/AdminDomains.js:578
 #: src/organizationDetails/OrganizationDomains.js:269
 msgid "An asset that is relevant to the organization but is not a direct part of the attack surface."
 msgstr "Un activo que es relevante para la organización pero que no forma parte directamente de la superficie de ataque."
 
-#: src/admin/AdminDomains.js:566
+#: src/admin/AdminDomains.js:582
 #: src/organizationDetails/OrganizationDomains.js:273
 msgid "An asset that is suspected to belong to the organization but has not been confirmed."
 msgstr "Activo que se sospecha que pertenece a la organización pero que no se ha confirmado."
 
-#: src/admin/AdminDomains.js:570
+#: src/admin/AdminDomains.js:586
 #: src/organizationDetails/OrganizationDomains.js:277
 msgid "An asset that requires further investigation to determine its relationship to the organization."
 msgstr "Un activo que requiere más investigación para determinar su relación con la organización."
@@ -471,7 +479,6 @@ msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
 #: src/user/EditableEmailUpdateOptions.js:39
-#: src/user/EmailUpdatesSwitch.js:17
 msgid "An error occurred while updating your email update preference."
 msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences de mise à jour du courrier électronique."
 
@@ -516,7 +523,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/createOrganization/CreateOrganizationPage.js:42
 #: src/guidance/CveIgnorer.js:19
 #: src/guidance/CveIgnorer.js:68
-#: src/user/UserPage.js:53
+#: src/user/UserPage.js:51
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -722,7 +729,7 @@ msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des se
 #: src/admin/DomainUpdateList.js:279
 #: src/admin/SuperAdminUserList.js:423
 #: src/components/ExportButton.js:93
-#: src/user/UserPage.js:225
+#: src/user/UserPage.js:215
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -902,8 +909,8 @@ msgstr "Fermer"
 
 #: src/admin/SuperAdminUserList.js:337
 #: src/admin/SuperAdminUserList.js:403
-#: src/user/UserPage.js:181
-#: src/user/UserPage.js:208
+#: src/user/UserPage.js:171
+#: src/user/UserPage.js:198
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -957,7 +964,7 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:186
 #: src/user/EditableUserPhoneNumber.js:244
-#: src/user/UserPage.js:229
+#: src/user/UserPage.js:219
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -1619,11 +1626,10 @@ msgid "Email Update Preferences:"
 msgstr "Préférences de mise à jour du courrier électronique :"
 
 #: src/user/EmailUpdatesSwitch.js:82
-msgid "Email Updates"
-msgstr "Mises à jour par courriel"
+#~ msgid "Email Updates"
+#~ msgstr "Mises à jour par courriel"
 
 #: src/user/EditableEmailUpdateOptions.js:50
-#: src/user/EmailUpdatesSwitch.js:28
 msgid "Email Updates status changed"
 msgstr "Changement de statut des mises à jour par courrier électronique"
 
@@ -1683,7 +1689,7 @@ msgstr "Anglais"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:217
+#: src/user/UserPage.js:207
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1905,7 +1911,7 @@ msgstr "Première vue : {0}"
 #~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity."
 #~ msgstr "Si vous avez des questions ou des préoccupations, n’hésitez pas à communiquer avec l’équipe responsable de la cybersécurité du SCT."
 
-#: src/app/ReadGuidancePage.js:569
+#: src/app/ReadGuidancePage.js:594
 msgid "For any questions or concerns, please contact <0>TBS Cyber Security</0> ."
 msgstr "Si vous avez des questions ou des préoccupations, n’hésitez pas à communiquer avec l’<0>équipe responsable de la cybersécurité du SCT</0>."
 
@@ -1918,7 +1924,6 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 #~ msgstr "Pour des conseils approfondis sur la mise en œuvre:"
 
 #: src/user/EditableEmailUpdateOptions.js:160
-#: src/user/EmailUpdatesSwitch.js:64
 msgid "For organization admins interested in receiving email updates on new activity in their organizations."
 msgstr "Pour les administrateurs d'organisations qui souhaitent recevoir des mises à jour par courrier électronique sur les nouvelles activités de leur organisation."
 
@@ -2403,7 +2408,7 @@ msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
 #: src/admin/SuperAdminUserList.js:107
-#: src/user/UserPage.js:85
+#: src/user/UserPage.js:83
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
@@ -2471,7 +2476,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/UserPage.js:84
+#: src/user/UserPage.js:82
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -2497,7 +2502,6 @@ msgid "Incorrect unignoreCve.result typename."
 msgstr "Incorrect unignoreCve.result typename."
 
 #: src/user/EditableEmailUpdateOptions.js:72
-#: src/user/EmailUpdatesSwitch.js:50
 #: src/user/InsideUserSwitch.js:54
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
@@ -2523,7 +2527,6 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserDisplayName.js:73
 #: src/user/EditableUserEmail.js:69
 #: src/user/EditableUserTFAMethod.js:77
-#: src/user/EmailUpdatesSwitch.js:51
 #: src/user/InsideUserSwitch.js:55
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
@@ -4100,6 +4103,10 @@ msgstr "Septembre"
 msgid "Serial:"
 msgstr "En série :"
 
+#: src/app/ReadGuidancePage.js:569
+msgid "Service Level Agreement"
+msgstr "Accord sur le niveau de service"
+
 #: src/organizations/Organizations.js:94
 #: src/organizations/Organizations.js:195
 msgid "Services"
@@ -4880,7 +4887,7 @@ msgstr "Les présentes conditions générales sont régies et interprétées en 
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {0} ?"
 
-#: src/user/UserPage.js:212
+#: src/user/UserPage.js:202
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -5063,7 +5070,7 @@ msgid "Track Digital Security"
 msgstr "Suivre la sécurité numérique"
 
 #: src/admin/SuperAdminUserList.js:88
-#: src/user/UserPage.js:65
+#: src/user/UserPage.js:63
 msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
@@ -5132,7 +5139,7 @@ msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/admin/SuperAdminUserList.js:97
-#: src/user/UserPage.js:75
+#: src/user/UserPage.js:73
 msgid "Unable to close the account."
 msgstr "Impossible de fermer le compte."
 
@@ -5260,7 +5267,6 @@ msgid "Unable to update to your display name, please try again."
 msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
 
 #: src/user/EditableEmailUpdateOptions.js:63
-#: src/user/EmailUpdatesSwitch.js:41
 msgid "Unable to update to your Email Updates status, please try again."
 msgstr "Impossible de mettre à jour votre statut de mise à jour par courriel, veuillez réessayer."
 
@@ -5410,7 +5416,7 @@ msgid "User email"
 msgstr "Courriel de l'utilisateur"
 
 #: src/admin/SuperAdminUserList.js:418
-#: src/user/UserPage.js:220
+#: src/user/UserPage.js:210
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -5850,7 +5856,6 @@ msgid "You have successfully updated your display name."
 msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
 
 #: src/user/EditableEmailUpdateOptions.js:51
-#: src/user/EmailUpdatesSwitch.js:29
 msgid "You have successfully updated your email update preference."
 msgstr "Vous avez mis à jour vos préférences de mise à jour de l'email avec succès."
 

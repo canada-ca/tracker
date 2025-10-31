@@ -37,8 +37,6 @@ import { useUserVar } from '../utilities/userState'
 import { CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
 import { InsideUserSwitch } from './InsideUserSwitch'
-import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { EditableEmailUpdateOptions } from './EditableEmailUpdateOptions'
 
 export default function UserPage() {
@@ -127,7 +125,6 @@ export default function UserPage() {
     emailValidated,
     phoneValidated,
     insideUser,
-    receiveUpdateEmails,
     emailUpdateOptions,
   } = queryUserData?.userPage
 
@@ -158,14 +155,7 @@ export default function UserPage() {
             mb="8"
           />
 
-          <ABTestWrapper>
-            <ABTestVariant name="A">
-              <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
-            </ABTestVariant>
-            <ABTestVariant name="B">
-              <EditableEmailUpdateOptions emailUpdateOptions={emailUpdateOptions} />
-            </ABTestVariant>
-          </ABTestWrapper>
+          <EditableEmailUpdateOptions emailUpdateOptions={emailUpdateOptions} />
           <InsideUserSwitch insideUser={insideUser || false} />
 
           <Flex mt="auto">

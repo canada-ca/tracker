@@ -118,7 +118,6 @@ export const UPDATE_USER_PROFILE = gql`
     $userName: EmailAddress
     $tfaSendMethod: TFASendMethodEnum
     $insideUser: Boolean
-    $receiveUpdateEmails: Boolean
     $emailUpdateOptions: emailUpdatesInput
   ) {
     updateUserProfile(
@@ -127,7 +126,6 @@ export const UPDATE_USER_PROFILE = gql`
         userName: $userName
         tfaSendMethod: $tfaSendMethod
         insideUser: $insideUser
-        receiveUpdateEmails: $receiveUpdateEmails
         emailUpdateOptions: $emailUpdateOptions
       }
     ) {
@@ -140,7 +138,6 @@ export const UPDATE_USER_PROFILE = gql`
             userName
             tfaSendMethod
             insideUser
-            receiveUpdateEmails
             emailUpdateOptions {
               orgFootprint
               progressReport
