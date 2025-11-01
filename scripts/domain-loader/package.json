@@ -13,7 +13,7 @@
   "author": "nsdeschenes",
   "license": "MIT",
   "dependencies": {
-    "arangojs": "^8.0.0",
+    "arangojs": "^9.0.0",
     "dotenv-safe": "^8.2.0",
     "url-slug": "^3.0.2",
     "yargs": "^17.2.1"
