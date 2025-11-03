@@ -1,4 +1,4 @@
-python-arango==7.3.4
+python-arango==8.2.3
 python-dotenv==1.1.0
 nats-py==2.6.0
 dnspython==2.6.1
