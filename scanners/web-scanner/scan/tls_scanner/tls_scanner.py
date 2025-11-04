@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 from dataclasses import dataclass, asdict as dataclass_asdict
 
 import logging
@@ -37,6 +38,10 @@ from scan.tls_scanner.query_crlite import query_crlite
 logger = logging.getLogger(__name__)
 
 CONNECT_TIMEOUT = 2
+
+PER_SERVER_CONCURRENT_CONNECTIONS_LIMIT = int(
+    os.getenv("PER_SERVER_CONCURRENT_CONNECTIONS_LIMIT", 2)
+)
 
 
 @dataclass
@@ -209,7 +214,9 @@ class TLSResult:
         self.request_domain = domain
         self.request_ip_address = ip_address
 
-        scanner = Scanner(per_server_concurrent_connections_limit=2)
+        scanner = Scanner(
+            per_server_concurrent_connections_limit=PER_SERVER_CONCURRENT_CONNECTIONS_LIMIT
+        )
 
         designated_scans = set()
 
