@@ -56,12 +56,10 @@ let db
     name: 'SCANS',
     subjects: [
       'scans.requests',
-      'scans.requests_priority',
       'scans.discovery',
       'scans.add_domain_to_easm',
       'scans.dns_scanner_results',
       'scans.dns_processor_results',
-      'scans.dns_processor_results_priority',
       'scans.web_scanner_results',
       'scans.web_processor_results',
     ],

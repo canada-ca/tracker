@@ -6,7 +6,6 @@ import { createDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
-import { headers } from 'nats'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -282,21 +281,15 @@ export const createDomain = new mutationWithClientMutationId({
       },
     })
 
-    const hdrs = headers()
-    hdrs.set('priority', 'high')
-
     try {
       await publish({
-        channel: 'scans.requests_priority',
+        channel: 'scans.requests',
         msg: {
           domain: returnDomain.domain,
           domain_key: returnDomain._key,
           hash: returnDomain.hash,
           user_key: null, // only used for One Time Scans
           shared_id: null, // only used for One Time Scans
-        },
-        options: {
-          headers: hdrs,
         },
       })
     } catch (err) {

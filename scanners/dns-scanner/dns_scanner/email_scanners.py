@@ -339,7 +339,7 @@ class DMARCScanner:
                         dns.resolver.NXDOMAIN,
                         NoAnswer,
                     ) as e:
-                        logger.info(
+                        logger.error(
                             f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}"
                         )
                         rua_value["accepting"] = "undetermined"
