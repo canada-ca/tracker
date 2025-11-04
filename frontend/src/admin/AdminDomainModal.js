@@ -35,9 +35,8 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
-export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
+export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, availableTags, ...props }) {
   const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -135,37 +134,41 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
         console.log('Incorrect updateDomain.result typename.')
       }
     },
+    update: (cache, { data }) => {
+      if (data.updateDomain.result.__typename !== 'Domain') return
+
+      const updateDomainId = cache.identify(data.updateDomain.result)
+      cache.modify({
+        id: updateDomainId,
+        fields: {
+          claimTags() {
+            return data.updateDomain.result.claimTags
+          },
+        },
+      })
+    },
   })
 
-  const tagOptions = [
-    { en: 'NEW', fr: 'NOUVEAU' },
-    { en: 'PROD', fr: 'PROD' },
-    { en: 'STAGING', fr: 'DEV' },
-    { en: 'TEST', fr: 'TEST' },
-    { en: 'WEB', fr: 'WEB' },
-    { en: 'INACTIVE', fr: 'INACTIF' },
-  ]
-
   const addableTags = (values, helper) => {
-    const stringValues = values?.map((label) => {
-      return label[i18n.locale]
+    const stringValues = values?.map(({ tagId }) => {
+      return tagId
     })
-    const difference = tagOptions.filter((label) => !stringValues?.includes(label[i18n.locale]))
-    return difference?.map((label, idx) => {
+    const difference = availableTags.filter(({ tagId }) => !stringValues?.includes(tagId))
+    return difference?.map((tag, idx) => {
       return (
         <Button
           key={idx}
-          id={`add-tag-${label[i18n.locale]}`}
+          id={`add-tag-${tag.tagId}`}
           _hover={{ bg: 'gray.200' }}
           borderRadius="full"
           onClick={() => {
-            helper.push(label)
+            helper.push(tag)
           }}
           bg="#f2f2f2"
           fontWeight="normal"
           size="sm"
         >
-          {label[i18n.locale]}
+          {tag.label.toUpperCase()}
           <AddIcon color="gray.500" ml="auto" />
         </Button>
       )
@@ -174,12 +177,11 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
 
   const getInitTags = () => {
     let tags = tagInputList?.map((label) => {
-      return tagOptions.filter((option) => {
-        return option[i18n.locale] == label
-      })[0]
+      return availableTags.filter((option) => option.tagId == label.tagId)[0]
     })
-    if (mutation === 'create' && tags.filter((tag) => tag.en === 'NEW').length === 0) {
-      tags.push(tagOptions[0])
+    if (mutation === 'create' && tags.filter(({ tagId }) => tagId === 'new-nouveau').length === 0) {
+      const newTag = availableTags.filter(({ tagId }) => tagId === 'new-nouveau')[0]
+      newTag && tags.push(newTag)
     }
     return tags
   }
@@ -207,7 +209,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   domainId: editingDomainId,
                   orgId: orgId,
-                  tags: values.tags,
+                  tags: values.tags.map(({ tagId }) => tagId),
                   archived: values.archiveDomain,
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
@@ -218,7 +220,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   orgId: orgId,
                   domain: values.domainUrl.trim(),
-                  tags: values.tags,
+                  tags: values.tags.map(({ tagId }) => tagId),
                   archived: values.archiveDomain,
                   assetState: values.assetState,
                 },
@@ -248,14 +250,16 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       <Box>
                         <Text fontWeight="bold">Tags:</Text>
                         <SimpleGrid columns={3} spacing={2}>
-                          {values.tags?.map((label, idx) => {
+                          {values.tags?.map(({ tagId, label, description }, idx) => {
                             return (
                               <Tag key={idx} borderRadius="full" py="2" px="3">
-                                <TagLabel>{label[i18n.locale]}</TagLabel>
+                                <Tooltip label={description} aria-label={`tag-tooltip-${tagId}`}>
+                                  <TagLabel>{label.toUpperCase()}</TagLabel>
+                                </Tooltip>
                                 <TagCloseButton
                                   ml="auto"
                                   onClick={() => arrayHelpers.remove(idx)}
-                                  aria-label={`remove-tag-${label[i18n.locale]}`}
+                                  aria-label={`remove-tag-${tagId}`}
                                 />
                               </Tag>
                             )
@@ -268,45 +272,40 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       </Box>
                     )}
                   />
-                  <ABTestWrapper insiderVariantName="B">
-                    <ABTestVariant name="B">
-                      <FormControl>
-                        <FormLabel htmlFor="assetState" fontWeight="bold">
-                          <Tooltip
-                            label={t`Select a state that best describes the asset in relation to your organization.`}
-                          >
-                            <Flex align="center">
-                              <Trans>Asset State</Trans>{' '}
-                              <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <Select
-                          name="assetState"
-                          id="assetState"
-                          borderColor="black"
-                          onChange={handleChange}
-                          defaultValue={assetState}
-                        >
-                          <option value="APPROVED">
-                            <Trans>Approved</Trans>
-                          </option>
-                          <option value="DEPENDENCY">
-                            <Trans>Dependency</Trans>
-                          </option>
-                          <option value="MONITOR_ONLY">
-                            <Trans>Monitor Only</Trans>
-                          </option>
-                          <option value="CANDIDATE">
-                            <Trans>Candidate</Trans>
-                          </option>
-                          <option value="REQUIRES_INVESTIGATION">
-                            <Trans>Requires Investigation</Trans>
-                          </option>
-                        </Select>
-                      </FormControl>
-                    </ABTestVariant>
-                  </ABTestWrapper>
+                  <FormControl>
+                    <FormLabel htmlFor="assetState" fontWeight="bold">
+                      <Tooltip
+                        label={t`Select a state that best describes the asset in relation to your organization.`}
+                      >
+                        <Flex align="center">
+                          <Trans>Asset State</Trans> <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
+                        </Flex>
+                      </Tooltip>
+                    </FormLabel>
+                    <Select
+                      name="assetState"
+                      id="assetState"
+                      borderColor="black"
+                      onChange={handleChange}
+                      defaultValue={assetState}
+                    >
+                      <option value="APPROVED">
+                        <Trans>Approved</Trans>
+                      </option>
+                      <option value="DEPENDENCY">
+                        <Trans>Dependency</Trans>
+                      </option>
+                      <option value="MONITOR_ONLY">
+                        <Trans>Monitor Only</Trans>
+                      </option>
+                      <option value="CANDIDATE">
+                        <Trans>Candidate</Trans>
+                      </option>
+                      <option value="REQUIRES_INVESTIGATION">
+                        <Trans>Requires Investigation</Trans>
+                      </option>
+                    </Select>
+                  </FormControl>
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
@@ -402,4 +401,5 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
+  availableTags: array,
 }

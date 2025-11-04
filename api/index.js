@@ -39,7 +39,7 @@ const {
     return db.beginTransaction(collections)
   }
 
-  const nc = await connect({ servers: NATS_URL })
+  const nc = await connect({ servers: NATS_URL, maxReconnectAttempts: -1, reconnectTimeWait: 1000 })
 
   const jsm = await nc.jetstreamManager()
 

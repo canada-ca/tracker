@@ -33,9 +33,9 @@ export const getAllOrganizationDomainStatuses = {
 
     const headers = [
       'domain',
-      'orgName',
-      'orgAcronym',
-      'orgExternalID',
+      'orgNames',
+      'orgAcronyms',
+      'orgExternalIDs',
       'ipAddresses',
       'https',
       'hsts',
@@ -57,8 +57,8 @@ export const getAllOrganizationDomainStatuses = {
     domainStatuses.forEach((domainStatus) => {
       const csvLine = headers
         .map((header) => {
-          if (['ipAddresses', 'top25Vulnerabilities'].includes(header)) {
-            return domainStatus[header]?.join('|') || []
+          if (['orgNames', 'orgAcronyms', 'orgExternalIDs', 'ipAddresses', 'top25Vulnerabilities'].includes(header)) {
+            return `"${domainStatus[header]?.join('|') || []}"`
           }
           return `"${domainStatus[header]}"`
         })

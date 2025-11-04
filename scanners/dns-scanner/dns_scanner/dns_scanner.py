@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from dataclasses import dataclass
 import time
 import re
@@ -5,6 +7,7 @@ import os
 import logging
 
 import dns.resolver
+import dns.name
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer
 from dns.exception import Timeout
 
@@ -13,12 +16,14 @@ from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
+DNSSEC_NAMESERVER_URL= os.getenv("DNSSEC_NAMESERVER_URL")
 
 
 @dataclass
 class DNSScanResult:
     domain: str
     base_domain: str = None
+    zone_apex: str = None
     record_exists: bool = None
     rcode: str = None
     resolve_chain: list[list[str]] = None
@@ -31,6 +36,42 @@ class DNSScanResult:
     dmarc: dict = None
     wildcard_sibling: bool = None
     wildcard_entry: bool = None
+
+
+def find_zone_apex(domain, resolver=None):
+    try:
+        if resolver is None:
+            resolver = dns.resolver.get_default_resolver()
+
+        name = dns.name.from_text(domain)
+
+        # Walk up the domain hierarchy
+        while name != dns.name.root:
+            logger.debug(f"Checking for SOA at {name}")
+            try:
+                answers = resolver.resolve(name, 'SOA')
+                logger.debug(f"Found SOA for {domain} at {name}: {answers[0]}")
+                zone_apex = str(name).rstrip('.')
+                return zone_apex
+            except NoAnswer:
+                # Go up one level
+                logger.debug(f"No SOA found at {name}, moving to parent")
+                name = name.parent()
+            except (NXDOMAIN, NoNameservers) as e:
+                # Go up one level
+                logger.debug(f"Domain does not exist at {name}: {e}, moving to parent")
+                name = name.parent()
+            except Timeout as e:
+                logger.error(f"Timeout while checking SOA at {name}: {e}")
+                name = name.parent()
+            except Exception as e:
+                logger.error(f"Error checking SOA at {name}: {e}")
+                name = name.parent()
+
+        return None
+    except Exception as e:
+        logger.error(f"Error in find_zone_apex for {domain}: {e}")
+        return None
 
 
 def get_dns_return_type(domain, query_type):
@@ -53,6 +94,35 @@ def get_dns_return_type(domain, query_type):
             f"Error while checking if domain '{domain}' exists with query type '${dns.rdatatype.to_text(query_type)}': {e}"
         )
         return None
+
+
+@lru_cache(maxsize=10_000)
+def minimal_dnssec_check(domain, nameserver_url, _ttl_marker=None):
+    """
+    Check if the domain is CAPABLE of signing records by sending a DNSSEC enabled DNSKEY query to a DNSSEC aware nameserver
+    _ttl_marker is strictly used to force cache invalidation after TTL
+    """
+    try:
+        q = dns.message.make_query(domain, dns.rdatatype.DNSKEY, want_dnssec=True)
+        resp = dns.query.https(q, where=nameserver_url, timeout=TIMEOUT)
+        if resp.rcode() != dns.rcode.NOERROR:
+            return None
+    except Timeout:
+        logger.error(
+            f"Timeout while running minimal DNSSEC check for domain '{domain}."
+        )
+        return None
+    except Exception as e:
+        logger.error(f"Error while running minimal DNSSEC check for domain '{domain}': {e}")
+        return None
+    # Check if AD (Authenticated Data) flag is set, showing that the data is DNSSEC validated
+    return bool(resp.flags & dns.flags.AD)
+
+
+def dnssec_check_with_ttl(domain, nameserver_url, ttl=3600):
+    # Create TTL buckets to force cache invalidation at "ttl" intervals"
+    _ttl_marker = int(time.time() / ttl)
+    return minimal_dnssec_check(domain, nameserver_url, _ttl_marker)
 
 
 def format_answers(ans):
@@ -130,7 +200,7 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     dns_answer_return_types = []
-    for query_type in [dns.rdatatype.SOA, dns.rdatatype.NS, dns.rdatatype.A]:
+    for query_type in [dns.rdatatype.A, dns.rdatatype.SOA, dns.rdatatype.NS]:
         rtype = get_dns_return_type(domain, query_type)
         if rtype == "NOERROR":
             dns_answer_return_types.append(rtype)
@@ -141,7 +211,7 @@ def scan_domain(domain, dkim_selectors=None):
         elif rtype == "NXDOMAIN":
             scan_result.rcode = rtype
             scan_result.record_exists = False
-            return scan_result.__dict__
+            dns_answer_return_types.append(rtype)
         elif rtype == "SERVFAIL":
             dns_answer_return_types.append(rtype)
         else:
@@ -205,6 +275,20 @@ def scan_domain(domain, dkim_selectors=None):
 
     if cname_record is not None:
         scan_result.cname_record = str(cname_record.response.answer[0])
+
+    zone_apex = find_zone_apex(domain)
+    scan_result.zone_apex = zone_apex
+
+    if not zone_apex:
+        logger.debug(f"Skipping DNSSEC check for {domain} - No zone apex found")
+        zone_dnssec_enabled = None
+    elif not DNSSEC_NAMESERVER_URL:
+        logger.debug(f"Skipping DNSSEC check for {domain} - DNSSEC_NAMESERVER_URL not set")
+        zone_dnssec_enabled = None
+    else:
+        zone_dnssec_enabled = dnssec_check_with_ttl(domain=zone_apex, nameserver_url=DNSSEC_NAMESERVER_URL)
+
+    scan_result.zone_dnssec_enabled = zone_dnssec_enabled
 
     # Run DMARC scan
     dmarc_start_time = time.monotonic()

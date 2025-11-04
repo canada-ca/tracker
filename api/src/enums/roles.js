@@ -25,6 +25,10 @@ export const RoleEnums = new GraphQLEnumType({
       value: 'super_admin',
       description: 'A user who has the same access as an admin, but can define new admins.',
     },
+    SERVICE: {
+      value: 'service',
+      description: 'An internal service used by Tracker to make changes to organizational data.',
+    },
   },
   description: 'An enum used to assign, and test users roles.',
 })

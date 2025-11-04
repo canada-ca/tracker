@@ -175,11 +175,9 @@ export default function OrganizationDetails({ loginRequired }) {
               </ErrorBoundary>
             )}
             <Divider />
-            {data?.organization?.userHasPermission && (
-              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
-              </ErrorBoundary>
-            )}
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <AggregatedGuidanceSummary orgSlug={orgSlug} mt="4" className="aggregated-guidance-summary" />
+            </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -197,6 +195,8 @@ export default function OrganizationDetails({ loginRequired }) {
                 orgSlug={orgSlug}
                 orgName={orgName}
                 userHasPermission={data?.organization?.userHasPermission}
+                availableTags={data?.organization?.availableTags || []}
+                negativeFindings={data?.organization?.summaries?.negativeFindings?.guidanceTags}
               />
             </ErrorBoundary>
           </TabPanel>

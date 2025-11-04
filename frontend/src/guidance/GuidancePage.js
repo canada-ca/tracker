@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeftIcon, StarIcon } from '@chakra-ui/icons'
 
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Badge,
   Box,
   Button,
@@ -31,7 +35,6 @@ import { FAVOURITE_DOMAIN } from '../graphql/mutations'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { AdditionalFindings } from './AdditionalFindings'
 
 import { ListOf } from '../components/ListOf'
@@ -77,7 +80,7 @@ function GuidancePage() {
     wildcardEntry,
   } = data?.findDomainByDomain || {}
 
-  useDocumentTitle(`${domainName}`)
+  useDocumentTitle(`${domain}`)
 
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
@@ -123,7 +126,7 @@ function GuidancePage() {
     )
   }
 
-  const orgNodes = organizations.edges.map(({ node }) => node)
+  const orgNodes = organizations?.edges.map(({ node }) => node)
 
   let orgList
   if (!userHasPermission) {
@@ -131,8 +134,8 @@ function GuidancePage() {
       <ListOf
         elements={orgNodes}
         ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Organizations</Trans>
+          <Text fontWeight="bold" fontSize="md" textAlign="center">
+            <Trans>No Organizations found for this domain.</Trans>
           </Text>
         )}
         mb="4"
@@ -181,17 +184,24 @@ function GuidancePage() {
 
     return (
       <Box align="center" w="100%" px={4}>
-        <Text textAlign="center" fontSize="2xl" fontWeight="bold">
-          <Trans>
-            Error while retrieving scan data for {domainName}. <br />
-            This could be due to insufficient user privileges or the Domain does not exist in the system. You can
-            request access to an Organization below to view the Domain results
-          </Trans>
-        </Text>
-
-        <Heading as="h1" textAlign="middle" mb="4" mt="4">
+        <Alert status="error" variant="left-accent" mb="6" borderRadius="md">
+          <AlertIcon />
+          <Box flex="1">
+            <AlertTitle fontSize="lg" mb="2">
+              <Trans>Unable to retrieve scan data for {domain}.</Trans>
+            </AlertTitle>
+            <AlertDescription fontSize="md">
+              <Trans>
+                This may be due to insufficient user privileges or because the domain does not exist in the system.
+                <br />
+                You can request access to an Organization below to view the Domain results.
+              </Trans>
+            </AlertDescription>
+          </Box>
+        </Alert>
+        <Text fontWeight="bold" fontSize="lg" textAlign="center" mb="4" mt="4">
           <Trans>Organizations</Trans>
-        </Heading>
+        </Text>
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>{orgList}</ErrorBoundary>
       </Box>
     )
@@ -302,15 +312,11 @@ function GuidancePage() {
           </Badge>
         )}
 
-        <ABTestWrapper insiderVariantName="B">
-          <ABTestVariant name="B">
-            {wildcardSibling && (
-              <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
-                {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
-              </Badge>
-            )}
-          </ABTestVariant>
-        </ABTestWrapper>
+        {wildcardSibling && (
+          <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+            {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
+          </Badge>
+        )}
 
         {isLoggedIn() && (
           <IconButton

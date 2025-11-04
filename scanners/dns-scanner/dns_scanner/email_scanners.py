@@ -207,6 +207,69 @@ class DMARCScanner:
                 },
             }
 
+        effective_policy_source = None
+        effective_policy = None
+
+        p_policy = scan_result["dmarc"].get("tags", {}).get("p", {}).get("value", None)
+        sp_policy = (
+            scan_result["dmarc"].get("tags", {}).get("sp", {}).get("value", None)
+        )
+
+        if p_policy and sp_policy:
+            if self.domain == scan_result.get("dmarc", {}).get("location", ""):
+                effective_policy_source = "p"
+                effective_policy = p_policy
+            else:
+                effective_policy_source = "sp"
+                effective_policy = sp_policy
+
+        scan_result["dmarc"]["effective_policy_source"] = effective_policy_source
+        scan_result["dmarc"]["effective_policy"] = effective_policy
+
+        def fix_spf_recursive_record_data(spf_res):
+            parsed_spf = spf_res.get("parsed", {})
+
+            include = [
+                fix_spf_recursive_record_data(spf_include)
+                for spf_include in parsed_spf.get("include", [])
+            ]
+            spf_res["parsed"]["include"] = include
+
+            redirect = (
+                fix_spf_recursive_record_data(parsed_spf.get("redirect"))
+                if parsed_spf.get("redirect")
+                else None
+            )
+            spf_res["parsed"]["redirect"] = redirect
+
+            if redirect:
+                # Follow "redirect" modifier for "all" mechanism
+                logger.debug(
+                    f'Following redirect in SPF record for "all" mechanism: {self.domain}'
+                )
+                spf_res["spf_default"] = redirect.get("spf_default", None)
+            else:
+                spf_res["spf_default"] = parsed_spf.get("all", None)
+
+            spf_res["parsed"].pop("all", None)
+
+            spf_res["lookups"] = spf_res["dns_lookups"]
+            spf_res.pop("dns_lookups", None)
+
+            duplicate_include = [
+                warning.split(":")[1].strip()
+                for warning in spf_res.get("warnings", [])
+                if warning.startswith("Duplicate include")
+            ]
+            spf_res["parsed"]["duplicate_include"] = duplicate_include
+
+            return spf_res
+
+        if scan_result["spf"].get("record", None) and not scan_result["spf"].get(
+            "error", None
+        ):
+            fix_spf_recursive_record_data(scan_result["spf"])
+
         if scan_result["dmarc"].get("record", "null") == "null":
             return {
                 "dmarc": {"error": "missing"},

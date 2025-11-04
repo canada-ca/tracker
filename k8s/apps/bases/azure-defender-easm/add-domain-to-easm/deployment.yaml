@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: add-domain-to-easm
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:master-35c323f-1730989342 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:master-f896041-1743697982 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
           env:
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222

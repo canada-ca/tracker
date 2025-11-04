@@ -77,7 +77,7 @@
         "numberOfShards": 6
       }
     },
-     {
+    {
       "type": "documentcollection",
       "name": "guidanceTags",
       "options": {
@@ -197,6 +197,15 @@
     {
       "type": "documentcollection",
       "name": "additionalFindings",
+      "options": {
+        "replicationfactor": 3,
+        "writeconcern": 1,
+        "numberofshards": 6
+      }
+    },
+    {
+      "type": "documentcollection",
+      "name": "tags",
       "options": {
         "replicationfactor": 3,
         "writeconcern": 1,

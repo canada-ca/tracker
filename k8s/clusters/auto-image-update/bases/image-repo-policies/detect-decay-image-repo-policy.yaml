@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: detect-decay
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/detect-decay
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: detect-decay
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: detect-decay
+  policy:
+    numerical:
+      order: asc

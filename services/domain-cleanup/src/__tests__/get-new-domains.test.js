@@ -61,10 +61,7 @@ describe('given the getNewDomains function', () => {
       claim = await collections.claims.save({
         _from: org._id,
         _to: domain._id,
-        tags: [
-          { en: 'NEW', fr: 'NOUVEAU' },
-          { en: 'TEST', fr: 'TEST' },
-        ],
+        tags: ['new-nouveau', 'test-test'],
         firstSeen: '2021-01-01',
       })
       claim2 = await collections.claims.save({
@@ -82,10 +79,7 @@ describe('given the getNewDomains function', () => {
           ...claim,
           _from: org._id,
           _to: domain._id,
-          tags: [
-            { en: 'NEW', fr: 'NOUVEAU' },
-            { en: 'TEST', fr: 'TEST' },
-          ],
+          tags: ['new-nouveau', 'test-test'],
           firstSeen: '2021-01-01',
         },
       ]

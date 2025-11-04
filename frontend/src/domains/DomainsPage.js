@@ -57,6 +57,7 @@ export default function DomainsPage() {
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
       variables: { filters },
+      fetchPolicy: 'no-cache',
       onError(error) {
         toast({
           title: error.message,
@@ -72,6 +73,7 @@ export default function DomainsPage() {
 
   const [getTop25Report, { loading: top25ReportLoading }] = useLazyQuery(GET_TOP_25_REPORT, {
     variables: { filters },
+    fetchPolicy: 'no-cache',
     onError(error) {
       toast({
         title: error.message,
@@ -138,13 +140,14 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
+    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
     return (
       <Flex>
         <ExportButton
-          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+          fileName={`Tracker_all_domains_${new Date().toLocaleDateString('en-CA')}`}
           dataFunction={async () => {
             toast({
               title: t`Getting domain statuses`,
@@ -174,7 +177,7 @@ export default function DomainsPage() {
           mr="2"
         />
         <ExportButton
-          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString()}`}
+          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString('en-CA')}`}
           dataFunction={async () => {
             toast({
               title: t`Getting top 25 report`,
@@ -347,7 +350,12 @@ export default function DomainsPage() {
             resetToFirstPage={resetToFirstPage}
           />
           {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />}
-          <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+          <FilterList
+            filters={filters}
+            setFilters={setFilters}
+            resetToFirstPage={resetToFirstPage}
+            filterTagOptions={filterTagOptions}
+          />
         </Flex>
 
         {domainList}

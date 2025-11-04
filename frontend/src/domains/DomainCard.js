@@ -1,6 +1,19 @@
 import React, { memo } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Badge, Box, Button, Flex, IconButton, ListItem, Stack, Tag, TagLabel, Text, useToast } from '@chakra-ui/react'
+import {
+  Badge,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  ListItem,
+  Stack,
+  Tag,
+  TagLabel,
+  Text,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
@@ -10,7 +23,6 @@ import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
 import { isEqual } from 'lodash-es'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 function DomainCard({
   id,
@@ -119,15 +131,11 @@ function DomainCard({
           <Text fontSize="lg" fontWeight="bold">
             {url}
           </Text>
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {assetState && (
-                <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center" className="asset-state">
-                  {assetStateLabels[assetState]}
-                </Badge>
-              )}
-            </ABTestVariant>
-          </ABTestWrapper>
+          {assetState && (
+            <Badge ml="1" colorScheme="green" variant="solid" alignSelf="center" className="asset-state">
+              {assetStateLabels[assetState]}
+            </Badge>
+          )}
           <Flex ml="auto" className="system-tags">
             {rcode === 'NXDOMAIN' && (
               <Badge colorScheme="red" variant="subtle" alignSelf="center">
@@ -144,15 +152,11 @@ function DomainCard({
                 <Trans>Blocked</Trans>
               </Badge>
             )}
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                {wildcardSibling && (
-                  <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
-                    {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
-                  </Badge>
-                )}
-              </ABTestVariant>
-            </ABTestWrapper>
+            {wildcardSibling && (
+              <Badge ml="2" colorScheme={wildcardEntry ? 'red' : 'blue'} variant="subtle" alignSelf="center">
+                {wildcardEntry ? <Trans>Wildcard Entry</Trans> : <Trans>Wildcard Sibling</Trans>}
+              </Badge>
+            )}
             {webScanPending && (
               <Badge ml="2" colorScheme="blue" variant="outline" alignSelf="center">
                 <Trans>Scan Pending</Trans>
@@ -163,12 +167,14 @@ function DomainCard({
         <Flex>
           <Box mr="auto" className="user-tags">
             <Flex flexWrap="wrap">
-              {tags?.map((tag, idx) => {
+              {tags?.map(({ label, description }, idx) => {
                 return (
                   <Tag key={idx} my="1" mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      {tag}
-                    </TagLabel>
+                    <Tooltip label={description} fontSize="md" placement="top">
+                      <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                        {label.toUpperCase()}
+                      </TagLabel>
+                    </Tooltip>
                   </Tag>
                 )
               })}

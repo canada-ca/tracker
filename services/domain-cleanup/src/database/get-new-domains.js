@@ -3,7 +3,7 @@ const getNewDomains = async ({ query, _log }) => {
   try {
     cursor = await query`
             FOR c IN claims
-                FILTER { en: "NEW", fr: "NOUVEAU" } IN c.tags
+                FILTER 'new-nouveau' IN c.tags
                 RETURN c
         `
   } catch (err) {

@@ -12,7 +12,7 @@ metadata:
 spec:
   # https://istio.io/latest/news/releases/1.9.x/announcing-1.9/#mirroring-of-images-on-gcr-io
   hub: gcr.io/istio-release
-  tag: 1.24.2-distroless
+  tag: 1.27.3-distroless
   meshConfig:
     accessLogFile: /dev/stdout
     enableTracing: true
@@ -51,6 +51,9 @@ spec:
           rollingUpdate:
             maxSurge: 100%
             maxUnavailable: 50%
+        env:
+          - name: ENABLE_NATIVE_SIDECARS
+            value: "true"
     ingressGateways:
     - name: istio-ingressgateway
       enabled: true

@@ -153,6 +153,7 @@ def process_msg(msg):
                             "hsts_status": webScanV.results.connectionResults.hstsStatus,
                             "certificate_status": webScanV.results.tlsResult.certificateStatus,
                             "tls_result": webScanV.results.tlsResult,
+                            "connection_results": webScanV.results.connectionResults,
                             "has_entrust_certificate": webScanV.results.tlsResult.certificateChainInfo.hasEntrustCertificate,
                             "ssl_status": webScanV.results.tlsResult.sslStatus,
                             "protocol_status": webScanV.results.tlsResult.protocolStatus,
@@ -175,6 +176,7 @@ def process_msg(msg):
             blocked_categories = []
             has_entrust_certificate = False
             scan_pending = False
+            web_negative_findings = set()
             for web_scan in all_web_scans:
                 # Skip incomplete scans
                 if web_scan["scan_status"] != "complete":
@@ -190,6 +192,8 @@ def process_msg(msg):
                 curve_statuses.append(web_scan["curve_status"])
                 certificate_statuses.append(web_scan["certificate_status"])
                 blocked_categories.append(web_scan["blocked_category"])
+                web_negative_findings.update(web_scan.get("tls_result", {"negativeTags": []}).get("negativeTags"))
+                web_negative_findings.update(web_scan.get("connection_results", {"negativeTags": []}).get("negativeTags"))
 
             def get_status(statuses):
                 if "fail" in statuses:
@@ -212,6 +216,7 @@ def process_msg(msg):
             )
             domain["webScanPending"] = scan_pending
             domain["hasEntrustCertificate"] = has_entrust_certificate
+            domain["negativeTags"]["web"] = list(web_negative_findings)
 
             del domain["_rev"]
             try:

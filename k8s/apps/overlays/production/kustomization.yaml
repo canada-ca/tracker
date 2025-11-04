@@ -15,6 +15,7 @@ resources:
   - ../../bases/scanners/update-selectors-cronjob
   - ../../bases/scanners/summaries-cronjob
   - ../../bases/scanners/domain-discovery
+  - ../../bases/scanners/detect-decay-cronjob
   - ../../bases/azure-defender-easm/defender-platform
   - ../../bases/azure-defender-easm/add-domain-to-easm
   - ../../bases/azure-defender-easm/label-known-easm-assets-cronjob
@@ -32,7 +33,6 @@ replicas:
 patchesStrategicMerge:
   - frontend-production-env-patch.yaml
   - update-selectors-enable-selector-removal-patch.yaml
-  - easm-to-tracker-sync-suspend-patch.yaml
   - api-production-env-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component

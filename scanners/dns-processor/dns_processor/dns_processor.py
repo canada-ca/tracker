@@ -18,7 +18,7 @@ def get_dkim_tag_status(selector_tag_list, sends_email):
     if sends_email == "false":
         dkim_tags["neutral_tags"].append("dkim17")
         return dkim_tags, selector_tags, "info"
-    elif sends_email == "unknown":
+    elif sends_email == "unknown" or sends_email is None:
         dkim_tags["neutral_tags"].append("dkim18")
         return dkim_tags, selector_tags, "info"
     elif sends_email == "true":
@@ -140,9 +140,9 @@ def process_spf(spf_results):
         spf_tags.append("spf2")
         return get_spf_tag_status(spf_tags)
 
-    # Check all tag
-    # "all": "neutral"
-    all_tag = spf_results.get("parsed", {}).get("all", None)
+    # Check all tag (renamed as spf_default)
+    # "spf_default": "neutral"
+    all_tag = spf_results.get("parsed", {}).get("spf_default", None)
     # "record": "v=spf1 redirect=transition._spf.canada.ca",
     spf_record = spf_results.get("record", None)
 
@@ -171,8 +171,8 @@ def process_spf(spf_results):
         spf_tags.append("spf9")
 
     # Look up limit check
-    # "dns_lookups": 3,
-    dns_lookups = spf_results.get("dns_lookups", 0)
+    # "lookups": 3,
+    dns_lookups = spf_results.get("lookups", 0)
     if dns_lookups > 10:
         spf_tags.append("spf11")
 
@@ -389,21 +389,16 @@ def process_results(results):
         else process_spf(results["spf"])
     )
 
-    if dmarc_tags:
-        all_dmarc_tags = (
-            dmarc_tags["negative_tags"]
-            + dmarc_tags["neutral_tags"]
-            + dmarc_tags["positive_tags"]
-        )
-    else:
-        all_dmarc_tags = None
-
     # Check DMARC phase (https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna)
     phase = "not implemented"
 
+    effective_policy_source = dmarc.get("effective_policy_source", None)
+    effective_policy = dmarc.get("effective_policy", None)
+    pct = dmarc.get("tags", {}).get("pct", {}).get("value", None)
+
     rua_addresses = dmarc.get("tags", {}).get("rua", {}).get("value", [])
     if (
-        any(tag in all_dmarc_tags for tag in ["dmarc4", "dmarc5", "dmarc6"])
+        effective_policy in ["none", "quarantine", "reject"]
         and len(rua_addresses) > 0
     ):
         phase = "assess"
@@ -411,7 +406,7 @@ def process_results(results):
         if dkim_status in ["info", "pass"] and spf_status == "pass":
             phase = "deploy"
 
-            if any(tag in all_dmarc_tags for tag in ["dmarc5", "dmarc6"]):
+            if effective_policy in ["quarantine", "reject"] and pct == 100:
                 phase = "maintain"
 
     has_cyber_rua = False
@@ -425,19 +420,18 @@ def process_results(results):
         "has_cyber_rua": has_cyber_rua,
         "p_policy": dmarc.get("tags", {}).get("p", {}).get("value", None),
         "sp_policy": dmarc.get("tags", {}).get("sp", {}).get("value", None),
-        "pct": dmarc.get("tags", {}).get("pct", {}).get("value", None),
+        "effective_policy_source": effective_policy_source,
+        "effective_policy": effective_policy,
+        "pct": pct,
         "phase": phase,
         "neutral_tags": dmarc_tags["neutral_tags"],
         "positive_tags": dmarc_tags["positive_tags"],
         "negative_tags": dmarc_tags["negative_tags"],
     }
 
-    spf_record = spf.get("record", None)
     spf_results = {
         "status": spf_status,
-        "record": spf_record,
-        "lookups": spf.get("dns_lookups", None),
-        "spf_default": spf.get("parsed", {}).get("all", None),
+        **spf,
         "neutral_tags": spf_tags["neutral_tags"],
         "positive_tags": spf_tags["positive_tags"],
         "negative_tags": spf_tags["negative_tags"],
@@ -489,6 +483,8 @@ def process_results(results):
         "cname_record": results.get("cname_record", None),
         "mx_records": results.get("mx_records", None),
         "ns_records": results.get("ns_records", None),
+        "zone_apex": results.get("zone_apex", None),
+        "zone_dnssec_enabled": results.get("zone_dnssec_enabled", None),
         "wildcard_sibling": results.get("wildcard_sibling", None),
         "wildcard_entry": results.get("wildcard_entry", None),
         "dmarc": dmarc_results,

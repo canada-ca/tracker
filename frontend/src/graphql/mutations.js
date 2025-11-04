@@ -118,7 +118,6 @@ export const UPDATE_USER_PROFILE = gql`
     $userName: EmailAddress
     $tfaSendMethod: TFASendMethodEnum
     $insideUser: Boolean
-    $receiveUpdateEmails: Boolean
     $emailUpdateOptions: emailUpdatesInput
   ) {
     updateUserProfile(
@@ -127,7 +126,6 @@ export const UPDATE_USER_PROFILE = gql`
         userName: $userName
         tfaSendMethod: $tfaSendMethod
         insideUser: $insideUser
-        receiveUpdateEmails: $receiveUpdateEmails
         emailUpdateOptions: $emailUpdateOptions
       }
     ) {
@@ -140,10 +138,10 @@ export const UPDATE_USER_PROFILE = gql`
             userName
             tfaSendMethod
             insideUser
-            receiveUpdateEmails
             emailUpdateOptions {
               orgFootprint
               progressReport
+              detectDecay
             }
           }
         }
@@ -182,7 +180,7 @@ export const CREATE_DOMAIN = gql`
   mutation CreateDomain(
     $orgId: ID!
     $domain: DomainScalar!
-    $tags: [InputTag]
+    $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums!
   ) {
@@ -192,7 +190,13 @@ export const CREATE_DOMAIN = gql`
           id
           domain
           lastRan
-          claimTags
+          claimTags {
+            tagId
+            label
+            description
+            isVisible
+            ownership
+          }
           assetState
           archived
           rcode
@@ -264,7 +268,7 @@ export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!
     $orgId: ID!
-    $tags: [InputTag]
+    $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
@@ -284,7 +288,13 @@ export const UPDATE_DOMAIN = gql`
           id
           domain
           lastRan
-          claimTags
+          claimTags {
+            tagId
+            label
+            description
+            isVisible
+            ownership
+          }
           assetState
           archived
           rcode
@@ -756,6 +766,84 @@ export const COMPLETE_TOUR = gql`
           }
         }
         ... on CompleteTourError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const CREATE_TAG = gql`
+  mutation CreateTag(
+    $labelEn: String!
+    $labelFr: String!
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+    $ownership: TagOwnershipEnums!
+    $orgId: ID
+  ) {
+    createTag(
+      input: {
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: $ownership
+        orgId: $orgId
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_TAG = gql`
+  mutation UpdateTag(
+    $tagId: String!
+    $labelEn: String
+    $labelFr: String
+    $descriptionEn: String
+    $descriptionFr: String
+    $isVisible: Boolean
+    $ownership: TagOwnershipEnums
+    $orgId: ID
+  ) {
+    updateTag(
+      input: {
+        tagId: $tagId
+        labelEn: $labelEn
+        labelFr: $labelFr
+        descriptionEn: $descriptionEn
+        descriptionFr: $descriptionFr
+        isVisible: $isVisible
+        ownership: $ownership
+        orgId: $orgId
+      }
+    ) {
+      result {
+        ... on Tag {
+          tagId
+          label
+          description
+          isVisible
+          ownership
+        }
+        ... on TagError {
           code
           description
         }

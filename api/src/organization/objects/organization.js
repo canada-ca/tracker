@@ -11,6 +11,7 @@ import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
 import { OrderDirection, PeriodEnums } from '../../enums'
+import { tagType } from '../../tags/objects'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -70,6 +71,43 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'String ID used to identify the organization in an external system.',
       resolve: ({ externalId }) => externalId,
+    },
+    availableTags: {
+      type: new GraphQLList(tagType),
+      description: '',
+      args: {
+        includeGlobal: {
+          type: GraphQLBoolean,
+          description: '',
+        },
+        includePending: {
+          type: GraphQLBoolean,
+          description: '',
+        },
+        sortDirection: {
+          type: new GraphQLNonNull(OrderDirection),
+          description: 'The direction in which to sort the data.',
+        },
+      },
+      resolve: async (
+        { _key },
+        args,
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
+      ) => {
+        if (loginRequiredBool) {
+          const user = await userRequired()
+          verifiedRequired({ user })
+        }
+
+        const orgTags = await loadTagsByOrg({
+          orgId: _key,
+          ...args,
+        })
+
+        console.debug(`User: ${userKey} successfully retrieved their org's tags.`)
+
+        return orgTags
+      },
     },
     summaries: {
       type: organizationSummaryType,

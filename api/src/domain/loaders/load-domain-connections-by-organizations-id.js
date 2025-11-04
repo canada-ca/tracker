@@ -3,7 +3,7 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByOrgId =
-  ({ query, userKey, language, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
+  ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
   async ({ orgId, permission, after, before, first, last, ownership, orderBy, search, filters = [] }) => {
     let afterTemplate = aql``
     let afterVar = aql``
@@ -398,6 +398,11 @@ export const loadDomainConnectionsByOrgId =
           ${domainFilters}
           FILTER e.assetState ${comparison} ${filterValue}
         `
+        } else if (filterCategory === 'guidance-tag') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
+        `
         }
       })
     }
@@ -446,6 +451,7 @@ export const loadDomainConnectionsByOrgId =
         LET collectedDomains = (
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             OPTIONS {order: "bfs"}
+            LET negativeTags = APPEND(v.negativeTags.dns, v.negativeTags.web)
             ${showArchivedDomains}
             ${domainFilters}
             RETURN v
@@ -472,11 +478,7 @@ export const loadDomainConnectionsByOrgId =
           LET claimVals = (
               FOR v, e IN 1..1 ANY domain._id claims
                 FILTER e._from == ${orgId}
-                LET translatedTags = (
-                  FOR tag IN e.tags || []
-                    RETURN TRANSLATE(${language}, tag)
-                )
-                RETURN { assetState: e.assetState, claimTags: translatedTags }
+                RETURN { assetState: e.assetState, claimTags: e.tags }
           )[0]
           ${afterTemplate}
           ${beforeTemplate}

@@ -1,0 +1,212 @@
+import { GraphQLNonNull, GraphQLID, GraphQLBoolean, GraphQLString } from 'graphql'
+import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { createTagUnion } from '../unions'
+import { TagOwnershipEnums } from '../../enums'
+import { logActivity } from '../../audit-logs'
+
+export const createTag = new mutationWithClientMutationId({
+  name: 'CreateTag',
+  description: 'Mutation used to create a new label for tagging domains.',
+  inputFields: () => ({
+    labelEn: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'English label that will be displayed.',
+    },
+    labelFr: {
+      description: 'French label that will be displayed.',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    descriptionEn: {
+      description: 'English description of what the tag describes about a domain.',
+      type: GraphQLString,
+    },
+    descriptionFr: {
+      description: 'French description of what the tag describes about a domain.',
+      type: GraphQLString,
+    },
+    isVisible: {
+      description: 'Value used to decide if users should see the tag.',
+      type: GraphQLBoolean,
+    },
+    ownership: {
+      description: 'Ownership of the tag, can be `global`, `org`, or `pending`.',
+      type: new GraphQLNonNull(TagOwnershipEnums),
+    },
+    orgId: {
+      description: 'The global id of the organization to be affiliated with the tag.',
+      type: GraphQLID,
+    },
+  }),
+  outputFields: () => ({
+    result: {
+      type: createTagUnion,
+      description: '`CreateTagUnion` returning either a `Tag`, or `TagError` object.',
+      resolve: (payload) => payload,
+    },
+  }),
+  mutateAndGetPayload: async (
+    args,
+    {
+      i18n,
+      request,
+      query,
+      collections,
+      transaction,
+      userKey,
+      auth: { userRequired, verifiedRequired, checkPermission, checkSuperAdmin, superAdminRequired },
+      loaders: { loadTagByTagId, loadOrgByKey },
+      validators: { cleanseInput, slugify },
+    },
+  ) => {
+    // Get User
+    const user = await userRequired()
+    verifiedRequired({ user })
+
+    // Cleanse input
+    const labelEn = cleanseInput(args.labelEn).toLowerCase()
+    const labelFr = cleanseInput(args.labelFr).toLowerCase()
+    const descriptionEn = cleanseInput(args.descriptionEn)
+    const descriptionFr = cleanseInput(args.descriptionFr)
+    const ownership = cleanseInput(args.ownership)
+    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+
+    const insertTag = {
+      tagId: slugify(`${labelEn}-${labelFr}`),
+      label: { en: labelEn, fr: labelFr },
+      description: {
+        en: descriptionEn || '',
+        fr: descriptionFr || '',
+      },
+      visible: args?.isVisible ?? true,
+      ownership,
+      organizations: [],
+    }
+
+    const tag = await loadTagByTagId.load(insertTag.tagId)
+
+    const isSuperAdmin = await checkSuperAdmin()
+    if (ownership === 'global') {
+      superAdminRequired({ user, isSuperAdmin })
+      if (typeof tag !== 'undefined') {
+        console.warn(`User: ${userKey} attempted to create a tag that already exists: ${insertTag.tagId}`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+        }
+      }
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collections)
+
+    let permission, org
+    if (ownership === 'org') {
+      if (typeof orgId === 'undefined') {
+        console.warn(
+          `User: ${userKey} attempted to create a tag: ${insertTag.tagId}, however organization-owned tags must have a valid organization.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Unable to create tag, tagId already in use.`),
+        }
+      }
+
+      // Check to see if org exists
+      org = await loadOrgByKey.load(orgId)
+      if (typeof org === 'undefined') {
+        console.warn(`User: ${userKey} attempted to create a tag to an organization: ${orgId} that does not exist.`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Unable to create tag in unknown organization.`),
+        }
+      }
+
+      permission = await checkPermission({ orgId: org._id })
+      if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+        console.warn(
+          `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Permission Denied: Please contact organization admin for help with creating tag.`),
+        }
+      }
+
+      if (permission !== 'super_admin' && typeof tag === 'undefined') insertTag.ownership = 'pending'
+
+      if (typeof tag === 'undefined') {
+        insertTag.organizations = [orgId]
+      } else if (!tag.organizations.includes(orgId)) {
+        insertTag.organizations = [...tag.organizations, orgId]
+      } else {
+        console.warn(
+          `User: ${userKey} attempted to create a tag in org:${orgId} that already exists: ${insertTag.tagId}`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Tag label already in use. Please try again with a different label.`),
+        }
+      }
+    }
+
+    try {
+      await trx.step(
+        () =>
+          query`
+            UPSERT { tagId: ${insertTag.tagId} }
+              INSERT ${insertTag}
+              UPDATE ${insertTag}
+              IN tags
+              RETURN NEW
+          `,
+      )
+    } catch (err) {
+      console.error(`Transaction step error occurred for user: ${userKey} when inserting new tag: ${err}`)
+      await trx.abort()
+      throw new Error(i18n._(t`Unable to create tag. Please try again.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(`Transaction commit error occurred while user: ${userKey} was creating tag: ${err}`)
+      await trx.abort()
+      throw new Error(i18n._(t`Unable to create tag. Please try again.`))
+    }
+
+    // Clear dataloader incase anything was updated or inserted into tag
+    await loadTagByTagId.clear(insertTag.tagId)
+    const returnTag = await loadTagByTagId.load(insertTag.tagId)
+
+    console.info(`User: ${userKey} successfully created tag ${returnTag.tagId}`)
+
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: isSuperAdmin ? 'super_admin' : permission,
+        ipAddress: request.ip,
+      },
+      action: 'add',
+      target: {
+        resource: insertTag.tagId, // name of resource being acted upon
+        organization: org && {
+          id: org._key,
+          name: org.name,
+        },
+        resourceType: 'tag',
+      },
+    })
+
+    return returnTag
+  },
+})

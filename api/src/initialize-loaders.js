@@ -23,7 +23,6 @@ import {
   loadDomainConnectionsByOrgId,
   loadDomainConnectionsByUserId,
   loadDkimSelectorsByDomainId,
-  loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
   loadAggregateGuidanceTagByTagId,
@@ -66,6 +65,7 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey, loadChartSummariesByPeriod } from './summaries/loaders'
 import { loadDnsConnectionsByDomainId, loadMxRecordDiffByDomainId } from './dns-scan'
+import { loadAllTags, loadTagByTagId, loadTagsByOrg } from './tags'
 
 export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
@@ -73,6 +73,24 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       query,
       userKey,
       i18n,
+    }),
+    loadAllTags: loadAllTags({
+      query,
+      userKey,
+      i18n,
+      language,
+    }),
+    loadTagByTagId: loadTagByTagId({
+      query,
+      userKey,
+      i18n,
+      language,
+    }),
+    loadTagsByOrg: loadTagsByOrg({
+      query,
+      userKey,
+      i18n,
+      language,
     }),
     loadTop25Reports: loadTop25Reports({
       query,
@@ -178,7 +196,6 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       i18n,
       auth: { loginRequiredBool },
     }),
-    loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),
     loadDnsConnectionsByDomainId: loadDnsConnectionsByDomainId({
       query,
       db,

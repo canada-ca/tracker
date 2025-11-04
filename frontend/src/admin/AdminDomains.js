@@ -27,7 +27,7 @@ import {
 import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
-import { bool, number, string } from 'prop-types'
+import { array, bool, number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
 import { AdminDomainCard } from './AdminDomainCard'
@@ -43,13 +43,13 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
-import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
-export function AdminDomains({ orgSlug, orgId, verified, permission }) {
+export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -175,18 +175,17 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
   if (error) return <ErrorFallbackMessage error={error} />
 
   const filterTagOptions = [
-    { value: t`NEW`, text: t`New` },
-    { value: t`PROD`, text: t`Prod` },
-    { value: t`STAGING`, text: t`Staging` },
-    { value: t`TEST`, text: t`Test` },
-    { value: t`WEB`, text: t`Web` },
-    { value: t`INACTIVE`, text: t`Inactive` },
+    ...availableTags?.map(({ tagId, label }) => ({
+      value: tagId,
+      text: label.toUpperCase(),
+    })),
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const adminDomainList = loading ? (
@@ -239,13 +238,9 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
                     <option value="TAGS">
                       <Trans>Tag</Trans>
                     </option>
-                    <ABTestWrapper insiderVariantName="B">
-                      <ABTestVariant name="B">
-                        <option value="ASSET_STATE">
-                          <Trans>Asset State</Trans>
-                        </option>
-                      </ABTestVariant>
-                    </ABTestWrapper>
+                    <option value="ASSET_STATE">
+                      <Trans>Asset State</Trans>
+                    </option>
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.comparison}
@@ -282,25 +277,21 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
                       })
                     ) : (
                       <>
-                        <ABTestWrapper insiderVariantName="B">
-                          <ABTestVariant name="B">
-                            <option value="APPROVED">
-                              <Trans>Approved</Trans>
-                            </option>
-                            <option value="DEPENDENCY">
-                              <Trans>Dependency</Trans>
-                            </option>
-                            <option value="MONITOR_ONLY">
-                              <Trans>Monitor Only</Trans>
-                            </option>
-                            <option value="CANDIDATE">
-                              <Trans>Candidate</Trans>
-                            </option>
-                            <option value="REQUIRES_INVESTIGATION">
-                              <Trans>Requires Investigation</Trans>
-                            </option>
-                          </ABTestVariant>
-                        </ABTestWrapper>
+                        <option value="APPROVED">
+                          <Trans>Approved</Trans>
+                        </option>
+                        <option value="DEPENDENCY">
+                          <Trans>Dependency</Trans>
+                        </option>
+                        <option value="MONITOR_ONLY">
+                          <Trans>Monitor Only</Trans>
+                        </option>
+                        <option value="CANDIDATE">
+                          <Trans>Candidate</Trans>
+                        </option>
+                        <option value="REQUIRES_INVESTIGATION">
+                          <Trans>Requires Investigation</Trans>
+                        </option>
                       </>
                     )}
                   </Select>
@@ -415,7 +406,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
             >
               <Trans>Search: </Trans>
             </Text>
-            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }}>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
               <InputLeftElement aria-hidden="true">
                 <PlusSquareIcon color="gray.300" />
               </InputLeftElement>
@@ -431,11 +422,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
                 }}
               />
             </InputGroup>
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <InfoButton bg="gray.50" onToggle={onToggle} />
-              </ABTestVariant>
-            </ABTestWrapper>
+            <InfoButton bg="gray.50" onToggle={onToggle} />
             <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit" ml="auto">
               <AddIcon mr={2} aria-hidden="true" />
               <Trans>Add Domain</Trans>
@@ -461,7 +448,12 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
         />
       </Box>
       <Flex align="center" mb="2">
-        <FilterList filters={filters} setFilters={setFilters} resetToFirstPage={resetToFirstPage} />
+        <FilterList
+          filters={filters}
+          setFilters={setFilters}
+          resetToFirstPage={resetToFirstPage}
+          filterTagOptions={filterTagOptions}
+        />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls
@@ -490,6 +482,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission }) {
         validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
+        availableTags={availableTags}
         {...modalProps}
       />
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
@@ -601,6 +594,7 @@ AdminDomains.propTypes = {
   orgSlug: string.isRequired,
   orgId: string.isRequired,
   verified: bool,
+  availableTags: array,
   domainsPerPage: number,
   permission: string,
 }

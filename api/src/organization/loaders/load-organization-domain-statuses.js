@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { aql } from 'arangojs'
 
 export const loadOrganizationDomainStatuses =
-  ({ query, userKey, i18n, language }) =>
+  ({ query, userKey, i18n }) =>
   async ({ orgId, filters }) => {
     let domains
     let domainFilters = aql``
@@ -97,7 +97,7 @@ export const loadOrganizationDomainStatuses =
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION(claimTags, ${filterValue}) ${comparison} true
+            FILTER POSITION(e.tags, ${filterValue}) ${comparison} true
           `
           }
         } else if (filterCategory === 'asset-state') {
@@ -105,6 +105,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER e.assetState ${comparison} ${filterValue}
           `
+        } else if (filterCategory === 'guidance-tag') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
+        `
         }
       })
     }
@@ -114,14 +119,8 @@ export const loadOrganizationDomainStatuses =
         await query`
           WITH claims, domains, organizations
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-            LET claimTags = (
-                LET translatedTags = (
-                  FOR tag IN e.tags || []
-                    RETURN TRANSLATE(${language}, tag)
-                )
-                RETURN translatedTags
-            )[0]
             ${archivedFilter}
+            LET negativeTags = APPEND(v.negativeTags.dns, v.negativeTags.web) 
             ${domainFilters}
             LET ipAddresses = FIRST(
               FILTER v.latestDnsScan
@@ -145,7 +144,7 @@ export const loadOrganizationDomainStatuses =
               domain: v.domain,
               ipAddresses: ipAddresses,
               status: v.status,
-              tags: claimTags,
+              tags: e.tags,
               assetState: e.assetState,
               rcode: v.rcode,
               blocked: v.blocked,

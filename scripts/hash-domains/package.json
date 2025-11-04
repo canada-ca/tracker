@@ -11,6 +11,10 @@
   "keywords": [],
   "author": "nsdeschenes",
   "license": "MIT",
+  "overrides": {
+    "form-data@^3.0.0": "3.0.4",
+    "form-data@^4.0.0": "4.0.4"
+  },
   "dependencies": {
     "arangojs": "^8.0.0",
     "dotenv-safe": "^8.2.0"

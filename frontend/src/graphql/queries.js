@@ -265,7 +265,13 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             id
             domain
             lastRan
-            claimTags
+            claimTags(isVisible: true) {
+              tagId
+              label
+              description
+              isVisible
+              ownership
+            }
             assetState
             archived
             ignoreRua
@@ -678,6 +684,18 @@ export const ORG_DETAILS_PAGE = gql`
         mail {
           ...RequiredSummaryFields
         }
+        negativeFindings(orderBy: { direction: DESC, field: TAG_COUNT }) {
+          guidanceTags {
+            tagId
+            tagName
+          }
+          totalCount
+        }
+      }
+      availableTags(sortDirection: ASC, includeGlobal: true) {
+        tagId
+        label
+        description
       }
     }
   }
@@ -782,7 +800,13 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ...RequiredDomainStatusFields
             }
             hasDMARCReport
-            claimTags
+            claimTags(isVisible: true) {
+              tagId
+              label
+              description
+              isVisible
+              ownership
+            }
             assetState
             archived
             rcode
@@ -891,10 +915,10 @@ export const QUERY_CURRENT_USER = gql`
       phoneValidated
       emailValidated
       insideUser
-      receiveUpdateEmails
       emailUpdateOptions {
         orgFootprint
         progressReport
+        detectDecay
       }
     }
     isUserAdmin
@@ -1136,6 +1160,12 @@ export const ADMIN_PAGE = gql`
           slug
           name
           verified
+          availableTags(sortDirection: ASC, includeGlobal: true) {
+            tagId
+            label
+            description
+            isVisible
+          }
         }
       }
     }
@@ -1305,5 +1335,22 @@ export const MY_TRACKER_DOMAINS = gql`
 export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
   query GetAllVerifiedRuaDomains {
     getAllVerifiedRuaDomains
+  }
+`
+
+export const DOMAIN_TAGS = gql`
+  query FindAllTags($orgId: ID, $isVisible: Boolean) {
+    findAllTags(orgId: $orgId, isVisible: $isVisible) {
+      tagId
+      label
+      description
+      isVisible
+      ownership
+      organizations {
+        id
+        name
+        acronym
+      }
+    }
   }
 `

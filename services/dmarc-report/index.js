@@ -3,10 +3,9 @@ require('dotenv-safe').config({
   example: '.env.example',
 })
 
-const { CosmosClient } = require('@azure/cosmos')
 const moment = require('moment')
 
-const { arangoConnection } = require('./src/database')
+const { arangoConnection, createCosmosClient } = require('./src/database')
 const { loadCosmosDates, loadDomainOwnership } = require('./src/loaders')
 const { dmarcReport } = require('./src/dmarc-report')
 
@@ -14,7 +13,6 @@ const {
   DB_PASS: rootPass,
   DB_URL: url,
   DB_NAME: databaseName,
-  AZURE_CONN_STRING,
   DATABASE,
   SUMMARIES_CONTAINER,
   UPDATE_ALL_DATES,
@@ -29,7 +27,7 @@ const updateAllDates = UPDATE_ALL_DATES === 'true'
     rootPass,
   })
 
-  const client = new CosmosClient(AZURE_CONN_STRING)
+  const client = createCosmosClient()
   const { database } = await client.databases.createIfNotExists({
     id: DATABASE,
   })

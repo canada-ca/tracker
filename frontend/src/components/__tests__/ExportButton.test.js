@@ -80,4 +80,94 @@ describe('<ExportButton />', () => {
     const btn = getByText(/Export to CSV/i)
     fireEvent.click(btn)
   })
+  describe('when button is clicked', () => {
+    it('displays popover', async () => {
+      const { getByText, queryByRole } = render(
+        <MockedProvider>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: 'fgdgsdfgvrd',
+              tfaSendMethod: null,
+              userName: 'a@a.a',
+              insideUser: true,
+            })}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <ExportButton jsonData={mocks} fileName="ExportButton-test" />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+      const btn = getByText(/Export to CSV/i)
+      fireEvent.click(btn)
+      // Popover should now be visible
+      await waitFor(() => {
+        expect(queryByRole('dialog')).toBeInTheDocument()
+      })
+    })
+    describe('in popover', () => {
+      it('displays file name input', async () => {
+        const { getByText, getByLabelText } = render(
+          <MockedProvider>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: 'fgdgsdfgvrd',
+                tfaSendMethod: null,
+                userName: 'a@a.a',
+                insideUser: true,
+              })}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <ExportButton jsonData={mocks} fileName="ExportButton-test" />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+        const btn = getByText(/Export to CSV/i)
+        fireEvent.click(btn)
+        // File name input should be visible
+        await waitFor(() => {
+          expect(getByLabelText(/File name:/i)).toBeInTheDocument()
+        })
+      })
+      it('button clicks', async () => {
+        const { getByText, getByLabelText } = render(
+          <MockedProvider>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: 'fgdgsdfgvrd',
+                tfaSendMethod: null,
+                userName: 'a@a.a',
+                insideUser: true,
+              })}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <ExportButton jsonData={mocks} fileName="ExportButton-test" />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+        const btn = getByText(/Export to CSV/i)
+        fireEvent.click(btn)
+        // Change file name
+        const input = getByLabelText(/File name:/i)
+        fireEvent.change(input, { target: { value: 'custom-file-name' } })
+        // Click Download
+        const downloadBtn = getByText(/Download/i)
+        fireEvent.click(downloadBtn)
+      })
+    })
+  })
 })

@@ -2,6 +2,7 @@ import subprocess
 import logging
 import os
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from arango import ArangoClient
 from dotenv import load_dotenv
@@ -93,7 +94,12 @@ def process_subdomains(results, orgId):
                     {
                         "_from": orgId,
                         "_to": domainInsert["_id"],
-                        "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
+                        "tags": ['new-nouveau'],
+                        "assetState": "approved",
+                        "firstSeen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
+                :-3
+            ]
+            + "Z",
                     }
                 )
             except Exception as e:
@@ -264,9 +270,10 @@ async def run():
         for newDomain in results:
             domain_key = newDomain["_key"]
             try:
-                await nc.publish(
-                    "scans.requests",
-                    json.dumps(
+                await js.publish(
+                    stream="SCANS",
+                    subject="scans.requests",
+                    payload=json.dumps(
                         {
                             "domain": newDomain["domain"],
                             "selectors": [],

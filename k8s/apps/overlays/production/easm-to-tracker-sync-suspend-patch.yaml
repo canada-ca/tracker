@@ -1,7 +1,0 @@
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: add-easm-assets-to-tracker
-  namespace: azure-defender-easm
-spec:
-  suspend: true

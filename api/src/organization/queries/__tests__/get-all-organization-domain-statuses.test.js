@@ -269,9 +269,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,orgExternalID,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,top25Vulnerabilities
-"domain.one","Org One","OO","ORG123",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false","false",
-"domain.two","Org One","OO","ORG123",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false","false",`,
+            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,top25Vulnerabilities
+"domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false","false",""
+"domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false","false",""`,
           },
         }
 
@@ -387,9 +387,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgName,orgAcronym,orgExternalID,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,top25Vulnerabilities
-"domain.one","Org One","OO","ORG123",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false","false",
-"domain.two","Org One","OO","ORG123",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false","false",`,
+            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,top25Vulnerabilities
+"domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false","false",""
+"domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false","false",""`,
           },
         }
         expect(response).toEqual(expectedResponse)
