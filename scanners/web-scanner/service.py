@@ -157,7 +157,7 @@ async def try_acquire_ip_slot(kv: KeyValue, ip: str) -> bool:
             )
             return True
         except Exception as e:
-            logging.error(f"Error acquiring IP slot for {ip}: {e}")
+            logger.error(f"Error acquiring IP slot for {ip}: {e}")
             retries += 1
             await asyncio.sleep(0.1)
 
@@ -191,7 +191,7 @@ async def release_ip_slot(kv: KeyValue, ip: str) -> None:
             return  # Key not found, nothing to release
         except Exception as e:
             error_retries += 1
-            logging.error(f"Unexpected error releasing IP slot for {ip}: {e}")
+            logger.error(f"Unexpected error releasing IP slot for {ip}: {e}")
             if error_retries > 10:
                 logger.critical(
                     f"Error releasing IP slot for {ip}. Giving up after 10 retries. Error: {e}"
