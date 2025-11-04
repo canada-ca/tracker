@@ -468,12 +468,10 @@ def process_results(results):
             if key_modulus:
                 dkim_results["selectors"][selector]["key_modulus"] = str(key_modulus)
 
-    duration_seconds = results.get("duration_seconds")
     timestamp = str(datetime.datetime.now().astimezone())
 
     return {
         "timestamp": timestamp,
-        "duration_seconds": duration_seconds,
         "domain": results["domain"],
         "base_domain": results.get("base_domain", None),
         "record_exists": results["record_exists"],

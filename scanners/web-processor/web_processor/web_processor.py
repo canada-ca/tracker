@@ -495,12 +495,10 @@ def process_results(results):
         "curve_status": processed_tls_results["curve_status"],
     }
 
-    duration_seconds = results.get("duration_seconds")
     timestamp = results.get("timestamp")
 
     return {
         "tls_result": tls_result,
         "connection_results": processed_connection_results,
-        "duration_seconds": duration_seconds,
         "timestamp": timestamp,
     }
