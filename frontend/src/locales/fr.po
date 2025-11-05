@@ -26,6 +26,11 @@ msgstr ". Les renseignements personnels ne seront pas divulgués par le Secréta
 msgid "{0} Findings"
 msgstr "{0} Constatations"
 
+#. placeholder {0}: selectedIds.size
+#: src/admin/DomainUpdateList.js:282
+msgid "{0} selected"
+msgstr "{0} sélectionné"
+
 #. placeholder {0}: createDomain.result.domain
 #: src/admin/AdminDomainModal.js:62
 msgid "{0} was added to {orgSlug}"
@@ -373,31 +378,44 @@ msgstr "Composants concernés"
 msgid "Affiliations:"
 msgstr "Affiliations :"
 
+#. placeholder {0}: selectedIds.size
+#: src/admin/DomainUpdateList.js:259
+msgid "All {0} domain(s) on this page are selected."
+msgstr "Tous les domaines {0} de cette page sont sélectionnés."
+
+#: src/admin/DomainUpdateList.js:272
+msgid "All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page."
+msgstr "Tous les {domainCount} domaines sont sélectionnés. Les mises à jour s'appliqueront à tous les domaines filtrés, pas seulement à cette page."
+
+#: src/admin/DomainUpdateList.js:287
+msgid "All {domainCount} selected"
+msgstr "Tous les {domainCount} sélectionnés"
+
 #: src/auth/CreateUserPage.js:154
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Vous avez déjà un compte ? <0>Connecter</0>"
 
-#: src/admin/AdminDomains.js:571
+#: src/admin/AdminDomains.js:555
 #: src/organizationDetails/OrganizationDomains.js:262
 msgid "An asset confirmed to belong to the organization."
 msgstr "Se confirma que un activo pertenece a la organización."
 
-#: src/admin/AdminDomains.js:574
+#: src/admin/AdminDomains.js:558
 #: src/organizationDetails/OrganizationDomains.js:265
 msgid "An asset that is owned by a third party and supports the operation of organization-owned assets."
 msgstr "Activo propiedad de un tercero que sirve de apoyo al funcionamiento de los activos propiedad de la organización."
 
-#: src/admin/AdminDomains.js:578
+#: src/admin/AdminDomains.js:562
 #: src/organizationDetails/OrganizationDomains.js:269
 msgid "An asset that is relevant to the organization but is not a direct part of the attack surface."
 msgstr "Un activo que es relevante para la organización pero que no forma parte directamente de la superficie de ataque."
 
-#: src/admin/AdminDomains.js:582
+#: src/admin/AdminDomains.js:566
 #: src/organizationDetails/OrganizationDomains.js:273
 msgid "An asset that is suspected to belong to the organization but has not been confirmed."
 msgstr "Activo que se sospecha que pertenece a la organización pero que no se ha confirmado."
 
-#: src/admin/AdminDomains.js:586
+#: src/admin/AdminDomains.js:570
 #: src/organizationDetails/OrganizationDomains.js:277
 msgid "An asset that requires further investigation to determine its relationship to the organization."
 msgstr "Un activo que requiere más investigación para determinar su relación con la organización."
@@ -513,8 +531,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/AdminDomainModal.js:49
 #: src/admin/AdminDomainModal.js:95
 #: src/admin/AdminDomains.js:132
-#: src/admin/DomainUpdateList.js:47
-#: src/admin/DomainUpdateList.js:92
+#: src/admin/DomainUpdateList.js:56
+#: src/admin/DomainUpdateList.js:102
 #: src/admin/TagForm.js:27
 #: src/admin/TagForm.js:72
 #: src/admin/UserListModal.js:50
@@ -548,7 +566,7 @@ msgstr "Tous les produits ou services connexes qui vous sont fournis par le SCT 
 #~ msgstr "les systèmes de gestion du portefeuille d’applications (GPA);"
 
 #: src/admin/AdminDomains.js:301
-#: src/admin/DomainUpdateList.js:253
+#: src/admin/DomainUpdateList.js:316
 #: src/domains/DomainListFilters.js:155
 msgid "Apply"
 msgstr "Appliquer"
@@ -561,7 +579,7 @@ msgstr "Appliquer des filtres pour affiner la liste des organisations."
 msgid "Apply filters to refine your domain search results."
 msgstr "Appliquez des filtres pour affiner les résultats de votre recherche de domaine."
 
-#: src/admin/DomainUpdateList.js:236
+#: src/admin/DomainUpdateList.js:299
 msgid "Apply Tags"
 msgstr "Appliquer les balises"
 
@@ -600,7 +618,7 @@ msgstr "Archivé"
 msgid "ARCHIVED"
 msgstr "ARCHIVES"
 
-#: src/admin/DomainUpdateList.js:271
+#: src/admin/DomainUpdateList.js:334
 msgid "Are you sure you want to apply these tag changes?"
 msgstr "Êtes-vous sûr de vouloir appliquer ces modifications aux balises ?"
 
@@ -625,7 +643,7 @@ msgstr "Êtes-vous sûr de vouloir cesser d'ignorer ce CVE ?"
 #~ msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 #~ msgstr "Êtes-vous sûr de vouloir quitter {orgName}? Vous devrez être réinvité pour y accéder."
 
-#: src/admin/DomainUpdateList.js:264
+#: src/admin/DomainUpdateList.js:327
 msgid "Are you sure?"
 msgstr "Tu es sûr ?"
 
@@ -726,7 +744,7 @@ msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des se
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les services <0>email<1/></0> et <2>web<3/></2>. Suivez l'évolution de la sécurité des sites gouvernementaux."
 
-#: src/admin/DomainUpdateList.js:279
+#: src/admin/DomainUpdateList.js:342
 #: src/admin/SuperAdminUserList.js:423
 #: src/components/ExportButton.js:93
 #: src/user/UserPage.js:215
@@ -1107,7 +1125,7 @@ msgstr "Mot de passe actuel:"
 #~ msgid "Current Phone Number:"
 #~ msgstr "Numéro de téléphone actuel:"
 
-#: src/admin/DomainUpdateList.js:221
+#: src/admin/DomainUpdateList.js:247
 msgid "Current Tags"
 msgstr "Balises actuelles"
 
@@ -1423,7 +1441,7 @@ msgid "DOES NOT EQUAL"
 msgstr "N'EST PAS ÉGAL"
 
 #: src/admin/AuditLogTable.js:77
-#: src/admin/DomainUpdateList.js:218
+#: src/admin/DomainUpdateList.js:244
 #: src/dmarc/DmarcByDomainPage.js:111
 #: src/dmarc/DmarcByDomainPage.js:297
 #: src/domains/DomainsPage.js:288
@@ -1513,8 +1531,8 @@ msgstr "Les domaines trouvés grâce à cette méthode seront automatiquement aj
 #~ msgid "domains information"
 #~ msgstr "Informations sur les domaines"
 
-#: src/admin/DomainUpdateList.js:59
-#: src/admin/DomainUpdateList.js:104
+#: src/admin/DomainUpdateList.js:69
+#: src/admin/DomainUpdateList.js:115
 msgid "Domains updated."
 msgstr "Domaines mis à jour."
 
@@ -1682,8 +1700,8 @@ msgstr "Point d'aboutissement :"
 msgid "English"
 msgstr "Anglais"
 
-#. placeholder {0}: editUserRole.userName
 #. placeholder {0}: org.name
+#. placeholder {0}: editUserRole.userName
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -2456,8 +2474,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/AdminDomainModal.js:79
 #: src/admin/AdminDomainModal.js:127
 #: src/admin/AdminDomains.js:162
-#: src/admin/DomainUpdateList.js:77
-#: src/admin/DomainUpdateList.js:122
+#: src/admin/DomainUpdateList.js:87
+#: src/admin/DomainUpdateList.js:133
 #: src/admin/SuperAdminUserList.js:106
 #: src/admin/TagForm.js:56
 #: src/admin/TagForm.js:102
@@ -2510,8 +2528,8 @@ msgstr "Méthode de mise à jour incorrecte reçue."
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
-#: src/admin/DomainUpdateList.js:78
-#: src/admin/DomainUpdateList.js:123
+#: src/admin/DomainUpdateList.js:88
+#: src/admin/DomainUpdateList.js:134
 msgid "Incorrect updateDomainsByDomainIds.result typename."
 msgstr "Incorrect updateDomainsByDomainIds.result typename."
 
@@ -4049,9 +4067,13 @@ msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Sélectionnez l'état qui décrit le mieux l'actif par rapport à votre organisation."
 
-#: src/admin/DomainUpdateList.js:213
+#: src/admin/DomainUpdateList.js:239
 msgid "Select All"
 msgstr "Tout sélectionner"
+
+#: src/admin/DomainUpdateList.js:263
+msgid "Select all {domainCount} domains"
+msgstr "Sélectionner tous les {domainCount} domaines"
 
 #: src/admin/AdminPage.js:93
 #: src/admin/AdminPage.js:110
@@ -4609,7 +4631,7 @@ msgstr "Les étiquettes désignées par le système apparaissent ici."
 msgid "Tag"
 msgstr "Tag"
 
-#: src/admin/DomainUpdateList.js:229
+#: src/admin/DomainUpdateList.js:292
 msgid "Tag Assets"
 msgstr "Baliser les actifs"
 
@@ -4971,8 +4993,8 @@ msgstr "Cet onglet affiche les résumés HTTPS et DMARC pour vos domaines favori
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
-#. placeholder {0}: selectAll ? domainCount : selectedIds.size
-#: src/admin/DomainUpdateList.js:268
+#. placeholder {0}: selectAllGlobal ? domainCount : selectedIds.size
+#: src/admin/DomainUpdateList.js:331
 msgid "This will update {0} domain(s)."
 msgstr "Cela mettra à jour {0} domaine(s)."
 
@@ -5245,8 +5267,8 @@ msgstr "Impossible de cesser d'ignorer le CVE."
 msgid "Unable to update domain."
 msgstr "Impossible de mettre à jour le domaine."
 
-#: src/admin/DomainUpdateList.js:68
-#: src/admin/DomainUpdateList.js:113
+#: src/admin/DomainUpdateList.js:78
+#: src/admin/DomainUpdateList.js:124
 msgid "Unable to update domains."
 msgstr "Impossible de mettre à jour les domaines."
 
@@ -5767,7 +5789,7 @@ msgstr "Depuis le début de l'année"
 msgid "Yes"
 msgstr "Oui"
 
-#: src/admin/DomainUpdateList.js:276
+#: src/admin/DomainUpdateList.js:339
 msgid "Yes, Apply"
 msgstr "Oui, postuler"
 

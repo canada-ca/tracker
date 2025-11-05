@@ -36,10 +36,19 @@ import { UPDATE_DOMAINS_BY_DOMAIN_IDS, UPDATE_DOMAINS_BY_FILTERS } from '../grap
 export function DomainUpdateList({ orgId, domains, availableTags, filters, search, domainCount }) {
   const toast = useToast()
   const [selectedIds, setSelectedIds] = useState(new Set())
-  const [selectAll, setSelectAll] = useState(false)
+  const [selectAllPage, setSelectAllPage] = useState(false)
+  const [selectAllGlobal, setSelectAllGlobal] = useState(false)
   const [tags, setTags] = useState([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose } = useDisclosure()
+
+  const resetSelections = () => {
+    setSelectedIds(new Set())
+    setSelectAllPage(false)
+    setSelectAllGlobal(false)
+    setTags([])
+  }
+
   const [updateDomainsByDomainIds, { loading: idLoading }] = useMutation(UPDATE_DOMAINS_BY_DOMAIN_IDS, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
     onError(error) {
@@ -55,6 +64,7 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
     onCompleted({ updateDomainsByDomainIds }) {
       if (updateDomainsByDomainIds.result.__typename === 'DomainBulkResult') {
         onClose()
+        resetSelections()
         toast({
           title: t`Domains updated.`,
           description: updateDomainsByDomainIds.result.status,
@@ -100,6 +110,7 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
     onCompleted({ updateDomainsByFilters }) {
       if (updateDomainsByFilters.result.__typename === 'DomainBulkResult') {
         onClose()
+        resetSelections()
         toast({
           title: t`Domains updated.`,
           description: updateDomainsByFilters.result.status,
@@ -135,48 +146,55 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
 
   // selection handlers
   const toggleDomain = (id) => {
-    if (selectAll) {
-      // When selectAll is true and a domain is unchecked, selectAll becomes false
-      // and all domains across all pages except the unchecked one are selected
-      setSelectAll(false)
-      // Simulate all domains selected except the one just unchecked
-      setSelectedIds(() => {
-        // This will select all currently visible domains except the unchecked one
-        const visibleIds = new Set(domains.map((d) => d.id))
-        visibleIds.delete(id)
-        // Mark that this is a "partial select all" by storing a special property
-        visibleIds.__selectAllExcept = id
-        return visibleIds
-      })
+    let newSet = new Set(selectedIds)
+    if (newSet.has(id)) {
+      newSet.delete(id)
     } else {
-      const newSet = new Set(selectedIds)
-      if (newSet.has(id)) newSet.delete(id)
-      else newSet.add(id)
-      setSelectedIds(newSet)
+      newSet.add(id)
+    }
+    setSelectedIds(newSet)
+    setSelectAllPage(newSet.size === domains.length)
+    setSelectAllGlobal(false)
+
+    if (liveRegionRef.current) {
+      if (newSet.size === 0) {
+        liveRegionRef.current.textContent = 'Selection cleared.'
+      } else if (newSet.size === domains.length) {
+        liveRegionRef.current.textContent = `All ${domains.length} domains on this page are selected.`
+      } else {
+        liveRegionRef.current.textContent = `${newSet.size} domain(s) selected.`
+      }
     }
   }
 
-  const handleSelectAll = () => {
-    if (selectAll) {
-      // Deselect all
-      setSelectAll(false)
-      setSelectedIds(new Set())
+  const handleSelectAllPage = () => {
+    if (selectAllPage) {
+      resetSelections()
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = 'Selection cleared.'
       }
     } else {
-      // Select all
-      setSelectAll(true)
-      setSelectedIds(new Set())
+      const newSet = new Set(domains.map((d) => d.id))
+      setSelectedIds(newSet)
+      setSelectAllPage(true)
+      setSelectAllGlobal(false)
       if (liveRegionRef.current) {
-        liveRegionRef.current.textContent =
-          'All filtered domains selected. Updates will apply to all, not just visible rows.'
+        liveRegionRef.current.textContent = `All ${domains.length} domains on this page are selected.`
       }
     }
   }
 
+  const handleSelectAllGlobal = () => {
+    setSelectAllGlobal(true)
+    setSelectAllPage(true)
+    setSelectedIds(new Set(domains.map((d) => d.id)))
+    if (liveRegionRef.current) {
+      liveRegionRef.current.textContent = `All ${domainCount} domains are selected.`
+    }
+  }
+
   const handleConfirmSubmit = async () => {
-    if (selectAll) {
+    if (selectAllGlobal) {
       await updateDomainsByFilters({
         variables: { filters, search, tags, orgId },
       })
@@ -186,20 +204,11 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
       })
     }
     onConfirmClose()
-    onClose()
   }
 
   // Render all rows
   const rows = domains.map((d) => {
-    let isChecked
-    if (selectAll) {
-      isChecked = true
-    } else if (selectedIds && selectedIds.__selectAllExcept) {
-      // Special case: all domains except one are selected
-      isChecked = d.id !== selectedIds.__selectAllExcept
-    } else {
-      isChecked = selectedIds.has(d.id)
-    }
+    const isChecked = selectedIds.has(d.id)
     return (
       <Tr key={d.id}>
         <Td>
@@ -221,8 +230,9 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
                 <Checkbox
                   id="select-all-checkbox"
                   borderColor="gray.900"
-                  isChecked={selectAll}
-                  onChange={handleSelectAll}
+                  isChecked={selectAllPage}
+                  isIndeterminate={selectedIds.size > 0 && selectedIds.size < domains.length}
+                  onChange={handleSelectAllPage}
                   mr="2"
                 />
                 <label htmlFor="select-all-checkbox">
@@ -241,7 +251,44 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
         <Tbody>{rows}</Tbody>
       </Table>
 
-      <Button variant="primary" my={4} onClick={onOpen} isDisabled={!selectAll && selectedIds.size === 0}>
+      {/* Selection banner */}
+      {selectedIds.size > 0 && !selectAllGlobal && (
+        <Box bg="moderateMuted" borderRadius="md" p={3} my={3}>
+          <Flex align="center" justify="space-between">
+            <Text>
+              <Trans>All {selectedIds.size} domain(s) on this page are selected.</Trans>
+            </Text>
+            {domainCount > domains.length && (
+              <Button size="sm" variant="link" colorScheme="blue" onClick={handleSelectAllGlobal}>
+                <Trans>Select all {domainCount} domains</Trans>
+              </Button>
+            )}
+          </Flex>
+        </Box>
+      )}
+      {selectAllGlobal && (
+        <Box bg="strongMuted" borderRadius="md" p={3} my={3}>
+          <Text>
+            <Trans>
+              All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page.
+            </Trans>
+          </Text>
+        </Box>
+      )}
+
+      {/* Show number selected */}
+      {selectedIds.size > 0 && !selectAllGlobal && (
+        <Text mt={2} fontSize="sm" color="gray.600">
+          <Trans>{selectedIds.size} selected</Trans>
+        </Text>
+      )}
+      {selectAllGlobal && (
+        <Text mt={2} fontSize="sm" color="gray.600">
+          <Trans>All {domainCount} selected</Trans>
+        </Text>
+      )}
+
+      <Button variant="primary" my={4} onClick={onOpen} isDisabled={selectedIds.size === 0 && !selectAllGlobal}>
         <Trans>Tag Assets</Trans>
       </Button>
 
@@ -281,7 +328,7 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
           </ModalHeader>
           <ModalBody>
             <Text mb={4}>
-              <Trans>This will update {selectAll ? domainCount : selectedIds.size} domain(s).</Trans>
+              <Trans>This will update {selectAllGlobal ? domainCount : selectedIds.size} domain(s).</Trans>
             </Text>
             <Text>
               <Trans>Are you sure you want to apply these tag changes?</Trans>
