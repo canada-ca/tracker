@@ -44,6 +44,23 @@ const mocks = [
       },
     },
   },
+  // Added mock for select-all (multiple domainIds)
+  {
+    request: {
+      query: UPDATE_DOMAINS_BY_DOMAIN_IDS,
+      variables: { domainIds: ['1', '2'], tags: ['tag1'], orgId },
+    },
+    result: {
+      data: {
+        updateDomainsByDomainIds: {
+          result: {
+            __typename: 'DomainBulkResult',
+            status: 'Success',
+          },
+        },
+      },
+    },
+  },
   {
     request: {
       query: UPDATE_DOMAINS_BY_FILTERS,
@@ -162,7 +179,9 @@ describe('<DomainUpdateList />', () => {
     fireEvent.click(getByRole('button', { name: /Apply/i }))
     await waitFor(() => getByText(/Are you sure\?/i))
     fireEvent.click(getByRole('button', { name: /Yes, Apply/i }))
-    await waitFor(() => getByText(/Domains updated/i))
+    await waitFor(() => {
+      expect(document.body.textContent).toMatch(/Domains updated/i)
+    })
   })
 
   it('shows error toast on mutation error', async () => {
