@@ -42,7 +42,7 @@ describe('loadChartSummariesByPeriod', () => {
 
   it('returns empty result if no summaries are found', async () => {
     query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue([]),
+      all: jest.fn().mockResolvedValue([]),
     })
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
     const result = await loader({ startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })
@@ -52,7 +52,7 @@ describe('loadChartSummariesByPeriod', () => {
   it('returns summaries if found', async () => {
     const summaries = [{ id: 1, date: '2023-01-01' }]
     query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue(summaries),
+      all: jest.fn().mockResolvedValue(summaries),
     })
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
     const result = await loader({ startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })
