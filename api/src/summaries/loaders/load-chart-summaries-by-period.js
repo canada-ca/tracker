@@ -34,14 +34,11 @@ export const loadChartSummariesByPeriod =
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
-        LET retrievedSummaries = (
-          FOR summary IN chartSummaries
-            FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')
-            FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')
-            SORT summary.date ${sortString}
-            RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
-        )
-        RETURN retrievedSummaries
+        FOR summary IN chartSummaries
+          FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')
+          FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')
+          SORT summary.date ${sortString}
+          RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
       `
     } catch (err) {
       console.error(
@@ -50,9 +47,9 @@ export const loadChartSummariesByPeriod =
       throw new Error(i18n._(t`Unable to load chart summary data. Please try again.`))
     }
 
-    let summariesInfo
+    let summariesInfo = []
     try {
-      summariesInfo = filterUniqueDates(await requestedSummaryInfo.next())
+      summariesInfo = filterUniqueDates(await requestedSummaryInfo.all())
     } catch (err) {
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to gather chart summaries in loadChartSummariesByPeriod, error: ${err}`,
@@ -60,5 +57,5 @@ export const loadChartSummariesByPeriod =
       throw new Error(i18n._(t`Unable to load chart summary data. Please try again.`))
     }
 
-    return summariesInfo || []
+    return summariesInfo
   }

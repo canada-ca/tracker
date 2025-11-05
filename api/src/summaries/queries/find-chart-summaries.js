@@ -1,7 +1,6 @@
-import { GraphQLList, GraphQLNonNull } from 'graphql'
+import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
 
 import { chartSummaryType } from '../objects'
-import { GraphQLDate } from 'graphql-scalars'
 import { OrderDirection } from '../../enums'
 
 export const findChartSummaries = {
@@ -9,15 +8,15 @@ export const findChartSummaries = {
   description: 'Select chart summaries a user has access to.',
   args: {
     startDate: {
-      type: new GraphQLNonNull(GraphQLDate),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The start date for the returned data (YYYY-MM-DD).',
     },
     endDate: {
-      type: new GraphQLNonNull(GraphQLDate),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The end date for the returned data (YYYY-MM-DD).',
     },
     sortDirection: {
-      type: OrderDirection,
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The direction in which to sort the data (ASC or DESC).',
     },
   },

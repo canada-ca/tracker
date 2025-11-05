@@ -12,7 +12,6 @@ import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
 import { OrderDirection } from '../../enums'
 import { tagType } from '../../tags/objects'
-import { GraphQLDate } from 'graphql-scalars'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -120,11 +119,11 @@ export const organizationType = new GraphQLObjectType({
       description: 'Historical summaries based on scan types that are performed on the given organizations domains.',
       args: {
         startDate: {
-          type: new GraphQLNonNull(GraphQLDate),
+          type: new GraphQLNonNull(GraphQLString),
           description: 'The start date for the returned data (YYYY-MM-DD).',
         },
         endDate: {
-          type: new GraphQLNonNull(GraphQLDate),
+          type: new GraphQLNonNull(GraphQLString),
           description: 'The end date for the returned data (YYYY-MM-DD).',
         },
         sortDirection: {
