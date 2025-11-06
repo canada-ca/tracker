@@ -58,19 +58,44 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |
-            until nc -z localhost 4222; do sleep 1; done
-            nats stream add SCANS --config /config/scans-stream.json --server nats://localhost:4222 || nats stream edit SCANS --config /config/scans-stream.json --server nats://localhost:4222
-            tail -f /dev/null
+            set -e
+            echo "[nats-stream-init] Waiting for NATS..."
+            until nc -z localhost 4222; do
+              sleep 1
+            done
+            # Small additional delay to ensure JetStream is ready
+            sleep 2
+            echo "[nats-stream-init] Attempting to add SCANS stream..."
+            if nats stream add SCANS --config /stream-config/stream-config.json --server nats://localhost:4222 2>&1; then
+              echo "[nats-stream-init] SCANS stream added successfully."
+            else
+              echo "[nats-stream-init] Add failed, attempting to edit SCANS stream..."
+              if nats stream edit SCANS --config /stream-config/stream-config.json --server nats://localhost:4222 --force; then
+                echo "[nats-stream-init] SCANS stream edited successfully."
+              else
+                echo "[nats-stream-init] ERROR: Could not add or edit SCANS stream!"
+                exit 1
+              fi
+            fi
+            echo "[nats-stream-init] Stream initialization complete."
+            exec sleep infinity
         volumeMounts:
         - name: stream-config
-          mountPath: /config
+          mountPath: /stream-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "10m"
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
       volumes:
       - name: config
         configMap:
           name: nats-config
       - name: stream-config
         configMap:
-          name: nats-stream-scans
+          name: stream-config
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -80,4 +105,3 @@ spec:
       resources:
         requests:
           storage: 28Gi
-
