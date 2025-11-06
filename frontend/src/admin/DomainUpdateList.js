@@ -35,8 +35,9 @@ import { UPDATE_DOMAINS_BY_DOMAIN_IDS, UPDATE_DOMAINS_BY_FILTERS } from '../grap
 
 export function DomainUpdateList({ orgId, domains, availableTags, filters, search, domainCount }) {
   const toast = useToast()
+  // selectedIds is global across all pages
   const [selectedIds, setSelectedIds] = useState(new Set())
-  const [selectAllPage, setSelectAllPage] = useState(false)
+  // selectAllGlobal means all filtered domains (not just visible) are selected
   const [selectAllGlobal, setSelectAllGlobal] = useState(false)
   const [tags, setTags] = useState([])
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -44,7 +45,6 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
 
   const resetSelections = () => {
     setSelectedIds(new Set())
-    setSelectAllPage(false)
     setSelectAllGlobal(false)
     setTags([])
   }
@@ -145,6 +145,15 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
   const liveRegionRef = useRef(null)
 
   // selection handlers
+  // Helper: get IDs of domains on current page
+  const currentPageIds = domains.map((d) => d.id)
+  // Helper: how many on this page are selected?
+  const selectedOnPage = domains.filter((d) => selectedIds.has(d.id)).length
+  // Helper: are all on this page selected?
+  const allOnPageSelected = domains.length > 0 && selectedOnPage === domains.length
+  // Helper: is some but not all on this page selected?
+  const someOnPageSelected = selectedOnPage > 0 && !allOnPageSelected
+
   const toggleDomain = (id) => {
     let newSet = new Set(selectedIds)
     if (newSet.has(id)) {
@@ -153,30 +162,34 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
       newSet.add(id)
     }
     setSelectedIds(newSet)
-    setSelectAllPage(newSet.size === domains.length)
     setSelectAllGlobal(false)
 
     if (liveRegionRef.current) {
       if (newSet.size === 0) {
         liveRegionRef.current.textContent = 'Selection cleared.'
-      } else if (newSet.size === domains.length) {
+      } else if (allOnPageSelected) {
         liveRegionRef.current.textContent = `All ${domains.length} domains on this page are selected.`
       } else {
-        liveRegionRef.current.textContent = `${newSet.size} domain(s) selected.`
+        liveRegionRef.current.textContent = `${selectedOnPage} selected on this page.`
       }
     }
   }
 
   const handleSelectAllPage = () => {
-    if (selectAllPage) {
-      resetSelections()
+    if (allOnPageSelected) {
+      // Deselect all on this page only
+      const newSet = new Set(selectedIds)
+      currentPageIds.forEach((id) => newSet.delete(id))
+      setSelectedIds(newSet)
+      setSelectAllGlobal(false)
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = 'Selection cleared.'
       }
     } else {
-      const newSet = new Set(domains.map((d) => d.id))
+      // Add all on this page to selection (preserve others)
+      const newSet = new Set(selectedIds)
+      currentPageIds.forEach((id) => newSet.add(id))
       setSelectedIds(newSet)
-      setSelectAllPage(true)
       setSelectAllGlobal(false)
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = `All ${domains.length} domains on this page are selected.`
@@ -186,8 +199,10 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
 
   const handleSelectAllGlobal = () => {
     setSelectAllGlobal(true)
-    setSelectAllPage(true)
-    setSelectedIds(new Set(domains.map((d) => d.id)))
+    // Add all visible to selectedIds (for UI feedback)
+    const newSet = new Set(selectedIds)
+    currentPageIds.forEach((id) => newSet.add(id))
+    setSelectedIds(newSet)
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = `All ${domainCount} domains are selected.`
     }
@@ -230,8 +245,8 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
                 <Checkbox
                   id="select-all-checkbox"
                   borderColor="gray.900"
-                  isChecked={selectAllPage}
-                  isIndeterminate={selectedIds.size > 0 && selectedIds.size < domains.length}
+                  isChecked={allOnPageSelected}
+                  isIndeterminate={someOnPageSelected}
                   onChange={handleSelectAllPage}
                   mr="2"
                 />
@@ -252,13 +267,17 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
       </Table>
 
       {/* Selection banner */}
-      {selectedIds.size > 0 && !selectAllGlobal && (
+      {selectedOnPage > 0 && !selectAllGlobal && (
         <Box bg="moderateMuted" borderRadius="md" p={3} my={3}>
           <Flex align="center" justify="space-between">
             <Text>
-              <Trans>All {selectedIds.size} domain(s) on this page are selected.</Trans>
+              {allOnPageSelected ? (
+                <Trans>All {domains.length} domains on this page are selected.</Trans>
+              ) : (
+                <Trans>{selectedOnPage} selected on this page.</Trans>
+              )}
             </Text>
-            {domainCount > domains.length && (
+            {domainCount > domains.length && !selectAllGlobal && (
               <Button size="sm" variant="link" colorScheme="blue" onClick={handleSelectAllGlobal}>
                 <Trans>Select all {domainCount} domains</Trans>
               </Button>
@@ -276,10 +295,10 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
         </Box>
       )}
 
-      {/* Show number selected */}
+      {/* Show number selected (global) */}
       {selectedIds.size > 0 && !selectAllGlobal && (
         <Text mt={2} fontSize="sm" color="gray.600">
-          <Trans>{selectedIds.size} selected</Trans>
+          <Trans>{selectedIds.size} selected in total</Trans>
         </Text>
       )}
       {selectAllGlobal && (
