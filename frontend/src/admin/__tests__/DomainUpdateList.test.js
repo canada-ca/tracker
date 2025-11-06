@@ -220,4 +220,176 @@ describe('<DomainUpdateList />', () => {
     fireEvent.click(getByRole('button', { name: 'Yes, Apply' }))
     await waitFor(() => getByText(/An error occurred/i))
   })
+
+  it('selects multiple domains across pages and preserves selection', () => {
+    // Simulate two pages of domains
+    const page1 = [
+      { id: '1', domain: 'example.com', tags: ['tag1'] },
+      { id: '2', domain: 'test.com', tags: ['tag2'] },
+    ]
+    const page2 = [
+      { id: '3', domain: 'foo.com', tags: ['tag1'] },
+      { id: '4', domain: 'bar.com', tags: ['tag2'] },
+    ]
+    // Render page 1
+    const { getAllByRole, rerender, getByText, getAllByText } = render(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={page1}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={4}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    // Select first domain on page 1
+    const checkboxes1 = getAllByRole('checkbox')
+    fireEvent.click(checkboxes1[1])
+    expect(getByText(/1 selected on this page/i)).toBeInTheDocument()
+    // Go to page 2
+    rerender(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={page2}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={4}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    // Select all on page 2
+    const checkboxes2 = getAllByRole('checkbox')
+    fireEvent.click(checkboxes2[0]) // select all on page 2
+    // Only match the visible banner, not the aria-live region
+    const visibleBanner = getAllByText(/All 2 domains on this page are selected/i).find(
+      (el) => el.tagName.toLowerCase() === 'p',
+    )
+    expect(visibleBanner).toBeInTheDocument()
+    // Go back to page 1, both selections should persist
+    rerender(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={page1}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={4}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    // The first domain should still be selected
+    expect(getByText(/1 selected on this page/i)).toBeInTheDocument()
+  })
+
+  it('shows indeterminate state when some but not all on page are selected', () => {
+    const { getAllByRole, getByText } = render(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={domains}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={2}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    // Select only one domain
+    const checkboxes = getAllByRole('checkbox')
+    fireEvent.click(checkboxes[1])
+    // The select all checkbox should be indeterminate
+    expect(checkboxes[0].indeterminate).toBe(true)
+    expect(getByText(/1 selected on this page/i)).toBeInTheDocument()
+  })
+
+  it('select all on page only adds those domains to selection, not clearing others', () => {
+    // page 1
+    const page1 = [
+      { id: '1', domain: 'example.com', tags: ['tag1'] },
+      { id: '2', domain: 'test.com', tags: ['tag2'] },
+    ]
+    // page 2
+    const page2 = [
+      { id: '3', domain: 'foo.com', tags: ['tag1'] },
+      { id: '4', domain: 'bar.com', tags: ['tag2'] },
+    ]
+    const { getAllByRole, rerender, getByText } = render(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={page1}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={4}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    // Select first domain on page 1
+    const checkboxes1 = getAllByRole('checkbox')
+    fireEvent.click(checkboxes1[1])
+    // Go to page 2 and select all
+    rerender(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={page2}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={4}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    const checkboxes2 = getAllByRole('checkbox')
+    fireEvent.click(checkboxes2[0]) // select all on page 2
+    // Go back to page 1, both selections should persist
+    rerender(
+      <MockedProvider mocks={mocks}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <DomainUpdateList
+              orgId={orgId}
+              domains={page1}
+              availableTags={availableTags}
+              filters={filters}
+              search={search}
+              domainCount={4}
+            />
+          </I18nProvider>
+        </ChakraProvider>
+      </MockedProvider>,
+    )
+    // Both domains on page 1 should be selectable, and the first should still be selected
+    expect(getByText(/1 selected on this page/i)).toBeInTheDocument()
+  })
 })
