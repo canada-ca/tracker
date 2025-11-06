@@ -18,7 +18,7 @@ data:
         "scans.web_scanner_results",
         "scans.web_processor_results"
       ],
-      "retention": "workq",
+      "retention": "workqueue",
       "storage": "file",
       "discard": "old",
       "max_msgs": -1,
