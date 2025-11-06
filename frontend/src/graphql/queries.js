@@ -131,7 +131,7 @@ export const LANDING_PAGE_SUMMARIES = gql`
 `
 
 export const GET_HISTORICAL_CHART_SUMMARIES = gql`
-  query FindChartSummaries($startDate: String!, $endDate: String!, $sortDirection: String) {
+  query FindChartSummaries($startDate: String!, $endDate: String!, $sortDirection: OrderDirection) {
     findChartSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection) {
       date
       https {
