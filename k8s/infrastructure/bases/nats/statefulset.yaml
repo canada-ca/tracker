@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+  namespace: pubsub
+  labels:
+    app: nats
+spec:
+  serviceName: nats
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:2.12.1-scratch
+        args: ["-c", "/etc/nats/nats.conf"]
+        ports:
+        - containerPort: 4222
+          name: client
+        - containerPort: 8222
+          name: monitor
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nats
+        - name: data
+          mountPath: /data/jetstream
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8222
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8222
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      - name: nats-stream-init
+        image: natsio/nats-box:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            until nc -z localhost 4222; do sleep 1; done
+            nats stream add SCANS --config /config/scans-stream.json --server nats://localhost:4222 || nats stream edit SCANS --config /config/scans-stream.json --server nats://localhost:4222
+            tail -f /dev/null
+        volumeMounts:
+        - name: stream-config
+          mountPath: /config
+      volumes:
+      - name: config
+        configMap:
+          name: nats-config
+      - name: stream-config
+        configMap:
+          name: nats-stream-scans
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: fast-delete
+      resources:
+        requests:
+          storage: 28Gi
+
