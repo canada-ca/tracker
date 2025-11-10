@@ -37,6 +37,7 @@ import useSearchParam from '../utilities/useSearchParam'
 import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 import { bool } from 'prop-types'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { getRangeDates } from '../helpers/getDateRange'
 
 export default function OrganizationDetails({ loginRequired }) {
   const { isLoggedIn } = useUserVar()
@@ -53,13 +54,10 @@ export default function OrganizationDetails({ loginRequired }) {
 
   useDocumentTitle(`${orgSlug}`)
 
-  const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug },
-    // errorPolicy: 'ignore', // allow partial success
-  })
-
+  const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, { variables: { slug: orgSlug } })
+  const { startDate, endDate } = getRangeDates(progressChartRangeParam)
   const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
-    variables: { orgSlug, month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
+    variables: { orgSlug, startDate, endDate, sortDirection: 'DESC' },
     errorPolicy: 'ignore', // allow partial success
   })
 

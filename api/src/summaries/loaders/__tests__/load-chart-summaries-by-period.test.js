@@ -12,72 +12,20 @@ describe('loadChartSummariesByPeriod', () => {
     cleanseInput = jest.fn((input) => input)
   })
 
-  it('throws an error if period is not provided', async () => {
+  it('throws an error if startDate or endDate is not provided', async () => {
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    await expect(loader({ year: '2023' })).rejects.toThrow(
-      'You must provide a `period` value to access the `ChartSummaries` connection.',
+    await expect(loader({ startDate: undefined, endDate: '2023-01-31' })).rejects.toThrow(
+      'You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection.',
     )
-  })
-
-  it('throws an error if year is not provided', async () => {
-    const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    await expect(loader({ period: 'january' })).rejects.toThrow(
-      'You must provide a `year` value to access the `ChartSummaries` connection.',
+    await expect(loader({ startDate: '2023-01-01', endDate: undefined })).rejects.toThrow(
+      'You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection.',
     )
-  })
-
-  it('calculates the correct startDate for period "thirtyDays"', async () => {
-    query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue([]),
-    })
-    const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    const period = 'thirtyDays'
-    const year = '2023'
-    await loader({ period, year })
-    const expectedDate = new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0]
-    expect(query).toHaveBeenCalledWith(expect.any(Array), expect.stringContaining(expectedDate))
-  })
-
-  it('calculates the correct startDate for period "lastYear"', async () => {
-    query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue([]),
-    })
-    const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    const period = 'lastYear'
-    const year = '2023'
-    await loader({ period, year })
-    const expectedDate = new Date(new Date().setDate(new Date().getDate() - 365)).toISOString().split('T')[0]
-    expect(query).toHaveBeenCalledWith(expect.any(Array), expect.stringContaining(expectedDate))
-  })
-
-  it('calculates the correct startDate for period "yearToDate"', async () => {
-    query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue([]),
-    })
-    const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    const period = 'yearToDate'
-    const year = '2023'
-    await loader({ period, year })
-    const expectedDate = new Date('2023-01-01').toISOString().split('T')[0]
-    expect(query).toHaveBeenCalledWith(expect.any(Array), expect.stringContaining(expectedDate))
-  })
-
-  it('calculates the correct startDate for a specific month', async () => {
-    query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue([]),
-    })
-    const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    const period = 'january'
-    const year = '2023'
-    await loader({ period, year })
-    const expectedDate = new Date('2023-01-01').toISOString().split('T')[0]
-    expect(query).toHaveBeenCalledWith(expect.any(Array), expect.stringContaining(expectedDate))
   })
 
   it('handles database query errors', async () => {
     query.mockRejectedValue(new Error('Database error'))
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    await expect(loader({ period: 'january', year: '2023' })).rejects.toThrow(
+    await expect(loader({ startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })).rejects.toThrow(
       'Unable to load chart summary data. Please try again.',
     )
   })
@@ -87,27 +35,27 @@ describe('loadChartSummariesByPeriod', () => {
       next: jest.fn().mockRejectedValue(new Error('Cursor error')),
     })
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    await expect(loader({ period: 'january', year: '2023' })).rejects.toThrow(
+    await expect(loader({ startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })).rejects.toThrow(
       'Unable to load chart summary data. Please try again.',
     )
   })
 
   it('returns empty result if no summaries are found', async () => {
     query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue([]),
+      all: jest.fn().mockResolvedValue([]),
     })
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    const result = await loader({ period: 'january', year: '2023' })
+    const result = await loader({ startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })
     expect(result).toEqual([])
   })
 
   it('returns summaries if found', async () => {
     const summaries = [{ id: 1, date: '2023-01-01' }]
     query.mockResolvedValue({
-      next: jest.fn().mockResolvedValue(summaries),
+      all: jest.fn().mockResolvedValue(summaries),
     })
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    const result = await loader({ period: 'january', year: '2023' })
+    const result = await loader({ startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })
     expect(result).toEqual(summaries)
   })
 })
