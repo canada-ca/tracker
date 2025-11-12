@@ -127,6 +127,7 @@ describe('<DomainUpdateList />', () => {
   })
 
   it('applies tags to selected domains', async () => {
+    const resetToFirstPage = jest.fn()
     const { getAllByRole, getByRole, getByText, getByLabelText, _getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <ChakraProvider theme={theme}>
@@ -138,6 +139,7 @@ describe('<DomainUpdateList />', () => {
               filters={filters}
               search={search}
               domainCount={domainCount}
+              resetToFirstPage={resetToFirstPage}
             />
           </I18nProvider>
         </ChakraProvider>
@@ -155,6 +157,7 @@ describe('<DomainUpdateList />', () => {
   })
 
   it('applies tags to all filtered domains when select all is checked', async () => {
+    const resetToFirstPage = jest.fn()
     const { getAllByRole, getByRole, getByText, getByLabelText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <ChakraProvider theme={theme}>
@@ -166,6 +169,7 @@ describe('<DomainUpdateList />', () => {
               filters={filters}
               search={search}
               domainCount={domainCount}
+              resetToFirstPage={resetToFirstPage}
             />
           </I18nProvider>
         </ChakraProvider>
