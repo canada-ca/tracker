@@ -8,6 +8,31 @@ services:
     command: -js
     restart: always
 
+  nats-box:
+    image: natsio/nats-box:latest
+    container_name: nats-box
+    depends_on:
+      - nats
+    network_mode: "host"
+    volumes:
+      - ../k8s/infrastructure/bases/nats/stream-config.json:/stream-config.json
+    entrypoint: >
+      /bin/sh -c '
+        until nc -z localhost 4222; do sleep 1; done
+        echo "[nats-box] Attempting to add SCANS stream..."
+        if nats stream add SCANS --config /stream-config.json --server nats://localhost:4222; then
+          echo "[nats-box] SCANS stream added successfully."
+        else
+          echo "[nats-box] Add failed, attempting to edit SCANS stream..."
+          if nats stream edit SCANS --config /stream-config.json --server nats://localhost:4222 --force; then
+            echo "[nats-box] SCANS stream edited successfully."
+          else
+            echo "[nats-box] ERROR: Could not add or edit SCANS stream!"
+          fi
+        fi
+        tail -f /dev/null
+      '
+
   arangodb:
     image: arangodb:3.12.1
     container_name: arangodb
