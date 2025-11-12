@@ -29,11 +29,11 @@ import {
   ModalFooter,
 } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { array, number, string } from 'prop-types'
+import { array, func, number, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import { UPDATE_DOMAINS_BY_DOMAIN_IDS, UPDATE_DOMAINS_BY_FILTERS } from '../graphql/mutations'
 
-export function DomainUpdateList({ orgId, domains, availableTags, filters, search, domainCount }) {
+export function DomainUpdateList({ orgId, domains, availableTags, filters, search, domainCount, resetToFirstPage }) {
   const toast = useToast()
   // selectedIds is global across all pages
   const [selectedIds, setSelectedIds] = useState(new Set())
@@ -65,6 +65,7 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
       if (updateDomainsByDomainIds.result.__typename === 'DomainBulkResult') {
         onClose()
         resetSelections()
+        resetToFirstPage()
         toast({
           title: t`Domains updated.`,
           description: updateDomainsByDomainIds.result.status,
@@ -111,6 +112,7 @@ export function DomainUpdateList({ orgId, domains, availableTags, filters, searc
       if (updateDomainsByFilters.result.__typename === 'DomainBulkResult') {
         onClose()
         resetSelections()
+        resetToFirstPage()
         toast({
           title: t`Domains updated.`,
           description: updateDomainsByFilters.result.status,
@@ -378,4 +380,5 @@ DomainUpdateList.propTypes = {
   orgId: string,
   search: string,
   domainCount: number,
+  resetToFirstPage: func,
 }

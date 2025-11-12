@@ -340,6 +340,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
               filters={filters}
               search={debouncedSearchTerm}
               domainCount={totalCount}
+              resetToFirstPage={resetToFirstPage}
             />
           ) : (
             <AdminDomainList
