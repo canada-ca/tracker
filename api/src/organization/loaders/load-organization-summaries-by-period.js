@@ -20,7 +20,15 @@ export const loadOrganizationSummariesByPeriod =
     }
 
     const sortString = aql`SORT summary.date ${sortDirection}`
-    let limitString
+    let startDateFilter = aql``
+    if (typeof cleansedStartDate !== 'undefined') {
+      startDateFilter = aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')`
+    }
+    let endDateFilter = aql``
+    if (typeof cleansedEndDate !== 'undefined') {
+      endDateFilter = aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')`
+    }
+    let limitString = aql``
     if (typeof limit !== 'undefined') {
       limitString = aql`LIMIT ${limit}`
     }
@@ -32,16 +40,8 @@ export const loadOrganizationSummariesByPeriod =
         LET historicalSummaries = (
           FOR summary IN organizationSummaries
             FILTER summary.organization == ${orgId}
-            ${
-              cleansedStartDate
-                ? aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')`
-                : aql``
-            }
-            ${
-              cleansedEndDate
-                ? aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')`
-                : aql``
-            }
+            ${startDateFilter}
+            ${endDateFilter}
             RETURN summary
         )
         FOR summary IN APPEND(latestSummary, historicalSummaries)
