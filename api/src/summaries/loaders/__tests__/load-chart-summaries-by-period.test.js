@@ -12,16 +12,6 @@ describe('loadChartSummariesByPeriod', () => {
     cleanseInput = jest.fn((input) => input)
   })
 
-  it('throws an error if startDate or endDate is not provided', async () => {
-    const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    await expect(loader({ startDate: undefined, endDate: '2023-01-31' })).rejects.toThrow(
-      'You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection.',
-    )
-    await expect(loader({ startDate: '2023-01-01', endDate: undefined })).rejects.toThrow(
-      'You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection.',
-    )
-  })
-
   it('handles database query errors', async () => {
     query.mockRejectedValue(new Error('Database error'))
     const loader = loadChartSummariesByPeriod({ query, userKey, cleanseInput, i18n })

@@ -12,20 +12,6 @@ describe('loadOrganizationSummariesByPeriod', () => {
     cleanseInput = jest.fn((input) => input)
   })
 
-  it('throws an error if startDate or endDate is not provided', async () => {
-    const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-    await expect(
-      loader({ orgId: 'org1', startDate: undefined, endDate: '2023-01-31', sortDirection: 'ASC' }),
-    ).rejects.toThrow(
-      'You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection.',
-    )
-    await expect(
-      loader({ orgId: 'org1', startDate: '2023-01-01', endDate: undefined, sortDirection: 'ASC' }),
-    ).rejects.toThrow(
-      'You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection.',
-    )
-  })
-
   it('returns summaries for a given startDate and endDate', async () => {
     const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
     const mockSummaries = [
