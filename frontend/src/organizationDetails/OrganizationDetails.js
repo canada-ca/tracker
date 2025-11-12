@@ -48,7 +48,7 @@ export default function OrganizationDetails({ loginRequired }) {
   const defaultActiveTab = tabNames[0]
   const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
     name: 'summary-range',
-    validOptions: ['last30days', 'lastyear', 'ytd'],
+    validOptions: ['last30days', 'lastyear', 'ytd', 'all'],
     defaultValue: 'last30days',
   })
 

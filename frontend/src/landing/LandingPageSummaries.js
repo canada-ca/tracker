@@ -15,7 +15,7 @@ export function LandingPageSummaries() {
   const { loading, error, data } = useQuery(LANDING_PAGE_SUMMARIES)
   const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
     name: 'summary-range',
-    validOptions: ['last30days', 'lastyear', 'ytd'],
+    validOptions: ['last30days', 'lastyear', 'ytd', 'all'],
     defaultValue: 'last30days',
   })
   const { startDate, endDate } = getRangeDates(progressChartRangeParam)
