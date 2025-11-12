@@ -26,10 +26,14 @@ msgstr ". Les renseignements personnels ne seront pas divulgués par le Secréta
 msgid "{0} Findings"
 msgstr "{0} Constatations"
 
-#. placeholder {0}: selectedIds.size
 #: src/admin/DomainUpdateList.js:282
-msgid "{0} selected"
-msgstr "{0} sélectionné"
+#~ msgid "{0} selected"
+#~ msgstr "{0} sélectionné"
+
+#. placeholder {0}: selectedIds.size
+#: src/admin/DomainUpdateList.js:301
+msgid "{0} selected in total"
+msgstr "{0} sélectionné au total"
 
 #. placeholder {0}: createDomain.result.domain
 #: src/admin/AdminDomainModal.js:62
@@ -75,6 +79,10 @@ msgstr "{info}"
 #: src/components/InfoPanel.js:42
 #~ msgid "{label}"
 #~ msgstr "{label}"
+
+#: src/admin/DomainUpdateList.js:277
+msgid "{selectedOnPage} selected on this page."
+msgstr "{selectedOnPage} sélectionné sur cette page."
 
 #: src/components/InfoPanel.js:42
 msgid "{title}"
@@ -378,16 +386,20 @@ msgstr "Composants concernés"
 msgid "Affiliations:"
 msgstr "Affiliations :"
 
-#. placeholder {0}: selectedIds.size
 #: src/admin/DomainUpdateList.js:259
-msgid "All {0} domain(s) on this page are selected."
+#~ msgid "All {0} domain(s) on this page are selected."
+#~ msgstr "Tous les domaines {0} de cette page sont sélectionnés."
+
+#. placeholder {0}: domains.length
+#: src/admin/DomainUpdateList.js:275
+msgid "All {0} domains on this page are selected."
 msgstr "Tous les domaines {0} de cette page sont sélectionnés."
 
-#: src/admin/DomainUpdateList.js:272
+#: src/admin/DomainUpdateList.js:291
 msgid "All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page."
 msgstr "Tous les {domainCount} domaines sont sélectionnés. Les mises à jour s'appliqueront à tous les domaines filtrés, pas seulement à cette page."
 
-#: src/admin/DomainUpdateList.js:287
+#: src/admin/DomainUpdateList.js:306
 msgid "All {domainCount} selected"
 msgstr "Tous les {domainCount} sélectionnés"
 
@@ -566,7 +578,7 @@ msgstr "Tous les produits ou services connexes qui vous sont fournis par le SCT 
 #~ msgstr "les systèmes de gestion du portefeuille d’applications (GPA);"
 
 #: src/admin/AdminDomains.js:301
-#: src/admin/DomainUpdateList.js:316
+#: src/admin/DomainUpdateList.js:335
 #: src/domains/DomainListFilters.js:155
 msgid "Apply"
 msgstr "Appliquer"
@@ -579,7 +591,7 @@ msgstr "Appliquer des filtres pour affiner la liste des organisations."
 msgid "Apply filters to refine your domain search results."
 msgstr "Appliquez des filtres pour affiner les résultats de votre recherche de domaine."
 
-#: src/admin/DomainUpdateList.js:299
+#: src/admin/DomainUpdateList.js:318
 msgid "Apply Tags"
 msgstr "Appliquer les balises"
 
@@ -618,7 +630,7 @@ msgstr "Archivé"
 msgid "ARCHIVED"
 msgstr "ARCHIVES"
 
-#: src/admin/DomainUpdateList.js:334
+#: src/admin/DomainUpdateList.js:353
 msgid "Are you sure you want to apply these tag changes?"
 msgstr "Êtes-vous sûr de vouloir appliquer ces modifications aux balises ?"
 
@@ -643,7 +655,7 @@ msgstr "Êtes-vous sûr de vouloir cesser d'ignorer ce CVE ?"
 #~ msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 #~ msgstr "Êtes-vous sûr de vouloir quitter {orgName}? Vous devrez être réinvité pour y accéder."
 
-#: src/admin/DomainUpdateList.js:327
+#: src/admin/DomainUpdateList.js:346
 msgid "Are you sure?"
 msgstr "Tu es sûr ?"
 
@@ -744,7 +756,7 @@ msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des se
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les services <0>email<1/></0> et <2>web<3/></2>. Suivez l'évolution de la sécurité des sites gouvernementaux."
 
-#: src/admin/DomainUpdateList.js:342
+#: src/admin/DomainUpdateList.js:361
 #: src/admin/SuperAdminUserList.js:423
 #: src/components/ExportButton.js:93
 #: src/user/UserPage.js:215
@@ -1125,7 +1137,7 @@ msgstr "Mot de passe actuel:"
 #~ msgid "Current Phone Number:"
 #~ msgstr "Numéro de téléphone actuel:"
 
-#: src/admin/DomainUpdateList.js:247
+#: src/admin/DomainUpdateList.js:262
 msgid "Current Tags"
 msgstr "Balises actuelles"
 
@@ -1441,7 +1453,7 @@ msgid "DOES NOT EQUAL"
 msgstr "N'EST PAS ÉGAL"
 
 #: src/admin/AuditLogTable.js:77
-#: src/admin/DomainUpdateList.js:244
+#: src/admin/DomainUpdateList.js:259
 #: src/dmarc/DmarcByDomainPage.js:111
 #: src/dmarc/DmarcByDomainPage.js:297
 #: src/domains/DomainsPage.js:288
@@ -1700,8 +1712,8 @@ msgstr "Point d'aboutissement :"
 msgid "English"
 msgstr "Anglais"
 
-#. placeholder {0}: org.name
 #. placeholder {0}: editUserRole.userName
+#. placeholder {0}: org.name
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -4067,11 +4079,11 @@ msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Sélectionnez l'état qui décrit le mieux l'actif par rapport à votre organisation."
 
-#: src/admin/DomainUpdateList.js:239
+#: src/admin/DomainUpdateList.js:254
 msgid "Select All"
 msgstr "Tout sélectionner"
 
-#: src/admin/DomainUpdateList.js:263
+#: src/admin/DomainUpdateList.js:282
 msgid "Select all {domainCount} domains"
 msgstr "Sélectionner tous les {domainCount} domaines"
 
@@ -4631,7 +4643,7 @@ msgstr "Les étiquettes désignées par le système apparaissent ici."
 msgid "Tag"
 msgstr "Tag"
 
-#: src/admin/DomainUpdateList.js:292
+#: src/admin/DomainUpdateList.js:311
 msgid "Tag Assets"
 msgstr "Baliser les actifs"
 
@@ -4994,7 +5006,7 @@ msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
 #. placeholder {0}: selectAllGlobal ? domainCount : selectedIds.size
-#: src/admin/DomainUpdateList.js:331
+#: src/admin/DomainUpdateList.js:350
 msgid "This will update {0} domain(s)."
 msgstr "Cela mettra à jour {0} domaine(s)."
 
@@ -5789,7 +5801,7 @@ msgstr "Depuis le début de l'année"
 msgid "Yes"
 msgstr "Oui"
 
-#: src/admin/DomainUpdateList.js:339
+#: src/admin/DomainUpdateList.js:358
 msgid "Yes, Apply"
 msgstr "Oui, postuler"
 

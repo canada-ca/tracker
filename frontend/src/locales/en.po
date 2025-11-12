@@ -50,10 +50,14 @@ msgstr ". Personal information will not be disclosed by Treasury Board Secretari
 msgid "{0} Findings"
 msgstr "{0} Findings"
 
-#. placeholder {0}: selectedIds.size
 #: src/admin/DomainUpdateList.js:282
-msgid "{0} selected"
-msgstr "{0} selected"
+#~ msgid "{0} selected"
+#~ msgstr "{0} selected"
+
+#. placeholder {0}: selectedIds.size
+#: src/admin/DomainUpdateList.js:301
+msgid "{0} selected in total"
+msgstr "{0} selected in total"
 
 #. placeholder {0}: createDomain.result.domain
 #: src/admin/AdminDomainModal.js:62
@@ -99,6 +103,10 @@ msgstr "{info}"
 #: src/components/InfoPanel.js:42
 #~ msgid "{label}"
 #~ msgstr "{label}"
+
+#: src/admin/DomainUpdateList.js:277
+msgid "{selectedOnPage} selected on this page."
+msgstr "{selectedOnPage} selected on this page."
 
 #: src/components/InfoPanel.js:42
 msgid "{title}"
@@ -426,16 +434,20 @@ msgstr "Affected Components"
 msgid "Affiliations:"
 msgstr "Affiliations:"
 
-#. placeholder {0}: selectedIds.size
 #: src/admin/DomainUpdateList.js:259
-msgid "All {0} domain(s) on this page are selected."
-msgstr "All {0} domain(s) on this page are selected."
+#~ msgid "All {0} domain(s) on this page are selected."
+#~ msgstr "All {0} domain(s) on this page are selected."
 
-#: src/admin/DomainUpdateList.js:272
+#. placeholder {0}: domains.length
+#: src/admin/DomainUpdateList.js:275
+msgid "All {0} domains on this page are selected."
+msgstr "All {0} domains on this page are selected."
+
+#: src/admin/DomainUpdateList.js:291
 msgid "All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page."
 msgstr "All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page."
 
-#: src/admin/DomainUpdateList.js:287
+#: src/admin/DomainUpdateList.js:306
 msgid "All {domainCount} selected"
 msgstr "All {domainCount} selected"
 
@@ -614,7 +626,7 @@ msgstr "Any products or related services provided to you by TBS are and will rem
 #~ msgstr "Application Portfolio Management (APM) systems; and"
 
 #: src/admin/AdminDomains.js:301
-#: src/admin/DomainUpdateList.js:316
+#: src/admin/DomainUpdateList.js:335
 #: src/domains/DomainListFilters.js:155
 msgid "Apply"
 msgstr "Apply"
@@ -627,7 +639,7 @@ msgstr "Apply filters to refine the organization list."
 msgid "Apply filters to refine your domain search results."
 msgstr "Apply filters to refine your domain search results."
 
-#: src/admin/DomainUpdateList.js:299
+#: src/admin/DomainUpdateList.js:318
 msgid "Apply Tags"
 msgstr "Apply Tags"
 
@@ -666,7 +678,7 @@ msgstr "Archived"
 msgid "ARCHIVED"
 msgstr "ARCHIVED"
 
-#: src/admin/DomainUpdateList.js:334
+#: src/admin/DomainUpdateList.js:353
 msgid "Are you sure you want to apply these tag changes?"
 msgstr "Are you sure you want to apply these tag changes?"
 
@@ -691,7 +703,7 @@ msgstr "Are you sure you want to stop ignoring this CVE?"
 #~ msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 #~ msgstr "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 
-#: src/admin/DomainUpdateList.js:327
+#: src/admin/DomainUpdateList.js:346
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
@@ -792,7 +804,7 @@ msgstr "Canadians rely on the Government of Canada to provide secure digital ser
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 
-#: src/admin/DomainUpdateList.js:342
+#: src/admin/DomainUpdateList.js:361
 #: src/admin/SuperAdminUserList.js:423
 #: src/components/ExportButton.js:93
 #: src/user/UserPage.js:215
@@ -1173,7 +1185,7 @@ msgstr "Current Password:"
 #~ msgid "Current Phone Number:"
 #~ msgstr "Current Phone Number:"
 
-#: src/admin/DomainUpdateList.js:247
+#: src/admin/DomainUpdateList.js:262
 msgid "Current Tags"
 msgstr "Current Tags"
 
@@ -1489,7 +1501,7 @@ msgid "DOES NOT EQUAL"
 msgstr "DOES NOT EQUAL"
 
 #: src/admin/AuditLogTable.js:77
-#: src/admin/DomainUpdateList.js:244
+#: src/admin/DomainUpdateList.js:259
 #: src/dmarc/DmarcByDomainPage.js:111
 #: src/dmarc/DmarcByDomainPage.js:297
 #: src/domains/DomainsPage.js:288
@@ -1764,8 +1776,8 @@ msgstr "Endpoint:"
 msgid "English"
 msgstr "English"
 
-#. placeholder {0}: org.name
 #. placeholder {0}: editUserRole.userName
+#. placeholder {0}: org.name
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -4166,11 +4178,11 @@ msgstr "Select a reason for removing this domain"
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Select a state that best describes the asset in relation to your organization."
 
-#: src/admin/DomainUpdateList.js:239
+#: src/admin/DomainUpdateList.js:254
 msgid "Select All"
 msgstr "Select All"
 
-#: src/admin/DomainUpdateList.js:263
+#: src/admin/DomainUpdateList.js:282
 msgid "Select all {domainCount} domains"
 msgstr "Select all {domainCount} domains"
 
@@ -4734,7 +4746,7 @@ msgstr "System-designated tags appear here."
 msgid "Tag"
 msgstr "Tag"
 
-#: src/admin/DomainUpdateList.js:292
+#: src/admin/DomainUpdateList.js:311
 msgid "Tag Assets"
 msgstr "Tag Assets"
 
@@ -5112,7 +5124,7 @@ msgid "This user is not affiliated with any organizations"
 msgstr "This user is not affiliated with any organizations"
 
 #. placeholder {0}: selectAllGlobal ? domainCount : selectedIds.size
-#: src/admin/DomainUpdateList.js:331
+#: src/admin/DomainUpdateList.js:350
 msgid "This will update {0} domain(s)."
 msgstr "This will update {0} domain(s)."
 
@@ -5947,7 +5959,7 @@ msgstr "Year to Date"
 msgid "Yes"
 msgstr "Yes"
 
-#: src/admin/DomainUpdateList.js:339
+#: src/admin/DomainUpdateList.js:358
 msgid "Yes, Apply"
 msgstr "Yes, Apply"
 
