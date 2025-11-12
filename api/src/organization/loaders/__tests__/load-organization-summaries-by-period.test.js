@@ -33,7 +33,7 @@ describe('loadOrganizationSummariesByPeriod', () => {
       { _key: '2', date: '2023-01-02' },
     ]
     query.mockResolvedValueOnce({
-      next: jest.fn().mockResolvedValueOnce(mockSummaries),
+      all: jest.fn().mockResolvedValueOnce(mockSummaries),
     })
 
     const result = await loader({ orgId: 'org1', startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })
@@ -53,7 +53,7 @@ describe('loadOrganizationSummariesByPeriod', () => {
   it('handles cursor errors gracefully', async () => {
     const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
     query.mockResolvedValueOnce({
-      next: jest.fn().mockRejectedValueOnce(new Error('Cursor error')),
+      all: jest.fn().mockRejectedValueOnce(new Error('Cursor error')),
     })
 
     await expect(

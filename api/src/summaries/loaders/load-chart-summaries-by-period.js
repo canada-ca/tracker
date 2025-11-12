@@ -3,19 +3,9 @@ import { aql } from 'arangojs'
 
 export const loadChartSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ startDate, endDate, sortDirection = 'ASC' }) => {
-    if (typeof startDate === 'undefined' || typeof endDate === 'undefined') {
-      console.warn(
-        `User: ${userKey} did not have \`startDate\` or \`endDate\` argument set for: loadChartSummariesByPeriod.`,
-      )
-      throw new Error(
-        i18n._(
-          t`You must provide both \`startDate\` and \`endDate\` values to access the \`ChartSummaries\` connection.`,
-        ),
-      )
-    }
-    const cleansedStartDate = cleanseInput(startDate)
-    const cleansedEndDate = cleanseInput(endDate)
+  async ({ startDate, endDate, sortDirection = 'ASC', limit }) => {
+    const cleansedStartDate = startDate != null ? cleanseInput(startDate) : null
+    const cleansedEndDate = endDate != null ? cleanseInput(endDate) : null
 
     const filterUniqueDates = (array) => {
       const filteredArray = []
@@ -29,15 +19,28 @@ export const loadChartSummariesByPeriod =
       return filteredArray
     }
 
-    const sortString = aql`${sortDirection}`
+    const sortString = aql`SORT summary.date ${sortDirection}`
+    let limitString
+    if (typeof limit !== 'undefined') {
+      limitString = aql`LIMIT ${limit}`
+    }
 
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
         FOR summary IN chartSummaries
-          FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')
-          FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')
-          SORT summary.date ${sortString}
+          ${
+            cleansedStartDate
+              ? aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')`
+              : aql``
+          }
+          ${
+            cleansedEndDate
+              ? aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')`
+              : aql``
+          }
+          ${sortString}
+          ${limitString}
           RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
       `
     } catch (err) {

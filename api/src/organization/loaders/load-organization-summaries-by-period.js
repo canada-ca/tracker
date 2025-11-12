@@ -3,19 +3,9 @@ import { aql } from 'arangojs'
 
 export const loadOrganizationSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ orgId, startDate, endDate, sortDirection = 'ASC' }) => {
-    if (typeof startDate === 'undefined' || typeof endDate === 'undefined') {
-      console.warn(
-        `User: ${userKey} did not have \`startDate\` or \`endDate\` argument set for: loadOrganizationSummariesByPeriod.`,
-      )
-      throw new Error(
-        i18n._(
-          t`You must provide both \`startDate\` and \`endDate\` values to access the \`OrganizationSummaries\` connection.`,
-        ),
-      )
-    }
-    const cleansedStartDate = cleanseInput(startDate)
-    const cleansedEndDate = cleanseInput(endDate)
+  async ({ orgId, startDate, endDate, sortDirection = 'ASC', limit }) => {
+    const cleansedStartDate = startDate != null ? cleanseInput(startDate) : null
+    const cleansedEndDate = endDate != null ? cleanseInput(endDate) : null
 
     const filterUniqueDates = (array) => {
       const filteredArray = []
@@ -29,25 +19,35 @@ export const loadOrganizationSummariesByPeriod =
       return filteredArray
     }
 
-    const sortString = aql`${sortDirection}`
+    const sortString = aql`SORT summary.date ${sortDirection}`
+    let limitString
+    if (typeof limit !== 'undefined') {
+      limitString = aql`LIMIT ${limit}`
+    }
 
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
-        LET retrievedSummaries = (
-          LET latestSummary = (RETURN DOCUMENT(organizations, ${orgId}).summaries)
-          LET historicalSummaries = (
-            FOR summary IN organizationSummaries
-              FILTER summary.organization == ${orgId}
-              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')
-              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')
-              RETURN summary
-          )
-          FOR summary IN APPEND(latestSummary, historicalSummaries)
-            SORT summary.date ${sortString}
+        LET latestSummary = (RETURN DOCUMENT(organizations, ${orgId}).summaries)
+        LET historicalSummaries = (
+          FOR summary IN organizationSummaries
+            FILTER summary.organization == ${orgId}
+            ${
+              cleansedStartDate
+                ? aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')`
+                : aql``
+            }
+            ${
+              cleansedEndDate
+                ? aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${cleansedEndDate}, '%yyyy-%mm-%dd')`
+                : aql``
+            }
             RETURN summary
         )
-        RETURN retrievedSummaries
+        FOR summary IN APPEND(latestSummary, historicalSummaries)
+          ${sortString}
+          ${limitString}
+          RETURN summary
       `
     } catch (err) {
       console.error(
@@ -58,7 +58,7 @@ export const loadOrganizationSummariesByPeriod =
 
     let summariesInfo
     try {
-      summariesInfo = filterUniqueDates(await requestedSummaryInfo.next())
+      summariesInfo = filterUniqueDates(await requestedSummaryInfo.all())
     } catch (err) {
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to gather organization summaries in loadOrganizationSummariesByPeriod, error: ${err}`,
