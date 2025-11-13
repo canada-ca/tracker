@@ -3,7 +3,7 @@ import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
 import { createContext } from './src/create-context'
 import { createI18n } from './src/create-i18n'
-import { connect, JSONCodec, RetentionPolicy } from 'nats'
+import { connect, JSONCodec } from 'nats'
 import { collectionNames as collections } from './src/collection-names'
 
 const {
@@ -40,22 +40,6 @@ const {
   }
 
   const nc = await connect({ servers: NATS_URL, maxReconnectAttempts: -1, reconnectTimeWait: 1000 })
-
-  const jsm = await nc.jetstreamManager()
-
-  await jsm.streams.add({
-    name: 'SCANS',
-    subjects: [
-      'scans.requests',
-      'scans.discovery',
-      'scans.add_domain_to_easm',
-      'scans.dns_scanner_results',
-      'scans.dns_processor_results',
-      'scans.web_scanner_results',
-      'scans.web_processor_results',
-    ],
-    retention: RetentionPolicy.Workqueue,
-  })
 
   // create a jetstream client:
   const js = nc.jetstream()

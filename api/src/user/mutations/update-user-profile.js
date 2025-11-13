@@ -30,10 +30,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       type: GraphQLBoolean,
       description: 'The updated boolean which represents if the user wants to see features in progress.',
     },
-    receiveUpdateEmails: {
-      type: GraphQLBoolean,
-      description: 'The updated boolean which represents if the user wants to receive update emails.',
-    },
     emailUpdateOptions: {
       type: emailUpdatesInput,
       description:
@@ -68,7 +64,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
     const insideUserBool = args.insideUser
-    const receiveUpdateEmailsBool = args.receiveUpdateEmails
     const emailUpdateOptions = args.emailUpdateOptions
 
     // Get user info from DB
@@ -137,8 +132,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       displayName: displayName || user.displayName,
       tfaSendMethod: tfaSendMethod,
       insideUser: typeof insideUserBool !== 'undefined' ? insideUserBool : user?.insideUser,
-      receiveUpdateEmails:
-        typeof receiveUpdateEmailsBool !== 'undefined' ? receiveUpdateEmailsBool : user?.receiveUpdateEmails,
       emailUpdateOptions: typeof emailUpdateOptions !== 'undefined' ? emailUpdateOptions : user?.emailUpdateOptions,
     }
 

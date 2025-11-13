@@ -117,27 +117,27 @@ describe('given findMyOrganizationsQuery', () => {
                 schema,
                 source: `
                   query {
-                    findChartSummaries(month: JANUARY, year: "2021") {
-                            date
-                            dmarc {
-                            categories {
-                                count
-                                name
-                                percentage
-                            }
-                            total
-                            }
-                            https {
-                            total
-                            categories {
-                                count
-                                name
-                                percentage
-                            }
-                            }
-                            id
+                    findChartSummaries(startDate: "2021-01-01", endDate: "2021-01-31", sortDirection: ASC) {
+                      date
+                      dmarc {
+                        categories {
+                          count
+                          name
+                          percentage
+                        }
+                        total
+                      }
+                      https {
+                        total
+                        categories {
+                          count
+                          name
+                          percentage
+                        }
+                      }
+                      id
                     }
-                    }
+                  }
                 `,
                 rootValue: null,
                 contextValue: {
@@ -274,27 +274,27 @@ describe('given findMyOrganizationsQuery', () => {
             schema,
             source: `
                   query {
-                    findChartSummaries(month: JANUARY, year: "2021") {
-                            date
-                            dmarc {
-                            categories {
-                                count
-                                name
-                                percentage
-                            }
-                            total
-                            }
-                            https {
-                            total
-                            categories {
-                                count
-                                name
-                                percentage
-                            }
-                            }
-                            id
+                    findChartSummaries(startDate: "2021-01-01", endDate: "2021-01-31", sortDirection: ASC) {
+                      date
+                      dmarc {
+                        categories {
+                          count
+                          name
+                          percentage
+                        }
+                        total
+                      }
+                      https {
+                        total
+                        categories {
+                          count
+                          name
+                          percentage
+                        }
+                      }
+                      id
                     }
-                    }
+                  }
                 `,
             rootValue: null,
             contextValue: {
@@ -322,7 +322,7 @@ describe('given findMyOrganizationsQuery', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather chart summaries in loadChartSummaryConnectionsByPeriod, error: Error: Database error occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather chart summaries in loadChartSummariesByPeriod, error: Error: Database error occurred.`,
           ])
         })
       })

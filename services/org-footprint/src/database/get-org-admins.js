@@ -5,7 +5,7 @@ const getOrgAdmins = async ({ query, orgKey }) => {
     cursor = await query`
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
             FILTER e.permission == "admin" OR e.permission == "owner"
-            FILTER v.receiveUpdateEmails == true OR v.emailUpdateOptions.orgFootprint == true
+            FILTER v.emailUpdateOptions.orgFootprint == true
             RETURN v
     `
   } catch (err) {

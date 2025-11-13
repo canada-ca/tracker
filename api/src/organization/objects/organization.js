@@ -4,13 +4,13 @@ import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
-import { Acronym, Slug, Year } from '../../scalars'
+import { Acronym, Slug } from '../../scalars'
 import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
-import { OrderDirection, PeriodEnums } from '../../enums'
+import { OrderDirection } from '../../enums'
 import { tagType } from '../../tags/objects'
 
 export const organizationType = new GraphQLObjectType({
@@ -116,15 +116,15 @@ export const organizationType = new GraphQLObjectType({
     },
     historicalSummaries: {
       type: new GraphQLList(organizationSummaryType),
-      description: 'Historical summaries based on scan types that are preformed on the given organizations domains.',
+      description: 'Historical summaries based on scan types that are performed on the given organizations domains.',
       args: {
-        month: {
-          type: new GraphQLNonNull(PeriodEnums),
-          description: 'The month in which the returned data is relevant to.',
+        startDate: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: 'The start date for the returned data (YYYY-MM-DD).',
         },
-        year: {
-          type: new GraphQLNonNull(Year),
-          description: 'The year in which the returned data is relevant to.',
+        endDate: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: 'The end date for the returned data (YYYY-MM-DD).',
         },
         sortDirection: {
           type: new GraphQLNonNull(OrderDirection),
@@ -147,12 +147,10 @@ export const organizationType = new GraphQLObjectType({
 
         const historicalSummaries = await loadOrganizationSummariesByPeriod({
           orgId: _id,
-          period: args.month,
           ...args,
         })
 
-        console.info(`User: ${userKey} successfully retrieved their chart summaries.`)
-
+        console.info(`User: ${userKey} successfully retrieved their organization summaries.`)
         return historicalSummaries
       },
     },

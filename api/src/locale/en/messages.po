@@ -135,7 +135,7 @@ msgstr "Authentication error. Please sign in."
 msgid "Cannot query additional findings without permission."
 msgstr "Cannot query additional findings without permission."
 
-#: src/organization/objects/organization.js:361
+#: src/organization/objects/organization.js:359
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
@@ -356,7 +356,7 @@ msgstr "Permission check error. Unable to request domain information."
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission Denied: Could not retrieve specified organization."
 
-#: src/user/mutations/update-user-profile.js:114
+#: src/user/mutations/update-user-profile.js:109
 msgid "Permission Denied: Multi-factor authentication is required for admin accounts"
 msgstr "Permission Denied: Multi-factor authentication is required for admin accounts"
 
@@ -432,7 +432,7 @@ msgstr "Permission Denied: Please contact organization user for help with creati
 #~ msgstr "Permission Denied: Please contact organization user for help with retrieving tags."
 
 #: src/domain/queries/find-domain-by-domain.js:51
-#: src/organization/objects/organization.js:196
+#: src/organization/objects/organization.js:194
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission Denied: Please contact organization user for help with retrieving this domain."
 
@@ -498,7 +498,7 @@ msgstr "Phone number has been successfully set, you will receive a verification 
 #~ msgid "Please provide a comment when adding an outside domain."
 #~ msgstr "Please provide a comment when adding an outside domain."
 
-#: src/user/mutations/update-user-profile.js:195
+#: src/user/mutations/update-user-profile.js:188
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -833,8 +833,8 @@ msgstr "Unable to dismiss message. Please try again."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Unable to dispatch one time scan. Please try again."
 
-#: src/organization/objects/organization.js:258
-#: src/organization/objects/organization.js:268
+#: src/organization/objects/organization.js:256
+#: src/organization/objects/organization.js:266
 msgid "Unable to export organization. Please try again."
 msgstr "Unable to export organization. Please try again."
 
@@ -1008,8 +1008,8 @@ msgstr "Unable to load Aggregate guidance tag(s). Please try again."
 #~ msgid "Unable to load all organization domain statuses. Please try again."
 #~ msgstr "Unable to load all organization domain statuses. Please try again."
 
-#: src/summaries/loaders/load-chart-summaries-by-period.js:79
-#: src/summaries/loaders/load-chart-summaries-by-period.js:89
+#: src/summaries/loaders/load-chart-summaries-by-period.js:47
+#: src/summaries/loaders/load-chart-summaries-by-period.js:57
 msgid "Unable to load chart summary data. Please try again."
 msgstr "Unable to load chart summary data. Please try again."
 
@@ -1142,8 +1142,8 @@ msgstr "Unable to load mail summary. Please try again."
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Unable to load organization domain statuses. Please try again."
 
-#: src/organization/loaders/load-organization-summaries-by-period.js:95
-#: src/organization/loaders/load-organization-summaries-by-period.js:105
+#: src/organization/loaders/load-organization-summaries-by-period.js:56
+#: src/organization/loaders/load-organization-summaries-by-period.js:66
 msgid "Unable to load organization summary data. Please try again."
 msgstr "Unable to load organization summary data. Please try again."
 
@@ -1478,15 +1478,15 @@ msgstr "Unable to set phone number, please try again."
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
-#: src/user/mutations/sign-up.js:198
-#: src/user/mutations/sign-up.js:209
+#: src/user/mutations/sign-up.js:197
+#: src/user/mutations/sign-up.js:208
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Unable to sign up, please contact org admin for a new invite."
 
-#: src/user/mutations/sign-up.js:169
-#: src/user/mutations/sign-up.js:178
-#: src/user/mutations/sign-up.js:230
-#: src/user/mutations/sign-up.js:239
+#: src/user/mutations/sign-up.js:168
+#: src/user/mutations/sign-up.js:177
+#: src/user/mutations/sign-up.js:229
+#: src/user/mutations/sign-up.js:238
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
@@ -1599,8 +1599,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:161
-#: src/user/mutations/update-user-profile.js:169
+#: src/user/mutations/update-user-profile.js:154
+#: src/user/mutations/update-user-profile.js:162
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -1673,7 +1673,7 @@ msgstr "Unable to verify account. Please try again."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Unable to verify if user is a super admin, please try again."
 
-#: src/user/mutations/update-user-profile.js:104
+#: src/user/mutations/update-user-profile.js:99
 #: src/user/queries/is-user-admin.js:55
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Unable to verify if user is an admin, please try again."
@@ -1700,7 +1700,7 @@ msgstr "User is trying to register for a non-production environment."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/update-user-profile.js:85
+#: src/user/mutations/update-user-profile.js:80
 #: src/user/mutations/verify-account.js:88
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
@@ -1828,28 +1828,28 @@ msgid "You must provide a `limit` value to properly paginate the `web` connectio
 msgstr "You must provide a `limit` value to properly paginate the `web` connection."
 
 #: src/summaries/loaders/load-chart-summaries-by-period.js:8
-msgid "You must provide a `period` value to access the `ChartSummaries` connection."
-msgstr "You must provide a `period` value to access the `ChartSummaries` connection."
+#~ msgid "You must provide a `period` value to access the `ChartSummaries` connection."
+#~ msgstr "You must provide a `period` value to access the `ChartSummaries` connection."
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:12
 msgid "You must provide a `period` value to access the `DmarcSummaries` connection."
 msgstr "You must provide a `period` value to access the `DmarcSummaries` connection."
 
 #: src/organization/loaders/load-organization-summaries-by-period.js:10
-msgid "You must provide a `period` value to access the `OrganizationSummaries` connection."
-msgstr "You must provide a `period` value to access the `OrganizationSummaries` connection."
+#~ msgid "You must provide a `period` value to access the `OrganizationSummaries` connection."
+#~ msgstr "You must provide a `period` value to access the `OrganizationSummaries` connection."
 
 #: src/summaries/loaders/load-chart-summaries-by-period.js:43
-msgid "You must provide a `year` value to access the `ChartSummaries` connection."
-msgstr "You must provide a `year` value to access the `ChartSummaries` connection."
+#~ msgid "You must provide a `year` value to access the `ChartSummaries` connection."
+#~ msgstr "You must provide a `year` value to access the `ChartSummaries` connection."
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:18
 msgid "You must provide a `year` value to access the `DmarcSummaries` connection."
 msgstr "You must provide a `year` value to access the `DmarcSummaries` connection."
 
 #: src/organization/loaders/load-organization-summaries-by-period.js:46
-msgid "You must provide a `year` value to access the `OrganizationSummaries` connection."
-msgstr "You must provide a `year` value to access the `OrganizationSummaries` connection."
+#~ msgid "You must provide a `year` value to access the `OrganizationSummaries` connection."
+#~ msgstr "You must provide a `year` value to access the `OrganizationSummaries` connection."
 
 #: src/dns-scan/loaders/load-dns-connections-by-domain-id.js:30
 msgid "You must provide at most one pagination method (`before`, `after`, `offset`) value to properly paginate the `DNS` connection."
@@ -1862,3 +1862,11 @@ msgstr "You must provide at most one pagination method (`before`, `after`, `offs
 #: src/web-scan/loaders/load-web-connections-by-domain-id.js:30
 msgid "You must provide at most one pagination method (`before`, `after`, `offset`) value to properly paginate the `web` connection."
 msgstr "You must provide at most one pagination method (`before`, `after`, `offset`) value to properly paginate the `web` connection."
+
+#: src/summaries/loaders/load-chart-summaries-by-period.js:13
+msgid "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."
+msgstr "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."
+
+#: src/organization/loaders/load-organization-summaries-by-period.js:13
+msgid "You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection."
+msgstr "You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection."

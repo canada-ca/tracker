@@ -54,11 +54,6 @@ export const userPersonalType = new GraphQLObjectType({
       description: 'Does the user want to see new features in progress.',
       resolve: ({ insideUser }) => insideUser,
     },
-    receiveUpdateEmails: {
-      type: GraphQLBoolean,
-      description: 'Does the user want to receive update emails.',
-      resolve: ({ receiveUpdateEmails }) => receiveUpdateEmails,
-    },
     emailUpdateOptions: {
       type: emailUpdateOptionsType,
       description:

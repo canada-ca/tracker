@@ -7,7 +7,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -24,15 +23,13 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
+import { AddIcon, EditIcon, HamburgerIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
 import { array, bool, number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
-import { AdminDomainCard } from './AdminDomainCard'
 
-import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
@@ -42,14 +39,16 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
-import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { DomainUpdateList } from './DomainUpdateList'
+import { AdminDomainList } from './AdminDomainList'
 
 export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
+  const [showUpdateList, setShowUpdateList] = useState(false)
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -221,7 +220,6 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
                 <Text fontWeight="bold" mr="2">
                   <Trans>Filters:</Trans>
                 </Text>
-
                 <Box maxW="25%" mx="1">
                   <Select
                     aria-label="filterCategory"
@@ -299,7 +297,6 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
                     {errors.filterValue}
                   </Text>
                 </Box>
-
                 <Button ml="auto" variant="primary" type="submit">
                   <Trans>Apply</Trans>
                 </Button>
@@ -308,77 +305,77 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
           )
         }}
       </Formik>
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-      >
-        {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
-          <React.Fragment key={`admindomain-${index}`}>
-            {index === 0 && <Divider borderBottomColor="gray.400" />}
-            <Flex p="1" align="center" rounded="md" mb="1">
-              <Stack direction="row" flexGrow="0" mr="2">
-                {(!verified || permission === 'SUPER_ADMIN' || rcode === 'NXDOMAIN') && (
-                  <IconButton
-                    data-testid={`remove-${index}`}
-                    onClick={() => {
-                      setSelectedRemoveProps({ domain, domainId, rcode })
-                      removeOnOpen()
-                    }}
-                    variant="danger"
-                    px="2"
-                    icon={<MinusIcon />}
-                    aria-label={'Remove ' + domain}
-                  />
-                )}
-                <IconButton
-                  data-testid={`edit-${index}`}
-                  variant="primary"
-                  px="2"
-                  onClick={() => {
-                    setModalProps({
-                      archived,
-                      mutation: 'update',
-                      assetState,
-                      tagInputList: claimTags,
-                      editingDomainId: domainId,
-                      editingDomainUrl: domain,
-                      orgCount: organizations.totalCount,
-                    })
-                    updateOnOpen()
-                  }}
-                  icon={<EditIcon />}
-                  aria-label={'Edit ' + domain}
-                />
-              </Stack>
-              <AdminDomainCard
-                url={domain}
-                tags={claimTags}
-                assetState={assetState}
-                isArchived={archived}
-                rcode={rcode}
-                locale={i18n.locale}
-                flexGrow={1}
-                fontSize={{ base: '75%', sm: '100%' }}
-              />
-              <ABTestWrapper>
-                <ABTestVariant name="B">
-                  <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
-                </ABTestVariant>
-              </ABTestWrapper>
-            </Flex>
-            <Divider borderBottomColor="gray.400" />
-          </React.Fragment>
-        )}
-      </ListOf>
+      <ABTestWrapper>
+        <ABTestVariant name="A">
+          <AdminDomainList
+            nodes={nodes}
+            verified={verified}
+            permission={permission}
+            orgId={orgId}
+            orgSlug={orgSlug}
+            i18n={i18n}
+            setSelectedRemoveProps={setSelectedRemoveProps}
+            removeOnOpen={removeOnOpen}
+            setModalProps={setModalProps}
+            updateOnOpen={updateOnOpen}
+          />
+        </ABTestVariant>
+        <ABTestVariant name="B">
+          <Button
+            leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
+            mt={4}
+            mb={2}
+            variant="primary"
+            onClick={() => setShowUpdateList((prev) => !prev)}
+          >
+            {showUpdateList ? <Trans>Show Domain List</Trans> : <Trans>Show Update List</Trans>}
+          </Button>
+          {showUpdateList ? (
+            <DomainUpdateList
+              availableTags={availableTags}
+              orgId={orgId}
+              domains={nodes.map(({ id, domain, claimTags }) => {
+                return { id, domain, tags: claimTags.map(({ label }) => label) }
+              })}
+              filters={filters}
+              search={debouncedSearchTerm}
+              domainCount={totalCount}
+              resetToFirstPage={resetToFirstPage}
+            />
+          ) : (
+            <AdminDomainList
+              nodes={nodes}
+              verified={verified}
+              permission={permission}
+              orgId={orgId}
+              orgSlug={orgSlug}
+              i18n={i18n}
+              setSelectedRemoveProps={setSelectedRemoveProps}
+              removeOnOpen={removeOnOpen}
+              setModalProps={setModalProps}
+              updateOnOpen={updateOnOpen}
+            />
+          )}
+        </ABTestVariant>
+      </ABTestWrapper>
+      <RelayPaginationControls
+        onlyPagination={false}
+        selectedDisplayLimit={domainsPerPage}
+        setSelectedDisplayLimit={setDomainsPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
+      />
     </>
   )
 
   return (
-    <Stack mb="6" w="100%">
+    <Box mb="6" w="100%">
       <Box bg="gray.100" p="2" mb="2" borderColor="gray.300" borderWidth="1px">
         <form
           id="form"
@@ -456,19 +453,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
         />
       </Flex>
       {adminDomainList}
-      <RelayPaginationControls
-        onlyPagination={false}
-        selectedDisplayLimit={domainsPerPage}
-        setSelectedDisplayLimit={setDomainsPerPage}
-        displayLimitOptions={[5, 10, 20, 50, 100]}
-        resetToFirstPage={resetToFirstPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isLoadingMore={isLoadingMore}
-        totalRecords={totalCount}
-      />
+
       <AdminDomainModal
         isOpen={updateIsOpen}
         onClose={
@@ -586,7 +571,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
           info={t`An asset that requires further investigation to determine its relationship to the organization.`}
         />
       </InfoPanel>
-    </Stack>
+    </Box>
   )
 }
 
