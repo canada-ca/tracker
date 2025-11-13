@@ -1,0 +1,22 @@
+{
+  "name": "SCANS",
+  "subjects": [
+    "scans.requests",
+    "scans.requests_priority",
+    "scans.discovery",
+    "scans.add_domain_to_easm",
+    "scans.dns_scanner_results",
+    "scans.dns_processor_results",
+    "scans.dns_processor_results_priority",
+    "scans.web_scanner_results",
+    "scans.web_processor_results"
+  ],
+  "retention": "workqueue",
+  "storage": "file",
+  "discard": "old",
+  "max_msgs": -1,
+  "max_bytes": 24000000000,
+  "max_age": 604800000000000,
+  "max_msg_size": 0,
+  "num_replicas": 1
+}

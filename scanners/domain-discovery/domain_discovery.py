@@ -15,7 +15,7 @@ import traceback
 
 import dns.resolver
 from nats.js import JetStreamContext
-from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
+from nats.js.api import ConsumerConfig, AckPolicy
 from nats.errors import TimeoutError
 
 load_dotenv()
@@ -181,8 +181,7 @@ async def run():
 
     async def reconnected_cb():
         logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
-        # Ensure jetstream stream and consumer are still present
-        await js.add_stream(**add_stream_options)
+        # Ensure jetstream consumer is still present
         context.sub = await js.pull_subscribe(**pull_subscribe_options)
         logger.info("Re-subscribed to NATS...")
 
@@ -195,22 +194,6 @@ async def run():
 
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
-
-    add_stream_options = {
-        "name": "SCANS",
-        "subjects": [
-            "scans.requests",
-            "scans.discovery",
-            "scans.add_domain_to_easm",
-            "scans.dns_scanner_results",
-            "scans.dns_processor_results",
-            "scans.web_scanner_results",
-            "scans.web_processor_results",
-        ],
-        "retention": RetentionPolicy.WORK_QUEUE,
-    }
-
-    await js.add_stream(**add_stream_options)
 
     pull_subscribe_options = {
         "stream": "SCANS",

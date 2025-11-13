@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-config
+  namespace: pubsub
+data:
+  nats.conf: |
+    port: 4222
+    monitor_port: 8222
+
+    jetstream {
+      store_dir: /data/jetstream
+      max_file_store: 25GB
+    }
