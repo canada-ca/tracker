@@ -118,7 +118,6 @@ export const UPDATE_USER_PROFILE = gql`
     $userName: EmailAddress
     $tfaSendMethod: TFASendMethodEnum
     $insideUser: Boolean
-    $receiveUpdateEmails: Boolean
     $emailUpdateOptions: emailUpdatesInput
   ) {
     updateUserProfile(
@@ -127,7 +126,6 @@ export const UPDATE_USER_PROFILE = gql`
         userName: $userName
         tfaSendMethod: $tfaSendMethod
         insideUser: $insideUser
-        receiveUpdateEmails: $receiveUpdateEmails
         emailUpdateOptions: $emailUpdateOptions
       }
     ) {
@@ -140,7 +138,6 @@ export const UPDATE_USER_PROFILE = gql`
             userName
             tfaSendMethod
             insideUser
-            receiveUpdateEmails
             emailUpdateOptions {
               orgFootprint
               progressReport
@@ -847,6 +844,38 @@ export const UPDATE_TAG = gql`
           ownership
         }
         ... on TagError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_DOMAINS_BY_DOMAIN_IDS = gql`
+  mutation UpdateDomainsByDomainIds($orgId: ID!, $tags: [String]!, $domainIds: [ID]!) {
+    updateDomainsByDomainIds(input: { orgId: $orgId, tags: $tags, domainIds: $domainIds }) {
+      result {
+        ... on DomainBulkResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_DOMAINS_BY_FILTERS = gql`
+  mutation UpdateDomainsByFilters($orgId: ID!, $tags: [String]!, $filters: [DomainFilter], $search: String) {
+    updateDomainsByFilters(input: { orgId: $orgId, tags: $tags, filters: $filters, search: $search }) {
+      result {
+        ... on DomainBulkResult {
+          status
+        }
+        ... on DomainError {
           code
           description
         }

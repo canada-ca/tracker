@@ -131,7 +131,6 @@ export const signUp = new mutationWithClientMutationId({
       phoneValidated: false,
       emailValidated: false,
       insideUser: false,
-      receiveUpdateEmails: true,
       emailUpdateOptions,
       failedLoginAttempts: 0,
       tfaSendMethod: 'email',
