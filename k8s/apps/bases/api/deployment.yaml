@@ -53,7 +53,7 @@ spec:
                   name: api
                   key: DB_URL
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-14686a2-1761677526 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-0c6be1d-1762980264 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000

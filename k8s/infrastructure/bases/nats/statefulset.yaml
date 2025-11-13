@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+  namespace: pubsub
+  labels:
+    app: nats
+spec:
+  serviceName: nats
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:2.12.1-scratch
+        args: ["-c", "/etc/nats/nats.conf"]
+        ports:
+        - containerPort: 4222
+          name: client
+        - containerPort: 8222
+          name: monitor
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nats
+        - name: data
+          mountPath: /data/jetstream
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8222
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8222
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      - name: nats-stream-init
+        image: natsio/nats-box:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            set -e
+            echo "[nats-stream-init] Waiting for NATS..."
+            until nc -z localhost 4222; do
+              sleep 1
+            done
+            # Small additional delay to ensure JetStream is ready
+            sleep 2
+            echo "[nats-stream-init] Attempting to add SCANS stream..."
+            if nats stream add SCANS --config /stream-config/stream-config.json --server nats://localhost:4222 2>&1; then
+              echo "[nats-stream-init] SCANS stream added successfully."
+            else
+              echo "[nats-stream-init] Add failed, attempting to edit SCANS stream..."
+              if nats stream edit SCANS --config /stream-config/stream-config.json --server nats://localhost:4222 --force; then
+                echo "[nats-stream-init] SCANS stream edited successfully."
+              else
+                echo "[nats-stream-init] ERROR: Could not add or edit SCANS stream!"
+                exit 1
+              fi
+            fi
+            echo "[nats-stream-init] Stream initialization complete."
+            exec sleep infinity
+        volumeMounts:
+        - name: stream-config
+          mountPath: /stream-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "10m"
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+      volumes:
+      - name: config
+        configMap:
+          name: nats-config
+      - name: stream-config
+        configMap:
+          name: stream-config
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: fast-delete
+      resources:
+        requests:
+          storage: 28Gi
