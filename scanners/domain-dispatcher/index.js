@@ -1,6 +1,6 @@
 import { config } from 'dotenv-safe'
 import { Database } from 'arangojs'
-import { connect, RetentionPolicy } from 'nats'
+import { connect } from 'nats'
 import { dispatchDomains } from './src/dispatchDomains.js'
 import { logger } from './src/logger.js'
 import { isListening } from './src/isListening.js'
@@ -50,21 +50,6 @@ let db
   })
 
   const nc = await connect({ servers: NATS_URL })
-
-  const jsm = await nc.jetstreamManager()
-  await jsm.streams.add({
-    name: 'SCANS',
-    subjects: [
-      'scans.requests',
-      'scans.discovery',
-      'scans.add_domain_to_easm',
-      'scans.dns_scanner_results',
-      'scans.dns_processor_results',
-      'scans.web_scanner_results',
-      'scans.web_processor_results',
-    ],
-    retention: RetentionPolicy.Workqueue,
-  })
 
   // // create a jetstream client:
   const js = nc.jetstream()

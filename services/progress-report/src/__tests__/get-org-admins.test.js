@@ -45,8 +45,10 @@ describe('given the getOrgAdmins function', () => {
       org = await collections.organizations.save({})
       user = await collections.users.save({
         userName: 'user@test.ca',
-        receiveUpdateEmails: true,
         insideUser: true,
+        emailUpdateOptions: {
+          progressReport: true,
+        },
       })
       affiliation = await collections.affiliations.save({
         _from: org._id,
@@ -56,9 +58,16 @@ describe('given the getOrgAdmins function', () => {
     })
     it('returns the org admins', async () => {
       const orgAdmins = await getOrgAdmins({ query, orgId: org._id })
-
-      const expectedOrgAdmins = [{ ...user, userName: 'user@test.ca', receiveUpdateEmails: true, insideUser: true }]
-
+      const expectedOrgAdmins = [
+        {
+          ...user,
+          userName: 'user@test.ca',
+          insideUser: true,
+          emailUpdateOptions: {
+            progressReport: true,
+          },
+        },
+      ]
       expect(orgAdmins).toEqual(expectedOrgAdmins)
     })
   })

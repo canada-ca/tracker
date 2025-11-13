@@ -12,23 +12,21 @@ describe('loadOrganizationSummariesByPeriod', () => {
     cleanseInput = jest.fn((input) => input)
   })
 
-  it('throws an error if period is not provided', async () => {
+  it('throws an error if startDate or endDate is not provided', async () => {
     const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-
-    await expect(loader({ orgId: 'org1', year: '2023', sortDirection: 'ASC' })).rejects.toThrow(
-      'You must provide a `period` value to access the `OrganizationSummaries` connection.',
+    await expect(
+      loader({ orgId: 'org1', startDate: undefined, endDate: '2023-01-31', sortDirection: 'ASC' }),
+    ).rejects.toThrow(
+      'You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection.',
+    )
+    await expect(
+      loader({ orgId: 'org1', startDate: '2023-01-01', endDate: undefined, sortDirection: 'ASC' }),
+    ).rejects.toThrow(
+      'You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection.',
     )
   })
 
-  it('throws an error if year is not provided', async () => {
-    const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
-
-    await expect(loader({ orgId: 'org1', period: 'january', sortDirection: 'ASC' })).rejects.toThrow(
-      'You must provide a `year` value to access the `OrganizationSummaries` connection.',
-    )
-  })
-
-  it('returns summaries for a given period and year', async () => {
+  it('returns summaries for a given startDate and endDate', async () => {
     const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
     const mockSummaries = [
       { _key: '1', date: '2023-01-01' },
@@ -38,7 +36,7 @@ describe('loadOrganizationSummariesByPeriod', () => {
       next: jest.fn().mockResolvedValueOnce(mockSummaries),
     })
 
-    const result = await loader({ orgId: 'org1', period: 'january', year: '2023', sortDirection: 'ASC' })
+    const result = await loader({ orgId: 'org1', startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' })
 
     expect(result).toEqual(mockSummaries)
   })
@@ -47,9 +45,9 @@ describe('loadOrganizationSummariesByPeriod', () => {
     const loader = loadOrganizationSummariesByPeriod({ query, userKey, cleanseInput, i18n })
     query.mockRejectedValueOnce(new Error('Database error'))
 
-    await expect(loader({ orgId: 'org1', period: 'january', year: '2023', sortDirection: 'ASC' })).rejects.toThrow(
-      'Unable to load organization summary data. Please try again.',
-    )
+    await expect(
+      loader({ orgId: 'org1', startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' }),
+    ).rejects.toThrow('Unable to load organization summary data. Please try again.')
   })
 
   it('handles cursor errors gracefully', async () => {
@@ -58,8 +56,8 @@ describe('loadOrganizationSummariesByPeriod', () => {
       next: jest.fn().mockRejectedValueOnce(new Error('Cursor error')),
     })
 
-    await expect(loader({ orgId: 'org1', period: 'january', year: '2023', sortDirection: 'ASC' })).rejects.toThrow(
-      'Unable to load organization summary data. Please try again.',
-    )
+    await expect(
+      loader({ orgId: 'org1', startDate: '2023-01-01', endDate: '2023-01-31', sortDirection: 'ASC' }),
+    ).rejects.toThrow('Unable to load organization summary data. Please try again.')
   })
 })
