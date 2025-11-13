@@ -373,6 +373,10 @@ msgstr "Composants concernés"
 msgid "Affiliations:"
 msgstr "Affiliations :"
 
+#: src/summaries/HistoricalSummariesGraph.js:195
+msgid "All Time"
+msgstr "Tout le temps"
+
 #: src/auth/CreateUserPage.js:154
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Vous avez déjà un compte ? <0>Connecter</0>"
@@ -1125,7 +1129,7 @@ msgid "Data Security and Use"
 msgstr "Sécurité et utilisation des données"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-#: src/summaries/HistoricalSummariesGraph.js:196
+#: src/summaries/HistoricalSummariesGraph.js:199
 msgid "Data:"
 msgstr "Données:"
 
@@ -1333,8 +1337,8 @@ msgstr "Phase de mise en œuvre de DMARC: {0}"
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
 
-#: src/organizationDetails/OrganizationDetails.js:145
-#: src/organizationDetails/OrganizationDetails.js:186
+#: src/organizationDetails/OrganizationDetails.js:143
+#: src/organizationDetails/OrganizationDetails.js:184
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -1416,7 +1420,7 @@ msgstr "Domaine"
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/summaries/HistoricalSummariesGraph.js:210
+#: src/summaries/HistoricalSummariesGraph.js:213
 msgid "Domain count"
 msgstr "Compte de domaine"
 
@@ -1471,7 +1475,7 @@ msgstr "Domaine:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:216
 #: src/domains/DomainsPage.js:282
-#: src/organizationDetails/OrganizationDetails.js:148
+#: src/organizationDetails/OrganizationDetails.js:146
 #: src/organizationDetails/OrganizationDomains.js:140
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -1656,8 +1660,8 @@ msgstr "Point d'aboutissement :"
 msgid "English"
 msgstr "Anglais"
 
-#. placeholder {0}: editUserRole.userName
 #. placeholder {0}: org.name
+#. placeholder {0}: editUserRole.userName
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -2689,23 +2693,21 @@ msgstr "Label (FR)"
 msgid "Language:"
 msgstr "La langue:"
 
-#: src/components/MonthSelect.js:63
-#: src/summaries/HistoricalSummariesGraph.js:156
-#~ msgid "Last 30 Days"
-#~ msgstr "Les 30 derniers jours"
+#: src/summaries/HistoricalSummariesGraph.js:186
+msgid "Last 30 Days"
+msgstr "Les 30 derniers jours"
 
 #: src/components/MonthSelect.js:60
-#: src/summaries/HistoricalSummariesGraph.js:186
 msgid "Last 30 Days of Data"
 msgstr "Données des 30 derniers jours"
 
-#: src/summaries/HistoricalSummariesGraph.js:159
-#~ msgid "Last 365 Days"
-#~ msgstr "Les 365 derniers jours"
+#: src/summaries/HistoricalSummariesGraph.js:189
+msgid "Last 365 Days"
+msgstr "Les 365 derniers jours"
 
 #: src/summaries/HistoricalSummariesGraph.js:189
-msgid "Last 365 Days of Data"
-msgstr "Données des 365 derniers jours"
+#~ msgid "Last 365 Days of Data"
+#~ msgstr "Données des 365 derniers jours"
 
 #: src/domains/DomainsPage.js:240
 #: src/organizationDetails/OrganizationDomains.js:235
@@ -3292,7 +3294,7 @@ msgstr "Organisation"
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/organizationDetails/OrganizationDetails.js:75
+#: src/organizationDetails/OrganizationDetails.js:73
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
@@ -3450,7 +3452,7 @@ msgstr "En attente"
 msgid "PENDING"
 msgstr "EN ATTENTE"
 
-#: src/summaries/HistoricalSummariesGraph.js:207
+#: src/summaries/HistoricalSummariesGraph.js:210
 msgid "Percentage"
 msgstr "Pourcentage"
 
@@ -3759,7 +3761,7 @@ msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Demandez une invitation si vous n'êtes pas affilié à votre organisation."
 
 #: src/guidance/GuidancePage.js:161
-#: src/organizationDetails/OrganizationDetails.js:122
+#: src/organizationDetails/OrganizationDetails.js:120
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
@@ -4522,7 +4524,7 @@ msgstr "L'utilisateur {0} a été supprimé."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Arrêt réussi de l'ignorance des CVE pour le domaine « {0} ». Nouvelles CVE ignorées : « {1} »."
 
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:140
 msgid "Summaries"
 msgstr "Résumés"
 
@@ -4534,7 +4536,7 @@ msgstr "Résumé"
 #~ msgid "Summary of your tracker"
 #~ msgstr "Résumé de votre tracker"
 
-#: src/summaries/HistoricalSummariesGraph.js:214
+#: src/summaries/HistoricalSummariesGraph.js:217
 msgid "Summary Tier:"
 msgstr "Résumé Tier :"
 
@@ -4922,17 +4924,17 @@ msgstr "Cet onglet affiche les résumés HTTPS et DMARC pour vos domaines favori
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
-#: src/summaries/HistoricalSummariesGraph.js:224
+#: src/summaries/HistoricalSummariesGraph.js:227
 #: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Niveau 1 : Exigences minimales"
 
-#: src/summaries/HistoricalSummariesGraph.js:227
+#: src/summaries/HistoricalSummariesGraph.js:230
 #: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Niveau 2 : Amélioration de la posture"
 
-#: src/summaries/HistoricalSummariesGraph.js:230
+#: src/summaries/HistoricalSummariesGraph.js:233
 #: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Niveau 3 : Conformité"
@@ -5002,7 +5004,7 @@ msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonct
 msgid "Total Messages"
 msgstr "Total des messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:234
+#: src/summaries/HistoricalSummariesGraph.js:237
 msgid "Total Negative Findings"
 msgstr "Total des conclusions négatives"
 
@@ -5392,7 +5394,7 @@ msgstr "Utilisateur: "
 
 #: src/admin/AdminPage.js:238
 #: src/admin/AdminPanel.js:26
-#: src/organizationDetails/OrganizationDetails.js:152
+#: src/organizationDetails/OrganizationDetails.js:150
 msgid "Users"
 msgstr "Utilisateurs"
 
