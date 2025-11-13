@@ -18,6 +18,7 @@ import { Trans, t } from '@lingui/macro'
 import { func } from 'prop-types'
 import useSearchParam from '../utilities/useSearchParam'
 import { useLocation } from 'react-router-dom'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 const getDate = ({ date }) => new Date(date)
 
@@ -191,9 +192,13 @@ export function HistoricalSummariesGraph({
           <option value="ytd">
             <Trans>Year to Date</Trans>
           </option>
-          <option value="all">
-            <Trans>All Time</Trans>
-          </option>
+          <ABTestWrapper>
+            <ABTestVariant name="B">
+              <option value="all">
+                <Trans>All Time</Trans>
+              </option>
+            </ABTestVariant>
+          </ABTestWrapper>
         </Select>
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Data:</Trans>
