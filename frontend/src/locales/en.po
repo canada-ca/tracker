@@ -434,6 +434,10 @@ msgstr "Affected Components"
 msgid "Affiliations:"
 msgstr "Affiliations:"
 
+#: src/summaries/HistoricalSummariesGraph.js:195
+msgid "All Time"
+msgstr "All Time"
+
 #: src/admin/DomainUpdateList.js:259
 #~ msgid "All {0} domain(s) on this page are selected."
 #~ msgstr "All {0} domain(s) on this page are selected."
@@ -1223,7 +1227,7 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-#: src/summaries/HistoricalSummariesGraph.js:196
+#: src/summaries/HistoricalSummariesGraph.js:199
 msgid "Data:"
 msgstr "Data:"
 
@@ -1431,8 +1435,8 @@ msgstr "DMARC Implementation Phase: {0}"
 #~ msgid "DMARC phase summary"
 #~ msgstr "DMARC phase summary"
 
-#: src/organizationDetails/OrganizationDetails.js:145
-#: src/organizationDetails/OrganizationDetails.js:186
+#: src/organizationDetails/OrganizationDetails.js:143
+#: src/organizationDetails/OrganizationDetails.js:184
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -1515,7 +1519,7 @@ msgstr "Domain"
 msgid "Domain added"
 msgstr "Domain added"
 
-#: src/summaries/HistoricalSummariesGraph.js:210
+#: src/summaries/HistoricalSummariesGraph.js:213
 msgid "Domain count"
 msgstr "Domain count"
 
@@ -1570,7 +1574,7 @@ msgstr "Domain:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:216
 #: src/domains/DomainsPage.js:282
-#: src/organizationDetails/OrganizationDetails.js:148
+#: src/organizationDetails/OrganizationDetails.js:146
 #: src/organizationDetails/OrganizationDomains.js:140
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -1776,8 +1780,8 @@ msgstr "Endpoint:"
 msgid "English"
 msgstr "English"
 
-#. placeholder {0}: editUserRole.userName
 #. placeholder {0}: org.name
+#. placeholder {0}: editUserRole.userName
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -2830,23 +2834,21 @@ msgstr "Label (FR)"
 msgid "Language:"
 msgstr "Language:"
 
-#: src/components/MonthSelect.js:63
-#: src/summaries/HistoricalSummariesGraph.js:156
-#~ msgid "Last 30 Days"
-#~ msgstr "Last 30 Days"
+#: src/summaries/HistoricalSummariesGraph.js:186
+msgid "Last 30 Days"
+msgstr "Last 30 Days"
 
 #: src/components/MonthSelect.js:60
-#: src/summaries/HistoricalSummariesGraph.js:186
 msgid "Last 30 Days of Data"
 msgstr "Last 30 Days of Data"
 
-#: src/summaries/HistoricalSummariesGraph.js:159
-#~ msgid "Last 365 Days"
-#~ msgstr "Last 365 Days"
+#: src/summaries/HistoricalSummariesGraph.js:189
+msgid "Last 365 Days"
+msgstr "Last 365 Days"
 
 #: src/summaries/HistoricalSummariesGraph.js:189
-msgid "Last 365 Days of Data"
-msgstr "Last 365 Days of Data"
+#~ msgid "Last 365 Days of Data"
+#~ msgstr "Last 365 Days of Data"
 
 #: src/domains/DomainsPage.js:240
 #: src/organizationDetails/OrganizationDomains.js:235
@@ -3444,7 +3446,7 @@ msgstr "Organization"
 msgid "Organization created"
 msgstr "Organization created"
 
-#: src/organizationDetails/OrganizationDetails.js:75
+#: src/organizationDetails/OrganizationDetails.js:73
 msgid "Organization Details"
 msgstr "Organization Details"
 
@@ -3602,7 +3604,7 @@ msgstr "Pending"
 msgid "PENDING"
 msgstr "PENDING"
 
-#: src/summaries/HistoricalSummariesGraph.js:207
+#: src/summaries/HistoricalSummariesGraph.js:210
 msgid "Percentage"
 msgstr "Percentage"
 
@@ -3917,7 +3919,7 @@ msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Request an invite if you are unaffiliated with your organization."
 
 #: src/guidance/GuidancePage.js:161
-#: src/organizationDetails/OrganizationDetails.js:122
+#: src/organizationDetails/OrganizationDetails.js:120
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
@@ -4704,7 +4706,7 @@ msgstr "Successfully removed user {0}."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:140
 msgid "Summaries"
 msgstr "Summaries"
 
@@ -4716,7 +4718,7 @@ msgstr "Summary"
 #~ msgid "Summary of your tracker"
 #~ msgstr "Summary of your tracker"
 
-#: src/summaries/HistoricalSummariesGraph.js:214
+#: src/summaries/HistoricalSummariesGraph.js:217
 msgid "Summary Tier:"
 msgstr "Summary Tier:"
 
@@ -5132,7 +5134,7 @@ msgstr "This will update {0} domain(s)."
 #~ msgid "Tier 1"
 #~ msgstr "Tier 1"
 
-#: src/summaries/HistoricalSummariesGraph.js:224
+#: src/summaries/HistoricalSummariesGraph.js:227
 #: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
@@ -5141,7 +5143,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgid "Tier 2"
 #~ msgstr "Tier 2"
 
-#: src/summaries/HistoricalSummariesGraph.js:227
+#: src/summaries/HistoricalSummariesGraph.js:230
 #: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
@@ -5150,7 +5152,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgid "Tier 3"
 #~ msgstr "Tier 3"
 
-#: src/summaries/HistoricalSummariesGraph.js:230
+#: src/summaries/HistoricalSummariesGraph.js:233
 #: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
@@ -5224,7 +5226,7 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 msgid "Total Messages"
 msgstr "Total Messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:234
+#: src/summaries/HistoricalSummariesGraph.js:237
 msgid "Total Negative Findings"
 msgstr "Total Negative Findings"
 
@@ -5627,7 +5629,7 @@ msgstr "User: "
 
 #: src/admin/AdminPage.js:238
 #: src/admin/AdminPanel.js:26
-#: src/organizationDetails/OrganizationDetails.js:152
+#: src/organizationDetails/OrganizationDetails.js:150
 msgid "Users"
 msgstr "Users"
 

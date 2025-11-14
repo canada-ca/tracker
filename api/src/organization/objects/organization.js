@@ -119,15 +119,15 @@ export const organizationType = new GraphQLObjectType({
       description: 'Historical summaries based on scan types that are performed on the given organizations domains.',
       args: {
         startDate: {
-          type: new GraphQLNonNull(GraphQLString),
+          type: GraphQLString,
           description: 'The start date for the returned data (YYYY-MM-DD).',
         },
         endDate: {
-          type: new GraphQLNonNull(GraphQLString),
+          type: GraphQLString,
           description: 'The end date for the returned data (YYYY-MM-DD).',
         },
         sortDirection: {
-          type: new GraphQLNonNull(OrderDirection),
+          type: OrderDirection,
           description: 'The direction in which to sort the data.',
         },
       },
