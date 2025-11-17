@@ -4,8 +4,8 @@ import { aql } from 'arangojs'
 export const loadOrganizationSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ orgId, startDate, endDate, sortDirection = 'ASC', limit }) => {
-    const cleansedStartDate = startDate != null ? cleanseInput(startDate) : null
-    const cleansedEndDate = endDate != null ? cleanseInput(endDate) : null
+    const cleansedStartDate = startDate ? cleanseInput(startDate) : null
+    const cleansedEndDate = endDate ? cleanseInput(endDate) : new Date().toISOString()
 
     const filterUniqueDates = (array) => {
       const filteredArray = []

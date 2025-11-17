@@ -4,8 +4,8 @@ import { aql } from 'arangojs'
 export const loadChartSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ startDate, endDate, sortDirection = 'ASC', limit }) => {
-    const cleansedStartDate = startDate != null ? cleanseInput(startDate) : null
-    const cleansedEndDate = endDate != null ? cleanseInput(endDate) : null
+    const cleansedStartDate = startDate ? cleanseInput(startDate) : null
+    const cleansedEndDate = endDate ? cleanseInput(endDate) : new Date().toISOString()
 
     const filterUniqueDates = (array) => {
       const filteredArray = []
