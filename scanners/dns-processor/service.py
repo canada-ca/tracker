@@ -334,6 +334,7 @@ def process_msg(msg):
             # If we have no IPs, we can't do web scans. Set all web statuses to info
             if not scan_results.get("resolve_ips", None) or all_ips_private:
                 domain.update({"webScanPending": False})
+                domain.update({"blocked": False})
                 domain["status"].update(
                     {
                         "https": "info",
