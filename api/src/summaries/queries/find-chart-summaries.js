@@ -1,20 +1,23 @@
-import { GraphQLList, GraphQLNonNull } from 'graphql'
+import { GraphQLList, GraphQLString } from 'graphql'
 
-import { Year } from '../../scalars'
-import { PeriodEnums } from '../../enums'
 import { chartSummaryType } from '../objects'
+import { OrderDirection } from '../../enums'
 
 export const findChartSummaries = {
   type: new GraphQLList(chartSummaryType),
-  description: 'Select domains a user has access to.',
+  description: 'Select chart summaries a user has access to.',
   args: {
-    month: {
-      type: new GraphQLNonNull(PeriodEnums),
-      description: 'The month in which the returned data is relevant to.',
+    startDate: {
+      type: GraphQLString,
+      description: 'The start date for the returned data (YYYY-MM-DD).',
     },
-    year: {
-      type: new GraphQLNonNull(Year),
-      description: 'The year in which the returned data is relevant to.',
+    endDate: {
+      type: GraphQLString,
+      description: 'The end date for the returned data (YYYY-MM-DD).',
+    },
+    sortDirection: {
+      type: OrderDirection,
+      description: 'The direction in which to sort the data (ASC or DESC).',
     },
   },
   resolve: async (
@@ -27,13 +30,9 @@ export const findChartSummaries = {
       verifiedRequired({ user })
     }
 
-    const summaryConnections = await loadChartSummariesByPeriod({
-      period: args.month,
-      ...args,
-    })
+    const summaryConnections = await loadChartSummariesByPeriod({ ...args })
 
     console.info(`User: ${userKey} successfully retrieved their chart summaries.`)
-
     return summaryConnections
   },
 }

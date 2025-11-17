@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from nats.aio.msg import Msg
 from nats.js import JetStreamContext
-from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
+from nats.js.api import AckPolicy, ConsumerConfig
 from nats.js.errors import KeyWrongLastSequenceError, KeyNotFoundError
 from nats.js.kv import KeyValue
 
@@ -218,8 +218,7 @@ async def scan_service():
 
     async def reconnected_cb():
         logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
-        # Ensure jetstream stream and consumer are still present
-        await js.add_stream(**add_stream_options)
+        # Ensure jetstream consumer is still present
         context.sub = await js.pull_subscribe(**pull_subscribe_options)
         context.priority_sub = await js.pull_subscribe(
             **priority_pull_subscribe_options
@@ -395,24 +394,6 @@ async def scan_service():
     )
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
-
-    add_stream_options = {
-        "name": "SCANS",
-        "subjects": [
-            "scans.requests",
-            "scans.requests_priority",
-            "scans.discovery",
-            "scans.add_domain_to_easm",
-            "scans.dns_scanner_results",
-            "scans.dns_processor_results",
-            "scans.dns_processor_results_priority",
-            "scans.web_scanner_results",
-            "scans.web_processor_results",
-        ],
-        "retention": RetentionPolicy.WORK_QUEUE,
-    }
-
-    await js.add_stream(**add_stream_options)
 
     context.ip_kv = await js.create_key_value(bucket="WEB_SCANNER_IPS")
     context.leaders_kv = await js.create_key_value(bucket="LEADERS")

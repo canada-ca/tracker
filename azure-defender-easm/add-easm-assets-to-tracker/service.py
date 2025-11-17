@@ -8,7 +8,6 @@ from arango import ArangoClient
 from dotenv import load_dotenv
 import asyncio
 import nats
-from nats.js.api import RetentionPolicy
 
 import dns.resolver
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
@@ -48,23 +47,6 @@ async def main():
     logger.info("Successfully connected to NATS")
 
     js = nc.jetstream()
-    add_stream_options = {
-        "name": "SCANS",
-        "subjects": [
-            "scans.requests",
-            "scans.requests_priority",
-            "scans.discovery",
-            "scans.add_domain_to_easm",
-            "scans.dns_scanner_results",
-            "scans.dns_processor_results",
-            "scans.dns_processor_results_priority",
-            "scans.web_scanner_results",
-            "scans.web_processor_results",
-        ],
-        "retention": RetentionPolicy.WORK_QUEUE,
-    }
-
-    await js.add_stream(**add_stream_options)
 
     async def publish(channel, msg):
         await js.publish(channel, msg)

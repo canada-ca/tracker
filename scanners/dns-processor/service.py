@@ -283,7 +283,7 @@ def process_msg(msg):
 
             dns_negative_tags = (
                 processed_results.get("spf", {"negative_tags": []}).get("negative_tags", []) +
-                processed_results.get("dmarc", {"negative_tags": []}).get("negative_tags", []) + 
+                processed_results.get("dmarc", {"negative_tags": []}).get("negative_tags", []) +
                 processed_results.get("dkim", {"negative_tags": []}).get("negative_tags", [])
             )
             domain.update({"negativeTags": {"dns": dns_negative_tags}})
@@ -397,8 +397,7 @@ async def run():
 
     async def reconnected_cb():
         logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
-        # Ensure jetstream stream and consumer are still present
-        await js.add_stream(**add_stream_options)
+        # Ensure jetstream consumer is still present
         context.sub = await js.pull_subscribe(**pull_subscribe_options)
         logger.info("Re-subscribed to NATS...")
 
@@ -410,24 +409,6 @@ async def run():
     )
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
-
-    add_stream_options = {
-        "name": "SCANS",
-        "subjects": [
-            "scans.requests",
-            "scans.requests_priority",
-            "scans.discovery",
-            "scans.add_domain_to_easm",
-            "scans.dns_scanner_results",
-            "scans.dns_processor_results",
-            "scans.dns_processor_results_priority",
-            "scans.web_scanner_results",
-            "scans.web_processor_results",
-        ],
-        "retention": RetentionPolicy.WORK_QUEUE,
-    }
-
-    await js.add_stream(**add_stream_options)
 
     pull_subscribe_options = {
         "stream": "SCANS",

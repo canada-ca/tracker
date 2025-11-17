@@ -131,8 +131,8 @@ export const LANDING_PAGE_SUMMARIES = gql`
 `
 
 export const GET_HISTORICAL_CHART_SUMMARIES = gql`
-  query FindChartSummaries($month: PeriodEnums!, $year: Year!) {
-    findChartSummaries(month: $month, year: $year) {
+  query FindChartSummaries($startDate: String, $endDate: String, $sortDirection: OrderDirection) {
+    findChartSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection) {
       date
       https {
         ...RequiredSummaryFields
@@ -703,9 +703,9 @@ export const ORG_DETAILS_PAGE = gql`
 `
 
 export const GET_HISTORICAL_ORG_SUMMARIES = gql`
-  query GetOrgSummaries($orgSlug: Slug!, $month: PeriodEnums!, $year: Year!) {
+  query GetOrgSummaries($orgSlug: Slug!, $startDate: String, $endDate: String, $sortDirection: OrderDirection) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
-      historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
+      historicalSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection) {
         date
         https {
           ...RequiredSummaryFields

@@ -9,17 +9,18 @@ import { Box } from '@chakra-ui/react'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ErrorBoundary } from 'react-error-boundary'
 import useSearchParam from '../utilities/useSearchParam'
+import { getRangeDates } from '../helpers/getDateRange'
 
 export function LandingPageSummaries() {
   const { loading, error, data } = useQuery(LANDING_PAGE_SUMMARIES)
   const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
     name: 'summary-range',
-    validOptions: ['last30days', 'lastyear', 'ytd'],
+    validOptions: ['last30days', 'lastyear', 'ytd', 'all'],
     defaultValue: 'last30days',
   })
-
+  const { startDate, endDate } = getRangeDates(progressChartRangeParam)
   const { data: historicalSummaries, loading: histSumLoading } = useQuery(GET_HISTORICAL_CHART_SUMMARIES, {
-    variables: { month: progressChartRangeParam.toUpperCase(), year: new Date().getFullYear().toString() },
+    variables: { startDate, endDate, sortDirection: 'DESC' },
   })
 
   if (loading) return <LoadingMessage />
