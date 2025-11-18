@@ -144,13 +144,25 @@ export function HistoricalSummariesGraph({
     nice: true,
   })
 
+  const getDomain = () => {
+    const scores = summaries.map(getRD)
+    const minScore = Math.min(...scores)
+    const maxScore = Math.max(...scores)
+    if (domainTypeParam === 'local') {
+      const localMin = Math.round(minScore * 0.9)
+      let localMax = maxScore * 1.1
+      if (scoreTypeParam === 'percentage') {
+        localMax = localMax >= 100 ? 100 : localMax
+      }
+      return [localMin, localMax]
+    }
+    return [0, scoreTypeParam === 'percentage' ? 100 : maxScore]
+  }
+
   // vertical, y scale
   const rdScale = scaleLinear({
     range: [innerHeight, 0],
-    domain:
-      scoreTypeParam === 'percentage' && summaryTierParam !== 'four'
-        ? [0, 100]
-        : [Math.min(...summaries.map(getRD)), Math.max(...summaries.map(getRD))],
+    domain: getDomain(),
     nice: true,
   })
 
