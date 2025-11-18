@@ -253,7 +253,7 @@ export function HistoricalSummariesGraph({
           </option>
         </Select>
         <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
-          <Trans>Summary Tier:</Trans>
+          <Trans>Metrics:</Trans>
         </Text>
         <Select
           mx="2"
