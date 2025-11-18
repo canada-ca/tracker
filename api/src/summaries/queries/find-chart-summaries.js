@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLString } from 'graphql'
+import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql'
 
 import { chartSummaryType } from '../objects'
 import { OrderDirection } from '../../enums'
@@ -18,6 +18,10 @@ export const findChartSummaries = {
     sortDirection: {
       type: OrderDirection,
       description: 'The direction in which to sort the data (ASC or DESC).',
+    },
+    limit: {
+      type: GraphQLInt,
+      description: 'The maximum amount of summaries to be returned.',
     },
   },
   resolve: async (

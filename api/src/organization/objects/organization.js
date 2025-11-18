@@ -130,6 +130,10 @@ export const organizationType = new GraphQLObjectType({
           type: OrderDirection,
           description: 'The direction in which to sort the data.',
         },
+        limit: {
+          type: GraphQLInt,
+          description: 'The maximum amount of summaries to be returned.',
+        },
       },
       resolve: async (
         { _id },
