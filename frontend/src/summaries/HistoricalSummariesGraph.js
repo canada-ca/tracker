@@ -79,6 +79,11 @@ export function HistoricalSummariesGraph({
     validOptions: Object.keys(tieredSummaries),
     defaultValue: 'one',
   })
+  const { searchValue: domainTypeParam, setSearchParams: setDomainTypeParam } = useSearchParam({
+    name: 'domain-type',
+    validOptions: ['local', 'global'],
+    defaultValue: 'global',
+  })
 
   const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
@@ -199,6 +204,23 @@ export function HistoricalSummariesGraph({
               </option>
             </ABTestVariant>
           </ABTestWrapper>
+        </Select>
+        <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
+          <Trans>Scope:</Trans>
+        </Text>
+        <Select
+          mx="2"
+          maxW="20%"
+          borderColor="black"
+          value={domainTypeParam}
+          onChange={(e) => setDomainTypeParam(e.target.value)}
+        >
+          <option value="local">
+            <Trans>Local</Trans>
+          </option>
+          <option value="global">
+            <Trans>Global</Trans>
+          </option>
         </Select>
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Data:</Trans>
