@@ -79,7 +79,7 @@ export function HistoricalSummariesGraph({
     validOptions: Object.keys(tieredSummaries),
     defaultValue: 'one',
   })
-  const { searchValue: domainTypeParam, setSearchParams: setDomainTypeParam } = useSearchParam({
+  const { searchValue: domainScopeParam, setSearchParams: setDomainScopeParam } = useSearchParam({
     name: 'domain-type',
     validOptions: ['local', 'global'],
     defaultValue: 'global',
@@ -148,7 +148,7 @@ export function HistoricalSummariesGraph({
     const scores = summaries.map(getRD)
     const minScore = Math.min(...scores)
     const maxScore = Math.max(...scores)
-    if (domainTypeParam === 'local') {
+    if (domainScopeParam === 'local') {
       const localMin = Math.round(minScore * 0.9)
       let localMax = maxScore * 1.1
       if (scoreTypeParam === 'percentage') {
@@ -217,23 +217,27 @@ export function HistoricalSummariesGraph({
             </ABTestVariant>
           </ABTestWrapper>
         </Select>
-        <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
-          <Trans>Scope:</Trans>
-        </Text>
-        <Select
-          mx="2"
-          maxW="20%"
-          borderColor="black"
-          value={domainTypeParam}
-          onChange={(e) => setDomainTypeParam(e.target.value)}
-        >
-          <option value="local">
-            <Trans>Local</Trans>
-          </option>
-          <option value="global">
-            <Trans>Global</Trans>
-          </option>
-        </Select>
+        <ABTestWrapper>
+          <ABTestVariant name="B">
+            <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
+              <Trans>Scope:</Trans>
+            </Text>
+            <Select
+              mx="2"
+              maxW="20%"
+              borderColor="black"
+              value={domainScopeParam}
+              onChange={(e) => setDomainScopeParam(e.target.value)}
+            >
+              <option value="local">
+                <Trans>Local</Trans>
+              </option>
+              <option value="global">
+                <Trans>Global</Trans>
+              </option>
+            </Select>
+          </ABTestVariant>
+        </ABTestWrapper>
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Data:</Trans>
         </Text>
