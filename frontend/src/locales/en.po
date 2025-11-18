@@ -55,7 +55,7 @@ msgstr "{0} Findings"
 #~ msgstr "{0} selected"
 
 #. placeholder {0}: selectedIds.size
-#: src/admin/DomainUpdateList.js:301
+#: src/admin/DomainUpdateList.js:303
 msgid "{0} selected in total"
 msgstr "{0} selected in total"
 
@@ -104,7 +104,7 @@ msgstr "{info}"
 #~ msgid "{label}"
 #~ msgstr "{label}"
 
-#: src/admin/DomainUpdateList.js:277
+#: src/admin/DomainUpdateList.js:279
 msgid "{selectedOnPage} selected on this page."
 msgstr "{selectedOnPage} selected on this page."
 
@@ -260,7 +260,7 @@ msgstr "404 - Page Not Found"
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
-#: src/admin/AdminDomains.js:506
+#: src/admin/AdminDomains.js:507
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 
@@ -361,7 +361,7 @@ msgstr "Activity"
 msgid "Add"
 msgstr "Add"
 
-#: src/admin/AdminDomains.js:424
+#: src/admin/AdminDomains.js:425
 msgid "Add Domain"
 msgstr "Add Domain"
 
@@ -434,52 +434,52 @@ msgstr "Affected Components"
 msgid "Affiliations:"
 msgstr "Affiliations:"
 
-#: src/summaries/HistoricalSummariesGraph.js:195
-msgid "All Time"
-msgstr "All Time"
-
 #: src/admin/DomainUpdateList.js:259
 #~ msgid "All {0} domain(s) on this page are selected."
 #~ msgstr "All {0} domain(s) on this page are selected."
 
 #. placeholder {0}: domains.length
-#: src/admin/DomainUpdateList.js:275
+#: src/admin/DomainUpdateList.js:277
 msgid "All {0} domains on this page are selected."
 msgstr "All {0} domains on this page are selected."
 
-#: src/admin/DomainUpdateList.js:291
+#: src/admin/DomainUpdateList.js:293
 msgid "All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page."
 msgstr "All {domainCount} domains are selected. Updates will apply to all filtered domains, not just this page."
 
-#: src/admin/DomainUpdateList.js:306
+#: src/admin/DomainUpdateList.js:308
 msgid "All {domainCount} selected"
 msgstr "All {domainCount} selected"
+
+#: src/summaries/HistoricalSummariesGraph.js:215
+msgid "All Time"
+msgstr "All Time"
 
 #: src/auth/CreateUserPage.js:154
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Already have an account? <0>Log in</0>"
 
-#: src/admin/AdminDomains.js:555
+#: src/admin/AdminDomains.js:556
 #: src/organizationDetails/OrganizationDomains.js:262
 msgid "An asset confirmed to belong to the organization."
 msgstr "An asset confirmed to belong to the organization."
 
-#: src/admin/AdminDomains.js:558
+#: src/admin/AdminDomains.js:559
 #: src/organizationDetails/OrganizationDomains.js:265
 msgid "An asset that is owned by a third party and supports the operation of organization-owned assets."
 msgstr "An asset that is owned by a third party and supports the operation of organization-owned assets."
 
-#: src/admin/AdminDomains.js:562
+#: src/admin/AdminDomains.js:563
 #: src/organizationDetails/OrganizationDomains.js:269
 msgid "An asset that is relevant to the organization but is not a direct part of the attack surface."
 msgstr "An asset that is relevant to the organization but is not a direct part of the attack surface."
 
-#: src/admin/AdminDomains.js:566
+#: src/admin/AdminDomains.js:567
 #: src/organizationDetails/OrganizationDomains.js:273
 msgid "An asset that is suspected to belong to the organization but has not been confirmed."
 msgstr "An asset that is suspected to belong to the organization but has not been confirmed."
 
-#: src/admin/AdminDomains.js:570
+#: src/admin/AdminDomains.js:571
 #: src/organizationDetails/OrganizationDomains.js:277
 msgid "An asset that requires further investigation to determine its relationship to the organization."
 msgstr "An asset that requires further investigation to determine its relationship to the organization."
@@ -596,7 +596,7 @@ msgstr "An error occurred while verifying your phone number."
 #: src/admin/AdminDomainModal.js:95
 #: src/admin/AdminDomains.js:132
 #: src/admin/DomainUpdateList.js:56
-#: src/admin/DomainUpdateList.js:102
+#: src/admin/DomainUpdateList.js:103
 #: src/admin/TagForm.js:27
 #: src/admin/TagForm.js:72
 #: src/admin/UserListModal.js:50
@@ -630,7 +630,7 @@ msgstr "Any products or related services provided to you by TBS are and will rem
 #~ msgstr "Application Portfolio Management (APM) systems; and"
 
 #: src/admin/AdminDomains.js:301
-#: src/admin/DomainUpdateList.js:335
+#: src/admin/DomainUpdateList.js:337
 #: src/domains/DomainListFilters.js:155
 msgid "Apply"
 msgstr "Apply"
@@ -643,14 +643,14 @@ msgstr "Apply filters to refine the organization list."
 msgid "Apply filters to refine your domain search results."
 msgstr "Apply filters to refine your domain search results."
 
-#: src/admin/DomainUpdateList.js:318
+#: src/admin/DomainUpdateList.js:320
 msgid "Apply Tags"
 msgstr "Apply Tags"
 
 #: src/admin/AdminDomainCard.js:8
 #: src/admin/AdminDomainModal.js:293
 #: src/admin/AdminDomains.js:279
-#: src/admin/AdminDomains.js:555
+#: src/admin/AdminDomains.js:556
 #: src/domains/DomainCard.js:111
 #: src/domains/FilterList.js:22
 #: src/organizationDetails/OrganizationDomains.js:124
@@ -682,7 +682,7 @@ msgstr "Archived"
 msgid "ARCHIVED"
 msgstr "ARCHIVED"
 
-#: src/admin/DomainUpdateList.js:353
+#: src/admin/DomainUpdateList.js:355
 msgid "Are you sure you want to apply these tag changes?"
 msgstr "Are you sure you want to apply these tag changes?"
 
@@ -707,7 +707,7 @@ msgstr "Are you sure you want to stop ignoring this CVE?"
 #~ msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 #~ msgstr "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 
-#: src/admin/DomainUpdateList.js:346
+#: src/admin/DomainUpdateList.js:348
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
@@ -722,7 +722,7 @@ msgstr "Assess current state;"
 msgid "Asset State"
 msgstr "Asset State"
 
-#: src/admin/AdminDomains.js:549
+#: src/admin/AdminDomains.js:550
 msgid "Asset States"
 msgstr "Asset States"
 
@@ -808,7 +808,7 @@ msgstr "Canadians rely on the Government of Canada to provide secure digital ser
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 
-#: src/admin/DomainUpdateList.js:361
+#: src/admin/DomainUpdateList.js:363
 #: src/admin/SuperAdminUserList.js:423
 #: src/components/ExportButton.js:93
 #: src/user/UserPage.js:215
@@ -818,7 +818,7 @@ msgstr "Cancel"
 #: src/admin/AdminDomainCard.js:11
 #: src/admin/AdminDomainModal.js:302
 #: src/admin/AdminDomains.js:288
-#: src/admin/AdminDomains.js:565
+#: src/admin/AdminDomains.js:566
 #: src/domains/DomainCard.js:114
 #: src/domains/FilterList.js:25
 #: src/organizationDetails/OrganizationDomains.js:127
@@ -1031,7 +1031,7 @@ msgid "Configuration requirements for web sites and services completely met"
 msgstr "Configuration requirements for web sites and services completely met"
 
 #: src/admin/AdminDomainModal.js:323
-#: src/admin/AdminDomains.js:541
+#: src/admin/AdminDomains.js:542
 #: src/admin/OrganizationInformation.js:347
 #: src/admin/OrganizationInformation.js:445
 #: src/admin/SuperAdminUserList.js:427
@@ -1058,7 +1058,7 @@ msgstr "Confirm New Password:"
 msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
-#: src/admin/AdminDomains.js:501
+#: src/admin/AdminDomains.js:502
 msgid "Confirm removal of domain:"
 msgstr "Confirm removal of domain:"
 
@@ -1189,7 +1189,7 @@ msgstr "Current Password:"
 #~ msgid "Current Phone Number:"
 #~ msgstr "Current Phone Number:"
 
-#: src/admin/DomainUpdateList.js:262
+#: src/admin/DomainUpdateList.js:264
 msgid "Current Tags"
 msgstr "Current Tags"
 
@@ -1227,7 +1227,7 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-#: src/summaries/HistoricalSummariesGraph.js:199
+#: src/summaries/HistoricalSummariesGraph.js:242
 msgid "Data:"
 msgstr "Data:"
 
@@ -1260,7 +1260,7 @@ msgstr "Delete"
 #: src/admin/AdminDomainCard.js:9
 #: src/admin/AdminDomainModal.js:296
 #: src/admin/AdminDomains.js:282
-#: src/admin/AdminDomains.js:557
+#: src/admin/AdminDomains.js:558
 #: src/domains/DomainCard.js:112
 #: src/domains/FilterList.js:23
 #: src/organizationDetails/OrganizationDomains.js:125
@@ -1505,7 +1505,7 @@ msgid "DOES NOT EQUAL"
 msgstr "DOES NOT EQUAL"
 
 #: src/admin/AuditLogTable.js:77
-#: src/admin/DomainUpdateList.js:259
+#: src/admin/DomainUpdateList.js:261
 #: src/dmarc/DmarcByDomainPage.js:111
 #: src/dmarc/DmarcByDomainPage.js:297
 #: src/domains/DomainsPage.js:288
@@ -1519,7 +1519,7 @@ msgstr "Domain"
 msgid "Domain added"
 msgstr "Domain added"
 
-#: src/summaries/HistoricalSummariesGraph.js:213
+#: src/summaries/HistoricalSummariesGraph.js:256
 msgid "Domain count"
 msgstr "Domain count"
 
@@ -1551,7 +1551,7 @@ msgstr "Domain Tags"
 msgid "Domain updated"
 msgstr "Domain updated"
 
-#: src/admin/AdminDomains.js:413
+#: src/admin/AdminDomains.js:414
 #: src/components/fields/DomainField.js:38
 msgid "Domain URL"
 msgstr "Domain URL"
@@ -1595,8 +1595,8 @@ msgstr "Domains found through this method will be automatically added to <0>{org
 #~ msgid "domains information"
 #~ msgstr "domains information"
 
-#: src/admin/DomainUpdateList.js:69
-#: src/admin/DomainUpdateList.js:115
+#: src/admin/DomainUpdateList.js:70
+#: src/admin/DomainUpdateList.js:117
 msgid "Domains updated."
 msgstr "Domains updated."
 
@@ -2133,6 +2133,7 @@ msgstr "Getting top 25 report"
 
 #: src/admin/DomainTagsList.js:50
 #: src/admin/TagForm.js:268
+#: src/summaries/HistoricalSummariesGraph.js:236
 msgid "Global"
 msgstr "Global"
 
@@ -2568,8 +2569,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/AdminDomainModal.js:79
 #: src/admin/AdminDomainModal.js:127
 #: src/admin/AdminDomains.js:162
-#: src/admin/DomainUpdateList.js:87
-#: src/admin/DomainUpdateList.js:133
+#: src/admin/DomainUpdateList.js:88
+#: src/admin/DomainUpdateList.js:135
 #: src/admin/SuperAdminUserList.js:106
 #: src/admin/TagForm.js:56
 #: src/admin/TagForm.js:102
@@ -2622,8 +2623,8 @@ msgstr "Incorrect update method received."
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
-#: src/admin/DomainUpdateList.js:88
-#: src/admin/DomainUpdateList.js:134
+#: src/admin/DomainUpdateList.js:89
+#: src/admin/DomainUpdateList.js:136
 msgid "Incorrect updateDomainsByDomainIds.result typename."
 msgstr "Incorrect updateDomainsByDomainIds.result typename."
 
@@ -2834,7 +2835,7 @@ msgstr "Label (FR)"
 msgid "Language:"
 msgstr "Language:"
 
-#: src/summaries/HistoricalSummariesGraph.js:186
+#: src/summaries/HistoricalSummariesGraph.js:204
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
@@ -2842,7 +2843,7 @@ msgstr "Last 30 Days"
 msgid "Last 30 Days of Data"
 msgstr "Last 30 Days of Data"
 
-#: src/summaries/HistoricalSummariesGraph.js:189
+#: src/summaries/HistoricalSummariesGraph.js:207
 msgid "Last 365 Days"
 msgstr "Last 365 Days"
 
@@ -2905,6 +2906,10 @@ msgstr "Loading {children}..."
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
+#: src/summaries/HistoricalSummariesGraph.js:233
+msgid "Local"
+msgstr "Local"
+
 #: src/auth/SignInPage.js:117
 msgid "Login"
 msgstr "Login"
@@ -2922,7 +2927,7 @@ msgstr "Lookups:"
 msgid "Low"
 msgstr "Low"
 
-#: src/summaries/HistoricalSummariesGraph.js:94
+#: src/summaries/HistoricalSummariesGraph.js:100
 msgid "Mail"
 msgstr "Mail"
 
@@ -2974,6 +2979,10 @@ msgstr "Menu"
 msgid "Message dismissed successfully"
 msgstr "Message dismissed successfully"
 
+#: src/summaries/HistoricalSummariesGraph.js:260
+msgid "Metrics:"
+msgstr "Metrics:"
+
 #: src/userOnboarding/config/tourSteps.js:54
 msgid "Monitor changes in your organization's security compliance over time."
 msgstr "Monitor changes in your organization's security compliance over time."
@@ -2991,7 +3000,7 @@ msgstr "Monitor DMARC reports;"
 #: src/admin/AdminDomainCard.js:10
 #: src/admin/AdminDomainModal.js:299
 #: src/admin/AdminDomains.js:285
-#: src/admin/AdminDomains.js:561
+#: src/admin/AdminDomains.js:562
 #: src/domains/DomainCard.js:113
 #: src/domains/FilterList.js:24
 #: src/organizationDetails/OrganizationDomains.js:126
@@ -3082,7 +3091,7 @@ msgstr "Negative"
 msgid "Negative Finding"
 msgstr "Negative Finding"
 
-#: src/summaries/HistoricalSummariesGraph.js:95
+#: src/summaries/HistoricalSummariesGraph.js:101
 msgid "Negative Findings"
 msgstr "Negative Findings"
 
@@ -3604,7 +3613,7 @@ msgstr "Pending"
 msgid "PENDING"
 msgstr "PENDING"
 
-#: src/summaries/HistoricalSummariesGraph.js:210
+#: src/summaries/HistoricalSummariesGraph.js:253
 msgid "Percentage"
 msgstr "Percentage"
 
@@ -3819,7 +3828,7 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
-#: src/summaries/HistoricalSummariesGraph.js:182
+#: src/summaries/HistoricalSummariesGraph.js:200
 msgid "Range:"
 msgstr "Range:"
 
@@ -3839,7 +3848,7 @@ msgstr "Read guidance"
 msgid "Read Guidance"
 msgstr "Read Guidance"
 
-#: src/admin/AdminDomains.js:515
+#: src/admin/AdminDomains.js:516
 #: src/admin/AuditLogTable.js:133
 msgid "Reason"
 msgstr "Reason"
@@ -3888,7 +3897,7 @@ msgstr "Remember me"
 msgid "Remove"
 msgstr "Remove"
 
-#: src/admin/AdminDomains.js:495
+#: src/admin/AdminDomains.js:496
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
@@ -3957,7 +3966,7 @@ msgstr "Requirements: <0>Web Sites and Services Management Configuration Require
 #: src/admin/AdminDomainCard.js:12
 #: src/admin/AdminDomainModal.js:305
 #: src/admin/AdminDomains.js:291
-#: src/admin/AdminDomains.js:569
+#: src/admin/AdminDomains.js:570
 #: src/domains/DomainCard.js:115
 #: src/domains/FilterList.js:26
 #: src/organizationDetails/OrganizationDomains.js:128
@@ -4083,7 +4092,11 @@ msgstr "Scan Request"
 #~ msgid "Scanner Finding"
 #~ msgstr "Scanner Finding"
 
-#: src/admin/AdminDomains.js:414
+#: src/summaries/HistoricalSummariesGraph.js:223
+msgid "Scope:"
+msgstr "Scope:"
+
+#: src/admin/AdminDomains.js:415
 msgid "Search by Domain URL"
 msgstr "Search by Domain URL"
 
@@ -4150,7 +4163,7 @@ msgstr "Search SPF Failing Items"
 msgid "Search:"
 msgstr "Search:"
 
-#: src/admin/AdminDomains.js:403
+#: src/admin/AdminDomains.js:404
 #: src/admin/UserList.js:153
 #: src/components/SearchBox.js:46
 msgid "Search: "
@@ -4168,7 +4181,7 @@ msgstr "See headers"
 #~ msgid "Select a reason for adding this outside domain"
 #~ msgstr "Select a reason for adding this outside domain"
 
-#: src/admin/AdminDomains.js:526
+#: src/admin/AdminDomains.js:527
 msgid "Select a reason for removing this domain"
 msgstr "Select a reason for removing this domain"
 
@@ -4180,11 +4193,11 @@ msgstr "Select a reason for removing this domain"
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Select a state that best describes the asset in relation to your organization."
 
-#: src/admin/DomainUpdateList.js:254
+#: src/admin/DomainUpdateList.js:256
 msgid "Select All"
 msgstr "Select All"
 
-#: src/admin/DomainUpdateList.js:282
+#: src/admin/DomainUpdateList.js:284
 msgid "Select all {domainCount} domains"
 msgstr "Select all {domainCount} domains"
 
@@ -4719,8 +4732,8 @@ msgstr "Summary"
 #~ msgstr "Summary of your tracker"
 
 #: src/summaries/HistoricalSummariesGraph.js:217
-msgid "Summary Tier:"
-msgstr "Summary Tier:"
+#~ msgid "Summary Tier:"
+#~ msgstr "Summary Tier:"
 
 #: src/admin/AdminPage.js:229
 msgid "Super Admin Menu:"
@@ -4748,7 +4761,7 @@ msgstr "System-designated tags appear here."
 msgid "Tag"
 msgstr "Tag"
 
-#: src/admin/DomainUpdateList.js:311
+#: src/admin/DomainUpdateList.js:313
 msgid "Tag Assets"
 msgstr "Tag Assets"
 
@@ -4885,7 +4898,7 @@ msgstr "Terms of Use"
 msgid "TEST"
 msgstr "TEST"
 
-#: src/admin/AdminDomains.js:550
+#: src/admin/AdminDomains.js:551
 msgid "The \"Asset State\" describes how the domain relates to your organization. These states are used by Tracker to give you a more accurate summary of your attack surface."
 msgstr "The \"Asset State\" describes how the domain relates to your organization. These states are used by Tracker to give you a more accurate summary of your attack surface."
 
@@ -5053,12 +5066,12 @@ msgstr "This could be due to improper configuration, or could be the result of a
 #~ msgid "this domain"
 #~ msgstr "this domain"
 
-#: src/admin/AdminDomains.js:532
+#: src/admin/AdminDomains.js:533
 #: src/admin/AuditLogTable.js:148
 msgid "This domain does not belong to this organization"
 msgstr "This domain does not belong to this organization"
 
-#: src/admin/AdminDomains.js:529
+#: src/admin/AdminDomains.js:530
 #: src/admin/AuditLogTable.js:146
 msgid "This domain no longer exists"
 msgstr "This domain no longer exists"
@@ -5126,7 +5139,7 @@ msgid "This user is not affiliated with any organizations"
 msgstr "This user is not affiliated with any organizations"
 
 #. placeholder {0}: selectAllGlobal ? domainCount : selectedIds.size
-#: src/admin/DomainUpdateList.js:350
+#: src/admin/DomainUpdateList.js:352
 msgid "This will update {0} domain(s)."
 msgstr "This will update {0} domain(s)."
 
@@ -5134,7 +5147,7 @@ msgstr "This will update {0} domain(s)."
 #~ msgid "Tier 1"
 #~ msgstr "Tier 1"
 
-#: src/summaries/HistoricalSummariesGraph.js:227
+#: src/summaries/HistoricalSummariesGraph.js:270
 #: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
@@ -5143,7 +5156,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgid "Tier 2"
 #~ msgstr "Tier 2"
 
-#: src/summaries/HistoricalSummariesGraph.js:230
+#: src/summaries/HistoricalSummariesGraph.js:273
 #: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
@@ -5152,7 +5165,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgid "Tier 3"
 #~ msgstr "Tier 3"
 
-#: src/summaries/HistoricalSummariesGraph.js:233
+#: src/summaries/HistoricalSummariesGraph.js:276
 #: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
@@ -5226,7 +5239,7 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 msgid "Total Messages"
 msgstr "Total Messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:237
+#: src/summaries/HistoricalSummariesGraph.js:280
 msgid "Total Negative Findings"
 msgstr "Total Negative Findings"
 
@@ -5423,8 +5436,8 @@ msgstr "Unable to stop ignoring CVE."
 msgid "Unable to update domain."
 msgstr "Unable to update domain."
 
-#: src/admin/DomainUpdateList.js:78
-#: src/admin/DomainUpdateList.js:124
+#: src/admin/DomainUpdateList.js:79
+#: src/admin/DomainUpdateList.js:126
 msgid "Unable to update domains."
 msgstr "Unable to update domains."
 
@@ -5777,7 +5790,7 @@ msgstr "weak"
 #~ msgid "Weak Curves:"
 #~ msgstr "Weak Curves:"
 
-#: src/summaries/HistoricalSummariesGraph.js:93
+#: src/summaries/HistoricalSummariesGraph.js:99
 msgid "Web"
 msgstr "Web"
 
@@ -5793,7 +5806,7 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Components"
 msgstr "Web Components"
 
-#: src/summaries/HistoricalSummariesGraph.js:88
+#: src/summaries/HistoricalSummariesGraph.js:94
 msgid "Web Connections"
 msgstr "Web Connections"
 
@@ -5937,7 +5950,7 @@ msgstr "WILDCARD SIBLING"
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Would you like to request an invite to {orgName}?"
 
-#: src/summaries/HistoricalSummariesGraph.js:192
+#: src/summaries/HistoricalSummariesGraph.js:210
 msgid "Year to Date"
 msgstr "Year to Date"
 
@@ -5961,7 +5974,7 @@ msgstr "Year to Date"
 msgid "Yes"
 msgstr "Yes"
 
-#: src/admin/DomainUpdateList.js:358
+#: src/admin/DomainUpdateList.js:360
 msgid "Yes, Apply"
 msgstr "Yes, Apply"
 
