@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: domain-cleanup
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-e82ac68-1763496912 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-25191be-1763497057 # {"$imagepolicy": "flux-system:domain-cleanup"}
               env:
                 - name: DB_PASS
                   valueFrom:
