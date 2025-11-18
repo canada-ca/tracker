@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: spring4shell-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/spring4shell-scanner:master-4b24ebf-1709148299 # {"$imagepolicy": "flux-system:spring4shell-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/spring4shell-scanner:master-66f4797-1763496883 # {"$imagepolicy": "flux-system:spring4shell-scanner"}
           env:
             - name: SUBSCRIBE_TO
               value: domains.*
