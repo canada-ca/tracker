@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import traceback
 
@@ -66,6 +67,7 @@ def to_json(msg):
 
 
 def run_scan(msg):
+    start_time = time.monotonic()
     subject = msg.subject
     reply = msg.reply
     data = msg.data.decode()
@@ -126,6 +128,12 @@ def run_scan(msg):
             "dkim": {"error": "missing"},
         }
 
+    end_time = time.monotonic()
+    # Truncate to 2 decimal places for duration
+    duration_seconds = round(end_time - start_time, 2)
+
+    scan_results["duration_seconds"] = duration_seconds
+
     formatted_scan_data = {
         "results": scan_results,
         "domain": domain,
@@ -144,6 +152,7 @@ async def run():
     class Context:
         should_exit: bool = False
         sub: JetStreamContext.PullSubscription = None
+        priority_sub: JetStreamContext.PullSubscription = None
 
     context = Context()
 
@@ -154,6 +163,9 @@ async def run():
         logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
         # Ensure jetstream consumer is still present
         context.sub = await js.pull_subscribe(**pull_subscribe_options)
+        context.priority_sub = await js.pull_subscribe(
+            **priority_pull_subscribe_options
+        )
         logger.info("Re-subscribed to NATS...")
 
     nc = await nats.connect(
@@ -177,8 +189,20 @@ async def run():
             ack_wait=90,
         ),
     }
+    priority_pull_subscribe_options = {
+        "stream": "SCANS",
+        "subject": "scans.requests_priority",
+        "durable": "dns_scanner_priority",
+        "config": ConsumerConfig(
+            ack_policy=AckPolicy.EXPLICIT,
+            max_deliver=1,
+            max_waiting=100_000,
+            ack_wait=90,
+        ),
+    }
 
     context.sub = await js.pull_subscribe(**pull_subscribe_options)
+    context.priority_sub = await js.pull_subscribe(**priority_pull_subscribe_options)
 
     async def ask_exit(sig_name):
         if context.should_exit is True:
@@ -204,10 +228,12 @@ async def run():
 
             scan_data = res
             try:
+                original_headers = original_msg.headers
                 await js.publish(
                     stream="SCANS",
                     subject="scans.dns_scanner_results",
                     payload=json.dumps(scan_data).encode(),
+                    headers=original_headers,
                 )
             except TimeoutError as e:
                 logger.error(
@@ -234,6 +260,8 @@ async def run():
     sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
 
     with ThreadPoolExecutor() as executor:
+        # Only check priority message every 0.5 seconds
+        time_to_check_priority = time.monotonic() + 0.5
         while True:
             if context.should_exit:
                 break
@@ -249,20 +277,36 @@ async def run():
                 logger.error("Connection to NATS is closed.")
                 break
 
-            try:
-                logger.debug("Fetching message...")
-                msgs = await context.sub.fetch(batch=1, timeout=1)
-                msg = msgs[0]
-                logger.debug(f"Received message: {msg}")
-            except NatsTimeoutError:
-                logger.debug("No messages available...")
+            msg = None
+
+            # Check for priority messages first
+            if time.monotonic() > time_to_check_priority:
                 try:
-                    sem.release()
-                except Exception as e:
-                    logger.error(
-                        f"Error while releasing semaphore for received message: {msg}: {e}"
-                    )
-                continue
+                    logger.debug("Fetching priority message...")
+                    msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
+                    msg = msgs[0]
+                    logger.debug(f"Received priority message: {msg}")
+                except NatsTimeoutError:
+                    msg = None
+                    logger.debug("No priority messages available...")
+                finally:
+                    time_to_check_priority = time.monotonic() + 0.5
+
+            if not msg:
+                try:
+                    logger.debug("Fetching message...")
+                    msgs = await context.sub.fetch(batch=1, timeout=1)
+                    msg = msgs[0]
+                    logger.debug(f"Received message: {msg}")
+                except NatsTimeoutError:
+                    logger.debug("No messages available...")
+                    try:
+                        sem.release()
+                    except Exception as e:
+                        logger.error(
+                            f"Error while releasing semaphore for received message: {msg}: {e}"
+                        )
+                    continue
 
             try:
                 future = loop.run_in_executor(executor, run_scan, msg)

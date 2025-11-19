@@ -223,10 +223,10 @@ def process_msg(msg):
                 db.collection("domains").update(domain)
             except DocumentUpdateError as e:
                 error_str = str(e)
-                start_retry = time.time()
+                start_retry = time.monotonic()
                 document_updated = False
                 # Retry for 5 seconds in case another process is updating the same document
-                while time.time() - start_retry < 5:
+                while time.monotonic() - start_retry < 5:
                     try:
                         db.collection("domains").update(domain)
                         document_updated = True

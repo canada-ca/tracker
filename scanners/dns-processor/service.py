@@ -353,10 +353,10 @@ def process_msg(msg):
                 db.collection("domains").update(domain)
             except DocumentUpdateError as e:
                 error_str = str(e)
-                start_retry = time.time()
+                start_retry = time.monotonic()
                 document_updated = False
                 # Retry for 5 seconds in case another process is updating the same document
-                while time.time() - start_retry < 5:
+                while time.monotonic() - start_retry < 5:
                     try:
                         db.collection("domains").update(domain)
                         document_updated = True
@@ -417,7 +417,7 @@ async def run():
         "durable": "dns_processor",
         "config": ConsumerConfig(
             ack_policy=AckPolicy.EXPLICIT,
-            max_deliver=1,
+            max_deliver=-1,
             max_waiting=100_000,
             ack_wait=90,
         ),
@@ -452,10 +452,15 @@ async def run():
             for scan_data in scan_data_array:
                 logger.debug(f"Publishing results: {scan_data}")
                 try:
+                    original_headers = original_msg.headers
+                    subject = "scans.dns_processor_results"
+                    if original_headers.get("priority") == "high":
+                        subject = "scans.dns_processor_results_priority"
                     await js.publish(
                         stream="SCANS",
-                        subject="scans.dns_processor_results",
+                        subject=subject,
                         payload=json.dumps(scan_data).encode(),
+                        headers=original_headers,
                     )
                 except TimeoutError as e:
                     logger.error(
