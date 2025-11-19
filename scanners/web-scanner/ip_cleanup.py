@@ -53,12 +53,13 @@ async def maintain_leadership(kv: KeyValue, instance_id: str):
             # Only update if we're the leader
             if (
                 leader_info.get("instance_id") == instance_id
-                and leader_info.get("updated_at") - time.time() > 10
+                and time.time() - leader_info.get("updated_at") > 10
             ):
                 leader_info["updated_at"] = int(time.time())
                 await kv.update(
                     cleanup_leader_key, json.dumps(leader_info).encode(), entry.revision
                 )
+                logger.debug(f"Maintained the leadership of {instance_id}")
         except Exception as e:
             logger.error(f"Error maintaining leadership: {e}")
 
@@ -112,6 +113,7 @@ async def leader_election_service(js: JetStreamContext, instance_id: str):
 
             # Start/restart the maintenance task
             if maintenance_task is None or maintenance_task.done():
+                logger.info(f"Creating maintenance task for {instance_id}")
                 maintenance_task = asyncio.create_task(
                     maintain_leadership(leader_kv, instance_id)
                 )
