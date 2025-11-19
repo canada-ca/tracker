@@ -79,6 +79,11 @@ export function HistoricalSummariesGraph({
     validOptions: Object.keys(tieredSummaries),
     defaultValue: 'one',
   })
+  const { searchValue: domainScopeParam, setSearchParams: setDomainScopeParam } = useSearchParam({
+    name: 'domain-type',
+    validOptions: ['local', 'global'],
+    defaultValue: 'global',
+  })
 
   const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
@@ -139,13 +144,25 @@ export function HistoricalSummariesGraph({
     nice: true,
   })
 
+  const getDomain = () => {
+    const scores = summaries.map(getRD)
+    const minScore = Math.min(...scores)
+    const maxScore = Math.max(...scores)
+    if (domainScopeParam === 'local') {
+      const localMin = Math.round(minScore * 0.9)
+      let localMax = maxScore * 1.1
+      if (scoreTypeParam === 'percentage') {
+        localMax = localMax >= 100 ? 100 : localMax
+      }
+      return [localMin, localMax]
+    }
+    return [0, scoreTypeParam === 'percentage' ? 100 : maxScore]
+  }
+
   // vertical, y scale
   const rdScale = scaleLinear({
     range: [innerHeight, 0],
-    domain:
-      scoreTypeParam === 'percentage' && summaryTierParam !== 'four'
-        ? [0, 100]
-        : [Math.min(...summaries.map(getRD)), Math.max(...summaries.map(getRD))],
+    domain: getDomain(),
     nice: true,
   })
 
@@ -200,6 +217,27 @@ export function HistoricalSummariesGraph({
             </ABTestVariant>
           </ABTestWrapper>
         </Select>
+        <ABTestWrapper>
+          <ABTestVariant name="B">
+            <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
+              <Trans>Scope:</Trans>
+            </Text>
+            <Select
+              mx="2"
+              maxW="20%"
+              borderColor="black"
+              value={domainScopeParam}
+              onChange={(e) => setDomainScopeParam(e.target.value)}
+            >
+              <option value="local">
+                <Trans>Local</Trans>
+              </option>
+              <option value="global">
+                <Trans>Global</Trans>
+              </option>
+            </Select>
+          </ABTestVariant>
+        </ABTestWrapper>
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Data:</Trans>
         </Text>
@@ -219,7 +257,7 @@ export function HistoricalSummariesGraph({
           </option>
         </Select>
         <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
-          <Trans>Summary Tier:</Trans>
+          <Trans>Metrics:</Trans>
         </Text>
         <Select
           mx="2"
