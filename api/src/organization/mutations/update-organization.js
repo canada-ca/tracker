@@ -144,7 +144,7 @@ export const updateOrganization = new mutationWithClientMutationId({
     // Check to see if user has permission
     const permission = await checkPermission({ orgId: currentOrg._id })
 
-    if (permission !== 'admin' && permission !== 'super_admin') {
+    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
       console.error(
         `User: ${userKey} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
