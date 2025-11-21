@@ -57,7 +57,6 @@ org = orgs.insert(
             "dkim": {"pass": 0, "fail": 0, "total": 0},
             "spf": {"pass": 0, "fail": 0, "total": 0},
             "dmarc_phase": {
-                "not_implemented": 0,
                 "assess": 0,
                 "deploy": 0,
                 "enforce": 0,
@@ -167,7 +166,6 @@ def test_update_chart_summaries():
     }
 
     assert summary["dmarc_phase"] == {
-        "not_implemented": 1,
         "assess": 0,
         "deploy": 0,
         "enforce": 0,
@@ -192,7 +190,6 @@ def test_update_org_summaries():
         "dkim": {"pass": 1, "fail": 2, "total": 3},
         "spf": {"pass": 2, "fail": 1, "total": 3},
         "dmarc_phase": {
-            "not_implemented": 1,
             "assess": 0,
             "deploy": 0,
             "enforce": 0,

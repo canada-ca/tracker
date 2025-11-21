@@ -65,12 +65,11 @@ describe('given dmarcPhaseSummary query', () => {
       await collections.chartSummaries.save({
         date: '2021-01-01',
         dmarc_phase: {
-          not_implemented: 200,
           assess: 200,
           deploy: 200,
           enforce: 200,
           maintain: 200,
-          total: 1000,
+          total: 800,
         },
       })
     })

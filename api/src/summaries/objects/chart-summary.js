@@ -144,15 +144,13 @@ export const chartSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description: 'Summary based on DMARC phases for all domains.',
       resolve: ({ dmarc_phase }, _) => {
-        let percentNotImplemented, percentAssess, percentDeploy, percentEnforce, percentMaintain
+        let percentAssess, percentDeploy, percentEnforce, percentMaintain
         if (dmarc_phase.total <= 0) {
-          percentNotImplemented = 0
           percentAssess = 0
           percentDeploy = 0
           percentEnforce = 0
           percentMaintain = 0
         } else {
-          percentNotImplemented = Number(((dmarc_phase.not_implemented / dmarc_phase.total) * 100).toFixed(1))
           percentAssess = Number(((dmarc_phase.assess / dmarc_phase.total) * 100).toFixed(1))
           percentDeploy = Number(((dmarc_phase.deploy / dmarc_phase.total) * 100).toFixed(1))
           percentEnforce = Number(((dmarc_phase.enforce / dmarc_phase.total) * 100).toFixed(1))
@@ -160,11 +158,6 @@ export const chartSummaryType = new GraphQLObjectType({
         }
 
         const categories = [
-          {
-            name: 'not implemented',
-            count: dmarc_phase.not_implemented,
-            percentage: percentNotImplemented,
-          },
           {
             name: 'assess',
             count: dmarc_phase.assess,

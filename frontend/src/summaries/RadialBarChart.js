@@ -28,22 +28,21 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
       const color = d3.scaleOrdinal().range(radialChartColours)
 
       const categoryDisplay = {
-        'not implemented': { name: t`0. Not Implemented`, color: colors.weak },
         assess: {
           name: t`1. Assess`,
-          color: colors.weak,
+          color: tracker.cool.dark,
         },
         deploy: {
           name: t`2. Deploy`,
-          color: colors.moderateAlt,
+          color: tracker.logo.yellow,
         },
         enforce: {
           name: t`3. Enforce`,
-          color: colors.moderate,
+          color: tracker.logo.lightOrange,
         },
         maintain: {
           name: t`4. Maintain`,
-          color: colors.strong,
+          color: tracker.logo.darkOrange,
         },
         unscanned: {
           name: t`Unscanned`,
