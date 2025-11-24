@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, ListItem, OrderedList, Text } from '@chakra-ui/react'
+import { Box, Link, ListItem, OrderedList, Text } from '@chakra-ui/react'
 import {
   Step,
   StepIcon,
@@ -13,8 +13,10 @@ import {
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { string } from 'prop-types'
+import { useLingui } from '@lingui/react'
 
 export function DmarcPhaseStepper({ dmarcPhase }) {
+  const { i18n } = useLingui()
   const phaseTitles = { assess: t`Assess`, deploy: t`Deploy`, enforce: t`Enforce`, maintain: t`Maintain` }
   const steps = Object.keys(phaseTitles)
   const { activeStep } = useSteps({
@@ -91,11 +93,30 @@ export function DmarcPhaseStepper({ dmarcPhase }) {
         <Text fontWeight="bold">
           <Trans>Next Steps:</Trans>
         </Text>
-        <OrderedList px="4">
+
+        <OrderedList px="4" mb="2">
           {dmarcSteps.map((step, idx) => {
             return <ListItem key={idx}>{step}</ListItem>
           })}
         </OrderedList>
+
+        <Text>
+          <Trans>
+            For more detailed steps, please see the{' '}
+            <Link
+              href={
+                i18n.locale === 'fr'
+                  ? 'https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#ann1'
+                  : 'https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna'
+              }
+              isExternal
+              color="blue.500"
+            >
+              CCCS implementation guidance
+            </Link>
+            .
+          </Trans>
+        </Text>
       </Box>
     </Box>
   )

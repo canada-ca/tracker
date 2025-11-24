@@ -711,12 +711,12 @@ msgstr "Are you sure you want to stop ignoring this CVE?"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src/guidance/DmarcPhaseStepper.js:18
+#: src/guidance/DmarcPhaseStepper.js:20
 msgid "Assess"
 msgstr "Assess"
 
 #: src/domains/ScanDomain.js:115
-#: src/guidance/DmarcPhaseStepper.js:30
+#: src/guidance/DmarcPhaseStepper.js:32
 msgid "Assess current state;"
 msgstr "Assess current state;"
 
@@ -1009,7 +1009,7 @@ msgid "Code field must not be empty"
 msgstr "Code field must not be empty"
 
 #: src/domains/ScanDomain.js:117
-#: src/guidance/DmarcPhaseStepper.js:32
+#: src/guidance/DmarcPhaseStepper.js:34
 msgid "Collect and analyze DMARC reports."
 msgstr "Collect and analyze DMARC reports."
 
@@ -1114,7 +1114,7 @@ msgid "Copyright Act"
 msgstr "Copyright Act"
 
 #: src/domains/ScanDomain.js:132
-#: src/guidance/DmarcPhaseStepper.js:53
+#: src/guidance/DmarcPhaseStepper.js:55
 msgid "Correct misconfigurations and update records as required; and"
 msgstr "Correct misconfigurations and update records as required; and"
 
@@ -1276,22 +1276,22 @@ msgstr "Dependency"
 msgid "DEPENDENCY"
 msgstr "DEPENDENCY"
 
-#: src/guidance/DmarcPhaseStepper.js:18
+#: src/guidance/DmarcPhaseStepper.js:20
 msgid "Deploy"
 msgstr "Deploy"
 
 #: src/domains/ScanDomain.js:122
-#: src/guidance/DmarcPhaseStepper.js:39
+#: src/guidance/DmarcPhaseStepper.js:41
 msgid "Deploy DKIM records and keys for all domains and senders; and"
 msgstr "Deploy DKIM records and keys for all domains and senders; and"
 
 #: src/domains/ScanDomain.js:116
-#: src/guidance/DmarcPhaseStepper.js:31
+#: src/guidance/DmarcPhaseStepper.js:33
 msgid "Deploy initial DMARC records with policy of none; and"
 msgstr "Deploy initial DMARC records with policy of none; and"
 
 #: src/domains/ScanDomain.js:121
-#: src/guidance/DmarcPhaseStepper.js:38
+#: src/guidance/DmarcPhaseStepper.js:40
 msgid "Deploy SPF records for all domains;"
 msgstr "Deploy SPF records for all domains;"
 
@@ -1435,7 +1435,7 @@ msgstr "DMARC Failures by IP Address"
 #. placeholder {0}: phaseTitles[dmarcPhase]
 #. placeholder {0}: mergedScan.scan.dmarc.dmarcPhase ? mergedScan.scan.dmarc.dmarcPhase.toUpperCase() : 'UNKNOWN'
 #: src/domains/ScanDomain.js:322
-#: src/guidance/DmarcPhaseStepper.js:73
+#: src/guidance/DmarcPhaseStepper.js:75
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
@@ -1768,7 +1768,7 @@ msgstr "Endpoint Summary"
 msgid "Endpoint:"
 msgstr "Endpoint:"
 
-#: src/guidance/DmarcPhaseStepper.js:18
+#: src/guidance/DmarcPhaseStepper.js:20
 msgid "Enforce"
 msgstr "Enforce"
 
@@ -1792,8 +1792,8 @@ msgstr "Enforce"
 msgid "English"
 msgstr "English"
 
-#. placeholder {0}: editUserRole.userName
 #. placeholder {0}: org.name
+#. placeholder {0}: editUserRole.userName
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -2036,6 +2036,10 @@ msgstr "For details related to terms pertaining to privacy, please refer to"
 #: src/guidance/GuidanceTagDetails.js:18
 #~ msgid "For in-depth implementation guidance:"
 #~ msgstr "For in-depth implementation guidance:"
+
+#: src/guidance/DmarcPhaseStepper.js:104
+msgid "For more detailed steps, please see the <0>CCCS implementation guidance</0>."
+msgstr "For more detailed steps, please see the <0>CCCS implementation guidance</0>."
 
 #: src/user/EditableEmailUpdateOptions.js:160
 msgid "For organization admins interested in receiving email updates on new activity in their organizations."
@@ -2397,12 +2401,12 @@ msgid "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/>
 msgstr "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/></0>"
 
 #: src/domains/ScanDomain.js:120
-#: src/guidance/DmarcPhaseStepper.js:37
+#: src/guidance/DmarcPhaseStepper.js:39
 msgid "Identify all authorized senders;"
 msgstr "Identify all authorized senders;"
 
 #: src/domains/ScanDomain.js:114
-#: src/guidance/DmarcPhaseStepper.js:29
+#: src/guidance/DmarcPhaseStepper.js:31
 msgid "Identify all domains and subdomains used to send mail;"
 msgstr "Identify all domains and subdomains used to send mail;"
 
@@ -2951,7 +2955,7 @@ msgstr "Mail Servers (MX)"
 msgid "Mail-sending"
 msgstr "Mail-sending"
 
-#: src/guidance/DmarcPhaseStepper.js:18
+#: src/guidance/DmarcPhaseStepper.js:20
 msgid "Maintain"
 msgstr "Maintain"
 
@@ -3004,12 +3008,12 @@ msgid "Monitor changes in your organization's security compliance over time."
 msgstr "Monitor changes in your organization's security compliance over time."
 
 #: src/domains/ScanDomain.js:123
-#: src/guidance/DmarcPhaseStepper.js:40
+#: src/guidance/DmarcPhaseStepper.js:42
 msgid "Monitor DMARC reports and correct misconfigurations."
 msgstr "Monitor DMARC reports and correct misconfigurations."
 
 #: src/domains/ScanDomain.js:131
-#: src/guidance/DmarcPhaseStepper.js:52
+#: src/guidance/DmarcPhaseStepper.js:54
 msgid "Monitor DMARC reports;"
 msgstr "Monitor DMARC reports;"
 
@@ -3173,7 +3177,7 @@ msgstr "New Value:"
 msgid "Next"
 msgstr "Next"
 
-#: src/guidance/DmarcPhaseStepper.js:92
+#: src/guidance/DmarcPhaseStepper.js:94
 msgid "Next Steps:"
 msgstr "Next Steps:"
 
@@ -3266,7 +3270,7 @@ msgstr "No DDOS Protection found"
 #~ msgid "No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated organization to add selectors."
 #~ msgstr "No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated organization to add selectors."
 
-#: src/guidance/DmarcPhaseStepper.js:65
+#: src/guidance/DmarcPhaseStepper.js:67
 msgid "No DMARC Implementation Phase"
 msgstr "No DMARC Implementation Phase"
 
@@ -3909,7 +3913,7 @@ msgid "Register"
 msgstr "Register"
 
 #: src/domains/ScanDomain.js:128
-#: src/guidance/DmarcPhaseStepper.js:47
+#: src/guidance/DmarcPhaseStepper.js:49
 msgid "Reject all messages from non-mail domains."
 msgstr "Reject all messages from non-mail domains."
 
@@ -4067,7 +4071,7 @@ msgid "Role:"
 msgstr "Role:"
 
 #: src/domains/ScanDomain.js:133
-#: src/guidance/DmarcPhaseStepper.js:54
+#: src/guidance/DmarcPhaseStepper.js:56
 msgid "Rotate DKIM keys annually."
 msgstr "Rotate DKIM keys annually."
 
@@ -5562,7 +5566,7 @@ msgstr "Updated Organization"
 msgid "Updated Properties"
 msgstr "Updated Properties"
 
-#: src/guidance/DmarcPhaseStepper.js:45
+#: src/guidance/DmarcPhaseStepper.js:47
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;"
 msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;"
 
@@ -5570,7 +5574,7 @@ msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
 msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
 
-#: src/guidance/DmarcPhaseStepper.js:46
+#: src/guidance/DmarcPhaseStepper.js:48
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and"
 msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and"
 
