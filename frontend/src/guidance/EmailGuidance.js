@@ -8,68 +8,23 @@ import {
   Box,
   Divider,
   Flex,
-  ListItem,
-  OrderedList,
   Text,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { object, string } from 'prop-types'
+import { any, object } from 'prop-types'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued'
 
-export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) {
-  let dmarcSteps
-  switch (dmarcPhase) {
-    case 'assess':
-      dmarcSteps = [
-        t`Identify all domains and subdomains used to send mail;`,
-        t`Assess current state;`,
-        t`Deploy initial DMARC records with policy of none; and`,
-        t`Collect and analyze DMARC reports.`,
-      ]
-      break
-    case 'deploy':
-      dmarcSteps = [
-        t`Identify all authorized senders;`,
-        t`Deploy SPF records for all domains;`,
-        t`Deploy DKIM records and keys for all domains and senders; and`,
-        t`Monitor DMARC reports and correct misconfigurations.`,
-      ]
-      break
-    case 'enforce':
-      dmarcSteps = [
-        t`Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;`,
-        t`Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and`,
-        t`Reject all messages from non-mail domains.`,
-      ]
-      break
-    case 'maintain':
-      dmarcSteps = [
-        t`Monitor DMARC reports;`,
-        t`Correct misconfigurations and update records as required; and`,
-        t`Rotate DKIM keys annually.`,
-      ]
-      break
-    default:
-      dmarcSteps = undefined
-      break
-  }
-
+export function EmailGuidance({ dnsResults, status, mxRecordDiff, children }) {
   const formatTimestamp = (ts) => {
     const date = new Date(ts)
     return date.toLocaleString('en-CA', {
       timeZoneName: 'short',
     })
   }
-
-  const dmarcStepList = !dmarcSteps
-    ? undefined
-    : dmarcSteps.map((step, idx) => {
-        return <ListItem key={idx}>{step}</ListItem>
-      })
 
   const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords, cnameRecord } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
@@ -160,16 +115,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         </Trans>
       </Text>
       {emailSummary}
-      <Box mb={4} ml="4">
-        <Text fontWeight="bold" fontSize="2xl">
-          <Trans>DMARC Implementation Phase: {dmarcPhase.toUpperCase()}</Trans>
-        </Text>
-        {dmarcSteps && (
-          <Box px="2" py="1">
-            <OrderedList>{dmarcStepList}</OrderedList>
-          </Box>
-        )}
-      </Box>
+      {children}
       <AccordionItem>
         <Flex as={AccordionButton}>
           <StatusIcon boxSize="icons.lg" status={status.spf} />
@@ -471,7 +417,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
 
 EmailGuidance.propTypes = {
   dnsResults: object,
-  dmarcPhase: string,
+  children: any,
   status: object,
   mxRecordDiff: object,
 }

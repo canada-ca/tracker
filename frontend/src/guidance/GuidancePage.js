@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { ArrowLeftIcon, StarIcon } from '@chakra-ui/icons'
-
 import {
   Alert,
   AlertDescription,
@@ -43,6 +42,7 @@ import { OrganizationCard } from '../organizations/OrganizationCard'
 import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
+import { DmarcPhaseStepper } from './DmarcPhaseStepper'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -276,12 +276,9 @@ function GuidancePage() {
             {dnsScan.edges.length === 0 ? (
               noScanData
             ) : (
-              <EmailGuidance
-                dnsResults={dnsResults}
-                dmarcPhase={dmarcPhase}
-                status={status}
-                mxRecordDiff={mxRecordDiff}
-              />
+              <EmailGuidance dnsResults={dnsResults} status={status} mxRecordDiff={mxRecordDiff}>
+                <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
+              </EmailGuidance>
             )}
           </TabPanel>
           <TabPanel>
