@@ -106,32 +106,27 @@ describe('given dmarcPhaseSummary query', () => {
       const expectedResponse = {
         data: {
           dmarcPhaseSummary: {
-            total: 1000,
+            total: 800,
             categories: [
-              {
-                name: 'not implemented',
-                count: 200,
-                percentage: 20,
-              },
               {
                 name: 'assess',
                 count: 200,
-                percentage: 20,
+                percentage: 25,
               },
               {
                 name: 'deploy',
                 count: 200,
-                percentage: 20,
+                percentage: 25,
               },
               {
                 name: 'enforce',
                 count: 200,
-                percentage: 20,
+                percentage: 25,
               },
               {
                 name: 'maintain',
                 count: 200,
-                percentage: 20,
+                percentage: 25,
               },
             ],
           },

@@ -346,11 +346,6 @@ describe('given the organization summary object', () => {
             categories: [
               {
                 count: 0,
-                name: 'not implemented',
-                percentage: 0,
-              },
-              {
-                count: 0,
                 name: 'assess',
                 percentage: 0,
               },
@@ -383,8 +378,8 @@ describe('given the organization summary object', () => {
             assess: 75,
             deploy: 100,
             enforce: 125,
-            maintain: 150,
-            total: 450,
+            maintain: 200,
+            total: 500,
           }
 
           const i18n = {
@@ -398,11 +393,6 @@ describe('given the organization summary object', () => {
 
           expect(demoType.dmarcPhase.resolve({ dmarc_phase: dmarcPhase }, {}, { i18n })).toEqual({
             categories: [
-              {
-                count: 50,
-                name: 'not implemented',
-                percentage: 10.0,
-              },
               {
                 count: 75,
                 name: 'assess',
@@ -419,9 +409,9 @@ describe('given the organization summary object', () => {
                 percentage: 25.0,
               },
               {
-                count: 150,
+                count: 200,
                 name: 'maintain',
-                percentage: 30.0,
+                percentage: 40.0,
               },
             ],
             total: 500,

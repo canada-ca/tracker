@@ -8,8 +8,8 @@ export const dmarcPhaseSummary = {
     const summary = await loadChartSummaryByKey.load('dmarc_phase')
 
     if (typeof summary === 'undefined') {
-      console.warn(`User could not retrieve DMARC phase `)
-      throw new Error(i18n._(t`Unable to load DMARC phase. Please try again.`))
+      console.warn(`User could not retrieve DMARC phase summary.`)
+      throw new Error(i18n._(t`Unable to load DMARC phase summary. Please try again.`))
     }
     const phaseNames = ['assess', 'deploy', 'enforce', 'maintain']
     const { total } = summary
