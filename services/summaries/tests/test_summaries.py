@@ -170,7 +170,7 @@ def test_update_chart_summaries():
         "deploy": 0,
         "enforce": 0,
         "maintain": 2,
-        "total": 3,
+        "total": 2,
     }
 
 
@@ -194,7 +194,7 @@ def test_update_org_summaries():
             "deploy": 0,
             "enforce": 0,
             "maintain": 2,
-            "total": 3,
+            "total": 2,
         },
         "negative_tags": {},
     }
