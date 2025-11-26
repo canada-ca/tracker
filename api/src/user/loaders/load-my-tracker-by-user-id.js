@@ -45,7 +45,6 @@ export const loadMyTrackerByUserId =
         total: 0,
       },
       dmarc_phase: {
-        not_implemented: 0,
         assess: 0,
         deploy: 0,
         enforce: 0,
@@ -70,8 +69,7 @@ export const loadMyTrackerByUserId =
       returnSummaries.dmarc.total++
 
       // calculate dmarcPhase summary
-      if (phase === 'not implemented') returnSummaries.dmarc_phase.not_implemented++
-      else if (phase === 'assess') returnSummaries.dmarc_phase.assess++
+      if (phase === 'assess') returnSummaries.dmarc_phase.assess++
       else if (phase === 'deploy') returnSummaries.dmarc_phase.deploy++
       else if (phase === 'enforce') returnSummaries.dmarc_phase.enforce++
       else if (phase === 'maintain') returnSummaries.dmarc_phase.maintain++

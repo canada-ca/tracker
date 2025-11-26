@@ -91,7 +91,6 @@ export const organizationSummaryType = new GraphQLObjectType({
       description: 'Summary based on DMARC phases for a given organization.',
       resolve: ({ dmarc_phase }, _) => {
         const categories = [
-          createCategory('not implemented', dmarc_phase.not_implemented, dmarc_phase.total),
           createCategory('assess', dmarc_phase.assess, dmarc_phase.total),
           createCategory('deploy', dmarc_phase.deploy, dmarc_phase.total),
           createCategory('enforce', dmarc_phase.enforce, dmarc_phase.total),

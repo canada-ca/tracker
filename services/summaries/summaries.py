@@ -104,8 +104,6 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
         }
 
     # DMARC phases:
-    # 0. Not Implemented
-    not_implemented_count = 0
     # 1. Assess
     assess_count = 0
     # 2. Deploy
@@ -145,9 +143,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
                 )
                 continue
 
-            if phase == "not implemented":
-                not_implemented_count = not_implemented_count + 1
-            elif phase == "assess":
+            if phase == "assess":
                 assess_count = assess_count + 1
             elif phase == "deploy":
                 deploy_count = deploy_count + 1
@@ -158,13 +154,11 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
 
     # Update DMARC phase summaries in DB
     dmarc_phase_summary = {
-        "not_implemented": not_implemented_count,
         "assess": assess_count,
         "deploy": deploy_count,
         "enforce": enforce_count,
         "maintain": maintain_count,
-        "total": not_implemented_count
-        + assess_count
+        "total": assess_count
         + deploy_count
         + enforce_count
         + maintain_count,
@@ -227,7 +221,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             mail_pass = 0
 
             # dmarc phase
-            dmarc_phase_not_implemented = 0
             dmarc_phase_assess = 0
             dmarc_phase_deploy = 0
             dmarc_phase_enforce = 0
@@ -319,11 +312,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                             )
                             continue
 
-                        if phase == "not implemented":
-                            dmarc_phase_not_implemented = (
-                                dmarc_phase_not_implemented + 1
-                            )
-                        elif phase == "assess":
+                        if phase == "assess":
                             dmarc_phase_assess = dmarc_phase_assess + 1
                         elif phase == "deploy":
                             dmarc_phase_deploy = dmarc_phase_deploy + 1
@@ -345,9 +334,8 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     logging.error(f"Error processing domain {domain['_id']}: {e}")
                     continue
 
-            dmarc_phase_total = (
-                dmarc_phase_not_implemented
-                + dmarc_phase_assess
+            dmarc_phase_total = ( 
+                dmarc_phase_assess
                 + dmarc_phase_deploy
                 + dmarc_phase_enforce
                 + dmarc_phase_maintain
@@ -373,7 +361,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     "total": mail_pass + mail_fail,
                 },
                 "dmarc_phase": {
-                    "not_implemented": dmarc_phase_not_implemented,
                     "assess": dmarc_phase_assess,
                     "deploy": dmarc_phase_deploy,
                     "enforce": dmarc_phase_enforce,

@@ -390,7 +390,7 @@ def process_results(results):
     )
 
     # Check DMARC phase (https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna)
-    phase = "not implemented"
+    phase = "assess"
 
     effective_policy_source = dmarc.get("effective_policy_source", None)
     effective_policy = dmarc.get("effective_policy", None)
@@ -401,10 +401,10 @@ def process_results(results):
         effective_policy in ["none", "quarantine", "reject"]
         and len(rua_addresses) > 0
     ):
-        phase = "assess"
+        phase = "deploy"
 
         if dkim_status in ["info", "pass"] and spf_status == "pass":
-            phase = "deploy"
+            phase = "enforce"
 
             if effective_policy in ["quarantine", "reject"] and pct == 100:
                 phase = "maintain"

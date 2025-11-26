@@ -150,7 +150,6 @@ while (currentDay.toISOString().split("T")[0] !== earliestScan.split(" ")[0]) {
     };
   }
 
-  let not_implemented_count = 0;
   let assess_count = 0;
   let deploy_count = 0;
   let enforce_count = 0;
@@ -175,9 +174,6 @@ while (currentDay.toISOString().split("T")[0] !== earliestScan.split(" ")[0]) {
       }
     }
     switch (statuses.dmarcPhase) {
-      case "not implemented":
-        not_implemented_count += 1;
-        break;
       case "assess":
         assess_count += 1;
         break;
@@ -196,12 +192,11 @@ while (currentDay.toISOString().split("T")[0] !== earliestScan.split(" ")[0]) {
   });
 
   const dmarcPhaseSummary = {
-    not_implemented: not_implemented_count,
     assess: assess_count,
     deploy: deploy_count,
     enforce: enforce_count,
     maintain: maintain_count,
-    total: not_implemented_count + assess_count + deploy_count + enforce_count + maintain_count,
+    total: assess_count + deploy_count + enforce_count + maintain_count,
   };
 
   db.chartSummaries.save({

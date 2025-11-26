@@ -255,11 +255,6 @@ describe('given findMyTracker query', () => {
                       dmarcPhase: {
                         categories: [
                           {
-                            name: 'not implemented',
-                            count: 0,
-                            percentage: 0,
-                          },
-                          {
                             name: 'assess',
                             count: 0,
                             percentage: 0,
