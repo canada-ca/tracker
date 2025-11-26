@@ -1,0 +1,121 @@
+name: Snyk Security Scan
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  scan-services:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect changed files
+        id: diff
+        run: |
+          git fetch origin master
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            git diff --name-only origin/master...HEAD > changed_files.txt
+          else
+            git diff --name-only HEAD~1 HEAD > changed_files.txt
+          fi
+          cat changed_files.txt
+
+      - name: Auto-detect service roots
+        id: roots
+        run: |
+          indicators="package.json requirements.txt Dockerfile"
+          roots=""
+
+          while read -r file; do
+            dir=$(dirname "$file")
+            while [[ "$dir" != "." && "$dir" != "/" ]]; do
+              found="false"
+              for i in $indicators; do
+                if [[ -f "$dir/$i" ]]; then
+                  found="true"
+                  break
+                fi
+              done
+              if [[ "$found" == "true" ]]; then
+                roots+="$dir "
+                break
+              fi
+              dir=$(dirname "$dir")
+            done
+          done < changed_files.txt
+
+          roots=$(echo "$roots" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+          echo "dirs=$roots" >> $GITHUB_OUTPUT
+          echo "Detected impacted services: $roots"
+
+      - name: Exit if no impacted services
+        if: ${{ steps.roots.outputs.dirs == '' }}
+        run: echo "No impacted services. Skipping." && exit 0
+
+      - name: Install Snyk
+        uses: snyk/actions/setup@v4
+
+      - name: Authenticate Snyk
+        run: snyk auth "$SNYK_TOKEN"
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Scan impacted services (source scans only)
+        id: scan
+        run: |
+          status=0
+          for dir in ${{ steps.roots.outputs.dirs }}; do
+            echo "=== Scanning $dir ==="
+
+            if [[ -f "$dir/package.json" ]]; then
+              snyk test "$dir" \
+                --baselineProject "canada-ca/tracker:${dir}" \
+                --severity-threshold=medium || status=1
+            fi
+
+            if [[ -f "$dir/requirements.txt" ]]; then
+              snyk test "$dir" \
+                --file="$dir/requirements.txt" \
+                --baselineProject "canada-ca/tracker:${dir}" \
+                --severity-threshold=medium || status=1
+            fi
+
+            snyk code test "$dir" \
+              --baselineProject "canada-ca/tracker:${dir}" \
+              --severity-threshold=medium || status=1
+
+            find "$dir" -type f \( -name "*.yml" -o -name "*.yaml" \) > yaml_list.txt
+            if [[ -s yaml_list.txt ]]; then
+              while read -r f; do
+                snyk iac test "$f" || status=1
+              done < yaml_list.txt
+            fi
+
+          done
+
+          exit $status
+
+      - name: Upload SARIF results
+        if: always()
+        run: |
+          mkdir -p sarif
+          for dir in ${{ steps.roots.outputs.dirs }}; do
+            snyk code test "$dir" --sarif-file-output="sarif/$dir.sarif" || true
+          done
+
+      - name: Publish SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif
+          category: snyk
