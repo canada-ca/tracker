@@ -403,6 +403,11 @@ export const loadDomainConnectionsByOrgId =
           ${domainFilters}
           FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
         `
+        } else if (filterCategory === 'dmarc-phase') {
+          domainFilters = aql`
+            ${domainFilters}
+            FILTER v.dmarcPhase ${comparison} ${filterValue}
+          `
         }
       })
     }
