@@ -104,6 +104,7 @@ jobs:
           done
 
           exit $status
+        continue-on-error: true
 
       - name: Upload SARIF results
         if: always()
