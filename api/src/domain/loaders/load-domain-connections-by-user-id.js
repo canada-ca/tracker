@@ -418,7 +418,7 @@ export const loadDomainConnectionsByUserId =
         } else if (filterCategory === 'dmarc-phase') {
           domainFilters = aql`
             ${domainFilters}
-            FILTER v.dmarcPhase ${comparison} ${filterValue}
+            FILTER v.phase ${comparison} ${filterValue}
           `
         }
       })

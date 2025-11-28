@@ -2,7 +2,7 @@ import { GraphQLEnumType } from 'graphql'
 import { StatusEnum } from './status'
 import { DomainTagLabel } from './domain-tag-label'
 import { AssetStateEnums } from './asset-state'
-import { DmarcPhaseEnums } from './dmarc-phase'
+import { DmarcPhaseEnum } from './dmarc-phase'
 
 const getEnumValues = (enums) => {
   return enums.getValues().reduce((acc, { name, value, description }) => {
@@ -17,7 +17,7 @@ export const filterEnum = new GraphQLEnumType({
     ...getEnumValues(StatusEnum),
     ...getEnumValues(DomainTagLabel),
     ...getEnumValues(AssetStateEnums),
-    ...getEnumValues(DmarcPhaseEnums),
+    ...getEnumValues(DmarcPhaseEnum),
   },
   description: 'Filter value from system-defined statuses or tags.',
 })

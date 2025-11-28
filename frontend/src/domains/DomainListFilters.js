@@ -109,6 +109,9 @@ export function DomainListFilters({
                         <Trans>Asset State</Trans>
                       </option>
                     )}
+                    <option value="DMARC_PHASE">
+                      <Trans>DMARC Phase</Trans>
+                    </option>
                     <ABTestWrapper insiderVariantName="B">
                       <ABTestVariant name="B">
                         {guidanceTagOptions.length > 0 && (

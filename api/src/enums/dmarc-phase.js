@@ -1,7 +1,7 @@
 import { GraphQLEnumType } from 'graphql'
 
-export const DmarcPhaseEnums = new GraphQLEnumType({
-  name: 'DmarcPhaseEnums',
+export const DmarcPhaseEnum = new GraphQLEnumType({
+  name: 'DmarcPhaseEnum',
   description: '',
   values: {
     ASSESS: {
