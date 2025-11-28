@@ -17,6 +17,7 @@ import { webOrder } from '../../web-scan/inputs/web-order'
 import { mxRecordConnection } from '../../dns-scan/objects/mx-record-connection'
 import { additionalFinding } from '../../additional-findings/objects/additional-finding'
 import { tagType } from '../../tags/objects'
+import { DmarcPhaseEnums } from '../../enums/dmarc-phase'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -28,7 +29,7 @@ export const domainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     dmarcPhase: {
-      type: GraphQLString,
+      type: DmarcPhaseEnums,
       description: 'The current dmarc phase the domain is compliant to.',
       resolve: ({ phase }) => phase,
     },
