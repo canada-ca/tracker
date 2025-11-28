@@ -583,7 +583,7 @@ msgstr "Tous les produits ou services connexes qui vous sont fournis par le SCT 
 
 #: src/admin/AdminDomains.js:301
 #: src/admin/DomainUpdateList.js:337
-#: src/domains/DomainListFilters.js:155
+#: src/domains/DomainListFilters.js:157
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -663,6 +663,8 @@ msgstr "Êtes-vous sûr de vouloir cesser d'ignorer ce CVE ?"
 msgid "Are you sure?"
 msgstr "Tu es sûr ?"
 
+#: src/domains/DomainListFilters.js:44
+#: src/domains/FilterList.js:30
 #: src/guidance/DmarcPhaseStepper.js:20
 msgid "Assess"
 msgstr "Évaluer"
@@ -674,7 +676,7 @@ msgstr "Évaluer l’état actuel."
 
 #: src/admin/AdminDomainModal.js:281
 #: src/admin/AdminDomains.js:240
-#: src/domains/DomainListFilters.js:110
+#: src/domains/DomainListFilters.js:109
 msgid "Asset State"
 msgstr "État des actifs"
 
@@ -786,7 +788,7 @@ msgstr "Candidat"
 msgid "CANDIDATE"
 msgstr "CANDIDAT"
 
-#: src/domains/DomainListFilters.js:96
+#: src/domains/DomainListFilters.js:95
 msgid "Category"
 msgstr "Catégorie"
 
@@ -966,7 +968,7 @@ msgid "Collect and analyze DMARC reports."
 msgstr "Recueillir et analyser les rapports DMARC."
 
 #: src/admin/AdminDomains.js:250
-#: src/domains/DomainListFilters.js:130
+#: src/domains/DomainListFilters.js:132
 msgid "Comparison"
 msgstr "Comparaison"
 
@@ -1228,6 +1230,8 @@ msgstr "Dépendance"
 msgid "DEPENDENCY"
 msgstr "DÉPENDANCE"
 
+#: src/domains/DomainListFilters.js:45
+#: src/domains/FilterList.js:31
 #: src/guidance/DmarcPhaseStepper.js:20
 msgid "Deploy"
 msgstr "Déployer"
@@ -1391,6 +1395,10 @@ msgstr "Défaillances du DMARC par adresse IP"
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
+#: src/domains/DomainListFilters.js:113
+msgid "DMARC Phase"
+msgstr "Phase DMARC"
+
 #: src/summaries/SummaryGroup.js:47
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
@@ -1460,7 +1468,7 @@ msgid "DNS scan for domain \"{0}\" has completed."
 msgstr "Le scan DNS du domaine \"{0}\" est terminé."
 
 #: src/admin/AdminDomains.js:256
-#: src/domains/DomainListFilters.js:136
+#: src/domains/DomainListFilters.js:138
 msgid "DOES NOT EQUAL"
 msgstr "N'EST PAS ÉGAL"
 
@@ -1704,6 +1712,8 @@ msgstr "Résumé du point d'aboutissement"
 msgid "Endpoint:"
 msgstr "Point d'aboutissement :"
 
+#: src/domains/DomainListFilters.js:46
+#: src/domains/FilterList.js:32
 #: src/guidance/DmarcPhaseStepper.js:20
 msgid "Enforce"
 msgstr "Mettre en application"
@@ -1728,8 +1738,8 @@ msgstr "Mettre en application"
 msgid "English"
 msgstr "Anglais"
 
-#. placeholder {0}: org.name
 #. placeholder {0}: editUserRole.userName
+#. placeholder {0}: org.name
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -1783,7 +1793,7 @@ msgid "Envelope From"
 msgstr "Enveloppe De"
 
 #: src/admin/AdminDomains.js:253
-#: src/domains/DomainListFilters.js:133
+#: src/domains/DomainListFilters.js:135
 msgid "EQUALS"
 msgstr "ÉGAUX"
 
@@ -1836,7 +1846,7 @@ msgstr "Identificación externa :"
 #: src/dmarc/DmarcReportPage.js:142
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:52
+#: src/domains/DomainListFilters.js:53
 msgid "Fail"
 msgstr "Échec"
 
@@ -2606,7 +2616,7 @@ msgstr "Les personnes d'un groupe ministériel de technologie de l'information p
 #~ msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 #~ msgstr "Les personnes ayant des questions sur l'exactitude des données de conformité de leur domaine peuvent contacter la boîte aux lettres de la cybersécurité du SCT."
 
-#: src/domains/DomainListFilters.js:49
+#: src/domains/DomainListFilters.js:52
 msgid "Info"
 msgstr "Info"
 
@@ -2877,6 +2887,8 @@ msgstr "Serveurs de messagerie (MX)"
 msgid "Mail-sending"
 msgstr "envoi de courrier"
 
+#: src/domains/DomainListFilters.js:47
+#: src/domains/FilterList.js:33
 #: src/guidance/DmarcPhaseStepper.js:20
 msgid "Maintain"
 msgstr "Maintenir"
@@ -3021,7 +3033,7 @@ msgstr "Noms :"
 msgid "Negative"
 msgstr "Négatif"
 
-#: src/domains/DomainListFilters.js:117
+#: src/domains/DomainListFilters.js:119
 msgid "Negative Finding"
 msgstr "Constat négatif"
 
@@ -3499,7 +3511,7 @@ msgstr "Page {0} de {1}"
 #: src/dmarc/DmarcReportPage.js:133
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:46
+#: src/domains/DomainListFilters.js:51
 msgid "Pass"
 msgstr "Passez"
 
@@ -4682,7 +4694,7 @@ msgstr "Les étiquettes désignées par le système apparaissent ici."
 
 #: src/admin/AdminDomains.js:237
 #: src/admin/AuditLogTable.js:80
-#: src/domains/DomainListFilters.js:106
+#: src/domains/DomainListFilters.js:105
 msgid "Tag"
 msgstr "Tag"
 
@@ -5537,7 +5549,7 @@ msgid "Users exercise due diligence in ensuring the accuracy of the materials re
 msgstr "Les utilisateurs font preuve de diligence raisonnable en s'assurant de l'exactitude des documents reproduits;"
 
 #: src/admin/AdminDomains.js:234
-#: src/domains/DomainListFilters.js:146
+#: src/domains/DomainListFilters.js:148
 msgid "Value"
 msgstr "Valeur"
 
