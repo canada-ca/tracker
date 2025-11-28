@@ -12,6 +12,7 @@ import { Domain, Selectors } from '../../../scalars'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { dnsScanConnection } from '../../../dns-scan'
+import { DmarcPhaseEnum } from '../../../enums'
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {
@@ -31,7 +32,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('dmarcPhase')
-      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLString)
+      expect(demoType.dmarcPhase.type).toMatchObject(DmarcPhaseEnum)
     })
     it('has a hasDMARCReport field', () => {
       const demoType = domainType.getFields()
