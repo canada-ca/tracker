@@ -1,5 +1,7 @@
 import { GraphQLString, GraphQLList } from 'graphql'
 import { domainFilter } from '../../domain/inputs'
+import { i18n } from '@lingui/core'
+import { t } from '@lingui/macro'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,
@@ -46,6 +48,7 @@ export const getAllOrganizationDomainStatuses = {
       'spf',
       'dkim',
       'dmarc',
+      'phase',
       'rcode',
       'blocked',
       'wildcardSibling',
@@ -59,6 +62,20 @@ export const getAllOrganizationDomainStatuses = {
         .map((header) => {
           if (['orgNames', 'orgAcronyms', 'orgExternalIDs', 'ipAddresses', 'top25Vulnerabilities'].includes(header)) {
             return `"${domainStatus[header]?.join('|') || []}"`
+          }
+          if (header === 'phase') {
+            switch (domainStatus[header]) {
+              case 'assess':
+                return i18n._(t`Assess`)
+              case 'deploy':
+                return i18n._(t`Deploy`)
+              case 'enforce':
+                return i18n._(t`Enforce`)
+              case 'maintain':
+                return i18n._(t`Maintain`)
+              default:
+                return ''
+            }
           }
           return `"${domainStatus[header]}"`
         })

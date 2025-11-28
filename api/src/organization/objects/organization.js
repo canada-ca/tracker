@@ -214,6 +214,7 @@ export const organizationType = new GraphQLObjectType({
           'spf',
           'dkim',
           'dmarc',
+          'phase',
           'tags',
           'assetState',
           'rcode',
@@ -236,6 +237,20 @@ export const organizationType = new GraphQLObjectType({
                 )
               ) {
                 return `"${domainDoc?.status[header]}"`
+              }
+              if (header === 'phase') {
+                switch (domainDoc[header]) {
+                  case 'assess':
+                    return i18n._(t`Assess`)
+                  case 'deploy':
+                    return i18n._(t`Deploy`)
+                  case 'enforce':
+                    return i18n._(t`Enforce`)
+                  case 'maintain':
+                    return i18n._(t`Maintain`)
+                  default:
+                    return ''
+                }
               }
               return `"${domainDoc[header]}"`
             })

@@ -95,6 +95,11 @@ export const loadAllOrganizationDomainStatuses =
           } else if (filterValue === 'archived') {
             archivedFilter = aql`FILTER d.archived ${comparison} true`
           }
+        } else if (filterCategory === 'dmarc-phase') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER v.phase ${comparison} ${filterValue}
+        `
         }
       })
     }
@@ -144,6 +149,7 @@ export const loadAllOrganizationDomainStatuses =
               "spf": d.status.spf,
               "dkim": d.status.dkim,
               "dmarc": d.status.dmarc,
+              "phase": d.phase,
               "rcode": d.rcode,
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
