@@ -665,12 +665,12 @@ msgstr "Tu es sûr ?"
 
 #: src/domains/DomainListFilters.js:44
 #: src/domains/FilterList.js:30
-#: src/guidance/DmarcPhaseStepper.js:20
+#: src/guidance/DmarcPhaseStepper.js:22
 msgid "Assess"
 msgstr "Évaluer"
 
 #: src/domains/ScanDomain.js:115
-#: src/guidance/DmarcPhaseStepper.js:32
+#: src/guidance/DmarcPhaseStepper.js:25
 msgid "Assess current state;"
 msgstr "Évaluer l’état actuel."
 
@@ -963,7 +963,7 @@ msgid "Code field must not be empty"
 msgstr "Le champ de code ne doit pas être vide"
 
 #: src/domains/ScanDomain.js:117
-#: src/guidance/DmarcPhaseStepper.js:34
+#: src/guidance/DmarcPhaseStepper.js:27
 msgid "Collect and analyze DMARC reports."
 msgstr "Recueillir et analyser les rapports DMARC."
 
@@ -1068,7 +1068,7 @@ msgid "Copyright Act"
 msgstr "Loi sur le droit d'auteur"
 
 #: src/domains/ScanDomain.js:132
-#: src/guidance/DmarcPhaseStepper.js:55
+#: src/guidance/DmarcPhaseStepper.js:51
 msgid "Correct misconfigurations and update records as required; and"
 msgstr "Corriger les erreurs de configuration et mettre à jour les enregistrements, au besoin."
 
@@ -1232,22 +1232,22 @@ msgstr "DÉPENDANCE"
 
 #: src/domains/DomainListFilters.js:45
 #: src/domains/FilterList.js:31
-#: src/guidance/DmarcPhaseStepper.js:20
+#: src/guidance/DmarcPhaseStepper.js:31
 msgid "Deploy"
 msgstr "Déployer"
 
 #: src/domains/ScanDomain.js:122
-#: src/guidance/DmarcPhaseStepper.js:41
+#: src/guidance/DmarcPhaseStepper.js:35
 msgid "Deploy DKIM records and keys for all domains and senders; and"
 msgstr "Déployer les enregistrements DKIM et les clés pour tous les domaines et expéditeurs."
 
 #: src/domains/ScanDomain.js:116
-#: src/guidance/DmarcPhaseStepper.js:33
+#: src/guidance/DmarcPhaseStepper.js:26
 msgid "Deploy initial DMARC records with policy of none; and"
 msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie Aucune (None)"
 
 #: src/domains/ScanDomain.js:121
-#: src/guidance/DmarcPhaseStepper.js:40
+#: src/guidance/DmarcPhaseStepper.js:34
 msgid "Deploy SPF records for all domains;"
 msgstr "Déployer les enregistrements SPF pour tous les domaines."
 
@@ -1388,12 +1388,14 @@ msgstr "Tableau des échecs de la DMARC"
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
-#. placeholder {0}: phaseTitles[dmarcPhase]
 #. placeholder {0}: mergedScan.scan.dmarc.dmarcPhase ? mergedScan.scan.dmarc.dmarcPhase.toUpperCase() : 'UNKNOWN'
 #: src/domains/ScanDomain.js:322
-#: src/guidance/DmarcPhaseStepper.js:75
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
+
+#: src/guidance/DmarcPhaseStepper.js:74
+msgid "DMARC Implementation Phase: {currentPhase}"
+msgstr "Phase de mise en œuvre de DMARC: {currentPhase}"
 
 #: src/domains/DomainListFilters.js:113
 msgid "DMARC Phase"
@@ -1714,7 +1716,7 @@ msgstr "Point d'aboutissement :"
 
 #: src/domains/DomainListFilters.js:46
 #: src/domains/FilterList.js:32
-#: src/guidance/DmarcPhaseStepper.js:20
+#: src/guidance/DmarcPhaseStepper.js:40
 msgid "Enforce"
 msgstr "Mettre en application"
 
@@ -1738,8 +1740,8 @@ msgstr "Mettre en application"
 msgid "English"
 msgstr "Anglais"
 
-#. placeholder {0}: editUserRole.userName
 #. placeholder {0}: org.name
+#. placeholder {0}: editUserRole.userName
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -1979,7 +1981,7 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 #~ msgid "For in-depth implementation guidance:"
 #~ msgstr "Pour des conseils approfondis sur la mise en œuvre:"
 
-#: src/guidance/DmarcPhaseStepper.js:104
+#: src/guidance/DmarcPhaseStepper.js:103
 msgid "For more detailed steps, please see the <0>CCCS implementation guidance</0>."
 msgstr "Pour plus de détails, veuillez consulter le <0>directives de mise en œuvre du CCC</0>."
 
@@ -2335,12 +2337,12 @@ msgid "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/>
 msgstr "J'accepte toutes les <0>Conditions générales, la politique de confidentialité et les directives du code de conduite<1/></0>."
 
 #: src/domains/ScanDomain.js:120
-#: src/guidance/DmarcPhaseStepper.js:39
+#: src/guidance/DmarcPhaseStepper.js:33
 msgid "Identify all authorized senders;"
 msgstr "Déterminer tous les expéditeurs autorisés."
 
 #: src/domains/ScanDomain.js:114
-#: src/guidance/DmarcPhaseStepper.js:31
+#: src/guidance/DmarcPhaseStepper.js:24
 msgid "Identify all domains and subdomains used to send mail;"
 msgstr "Déterminer tous les domaines et sous-domaines utilisés pour envoyer des courriels."
 
@@ -2889,7 +2891,7 @@ msgstr "envoi de courrier"
 
 #: src/domains/DomainListFilters.js:47
 #: src/domains/FilterList.js:33
-#: src/guidance/DmarcPhaseStepper.js:20
+#: src/guidance/DmarcPhaseStepper.js:48
 msgid "Maintain"
 msgstr "Maintenir"
 
@@ -2942,12 +2944,12 @@ msgid "Monitor changes in your organization's security compliance over time."
 msgstr "Surveillez l'évolution de la conformité de votre organisation en matière de sécurité au fil du temps."
 
 #: src/domains/ScanDomain.js:123
-#: src/guidance/DmarcPhaseStepper.js:42
+#: src/guidance/DmarcPhaseStepper.js:36
 msgid "Monitor DMARC reports and correct misconfigurations."
 msgstr "Surveiller les rapports DMARC et corriger les erreurs de configuration."
 
 #: src/domains/ScanDomain.js:131
-#: src/guidance/DmarcPhaseStepper.js:54
+#: src/guidance/DmarcPhaseStepper.js:50
 msgid "Monitor DMARC reports;"
 msgstr "Surveiller les rapports DMARC."
 
@@ -3101,7 +3103,7 @@ msgstr "Nouvelle valeur :"
 msgid "Next"
 msgstr "Suivant"
 
-#: src/guidance/DmarcPhaseStepper.js:94
+#: src/guidance/DmarcPhaseStepper.js:93
 msgid "Next Steps:"
 msgstr "Prochaines étapes :"
 
@@ -3194,7 +3196,7 @@ msgstr "Aucune protection DDOS trouvée"
 #~ msgid "No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated organization to add selectors."
 #~ msgstr "Aucun sélecteur DKIM n'est actuellement associé à ce domaine. Veuillez contacter un administrateur d'une organisation affiliée pour ajouter des sélecteurs."
 
-#: src/guidance/DmarcPhaseStepper.js:67
+#: src/guidance/DmarcPhaseStepper.js:66
 msgid "No DMARC Implementation Phase"
 msgstr "Aucune phase de mise en œuvre DMARC"
 
@@ -3830,7 +3832,7 @@ msgid "Register"
 msgstr "Registre"
 
 #: src/domains/ScanDomain.js:128
-#: src/guidance/DmarcPhaseStepper.js:49
+#: src/guidance/DmarcPhaseStepper.js:44
 msgid "Reject all messages from non-mail domains."
 msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
 
@@ -3988,7 +3990,7 @@ msgid "Role:"
 msgstr "Fonction:"
 
 #: src/domains/ScanDomain.js:133
-#: src/guidance/DmarcPhaseStepper.js:56
+#: src/guidance/DmarcPhaseStepper.js:52
 msgid "Rotate DKIM keys annually."
 msgstr "Effectuer la rotation des clés DKIM annuellement."
 
@@ -5436,7 +5438,7 @@ msgstr "Organisation mise à jour"
 msgid "Updated Properties"
 msgstr "Propriétés actualisées"
 
-#: src/guidance/DmarcPhaseStepper.js:47
+#: src/guidance/DmarcPhaseStepper.js:42
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;"
 msgstr "Mettez la politique DMARC en quarantaine (augmentez progressivement l'application de 25% à 100%) ;"
 
@@ -5444,7 +5446,7 @@ msgstr "Mettez la politique DMARC en quarantaine (augmentez progressivement l'ap
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
 msgstr "Faire passer la stratégie DMARC à Mettre en quarantaine (Quarantine) (l’appliquer progressivement pour passer de 25 % à 100 %)."
 
-#: src/guidance/DmarcPhaseStepper.js:48
+#: src/guidance/DmarcPhaseStepper.js:43
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and"
 msgstr "Mettre à niveau la politique DMARC pour qu'elle rejette (augmentation progressive de l'application de 25 % à 100 %)"
 
