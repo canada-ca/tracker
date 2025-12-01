@@ -17,3 +17,5 @@ global['Request'] = jest.fn().mockImplementation(() => ({
     addEventListener: () => {},
   },
 }))
+
+global.TextEncoder = require('util').TextEncoder
