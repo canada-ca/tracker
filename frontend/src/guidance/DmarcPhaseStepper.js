@@ -16,8 +16,10 @@ import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 
 export function DmarcPhaseStepper({ dmarcPhase }) {
+  console.log(dmarcPhase)
   const { i18n } = useLingui()
-  const phaseTitles = { assess: t`Assess`, deploy: t`Deploy`, enforce: t`Enforce`, maintain: t`Maintain` }
+
+  const phaseTitles = { ASSESS: t`Assess`, DEPLOY: t`Deploy`, ENFORCE: t`Enforce`, MAINTAIN: t`Maintain` }
   const steps = Object.keys(phaseTitles)
   const { activeStep } = useSteps({
     index: steps.indexOf(dmarcPhase),
@@ -26,7 +28,7 @@ export function DmarcPhaseStepper({ dmarcPhase }) {
 
   let dmarcSteps
   switch (dmarcPhase) {
-    case 'assess':
+    case 'ASSESS':
       dmarcSteps = [
         t`Identify all domains and subdomains used to send mail;`,
         t`Assess current state;`,
@@ -34,7 +36,7 @@ export function DmarcPhaseStepper({ dmarcPhase }) {
         t`Collect and analyze DMARC reports.`,
       ]
       break
-    case 'deploy':
+    case 'DEPLOY':
       dmarcSteps = [
         t`Identify all authorized senders;`,
         t`Deploy SPF records for all domains;`,
@@ -42,14 +44,14 @@ export function DmarcPhaseStepper({ dmarcPhase }) {
         t`Monitor DMARC reports and correct misconfigurations.`,
       ]
       break
-    case 'enforce':
+    case 'ENFORCE':
       dmarcSteps = [
         t`Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;`,
         t`Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and`,
         t`Reject all messages from non-mail domains.`,
       ]
       break
-    case 'maintain':
+    case 'MAINTAIN':
       dmarcSteps = [
         t`Monitor DMARC reports;`,
         t`Correct misconfigurations and update records as required; and`,
