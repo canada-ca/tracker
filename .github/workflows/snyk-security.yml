@@ -63,7 +63,7 @@ jobs:
         run: echo "No impacted services. Skipping." && exit 0
 
       - name: Install Snyk
-        uses: snyk/actions/setup@v3
+        uses: snyk/actions/setup@master
 
       - name: Authenticate Snyk
         run: snyk auth "$SNYK_TOKEN"
