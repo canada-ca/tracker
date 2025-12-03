@@ -21,5 +21,9 @@ export const DomainFilterCategory = new GraphQLEnumType({
       value: 'guidance-tag',
       description: 'Scanner findings.',
     },
+    DMARC_PHASE: {
+      value: 'dmarc-phase',
+      description: 'DMARC phase.',
+    },
   },
 })

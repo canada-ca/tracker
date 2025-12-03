@@ -390,7 +390,7 @@ export const loadDomainConnectionsByOrgId =
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION( e.tags, ${filterValue}) ${comparison} true
+            FILTER POSITION(e.tags, ${filterValue}) ${comparison} true
           `
           }
         } else if (filterCategory === 'asset-state') {
@@ -402,6 +402,11 @@ export const loadDomainConnectionsByOrgId =
           domainFilters = aql`
           ${domainFilters}
           FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
+        `
+        } else if (filterCategory === 'dmarc-phase') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER v.phase ${comparison} ${filterValue}
         `
         }
       })

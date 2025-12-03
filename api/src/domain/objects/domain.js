@@ -3,7 +3,7 @@ import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectT
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { domainStatus } from './domain-status'
-import { AssetStateEnums, PeriodEnums } from '../../enums'
+import { AssetStateEnums, PeriodEnums, DmarcPhaseEnum } from '../../enums'
 import { nodeInterface } from '../../node'
 import { CveID, Domain, Selectors, Year } from '../../scalars'
 import { dmarcSummaryType } from '../../dmarc-summaries/objects'
@@ -28,7 +28,7 @@ export const domainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     dmarcPhase: {
-      type: GraphQLString,
+      type: DmarcPhaseEnum,
       description: 'The current dmarc phase the domain is compliant to.',
       resolve: ({ phase }) => phase,
     },

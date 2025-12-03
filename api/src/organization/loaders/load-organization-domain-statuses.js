@@ -110,6 +110,11 @@ export const loadOrganizationDomainStatuses =
           ${domainFilters}
           FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
         `
+        } else if (filterCategory === 'dmarc-phase') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER v.phase ${comparison} ${filterValue}
+        `
         }
       })
     }
@@ -144,6 +149,7 @@ export const loadOrganizationDomainStatuses =
               domain: v.domain,
               ipAddresses: ipAddresses,
               status: v.status,
+              phase: v.phase,
               tags: e.tags,
               assetState: e.assetState,
               rcode: v.rcode,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Button, Flex, Select, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Formik } from 'formik'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { array, func } from 'prop-types'
@@ -39,20 +39,19 @@ export function DomainListFilters({
         return mapFilters(assetStateOptions)
       case 'GUIDANCE_TAG':
         return mapFilters(guidanceTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [])
+      case 'DMARC_PHASE':
+        return mapFilters([
+          { value: 'ASSESS', text: t`Assess` },
+          { value: 'DEPLOY', text: t`Deploy` },
+          { value: 'ENFORCE', text: t`Enforce` },
+          { value: 'MAINTAIN', text: t`Maintain` },
+        ])
       default:
-        return (
-          <>
-            <option value="PASS">
-              <Trans>Pass</Trans>
-            </option>
-            <option value="INFO">
-              <Trans>Info</Trans>
-            </option>
-            <option value="FAIL">
-              <Trans>Fail</Trans>
-            </option>
-          </>
-        )
+        return mapFilters([
+          { value: 'PASS', text: t`Pass` },
+          { value: 'INFO', text: t`Info` },
+          { value: 'FAIL', text: t`Fail` },
+        ])
     }
   }
 
@@ -110,6 +109,9 @@ export function DomainListFilters({
                         <Trans>Asset State</Trans>
                       </option>
                     )}
+                    <option value="DMARC_PHASE">
+                      <Trans>DMARC Phase</Trans>
+                    </option>
                     <ABTestWrapper insiderVariantName="B">
                       <ABTestVariant name="B">
                         {guidanceTagOptions.length > 0 && (

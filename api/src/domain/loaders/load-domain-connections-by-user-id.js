@@ -415,6 +415,11 @@ export const loadDomainConnectionsByUserId =
             FILTER v.cveDetected ${comparison} true
           `
           }
+        } else if (filterCategory === 'dmarc-phase') {
+          domainFilters = aql`
+            ${domainFilters}
+            FILTER v.phase ${comparison} ${filterValue}
+          `
         }
       })
     }

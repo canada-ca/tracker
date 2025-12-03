@@ -123,6 +123,11 @@ msgstr "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 
+#: src/organization/objects/organization.js:244
+#: src/organization/queries/get-all-organization-domain-statuses.js:69
+msgid "Assess"
+msgstr "Assess"
+
 #: src/auth/check-permission.js:18
 #: src/auth/check-permission.js:57
 #: src/auth/user-required.js:10
@@ -135,7 +140,7 @@ msgstr "Authentication error. Please sign in."
 msgid "Cannot query additional findings without permission."
 msgstr "Cannot query additional findings without permission."
 
-#: src/organization/objects/organization.js:359
+#: src/organization/objects/organization.js:378
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
@@ -165,12 +170,22 @@ msgstr "CVE is already ignored for this domain."
 msgid "CVE is not ignored for this domain."
 msgstr "CVE is not ignored for this domain."
 
+#: src/organization/objects/organization.js:246
+#: src/organization/queries/get-all-organization-domain-statuses.js:71
+msgid "Deploy"
+msgstr "Deploy"
+
 #: src/user/mutations/sign-up.js:111
 msgid "Email already in use."
 msgstr "Email already in use."
 
-#: src/domain/mutations/request-scan.js:88
-#: src/domain/mutations/request-scan.js:98
+#: src/organization/objects/organization.js:248
+#: src/organization/queries/get-all-organization-domain-statuses.js:73
+msgid "Enforce"
+msgstr "Enforce"
+
+#: src/domain/mutations/request-scan.js:89
+#: src/domain/mutations/request-scan.js:99
 msgid "Error while requesting scan. Please try again."
 msgstr "Error while requesting scan. Please try again."
 
@@ -200,6 +215,11 @@ msgstr "Incorrect username or password. Please try again."
 #: src/auth/verify-jwt.js:15
 msgid "Invalid token, please sign in."
 msgstr "Invalid token, please sign in."
+
+#: src/organization/objects/organization.js:250
+#: src/organization/queries/get-all-organization-domain-statuses.js:75
+msgid "Maintain"
+msgstr "Maintain"
 
 #: src/user/mutations/dismiss-message.js:75
 msgid "Message dismissed successfully"
@@ -419,7 +439,7 @@ msgstr "Permission Denied: Please contact organization admin for help with user 
 msgid "Permission Denied: Please contact organization admin for help with user role changes."
 msgstr "Permission Denied: Please contact organization admin for help with user role changes."
 
-#: src/domain/mutations/create-domain.js:120
+#: src/domain/mutations/create-domain.js:121
 msgid "Permission Denied: Please contact organization user for help with creating domain."
 msgstr "Permission Denied: Please contact organization user for help with creating domain."
 
@@ -432,12 +452,12 @@ msgstr "Permission Denied: Please contact organization user for help with creati
 #~ msgstr "Permission Denied: Please contact organization user for help with retrieving tags."
 
 #: src/domain/queries/find-domain-by-domain.js:51
-#: src/organization/objects/organization.js:194
+#: src/organization/objects/organization.js:198
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission Denied: Please contact organization user for help with retrieving this domain."
 
 #: src/domain/mutations/request-discovery.js:98
-#: src/domain/mutations/request-scan.js:64
+#: src/domain/mutations/request-scan.js:65
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission Denied: Please contact organization user for help with scanning this domain."
 
@@ -607,7 +627,7 @@ msgstr "Successfully archived organization: {0}."
 msgid "Successfully closed account."
 msgstr "Successfully closed account."
 
-#: src/domain/mutations/request-scan.js:167
+#: src/domain/mutations/request-scan.js:174
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
 
@@ -778,20 +798,20 @@ msgstr "Unable to close account. Please try again."
 msgid "Unable to confirm completion of the tour. Please try again."
 msgstr "Unable to confirm completion of the tour. Please try again."
 
-#: src/domain/mutations/create-domain.js:106
+#: src/domain/mutations/create-domain.js:107
 msgid "Unable to create domain in unknown organization."
 msgstr "Unable to create domain in unknown organization."
 
-#: src/domain/mutations/create-domain.js:177
+#: src/domain/mutations/create-domain.js:178
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Unable to create domain, organization has already claimed it."
 
-#: src/domain/mutations/create-domain.js:159
-#: src/domain/mutations/create-domain.js:167
-#: src/domain/mutations/create-domain.js:199
-#: src/domain/mutations/create-domain.js:208
-#: src/domain/mutations/create-domain.js:228
-#: src/domain/mutations/create-domain.js:236
+#: src/domain/mutations/create-domain.js:160
+#: src/domain/mutations/create-domain.js:168
+#: src/domain/mutations/create-domain.js:200
+#: src/domain/mutations/create-domain.js:209
+#: src/domain/mutations/create-domain.js:229
+#: src/domain/mutations/create-domain.js:237
 msgid "Unable to create domain. Please try again."
 msgstr "Unable to create domain. Please try again."
 
@@ -833,8 +853,8 @@ msgstr "Unable to dismiss message. Please try again."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Unable to dispatch one time scan. Please try again."
 
-#: src/organization/objects/organization.js:256
-#: src/organization/objects/organization.js:266
+#: src/organization/objects/organization.js:275
+#: src/organization/objects/organization.js:285
 msgid "Unable to export organization. Please try again."
 msgstr "Unable to export organization. Please try again."
 
@@ -1008,8 +1028,8 @@ msgstr "Unable to load Aggregate guidance tag(s). Please try again."
 #~ msgid "Unable to load all organization domain statuses. Please try again."
 #~ msgstr "Unable to load all organization domain statuses. Please try again."
 
-#: src/summaries/loaders/load-chart-summaries-by-period.js:47
-#: src/summaries/loaders/load-chart-summaries-by-period.js:57
+#: src/summaries/loaders/load-chart-summaries-by-period.js:50
+#: src/summaries/loaders/load-chart-summaries-by-period.js:60
 msgid "Unable to load chart summary data. Please try again."
 msgstr "Unable to load chart summary data. Please try again."
 
@@ -1049,7 +1069,7 @@ msgstr "Unable to load DMARC failure data. Please try again."
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Unable to load DMARC guidance tag(s). Please try again."
 
-#: src/summaries/queries/dmarc-phase-summary.js:14
+#: src/summaries/queries/dmarc-phase-summary.js:12
 msgid "Unable to load DMARC phase summary. Please try again."
 msgstr "Unable to load DMARC phase summary. Please try again."
 
@@ -1090,9 +1110,9 @@ msgstr "Unable to load domain selector(s). Please try again."
 msgid "Unable to load domain. Please try again."
 msgstr "Unable to load domain. Please try again."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:518
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:528
-#: src/domain/loaders/load-domain-connections-by-user-id.js:570
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:523
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:533
+#: src/domain/loaders/load-domain-connections-by-user-id.js:575
 #: src/user/loaders/load-my-tracker-by-user-id.js:33
 msgid "Unable to load domain(s). Please try again."
 msgstr "Unable to load domain(s). Please try again."
@@ -1137,8 +1157,8 @@ msgid "Unable to load mail summary. Please try again."
 msgstr "Unable to load mail summary. Please try again."
 
 #: src/additional-findings/loaders/load-top-25-reports.js:29
-#: src/organization/loaders/load-all-organization-domain-statuses.js:158
-#: src/organization/loaders/load-organization-domain-statuses.js:160
+#: src/organization/loaders/load-all-organization-domain-statuses.js:164
+#: src/organization/loaders/load-organization-domain-statuses.js:166
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Unable to load organization domain statuses. Please try again."
 
@@ -1266,7 +1286,7 @@ msgstr "Unable to load web summary. Please try again."
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "Unable to query affiliation(s). Please try again."
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:560
+#: src/domain/loaders/load-domain-connections-by-user-id.js:565
 #: src/user/loaders/load-my-tracker-by-user-id.js:23
 msgid "Unable to query domain(s). Please try again."
 msgstr "Unable to query domain(s). Please try again."
@@ -1367,15 +1387,15 @@ msgstr "Unable to remove user from this organization. Please try again."
 msgid "Unable to remove user from unknown organization."
 msgstr "Unable to remove user from unknown organization."
 
-#: src/domain/mutations/request-scan.js:118
+#: src/domain/mutations/request-scan.js:119
 msgid "Unable to request a one time scan on a domain that already has a pending scan."
 msgstr "Unable to request a one time scan on a domain that already has a pending scan."
 
-#: src/domain/mutations/request-scan.js:53
+#: src/domain/mutations/request-scan.js:54
 msgid "Unable to request a one time scan on an unknown domain."
 msgstr "Unable to request a one time scan on an unknown domain."
 
-#: src/domain/mutations/request-scan.js:126
+#: src/domain/mutations/request-scan.js:127
 msgid "Unable to request a one time scan. Please try again."
 msgstr "Unable to request a one time scan. Please try again."
 
@@ -1864,9 +1884,9 @@ msgid "You must provide at most one pagination method (`before`, `after`, `offse
 msgstr "You must provide at most one pagination method (`before`, `after`, `offset`) value to properly paginate the `web` connection."
 
 #: src/summaries/loaders/load-chart-summaries-by-period.js:13
-msgid "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."
-msgstr "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."
+#~ msgid "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."
+#~ msgstr "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."
 
 #: src/organization/loaders/load-organization-summaries-by-period.js:13
-msgid "You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection."
-msgstr "You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection."
+#~ msgid "You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection."
+#~ msgstr "You must provide both `startDate` and `endDate` values to access the `OrganizationSummaries` connection."

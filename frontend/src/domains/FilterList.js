@@ -26,6 +26,13 @@ export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOpt
     REQUIRES_INVESTIGATION: t`Requires Investigation`,
   }
 
+  const dmarcPhaseLabels = {
+    ASSESS: t`Assess`,
+    DEPLOY: t`Deploy`,
+    ENFORCE: t`Enforce`,
+    MAINTAIN: t`Maintain`,
+  }
+
   const displayTagFilterName = (options, value) => {
     const tag = options.find((tag) => tag.value === value)
     if (tag) {
@@ -62,6 +69,8 @@ export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOpt
             <TagRightIcon color="weak" as={WarningIcon} />
           </>
         )
+      case 'DMARC_PHASE':
+        return <TagLabel>{dmarcPhaseLabels[filterValue]}</TagLabel>
       default: {
         let color, icon
         switch (filterValue) {
