@@ -24,7 +24,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-1b23ddd-1764797266 # {"$imagepolicy": "flux-system:frontend"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-a676fd2-1764944725 # {"$imagepolicy": "flux-system:frontend"}
           name: frontend
           env:
             - name: FRENCH_HOSTS
