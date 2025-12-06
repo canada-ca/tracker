@@ -20,4 +20,4 @@ service-identity==24.1.0
 sslyze==6.1.0
 tls-parser==2.0.0
 typing_extensions==4.12.2
-urllib3==2.5.0
+urllib3==2.6.0
