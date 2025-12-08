@@ -337,11 +337,11 @@ msgstr "Acronym (FR)"
 msgid "Acronym:"
 msgstr "Acronym:"
 
-#: src/utilities/fieldRequirements.js:34
+#: src/utilities/fieldRequirements.js:36
 msgid "Acronyms can only use upper case letters and underscores"
 msgstr "Acronyms can only use upper case letters and underscores"
 
-#: src/utilities/fieldRequirements.js:35
+#: src/utilities/fieldRequirements.js:37
 msgid "Acronyms must be at most 50 characters"
 msgstr "Acronyms must be at most 50 characters"
 
@@ -631,7 +631,7 @@ msgstr "Any products or related services provided to you by TBS are and will rem
 
 #: src/admin/AdminDomains.js:301
 #: src/admin/DomainUpdateList.js:337
-#: src/domains/DomainListFilters.js:157
+#: src/domains/DomainListFilters.js:176
 msgid "Apply"
 msgstr "Apply"
 
@@ -711,7 +711,7 @@ msgstr "Are you sure you want to stop ignoring this CVE?"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src/domains/DomainListFilters.js:44
+#: src/domains/DomainListFilters.js:51
 #: src/domains/FilterList.js:30
 #: src/guidance/DmarcPhaseStepper.js:22
 msgid "Assess"
@@ -724,7 +724,7 @@ msgstr "Assess current state;"
 
 #: src/admin/AdminDomainModal.js:281
 #: src/admin/AdminDomains.js:240
-#: src/domains/DomainListFilters.js:109
+#: src/domains/DomainListFilters.js:116
 msgid "Asset State"
 msgstr "Asset State"
 
@@ -837,8 +837,8 @@ msgid "CANDIDATE"
 msgstr "CANDIDATE"
 
 #: src/domains/DomainListFilters.js:95
-msgid "Category"
-msgstr "Category"
+#~ msgid "Category"
+#~ msgstr "Category"
 
 #: src/guidance/WebGuidance.js:159
 msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
@@ -1006,7 +1006,7 @@ msgstr "Close Account"
 msgid "CNAME:"
 msgstr "CNAME:"
 
-#: src/utilities/fieldRequirements.js:28
+#: src/utilities/fieldRequirements.js:30
 msgid "Code field must not be empty"
 msgstr "Code field must not be empty"
 
@@ -1016,7 +1016,7 @@ msgid "Collect and analyze DMARC reports."
 msgstr "Collect and analyze DMARC reports."
 
 #: src/admin/AdminDomains.js:250
-#: src/domains/DomainListFilters.js:132
+#: src/domains/DomainListFilters.js:153
 msgid "Comparison"
 msgstr "Comparison"
 
@@ -1278,7 +1278,7 @@ msgstr "Dependency"
 msgid "DEPENDENCY"
 msgstr "DEPENDENCY"
 
-#: src/domains/DomainListFilters.js:45
+#: src/domains/DomainListFilters.js:52
 #: src/domains/FilterList.js:31
 #: src/guidance/DmarcPhaseStepper.js:31
 msgid "Deploy"
@@ -1336,7 +1336,7 @@ msgstr "Discover Subdomains"
 msgid "Display Name"
 msgstr "Display Name"
 
-#: src/utilities/fieldRequirements.js:14
+#: src/utilities/fieldRequirements.js:16
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
@@ -1445,7 +1445,7 @@ msgstr "DMARC Implementation Phase: {0}"
 msgid "DMARC Implementation Phase: {currentPhase}"
 msgstr "DMARC Implementation Phase: {currentPhase}"
 
-#: src/domains/DomainListFilters.js:113
+#: src/domains/DomainListFilters.js:120
 msgid "DMARC Phase"
 msgstr "DMARC Phase"
 
@@ -1518,7 +1518,7 @@ msgid "DNS scan for domain \"{0}\" has completed."
 msgstr "DNS scan for domain \"{0}\" has completed."
 
 #: src/admin/AdminDomains.js:256
-#: src/domains/DomainListFilters.js:138
+#: src/domains/DomainListFilters.js:159
 msgid "DOES NOT EQUAL"
 msgstr "DOES NOT EQUAL"
 
@@ -1574,7 +1574,7 @@ msgstr "Domain updated"
 msgid "Domain URL"
 msgstr "Domain URL"
 
-#: src/utilities/fieldRequirements.js:29
+#: src/utilities/fieldRequirements.js:31
 msgid "Domain url field must not be empty"
 msgstr "Domain url field must not be empty"
 
@@ -1691,8 +1691,8 @@ msgid "Email"
 msgstr "Email"
 
 #: src/auth/ForgotPasswordPage.js:18
-#: src/utilities/fieldRequirements.js:9
-#: src/utilities/fieldRequirements.js:12
+#: src/utilities/fieldRequirements.js:11
+#: src/utilities/fieldRequirements.js:14
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
@@ -1778,7 +1778,7 @@ msgstr "Endpoint Summary"
 msgid "Endpoint:"
 msgstr "Endpoint:"
 
-#: src/domains/DomainListFilters.js:46
+#: src/domains/DomainListFilters.js:53
 #: src/domains/FilterList.js:32
 #: src/guidance/DmarcPhaseStepper.js:40
 msgid "Enforce"
@@ -1804,8 +1804,8 @@ msgstr "Enforce"
 msgid "English"
 msgstr "English"
 
-#. placeholder {0}: org.name
 #. placeholder {0}: editUserRole.userName
+#. placeholder {0}: org.name
 #: src/admin/OrganizationInformation.js:438
 #: src/admin/SuperAdminUserList.js:413
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -1859,7 +1859,7 @@ msgid "Envelope From"
 msgstr "Envelope From"
 
 #: src/admin/AdminDomains.js:253
-#: src/domains/DomainListFilters.js:135
+#: src/domains/DomainListFilters.js:156
 msgid "EQUALS"
 msgstr "EQUALS"
 
@@ -1912,7 +1912,7 @@ msgstr "External ID:"
 #: src/dmarc/DmarcReportPage.js:142
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:53
+#: src/domains/DomainListFilters.js:41
 msgid "Fail"
 msgstr "Fail"
 
@@ -2696,7 +2696,7 @@ msgstr "Individuals from a departmental information technology group may contact
 #~ msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 #~ msgstr "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 
-#: src/domains/DomainListFilters.js:52
+#: src/domains/DomainListFilters.js:40
 msgid "Info"
 msgstr "Info"
 
@@ -2757,7 +2757,7 @@ msgid "Internet-facing"
 msgstr "Internet-facing"
 
 #: src/auth/ForgotPasswordPage.js:19
-#: src/utilities/fieldRequirements.js:10
+#: src/utilities/fieldRequirements.js:12
 msgid "Invalid email"
 msgstr "Invalid email"
 
@@ -2967,7 +2967,7 @@ msgstr "Mail Servers (MX)"
 msgid "Mail-sending"
 msgstr "Mail-sending"
 
-#: src/domains/DomainListFilters.js:47
+#: src/domains/DomainListFilters.js:54
 #: src/domains/FilterList.js:33
 #: src/guidance/DmarcPhaseStepper.js:48
 msgid "Maintain"
@@ -3121,7 +3121,7 @@ msgstr "Names:"
 msgid "Negative"
 msgstr "Negative"
 
-#: src/domains/DomainListFilters.js:119
+#: src/domains/DomainListFilters.js:124
 msgid "Negative Finding"
 msgstr "Negative Finding"
 
@@ -3602,7 +3602,7 @@ msgstr "Page {0} of {1}"
 #: src/dmarc/DmarcReportPage.js:133
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:51
+#: src/domains/DomainListFilters.js:39
 msgid "Pass"
 msgstr "Pass"
 
@@ -3613,18 +3613,18 @@ msgid "Password"
 msgstr "Password"
 
 #: src/auth/ResetPasswordPage.js:20
-#: src/utilities/fieldRequirements.js:16
 #: src/utilities/fieldRequirements.js:18
+#: src/utilities/fieldRequirements.js:20
 msgid "Password cannot be empty"
 msgstr "Password cannot be empty"
 
 #: src/auth/ResetPasswordPage.js:23
-#: src/utilities/fieldRequirements.js:20
+#: src/utilities/fieldRequirements.js:22
 msgid "Password confirmation cannot be empty"
 msgstr "Password confirmation cannot be empty"
 
 #: src/auth/ResetPasswordPage.js:21
-#: src/utilities/fieldRequirements.js:17
+#: src/utilities/fieldRequirements.js:19
 msgid "Password must be at least 12 characters long"
 msgstr "Password must be at least 12 characters long"
 
@@ -3639,7 +3639,7 @@ msgid "Password:"
 msgstr "Password:"
 
 #: src/auth/ResetPasswordPage.js:24
-#: src/utilities/fieldRequirements.js:21
+#: src/utilities/fieldRequirements.js:23
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
@@ -3687,11 +3687,11 @@ msgstr "phase out"
 msgid "Phone"
 msgstr "Phone"
 
-#: src/utilities/fieldRequirements.js:31
+#: src/utilities/fieldRequirements.js:33
 msgid "Phone number field must not be empty"
 msgstr "Phone number field must not be empty"
 
-#: src/utilities/fieldRequirements.js:32
+#: src/utilities/fieldRequirements.js:34
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Phone number must be a valid phone number that is 10-15 digits long"
 
@@ -3708,7 +3708,7 @@ msgstr "Phone Validated"
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Please allow up to 24 hours for summaries to reflect any changes."
 
-#: src/utilities/fieldRequirements.js:24
+#: src/utilities/fieldRequirements.js:26
 msgid "Please choose your preferred language"
 msgstr "Please choose your preferred language"
 
@@ -3720,7 +3720,7 @@ msgstr "Please contact <0>TBS Cyber Security</0> for help."
 #~ msgid "Please direct all updates to TBS Cyber Security."
 #~ msgstr "Please direct all updates to TBS Cyber Security."
 
-#: src/utilities/fieldRequirements.js:22
+#: src/utilities/fieldRequirements.js:24
 msgid "Please enter your current password."
 msgstr "Please enter your current password."
 
@@ -4687,13 +4687,17 @@ msgstr "State: {lastPortStateTranslated}"
 #~ msgid "Static IP Address: <0>52.138.13.28</0>"
 #~ msgstr "Static IP Address: <0>52.138.13.28</0>"
 
-#: src/admin/AuditLogTable.js:76
-#~ msgid "Status"
-#~ msgstr "Status"
+#: src/domains/DomainListFilters.js:109
+msgid "Status"
+msgstr "Status"
 
 #: src/domains/DomainListFilters.js:92
 #~ msgid "Status or tag"
 #~ msgstr "Status or tag"
+
+#: src/domains/DomainListFilters.js:141
+msgid "Status Value"
+msgstr "Status Value"
 
 #: src/guidance/WebConnectionResults.js:61
 msgid "Status:"
@@ -4799,7 +4803,7 @@ msgstr "System-designated tags appear here."
 
 #: src/admin/AdminDomains.js:237
 #: src/admin/AuditLogTable.js:80
-#: src/domains/DomainListFilters.js:105
+#: src/domains/DomainListFilters.js:112
 msgid "Tag"
 msgstr "Tag"
 
@@ -5119,10 +5123,7 @@ msgid "This domain no longer exists"
 msgstr "This domain no longer exists"
 
 #: src/createOrganization/CreateOrganizationPage.js:24
-#: src/utilities/fieldRequirements.js:36
-#: src/utilities/fieldRequirements.js:38
-#: src/utilities/fieldRequirements.js:54
-#: src/utilities/fieldRequirements.js:57
+#: src/utilities/fieldRequirements.js:6
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
@@ -5653,7 +5654,7 @@ msgstr "User email"
 msgid "User Email"
 msgstr "User Email"
 
-#: src/utilities/fieldRequirements.js:13
+#: src/utilities/fieldRequirements.js:15
 msgid "User email does not match"
 msgstr "User email does not match"
 
@@ -5693,11 +5694,11 @@ msgid "Users exercise due diligence in ensuring the accuracy of the materials re
 msgstr "Users exercise due diligence in ensuring the accuracy of the materials reproduced;"
 
 #: src/admin/AdminDomains.js:234
-#: src/domains/DomainListFilters.js:148
+#: src/domains/DomainListFilters.js:168
 msgid "Value"
 msgstr "Value"
 
-#: src/utilities/fieldRequirements.js:27
+#: src/utilities/fieldRequirements.js:29
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
