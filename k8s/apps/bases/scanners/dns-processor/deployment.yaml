@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dns-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-c7479a1-1764183339 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-a49b427-1765219560 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
