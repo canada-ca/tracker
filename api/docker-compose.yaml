@@ -15,22 +15,53 @@ services:
       - nats
     network_mode: "host"
     volumes:
-      - ../k8s/infrastructure/bases/nats/stream-config.json:/stream-config.json
+      - ../k8s/infrastructure/bases/nats/stream-config.json:/stream-config/stream-config.json
     entrypoint: >
       /bin/sh -c '
-        until nc -z localhost 4222; do sleep 1; done
-        echo "[nats-box] Attempting to add SCANS stream..."
-        if nats stream add SCANS --config /stream-config.json --server nats://localhost:4222; then
-          echo "[nats-box] SCANS stream added successfully."
-        else
-          echo "[nats-box] Add failed, attempting to edit SCANS stream..."
-          if nats stream edit SCANS --config /stream-config.json --server nats://localhost:4222 --force; then
-            echo "[nats-box] SCANS stream edited successfully."
-          else
-            echo "[nats-box] ERROR: Could not add or edit SCANS stream!"
-          fi
-        fi
-        tail -f /dev/null
+            set -e
+            echo "[nats-stream-init] Waiting for NATS..."
+            until nc -z localhost 4222; do
+              sleep 1
+            done
+
+            # Small additional delay to ensure JetStream is ready
+            sleep 2
+
+            # ==================== CREATE/UPDATE STREAM ====================
+            echo "[nats-stream-init] Attempting to add SCANS stream..."
+            if nats stream add SCANS --config /stream-config/stream-config.json --server nats://localhost:4222; then
+              echo "[nats-stream-init] SCANS stream added successfully."
+            else
+              echo "[nats-stream-init] Add failed, attempting to edit SCANS stream..."
+              if nats stream edit SCANS --config /stream-config/stream-config.json --server nats://localhost:4222 --force; then
+                echo "[nats-stream-init] SCANS stream edited successfully."
+              else
+                echo "[nats-stream-init] ERROR: Could not add or edit SCANS stream!"
+                exit 1
+              fi
+            fi
+
+            # ==================== CREATE/UPDATE KV STORE ====================
+
+            echo "[nats-stream-init] Attempting to add WEB_SCANNER_IPS KV bucket..."
+
+            if nats kv add "WEB_SCANNER_IPS" \
+                --ttl="5m"; then
+              echo "[nats-stream-init] WEB_SCANNER_IPS KV bucket added successfully."
+            else
+              echo "[nats-stream-init] Add failed, attempting to edit WEB_SCANNER_IPS KV bucket..."
+
+              if nats kv edit "WEB_SCANNER_IPS" \
+                  --ttl="5m"; then
+                echo "[nats-stream-init] WEB_SCANNER_IPS KV bucket edited successfully."
+              else
+                echo "[nats-stream-init] ERROR: Could not add or edit WEB_SCANNER_IPS KV bucket!"
+                exit 1
+              fi
+            fi
+
+            echo "[nats-stream-init] Stream initialization complete."
+            exec sleep infinity
       '
 
   arangodb:
