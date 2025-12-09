@@ -36,21 +36,12 @@ build:
 #  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/https-scanner
 #    context: scanners/https-scanner
 #    docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-processor
-#    context: scanners/log4shell-processor
-#    docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-scanner
-#    context: scanners/log4shell-scanner
-#    docker: {}
   - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/guidance
     context: services/guidance
     docker: {}
   - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries
     context: services/summaries
     docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/spring4shell-scanner
-#    context: scanners/spring4shell
-#    docker: {}
   - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin
     context: services/super-admin
     docker: {}
