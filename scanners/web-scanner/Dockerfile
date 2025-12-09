@@ -38,7 +38,7 @@ COPY --from=crlite-builder /usr/local/cargo/bin/rust-query-crlite /usr/local/bin
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY service.py web_scan_cli.py ip_cleanup.py ./
+COPY service.py web_scan_cli.py ./
 COPY scan ./scan
 
 # Update Mozilla CRLite DB for revocation checks
