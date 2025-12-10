@@ -32,31 +32,24 @@ export function DomainListFilters({
     })
   }
 
-  const filterValues = (values) => {
-    switch (values.filterCategory) {
-      case 'STATUS':
-        return mapOptions([
-          { value: 'PASS', text: t`Pass` },
-          { value: 'INFO', text: t`Info` },
-          { value: 'FAIL', text: t`Fail` },
-        ])
-      case 'TAGS':
-        return mapOptions(filterTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [])
-      case 'ASSET_STATE':
-        return mapOptions(assetStateOptions)
-      case 'GUIDANCE_TAG':
-        return mapOptions(guidanceTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [])
-      case 'DMARC_PHASE':
-        return mapOptions([
-          { value: 'ASSESS', text: t`Assess` },
-          { value: 'DEPLOY', text: t`Deploy` },
-          { value: 'ENFORCE', text: t`Enforce` },
-          { value: 'MAINTAIN', text: t`Maintain` },
-        ])
-      default:
-        return []
-    }
+  const filterOptionsMap = {
+    STATUS: [
+      { value: 'PASS', text: t`Pass` },
+      { value: 'INFO', text: t`Info` },
+      { value: 'FAIL', text: t`Fail` },
+    ],
+    TAGS: filterTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [],
+    ASSET_STATE: assetStateOptions,
+    GUIDANCE_TAG: guidanceTagOptions.toSorted((a, b) => a.text.localeCompare(b.text)) || [],
+    DMARC_PHASE: [
+      { value: 'ASSESS', text: t`Assess` },
+      { value: 'DEPLOY', text: t`Deploy` },
+      { value: 'ENFORCE', text: t`Enforce` },
+      { value: 'MAINTAIN', text: t`Maintain` },
+    ],
   }
+
+  const getFilterValueOptions = (category) => mapOptions(filterOptionsMap[category] || [])
 
   return (
     <Box py="2" {...props}>
@@ -167,7 +160,7 @@ export function DomainListFilters({
                     <option hidden value="">
                       <Trans>Value</Trans>
                     </option>
-                    {filterValues(values)}
+                    {getFilterValueOptions(values.filterCategory)}
                   </Select>
                   <Text color="red.500">{errors.filterValue}</Text>
                 </Box>
