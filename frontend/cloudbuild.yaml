@@ -128,5 +128,5 @@ options:
 
 availableSecrets:
   secretManager:
-    - versionName: projects/track-compliance/secrets/snyk-token/versions/2
+    - versionName: projects/${_PROJECT_ID}/secrets/snyk-token/versions/2
       env: SNYK_TOKEN
