@@ -1,17 +1,17 @@
 steps:
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: install
     dir: frontend
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: lint
     dir: frontend
     entrypoint: npm
     args: ['run', 'lint']
 
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: lingui-extract
     dir: frontend
     entrypoint: ash
@@ -20,7 +20,7 @@ steps:
       - |
         npm run extract | tee /workspace/lingui-extract-output.txt
 
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: lingui-translation-check
     dir: frontend
     entrypoint: ash
@@ -37,19 +37,19 @@ steps:
           exit 1
         fi
 
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: lingui-compile
     dir: frontend
     entrypoint: npm
     args: ['run', 'compile']
 
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: test
     dir: frontend
     entrypoint: npm
     args: ['test']
 
-  - name: node:16.3.0-alpine
+  - name: node:20.10.0-alpine
     id: build-production-bundle
     dir: frontend
     entrypoint: npm

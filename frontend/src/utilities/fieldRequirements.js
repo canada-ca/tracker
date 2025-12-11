@@ -3,6 +3,8 @@ import { t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { array as arrayProp, object as objectProp, string as stringProp } from 'prop-types'
 
+const nonEmptyMessage = () => i18n._(t`This field cannot be empty`)
+
 const getSchema = (options) => {
   return {
     email: string()
@@ -33,9 +35,9 @@ const getSchema = (options) => {
     acronym: string()
       .matches(/^[A-Z]+(?:_[A-Za-z]+)*$/gm, i18n._(t`Acronyms can only use upper case letters and underscores`))
       .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
-    field: string().required(i18n._(t`This field cannot be empty`)),
+    field: string().required(nonEmptyMessage()),
     filterCategory: string()
-      .required(i18n._(t`This field cannot be empty`))
+      .required(nonEmptyMessage())
       .oneOf(
         [
           'HTTPS_STATUS',
@@ -50,11 +52,9 @@ const getSchema = (options) => {
         ],
         '',
       ),
-    comparison: string()
-      .required(i18n._(t`This field cannot be empty`))
-      .oneOf(['EQUAL', 'NOT_EQUAL'], ''),
+    comparison: string().required(nonEmptyMessage()).oneOf(['EQUAL', 'NOT_EQUAL'], ''),
     filterValue: string()
-      .required(i18n._(t`This field cannot be empty`))
+      .required(nonEmptyMessage())
       .oneOf(
         [
           'PASS',
@@ -83,6 +83,11 @@ const getSchema = (options) => {
           ),
         ),
     ),
+    statusOption: string().when('filterCategory', {
+      is: (val) => val === 'STATUS',
+      then: (schema) => schema.required(nonEmptyMessage()),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   }
 }
 
