@@ -31,7 +31,9 @@ const getSummaries = (data, scanTypes, scoreType) => {
       if (scanType === 'negativeFindings') {
         score = scanTypeData?.guidanceTags?.map(({ count }) => count)?.reduce((a, b) => a + b)
       } else {
-        score = scanTypeData.categories[0][scoreType]?.toFixed(0)
+        const passingDataName = scanType === 'dmarcPhase' ? 'maintain' : 'pass'
+        const passingData = scanTypeData.categories.find((d) => d.name === passingDataName)
+        score = passingData[scoreType]?.toFixed(0)
       }
       if (typeof score === 'undefined') continue
       summaries.push({ date, type: scanType, score })
@@ -87,6 +89,8 @@ export function HistoricalSummariesGraph({
 
   const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
+
+  console.log(summaries)
 
   const summaryNames = {
     https: `HTTPS`,
