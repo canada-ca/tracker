@@ -90,8 +90,6 @@ export function HistoricalSummariesGraph({
   const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
 
-  console.log(summaries)
-
   const summaryNames = {
     https: `HTTPS`,
     dmarc: `DMARC`,
