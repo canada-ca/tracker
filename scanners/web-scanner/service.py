@@ -21,7 +21,6 @@ from nats.js.api import AckPolicy, ConsumerConfig
 from nats.js.errors import KeyWrongLastSequenceError, KeyNotFoundError
 from nats.js.kv import KeyValue
 
-from ip_cleanup import leader_election_service
 from scan.web_scanner import scan_web
 import nats
 from nats.errors import TimeoutError as NatsTimeoutError
@@ -223,8 +222,7 @@ async def scan_service():
         context.priority_sub = await js.pull_subscribe(
             **priority_pull_subscribe_options
         )
-        context.ip_kv = await js.create_key_value(bucket="WEB_SCANNER_IPS")
-        context.leaders_kv = await js.create_key_value(bucket="LEADERS")
+        context.ip_kv = await js.key_value(bucket="WEB_SCANNER_IPS")
         logger.info("Re-subscribed to NATS...")
 
     async def work_consumer():
@@ -395,8 +393,7 @@ async def scan_service():
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    context.ip_kv = await js.create_key_value(bucket="WEB_SCANNER_IPS")
-    context.leaders_kv = await js.create_key_value(bucket="LEADERS")
+    context.ip_kv = await js.key_value(bucket="WEB_SCANNER_IPS")
 
     pull_subscribe_options = {
         "stream": "SCANS",
@@ -423,8 +420,6 @@ async def scan_service():
 
     context.sub = await js.pull_subscribe(**pull_subscribe_options)
     context.priority_sub = await js.pull_subscribe(**priority_pull_subscribe_options)
-
-    asyncio.create_task(leader_election_service(js, instance_id))
 
     workers = [asyncio.create_task(work_consumer()) for _ in range(SCAN_THREAD_COUNT)]
     producer = asyncio.create_task(work_producer())
