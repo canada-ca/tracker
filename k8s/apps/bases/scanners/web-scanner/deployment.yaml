@@ -30,6 +30,8 @@ spec:
               value: INFO
             - name: SCAN_THREAD_COUNT
               value: "2"
+            - name: MAX_SLOTS_PER_IP
+              value: "10"
             - name: PYTHONWARNINGS
               value: ignore
             - name: NATS_SERVERS
