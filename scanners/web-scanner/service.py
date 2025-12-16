@@ -292,7 +292,7 @@ async def scan_service():
                         if task_success:
                             logger.debug(f"Acknowledging message: {msg}")
                             await msg.ack()
-                            logger.info(f"Message acknowledged: {msg}")
+                            logger.debug(f"Message acknowledged: {msg}")
                     except Exception as e:
                         logger.error(
                             f"Error while acknowledging message for received message: {msg}: {e}"
