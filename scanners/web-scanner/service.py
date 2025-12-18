@@ -184,9 +184,11 @@ async def release_ip_slot(kv: KeyValue, ip: str) -> None:
                     )
                     return
                 except KeyWrongLastSequenceError:
+                    logger.info(f"Wrong last sequence for {ip}: {entry.revision}")
                     await asyncio.sleep(0.1)
                     continue
         except KeyNotFoundError:
+            logger.info(f"IP slot for {ip} not found to release")
             return  # Key not found, nothing to release
         except Exception as e:
             error_retries += 1
@@ -290,6 +292,7 @@ async def scan_service():
                         if task_success:
                             logger.debug(f"Acknowledging message: {msg}")
                             await msg.ack()
+                            logger.debug(f"Message acknowledged: {msg}")
                     except Exception as e:
                         logger.error(
                             f"Error while acknowledging message for received message: {msg}: {e}"
@@ -297,7 +300,9 @@ async def scan_service():
 
                     try:
                         ip_address = json.loads(msg.data).get("ip_address")
+                        logger.debug(f"Releasing IP address: {ip_address}")
                         await release_ip_slot(context.ip_kv, ip_address)
+                        logger.debug(f"Released IP address: {ip_address}")
                     except Exception as e:
                         logger.error(
                             f"Error while releasing IP slot for received message: {msg}: {e}"
@@ -305,6 +310,8 @@ async def scan_service():
 
                 running_tasks.discard(task)
                 TASK_QUEUE.task_done()
+
+                logger.debug(f"Task completed for message: {msg}")
 
     async def work_producer():
         # Only check priority message every 0.5 seconds
