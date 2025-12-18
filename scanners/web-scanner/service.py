@@ -344,6 +344,7 @@ async def scan_service():
                         logger.debug(f"Received message: {msg}")
                     except NatsTimeoutError:
                         logger.debug("No messages available...")
+                        await asyncio.sleep(1)
                         continue
 
                 ip = json.loads(msg.data).get("ip_address")
