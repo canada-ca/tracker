@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "arango-tools": "^0.6.0",
-    "arangojs": "^8.8.1",
+    "arangojs": "^9.0.0",
     "dotenv-safe": "^8.2.0",
     "json-placeholder-replacer": "^1.0.35"
   },
