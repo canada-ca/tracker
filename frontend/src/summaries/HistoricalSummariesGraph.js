@@ -12,7 +12,7 @@ import { localPoint } from '@visx/event'
 import { scaleLinear } from '@visx/scale'
 import { Line, LinePath } from '@visx/shape'
 import { useTooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip'
-import { timeFormat } from '@visx/vendor/d3-time-format'
+import { utcFormat } from '@visx/vendor/d3-time-format'
 import { GlyphCircle } from '@visx/glyph'
 import { Trans, t } from '@lingui/macro'
 import { func } from 'prop-types'
@@ -137,7 +137,7 @@ export function HistoricalSummariesGraph({
   }
 
   // to remove comma from date
-  const formatDate = timeFormat('%y-%m-%d')
+  const formatDate = utcFormat('%y-%m-%d')
 
   // horizontal, x scale
   const timeScale = scaleLinear({
