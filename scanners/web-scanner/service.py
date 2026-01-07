@@ -364,6 +364,7 @@ async def scan_service():
                     )
                     #  Unable to acquire slot, requeue (Nak) message with delay
                     await msg.nak(delay=3)
+                    await asyncio.sleep(1)
                     continue
 
                 try:
