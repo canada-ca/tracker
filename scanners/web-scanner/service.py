@@ -314,7 +314,7 @@ async def scan_service():
                 TASK_QUEUE.task_done()
 
                 logger.debug(f"Task completed for message: {msg}")
-        logger.debug(f"Consumer shutting down...")
+        logger.info(f"Consumer shutting down...")
 
     async def work_producer():
         # Only check priority message every 0.5 seconds
