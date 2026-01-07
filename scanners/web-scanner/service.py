@@ -231,6 +231,7 @@ async def scan_service():
         while not SHUTDOWN_EVENT.is_set():
             try:
                 msg: Msg = await asyncio.wait_for(TASK_QUEUE.get(), timeout=1)
+                logger.debug(f"Consumer fetched message. Queue size: {TASK_QUEUE.qsize()}")
             except asyncio.TimeoutError:
                 continue  # No tasks available. Check SHUTDOWN_EVENT and try again
 
@@ -239,6 +240,7 @@ async def scan_service():
 
             try:
                 async with SEMAPHORE:
+                    logger.debug(f"Consumer acquired semaphore.")
                     task = loop.run_in_executor(EXECUTOR, run_scan, msg)
                     running_tasks.add(task)
                     result = await task
@@ -312,6 +314,7 @@ async def scan_service():
                 TASK_QUEUE.task_done()
 
                 logger.debug(f"Task completed for message: {msg}")
+        logger.debug(f"Consumer shutting down...")
 
     async def work_producer():
         # Only check priority message every 0.5 seconds
@@ -319,8 +322,10 @@ async def scan_service():
         time_to_check_priority = time.monotonic() + 0.5
 
         while not SHUTDOWN_EVENT.is_set():
+            logger.debug(f"Producer loop iteration. Queue size: {TASK_QUEUE.qsize()}")
             # Only get new tasks if there are available slots in the semaphore (i.e. not all threads are busy)
             async with SEMAPHORE:
+                logger.debug(f"Producer acquired semaphore.")
                 msg = None
 
                 # Check for priority messages first
@@ -365,6 +370,7 @@ async def scan_service():
                     await TASK_QUEUE.put(msg)
                 except Exception as e:
                     logger.error(f"Error while queueing scans: {e}")
+        logger.info("Producer shutting down...")
 
     async def shutdown():
         logger.info("Shutting down...")
