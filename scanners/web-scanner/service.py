@@ -227,6 +227,12 @@ async def scan_service():
         context.ip_kv = await js.key_value(bucket="WEB_SCANNER_IPS")
         logger.info("Re-subscribed to NATS...")
 
+    async def disconnected_cb():
+        logger.warning(f"Disconnected from NATS...")
+
+    async def closed_cb():
+        logger.info(f"NATS connection closed")
+
     async def work_consumer():
         while not SHUTDOWN_EVENT.is_set():
             try:
@@ -400,6 +406,8 @@ async def scan_service():
 
     nc = await nats.connect(
         error_cb=error_cb,
+        disconnected_cb=disconnected_cb,
+        closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
