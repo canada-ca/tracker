@@ -30,7 +30,7 @@
     "@as-integrations/express4": "^1.1.2",
     "@lingui/core": "^4.13.0",
     "arango-tools": "^0.6.0",
-    "arangojs": "^8.0.0",
+    "arangojs": "^9.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.4",
     "compression": "^1.8.1",
