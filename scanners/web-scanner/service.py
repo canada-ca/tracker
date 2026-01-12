@@ -249,6 +249,7 @@ async def scan_service():
                     logger.debug(f"Consumer acquired semaphore.")
                     task = loop.run_in_executor(EXECUTOR, run_scan, msg)
                     running_tasks.add(task)
+                    logger.debug(f"Added task to running tasks. Total running: {len(running_tasks)}")
                     result = await task
                     if isinstance(result, Exception):
                         logger.error(
@@ -258,6 +259,7 @@ async def scan_service():
                         # Attempt to scan again
                         task = loop.run_in_executor(EXECUTOR, run_scan, msg)
                         running_tasks.add(task)
+                        logger.debug(f"Retrying task. Added to running tasks. Total running: {len(running_tasks)}")
                         result = await task
                         if isinstance(result, Exception):
                             logger.error(
@@ -317,6 +319,7 @@ async def scan_service():
                         )
 
                 running_tasks.discard(task)
+                logger.debug(f"Removed task from running tasks. Total running: {len(running_tasks)}")
                 TASK_QUEUE.task_done()
 
                 logger.debug(f"Task completed for message: {msg}")
@@ -328,55 +331,62 @@ async def scan_service():
         time_to_check_priority = time.monotonic() + 0.5
 
         while not SHUTDOWN_EVENT.is_set():
-            logger.debug(f"Producer loop iteration. Queue size: {TASK_QUEUE.qsize()}")
-            # Only get new tasks if there are available slots in the semaphore (i.e. not all threads are busy)
-            async with SEMAPHORE:
-                logger.debug(f"Producer acquired semaphore.")
-                msg = None
+            try:
+                logger.debug(f"Producer loop iteration. Queue size: {TASK_QUEUE.qsize()}")
+                # Only get new tasks if there are available slots in the semaphore (i.e. not all threads are busy)
+                async with SEMAPHORE:
+                    logger.debug(f"Producer acquired semaphore.")
+                    msg = None
 
-                # Check for priority messages first
-                if time.monotonic() > time_to_check_priority:
-                    try:
-                        logger.debug("Fetching priority message...")
-                        msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
-                        msg = msgs[0]
-                        logger.debug(f"Received priority message: {msg}")
-                    except NatsTimeoutError:
-                        msg = None
-                        logger.debug("No priority messages available...")
-                    finally:
-                        time_to_check_priority = time.monotonic() + 0.5
+                    # Check for priority messages first
+                    if time.monotonic() > time_to_check_priority:
+                        try:
+                            logger.debug("Fetching priority message...")
+                            msgs = await context.priority_sub.fetch(batch=1, timeout=0.5)
+                            msg = msgs[0]
+                            logger.debug(f"Received priority message: {msg}")
+                        except NatsTimeoutError:
+                            msg = None
+                            logger.debug("No priority messages available...")
+                        finally:
+                            time_to_check_priority = time.monotonic() + 0.5
 
-                if not msg:
-                    try:
-                        logger.debug("Fetching message...")
-                        msgs = await context.sub.fetch(batch=1, timeout=1)
-                        msg = msgs[0]
-                        logger.debug(f"Received message: {msg}")
-                    except NatsTimeoutError:
-                        logger.debug("No messages available...")
+                    if not msg:
+                        try:
+                            logger.debug("Fetching message...")
+                            msgs = await context.sub.fetch(batch=1, timeout=1)
+                            msg = msgs[0]
+                            logger.debug(f"Received message: {msg}")
+                        except NatsTimeoutError:
+                            logger.debug("No messages available...")
+                            await asyncio.sleep(1)
+                            continue
+
+                    ip = json.loads(msg.data).get("ip_address")
+                    if not ip:
+                        logger.error(f"Invalid IP address in message: {msg}")
+                        await msg.ack()
+                        continue
+
+                    if not await try_acquire_ip_slot(context.ip_kv, ip):
+                        logger.debug(
+                            f"Unable to acquire slot for IP address: {ip}, requeuing..."
+                        )
+                        #  Unable to acquire slot, requeue (Nak) message with delay
+                        await msg.nak(delay=3)
                         await asyncio.sleep(1)
                         continue
 
-                ip = json.loads(msg.data).get("ip_address")
-                if not ip:
-                    logger.error(f"Invalid IP address in message: {msg}")
-                    await msg.ack()
-                    continue
-
-                if not await try_acquire_ip_slot(context.ip_kv, ip):
-                    logger.debug(
-                        f"Unable to acquire slot for IP address: {ip}, requeuing..."
-                    )
-                    #  Unable to acquire slot, requeue (Nak) message with delay
-                    await msg.nak(delay=3)
-                    await asyncio.sleep(1)
-                    continue
-
-                try:
-                    await TASK_QUEUE.put(msg)
-                except Exception as e:
-                    logger.error(f"Error while queueing scans: {e}")
+                    try:
+                        await TASK_QUEUE.put(msg)
+                    except Exception as e:
+                        logger.error(f"Error while queueing scans: {e}")
+            except asyncio.CancelledError:
+                logger.info("Producer task cancelled...")
+                break
+            except Exception as e:
+                logger.critical(f"Uncaught error in producer: {e} \n\nFull traceback: {traceback.format_exc()}")
+                raise
         logger.info("Producer shutting down...")
 
     async def shutdown():
