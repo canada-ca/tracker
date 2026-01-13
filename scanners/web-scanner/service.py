@@ -122,7 +122,7 @@ def run_scan(msg):
 
 async def try_acquire_ip_slot(kv: KeyValue, ip: str) -> bool:
     # Try to acquire a slot to scan the IP address
-    max_retries = 3
+    max_retries = 5
     retries = 0
 
     while retries < max_retries:
@@ -142,19 +142,34 @@ async def try_acquire_ip_slot(kv: KeyValue, ip: str) -> bool:
                     )
                     return True
                 except KeyWrongLastSequenceError:
+                    logger.debug(f"Wrong last sequence for {ip}: {entry.revision}")
                     retries += 1
                     await asyncio.sleep(0.1)
                     continue
                 except Exception as e:
                     logger.error(f"Unexpected error acquiring IP slot for {ip}: {e}")
-                    raise
+                    retries += 1
+                    await asyncio.sleep(0.1)
+                    continue
             else:
                 return False  # No slots available
         except KeyNotFoundError:
-            await kv.create(
-                ip, json.dumps({"count": 1, "updated_at": int(time.time())}).encode()
-            )
-            return True
+            try:
+                # Key does not exist, create it
+                await kv.create(
+                    ip, json.dumps({"count": 1, "updated_at": int(time.time())}).encode()
+                )
+                return True
+            except KeyWrongLastSequenceError:
+                logger.debug(f"Wrong last sequence when creating {ip}")
+                retries += 1
+                await asyncio.sleep(0.1)
+                continue
+            except Exception as e:
+                logger.error(f"Unexpected error creating IP slot for {ip}: {e}")
+                retries += 1
+                await asyncio.sleep(0.1)
+                continue
         except Exception as e:
             logger.error(f"Error acquiring IP slot for {ip}: {e}")
             retries += 1
