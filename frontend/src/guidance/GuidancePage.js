@@ -63,6 +63,13 @@ function GuidancePage() {
   const { from, searchParams } = location.state || { from: { pathname: '/domains', searchParams: '' } }
   const [orgInfo, setOrgInfo] = useState({})
 
+  const formatTimestamp = (ts) => {
+    const date = new Date(ts)
+    return date.toLocaleString('en-CA', {
+      timeZoneName: 'short',
+    })
+  }
+
   const {
     id: domainId,
     domain: domainName,
@@ -212,7 +219,7 @@ function GuidancePage() {
   }
 
   let guidanceResults
-  if (rcode !== 'NOERROR') {
+  if (rcode && rcode !== 'NOERROR') {
     guidanceResults = (
       <Box fontSize="lg">
         <Flex>
@@ -231,8 +238,12 @@ function GuidancePage() {
       </Box>
     )
   } else {
-    const { results: webResults, timestamp } = webScan?.edges[0]?.node
-    const { node: dnsResults } = dnsScan?.edges[0]
+    const { results: webResults, timestamp: webTimestamp } = webScan?.edges[0]?.node || {}
+    const { node: dnsResults } = dnsScan?.edges[0] || {}
+
+    const hasNoIpAddresses = webResults && webResults.length === 0
+
+    const hasNoDnsScans = !dnsScan || !dnsScan.edges || dnsScan.edges.length === 0
 
     const noScanData = (
       <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
@@ -245,47 +256,71 @@ function GuidancePage() {
       </Flex>
     )
 
+    const noIpAddressData = (
+      <>
+        {webTimestamp && (
+          <Text fontSize="lg" mb="4">
+            <Trans>
+              <b>Last Scanned:</b> {formatTimestamp(webTimestamp)}
+            </Trans>
+          </Text>
+        )}
+        <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
+          <Text>
+            <Trans>
+              No IP addresses were available to scan for this service. Please check your DNS configuration or contact us
+              for assistance.
+            </Trans>
+          </Text>
+        </Flex>
+      </>
+    )
+
     guidanceResults = (
-      <Tabs
-        isFitted
-        variant="enclosed-colored"
-        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
-        onChange={(i) => changeActiveTab(i)}
-        isLazy
-      >
-        <TabList mb="4">
-          <Tab borderTopWidth="0.25">
-            <Trans>Web Guidance</Trans>
-          </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Email Guidance</Trans>
-          </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Additional Findings</Trans>
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            {webResults.length === 0 ? (
-              noScanData
-            ) : (
-              <WebGuidance webResults={webResults} status={status} timestamp={timestamp} />
-            )}
-          </TabPanel>
-          <TabPanel>
-            {dnsScan.edges.length === 0 ? (
-              noScanData
-            ) : (
-              <EmailGuidance dnsResults={dnsResults} status={status} mxRecordDiff={mxRecordDiff}>
-                <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
-              </EmailGuidance>
-            )}
-          </TabPanel>
-          <TabPanel>
-            <AdditionalFindings domain={domainName} />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      <>
+        <Tabs
+          isFitted
+          variant="enclosed-colored"
+          defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+          onChange={(i) => changeActiveTab(i)}
+          isLazy
+        >
+          <TabList mb="4">
+            <Tab borderTopWidth="0.25">
+              <Trans>Web Guidance</Trans>
+            </Tab>
+            <Tab borderTopWidth="0.25">
+              <Trans>Email Guidance</Trans>
+            </Tab>
+            <Tab borderTopWidth="0.25">
+              <Trans>Additional Findings</Trans>
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              {!webResults ? (
+                noScanData
+              ) : hasNoIpAddresses ? (
+                noIpAddressData
+              ) : (
+                <WebGuidance webResults={webResults} status={status} timestamp={webTimestamp} />
+              )}
+            </TabPanel>
+            <TabPanel>
+              {hasNoDnsScans ? (
+                noScanData
+              ) : (
+                <EmailGuidance dnsResults={dnsResults} status={status} mxRecordDiff={mxRecordDiff}>
+                  <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
+                </EmailGuidance>
+              )}
+            </TabPanel>
+            <TabPanel>
+              <AdditionalFindings domain={domainName} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </>
     )
   }
 

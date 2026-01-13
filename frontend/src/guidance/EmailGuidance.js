@@ -109,11 +109,13 @@ export function EmailGuidance({ dnsResults, status, mxRecordDiff, children }) {
 
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
-      <Text fontSize="lg">
-        <Trans>
-          <b>Last Scanned:</b> {formatTimestamp(timestamp)}
-        </Trans>
-      </Text>
+      {timestamp && (
+        <Text fontSize="lg" mb="2">
+          <Trans>
+            <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+          </Trans>
+        </Text>
+      )}
       {emailSummary}
       {children}
       <AccordionItem>
