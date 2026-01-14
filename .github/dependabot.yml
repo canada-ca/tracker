@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: daily
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
 
   - package-ecosystem: docker
     directory: "/frontend"
