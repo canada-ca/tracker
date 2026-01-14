@@ -3,17 +3,10 @@ import os
 import sys
 
 from arango import ArangoClient
-from azure.cosmos import CosmosClient
+from azure.cosmos import CosmosClient, ProxyConfiguration
 from dotenv import load_dotenv
 
 from update_selectors import update_selectors
-
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.INFO,
-    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
-)
-logger = logging.getLogger()
 
 load_dotenv()
 
@@ -51,6 +44,8 @@ COSMOS_DB_SELECTORS_CONTAINER = os.getenv("COSMOS_DB_SELECTORS_CONTAINER")
 
 REMOVE_SELECTORS = os.getenv("REMOVE_SELECTORS", "false").lower() == "true"
 
+COSMOS_PROXY_URL = os.getenv("COSMOS_PROXY_URL")
+
 
 if __name__ == "__main__":
     missing_envs = []
@@ -82,7 +77,16 @@ if __name__ == "__main__":
     )
 
     # Initialize the Cosmos client using connection string
-    cosmos_client = CosmosClient.from_connection_string(COSMOS_DB_CONN_STRING)
+    cosmos_connection_kwargs = {}
+    if COSMOS_PROXY_URL:
+        logger.info("Configuring Cosmos DB client to use proxy")
+
+        cosmos_connection_kwargs["proxies"] = {
+            "http": COSMOS_PROXY_URL,
+            "https": COSMOS_PROXY_URL
+        }
+
+    cosmos_client = CosmosClient.from_connection_string(COSMOS_DB_CONN_STRING, **cosmos_connection_kwargs)
 
     # Get DB
     cosmos_db = cosmos_client.get_database_client(COSMOS_DB_NAME)
