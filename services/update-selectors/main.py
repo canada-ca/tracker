@@ -17,6 +17,29 @@ logger = logging.getLogger()
 
 load_dotenv()
 
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
+
+logger_level = logging.getLevelName(LOGGER_LEVEL)
+if not isinstance(logger_level, int):
+    print(f"Invalid logger level: {LOGGER_LEVEL}")
+    sys.exit(1)
+
+# Split logging to stdout and stderr
+# DEBUG and INFO to stdout
+# WARNING and above to stderr
+h1 = logging.StreamHandler(sys.stdout)
+h1.setLevel(logging.DEBUG)
+h1.addFilter(lambda record: record.levelno <= logging.INFO)
+h2 = logging.StreamHandler(sys.stderr)
+h2.setLevel(logging.WARNING)
+
+logging.basicConfig(
+    level=logger_level,
+    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+    handlers=[h1, h2],
+)
+logger = logging.getLogger(__name__)
+
 ARANGO_DB_USER = os.getenv("ARANGO_DB_USER")
 ARANGO_DB_PASS = os.getenv("ARANGO_DB_PASS")
 ARANGO_DB_NAME = os.getenv("ARANGO_DB_NAME")
