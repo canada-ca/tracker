@@ -277,50 +277,48 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <>
-        <Tabs
-          isFitted
-          variant="enclosed-colored"
-          defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
-          onChange={(i) => changeActiveTab(i)}
-          isLazy
-        >
-          <TabList mb="4">
-            <Tab borderTopWidth="0.25">
-              <Trans>Web Guidance</Trans>
-            </Tab>
-            <Tab borderTopWidth="0.25">
-              <Trans>Email Guidance</Trans>
-            </Tab>
-            <Tab borderTopWidth="0.25">
-              <Trans>Additional Findings</Trans>
-            </Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              {!webResults ? (
-                noScanData
-              ) : hasNoIpAddresses ? (
-                noIpAddressData
-              ) : (
-                <WebGuidance webResults={webResults} status={status} timestamp={webTimestamp} />
-              )}
-            </TabPanel>
-            <TabPanel>
-              {hasNoDnsScans ? (
-                noScanData
-              ) : (
-                <EmailGuidance dnsResults={dnsResults} status={status} mxRecordDiff={mxRecordDiff}>
-                  <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
-                </EmailGuidance>
-              )}
-            </TabPanel>
-            <TabPanel>
-              <AdditionalFindings domain={domainName} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </>
+      <Tabs
+        isFitted
+        variant="enclosed-colored"
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        onChange={(i) => changeActiveTab(i)}
+        isLazy
+      >
+        <TabList mb="4">
+          <Tab borderTopWidth="0.25">
+            <Trans>Web Guidance</Trans>
+          </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Email Guidance</Trans>
+          </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Additional Findings</Trans>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            {!webResults ? (
+              noScanData
+            ) : hasNoIpAddresses ? (
+              noIpAddressData
+            ) : (
+              <WebGuidance webResults={webResults} status={status} timestamp={webTimestamp} />
+            )}
+          </TabPanel>
+          <TabPanel>
+            {hasNoDnsScans ? (
+              noScanData
+            ) : (
+              <EmailGuidance dnsResults={dnsResults} status={status} mxRecordDiff={mxRecordDiff}>
+                <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
+              </EmailGuidance>
+            )}
+          </TabPanel>
+          <TabPanel>
+            <AdditionalFindings domain={domainName} />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     )
   }
 
