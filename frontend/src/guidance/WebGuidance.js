@@ -14,12 +14,11 @@ import {
   Select,
   Text,
 } from '@chakra-ui/react'
-import { array } from 'prop-types'
+import { array, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { WebTLSResults } from './WebTLSResults'
 import { WebConnectionResults } from './WebConnectionResults'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
-import { string } from 'prop-types'
 import { NotificationBanner } from '../app/NotificationBanner'
 
 export function WebGuidance({ webResults, timestamp }) {
@@ -54,6 +53,13 @@ export function WebGuidance({ webResults, timestamp }) {
     totalWebInfo += endpointInfo
     totalWebFail += endpointFail
   })
+
+  const formatTimestamp = (ts) => {
+    const date = new Date(ts)
+    return date.toLocaleString('en-CA', {
+      timeZoneName: 'short',
+    })
+  }
 
   const endPointSummary = (
     <AccordionItem>
@@ -141,13 +147,6 @@ export function WebGuidance({ webResults, timestamp }) {
     return ipAddress === selectedEndpoint
   })
 
-  const formatTimestamp = (ts) => {
-    const date = new Date(ts)
-    return date.toLocaleString('en-CA', {
-      timeZoneName: 'short',
-    })
-  }
-
   return (
     <>
       <NotificationBanner status="info" bannerId="updated-tls-guidance" hideable>
@@ -171,11 +170,13 @@ export function WebGuidance({ webResults, timestamp }) {
         </Box>
       </NotificationBanner>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        <Text fontSize="lg">
-          <Trans>
-            <b>Last Scanned:</b> {formatTimestamp(timestamp)}
-          </Trans>
-        </Text>
+        {timestamp && (
+          <Text fontSize="lg" mb="2">
+            <Trans>
+              <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+            </Trans>
+          </Text>
+        )}
         {!isWebHosting && (
           <NotificationBanner>
             <Text>

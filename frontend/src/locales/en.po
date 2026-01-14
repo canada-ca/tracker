@@ -138,8 +138,8 @@ msgstr "<0>Current Phone Number:</0> {detailValue}"
 
 #. placeholder {0}: mxRecords.error
 #. placeholder {0}: nsRecords.error
-#: src/guidance/EmailGuidance.js:332
-#: src/guidance/EmailGuidance.js:405
+#: src/guidance/EmailGuidance.js:334
+#: src/guidance/EmailGuidance.js:407
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Error:</0> {0}"
 
@@ -159,19 +159,21 @@ msgstr "<0>Help Desk</0>: All enquiries submitted via generic mailboxes <1>track
 #~ msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxs tracker@tbs-sct.gc.ca, suivi@tbs-sct.gc.ca will be responded to within 10 business days."
 #~ msgstr "<0>Help Desk</0>: All enquiries submitted via generic mailboxs tracker@tbs-sct.gc.ca, suivi@tbs-sct.gc.ca will be responded to within 10 business days."
 
-#: src/guidance/EmailGuidance.js:292
-#: src/guidance/EmailGuidance.js:379
+#: src/guidance/EmailGuidance.js:294
+#: src/guidance/EmailGuidance.js:381
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Hostname:</0> {hostname}"
 
 #. placeholder {0}: addresses.join(', ')
-#: src/guidance/EmailGuidance.js:297
+#: src/guidance/EmailGuidance.js:299
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
 #. placeholder {0}: formatTimestamp(timestamp)
+#. placeholder {0}: formatTimestamp(webTimestamp)
 #: src/guidance/AdditionalFindings.js:80
-#: src/guidance/EmailGuidance.js:113
+#: src/guidance/EmailGuidance.js:114
+#: src/guidance/GuidancePage.js:263
 #: src/guidance/WebGuidance.js:175
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Last Scanned:</0> {0}"
@@ -184,7 +186,7 @@ msgstr "<0>Last Scanned:</0> {0}"
 msgid "<0>Note:</0> Tags must not include data that would reclassify the asset above <1>Unclassified, Low Integrity, Low Availability (ULL)</1>"
 msgstr "<0>Note:</0> Tags must not include data that would reclassify the asset above <1>Unclassified, Low Integrity, Low Availability (ULL)</1>"
 
-#: src/guidance/EmailGuidance.js:302
+#: src/guidance/EmailGuidance.js:304
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Preference:</0> {preference}"
 
@@ -256,7 +258,7 @@ msgstr "404 - Page Not Found"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 
-#: src/guidance/GuidancePage.js:220
+#: src/guidance/GuidancePage.js:227
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
@@ -382,7 +384,7 @@ msgstr "Add User"
 #~ msgstr "Additional findings"
 
 #: src/guidance/AdditionalFindings.js:45
-#: src/guidance/GuidancePage.js:264
+#: src/guidance/GuidancePage.js:296
 msgid "Additional Findings"
 msgstr "Additional Findings"
 
@@ -451,7 +453,7 @@ msgstr "All {domainCount} domains are selected. Updates will apply to all filter
 msgid "All {domainCount} selected"
 msgstr "All {domainCount} selected"
 
-#: src/summaries/HistoricalSummariesGraph.js:215
+#: src/summaries/HistoricalSummariesGraph.js:217
 msgid "All Time"
 msgstr "All Time"
 
@@ -528,7 +530,7 @@ msgid "An error occurred when you attempted to sign out"
 msgstr "An error occurred when you attempted to sign out"
 
 #: src/domains/DomainCard.js:52
-#: src/guidance/GuidancePage.js:101
+#: src/guidance/GuidancePage.js:108
 msgid "An error occurred while favouriting a domain."
 msgstr "An error occurred while favouriting a domain."
 
@@ -631,7 +633,7 @@ msgstr "Any products or related services provided to you by TBS are and will rem
 
 #: src/admin/AdminDomains.js:301
 #: src/admin/DomainUpdateList.js:337
-#: src/domains/DomainListFilters.js:176
+#: src/domains/DomainListFilters.js:169
 msgid "Apply"
 msgstr "Apply"
 
@@ -711,7 +713,7 @@ msgstr "Are you sure you want to stop ignoring this CVE?"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src/domains/DomainListFilters.js:51
+#: src/domains/DomainListFilters.js:45
 #: src/domains/FilterList.js:30
 #: src/guidance/DmarcPhaseStepper.js:22
 msgid "Assess"
@@ -724,7 +726,7 @@ msgstr "Assess current state;"
 
 #: src/admin/AdminDomainModal.js:281
 #: src/admin/AdminDomains.js:240
-#: src/domains/DomainListFilters.js:116
+#: src/domains/DomainListFilters.js:109
 msgid "Asset State"
 msgstr "Asset State"
 
@@ -776,7 +778,7 @@ msgstr "Blank fields will not be included when updating the organization."
 #: src/admin/AdminDomains.js:182
 #: src/domains/DomainCard.js:152
 #: src/domains/DomainsPage.js:138
-#: src/guidance/WebGuidance.js:102
+#: src/guidance/WebGuidance.js:108
 #: src/organizationDetails/OrganizationDomains.js:115
 msgid "Blocked"
 msgstr "Blocked"
@@ -840,7 +842,7 @@ msgstr "CANDIDATE"
 #~ msgid "Category"
 #~ msgstr "Category"
 
-#: src/guidance/WebGuidance.js:159
+#: src/guidance/WebGuidance.js:158
 msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
 msgstr "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
 
@@ -912,7 +914,7 @@ msgstr "Changes Required for ITPIN Compliance"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 
-#: src/guidance/EmailGuidance.js:342
+#: src/guidance/EmailGuidance.js:344
 msgid "Changes:"
 msgstr "Changes:"
 
@@ -1002,7 +1004,7 @@ msgstr "Close"
 msgid "Close Account"
 msgstr "Close Account"
 
-#: src/guidance/EmailGuidance.js:271
+#: src/guidance/EmailGuidance.js:273
 msgid "CNAME:"
 msgstr "CNAME:"
 
@@ -1016,7 +1018,7 @@ msgid "Collect and analyze DMARC reports."
 msgstr "Collect and analyze DMARC reports."
 
 #: src/admin/AdminDomains.js:250
-#: src/domains/DomainListFilters.js:153
+#: src/domains/DomainListFilters.js:146
 msgid "Comparison"
 msgstr "Comparison"
 
@@ -1233,7 +1235,7 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-#: src/summaries/HistoricalSummariesGraph.js:242
+#: src/summaries/HistoricalSummariesGraph.js:244
 msgid "Data:"
 msgstr "Data:"
 
@@ -1251,7 +1253,7 @@ msgstr "Decay Detection"
 msgid "December"
 msgstr "December"
 
-#: src/guidance/EmailGuidance.js:144
+#: src/guidance/EmailGuidance.js:146
 msgid "Default:"
 msgstr "Default:"
 
@@ -1278,7 +1280,7 @@ msgstr "Dependency"
 msgid "DEPENDENCY"
 msgstr "DEPENDENCY"
 
-#: src/domains/DomainListFilters.js:52
+#: src/domains/DomainListFilters.js:46
 #: src/domains/FilterList.js:31
 #: src/guidance/DmarcPhaseStepper.js:31
 msgid "Deploy"
@@ -1445,7 +1447,7 @@ msgstr "DMARC Implementation Phase: {0}"
 msgid "DMARC Implementation Phase: {currentPhase}"
 msgstr "DMARC Implementation Phase: {currentPhase}"
 
-#: src/domains/DomainListFilters.js:120
+#: src/domains/DomainListFilters.js:113
 msgid "DMARC Phase"
 msgstr "DMARC Phase"
 
@@ -1475,7 +1477,7 @@ msgstr "DMARC policy of quarantine or reject, and all messages from non-mail dom
 
 #: src/dmarc/DmarcReportPage.js:94
 #: src/domains/DomainCard.js:244
-#: src/guidance/GuidancePage.js:338
+#: src/guidance/GuidancePage.js:373
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -1518,7 +1520,7 @@ msgid "DNS scan for domain \"{0}\" has completed."
 msgstr "DNS scan for domain \"{0}\" has completed."
 
 #: src/admin/AdminDomains.js:256
-#: src/domains/DomainListFilters.js:159
+#: src/domains/DomainListFilters.js:152
 msgid "DOES NOT EQUAL"
 msgstr "DOES NOT EQUAL"
 
@@ -1537,7 +1539,7 @@ msgstr "Domain"
 msgid "Domain added"
 msgstr "Domain added"
 
-#: src/summaries/HistoricalSummariesGraph.js:256
+#: src/summaries/HistoricalSummariesGraph.js:258
 msgid "Domain count"
 msgstr "Domain count"
 
@@ -1697,7 +1699,7 @@ msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:261
+#: src/guidance/GuidancePage.js:293
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
@@ -1770,15 +1772,15 @@ msgstr "Email Verification Sent"
 msgid "Email:"
 msgstr "Email:"
 
-#: src/guidance/WebGuidance.js:62
+#: src/guidance/WebGuidance.js:68
 msgid "Endpoint Summary"
 msgstr "Endpoint Summary"
 
-#: src/guidance/WebGuidance.js:121
+#: src/guidance/WebGuidance.js:127
 msgid "Endpoint:"
 msgstr "Endpoint:"
 
-#: src/domains/DomainListFilters.js:53
+#: src/domains/DomainListFilters.js:47
 #: src/domains/FilterList.js:32
 #: src/guidance/DmarcPhaseStepper.js:40
 msgid "Enforce"
@@ -1859,7 +1861,7 @@ msgid "Envelope From"
 msgstr "Envelope From"
 
 #: src/admin/AdminDomains.js:253
-#: src/domains/DomainListFilters.js:156
+#: src/domains/DomainListFilters.js:149
 msgid "EQUALS"
 msgstr "EQUALS"
 
@@ -1912,7 +1914,7 @@ msgstr "External ID:"
 #: src/dmarc/DmarcReportPage.js:142
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:41
+#: src/domains/DomainListFilters.js:39
 msgid "Fail"
 msgstr "Fail"
 
@@ -1949,7 +1951,7 @@ msgstr "Fake email domain blocks (reject + quarantine):"
 #~ msgstr "FAQ"
 
 #: src/domains/DomainCard.js:62
-#: src/guidance/GuidancePage.js:111
+#: src/guidance/GuidancePage.js:118
 msgid "Favourited Domain"
 msgstr "Favourited Domain"
 
@@ -2161,7 +2163,7 @@ msgstr "Getting top 25 report"
 
 #: src/admin/DomainTagsList.js:50
 #: src/admin/TagForm.js:268
-#: src/summaries/HistoricalSummariesGraph.js:236
+#: src/summaries/HistoricalSummariesGraph.js:238
 msgid "Global"
 msgstr "Global"
 
@@ -2191,7 +2193,7 @@ msgstr "Graph direction:"
 msgid "Guidance"
 msgstr "Guidance"
 
-#: src/guidance/GuidancePage.js:124
+#: src/guidance/GuidancePage.js:131
 msgid "Guidance results"
 msgstr "Guidance results"
 
@@ -2458,7 +2460,7 @@ msgstr "If available, please use a managed device provided by your organization.
 msgid "If you are an admin, you can find your organization here."
 msgstr "If you are an admin, you can find your organization here."
 
-#: src/guidance/GuidancePage.js:225
+#: src/guidance/GuidancePage.js:232
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 
@@ -2696,7 +2698,7 @@ msgstr "Individuals from a departmental information technology group may contact
 #~ msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 #~ msgstr "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 
-#: src/domains/DomainListFilters.js:40
+#: src/domains/DomainListFilters.js:38
 msgid "Info"
 msgstr "Info"
 
@@ -2839,11 +2841,11 @@ msgstr "June"
 msgid "Jurisdiction"
 msgstr "Jurisdiction"
 
-#: src/guidance/EmailGuidance.js:190
+#: src/guidance/EmailGuidance.js:192
 msgid "Key length:"
 msgstr "Key length:"
 
-#: src/guidance/EmailGuidance.js:184
+#: src/guidance/EmailGuidance.js:186
 msgid "Key type:"
 msgstr "Key type:"
 
@@ -2863,7 +2865,7 @@ msgstr "Label (FR)"
 msgid "Language:"
 msgstr "Language:"
 
-#: src/summaries/HistoricalSummariesGraph.js:204
+#: src/summaries/HistoricalSummariesGraph.js:206
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
@@ -2871,7 +2873,7 @@ msgstr "Last 30 Days"
 msgid "Last 30 Days of Data"
 msgstr "Last 30 Days of Data"
 
-#: src/summaries/HistoricalSummariesGraph.js:207
+#: src/summaries/HistoricalSummariesGraph.js:209
 msgid "Last 365 Days"
 msgstr "Last 365 Days"
 
@@ -2895,7 +2897,7 @@ msgstr "Last 365 Days"
 msgid "Last Seen: {0}"
 msgstr "Last Seen: {0}"
 
-#: src/guidance/EmailGuidance.js:286
+#: src/guidance/EmailGuidance.js:288
 msgid "Latest Scan:"
 msgstr "Latest Scan:"
 
@@ -2934,7 +2936,7 @@ msgstr "Loading {children}..."
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
-#: src/summaries/HistoricalSummariesGraph.js:233
+#: src/summaries/HistoricalSummariesGraph.js:235
 msgid "Local"
 msgstr "Local"
 
@@ -2946,7 +2948,7 @@ msgstr "Login"
 msgid "Login to your account"
 msgstr "Login to your account"
 
-#: src/guidance/EmailGuidance.js:138
+#: src/guidance/EmailGuidance.js:140
 msgid "Lookups:"
 msgstr "Lookups:"
 
@@ -2955,11 +2957,11 @@ msgstr "Lookups:"
 msgid "Low"
 msgstr "Low"
 
-#: src/summaries/HistoricalSummariesGraph.js:100
+#: src/summaries/HistoricalSummariesGraph.js:102
 msgid "Mail"
 msgstr "Mail"
 
-#: src/guidance/EmailGuidance.js:281
+#: src/guidance/EmailGuidance.js:283
 msgid "Mail Servers (MX)"
 msgstr "Mail Servers (MX)"
 
@@ -2967,7 +2969,7 @@ msgstr "Mail Servers (MX)"
 msgid "Mail-sending"
 msgstr "Mail-sending"
 
-#: src/domains/DomainListFilters.js:54
+#: src/domains/DomainListFilters.js:48
 #: src/domains/FilterList.js:33
 #: src/guidance/DmarcPhaseStepper.js:48
 msgid "Maintain"
@@ -3013,7 +3015,7 @@ msgstr "Menu"
 msgid "Message dismissed successfully"
 msgstr "Message dismissed successfully"
 
-#: src/summaries/HistoricalSummariesGraph.js:260
+#: src/summaries/HistoricalSummariesGraph.js:262
 msgid "Metrics:"
 msgstr "Metrics:"
 
@@ -3104,7 +3106,7 @@ msgstr "Name (EN)"
 msgid "Name (FR)"
 msgstr "Name (FR)"
 
-#: src/guidance/EmailGuidance.js:371
+#: src/guidance/EmailGuidance.js:373
 msgid "Name Servers (NS)"
 msgstr "Name Servers (NS)"
 
@@ -3121,11 +3123,11 @@ msgstr "Names:"
 msgid "Negative"
 msgstr "Negative"
 
-#: src/domains/DomainListFilters.js:124
+#: src/domains/DomainListFilters.js:117
 msgid "Negative Finding"
 msgstr "Negative Finding"
 
-#: src/summaries/HistoricalSummariesGraph.js:101
+#: src/summaries/HistoricalSummariesGraph.js:103
 msgid "Negative Findings"
 msgstr "Negative Findings"
 
@@ -3179,7 +3181,7 @@ msgstr "New Password:"
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
 
-#: src/guidance/WebGuidance.js:156
+#: src/guidance/WebGuidance.js:155
 msgid "New Recommended TLS Ciphers"
 msgstr "New Recommended TLS Ciphers"
 
@@ -3314,11 +3316,15 @@ msgstr "No guidance found for this category"
 #~ msgid "No HTTPS configuration information available for this organization."
 #~ msgstr "No HTTPS configuration information available for this organization."
 
+#: src/guidance/GuidancePage.js:270
+msgid "No IP addresses were available to scan for this service. Please check your DNS configuration or contact us for assistance."
+msgstr "No IP addresses were available to scan for this service. Please check your DNS configuration or contact us for assistance."
+
 #: src/guidance/WebTLSResults.js:79
 msgid "No known weak protocols used."
 msgstr "No known weak protocols used."
 
-#: src/guidance/EmailGuidance.js:317
+#: src/guidance/EmailGuidance.js:319
 msgid "No MX records found. Is the domain parked?"
 msgstr "No MX records found. Is the domain parked?"
 
@@ -3334,7 +3340,7 @@ msgstr "No negative findings to show. "
 msgid "No Organizations"
 msgstr "No Organizations"
 
-#: src/guidance/GuidancePage.js:138
+#: src/guidance/GuidancePage.js:145
 msgid "No Organizations found for this domain."
 msgstr "No Organizations found for this domain."
 
@@ -3350,7 +3356,7 @@ msgstr "No response headers found"
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/guidance/GuidancePage.js:240
+#: src/guidance/GuidancePage.js:251
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
@@ -3381,7 +3387,7 @@ msgid "Non-compliant"
 msgstr "Non-compliant"
 
 #: src/admin/OrganizationInformation.js:392
-#: src/guidance/EmailGuidance.js:273
+#: src/guidance/EmailGuidance.js:275
 #: src/guidance/IgnoredCves.js:22
 #: src/guidance/IgnoredCves.js:66
 #: src/user/EditableUserTFAMethod.js:164
@@ -3543,7 +3549,7 @@ msgstr "Organization owns this domain, but it is outside the allowed scope"
 msgid "Organization: "
 msgstr "Organization: "
 
-#: src/guidance/GuidancePage.js:345
+#: src/guidance/GuidancePage.js:380
 msgid "Organization(s):"
 msgstr "Organization(s):"
 
@@ -3551,7 +3557,7 @@ msgstr "Organization(s):"
 #: src/app/App.js:131
 #: src/app/App.js:292
 #: src/app/FloatingMenu.js:103
-#: src/guidance/GuidancePage.js:203
+#: src/guidance/GuidancePage.js:210
 #: src/organizations/Organizations.js:102
 #: src/organizations/Organizations.js:187
 msgid "Organizations"
@@ -3588,7 +3594,7 @@ msgstr "OWNER"
 msgid "Ownership:"
 msgstr "Ownership:"
 
-#: src/guidance/EmailGuidance.js:234
+#: src/guidance/EmailGuidance.js:236
 msgid "p:"
 msgstr "p:"
 
@@ -3602,7 +3608,7 @@ msgstr "Page {0} of {1}"
 #: src/dmarc/DmarcReportPage.js:133
 #: src/dmarc/DmarcReportSummaryGraph.js:184
 #: src/dmarc/DmarcReportSummaryGraph.js:381
-#: src/domains/DomainListFilters.js:39
+#: src/domains/DomainListFilters.js:37
 msgid "Pass"
 msgstr "Pass"
 
@@ -3643,7 +3649,7 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/guidance/EmailGuidance.js:246
+#: src/guidance/EmailGuidance.js:248
 msgid "pct:"
 msgstr "pct:"
 
@@ -3655,7 +3661,7 @@ msgstr "Pending"
 msgid "PENDING"
 msgstr "PENDING"
 
-#: src/summaries/HistoricalSummariesGraph.js:253
+#: src/summaries/HistoricalSummariesGraph.js:255
 msgid "Percentage"
 msgstr "Percentage"
 
@@ -3806,7 +3812,7 @@ msgstr "Privacy Act."
 msgid "Privacy Notice Statement"
 msgstr "Privacy Notice Statement"
 
-#: src/guidance/WebGuidance.js:107
+#: src/guidance/WebGuidance.js:113
 msgid "Private IP"
 msgstr "Private IP"
 
@@ -3870,7 +3876,7 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
-#: src/summaries/HistoricalSummariesGraph.js:200
+#: src/summaries/HistoricalSummariesGraph.js:202
 msgid "Range:"
 msgstr "Range:"
 
@@ -3908,9 +3914,9 @@ msgstr "Received Chain Has Valid Order"
 msgid "Recent Activity"
 msgstr "Recent Activity"
 
-#: src/guidance/EmailGuidance.js:132
-#: src/guidance/EmailGuidance.js:178
-#: src/guidance/EmailGuidance.js:228
+#: src/guidance/EmailGuidance.js:134
+#: src/guidance/EmailGuidance.js:180
+#: src/guidance/EmailGuidance.js:230
 msgid "Record:"
 msgstr "Record:"
 
@@ -3969,7 +3975,7 @@ msgstr "Request a domain to be scanned:"
 msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Request an invite if you are unaffiliated with your organization."
 
-#: src/guidance/GuidancePage.js:161
+#: src/guidance/GuidancePage.js:168
 #: src/organizationDetails/OrganizationDetails.js:120
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
@@ -4116,7 +4122,7 @@ msgstr "Scan of domain successfully requested"
 #: src/admin/AdminDomains.js:185
 #: src/domains/DomainCard.js:162
 #: src/domains/DomainsPage.js:142
-#: src/guidance/GuidancePage.js:308
+#: src/guidance/GuidancePage.js:343
 #: src/organizationDetails/OrganizationDomains.js:118
 msgid "Scan Pending"
 msgstr "Scan Pending"
@@ -4134,7 +4140,7 @@ msgstr "Scan Request"
 #~ msgid "Scanner Finding"
 #~ msgstr "Scanner Finding"
 
-#: src/summaries/HistoricalSummariesGraph.js:223
+#: src/summaries/HistoricalSummariesGraph.js:225
 msgid "Scope:"
 msgstr "Scope:"
 
@@ -4579,7 +4585,7 @@ msgstr "Sort by: "
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
-#: src/guidance/EmailGuidance.js:240
+#: src/guidance/EmailGuidance.js:242
 msgid "sp:"
 msgstr "sp:"
 
@@ -4687,7 +4693,7 @@ msgstr "State: {lastPortStateTranslated}"
 #~ msgid "Static IP Address: <0>52.138.13.28</0>"
 #~ msgstr "Static IP Address: <0>52.138.13.28</0>"
 
-#: src/domains/DomainListFilters.js:109
+#: src/domains/DomainListFilters.js:102
 msgid "Status"
 msgstr "Status"
 
@@ -4695,7 +4701,7 @@ msgstr "Status"
 #~ msgid "Status or tag"
 #~ msgstr "Status or tag"
 
-#: src/domains/DomainListFilters.js:141
+#: src/domains/DomainListFilters.js:134
 msgid "Status Value"
 msgstr "Status Value"
 
@@ -4803,7 +4809,7 @@ msgstr "System-designated tags appear here."
 
 #: src/admin/AdminDomains.js:237
 #: src/admin/AuditLogTable.js:80
-#: src/domains/DomainListFilters.js:112
+#: src/domains/DomainListFilters.js:105
 msgid "Tag"
 msgstr "Tag"
 
@@ -5047,7 +5053,7 @@ msgstr "The results of DKIM verification of the message. Can be pass, fail, neut
 msgid "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 msgstr "The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
 
-#: src/guidance/WebGuidance.js:203
+#: src/guidance/WebGuidance.js:204
 msgid "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 msgstr "The selected endpoint is a private IP address. Tracker does not perform scans on private IP addresses."
 
@@ -5145,7 +5151,7 @@ msgstr "This is a new service, we are constantly improving."
 #~ msgid "This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs."
 #~ msgstr "This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs."
 
-#: src/guidance/GuidancePage.js:194
+#: src/guidance/GuidancePage.js:201
 msgid "This may be due to insufficient user privileges or because the domain does not exist in the system.<0/>You can request access to an Organization below to view the Domain results."
 msgstr "This may be due to insufficient user privileges or because the domain does not exist in the system.<0/>You can request access to an Organization below to view the Domain results."
 
@@ -5161,7 +5167,7 @@ msgstr "This page displays your personal view of tracked domains. All domains ma
 #~ msgid "This page is dedicated to your personal view of tracker"
 #~ msgstr "This page is dedicated to your personal view of tracker"
 
-#: src/guidance/WebGuidance.js:182
+#: src/guidance/WebGuidance.js:183
 msgid "This service does <0>not host web content</0> and is not subject to the Web Sites and Services Management Configuration Requirements."
 msgstr "This service does <0>not host web content</0> and is not subject to the Web Sites and Services Management Configuration Requirements."
 
@@ -5190,7 +5196,7 @@ msgstr "This will update {0} domain(s)."
 #~ msgid "Tier 1"
 #~ msgstr "Tier 1"
 
-#: src/summaries/HistoricalSummariesGraph.js:270
+#: src/summaries/HistoricalSummariesGraph.js:272
 #: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
@@ -5199,7 +5205,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgid "Tier 2"
 #~ msgstr "Tier 2"
 
-#: src/summaries/HistoricalSummariesGraph.js:273
+#: src/summaries/HistoricalSummariesGraph.js:275
 #: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
@@ -5208,7 +5214,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgid "Tier 3"
 #~ msgstr "Tier 3"
 
-#: src/summaries/HistoricalSummariesGraph.js:276
+#: src/summaries/HistoricalSummariesGraph.js:278
 #: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
@@ -5282,7 +5288,7 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 msgid "Total Messages"
 msgstr "Total Messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:280
+#: src/summaries/HistoricalSummariesGraph.js:282
 msgid "Total Negative Findings"
 msgstr "Total Negative Findings"
 
@@ -5452,7 +5458,7 @@ msgstr "Unable to reset your password, please try again."
 #~ msgid "Unable to retrieve scan data for {0}."
 #~ msgstr "Unable to retrieve scan data for {0}."
 
-#: src/guidance/GuidancePage.js:191
+#: src/guidance/GuidancePage.js:198
 msgid "Unable to retrieve scan data for {domain}."
 msgstr "Unable to retrieve scan data for {domain}."
 
@@ -5694,7 +5700,7 @@ msgid "Users exercise due diligence in ensuring the accuracy of the materials re
 msgstr "Users exercise due diligence in ensuring the accuracy of the materials reproduced;"
 
 #: src/admin/AdminDomains.js:234
-#: src/domains/DomainListFilters.js:168
+#: src/domains/DomainListFilters.js:161
 msgid "Value"
 msgstr "Value"
 
@@ -5788,8 +5794,8 @@ msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 #~ msgid "Warnings"
 #~ msgstr "Warnings"
 
-#: src/guidance/EmailGuidance.js:312
-#: src/guidance/EmailGuidance.js:389
+#: src/guidance/EmailGuidance.js:314
+#: src/guidance/EmailGuidance.js:391
 msgid "Warnings:"
 msgstr "Warnings:"
 
@@ -5833,7 +5839,7 @@ msgstr "weak"
 #~ msgid "Weak Curves:"
 #~ msgstr "Weak Curves:"
 
-#: src/summaries/HistoricalSummariesGraph.js:99
+#: src/summaries/HistoricalSummariesGraph.js:101
 msgid "Web"
 msgstr "Web"
 
@@ -5849,7 +5855,7 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Components"
 msgstr "Web Components"
 
-#: src/summaries/HistoricalSummariesGraph.js:94
+#: src/summaries/HistoricalSummariesGraph.js:96
 msgid "Web Connections"
 msgstr "Web Connections"
 
@@ -5858,7 +5864,7 @@ msgid "Web Connections Summary"
 msgstr "Web Connections Summary"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:258
+#: src/guidance/GuidancePage.js:290
 msgid "Web Guidance"
 msgstr "Web Guidance"
 
@@ -5963,7 +5969,7 @@ msgstr "Wildcard"
 #: src/admin/AdminDomains.js:184
 #: src/domains/DomainCard.js:157
 #: src/domains/DomainsPage.js:141
-#: src/guidance/GuidancePage.js:314
+#: src/guidance/GuidancePage.js:349
 #: src/organizationDetails/OrganizationDomains.js:117
 msgid "Wildcard Entry"
 msgstr "Wildcard Entry"
@@ -5975,7 +5981,7 @@ msgstr "WILDCARD ENTRY"
 
 #: src/admin/AdminDomains.js:183
 #: src/domains/DomainCard.js:157
-#: src/guidance/GuidancePage.js:314
+#: src/guidance/GuidancePage.js:349
 #: src/organizationDetails/OrganizationDomains.js:116
 msgid "Wildcard Sibling"
 msgstr "Wildcard Sibling"
@@ -5993,7 +5999,7 @@ msgstr "WILDCARD SIBLING"
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Would you like to request an invite to {orgName}?"
 
-#: src/summaries/HistoricalSummariesGraph.js:210
+#: src/summaries/HistoricalSummariesGraph.js:212
 msgid "Year to Date"
 msgstr "Year to Date"
 
@@ -6061,7 +6067,7 @@ msgstr "You are currently visiting a staging environment, used for testing purpo
 msgid "You currently have no admin affiliations."
 msgstr "You currently have no admin affiliations."
 
-#: src/guidance/GuidancePage.js:112
+#: src/guidance/GuidancePage.js:119
 msgid "You have successfully added {domainName} to myTracker."
 msgstr "You have successfully added {domainName} to myTracker."
 
