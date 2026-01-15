@@ -5,7 +5,7 @@ from datetime import datetime
 from arango.database import StandardDatabase
 from azure.cosmos import ContainerProxy
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 class SelectorDoc(TypedDict):

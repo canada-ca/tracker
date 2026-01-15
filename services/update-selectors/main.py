@@ -3,19 +3,35 @@ import os
 import sys
 
 from arango import ArangoClient
-from azure.cosmos import CosmosClient
+from azure.cosmos import CosmosClient, ProxyConfiguration
 from dotenv import load_dotenv
 
 from update_selectors import update_selectors
 
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.INFO,
-    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
-)
-logger = logging.getLogger()
-
 load_dotenv()
+
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
+
+logger_level = logging.getLevelName(LOGGER_LEVEL)
+if not isinstance(logger_level, int):
+    print(f"Invalid logger level: {LOGGER_LEVEL}")
+    sys.exit(1)
+
+# Split logging to stdout and stderr
+# DEBUG and INFO to stdout
+# WARNING and above to stderr
+h1 = logging.StreamHandler(sys.stdout)
+h1.setLevel(logging.DEBUG)
+h1.addFilter(lambda record: record.levelno <= logging.INFO)
+h2 = logging.StreamHandler(sys.stderr)
+h2.setLevel(logging.WARNING)
+
+logging.basicConfig(
+    level=logger_level,
+    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+    handlers=[h1, h2],
+)
+logger = logging.getLogger(__name__)
 
 ARANGO_DB_USER = os.getenv("ARANGO_DB_USER")
 ARANGO_DB_PASS = os.getenv("ARANGO_DB_PASS")
@@ -27,6 +43,8 @@ COSMOS_DB_NAME = os.getenv("COSMOS_DB_NAME")
 COSMOS_DB_SELECTORS_CONTAINER = os.getenv("COSMOS_DB_SELECTORS_CONTAINER")
 
 REMOVE_SELECTORS = os.getenv("REMOVE_SELECTORS", "false").lower() == "true"
+
+COSMOS_PROXY_URL = os.getenv("COSMOS_PROXY_URL")
 
 
 if __name__ == "__main__":
@@ -59,7 +77,16 @@ if __name__ == "__main__":
     )
 
     # Initialize the Cosmos client using connection string
-    cosmos_client = CosmosClient.from_connection_string(COSMOS_DB_CONN_STRING)
+    cosmos_connection_kwargs = {}
+    if COSMOS_PROXY_URL:
+        logger.info("Configuring Cosmos DB client to use proxy")
+
+        cosmos_connection_kwargs["proxies"] = {
+            "http": COSMOS_PROXY_URL,
+            "https": COSMOS_PROXY_URL
+        }
+
+    cosmos_client = CosmosClient.from_connection_string(COSMOS_DB_CONN_STRING, **cosmos_connection_kwargs)
 
     # Get DB
     cosmos_db = cosmos_client.get_database_client(COSMOS_DB_NAME)
