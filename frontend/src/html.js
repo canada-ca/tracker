@@ -1,14 +1,3 @@
-import './images/apple-touch-icon.png'
-import './images/android-chrome-192x192.png'
-import './images/android-chrome-512x512.png'
-import './images/favicon.ico'
-import './images/favicon-32x32.png'
-import './images/favicon-16x16.png'
-import './images/logo192.png'
-import './images/logo512.png'
-import './manifest.json'
-import './robots.txt'
-
 export default () => `
   <!DOCTYPE html>
   <html lang="en">
@@ -21,29 +10,27 @@ export default () => `
       <link
         rel="apple-touch-icon"
         sizes="180x180"
-        href="/images/apple-touch-icon.png"
+        href="/apple-touch-icon.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="/images/favicon-32x32.png"
+        href="/favicon-32x32.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="/images/favicon-16x16.png"
+        href="/favicon-16x16.png"
       />
       <link
         rel="mask-icon"
-        href="/images/safari-pinned-tab.svg"
+        href="/safari-pinned-tab.svg"
         color="#e65225"
       />
-      <link rel="shortcut icon" href="/images/favicon.ico" />
-      <link rel="manifest" href="manifest.json" />
-      <meta name="msapplication-TileColor" content="#2e2e40" />
-      <meta name="msapplication-config" content="./browserconfig.xml" />
+      <link rel="shortcut icon" href="/favicon.ico" />
+      <link rel="manifest" href="/manifest.json" />
       <meta name="theme-color" content="#ff0000" />
 
       <meta
