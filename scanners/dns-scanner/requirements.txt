@@ -1,5 +1,5 @@
 certifi==2024.7.4
-cffi==1.17.0
+cffi==2.0.0
 charset-normalizer==2.1.1
 checkdmarc==5.7.7
 cryptography==44.0.1
