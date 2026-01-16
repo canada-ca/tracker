@@ -183,5 +183,57 @@ export const connectionChainResultType = new GraphQLObjectType({
       type: new GraphQLList(connectionType),
       description: `The connection chain created when following redirects.`,
     },
+    securityTxt: {
+      type: securityTxtResultType,
+      description: 'Result of fetching and parsing the security.txt file for this domain.',
+    },
+  }),
+})
+
+export const securityTxtResultType = new GraphQLObjectType({
+  name: 'SecurityTxtResult',
+  description: 'Represents the result of a security.txt file fetch and parse operation.',
+  fields: () => ({
+    path: {
+      type: GraphQLString,
+      description:
+        'The path where the security.txt file was requested (e.g., /.well-known/security.txt or /security.txt).',
+    },
+    url: {
+      type: GraphQLString,
+      description: 'The full URL used to fetch the security.txt file.',
+    },
+    status_code: {
+      type: GraphQLInt,
+      description: 'The HTTP status code returned when requesting the security.txt file.',
+    },
+    fields: {
+      type: GraphQLJSONObject,
+      description: 'Parsed fields from the security.txt file as key-value pairs.',
+    },
+    is_valid: {
+      type: GraphQLBoolean,
+      description: 'Whether the security.txt file was found and successfully parsed.',
+    },
+    error: {
+      type: new GraphQLList(GraphQLString),
+      description: 'Any errors encountered during fetching or parsing the security.txt file.',
+    },
+    raw: {
+      type: new GraphQLList(GraphQLString),
+      description: 'The raw contents of the security.txt file, if available.',
+    },
+    redirected: {
+      type: GraphQLBoolean,
+      description: 'Whether the request for security.txt was redirected.',
+    },
+    redirect_location: {
+      type: new GraphQLList(GraphQLString),
+      description: 'The location(s) to which the request was redirected, if any.',
+    },
+    redirect_status_code: {
+      type: new GraphQLList(GraphQLInt),
+      description: 'The HTTP status code(s) returned by any redirect(s) encountered.',
+    },
   }),
 })
