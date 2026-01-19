@@ -1,6 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = (env) => {
   return {
@@ -25,6 +26,14 @@ module.exports = (env) => {
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './src/html.js',
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: './src/meta',
+            to: './',
+          },
+        ],
       }),
     ],
     devServer: {
@@ -90,7 +99,7 @@ module.exports = (env) => {
           test: /\.(png|svg|jpe?g|gif)$/i,
           type: 'asset/resource',
           generator: {
-            filename: 'images/[name][ext]',
+            filename: 'images/[name].[contenthash][ext]',
           },
         },
         {
