@@ -5,7 +5,7 @@ cffi==1.17.0
 charset-normalizer==2.1.1
 cryptography==44.0.3
 idna==3.7
-nassl==5.3.0
+nassl==5.4.0
 nats-py==2.8.0
 psutil==5.9.8
 pyasn1==0.6.0
@@ -17,7 +17,7 @@ python-dotenv==0.21.0
 requests==2.32.4
 requests-toolbelt==0.10.1
 service-identity==24.1.0
-sslyze==6.1.0
+sslyze==6.3.0
 tls-parser==2.0.0
 typing_extensions==4.12.2
 urllib3==2.6.3
