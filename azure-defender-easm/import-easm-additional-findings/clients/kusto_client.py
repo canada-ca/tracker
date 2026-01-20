@@ -129,7 +129,7 @@ def fetch_cve_affected_versions(cve, comp_name, fetched_cves):
     try:
         return fetched_cves[cve]
     except KeyError:
-        logger.error(f"Data on {cve} has not been fetched yet")
+        logger.info(f"Data on {cve} has not been fetched yet. Attempting to fetch it.")
 
     res = {"status_code": 0}
     attempts = 1
@@ -154,8 +154,13 @@ def fetch_cve_affected_versions(cve, comp_name, fetched_cves):
                 time.sleep(60)
                 attempts += 1
         except Exception as e:
-            print("Error:", e)
+            logger.error(f"Encountered problem while fetching cves for {cve}: {e}")
             return None
+
+    # Unable to fetch CVE data
+    logger.error(f"Unable to fetch data for CVE: {cve}")
+    fetched_cves[cve] = None
+    return None
 
 
 def get_version_range(affected_versions):
