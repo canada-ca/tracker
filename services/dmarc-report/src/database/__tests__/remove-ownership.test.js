@@ -1,4 +1,4 @@
-const { removeOwnership } = require('../remove-ownership')
+const { removeOwnershipAndSummaries } = require('../remove-ownership-and-summaries')
 const { arangoConnection } = require('../arango-connection')
 const { dbNameFromFile } = require('arango-tools')
 
@@ -70,7 +70,7 @@ describe('given the removeOwnership function', () => {
   })
 
   it('removes the ownership', async () => {
-    await removeOwnership({
+    await removeOwnershipAndSummaries({
       arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
@@ -83,7 +83,7 @@ describe('given the removeOwnership function', () => {
     expect(ownership).toBeUndefined()
   })
   it('removes domainsToDmarcSummaries', async () => {
-    await removeOwnership({
+    await removeOwnershipAndSummaries({
       arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
@@ -96,7 +96,7 @@ describe('given the removeOwnership function', () => {
     expect(domainsToDmarcSummaries).toBeUndefined()
   })
   it('removes dmarc summary', async () => {
-    await removeOwnership({
+    await removeOwnershipAndSummaries({
       arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
