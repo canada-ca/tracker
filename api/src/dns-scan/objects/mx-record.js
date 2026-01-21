@@ -1,6 +1,4 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
-import { GraphQLDateTime } from 'graphql-scalars'
-import { globalIdField } from 'graphql-relay'
 
 export const mxHostType = new GraphQLObjectType({
   name: 'MXHost',
@@ -35,23 +33,6 @@ export const mxRecordType = new GraphQLObjectType({
     error: {
       type: GraphQLString,
       description: `Error message if the MX record could not be retrieved.`,
-    },
-  }),
-})
-
-export const mxRecordDiffType = new GraphQLObjectType({
-  name: 'MXRecordDiff',
-  fields: () => ({
-    id: globalIdField('dns'),
-    timestamp: {
-      type: GraphQLDateTime,
-      description: `The time when the scan was initiated.`,
-      resolve: ({ timestamp }) => new Date(timestamp),
-    },
-    mxRecords: {
-      type: mxRecordType,
-      description: `The MX records for the domain (if they exist).`,
-      resolve: ({ mxRecords }) => mxRecords,
     },
   }),
 })

@@ -15,10 +15,8 @@ import { any, object } from 'prop-types'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
-import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
-import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued'
 
-export function EmailGuidance({ dnsResults, status, mxRecordDiff, children }) {
+export function EmailGuidance({ dnsResults, status, children }) {
   const formatTimestamp = (ts) => {
     const date = new Date(ts)
     return date.toLocaleString('en-CA', {
@@ -337,33 +335,6 @@ export function EmailGuidance({ dnsResults, status, mxRecordDiff, children }) {
                 </Text>
               </Box>
             )}
-            {mxRecordDiff.edges.length > 1 && (
-              <ABTestWrapper>
-                <ABTestVariant name="B">
-                  <Text fontSize="xl" fontWeight="bold">
-                    <Trans>Changes:</Trans>
-                  </Text>
-                  {mxRecordDiff.edges.map(({ node }, idx) => {
-                    if (idx !== mxRecordDiff.edges.length - 1) {
-                      const nextNode = mxRecordDiff.edges[idx + 1].node
-                      return (
-                        <ReactDiffViewer
-                          key={idx}
-                          newValue={node.mxRecords.hosts}
-                          oldValue={nextNode.mxRecords.hosts}
-                          rightTitle={node.timestamp}
-                          leftTitle={nextNode.timestamp}
-                          splitView={true}
-                          compareMethod={DiffMethod.JSON}
-                          hideLineNumbers={true}
-                          showDiffOnly={true}
-                        />
-                      )
-                    }
-                  })}
-                </ABTestVariant>
-              </ABTestWrapper>
-            )}
           </AccordionItem>
         </AccordionPanel>
         <AccordionPanel>
@@ -421,5 +392,4 @@ EmailGuidance.propTypes = {
   dnsResults: object,
   children: any,
   status: object,
-  mxRecordDiff: object,
 }

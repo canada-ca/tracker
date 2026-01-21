@@ -54,7 +54,6 @@
     "make-plural": "^7.1.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-diff-viewer-continued": "^3.2.6",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-joyride": "^2.8.2",

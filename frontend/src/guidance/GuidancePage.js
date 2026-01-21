@@ -76,7 +76,6 @@ function GuidancePage() {
     web: webScan,
     hasDMARCReport,
     dnsScan,
-    mxRecordDiff,
     organizations,
     dmarcPhase,
     rcode,
@@ -309,7 +308,7 @@ function GuidancePage() {
             {hasNoDnsScans ? (
               noScanData
             ) : (
-              <EmailGuidance dnsResults={dnsResults} status={status} mxRecordDiff={mxRecordDiff}>
+              <EmailGuidance dnsResults={dnsResults} status={status}>
                 <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
               </EmailGuidance>
             )}
