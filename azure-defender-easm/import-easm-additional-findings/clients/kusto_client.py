@@ -78,12 +78,12 @@ def get_web_components_by_asset(asset, fetched_cves):
             cve for cve in wc["WebComponentCves"] if cve["Cve"] in top25
         ]
 
-        componentVersions = wc["WebComponentVersion"].split(".", 2)
+        component_versions = wc["WebComponentVersion"].split(".", 2)
         # Assign confidence levels to each CVE
         for cve in wc["WebComponentCves"]:
             cve["ConfidenceLevel"] = "unknown"
             # if detected version includes patch, high confidence
-            if len(componentVersions) == 3:
+            if len(component_versions) == 3:
                 cve["ConfidenceLevel"] = "high"
             else:
                 # fetch affected versions of CVE
@@ -94,9 +94,9 @@ def get_web_components_by_asset(asset, fetched_cves):
                     try:
                         start, end = get_version_range(cpe).values()
                         # compare minor and major version nums
-                        if len(componentVersions) == 2:
-                            major = int(componentVersions[0])
-                            minor = int(componentVersions[1])
+                        if len(component_versions) == 2:
+                            major = int(component_versions[0])
+                            minor = int(component_versions[1])
                             if start is not None:
                                 if major < int(start.split(".")[0]):
                                     continue
@@ -107,8 +107,8 @@ def get_web_components_by_asset(asset, fetched_cves):
                                 cve["ConfidenceLevel"] = "high"
                             elif minor == int(end.split(".")[1]):
                                 cve["ConfidenceLevel"] = "medium"
-                        elif len(componentVersions) == 1:
-                            major = int(componentVersions[0])
+                        elif len(component_versions) == 1:
+                            major = int(component_versions[0])
                             if start is not None:
                                 if major < int(start.split(".")[0]):
                                     continue
@@ -129,7 +129,7 @@ def fetch_cve_affected_versions(cve, comp_name, fetched_cves):
     try:
         return fetched_cves[cve]
     except KeyError:
-        logger.error(f"Data on {cve} has not been fetched yet")
+        logger.info(f"Data on {cve} has not been fetched yet. Attempting to fetch it.")
 
     res = {"status_code": 0}
     attempts = 1
@@ -154,8 +154,13 @@ def fetch_cve_affected_versions(cve, comp_name, fetched_cves):
                 time.sleep(60)
                 attempts += 1
         except Exception as e:
-            print("Error:", e)
+            logger.error(f"Encountered problem while fetching cves for {cve}: {e}")
             return None
+
+    # Unable to fetch CVE data
+    logger.error(f"Unable to fetch data for CVE: {cve}")
+    fetched_cves[cve] = None
+    return None
 
 
 def get_version_range(affected_versions):
