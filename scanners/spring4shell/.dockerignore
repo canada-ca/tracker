@@ -1,8 +1,0 @@
-**/*.env
-*.yaml
-node_modules
-coverage
-Dockerfile
-README.md
-src/__tests__
-setupTests.js
