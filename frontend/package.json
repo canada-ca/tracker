@@ -50,7 +50,7 @@
     "intro.js-react": "^1.0.0",
     "isomorphic-unfetch": "^3.1.0",
     "json-2-csv": "^3.17.1",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "make-plural": "^7.1.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
