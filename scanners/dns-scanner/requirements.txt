@@ -12,7 +12,7 @@ nats-py==2.8.0
 publicsuffix2==2.20191221
 publicsuffixlist==0.10.0.20240420
 pycparser==2.21
-PyJWT==2.8.0
+PyJWT==2.10.1
 pyleri==1.4.1
 PyNaCl==1.6.2
 python-arango==8.1.6
