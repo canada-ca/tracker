@@ -577,6 +577,18 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                       error
                       scheme
                     }
+                    securityTxt {
+                      url
+                      status_code
+                      redirected
+                      redirect_status_code
+                      redirect_location
+                      is_valid
+                      path
+                      raw
+                      fields
+                      error
+                    }
                   }
                 }
               }
