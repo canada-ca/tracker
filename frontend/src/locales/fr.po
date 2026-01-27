@@ -110,8 +110,8 @@ msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
 
 #. placeholder {0}: mxRecords.error
 #. placeholder {0}: nsRecords.error
-#: src/guidance/EmailGuidance.js:334
-#: src/guidance/EmailGuidance.js:407
+#: src/guidance/EmailGuidance.js:332
+#: src/guidance/EmailGuidance.js:378
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Erreur:</0> {0}"
 
@@ -123,21 +123,21 @@ msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1
 msgid "<0>Help Desk</0>: All enquiries submitted via generic mailboxes <1>tracker@tbs-sct.gc.ca</1> will be responded to within 10 business days."
 msgstr "<0>Service d'assistance</0> : Toutes les demandes soumises via les boîtes aux lettres génériques <1>suivi@tbs-sct.gc.ca</1> recevront une réponse dans un délai de 10 jours ouvrables."
 
-#: src/guidance/EmailGuidance.js:294
-#: src/guidance/EmailGuidance.js:381
+#: src/guidance/EmailGuidance.js:292
+#: src/guidance/EmailGuidance.js:352
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Nom d'hôte:</0> {hostname}"
 
 #. placeholder {0}: addresses.join(', ')
-#: src/guidance/EmailGuidance.js:299
+#: src/guidance/EmailGuidance.js:297
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
 #. placeholder {0}: formatTimestamp(timestamp)
 #. placeholder {0}: formatTimestamp(webTimestamp)
 #: src/guidance/AdditionalFindings.js:80
-#: src/guidance/EmailGuidance.js:114
-#: src/guidance/GuidancePage.js:263
+#: src/guidance/EmailGuidance.js:112
+#: src/guidance/GuidancePage.js:262
 #: src/guidance/WebGuidance.js:175
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Dernière numérisation:</0> {0}"
@@ -150,7 +150,7 @@ msgstr "<0>Dernière numérisation:</0> {0}"
 msgid "<0>Note:</0> Tags must not include data that would reclassify the asset above <1>Unclassified, Low Integrity, Low Availability (ULL)</1>"
 msgstr "<0>Note:</0> Les étiquettes ne doivent pas inclure de données qui reclasseraient le bien au-dessus de <1>\tNon classifié, intégrité faible, disponibilité faible (NID)</1>."
 
-#: src/guidance/EmailGuidance.js:304
+#: src/guidance/EmailGuidance.js:302
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Préférence:</0> {préférence}"
 
@@ -218,7 +218,7 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
-#: src/guidance/GuidancePage.js:227
+#: src/guidance/GuidancePage.js:226
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
@@ -340,7 +340,7 @@ msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
 #: src/guidance/AdditionalFindings.js:45
-#: src/guidance/GuidancePage.js:296
+#: src/guidance/GuidancePage.js:294
 msgid "Additional Findings"
 msgstr "Constatations supplémentaires"
 
@@ -482,7 +482,7 @@ msgid "An error occurred when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter"
 
 #: src/domains/DomainCard.js:52
-#: src/guidance/GuidancePage.js:108
+#: src/guidance/GuidancePage.js:107
 msgid "An error occurred while favouriting a domain."
 msgstr "Une erreur s'est produite lors de la mise en favori d'un domaine."
 
@@ -867,8 +867,8 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 #~ msgstr "Changements requis pour la conformité aux exigences de configuration de la gestion des sites et services Web."
 
 #: src/guidance/EmailGuidance.js:344
-msgid "Changes:"
-msgstr "Changements :"
+#~ msgid "Changes:"
+#~ msgstr "Changements :"
 
 #: src/userOnboarding/config/tourSteps.js:183
 #~ msgid "Check if your organization is already included in our monitored list. If not, you can create a free account to access an overview of your organization's digital footprint and potential vulnerabilities."
@@ -956,7 +956,7 @@ msgstr "Fermer"
 msgid "Close Account"
 msgstr "Fermer le compte"
 
-#: src/guidance/EmailGuidance.js:273
+#: src/guidance/EmailGuidance.js:271
 msgid "CNAME:"
 msgstr "CNAME:"
 
@@ -1030,7 +1030,7 @@ msgstr "Confirmer la suppression du domaine:"
 msgid "Confirm subdomain discovery for <0>{domainUrl}</0>:"
 msgstr "Confirmer la découverte du sous-domaine pour <0>{domainUrl}</0> :"
 
-#: src/guidance/WebConnectionResults.js:103
+#: src/guidance/WebConnectionResults.js:112
 msgid "Connection Results"
 msgstr "Résultats de la connexion"
 
@@ -1182,6 +1182,10 @@ msgstr "CVE ignoré"
 msgid "Data Handling"
 msgstr "Traitement des données"
 
+#: src/guidance/SecurityTxt.js:12
+msgid "Data not available for this service. Try rescanning or come back later."
+msgstr "Données non disponibles pour ce service. Essayez de relancer la recherche ou revenez plus tard."
+
 #: src/termsConditions/TermsConditionsPage.js:114
 msgid "Data Security and Use"
 msgstr "Sécurité et utilisation des données"
@@ -1205,7 +1209,7 @@ msgstr "Détection de dégradation"
 msgid "December"
 msgstr "Décembre"
 
-#: src/guidance/EmailGuidance.js:146
+#: src/guidance/EmailGuidance.js:144
 msgid "Default:"
 msgstr "Par défaut :"
 
@@ -1429,7 +1433,7 @@ msgstr "Politique DMARC de mise en quarantaine ou de rejet, et rejet de tous les
 
 #: src/dmarc/DmarcReportPage.js:94
 #: src/domains/DomainCard.js:244
-#: src/guidance/GuidancePage.js:373
+#: src/guidance/GuidancePage.js:370
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -1458,7 +1462,7 @@ msgstr "Résumé DMARC"
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
-#: src/guidance/EmailGuidance.js:53
+#: src/guidance/EmailGuidance.js:51
 msgid "DNS Result Summary"
 msgstr "Résumé des résultats du DNS"
 
@@ -1643,7 +1647,7 @@ msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:293
+#: src/guidance/GuidancePage.js:291
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
@@ -1813,7 +1817,7 @@ msgstr "Erreur lors de la récupération des données DMARC pour {domainSlug}. <
 #~ msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
 #~ msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <0/>Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système. Vous pouvez demander l'accès à une organisation ci-dessous pour voir les résultats du domaine."
 
-#: src/guidance/WebConnectionResults.js:147
+#: src/guidance/WebConnectionResults.js:148
 #: src/guidance/WebConnectionResults.js:196
 msgid "Eventually"
 msgstr "Éventuellement"
@@ -1887,7 +1891,7 @@ msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 #~ msgstr "FAQ"
 
 #: src/domains/DomainCard.js:62
-#: src/guidance/GuidancePage.js:118
+#: src/guidance/GuidancePage.js:117
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
@@ -2117,7 +2121,7 @@ msgstr "Direction du graphique :"
 msgid "Guidance"
 msgstr "Orientation"
 
-#: src/guidance/GuidancePage.js:131
+#: src/guidance/GuidancePage.js:130
 msgid "Guidance results"
 msgstr "Résultats de l'orientation"
 
@@ -2236,19 +2240,19 @@ msgstr "HSTS"
 #~ msgid "HSTS Age:"
 #~ msgstr "Âge du HSTS:"
 
-#: src/guidance/WebConnectionResults.js:230
+#: src/guidance/WebConnectionResults.js:220
 msgid "HSTS Includes Subdomains"
 msgstr "HSTS inclut les sous-domaines"
 
-#: src/guidance/WebConnectionResults.js:212
+#: src/guidance/WebConnectionResults.js:208
 msgid "HSTS Max Age"
 msgstr "HSTS Âge maximum"
 
-#: src/guidance/WebConnectionResults.js:203
+#: src/guidance/WebConnectionResults.js:202
 msgid "HSTS Parsed"
 msgstr "HSTS analysé"
 
-#: src/guidance/WebConnectionResults.js:221
+#: src/guidance/WebConnectionResults.js:214
 msgid "HSTS Preloaded"
 msgstr "HSTS préchargé"
 
@@ -2261,15 +2265,15 @@ msgstr "Statut HSTS"
 #~ msgid "HSTS Status:"
 #~ msgstr "Statut HSTS:"
 
-#: src/guidance/WebConnectionResults.js:117
+#: src/guidance/WebConnectionResults.js:126
 msgid "HTTP (80) Chain"
 msgstr "Chaîne HTTP (80)"
 
-#: src/guidance/WebConnectionResults.js:127
+#: src/guidance/WebConnectionResults.js:136
 msgid "HTTP Live"
 msgstr "HTTP Live"
 
-#: src/guidance/WebConnectionResults.js:138
+#: src/guidance/WebConnectionResults.js:142
 msgid "HTTP Upgrades"
 msgstr "Mises à jour HTTP"
 
@@ -2279,7 +2283,7 @@ msgstr "Mises à jour HTTP"
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/guidance/WebConnectionResults.js:163
+#: src/guidance/WebConnectionResults.js:166
 msgid "HTTPS (443) Chain"
 msgstr "Chaîne HTTPS (443)"
 
@@ -2312,7 +2316,7 @@ msgstr "HTTPS est configuré et les connexions HTTP sont redirigées vers HTTPS.
 msgid "HTTPS is configured, HTTP redirects, and HSTS is enabled"
 msgstr "HTTPS est configuré, les redirections HTTP et HSTS sont activés."
 
-#: src/guidance/WebConnectionResults.js:173
+#: src/guidance/WebConnectionResults.js:176
 msgid "HTTPS Live"
 msgstr "HTTPS Live"
 
@@ -2384,7 +2388,7 @@ msgstr "Si disponible, veuillez utiliser un dispositif géré fourni par votre o
 msgid "If you are an admin, you can find your organization here."
 msgstr "Si vous êtes administrateur, vous pouvez trouver votre organisation ici."
 
-#: src/guidance/GuidancePage.js:232
+#: src/guidance/GuidancePage.js:231
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
 
@@ -2416,8 +2420,8 @@ msgstr "Ignoré"
 #~ msgid "Ignored CVEs:"
 #~ msgstr "CVE ignorés :"
 
-#: src/guidance/WebConnectionResults.js:145
-#: src/guidance/WebConnectionResults.js:196
+#: src/guidance/WebConnectionResults.js:146
+#: src/guidance/WebConnectionResults.js:194
 msgid "Immediately"
 msgstr "Immédiatement"
 
@@ -2763,11 +2767,11 @@ msgstr "Juin"
 msgid "Jurisdiction"
 msgstr "Compétence"
 
-#: src/guidance/EmailGuidance.js:192
+#: src/guidance/EmailGuidance.js:190
 msgid "Key length:"
 msgstr "Longueur des clés :"
 
-#: src/guidance/EmailGuidance.js:186
+#: src/guidance/EmailGuidance.js:184
 msgid "Key type:"
 msgstr "Type de clé :"
 
@@ -2819,7 +2823,7 @@ msgstr "Les 365 derniers jours"
 msgid "Last Seen: {0}"
 msgstr "Dernière visite : {0}"
 
-#: src/guidance/EmailGuidance.js:288
+#: src/guidance/EmailGuidance.js:286
 msgid "Latest Scan:"
 msgstr "Dernière analyse :"
 
@@ -2870,7 +2874,7 @@ msgstr "Connexion"
 msgid "Login to your account"
 msgstr "Connectez-vous à votre compte"
 
-#: src/guidance/EmailGuidance.js:140
+#: src/guidance/EmailGuidance.js:138
 msgid "Lookups:"
 msgstr "Les recherches :"
 
@@ -2883,7 +2887,7 @@ msgstr "Faible"
 msgid "Mail"
 msgstr "Courrier"
 
-#: src/guidance/EmailGuidance.js:283
+#: src/guidance/EmailGuidance.js:281
 msgid "Mail Servers (MX)"
 msgstr "Serveurs de messagerie (MX)"
 
@@ -3020,7 +3024,7 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/guidance/EmailGuidance.js:373
+#: src/guidance/EmailGuidance.js:344
 msgid "Name Servers (NS)"
 msgstr "Serveurs de noms (NS)"
 
@@ -3057,8 +3061,8 @@ msgstr "Constatations négatives"
 #~ msgid "Neutral tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 #~ msgstr "Les balises neutres mettent en évidence les détails pertinents de la configuration, mais ne sont pas traitées dans le cadre des exigences de la politique et n'ont aucun impact sur la notation."
 
-#: src/guidance/WebConnectionResults.js:148
-#: src/guidance/WebConnectionResults.js:196
+#: src/guidance/WebConnectionResults.js:149
+#: src/guidance/WebConnectionResults.js:197
 msgid "Never"
 msgstr "Jamais"
 
@@ -3109,11 +3113,11 @@ msgstr "Suivant"
 msgid "Next Steps:"
 msgstr "Prochaines étapes :"
 
-#: src/guidance/WebConnectionResults.js:130
-#: src/guidance/WebConnectionResults.js:176
-#: src/guidance/WebConnectionResults.js:206
-#: src/guidance/WebConnectionResults.js:224
-#: src/guidance/WebConnectionResults.js:233
+#: src/guidance/WebConnectionResults.js:137
+#: src/guidance/WebConnectionResults.js:177
+#: src/guidance/WebConnectionResults.js:203
+#: src/guidance/WebConnectionResults.js:215
+#: src/guidance/WebConnectionResults.js:221
 #: src/guidance/WebTLSResults.js:216
 #: src/guidance/WebTLSResults.js:274
 #: src/guidance/WebTLSResults.js:285
@@ -3228,7 +3232,7 @@ msgstr "Aucun conseil trouvé pour cette catégorie"
 #~ msgid "No HTTPS configuration information available for this organization."
 #~ msgstr "Aucune information de configuration HTTPS disponible pour cette organisation."
 
-#: src/guidance/GuidancePage.js:270
+#: src/guidance/GuidancePage.js:269
 msgid "No IP addresses were available to scan for this service. Please check your DNS configuration or contact us for assistance."
 msgstr "Aucune adresse IP n'était disponible pour analyser ce service. Veuillez vérifier votre configuration DNS ou nous contacter pour obtenir de l'aide."
 
@@ -3236,7 +3240,7 @@ msgstr "Aucune adresse IP n'était disponible pour analyser ce service. Veuillez
 msgid "No known weak protocols used."
 msgstr "Aucun protocole faible connu n'a été utilisé."
 
-#: src/guidance/EmailGuidance.js:319
+#: src/guidance/EmailGuidance.js:317
 msgid "No MX records found. Is the domain parked?"
 msgstr "Aucun enregistrement MX n'a été trouvé. Le domaine est-il parqué ?"
 
@@ -3252,9 +3256,13 @@ msgstr "Aucun résultat négatif à signaler."
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
-#: src/guidance/GuidancePage.js:145
+#: src/guidance/GuidancePage.js:144
 msgid "No Organizations found for this domain."
 msgstr "Aucune organisation trouvée pour ce domaine."
+
+#: src/guidance/SecurityTxt.js:21
+msgid "No record was found for this service."
+msgstr "Aucun enregistrement n'a été trouvé pour ce service."
 
 #: src/guidance/AdditionalFindings.js:257
 msgid "No response headers found"
@@ -3268,7 +3276,7 @@ msgstr "Aucun en-tête de réponse n'a été trouvé"
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
-#: src/guidance/GuidancePage.js:251
+#: src/guidance/GuidancePage.js:250
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "Aucune donnée de balayage n'est actuellement disponible pour ce service. Vous pouvez demander un scan en utilisant le bouton d'actualisation, ou attendre jusqu'à 24 heures pour que les données soient actualisées."
 
@@ -3299,7 +3307,7 @@ msgid "Non-compliant"
 msgstr "Non conforme"
 
 #: src/admin/OrganizationInformation.js:392
-#: src/guidance/EmailGuidance.js:275
+#: src/guidance/EmailGuidance.js:273
 #: src/guidance/IgnoredCves.js:22
 #: src/guidance/IgnoredCves.js:66
 #: src/user/EditableUserTFAMethod.js:164
@@ -3311,10 +3319,10 @@ msgstr "Aucun"
 msgid "Not After:"
 msgstr "Pas après :"
 
-#: src/guidance/WebConnectionResults.js:143
+#: src/guidance/WebConnectionResults.js:144
+#: src/guidance/WebConnectionResults.js:209
 #: src/guidance/WebConnectionResults.js:215
-#: src/guidance/WebConnectionResults.js:224
-#: src/guidance/WebConnectionResults.js:233
+#: src/guidance/WebConnectionResults.js:221
 msgid "Not available"
 msgstr "Non disponible"
 
@@ -3460,7 +3468,7 @@ msgstr "L'organisation possède ce domaine, mais il est en dehors du champ d'app
 msgid "Organization: "
 msgstr "Organisation : "
 
-#: src/guidance/GuidancePage.js:380
+#: src/guidance/GuidancePage.js:377
 msgid "Organization(s):"
 msgstr "Organisation(s) :"
 
@@ -3468,7 +3476,7 @@ msgstr "Organisation(s) :"
 #: src/app/App.js:131
 #: src/app/App.js:292
 #: src/app/FloatingMenu.js:103
-#: src/guidance/GuidancePage.js:210
+#: src/guidance/GuidancePage.js:209
 #: src/organizations/Organizations.js:102
 #: src/organizations/Organizations.js:187
 msgid "Organizations"
@@ -3505,7 +3513,7 @@ msgstr "PROPRIÉTAIRE"
 msgid "Ownership:"
 msgstr "Propriété :"
 
-#: src/guidance/EmailGuidance.js:236
+#: src/guidance/EmailGuidance.js:234
 msgid "p:"
 msgstr "p:"
 
@@ -3560,7 +3568,7 @@ msgstr "Mot de passe:"
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 
-#: src/guidance/EmailGuidance.js:248
+#: src/guidance/EmailGuidance.js:246
 msgid "pct:"
 msgstr "pct:"
 
@@ -3819,9 +3827,9 @@ msgstr "La chaîne reçue a un ordre valide"
 msgid "Recent Activity"
 msgstr "Activité récente"
 
-#: src/guidance/EmailGuidance.js:134
-#: src/guidance/EmailGuidance.js:180
-#: src/guidance/EmailGuidance.js:230
+#: src/guidance/EmailGuidance.js:132
+#: src/guidance/EmailGuidance.js:178
+#: src/guidance/EmailGuidance.js:228
 msgid "Record:"
 msgstr "Record :"
 
@@ -3880,7 +3888,7 @@ msgstr "Demander qu'un domaine soit scanné:"
 msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Demandez une invitation si vous n'êtes pas affilié à votre organisation."
 
-#: src/guidance/GuidancePage.js:168
+#: src/guidance/GuidancePage.js:167
 #: src/organizationDetails/OrganizationDetails.js:120
 #: src/organizations/Organizations.js:133
 #: src/organizations/RequestOrgInviteModal.js:62
@@ -4027,7 +4035,7 @@ msgstr "Scan du domaine demandé avec succès"
 #: src/admin/AdminDomains.js:185
 #: src/domains/DomainCard.js:162
 #: src/domains/DomainsPage.js:142
-#: src/guidance/GuidancePage.js:343
+#: src/guidance/GuidancePage.js:340
 #: src/organizationDetails/OrganizationDomains.js:118
 msgid "Scan Pending"
 msgstr "Scan en attente"
@@ -4126,7 +4134,7 @@ msgstr "Recherche: "
 #~ msgid "Sector:"
 #~ msgstr "Secteur:"
 
-#: src/guidance/WebConnectionResults.js:69
+#: src/guidance/WebConnectionResults.js:90
 msgid "See headers"
 msgstr "Voir les en-têtes"
 
@@ -4326,23 +4334,23 @@ msgstr "Indique si le nom d'hôte figurant sur le certificat du serveur correspo
 msgid "Shows if the HSTS (HTTP Strict Transport Security) header is present."
 msgstr "Indique si l'en-tête HSTS (HTTP Strict Transport Security) est présent."
 
-#: src/guidance/WebConnectionResults.js:227
+#: src/guidance/WebConnectionResults.js:218
 msgid "Shows if the HSTS header includes the includeSubdomains directive."
 msgstr "Indique si l'en-tête HSTS inclut la directive includeSubdomains."
 
-#: src/guidance/WebConnectionResults.js:218
+#: src/guidance/WebConnectionResults.js:212
 msgid "Shows if the HSTS header includes the preload directive."
 msgstr "Indique si l'en-tête HSTS inclut la directive preload."
 
-#: src/guidance/WebConnectionResults.js:124
+#: src/guidance/WebConnectionResults.js:134
 msgid "Shows if the HTTP connection is live."
 msgstr "Indique si la connexion HTTP est active."
 
-#: src/guidance/WebConnectionResults.js:134
+#: src/guidance/WebConnectionResults.js:140
 msgid "Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never."
 msgstr "Indique si le point d'extrémité HTTP passe à la mise à niveau HTTPS immédiatement, éventuellement (après la première redirection) ou jamais."
 
-#: src/guidance/WebConnectionResults.js:170
+#: src/guidance/WebConnectionResults.js:174
 msgid "Shows if the HTTPS connection is live."
 msgstr "Indique si la connexion HTTPS est active."
 
@@ -4378,7 +4386,7 @@ msgstr "Indique si le serveur s'est avéré vulnérable à la faille Heartbleed.
 msgid "Shows if the server was found to be vulnerable to the ROBOT vulnerability."
 msgstr "Indique si le serveur a été jugé vulnérable à la vulnérabilité ROBOT."
 
-#: src/guidance/WebConnectionResults.js:209
+#: src/guidance/WebConnectionResults.js:206
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Indique la durée, en secondes, pendant laquelle l'en-tête HSTS est valide."
 
@@ -4492,7 +4500,7 @@ msgstr "Trier par: "
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
-#: src/guidance/EmailGuidance.js:242
+#: src/guidance/EmailGuidance.js:240
 msgid "sp:"
 msgstr "sp:"
 
@@ -4610,7 +4618,7 @@ msgstr "Statut"
 msgid "Status Value"
 msgstr "Valeur du statut"
 
-#: src/guidance/WebConnectionResults.js:61
+#: src/guidance/WebConnectionResults.js:78
 msgid "Status:"
 msgstr "Statut :"
 
@@ -5037,7 +5045,7 @@ msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 #~ msgid "This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs."
 #~ msgstr "Il s'agit du menu Super Admin. Vous pouvez passer d'une organisation à l'autre, d'un utilisateur à l'autre et d'un journal d'audit à l'autre."
 
-#: src/guidance/GuidancePage.js:201
+#: src/guidance/GuidancePage.js:200
 msgid "This may be due to insufficient user privileges or because the domain does not exist in the system.<0/>You can request access to an Organization below to view the Domain results."
 msgstr "Cela peut être dû à des privilèges utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système.<0/>Vous pouvez demander l'accès à une organisation ci-dessous pour afficher les résultats du domaine."
 
@@ -5320,7 +5328,7 @@ msgstr "Impossible de demander un balayage, veuillez réessayer."
 msgid "Unable to reset your password, please try again."
 msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 
-#: src/guidance/GuidancePage.js:198
+#: src/guidance/GuidancePage.js:197
 msgid "Unable to retrieve scan data for {domain}."
 msgstr "Impossible de récupérer les données d'analyse pour {domain}."
 
@@ -5465,11 +5473,11 @@ msgstr "Mettre à niveau la politique DMARC pour qu'elle rejette (augmentation p
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
 msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer progressivement pour passer de 25 % à 100 %)."
 
-#: src/guidance/WebConnectionResults.js:153
+#: src/guidance/WebConnectionResults.js:156
 msgid "URL:"
 msgstr "URL :"
 
-#: src/guidance/WebConnectionResults.js:237
+#: src/guidance/WebConnectionResults.js:228
 msgid "URL: "
 msgstr "URL :"
 
@@ -5656,8 +5664,8 @@ msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
 #~ msgid "Warnings"
 #~ msgstr "Avertissements"
 
-#: src/guidance/EmailGuidance.js:314
-#: src/guidance/EmailGuidance.js:391
+#: src/guidance/EmailGuidance.js:312
+#: src/guidance/EmailGuidance.js:362
 msgid "Warnings:"
 msgstr "Avertissements :"
 
@@ -5722,7 +5730,7 @@ msgid "Web Connections Summary"
 msgstr "Résumé des connexions web"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:290
+#: src/guidance/GuidancePage.js:288
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
@@ -5819,7 +5827,7 @@ msgstr "Wildcard"
 #: src/admin/AdminDomains.js:184
 #: src/domains/DomainCard.js:157
 #: src/domains/DomainsPage.js:141
-#: src/guidance/GuidancePage.js:349
+#: src/guidance/GuidancePage.js:346
 #: src/organizationDetails/OrganizationDomains.js:117
 msgid "Wildcard Entry"
 msgstr "Entrée Wildcard"
@@ -5831,7 +5839,7 @@ msgstr "ENTRÉE WILDCARD"
 
 #: src/admin/AdminDomains.js:183
 #: src/domains/DomainCard.js:157
-#: src/guidance/GuidancePage.js:349
+#: src/guidance/GuidancePage.js:346
 #: src/organizationDetails/OrganizationDomains.js:116
 msgid "Wildcard Sibling"
 msgstr "Wildcard en rapport"
@@ -5849,11 +5857,11 @@ msgstr "Souhaitez-vous demander une invitation à {orgName} ?"
 msgid "Year to Date"
 msgstr "Depuis le début de l'année"
 
-#: src/guidance/WebConnectionResults.js:130
-#: src/guidance/WebConnectionResults.js:176
-#: src/guidance/WebConnectionResults.js:206
-#: src/guidance/WebConnectionResults.js:224
-#: src/guidance/WebConnectionResults.js:233
+#: src/guidance/WebConnectionResults.js:137
+#: src/guidance/WebConnectionResults.js:177
+#: src/guidance/WebConnectionResults.js:203
+#: src/guidance/WebConnectionResults.js:215
+#: src/guidance/WebConnectionResults.js:221
 #: src/guidance/WebTLSResults.js:216
 #: src/guidance/WebTLSResults.js:274
 #: src/guidance/WebTLSResults.js:285
@@ -5913,7 +5921,7 @@ msgstr "Vous visitez actuellement un environnement de démonstration, utilisé u
 msgid "You currently have no admin affiliations."
 msgstr "Vous n'avez actuellement aucune affiliation administrative."
 
-#: src/guidance/GuidancePage.js:119
+#: src/guidance/GuidancePage.js:118
 msgid "You have successfully added {domainName} to myTracker."
 msgstr "Vous avez ajouté avec succès {domainName} à myTracker."
 
