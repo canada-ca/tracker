@@ -34,11 +34,15 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
 
   let connectionResultsStatus = 'FAIL'
   if (
-    [(connectionResults.httpsStatus, connectionResults.hstsStatus)].every((status) => status.toUpperCase() === 'PASS')
+    [connectionResults.httpsStatus, connectionResults.hstsStatus].every(
+      (status) => status.toUpperCase() === 'PASS',
+    )
   )
     connectionResultsStatus = 'PASS'
   else if (
-    [(connectionResults.httpsStatus, connectionResults.hstsStatus)].every((status) => status.toUpperCase() === 'INFO')
+    [connectionResults.httpsStatus, connectionResults.hstsStatus].every(
+      (status) => status.toUpperCase() === 'INFO',
+    )
   )
     connectionResultsStatus = 'INFO'
 
