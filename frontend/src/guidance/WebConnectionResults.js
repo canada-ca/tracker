@@ -17,6 +17,7 @@ import { GuidanceTagList } from './GuidanceTagList'
 import { t, Trans } from '@lingui/macro'
 import { DetailTooltip } from './DetailTooltip'
 import { SecurityTxt } from './SecurityTxt'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function WebConnectionResults({ connectionResults, isWebHosting }) {
   const {
@@ -229,7 +230,11 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
               <Accordion allowMultiple defaultIndex={[]}>
                 {connChainResult(httpsChainResult)}
               </Accordion>
-              <SecurityTxt data={httpsChainResult?.securityTxt} mx="2" />
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  <SecurityTxt data={httpsChainResult?.securityTxt} mx="2" />
+                </ABTestVariant>
+              </ABTestWrapper>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
