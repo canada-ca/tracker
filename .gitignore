@@ -21,6 +21,8 @@ api/api.current.graphql
 **/*.env
 **/.venv
 venv
+**/lib64
+**/pyvenv.cfg
 
 # Linting
 **/.mypy_cache/
@@ -42,6 +44,7 @@ scanner/logs
 # IDE Files
 .idea/
 .vscode/
+*.code-workspace
 
 # all dist directories
 **/dist
