@@ -1,7 +1,7 @@
 # To build image: docker build --tag tracker-api:1.0 .
 # To run image: docker run --network=host --env-file ./.env  tracker-api:1.0
 # Build image
-FROM node:20.20.0-alpine3.22 AS base
+FROM node:25.5.0-alpine3.22 AS base
 
 WORKDIR /app
 
