@@ -203,7 +203,7 @@ export const securityTxtResultType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The full URL used to fetch the security.txt file.',
     },
-    status_code: {
+    statusCode: {
       type: GraphQLInt,
       description: 'The HTTP status code returned when requesting the security.txt file.',
     },
@@ -211,7 +211,7 @@ export const securityTxtResultType = new GraphQLObjectType({
       type: GraphQLJSONObject,
       description: 'Parsed fields from the security.txt file as key-value pairs.',
     },
-    is_valid: {
+    isValid: {
       type: GraphQLBoolean,
       description: 'Whether the security.txt file was found and successfully parsed.',
     },
@@ -220,20 +220,20 @@ export const securityTxtResultType = new GraphQLObjectType({
       description: 'Any errors encountered during fetching or parsing the security.txt file.',
     },
     raw: {
-      type: new GraphQLList(GraphQLString),
+      type: GraphQLString,
       description: 'The raw contents of the security.txt file, if available.',
     },
     redirected: {
       type: GraphQLBoolean,
       description: 'Whether the request for security.txt was redirected.',
     },
-    redirect_location: {
-      type: new GraphQLList(GraphQLString),
-      description: 'The location(s) to which the request was redirected, if any.',
+    redirectLocation: {
+      type: GraphQLString,
+      description: 'The location to which the request was redirected, if any.',
     },
-    redirect_status_code: {
-      type: new GraphQLList(GraphQLInt),
-      description: 'The HTTP status code(s) returned by any redirect(s) encountered.',
+    redirectStatusCode: {
+      type: GraphQLInt,
+      description: 'The HTTP status code returned by any redirect encountered.',
     },
   }),
 })

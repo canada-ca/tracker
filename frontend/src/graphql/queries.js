@@ -579,11 +579,11 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     }
                     securityTxt {
                       url
-                      status_code
+                      statusCode
                       redirected
-                      redirect_status_code
-                      redirect_location
-                      is_valid
+                      redirectStatusCode
+                      redirectLocation
+                      isValid
                       path
                       raw
                       fields
