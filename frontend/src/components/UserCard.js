@@ -1,16 +1,17 @@
 import React from 'react'
-import { Badge, Grid, Text } from '@chakra-ui/react'
-import { string } from 'prop-types'
+import { Badge, Flex, Text } from '@chakra-ui/react'
+import { any, string } from 'prop-types'
 
-export function UserCard({ userName, displayName, role, ...props }) {
+export function UserCard({ userName, displayName, role, children, ...props }) {
   return (
-    <Grid templateColumns={{ base: 'auto', md: '45% auto auto' }} columnGap="1.5rem" {...props}>
-      <Text fontSize="md" wordBreak="break-all" ml={{ md: '1rem' }}>
-        {userName}
+    <Flex px="2" py="3" align="center" rounded="md" mb="2" borderColor="black" borderWidth="1px" {...props}>
+      {children}
+      <Text fontSize="lg" fontWeight="bold" wordBreak="break-all" ml={{ md: '1rem' }}>
+        {displayName} ({userName})
       </Text>
-      <Text>{displayName}</Text>
       {role && (
         <Badge
+          ml="auto"
           variant="solid"
           bg={role === 'USER' ? 'primary' : role === 'ADMIN' ? 'info' : role === 'PENDING' ? 'strong' : 'weak'}
           pt={1}
@@ -20,7 +21,7 @@ export function UserCard({ userName, displayName, role, ...props }) {
           {role}
         </Badge>
       )}
-    </Grid>
+    </Flex>
   )
 }
 
@@ -28,4 +29,5 @@ UserCard.propTypes = {
   userName: string.isRequired,
   displayName: string,
   role: string,
+  children: any,
 }
