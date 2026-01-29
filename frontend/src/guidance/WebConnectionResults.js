@@ -16,6 +16,8 @@ import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
 import { t, Trans } from '@lingui/macro'
 import { DetailTooltip } from './DetailTooltip'
+import { SecurityTxt } from './SecurityTxt'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function WebConnectionResults({ connectionResults, isWebHosting }) {
   const {
@@ -30,11 +32,31 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
     httpsChainResult,
   } = connectionResults
 
-  const columnInfoStyleProps = {
-    align: 'center',
-    py: '0.5',
-    px: '2',
-    _even: { bg: 'gray.200' },
+  let connectionResultsStatus = 'FAIL'
+  if (
+    [connectionResults.httpsStatus, connectionResults.hstsStatus].every(
+      (status) => status.toUpperCase() === 'PASS',
+    )
+  )
+    connectionResultsStatus = 'PASS'
+  else if (
+    [connectionResults.httpsStatus, connectionResults.hstsStatus].every(
+      (status) => status.toUpperCase() === 'INFO',
+    )
+  )
+    connectionResultsStatus = 'INFO'
+
+  // eslint-disable-next-line react/prop-types
+  const InfoTableItem = ({ label, icon, title, value, ...props }) => {
+    return (
+      <Flex align="center" py="0.5" px="2" _even={{ bg: 'gray.200' }} {...props}>
+        <DetailTooltip label={label}>
+          {icon}
+          <Text px="1">{title}</Text>
+        </DetailTooltip>
+        <Text>{value}</Text>
+      </Flex>
+    )
   }
 
   const connChainResult = (chainResult) =>
@@ -56,27 +78,28 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
               <Text>
                 {idx + 1}. {uri}
               </Text>
-
-              <Text>
-                <Trans>Status:</Trans> {statusCode}
-              </Text>
-
-              <Text>{blockedCategory}</Text>
-              <Text>{HSTS}</Text>
-
+              {[
+                { label: <Trans>Status:</Trans>, value: statusCode },
+                { label: '', value: blockedCategory },
+                { label: '', value: HSTS },
+              ].map(({ label, value }, i) =>
+                value ? (
+                  <Text key={i} pl="4">
+                    {label} {value}
+                  </Text>
+                ) : null,
+              )}
               <AccordionButton color="blue.500" variant="link">
                 <PlusSquareIcon mr="1" />
                 <Trans>See headers</Trans>
               </AccordionButton>
               <AccordionPanel>
                 <Code>
-                  {Object.keys(headers).map((key, idx) => {
-                    return (
-                      <Text key={idx}>
-                        {key}: {headers[key]}
-                      </Text>
-                    )
-                  })}
+                  {Object.keys(headers).map((key, idx) => (
+                    <Text key={idx}>
+                      {key}: {headers[key]}
+                    </Text>
+                  ))}
                 </Code>
               </AccordionPanel>
             </Box>
@@ -84,16 +107,6 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
         )
       }
     })
-
-  let connectionResultsStatus = 'FAIL'
-  if (
-    [(connectionResults.httpsStatus, connectionResults.hstsStatus)].every((status) => status.toUpperCase() === 'PASS')
-  )
-    connectionResultsStatus = 'PASS'
-  else if (
-    [(connectionResults.httpsStatus, connectionResults.hstsStatus)].every((status) => status.toUpperCase() === 'INFO')
-  )
-    connectionResultsStatus = 'INFO'
 
   return (
     <AccordionItem>
@@ -120,34 +133,28 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
             </Flex>
             <AccordionPanel>
               <Box fontSize="lg" px="2">
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip label={t`Shows if the HTTP connection is live.`}>
-                    <StatusIcon status="INFO" />
-                    <Text px="1">
-                      <Trans>HTTP Live</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>{httpLive ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip
-                    label={t`Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never.`}
-                  >
-                    <StatusIcon status={!httpLive ? 'INFO' : httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
-                    <Text px="1">
-                      <Trans>HTTP Upgrades</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>
-                    {!httpLive
+                {[
+                  {
+                    label: t`Shows if the HTTP connection is live.`,
+                    icon: <StatusIcon status="INFO" />,
+                    title: <Trans>HTTP Live</Trans>,
+                    value: httpLive ? t`Yes` : t`No`,
+                  },
+                  {
+                    label: t`Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never.`,
+                    icon: <StatusIcon status={!httpLive ? 'INFO' : httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />,
+                    title: <Trans>HTTP Upgrades</Trans>,
+                    value: !httpLive
                       ? t`Not available`
                       : httpImmediatelyUpgrades
                       ? t`Immediately`
                       : httpEventuallyUpgrades
                       ? t`Eventually`
-                      : t`Never`}
-                  </Text>
-                </Flex>
+                      : t`Never`,
+                  },
+                ].map((vals, idx) => (
+                  <InfoTableItem {...vals} key={idx} />
+                ))}
               </Box>
               <Text mt="2" fontWeight="bold" mx="2">
                 <Trans>URL:</Trans> {httpChainResult.uri}
@@ -166,72 +173,60 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
             </Flex>
             <AccordionPanel>
               <Box fontSize="lg" px="2">
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip label={t`Shows if the HTTPS connection is live.`}>
-                    <StatusIcon status={!isWebHosting ? 'INFO' : httpsLive ? 'PASS' : 'FAIL'} />
-                    <Text px="1">
-                      <Trans>HTTPS Live</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>{httpsLive ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip
-                    label={t`Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never.`}
-                  >
-                    <StatusIcon
-                      status={
-                        !isWebHosting
-                          ? 'INFO'
-                          : httpsImmediatelyDowngrades || httpsEventuallyDowngrades
-                          ? 'FAIL'
-                          : 'PASS'
-                      }
-                    />
-                    <Text px="1">
-                      <Trans>HTTPS Downgrades</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>
-                    {httpsImmediatelyDowngrades ? t`Immediately` : httpsEventuallyDowngrades ? t`Eventually` : t`Never`}
-                  </Text>
-                </Flex>
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip label={t`Shows if the HSTS (HTTP Strict Transport Security) header is present.`}>
-                    <StatusIcon status={!isWebHosting ? 'INFO' : hstsParsed ? 'PASS' : 'FAIL'} />
-                    <Text px="1">
-                      <Trans>HSTS Parsed</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip label={t`Shows the duration of time, in seconds, that the HSTS header is valid.`}>
-                    <StatusIcon status="INFO" />
-                    <Text px="1">
-                      <Trans>HSTS Max Age</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>{hstsParsed?.maxAge || t`Not available`}</Text>
-                </Flex>
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip label={t`Shows if the HSTS header includes the preload directive.`}>
-                    <StatusIcon status="INFO" />
-                    <Text px="1">
-                      <Trans>HSTS Preloaded</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>{!hstsParsed ? t`Not available` : hstsParsed?.preload ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex {...columnInfoStyleProps}>
-                  <DetailTooltip label={t`Shows if the HSTS header includes the includeSubdomains directive.`}>
-                    <StatusIcon status="INFO" />
-                    <Text px="1">
-                      <Trans>HSTS Includes Subdomains</Trans>
-                    </Text>
-                  </DetailTooltip>
-                  <Text>{!hstsParsed ? t`Not available` : hstsParsed?.includeSubdomains ? t`Yes` : t`No`}</Text>
-                </Flex>
+                {[
+                  {
+                    label: t`Shows if the HTTPS connection is live.`,
+                    icon: <StatusIcon status={!isWebHosting ? 'INFO' : httpsLive ? 'PASS' : 'FAIL'} />,
+                    title: <Trans>HTTPS Live</Trans>,
+                    value: httpsLive ? t`Yes` : t`No`,
+                  },
+                  {
+                    label: t`Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never.`,
+                    icon: (
+                      <StatusIcon
+                        status={
+                          !isWebHosting
+                            ? 'INFO'
+                            : httpsImmediatelyDowngrades || httpsEventuallyDowngrades
+                            ? 'FAIL'
+                            : 'PASS'
+                        }
+                      />
+                    ),
+                    title: <Trans>HTTPS Downgrades</Trans>,
+                    value: httpsImmediatelyDowngrades
+                      ? t`Immediately`
+                      : httpsEventuallyDowngrades
+                      ? t`Eventually`
+                      : t`Never`,
+                  },
+                  {
+                    label: t`Shows if the HSTS (HTTP Strict Transport Security) header is present.`,
+                    icon: <StatusIcon status={!isWebHosting ? 'INFO' : hstsParsed ? 'PASS' : 'FAIL'} />,
+                    title: <Trans>HSTS Parsed</Trans>,
+                    value: hstsParsed ? t`Yes` : t`No`,
+                  },
+                  {
+                    label: t`Shows the duration of time, in seconds, that the HSTS header is valid.`,
+                    icon: <StatusIcon status="INFO" />,
+                    title: <Trans>HSTS Max Age</Trans>,
+                    value: hstsParsed?.maxAge || t`Not available`,
+                  },
+                  {
+                    label: t`Shows if the HSTS header includes the preload directive.`,
+                    icon: <StatusIcon status="INFO" />,
+                    title: <Trans>HSTS Preloaded</Trans>,
+                    value: !hstsParsed ? t`Not available` : hstsParsed?.preload ? t`Yes` : t`No`,
+                  },
+                  {
+                    label: t`Shows if the HSTS header includes the includeSubdomains directive.`,
+                    icon: <StatusIcon status="INFO" />,
+                    title: <Trans>HSTS Includes Subdomains</Trans>,
+                    value: !hstsParsed ? t`Not available` : hstsParsed?.includeSubdomains ? t`Yes` : t`No`,
+                  },
+                ].map((vals, idx) => (
+                  <InfoTableItem {...vals} key={idx} />
+                ))}
               </Box>
               <Text mt="2" fontWeight="bold" mx="2">
                 <Trans>URL: </Trans> {httpsChainResult?.uri}
@@ -239,6 +234,11 @@ export function WebConnectionResults({ connectionResults, isWebHosting }) {
               <Accordion allowMultiple defaultIndex={[]}>
                 {connChainResult(httpsChainResult)}
               </Accordion>
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  <SecurityTxt data={httpsChainResult?.securityTxt} mx="2" />
+                </ABTestVariant>
+              </ABTestWrapper>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
