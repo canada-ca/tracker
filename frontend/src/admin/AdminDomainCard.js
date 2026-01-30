@@ -1,9 +1,9 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { array, bool, string } from 'prop-types'
+import { any, array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
 
-export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...rest }) {
+export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, children, ...rest }) {
   const assetStateLabels = {
     APPROVED: t`Approved`,
     DEPENDENCY: t`Dependency`,
@@ -14,7 +14,8 @@ export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...r
 
   return (
     <ListItem {...rest}>
-      <Flex align="center">
+      <Flex px="2" py="3" align="center" rounded="md" mb="2" borderColor="black" borderWidth="1px">
+        {children}
         <Text minWidth="35%" fontWeight="bold" fontSize="lg" mr="2">
           {url}
         </Text>
@@ -60,4 +61,5 @@ AdminDomainCard.propTypes = {
   isArchived: bool,
   rcode: string,
   assetState: string,
+  children: any,
 }

@@ -347,8 +347,6 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
               nodes={nodes}
               verified={verified}
               permission={permission}
-              orgId={orgId}
-              orgSlug={orgSlug}
               i18n={i18n}
               setSelectedRemoveProps={setSelectedRemoveProps}
               removeOnOpen={removeOnOpen}

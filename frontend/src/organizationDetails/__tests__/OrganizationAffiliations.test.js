@@ -159,10 +159,10 @@ describe('<OrganizationAffiliations />', () => {
       )
 
       await waitFor(() => {
-        expect(getByText('Jabari_Larson@hotmail.com')).toBeInTheDocument()
+        expect(getByText(/Jabari_Larson@hotmail.com/i)).toBeInTheDocument()
       })
       await waitFor(() => {
-        expect(getByText('Cara Olson')).toBeInTheDocument()
+        expect(getByText(/Cara Olson/i)).toBeInTheDocument()
       })
     })
   })

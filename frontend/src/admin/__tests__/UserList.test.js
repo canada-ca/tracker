@@ -142,11 +142,7 @@ describe('<UserList />', () => {
       </MockedProvider>,
     )
 
-    await waitFor(() =>
-      expect(
-        getByText(rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node.user.userName),
-      ).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(getByText(/test.user@email.com/i)).toBeInTheDocument())
   })
 
   describe('Admin profile userlist', () => {

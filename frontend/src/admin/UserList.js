@@ -8,7 +8,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Stack,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -85,45 +84,40 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
   ) : (
     nodes.map(({ id, permission: userRole, user }) => {
       return (
-        <Box key={`${user.userName}:${id}`}>
-          <Flex align="center" w="100%">
-            <Stack direction="row" flexGrow="0">
-              <IconButton
-                aria-label="Remove User"
-                variant="danger"
-                onClick={() => {
-                  setSelectedRemoveUser(user)
-                  setMutation('remove')
-                  onOpen()
-                }}
-                p={2}
-                m={0}
-                icon={<MinusIcon />}
-              />
-              <IconButton
-                aria-label="Edit User"
-                variant="primary"
-                onClick={() => {
-                  setEditingUserRole(userRole)
-                  setEditingUserName(user.userName)
-                  setMutation('update')
-                  onOpen()
-                }}
-                p={2}
-                m={0}
-                icon={<EditIcon />}
-              />
-            </Stack>
-            <UserCard
-              flexGrow="1"
-              userName={user.userName}
-              displayName={user.displayName}
-              role={userRole}
-              ml={{ base: 4, md: 0 }}
-            />
-          </Flex>
-          <Divider borderColor="gray.900" />
-        </Box>
+        <UserCard
+          key={`${user.userName}:${id}`}
+          flexGrow="1"
+          userName={user.userName}
+          displayName={user.displayName}
+          role={userRole}
+          ml={{ base: 4, md: 0 }}
+        >
+          <IconButton
+            aria-label="Remove User"
+            variant="danger"
+            onClick={() => {
+              setSelectedRemoveUser(user)
+              setMutation('remove')
+              onOpen()
+            }}
+            px="2"
+            mr="1"
+            icon={<MinusIcon />}
+          />
+          <IconButton
+            aria-label="Edit User"
+            variant="primary"
+            onClick={() => {
+              setEditingUserRole(userRole)
+              setEditingUserName(user.userName)
+              setMutation('update')
+              onOpen()
+            }}
+            px="2"
+            mr="2"
+            icon={<EditIcon />}
+          />
+        </UserCard>
       )
     })
   )
