@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: org-footprint
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-44d0896-1769017863 # {"$imagepolicy": "flux-system:org-footprint"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-a5a52a0-1769790008 # {"$imagepolicy": "flux-system:org-footprint"}
               env:
                 - name: DB_PASS
                   valueFrom:
