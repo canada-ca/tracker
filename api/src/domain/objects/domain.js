@@ -379,23 +379,8 @@ export const domainType = new GraphQLObjectType({
       type: cvdEnrollment,
       description:
         'The Coordinated Vulnerability Disclosure (CVD) enrollment status and requirements for this domain asset, including HackerOne integration details.',
-      resolve: async (
-        { _id, _key, domain, cvdEnrollment },
-        __,
-        { i18n, userKey, auth: { checkDomainOwnership, userRequired } },
-      ) => {
+      resolve: async ({ cvdEnrollment }, __, { auth: { userRequired } }) => {
         await userRequired()
-
-        const permitted = await checkDomainOwnership({
-          domainId: _id,
-        })
-
-        if (!permitted) {
-          console.warn(
-            `User: ${userKey} attempted to access CVD enrollment data for ${_key}, but does not belong to an org with ownership.`,
-          )
-          throw new Error(i18n._(t`Unable to retrieve CVD enrollment information for: ${domain}`))
-        }
 
         return cvdEnrollment
       },
