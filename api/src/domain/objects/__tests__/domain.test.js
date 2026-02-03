@@ -88,6 +88,10 @@ describe('given the domain object', () => {
       expect(demoType).toHaveProperty('yearlyDmarcSummaries')
       expect(demoType.yearlyDmarcSummaries.type).toMatchObject(new GraphQLList(dmarcSummaryType))
     })
+    it('has a cvdEnrollment field', () => {
+      const demoType = domainType.getFields()
+      expect(demoType).toHaveProperty('cvdEnrollment')
+    })
   })
   describe('testing the field resolvers', () => {
     const consoleOutput = []
@@ -98,6 +102,37 @@ describe('given the domain object', () => {
     })
     afterEach(() => {
       consoleOutput.length = 0
+    })
+
+    describe('testing the cvdEnrollment resolver', () => {
+      it('returns the resolved value with correct structure when user is authenticated', async () => {
+        const demoType = domainType.getFields()
+        const mockUserRequired = jest.fn()
+        const cvdEnrollmentValue = {
+          status: 'ENROLLED',
+          description: 'Test asset',
+          maxSeverity: 'HIGH',
+          confidentialityRequirement: 'HIGH',
+          integrityRequirement: 'LOW',
+          availabilityRequirement: 'LOW',
+        }
+
+        await expect(
+          demoType.cvdEnrollment.resolve(
+            { cvdEnrollment: cvdEnrollmentValue },
+            {},
+            { auth: { userRequired: mockUserRequired } },
+          ),
+        ).resolves.toEqual(cvdEnrollmentValue)
+        expect(mockUserRequired).toHaveBeenCalled()
+      })
+      it('returns undefined if cvdEnrollment is not present', async () => {
+        const demoType = domainType.getFields()
+        const mockUserRequired = jest.fn()
+        await expect(
+          demoType.cvdEnrollment.resolve({}, {}, { auth: { userRequired: mockUserRequired } }),
+        ).resolves.toBeUndefined()
+      })
     })
 
     describe('testing the id resolver', () => {

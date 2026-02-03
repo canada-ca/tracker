@@ -162,7 +162,6 @@ describe('updateDomainsByFilters mutation', () => {
           validators: { cleanseInput },
         },
       })
-      console.log(response)
       expect(response.data.updateDomainsByFilters.result.status).toMatch(
         /Successfully updated 1 domain\(s\) in treasury-board-secretariat/,
       )
