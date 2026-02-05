@@ -7,6 +7,7 @@ import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
 import { headers } from 'nats'
+import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -31,6 +32,11 @@ export const createDomain = new mutationWithClientMutationId({
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
       type: new GraphQLNonNull(AssetStateEnums),
+    },
+    cvdEnrollment: {
+      description:
+        'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
+      type: CvdEnrollmentInputOptions,
     },
   }),
   outputFields: () => ({
@@ -93,8 +99,10 @@ export const createDomain = new mutationWithClientMutationId({
     if (typeof args.assetState !== 'undefined') {
       assetState = cleanseInput(args.assetState)
     } else {
-      assetState = ''
+      assetState = 'approved'
     }
+
+    const cvdEnrollment = args.cvdEnrollment || { status: 'not-enrolled' }
 
     // Check to see if org exists
     const org = await loadOrgByKey.load(orgId)
@@ -122,6 +130,14 @@ export const createDomain = new mutationWithClientMutationId({
       }
     }
 
+    // ensure only owners can enroll domains
+    if (!['super_admin', 'owner'].includes(permission) && cvdEnrollment.status === 'enrolled') {
+      console.warn(
+        `User: ${userKey} attempted to update the CVD enrollment for domain: ${domain} in org: ${orgId}, however they do not have permission in that org.`,
+      )
+      cvdEnrollment.status = 'pending'
+    }
+
     const insertDomain = {
       domain: domain.toLowerCase(),
       lastRan: null,
@@ -138,8 +154,9 @@ export const createDomain = new mutationWithClientMutationId({
         spf: 'info',
         ssl: 'info',
       },
-      archived: archived,
+      archived,
       ignoreRua: false,
+      cvdEnrollment,
     }
 
     // Check to see if domain already belongs to same org
@@ -257,6 +274,14 @@ export const createDomain = new mutationWithClientMutationId({
         name: 'assetState',
         oldValue: null,
         newValue: assetState,
+      })
+    }
+
+    if (typeof cvdEnrollment !== 'undefined') {
+      updatedProperties.push({
+        name: 'cvdEnrollment',
+        oldValue: null,
+        newValue: cvdEnrollment.enrollment,
       })
     }
 

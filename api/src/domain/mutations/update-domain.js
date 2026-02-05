@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 import { updateDomainUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
+import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -33,6 +34,11 @@ export const updateDomain = new mutationWithClientMutationId({
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
+    },
+    cvdEnrollment: {
+      description:
+        'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
+      type: CvdEnrollmentInputOptions,
     },
   }),
   outputFields: () => ({
@@ -93,7 +99,14 @@ export const updateDomain = new mutationWithClientMutationId({
     if (typeof args.assetState !== 'undefined') {
       assetState = cleanseInput(args.assetState)
     } else {
-      assetState = ''
+      assetState = null
+    }
+
+    let cvdEnrollment
+    if (typeof args.cvdEnrollment !== 'undefined') {
+      cvdEnrollment = args.cvdEnrollment
+    } else {
+      cvdEnrollment = null
     }
 
     // Check to see if domain exists
@@ -165,6 +178,13 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
+    if (!['super_admin', 'owner'].includes(permission) && cvdEnrollment?.status === 'enrolled') {
+      console.warn(
+        `User: ${userKey} attempted to update the CVD enrollment for domain: ${domainId} in org: ${orgId}, however they do not have permission in that org.`,
+      )
+      cvdEnrollment.status = 'pending'
+    }
+
     // Setup Transaction
     const trx = await transaction(collections)
 
@@ -172,6 +192,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
+      cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
     }
 
     try {
@@ -259,6 +280,17 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'assetState',
         oldValue: claim.assetState,
         newValue: assetState,
+      })
+    }
+
+    if (
+      typeof cvdEnrollment !== 'undefined' &&
+      JSON.stringify(cvdEnrollment) !== JSON.stringify(domain.cvdEnrollment)
+    ) {
+      updatedProperties.push({
+        name: 'cvdEnrollment',
+        oldValue: domain.cvdEnrollment,
+        newValue: cvdEnrollment,
       })
     }
 

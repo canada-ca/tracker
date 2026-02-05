@@ -16,6 +16,7 @@ import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
 import { additionalFinding } from '../../additional-findings/objects/additional-finding'
 import { tagType } from '../../tags/objects'
+import { cvdEnrollment } from '../../additional-findings/objects'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -373,6 +374,16 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: `Whether or not a CVE has been detected in the domain's additional findings.`,
       resolve: ({ cveDetected }) => cveDetected,
+    },
+    cvdEnrollment: {
+      type: cvdEnrollment,
+      description:
+        'The Coordinated Vulnerability Disclosure (CVD) enrollment status and requirements for this domain asset, including HackerOne integration details.',
+      resolve: async ({ cvdEnrollment }, __, { auth: { userRequired } }) => {
+        await userRequired()
+
+        return cvdEnrollment
+      },
     },
   }),
   interfaces: [nodeInterface],
