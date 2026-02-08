@@ -27,7 +27,7 @@
     "form-data@^4.0.0": "4.0.4"
   },
   "dependencies": {
-    "@apollo/server": "^5.2.0",
+    "@apollo/server": "^5.4.0",
     "@as-integrations/express4": "^1.1.2",
     "@lingui/core": "^4.13.0",
     "arango-tools": "^0.6.0",
