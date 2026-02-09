@@ -57,6 +57,9 @@ DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
+CNAME_MONITOR_ONLY_LIST = os.getenv("CNAME_MONITOR_ONLY_LIST", "").split(",")
+SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")
+
 SCAN_THREAD_COUNT = int(os.getenv("SCAN_THREAD_COUNT", 1))
 
 # Establish DB connection
@@ -168,6 +171,18 @@ def check_mx_diff(processed_results, domain_id):
         )
 
     return mx_record_diff
+
+
+def is_cname_target(resolve_chain, domains):
+    # Check if any CNAME record in the resolve chain points to a domain in the provided list
+    for rrset in resolve_chain:
+        for record in rrset:
+            record_parts = record.split(" ")
+            if len(record_parts) >= 5 and record_parts[3] == "CNAME":
+                record_target = record_parts[4].strip(".")
+                if record_target in domains:
+                    return True
+    return False
 
 
 def process_msg(msg):
@@ -368,6 +383,75 @@ def process_msg(msg):
                 if not document_updated:
                     logger.error(
                         f"Error while updating domain after retrying for received message: {msg}: {error_str}"
+                    )
+
+            if processed_results.get("cname_record") is not None and CNAME_MONITOR_ONLY_LIST:
+                try:
+                    # Use resolve chain instead of CNAME as some domains have CNAMEs that point to other CNAMEs before reaching the final target domain
+                    is_cname_target_in_monitor_only_list = is_cname_target(
+                        resolve_chain=processed_results.get("resolve_chain", []),
+                        domains=CNAME_MONITOR_ONLY_LIST,
+                    )
+
+                    if is_cname_target_in_monitor_only_list:
+                        # Get current claim asset states of domain
+                        approved_state_claims_cursor = db.aql.execute(
+                            """
+                                FOR v, e IN 1..1 INBOUND @domain_id claims
+                                    FILTER v.verified == true
+                                    FILTER e.assetState == "approved"
+                                    RETURN e
+                            """,
+                            bind_vars={"domain_id": domain["_id"]},
+                        )
+                        if approved_state_claims_cursor.empty():
+                            logger.debug(
+                                f"No approved claims for domain with CNAME in monitor-only list for received message: {msg}"
+                            )
+                        else:
+                            approved_state_claims = [claim for claim in approved_state_claims_cursor]
+                            for claim in approved_state_claims:
+                                try:
+                                    logger.info(f"Domain with CNAME in monitor-only list has approved claim, updating claim state to monitor-only for claim: {claim}")
+                                    claim["assetState"] = "monitor-only"
+                                    db.collection("claims").update(claim)
+
+                                    insert_activity = {
+                                        "timestamp": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[
+                                                         :-3
+                                                     ]
+                                                     + "Z",
+                                        "initiatedBy": {
+                                            "id": "dns-processor",
+                                            "userName": SERVICE_ACCOUNT_EMAIL,
+                                            "role": "service",
+                                        },
+                                        "target": {
+                                            "resource": domain["domain"],
+                                            "updatedProperties": [
+                                                {
+                                                    "name": "assetState",
+                                                    "oldValue": "approved",
+                                                    "newValue": "monitor-only",
+                                                }
+                                            ],
+                                            "organization": {"id": claim["_from"].split("/")[1]},
+                                            "resourceType": "domain",
+                                        },
+                                        "action": "update",
+                                        "reason": None,
+                                    }
+                                    db.collection("auditLogs").insert(insert_activity)
+
+                                except Exception as e:
+                                    logger.error(
+                                        f"Error while processing claim with approved state for domain with CNAME in monitor-only list for received message: {msg}: {str(e)}"
+                                    )
+                                    continue
+
+                except Exception as e:
+                    logger.error(
+                        f"Error while parsing CNAME record for received message: {msg}: {str(e)}"
                     )
 
         except Exception as e:

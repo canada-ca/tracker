@@ -44,6 +44,16 @@ spec:
                   key: DB_USER
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
+            - name: CNAME_MONITOR_ONLY_LIST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: CNAME_MONITOR_ONLY_LIST
+            - name: SERVICE_ACCOUNT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: SERVICE_ACCOUNT_EMAIL
             - name: NOTIFICATION_API_KEY
               valueFrom:
                 secretKeyRef:

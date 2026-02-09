@@ -34,6 +34,7 @@ def domain_has_verified_claim(domain, db):
         """
             FOR v, e IN 1..1 INBOUND @domain_id claims
                 FILTER v.verified == true
+                FILTER e.assetState == "approved"
                 RETURN v
             """,
         bind_vars={"domain_id": domain["_id"]},
@@ -334,7 +335,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     logging.error(f"Error processing domain {domain['_id']}: {e}")
                     continue
 
-            dmarc_phase_total = ( 
+            dmarc_phase_total = (
                 dmarc_phase_assess
                 + dmarc_phase_deploy
                 + dmarc_phase_enforce
