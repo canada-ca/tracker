@@ -2,4 +2,3 @@ python-arango==8.2.6
 python-dotenv==1.1.0
 requests==2.32.4
 requests-toolbelt==1.0.0
-notifications-python-client==10.0.1
