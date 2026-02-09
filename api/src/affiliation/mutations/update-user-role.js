@@ -43,8 +43,9 @@ given organization.`,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByUserName },
+      loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
       validators: { cleanseInput },
+      notify: { sendRoleChangeEmail },
     },
   ) => {
     // Cleanse Input
@@ -211,6 +212,19 @@ given organization.`,
       await trx.abort()
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
+
+    // Get org names to use in email
+    let orgNames
+    try {
+      orgNames = await loadOrganizationNamesById({ query, userKey, i18n }).load(org._id)
+    } catch (err) {
+      console.error(
+        `Error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+    }
+
+    await sendRoleChangeEmail({ user, newRole: role, oldRole: affiliation.permission, orgNames })
 
     console.info(`User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`)
     await logActivity({
