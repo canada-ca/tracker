@@ -1,0 +1,7 @@
+**/*.env
+Dockerfile
+tests
+*.yaml
+*.md
+.venv
+.pytest_cache
