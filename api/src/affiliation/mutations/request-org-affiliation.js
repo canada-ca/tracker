@@ -35,7 +35,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       userKey,
       request: { ip },
       auth: { userRequired, verifiedRequired },
-      loaders: { loadOrgByKey, loadUserByKey },
+      loaders: { loadOrgByKey, loadUserByKey, loadOrganizationNamesById },
       notify: { sendInviteRequestEmail },
       validators: { cleanseInput },
     },
@@ -156,28 +156,12 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
 
     if (orgAdmins.length > 0) {
       // Get org names to use in email
-      let orgNamesCursor
-      try {
-        orgNamesCursor = await query`
-        LET org = DOCUMENT(organizations, ${org._id})
-        RETURN {
-          "orgNameEN": org.orgDetails.en.name,
-          "orgNameFR": org.orgDetails.fr.name,
-        }
-      `
-      } catch (err) {
-        console.error(
-          `Database error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while creating cursor for retrieving organization names. error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to request invite. Please try again.`))
-      }
       let orgNames
       try {
-        orgNames = await orgNamesCursor.next()
+        orgNames = await loadOrganizationNamesById({ query, userKey, i18n }).load(org._id)
       } catch (err) {
         console.error(
-          `Cursor error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
+          `Error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
         )
         await trx.abort()
         throw new Error(i18n._(t`Unable to request invite. Please try again.`))

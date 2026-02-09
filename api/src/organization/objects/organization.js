@@ -184,7 +184,7 @@ export const organizationType = new GraphQLObjectType({
           collections,
           request: { ip },
           auth: { checkPermission, userRequired, verifiedRequired },
-          loaders: { loadOrganizationDomainStatuses },
+          loaders: { loadOrganizationDomainStatuses, loadOrganizationNamesById },
         },
       ) => {
         const user = await userRequired()
@@ -259,28 +259,12 @@ export const organizationType = new GraphQLObjectType({
         })
 
         // Get org names to use in activity log
-        let orgNamesCursor
-        try {
-          orgNamesCursor = await query`
-            LET org = DOCUMENT(organizations, ${_id})
-            RETURN {
-              "orgNameEN": org.orgDetails.en.name,
-              "orgNameFR": org.orgDetails.fr.name,
-            }
-          `
-        } catch (err) {
-          console.error(
-            `Database error occurred when user: ${userKey} attempted to export org: ${_id}. Error while creating cursor for retrieving organization names. error: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
-        }
-
         let orgNames
         try {
-          orgNames = await orgNamesCursor.next()
+          orgNames = await loadOrganizationNamesById({ query, userKey, i18n }).load(_id)
         } catch (err) {
           console.error(
-            `Cursor error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
+            `Error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
           )
           throw new Error(i18n._(t`Unable to export organization. Please try again.`))
         }
