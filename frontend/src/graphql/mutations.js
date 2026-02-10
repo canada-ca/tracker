@@ -183,8 +183,18 @@ export const CREATE_DOMAIN = gql`
     $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums!
+    $cvdEnollment: CvdEnrollmenInputOptions
   ) {
-    createDomain(input: { orgId: $orgId, domain: $domain, tags: $tags, archived: $archived, assetState: $assetState }) {
+    createDomain(
+      input: {
+        orgId: $orgId
+        domain: $domain
+        tags: $tags
+        archived: $archived
+        assetState: $assetState
+        cvdEnrollment: $cvdEnrollment
+      }
+    ) {
       result {
         ... on Domain {
           id
@@ -200,6 +210,7 @@ export const CREATE_DOMAIN = gql`
           assetState
           archived
           rcode
+          cvdEnrollment
         }
         ... on DomainError {
           code
@@ -272,6 +283,7 @@ export const UPDATE_DOMAIN = gql`
     $archived: Boolean
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
+    $cvdEnollment: CvdEnrollmenInputOptions
   ) {
     updateDomain(
       input: {
@@ -281,6 +293,7 @@ export const UPDATE_DOMAIN = gql`
         archived: $archived
         assetState: $assetState
         ignoreRua: $ignoreRua
+        cvdEnrollment: $cvdEnollment
       }
     ) {
       result {
@@ -299,6 +312,7 @@ export const UPDATE_DOMAIN = gql`
           archived
           rcode
           ignoreRua
+          cvdEnrollment
         }
         ... on DomainError {
           code
