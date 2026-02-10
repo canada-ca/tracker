@@ -36,8 +36,23 @@ import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
 
-export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, availableTags, ...props }) {
-  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
+export function AdminDomainModal({
+  isOpen,
+  onClose,
+  validationSchema,
+  orgId,
+  availableTags,
+  editingDomainId,
+  editingDomainUrl,
+  tagInputList,
+  orgSlug,
+  archived,
+  assetState,
+  mutation,
+  orgCount,
+  cvdEnrolled,
+  ...rest
+}) {
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -187,7 +202,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom">
+    <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom" {...rest}>
       <ModalOverlay />
       <ModalContent pb={4}>
         <Formik
@@ -197,6 +212,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
             tags: getInitTags(),
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
+            cvdEnrolled: cvdEnrolled || 'NOT_ENROLLED',
           }}
           initialTouched={{
             domainUrl: true,
@@ -213,6 +229,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                   archived: values.archiveDomain,
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
+                  cvdEnrolled: values.cvdEnrolled,
                 },
               })
             } else if (mutation === 'create') {
@@ -223,6 +240,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                   tags: values.tags.map(({ tagId }) => tagId),
                   archived: values.archiveDomain,
                   assetState: values.assetState,
+                  cvdEnrolled: values.cvdEnrolled,
                 },
               })
             }
@@ -306,6 +324,9 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                       </option>
                     </Select>
                   </FormControl>
+
+                  {/* CVD Enrollment Options */}
+
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
@@ -401,5 +422,6 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
+  cvdEnrolled: string,
   availableTags: array,
 }

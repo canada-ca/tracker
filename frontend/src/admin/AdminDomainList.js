@@ -65,6 +65,7 @@ export function AdminDomainList({
                   editingDomainId: domainId,
                   editingDomainUrl: domain,
                   orgCount: organizations.totalCount,
+                  cvdEnrolled,
                 })
                 updateOnOpen()
               }}
