@@ -248,6 +248,7 @@ export default function DomainsPage() {
             webScanPending,
             userHasPermission,
             cveDetected,
+            cvdEnrolled,
           },
           index,
         ) => (
@@ -266,6 +267,7 @@ export default function DomainsPage() {
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
+              cvdEnrolled={cvdEnrolled}
               mb="3"
             />
           </ErrorBoundary>

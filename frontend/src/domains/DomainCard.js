@@ -39,6 +39,7 @@ function DomainCard({
   webScanPending,
   userHasPermission,
   cveDetected,
+  cvdEnrolled,
   ...rest
 }) {
   const location = useLocation()
@@ -193,6 +194,14 @@ function DomainCard({
                   </TagLabel>
                 </Tag>
               )}
+
+              {userHasPermission && cvdEnrolled && cvdEnrolled !== 'NOT_ENROLLED' && (
+                <Tag my="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    <Trans>CVD {cvdEnrolled}</Trans>
+                  </TagLabel>
+                </Tag>
+              )}
             </Flex>
           </Box>
 
@@ -294,6 +303,7 @@ DomainCard.propTypes = {
   userHasPermission: bool,
   assetState: string,
   cveDetected: bool,
+  cvdEnrolled: string,
 }
 
 const memoizedDomainCard = memo(DomainCard, (prevProps, nextProps) => {

@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { any, array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
 
-export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, children, ...rest }) {
+export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, cvdEnrolled, children, ...rest }) {
   const assetStateLabels = {
     APPROVED: t`Approved`,
     DEPENDENCY: t`Dependency`,
@@ -38,6 +38,15 @@ export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, chil
               <TagLabel fontWeight="bold">{assetStateLabels[assetState]}</TagLabel>
             </Tag>
           )}
+          {cvdEnrolled &&
+            cvdEnrolled !==
+              'NOT_ENROLLED'(
+                <Tag colorScheme="blue" mx="1">
+                  <TagLabel fontWeight="bold">
+                    <Trans>CVD {cvdEnrolled}</Trans>
+                  </TagLabel>
+                </Tag>,
+              )}
           {rcode === 'NXDOMAIN' && (
             <Tag colorScheme="red" mr="auto" alignSelf="center">
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
@@ -62,4 +71,5 @@ AdminDomainCard.propTypes = {
   rcode: string,
   assetState: string,
   children: any,
+  cvdEnrolled: string,
 }
