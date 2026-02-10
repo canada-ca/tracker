@@ -8,11 +8,11 @@ export const sendRoleChangeEmail =
     try {
       await notifyClient.sendEmail(NOTIFICATION_ROLE_CHANGE_EMAIL, user.userName, {
         personalisation: {
-          user: user.displayName,
-          orgNameEN: orgNames.orgNameEN,
-          orgNameFR: orgNames.orgNameFR,
-          oldRole,
-          newRole,
+          display_name: user.displayName,
+          org_name_en: orgNames.orgNameEN,
+          org_name_fr: orgNames.orgNameFR,
+          old_role: oldRole,
+          new_role: newRole,
         },
       })
       return true
