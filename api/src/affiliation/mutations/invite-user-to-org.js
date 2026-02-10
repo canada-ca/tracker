@@ -106,7 +106,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // Get org names to use in email
     let orgNames
     try {
-      orgNames = await loadOrganizationNamesById({ query, userKey, i18n }).load(org._id)
+      orgNames = await loadOrganizationNamesById.load(org._id)
     } catch (err) {
       console.error(
         `Error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while retrieving organization names. error: ${err}`,

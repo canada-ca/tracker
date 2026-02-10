@@ -1,10 +1,6 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-/**
- * Loader to fetch organization names (EN/FR) by org _id.
- * Usage: loadOrganizationNamesById({ query, userKey, i18n }).load(orgId)
- */
 export const loadOrganizationNamesById = ({ query, userKey, i18n }) =>
   new DataLoader(async (ids) => {
     let cursor

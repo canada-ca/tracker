@@ -261,7 +261,7 @@ export const organizationType = new GraphQLObjectType({
         // Get org names to use in activity log
         let orgNames
         try {
-          orgNames = await loadOrganizationNamesById({ query, userKey, i18n }).load(_id)
+          orgNames = await loadOrganizationNamesById.load(_id)
         } catch (err) {
           console.error(
             `Error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
