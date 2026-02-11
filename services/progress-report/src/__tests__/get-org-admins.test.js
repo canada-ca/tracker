@@ -4,9 +4,9 @@ const { dbNameFromFile } = require('arango-tools')
 const { ensureDatabase: ensure } = require('../testUtilities')
 const { databaseOptions } = require('../../database-options')
 
-const { getOrgAdmins } = require('../database')
+const { getOrgUsers } = require('../database')
 
-describe('given the getOrgAdmins function', () => {
+describe('given the getOrgUsers function', () => {
   const consoleErrorOutput = []
   const consoleInfoOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
@@ -56,9 +56,9 @@ describe('given the getOrgAdmins function', () => {
         permission: 'admin',
       })
     })
-    it('returns the org admins', async () => {
-      const orgAdmins = await getOrgAdmins({ query, orgId: org._id })
-      const expectedOrgAdmins = [
+    it('returns the org users', async () => {
+      const orgUsers = await getOrgUsers({ query, orgId: org._id })
+      const expectedorgUsers = [
         {
           ...user,
           userName: 'user@test.ca',
@@ -68,7 +68,7 @@ describe('given the getOrgAdmins function', () => {
           },
         },
       ]
-      expect(orgAdmins).toEqual(expectedOrgAdmins)
+      expect(orgUsers).toEqual(expectedorgUsers)
     })
   })
   describe('given an unsuccessful query', () => {
@@ -76,10 +76,10 @@ describe('given the getOrgAdmins function', () => {
       it('throws an error', async () => {
         const mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         try {
-          await getOrgAdmins({ query: mockQuery })
+          await getOrgUsers({ query: mockQuery })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Database error occurred while trying to find org admins: Error: Database error occurred.'),
+            new Error('Database error occurred while trying to find org users: Error: Database error occurred.'),
           )
         }
       })
@@ -93,10 +93,10 @@ describe('given the getOrgAdmins function', () => {
         }
         const mockQuery = jest.fn().mockReturnValue(cursor)
         try {
-          await getOrgAdmins({ query: mockQuery })
+          await getOrgUsers({ query: mockQuery })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Cursor error occurred while trying to find org admins: Error: Cursor error occurred.'),
+            new Error('Cursor error occurred while trying to find org users: Error: Cursor error occurred.'),
           )
         }
       })
