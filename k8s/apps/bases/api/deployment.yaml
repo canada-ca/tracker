@@ -168,6 +168,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_PASSWORD_RESET_BILINGUAL
+            - name: NOTIFICATION_ROLE_CHANGE_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ROLE_CHANGE_EMAIL
             - name: NOTIFICATION_TWO_FACTOR_CODE_EN
               valueFrom:
                 secretKeyRef:
