@@ -10,7 +10,7 @@ import { userRequired, verifiedRequired } from '../../../auth'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
-import { loadOrgByKey } from '../../../organization/loaders'
+import { loadOrgByKey, loadOrganizationNamesById } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -172,6 +172,7 @@ describe('invite user to org', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendInviteRequestEmail: sendInviteRequestEmail },
                   validators: { cleanseInput },
@@ -332,6 +333,9 @@ describe('invite user to org', () => {
                 loadUserByKey: {
                   load: jest.fn(),
                 },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
+                },
               },
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
@@ -404,6 +408,9 @@ describe('invite user to org', () => {
                   load: jest.fn().mockReturnValue({ _id: org._id }),
                 },
                 loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadOrganizationNamesById: {
                   load: jest.fn(),
                 },
               },
@@ -481,6 +488,9 @@ describe('invite user to org', () => {
                 loadUserByKey: {
                   load: jest.fn(),
                 },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
+                },
               },
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
@@ -550,6 +560,7 @@ describe('invite user to org', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                 loadUserByKey: loadUserByKey({ query }),
+                loadOrganizationNamesById: loadOrganizationNamesById({ query }),
               },
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
@@ -604,6 +615,7 @@ describe('invite user to org', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                 loadUserByKey: loadUserByKey({ query }),
+                loadOrganizationNamesById: loadOrganizationNamesById({ query }),
               },
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },

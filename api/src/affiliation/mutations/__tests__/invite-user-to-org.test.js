@@ -10,7 +10,7 @@ import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '..
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
-import { loadOrgByKey } from '../../../organization/loaders'
+import { loadOrgByKey, loadOrganizationNamesById } from '../../../organization/loaders'
 import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -184,6 +184,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -278,6 +279,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -372,6 +374,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -462,6 +465,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -556,6 +560,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -651,6 +656,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -762,6 +768,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -856,6 +863,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -947,6 +955,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -1042,6 +1051,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -1201,6 +1211,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -1296,6 +1307,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -1391,6 +1403,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -1483,6 +1496,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -1576,6 +1590,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -1669,6 +1684,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -1778,6 +1794,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -1874,6 +1891,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
@@ -1966,6 +1984,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -2059,6 +2078,7 @@ describe('invite user to org', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     loadUserByKey: loadUserByKey({ query }),
                     loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                   },
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
@@ -2237,6 +2257,7 @@ describe('invite user to org', () => {
                 loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadUserByUserName: loadUserByUserName({ query, i18n }),
+                loadOrganizationNamesById: loadOrganizationNamesById({ query, i18n }),
               },
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
@@ -2312,6 +2333,9 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
                 loadUserByUserName: {
+                  load: jest.fn(),
+                },
+                loadOrganizationNamesById: {
                   load: jest.fn(),
                 },
               },
@@ -2391,6 +2415,9 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
                 loadUserByUserName: {
+                  load: jest.fn(),
+                },
+                loadOrganizationNamesById: {
                   load: jest.fn(),
                 },
               },
@@ -2473,6 +2500,9 @@ describe('invite user to org', () => {
                 loadUserByUserName: {
                   load: jest.fn(),
                 },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
+                },
               },
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
@@ -2553,6 +2583,9 @@ describe('invite user to org', () => {
                 loadUserByUserName: {
                   load: jest.fn(),
                 },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
+                },
               },
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
@@ -2631,6 +2664,7 @@ describe('invite user to org', () => {
                   loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadUserByUserName: loadUserByUserName({ query, i18n }),
+                  loadOrganizationNamesById: loadOrganizationNamesById({ query, i18n }),
                 },
                 notify: { sendOrgInviteCreateAccount: jest.fn() },
                 validators: { cleanseInput },
@@ -2708,6 +2742,7 @@ describe('invite user to org', () => {
                   loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadUserByUserName: loadUserByUserName({ query }),
+                  loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                 },
                 notify: {
                   sendOrgInviteCreateAccount: jest.fn(),
@@ -2798,16 +2833,17 @@ describe('invite user to org', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn(),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
+                loadOrgByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
                 },
               },
               notify: { sendOrgInviteCreateAccount: jest.fn() },
@@ -2884,6 +2920,9 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
                 loadUserByUserName: {
+                  load: jest.fn(),
+                },
+                loadOrganizationNamesById: {
                   load: jest.fn(),
                 },
               },
@@ -2965,6 +3004,9 @@ describe('invite user to org', () => {
                 loadUserByUserName: {
                   load: jest.fn(),
                 },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
+                },
               },
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
@@ -3042,6 +3084,9 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
                 loadUserByUserName: {
+                  load: jest.fn(),
+                },
+                loadOrganizationNamesById: {
                   load: jest.fn(),
                 },
               },
@@ -3123,6 +3168,9 @@ describe('invite user to org', () => {
                 loadUserByUserName: {
                   load: jest.fn(),
                 },
+                loadOrganizationNamesById: {
+                  load: jest.fn(),
+                },
               },
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
@@ -3200,6 +3248,7 @@ describe('invite user to org', () => {
                   loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadUserByUserName: loadUserByUserName({ query }),
+                  loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                 },
                 notify: { sendOrgInviteCreateAccount: jest.fn() },
                 validators: { cleanseInput },
@@ -3277,6 +3326,7 @@ describe('invite user to org', () => {
                   loadOrgByKey: loadOrgByKey({ query, language: i18n.locale }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadUserByUserName: loadUserByUserName({ query }),
+                  loadOrganizationNamesById: loadOrganizationNamesById({ query }),
                 },
                 notify: {
                   sendOrgInviteCreateAccount: jest.fn(),
