@@ -32,7 +32,7 @@ class EnrollmentOptions(TypedDict):
 
 
 def handle_res(res: Response):
-    if res.status_code != 200:
+    if res.ok is False:
         raise Exception(res.json().get("errors", []))
     return res.json()
 
