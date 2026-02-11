@@ -39,7 +39,7 @@ DB_URL = os.getenv("DB_URL")
 
 
 def get_asset_identifiers(assets: list[dict]):
-    return [a.get("attribute", {}).get("identifier", None) for a in assets]
+    return [a.get("attributes", {}).get("identifier", None) for a in assets]
 
 
 def get_domain_names(domains: list[dict]):
@@ -58,7 +58,7 @@ def main(db: StandardDatabase):
                 RETURN d
             """
         )
-        enrolled_domains = list(cursor.batch())
+        enrolled_domains = [domain for domain in cursor]
     except Exception as e:
         logger.error(f"Error(s) while fetching CVD enrolled domains: {e}")
         return
@@ -99,13 +99,14 @@ def main(db: StandardDatabase):
     ]
 
     # archive assets no longer enrolled
-    logger.info(f"Archiving {len(archive_list)} assets from CVD program.")
-    try:
-        res = archive_assets(data={"data": archive_list})
-        logger.info(res)
-    except Exception as e:
-        logger.error(f"Error(s) while archiving CVD enrolled domains: {e}")
-        return
+    if len(archive_list) > 0:
+        logger.info(f"Archiving {len(archive_list)} assets from CVD program.")
+        try:
+            res = archive_assets(data={"data": archive_list})
+            logger.info(res)
+        except Exception as e:
+            logger.error(f"Error(s) while archiving CVD enrolled domains: {e}")
+            return
 
 
 if __name__ == "__main__":
