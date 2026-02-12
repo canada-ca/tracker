@@ -3,8 +3,6 @@ const { NOTIFICATION_ROLE_CHANGE_EMAIL } = process.env
 export const sendRoleChangeEmail =
   ({ notifyClient }) =>
   async ({ user, orgNames, oldRole, newRole }) => {
-    console.log(`${oldRole} ==> ${newRole}`)
-
     try {
       await notifyClient.sendEmail(NOTIFICATION_ROLE_CHANGE_EMAIL, user.userName, {
         personalisation: {
