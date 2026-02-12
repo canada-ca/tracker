@@ -1,10 +1,10 @@
-import { t } from '@lingui/macro'
-
 const { NOTIFICATION_ROLE_CHANGE_EMAIL } = process.env
 
 export const sendRoleChangeEmail =
-  ({ notifyClient, i18n }) =>
+  ({ notifyClient }) =>
   async ({ user, orgNames, oldRole, newRole }) => {
+    console.log(`${oldRole} ==> ${newRole}`)
+
     try {
       await notifyClient.sendEmail(NOTIFICATION_ROLE_CHANGE_EMAIL, user.userName, {
         personalisation: {
@@ -18,6 +18,5 @@ export const sendRoleChangeEmail =
       return true
     } catch (err) {
       console.error(`Error occurred when sending role update email for ${user._key}: ${err}`)
-      throw new Error(i18n._(t`Unable to send role update email. Please try again.`))
     }
   }
