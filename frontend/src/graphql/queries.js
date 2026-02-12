@@ -276,7 +276,9 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             archived
             ignoreRua
             rcode
-            cvdEnrollment
+            cvdEnrollment {
+              status
+            }
             organizations(first: 1) {
               totalCount
             }
@@ -812,7 +814,9 @@ export const PAGINATED_ORG_DOMAINS = gql`
             webScanPending
             userHasPermission
             cveDetected
-            cvdEnrollment
+            cvdEnrollment {
+              status
+            }
           }
         }
       }
@@ -883,7 +887,9 @@ export const PAGINATED_DOMAINS = gql`
           hasDMARCReport
           userHasPermission
           cveDetected
-          cvdEnrollment
+          cvdEnrollment {
+            status
+          }
           __typename
         }
         __typename

@@ -31,6 +31,7 @@ import { AddIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { array, bool, func, number, object, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
@@ -51,6 +52,7 @@ export function AdminDomainModal({
   mutation,
   orgCount,
   cvdEnrolled,
+  permission,
   ...rest
 }) {
   const toast = useToast()
@@ -212,7 +214,14 @@ export function AdminDomainModal({
             tags: getInitTags(),
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
-            cvdEnrolled: cvdEnrolled || { status: 'NOT_ENROLLED' },
+            cvdEnrolled: cvdEnrolled || {
+              status: 'NOT_ENROLLED',
+              description: '',
+              maxSeverity: '',
+              confidentialityRequirement: '',
+              integrityRequirement: '',
+              availabilityRequirement: '',
+            },
           }}
           initialTouched={{
             domainUrl: true,
@@ -326,187 +335,185 @@ export function AdminDomainModal({
                   </FormControl>
 
                   {/* CVD Enrollment Fields */}
-                  <FormControl>
-                    <FormLabel htmlFor="cvdEnrolled" fontWeight="bold">
-                      <Tooltip label={t`Select the CVD enrollment status for this asset.`}>
-                        <Flex align="center">
-                          <Trans>CVD Enrollment Status</Trans>
-                          <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
-                        </Flex>
-                      </Tooltip>
-                    </FormLabel>
-                    <Select
-                      name="cvdEnrolled.status"
-                      id="cvdEnrolled.status"
-                      borderColor="black"
-                      onChange={handleChange}
-                      value={values.cvdEnrolled.status}
-                    >
-                      <option value="NOT_ENROLLED">
-                        <Trans>Not Enrolled</Trans>
-                      </option>
-                      <option value="ENROLLED">
-                        <Trans>Enrolled</Trans>
-                      </option>
-                      <option value="PENDING">
-                        <Trans>Pending</Trans>
-                      </option>
-                    </Select>
-                  </FormControl>
-
-                  {values.cvdEnrolled.status !== 'NOT_ENROLLED' && (
-                    <>
+                  <ABTestWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
                       <FormControl>
-                        <FormLabel htmlFor="cvdEnrolled.description" fontWeight="bold">
-                          <Tooltip label={t`Provide a description for the asset.`}>
+                        <FormLabel htmlFor="cvdEnrolled" fontWeight="bold">
+                          <Tooltip label={t`Select the CVD enrollment status for this asset.`}>
                             <Flex align="center">
-                              <Trans>Description</Trans>
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <input
-                          type="text"
-                          name="cvdEnrolled.description"
-                          id="cvdEnrolled.description"
-                          value={values.cvdEnrolled.description || ''}
-                          onChange={handleChange}
-                          style={{ border: '1px solid #000', borderRadius: 4, padding: 8, width: '100%' }}
-                        />
-                      </FormControl>
-
-                      <FormControl>
-                        <FormLabel htmlFor="cvdEnrolled.maxSeverity" fontWeight="bold">
-                          <Tooltip label={t`Maximum severity allowed on this asset.`}>
-                            <Flex align="center">
-                              <Trans>Max Severity</Trans>
+                              <Trans>CVD Enrollment Status</Trans>
+                              <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
                             </Flex>
                           </Tooltip>
                         </FormLabel>
                         <Select
-                          name="cvdEnrolled.maxSeverity"
-                          id="cvdEnrolled.maxSeverity"
+                          name="cvdEnrolled.status"
+                          id="cvdEnrolled.status"
                           borderColor="black"
                           onChange={handleChange}
-                          value={values.cvdEnrolled.maxSeverity || ''}
+                          value={values.cvdEnrolled.status}
                         >
-                          <option value="">
-                            <Trans>Select severity</Trans>
+                          <option value="NOT_ENROLLED">
+                            <Trans>Not Enrolled</Trans>
                           </option>
-                          <option value="LOW">
-                            <Trans>Low</Trans>
-                          </option>
-                          <option value="MEDIUM">
-                            <Trans>Medium</Trans>
-                          </option>
-                          <option value="HIGH">
-                            <Trans>High</Trans>
-                          </option>
-                          <option value="CRITICAL">
-                            <Trans>Critical</Trans>
-                          </option>
+                          {permission === 'ADMIN' ? (
+                            <option value="PENDING">
+                              <Trans>Pending</Trans>
+                            </option>
+                          ) : (
+                            <option value="ENROLLED">
+                              <Trans>Enrolled</Trans>
+                            </option>
+                          )}
                         </Select>
                       </FormControl>
 
-                      <FormControl>
-                        <FormLabel htmlFor="cvdEnrolled.confidentialityRequirement" fontWeight="bold">
-                          <Tooltip label={t`Confidentiality Requirement (CVSS environmental modifier).`}>
-                            <Flex align="center">
-                              <Trans>Confidentiality Requirement</Trans>
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <Select
-                          name="cvdEnrolled.confidentialityRequirement"
-                          id="cvdEnrolled.confidentialityRequirement"
-                          borderColor="black"
-                          onChange={handleChange}
-                          value={values.cvdEnrolled.confidentialityRequirement || ''}
-                        >
-                          <option value="">
-                            <Trans>Select requirement</Trans>
-                          </option>
-                          <option value="NOT_DEFINED">
-                            <Trans>Not Defined</Trans>
-                          </option>
-                          <option value="LOW">
-                            <Trans>Low</Trans>
-                          </option>
-                          <option value="MEDIUM">
-                            <Trans>Medium</Trans>
-                          </option>
-                          <option value="HIGH">
-                            <Trans>High</Trans>
-                          </option>
-                        </Select>
-                      </FormControl>
+                      {values.cvdEnrolled.status !== 'NOT_ENROLLED' && (
+                        <>
+                          <FormControl>
+                            <FormLabel htmlFor="cvdEnrolled.description" fontWeight="bold">
+                              <Tooltip label={t`Provide a description for the asset.`}>
+                                <Flex align="center">
+                                  <Trans>Description</Trans>
+                                </Flex>
+                              </Tooltip>
+                            </FormLabel>
+                            <input
+                              type="text"
+                              name="cvdEnrolled.description"
+                              id="cvdEnrolled.description"
+                              value={values.cvdEnrolled.description}
+                              onChange={handleChange}
+                              style={{ border: '1px solid #000', borderRadius: 4, padding: 8, width: '100%' }}
+                            />
+                          </FormControl>
 
-                      <FormControl>
-                        <FormLabel htmlFor="cvdEnrolled.integrityRequirement" fontWeight="bold">
-                          <Tooltip label={t`Integrity Requirement (CVSS environmental modifier).`}>
-                            <Flex align="center">
-                              <Trans>Integrity Requirement</Trans>
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <Select
-                          name="cvdEnrolled.integrityRequirement"
-                          id="cvdEnrolled.integrityRequirement"
-                          borderColor="black"
-                          onChange={handleChange}
-                          value={values.cvdEnrolled.integrityRequirement || ''}
-                        >
-                          <option value="">
-                            <Trans>Select requirement</Trans>
-                          </option>
-                          <option value="NOT_DEFINED">
-                            <Trans>Not Defined</Trans>
-                          </option>
-                          <option value="LOW">
-                            <Trans>Low</Trans>
-                          </option>
-                          <option value="MEDIUM">
-                            <Trans>Medium</Trans>
-                          </option>
-                          <option value="HIGH">
-                            <Trans>High</Trans>
-                          </option>
-                        </Select>
-                      </FormControl>
+                          <FormControl>
+                            <FormLabel htmlFor="cvdEnrolled.maxSeverity" fontWeight="bold">
+                              <Tooltip label={t`Maximum severity allowed on this asset.`}>
+                                <Flex align="center">
+                                  <Trans>Max Severity</Trans>
+                                </Flex>
+                              </Tooltip>
+                            </FormLabel>
+                            <Select
+                              name="cvdEnrolled.maxSeverity"
+                              id="cvdEnrolled.maxSeverity"
+                              borderColor="black"
+                              onChange={handleChange}
+                              value={values.cvdEnrolled.maxSeverity}
+                            >
+                              <option value="">
+                                <Trans>Select severity</Trans>
+                              </option>
+                              <option value="LOW">
+                                <Trans>Low</Trans>
+                              </option>
+                              <option value="MEDIUM">
+                                <Trans>Medium</Trans>
+                              </option>
+                              <option value="HIGH">
+                                <Trans>High</Trans>
+                              </option>
+                              <option value="CRITICAL">
+                                <Trans>Critical</Trans>
+                              </option>
+                            </Select>
+                          </FormControl>
 
-                      <FormControl>
-                        <FormLabel htmlFor="cvdEnrolled.availabilityRequirement" fontWeight="bold">
-                          <Tooltip label={t`Availability Requirement (CVSS environmental modifier).`}>
-                            <Flex align="center">
-                              <Trans>Availability Requirement</Trans>
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <Select
-                          name="cvdEnrolled.availabilityRequirement"
-                          id="cvdEnrolled.availabilityRequirement"
-                          borderColor="black"
-                          onChange={handleChange}
-                          value={values.cvdEnrolled.availabilityRequirement || ''}
-                        >
-                          <option value="">
-                            <Trans>Select requirement</Trans>
-                          </option>
-                          <option value="NOT_DEFINED">
-                            <Trans>Not Defined</Trans>
-                          </option>
-                          <option value="LOW">
-                            <Trans>Low</Trans>
-                          </option>
-                          <option value="MEDIUM">
-                            <Trans>Medium</Trans>
-                          </option>
-                          <option value="HIGH">
-                            <Trans>High</Trans>
-                          </option>
-                        </Select>
-                      </FormControl>
-                    </>
-                  )}
+                          <FormControl>
+                            <FormLabel htmlFor="cvdEnrolled.confidentialityRequirement" fontWeight="bold">
+                              <Tooltip label={t`Confidentiality Requirement (CVSS environmental modifier).`}>
+                                <Flex align="center">
+                                  <Trans>Confidentiality Requirement</Trans>
+                                </Flex>
+                              </Tooltip>
+                            </FormLabel>
+                            <Select
+                              name="cvdEnrolled.confidentialityRequirement"
+                              id="cvdEnrolled.confidentialityRequirement"
+                              borderColor="black"
+                              onChange={handleChange}
+                              value={values.cvdEnrolled.confidentialityRequirement || ''}
+                            >
+                              <option value="">
+                                <Trans>Select requirement</Trans>
+                              </option>
+                              <option value="NONE">
+                                <Trans>None</Trans>
+                              </option>
+                              <option value="LOW">
+                                <Trans>Low</Trans>
+                              </option>
+                              <option value="HIGH">
+                                <Trans>High</Trans>
+                              </option>
+                            </Select>
+                          </FormControl>
+
+                          <FormControl>
+                            <FormLabel htmlFor="cvdEnrolled.integrityRequirement" fontWeight="bold">
+                              <Tooltip label={t`Integrity Requirement (CVSS environmental modifier).`}>
+                                <Flex align="center">
+                                  <Trans>Integrity Requirement</Trans>
+                                </Flex>
+                              </Tooltip>
+                            </FormLabel>
+                            <Select
+                              name="cvdEnrolled.integrityRequirement"
+                              id="cvdEnrolled.integrityRequirement"
+                              borderColor="black"
+                              onChange={handleChange}
+                              value={values.cvdEnrolled.integrityRequirement || ''}
+                            >
+                              <option value="">
+                                <Trans>Select requirement</Trans>
+                              </option>
+                              <option value="NONE">
+                                <Trans>None</Trans>
+                              </option>
+                              <option value="LOW">
+                                <Trans>Low</Trans>
+                              </option>
+                              <option value="HIGH">
+                                <Trans>High</Trans>
+                              </option>
+                            </Select>
+                          </FormControl>
+
+                          <FormControl>
+                            <FormLabel htmlFor="cvdEnrolled.availabilityRequirement" fontWeight="bold">
+                              <Tooltip label={t`Availability Requirement (CVSS environmental modifier).`}>
+                                <Flex align="center">
+                                  <Trans>Availability Requirement</Trans>
+                                </Flex>
+                              </Tooltip>
+                            </FormLabel>
+                            <Select
+                              name="cvdEnrolled.availabilityRequirement"
+                              id="cvdEnrolled.availabilityRequirement"
+                              borderColor="black"
+                              onChange={handleChange}
+                              value={values.cvdEnrolled.availabilityRequirement || ''}
+                            >
+                              <option value="">
+                                <Trans>Select requirement</Trans>
+                              </option>
+                              <option value="NONE">
+                                <Trans>None</Trans>
+                              </option>
+                              <option value="LOW">
+                                <Trans>Low</Trans>
+                              </option>
+                              <option value="HIGH">
+                                <Trans>High</Trans>
+                              </option>
+                            </Select>
+                          </FormControl>
+                        </>
+                      )}
+                    </ABTestVariant>
+                  </ABTestWrapper>
 
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
@@ -605,4 +612,5 @@ AdminDomainModal.propTypes = {
   assetState: string,
   cvdEnrolled: string,
   availableTags: array,
+  permission: string,
 }
