@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/canada-ca/tracker#readme",
   "dependencies": {
-    "@azure/cosmos": "^3.15.1",
+    "@azure/cosmos": "^4.9.0",
     "arango-tools": "0.6.0",
     "dotenv-safe": "^8.2.0",
     "https-proxy-agent": "^7.0.6",
