@@ -33,6 +33,7 @@ import {
   sendPasswordResetEmail,
   sendUpdatedUserNameEmail,
   sendVerificationEmail,
+  sendRoleChangeEmail,
 } from './notify'
 
 export async function createContext({
@@ -130,6 +131,7 @@ export async function createContext({
         i18n,
       }),
       sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
+      sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
     },
     loaders: initializeLoaders({
       query,

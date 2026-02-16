@@ -53,7 +53,7 @@ spec:
                   name: api
                   key: DB_URL
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-47f958f-1770651533 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-8051fbc-1770835539 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -168,6 +168,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_PASSWORD_RESET_BILINGUAL
+            - name: NOTIFICATION_ROLE_CHANGE_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ROLE_CHANGE_EMAIL
             - name: NOTIFICATION_TWO_FACTOR_CODE_EN
               valueFrom:
                 secretKeyRef:
