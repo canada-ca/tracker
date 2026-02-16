@@ -48,7 +48,7 @@
     "graphql-scalars": "^1.25.0",
     "graphql-subscriptions": "^2.0.0",
     "graphql-validation-complexity": "^0.4.2",
-    "ioredis": "^4.28.3",
+    "ioredis": "^5.9.1",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "make-plural": "^7.1.0",
