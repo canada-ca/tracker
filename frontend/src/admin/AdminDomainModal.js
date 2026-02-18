@@ -36,6 +36,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
+import { CvdEnrollmentForm } from './CvdEnrollmentForm'
 
 export function AdminDomainModal({
   isOpen,
@@ -51,7 +52,7 @@ export function AdminDomainModal({
   assetState,
   mutation,
   orgCount,
-  cvdEnrolled,
+  cvdEnrollment,
   permission,
   ...rest
 }) {
@@ -122,9 +123,7 @@ export function AdminDomainModal({
         onClose()
         toast({
           title: i18n._(t`Domain updated`),
-          description: i18n._(
-            t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
-          ),
+          description: i18n._(t`${editingDomainUrl} from ${orgSlug} successfully updated.`),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -210,18 +209,10 @@ export function AdminDomainModal({
         <Formik
           initialValues={{
             domainUrl: editingDomainUrl,
-            // convert initial tags to input type
-            tags: getInitTags(),
+            tags: getInitTags(), // convert initial tags to input type
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
-            cvdEnrolled: cvdEnrolled || {
-              status: 'NOT_ENROLLED',
-              description: '',
-              maxSeverity: '',
-              confidentialityRequirement: '',
-              integrityRequirement: '',
-              availabilityRequirement: '',
-            },
+            cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
           }}
           initialTouched={{
             domainUrl: true,
@@ -229,6 +220,11 @@ export function AdminDomainModal({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
+            const sanitizeCvdEnrollment = (enrollment) => {
+              if (!enrollment || typeof enrollment !== 'object') return enrollment
+              const { __typename, ...rest } = enrollment
+              return rest
+            }
             if (mutation === 'update') {
               await updateDomain({
                 variables: {
@@ -238,7 +234,7 @@ export function AdminDomainModal({
                   archived: values.archiveDomain,
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
-                  cvdEnrolled: values.cvdEnrolled,
+                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                 },
               })
             } else if (mutation === 'create') {
@@ -249,7 +245,7 @@ export function AdminDomainModal({
                   tags: values.tags.map(({ tagId }) => tagId),
                   archived: values.archiveDomain,
                   assetState: values.assetState,
-                  cvdEnrolled: values.cvdEnrolled,
+                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                 },
               })
             }
@@ -334,184 +330,9 @@ export function AdminDomainModal({
                     </Select>
                   </FormControl>
 
-                  {/* CVD Enrollment Fields */}
                   <ABTestWrapper insiderVariantName="B">
                     <ABTestVariant name="B">
-                      <FormControl>
-                        <FormLabel htmlFor="cvdEnrolled" fontWeight="bold">
-                          <Tooltip label={t`Select the CVD enrollment status for this asset.`}>
-                            <Flex align="center">
-                              <Trans>CVD Enrollment Status</Trans>
-                              <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
-                            </Flex>
-                          </Tooltip>
-                        </FormLabel>
-                        <Select
-                          name="cvdEnrolled.status"
-                          id="cvdEnrolled.status"
-                          borderColor="black"
-                          onChange={handleChange}
-                          value={values.cvdEnrolled.status}
-                        >
-                          <option value="NOT_ENROLLED">
-                            <Trans>Not Enrolled</Trans>
-                          </option>
-                          {permission === 'ADMIN' ? (
-                            <option value="PENDING">
-                              <Trans>Pending</Trans>
-                            </option>
-                          ) : (
-                            <option value="ENROLLED">
-                              <Trans>Enrolled</Trans>
-                            </option>
-                          )}
-                        </Select>
-                      </FormControl>
-
-                      {values.cvdEnrolled.status !== 'NOT_ENROLLED' && (
-                        <>
-                          <FormControl>
-                            <FormLabel htmlFor="cvdEnrolled.description" fontWeight="bold">
-                              <Tooltip label={t`Provide a description for the asset.`}>
-                                <Flex align="center">
-                                  <Trans>Description</Trans>
-                                </Flex>
-                              </Tooltip>
-                            </FormLabel>
-                            <input
-                              type="text"
-                              name="cvdEnrolled.description"
-                              id="cvdEnrolled.description"
-                              value={values.cvdEnrolled.description}
-                              onChange={handleChange}
-                              style={{ border: '1px solid #000', borderRadius: 4, padding: 8, width: '100%' }}
-                            />
-                          </FormControl>
-
-                          <FormControl>
-                            <FormLabel htmlFor="cvdEnrolled.maxSeverity" fontWeight="bold">
-                              <Tooltip label={t`Maximum severity allowed on this asset.`}>
-                                <Flex align="center">
-                                  <Trans>Max Severity</Trans>
-                                </Flex>
-                              </Tooltip>
-                            </FormLabel>
-                            <Select
-                              name="cvdEnrolled.maxSeverity"
-                              id="cvdEnrolled.maxSeverity"
-                              borderColor="black"
-                              onChange={handleChange}
-                              value={values.cvdEnrolled.maxSeverity}
-                            >
-                              <option value="">
-                                <Trans>Select severity</Trans>
-                              </option>
-                              <option value="LOW">
-                                <Trans>Low</Trans>
-                              </option>
-                              <option value="MEDIUM">
-                                <Trans>Medium</Trans>
-                              </option>
-                              <option value="HIGH">
-                                <Trans>High</Trans>
-                              </option>
-                              <option value="CRITICAL">
-                                <Trans>Critical</Trans>
-                              </option>
-                            </Select>
-                          </FormControl>
-
-                          <FormControl>
-                            <FormLabel htmlFor="cvdEnrolled.confidentialityRequirement" fontWeight="bold">
-                              <Tooltip label={t`Confidentiality Requirement (CVSS environmental modifier).`}>
-                                <Flex align="center">
-                                  <Trans>Confidentiality Requirement</Trans>
-                                </Flex>
-                              </Tooltip>
-                            </FormLabel>
-                            <Select
-                              name="cvdEnrolled.confidentialityRequirement"
-                              id="cvdEnrolled.confidentialityRequirement"
-                              borderColor="black"
-                              onChange={handleChange}
-                              value={values.cvdEnrolled.confidentialityRequirement || ''}
-                            >
-                              <option value="">
-                                <Trans>Select requirement</Trans>
-                              </option>
-                              <option value="NONE">
-                                <Trans>None</Trans>
-                              </option>
-                              <option value="LOW">
-                                <Trans>Low</Trans>
-                              </option>
-                              <option value="HIGH">
-                                <Trans>High</Trans>
-                              </option>
-                            </Select>
-                          </FormControl>
-
-                          <FormControl>
-                            <FormLabel htmlFor="cvdEnrolled.integrityRequirement" fontWeight="bold">
-                              <Tooltip label={t`Integrity Requirement (CVSS environmental modifier).`}>
-                                <Flex align="center">
-                                  <Trans>Integrity Requirement</Trans>
-                                </Flex>
-                              </Tooltip>
-                            </FormLabel>
-                            <Select
-                              name="cvdEnrolled.integrityRequirement"
-                              id="cvdEnrolled.integrityRequirement"
-                              borderColor="black"
-                              onChange={handleChange}
-                              value={values.cvdEnrolled.integrityRequirement || ''}
-                            >
-                              <option value="">
-                                <Trans>Select requirement</Trans>
-                              </option>
-                              <option value="NONE">
-                                <Trans>None</Trans>
-                              </option>
-                              <option value="LOW">
-                                <Trans>Low</Trans>
-                              </option>
-                              <option value="HIGH">
-                                <Trans>High</Trans>
-                              </option>
-                            </Select>
-                          </FormControl>
-
-                          <FormControl>
-                            <FormLabel htmlFor="cvdEnrolled.availabilityRequirement" fontWeight="bold">
-                              <Tooltip label={t`Availability Requirement (CVSS environmental modifier).`}>
-                                <Flex align="center">
-                                  <Trans>Availability Requirement</Trans>
-                                </Flex>
-                              </Tooltip>
-                            </FormLabel>
-                            <Select
-                              name="cvdEnrolled.availabilityRequirement"
-                              id="cvdEnrolled.availabilityRequirement"
-                              borderColor="black"
-                              onChange={handleChange}
-                              value={values.cvdEnrolled.availabilityRequirement || ''}
-                            >
-                              <option value="">
-                                <Trans>Select requirement</Trans>
-                              </option>
-                              <option value="NONE">
-                                <Trans>None</Trans>
-                              </option>
-                              <option value="LOW">
-                                <Trans>Low</Trans>
-                              </option>
-                              <option value="HIGH">
-                                <Trans>High</Trans>
-                              </option>
-                            </Select>
-                          </FormControl>
-                        </>
-                      )}
+                      <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
                     </ABTestVariant>
                   </ABTestWrapper>
 
@@ -610,7 +431,7 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
-  cvdEnrolled: string,
+  cvdEnrollment: object,
   availableTags: array,
   permission: string,
 }
