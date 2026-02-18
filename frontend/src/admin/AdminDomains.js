@@ -67,7 +67,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     assetState: '',
     editingDomainId: '',
     editingDomainUrl: '',
-    cvdEnrolled: 'NOT_ENROLLED',
+    cvdEnrollment: { status: 'NOT_ENROLLED' },
   })
   const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
     name: 'domain-filters',

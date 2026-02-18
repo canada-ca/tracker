@@ -278,6 +278,11 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             rcode
             cvdEnrollment {
               status
+              description
+              maxSeverity
+              confidentialityRequirement
+              integrityRequirement
+              availabilityRequirement
             }
             organizations(first: 1) {
               totalCount

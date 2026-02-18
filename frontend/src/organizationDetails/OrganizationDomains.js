@@ -178,7 +178,7 @@ export function OrganizationDomains({
             webScanPending,
             userHasPermission,
             cveDetected,
-            cvdEnrolled,
+            cvdEnrollment,
           },
           index,
         ) => (
@@ -199,7 +199,7 @@ export function OrganizationDomains({
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
-              cvdEnrolled={cvdEnrolled}
+              cvdEnrollment={cvdEnrollment}
               mb="3"
             />
           </ErrorBoundary>
