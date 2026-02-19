@@ -17,6 +17,8 @@ import {
   Divider,
   Input,
   Button,
+  PopoverFooter,
+  Link,
 } from '@chakra-ui/react'
 import { func, object, string } from 'prop-types'
 
@@ -45,7 +47,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
                       <b>1. What is Coordinated Vulnerability Disclosure (CVD)?</b>
                       <br />A structured process that allows security researchers to report vulnerabilities safely and
                       responsibly. It ensures findings are received, validated, and addressed in an organized way,
-                      helping departments fix issues before they can be exploited.
+                      helping organizations fix issues before they can be exploited.
                     </Trans>
                   </Text>
                   <Divider borderBottomColor="gray.300" />
@@ -55,7 +57,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
                       <br />
                       Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly
                       to the Government of Canada through an approved and safe channel. This improves early detection,
-                      reduces security risk, and strengthens your department’s ability to respond quickly and
+                      reduces security risk, and strengthens your organization’s ability to respond quickly and
                       consistently.
                     </Trans>
                   </Text>
@@ -64,12 +66,23 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
                     <Trans>
                       <b>3. Which domains should you enroll?</b>
                       <br />
-                      Enroll any public, internet‑facing domains or subdomains your department owns—especially
+                      Enroll any public, internet‑facing domains or subdomains your organization owns—especially
                       production systems that deliver services or expose application functionality. Test or pre‑launch
                       environments may be excluded unless they are publicly accessible.
                     </Trans>
                   </Text>
                 </PopoverBody>
+                <PopoverFooter>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    as={Link}
+                    href={'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=GC%CVD%Support'}
+                    isExternal={true}
+                  >
+                    <Trans>Contact Us</Trans>
+                  </Button>
+                </PopoverFooter>
               </PopoverContent>
             </Popover>
           </Flex>
