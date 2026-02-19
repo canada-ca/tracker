@@ -128,16 +128,28 @@ msgid "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden you
 msgstr "<0><1>Search Tip: Wildcard <2>%</2></1></0><3>Use <4>%</4> to broaden your search:</3><5><6><7>Start with <8>%</8></7>: Search <9><10>%example.gc.ca</10></9> to find subdomains like <11>\"sub.example.gc.ca.\"</11></6><12><13>End with <14>%</14></13>: Search <15><16>example%</16> </15>to find domains like <17>\"example.gc.ca\"</17> or <18>\"example.canada.ca.\"</18></12><19><20>Use both</20>: Search <21><22>%example%</22> </21>to find anything containing \"example\", like<23>\"sub.example.gc.ca\"</23> or <24>\"example.canada.ca.\"</24></19></5><25>This helps you quickly locate related domains and subdomains.</25>"
 
 #: src/admin/CvdEnrollmentForm.js:43
-msgid "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping departments fix issues before they can be exploited."
-msgstr "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping departments fix issues before they can be exploited."
+#~ msgid "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping departments fix issues before they can be exploited."
+#~ msgstr "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping departments fix issues before they can be exploited."
+
+#: src/admin/CvdEnrollmentForm.js:46
+msgid "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping organizations fix issues before they can be exploited."
+msgstr "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping organizations fix issues before they can be exploited."
 
 #: src/admin/CvdEnrollmentForm.js:52
-msgid "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your department’s ability to respond quickly and consistently."
-msgstr "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your department’s ability to respond quickly and consistently."
+#~ msgid "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your department’s ability to respond quickly and consistently."
+#~ msgstr "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your department’s ability to respond quickly and consistently."
+
+#: src/admin/CvdEnrollmentForm.js:55
+msgid "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your organization’s ability to respond quickly and consistently."
+msgstr "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your organization’s ability to respond quickly and consistently."
 
 #: src/admin/CvdEnrollmentForm.js:63
-msgid "<0>3. Which domains should you enroll?</0><1/>Enroll any public, internet‑facing domains or subdomains your department owns—especially production systems that deliver services or expose application functionality. Test or pre‑launch environments may be excluded unless they are publicly accessible."
-msgstr "<0>3. Which domains should you enroll?</0><1/>Enroll any public, internet‑facing domains or subdomains your department owns—especially production systems that deliver services or expose application functionality. Test or pre‑launch environments may be excluded unless they are publicly accessible."
+#~ msgid "<0>3. Which domains should you enroll?</0><1/>Enroll any public, internet‑facing domains or subdomains your department owns—especially production systems that deliver services or expose application functionality. Test or pre‑launch environments may be excluded unless they are publicly accessible."
+#~ msgstr "<0>3. Which domains should you enroll?</0><1/>Enroll any public, internet‑facing domains or subdomains your department owns—especially production systems that deliver services or expose application functionality. Test or pre‑launch environments may be excluded unless they are publicly accessible."
+
+#: src/admin/CvdEnrollmentForm.js:66
+msgid "<0>3. Which domains should you enroll?</0><1/>Enroll any public, internet‑facing domains or subdomains your organization owns—especially production systems that deliver services or expose application functionality. Test or pre‑launch environments may be excluded unless they are publicly accessible."
+msgstr "<0>3. Which domains should you enroll?</0><1/>Enroll any public, internet‑facing domains or subdomains your organization owns—especially production systems that deliver services or expose application functionality. Test or pre‑launch environments may be excluded unless they are publicly accessible."
 
 #: src/app/ReadGuidancePage.js:586
 msgid "<0>Application Availability</0>: This cloud-based web application is to be 95% fully operational from 8:00 AM to 4:00 PM Eastern time on regular business days."
@@ -297,7 +309,7 @@ msgstr "A verification email has been sent to your new email address. Please ver
 #~ msgid "A verification link has been sent to your email account"
 #~ msgstr "A verification link has been sent to your email account"
 
-#: src/admin/CvdEnrollmentForm.js:39
+#: src/admin/CvdEnrollmentForm.js:42
 msgid "About Coordinated Vulnerability Disclosure (CVD)"
 msgstr "About Coordinated Vulnerability Disclosure (CVD)"
 
@@ -382,7 +394,7 @@ msgstr "Activity"
 msgid "Add"
 msgstr "Add"
 
-#: src/admin/CvdEnrollmentForm.js:116
+#: src/admin/CvdEnrollmentForm.js:131
 msgid "Add details about the enrollment (optional)"
 msgstr "Add details about the enrollment (optional)"
 
@@ -390,7 +402,7 @@ msgstr "Add details about the enrollment (optional)"
 msgid "Add Domain"
 msgstr "Add Domain"
 
-#: src/admin/AdminDomainModal.js:258
+#: src/admin/AdminDomainModal.js:253
 msgid "Add Domain Details"
 msgstr "Add Domain Details"
 
@@ -673,7 +685,7 @@ msgid "Apply Tags"
 msgstr "Apply Tags"
 
 #: src/admin/AdminDomainCard.js:8
-#: src/admin/AdminDomainModal.js:317
+#: src/admin/AdminDomainModal.js:312
 #: src/admin/AdminDomains.js:280
 #: src/admin/AdminDomains.js:555
 #: src/domains/DomainCard.js:112
@@ -692,7 +704,7 @@ msgstr "APPROVED"
 msgid "April"
 msgstr "April"
 
-#: src/admin/AdminDomainModal.js:383
+#: src/admin/AdminDomainModal.js:378
 msgid "Archive domain"
 msgstr "Archive domain"
 
@@ -747,7 +759,7 @@ msgstr "Assess"
 msgid "Assess current state;"
 msgstr "Assess current state;"
 
-#: src/admin/AdminDomainModal.js:305
+#: src/admin/AdminDomainModal.js:300
 #: src/admin/AdminDomains.js:241
 #: src/domains/DomainListFilters.js:109
 msgid "Asset State"
@@ -771,7 +783,7 @@ msgstr "August"
 msgid "Authenticate"
 msgstr "Authenticate"
 
-#: src/admin/CvdEnrollmentForm.js:210
+#: src/admin/CvdEnrollmentForm.js:225
 msgid "Availability Requirement"
 msgstr "Availability Requirement"
 
@@ -851,7 +863,7 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #: src/admin/AdminDomainCard.js:11
-#: src/admin/AdminDomainModal.js:326
+#: src/admin/AdminDomainModal.js:321
 #: src/admin/AdminDomains.js:289
 #: src/admin/AdminDomains.js:565
 #: src/domains/DomainCard.js:115
@@ -1057,7 +1069,7 @@ msgstr "Compliant"
 msgid "Confidence Level"
 msgstr "Confidence Level"
 
-#: src/admin/CvdEnrollmentForm.js:154
+#: src/admin/CvdEnrollmentForm.js:169
 msgid "Confidentiality Requirement"
 msgstr "Confidentiality Requirement"
 
@@ -1069,7 +1081,7 @@ msgstr "Configuration requirements for email services completely met"
 msgid "Configuration requirements for web sites and services completely met"
 msgstr "Configuration requirements for web sites and services completely met"
 
-#: src/admin/AdminDomainModal.js:354
+#: src/admin/AdminDomainModal.js:349
 #: src/admin/AdminDomains.js:541
 #: src/admin/OrganizationInformation.js:347
 #: src/admin/OrganizationInformation.js:445
@@ -1129,6 +1141,7 @@ msgstr "Contact the Tracker Team"
 msgid "contact us"
 msgstr "contact us"
 
+#: src/admin/CvdEnrollmentForm.js:83
 #: src/app/App.js:271
 #: src/app/App.js:431
 #: src/app/ContactUsPage.js:52
@@ -1207,7 +1220,7 @@ msgstr "Create Organization"
 #~ msgid "Create your free account to unlock visibility into your organization's digital footprint. Upon signing up, you'll gain access to a dynamic inventory of web infrastructure under your management."
 #~ msgstr "Create your free account to unlock visibility into your organization's digital footprint. Upon signing up, you'll gain access to a dynamic inventory of web infrastructure under your management."
 
-#: src/admin/CvdEnrollmentForm.js:146
+#: src/admin/CvdEnrollmentForm.js:161
 #: src/guidance/AdditionalFindings.js:33
 #: src/guidance/IgnoredCves.js:8
 msgid "Critical"
@@ -1252,7 +1265,7 @@ msgstr "Curves Status"
 msgid "CVD {0}"
 msgstr "CVD {0}"
 
-#: src/admin/CvdEnrollmentForm.js:30
+#: src/admin/CvdEnrollmentForm.js:31
 msgid "CVD Enrollment Status"
 msgstr "CVD Enrollment Status"
 
@@ -1312,7 +1325,7 @@ msgstr "Delete"
 #~ msgstr "Departmental business units"
 
 #: src/admin/AdminDomainCard.js:9
-#: src/admin/AdminDomainModal.js:320
+#: src/admin/AdminDomainModal.js:315
 #: src/admin/AdminDomains.js:283
 #: src/admin/AdminDomains.js:557
 #: src/domains/DomainCard.js:113
@@ -1347,7 +1360,7 @@ msgstr "Deploy initial DMARC records with policy of none; and"
 msgid "Deploy SPF records for all domains;"
 msgstr "Deploy SPF records for all domains;"
 
-#: src/admin/CvdEnrollmentForm.js:103
+#: src/admin/CvdEnrollmentForm.js:118
 msgid "Description"
 msgstr "Description"
 
@@ -1710,7 +1723,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Edit Display Name"
 
-#: src/admin/AdminDomainModal.js:258
+#: src/admin/AdminDomainModal.js:253
 msgid "Edit Domain Details"
 msgstr "Edit Domain Details"
 
@@ -1856,7 +1869,7 @@ msgstr "Enforce"
 msgid "English"
 msgstr "English"
 
-#: src/admin/CvdEnrollmentForm.js:92
+#: src/admin/CvdEnrollmentForm.js:107
 msgid "Enrolled"
 msgstr "Enrolled"
 
@@ -2320,10 +2333,10 @@ msgstr "here."
 msgid "Hide password"
 msgstr "Hide password"
 
-#: src/admin/CvdEnrollmentForm.js:143
-#: src/admin/CvdEnrollmentForm.js:174
-#: src/admin/CvdEnrollmentForm.js:202
-#: src/admin/CvdEnrollmentForm.js:230
+#: src/admin/CvdEnrollmentForm.js:158
+#: src/admin/CvdEnrollmentForm.js:189
+#: src/admin/CvdEnrollmentForm.js:217
+#: src/admin/CvdEnrollmentForm.js:245
 #: src/guidance/AdditionalFindings.js:33
 #: src/guidance/IgnoredCves.js:8
 msgid "High"
@@ -2538,7 +2551,7 @@ msgstr "If your organization has no affiliated users within Tracker, contact the
 msgid "Ignore CVE"
 msgstr "Ignore CVE"
 
-#: src/admin/AdminDomainModal.js:413
+#: src/admin/AdminDomainModal.js:408
 msgid "Ignore RUA"
 msgstr "Ignore RUA"
 
@@ -2800,7 +2813,7 @@ msgstr "Inside user status changed"
 #~ msgid "Insider status changed"
 #~ msgstr "Insider status changed"
 
-#: src/admin/CvdEnrollmentForm.js:182
+#: src/admin/CvdEnrollmentForm.js:197
 msgid "Integrity Requirement"
 msgstr "Integrity Requirement"
 
@@ -3014,10 +3027,10 @@ msgstr "Login to your account"
 msgid "Lookups:"
 msgstr "Lookups:"
 
-#: src/admin/CvdEnrollmentForm.js:137
-#: src/admin/CvdEnrollmentForm.js:171
-#: src/admin/CvdEnrollmentForm.js:199
-#: src/admin/CvdEnrollmentForm.js:227
+#: src/admin/CvdEnrollmentForm.js:152
+#: src/admin/CvdEnrollmentForm.js:186
+#: src/admin/CvdEnrollmentForm.js:214
+#: src/admin/CvdEnrollmentForm.js:242
 #: src/guidance/AdditionalFindings.js:33
 #: src/guidance/IgnoredCves.js:8
 msgid "Low"
@@ -3058,7 +3071,7 @@ msgstr "March"
 msgid "Mark domains as \"Favourite\" to save them to your \"myTracker\" page."
 msgstr "Mark domains as \"Favourite\" to save them to your \"myTracker\" page."
 
-#: src/admin/CvdEnrollmentForm.js:123
+#: src/admin/CvdEnrollmentForm.js:138
 msgid "Max Severity"
 msgstr "Max Severity"
 
@@ -3067,7 +3080,7 @@ msgstr "Max Severity"
 msgid "May"
 msgstr "May"
 
-#: src/admin/CvdEnrollmentForm.js:140
+#: src/admin/CvdEnrollmentForm.js:155
 #: src/guidance/AdditionalFindings.js:33
 #: src/guidance/IgnoredCves.js:8
 msgid "Medium"
@@ -3105,7 +3118,7 @@ msgid "Monitor DMARC reports;"
 msgstr "Monitor DMARC reports;"
 
 #: src/admin/AdminDomainCard.js:10
-#: src/admin/AdminDomainModal.js:323
+#: src/admin/AdminDomainModal.js:318
 #: src/admin/AdminDomains.js:286
 #: src/admin/AdminDomains.js:561
 #: src/domains/DomainCard.js:114
@@ -3126,6 +3139,10 @@ msgstr "More details"
 #: src/guidance/AdditionalFindings.js:440
 #~ msgid "More info"
 #~ msgstr "More info"
+
+#: src/admin/CvdEnrollmentForm.js:35
+msgid "More Info"
+msgstr "More Info"
 
 #: src/summaries/AggregatedGuidanceSummary.js:44
 msgid "Most Common Negative Findings"
@@ -3232,11 +3249,11 @@ msgstr "NEW"
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
-#: src/admin/AdminDomainModal.js:264
+#: src/admin/AdminDomainModal.js:259
 msgid "New Domain URL"
 msgstr "New Domain URL"
 
-#: src/admin/AdminDomainModal.js:264
+#: src/admin/AdminDomainModal.js:259
 msgid "New Domain URL:"
 msgstr "New Domain URL:"
 
@@ -3461,9 +3478,9 @@ msgstr "No values were supplied when attempting to update organization details."
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
-#: src/admin/CvdEnrollmentForm.js:168
-#: src/admin/CvdEnrollmentForm.js:196
-#: src/admin/CvdEnrollmentForm.js:224
+#: src/admin/CvdEnrollmentForm.js:183
+#: src/admin/CvdEnrollmentForm.js:211
+#: src/admin/CvdEnrollmentForm.js:239
 #: src/admin/OrganizationInformation.js:392
 #: src/guidance/EmailGuidance.js:273
 #: src/guidance/IgnoredCves.js:22
@@ -3488,7 +3505,7 @@ msgstr "Not available"
 msgid "Not Before:"
 msgstr "Not Before:"
 
-#: src/admin/CvdEnrollmentForm.js:84
+#: src/admin/CvdEnrollmentForm.js:98
 msgid "Not Enrolled"
 msgstr "Not Enrolled"
 
@@ -3504,11 +3521,11 @@ msgstr "Not Implemented"
 #~ msgid "Note:"
 #~ msgstr "Note:"
 
-#: src/admin/AdminDomainModal.js:391
+#: src/admin/AdminDomainModal.js:386
 msgid "Note: This could affect results for multiple organizations"
 msgstr "Note: This could affect results for multiple organizations"
 
-#: src/admin/AdminDomainModal.js:389
+#: src/admin/AdminDomainModal.js:384
 msgid "Note: This will affect results for {orgCount} organizations"
 msgstr "Note: This will affect results for {orgCount} organizations"
 
@@ -3735,7 +3752,7 @@ msgstr "Passwords must match"
 msgid "pct:"
 msgstr "pct:"
 
-#: src/admin/CvdEnrollmentForm.js:88
+#: src/admin/CvdEnrollmentForm.js:102
 #: src/admin/DomainTagsList.js:52
 msgid "Pending"
 msgstr "Pending"
@@ -3793,7 +3810,7 @@ msgstr "Phone Number:"
 msgid "Phone Validated"
 msgstr "Phone Validated"
 
-#: src/admin/AdminDomainModal.js:347
+#: src/admin/AdminDomainModal.js:342
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Please allow up to 24 hours for summaries to reflect any changes."
 
@@ -3868,7 +3885,7 @@ msgstr "Positive"
 #~ msgid "Prevent this domain from being scanned and being counted in any summaries."
 #~ msgstr "Prevent this domain from being scanned and being counted in any summaries."
 
-#: src/admin/AdminDomainModal.js:369
+#: src/admin/AdminDomainModal.js:364
 msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
 msgstr "Prevent this domain from being visible, scanned, and being counted in any summaries."
 
@@ -4095,7 +4112,7 @@ msgid "Requirements: <0>Web Sites and Services Management Configuration Requirem
 msgstr "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 
 #: src/admin/AdminDomainCard.js:12
-#: src/admin/AdminDomainModal.js:329
+#: src/admin/AdminDomainModal.js:324
 #: src/admin/AdminDomains.js:292
 #: src/admin/AdminDomains.js:569
 #: src/domains/DomainCard.js:116
@@ -4320,7 +4337,7 @@ msgstr "Select a reason for removing this domain"
 #~ msgid "Select a state that best describes the asset in realtion to your organization."
 #~ msgstr "Select a state that best describes the asset in realtion to your organization."
 
-#: src/admin/AdminDomainModal.js:302
+#: src/admin/AdminDomainModal.js:297
 msgid "Select a state that best describes the asset in relation to your organization."
 msgstr "Select a state that best describes the asset in relation to your organization."
 
@@ -4349,13 +4366,13 @@ msgstr "Select an ownership level"
 msgid "Select Preferred Language"
 msgstr "Select Preferred Language"
 
-#: src/admin/CvdEnrollmentForm.js:165
-#: src/admin/CvdEnrollmentForm.js:193
-#: src/admin/CvdEnrollmentForm.js:221
+#: src/admin/CvdEnrollmentForm.js:180
+#: src/admin/CvdEnrollmentForm.js:208
+#: src/admin/CvdEnrollmentForm.js:236
 msgid "Select requirement"
 msgstr "Select requirement"
 
-#: src/admin/CvdEnrollmentForm.js:134
+#: src/admin/CvdEnrollmentForm.js:149
 msgid "Select severity"
 msgstr "Select severity"
 
