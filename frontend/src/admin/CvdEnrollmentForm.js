@@ -14,11 +14,10 @@ import {
   PopoverBody,
   PopoverArrow,
   PopoverCloseButton,
-  IconButton,
   Divider,
   Input,
+  Button,
 } from '@chakra-ui/react'
-import { QuestionIcon } from '@chakra-ui/icons'
 import { func, object, string } from 'prop-types'
 
 export function CvdEnrollmentForm({ handleChange, values, permission, ...rest }) {
@@ -30,7 +29,9 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
             <Trans>CVD Enrollment Status</Trans>
             <Popover placement="right" isLazy borderColor="black">
               <PopoverTrigger>
-                <IconButton icon={<QuestionIcon />} ml={2} size="xs" variant="info" />
+                <Button variant="link" ml="auto" size="sm" color="info">
+                  <Trans>More Info</Trans>
+                </Button>
               </PopoverTrigger>
               <PopoverContent maxW="md">
                 <PopoverArrow />

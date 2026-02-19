@@ -208,14 +208,10 @@ export function AdminDomainModal({
       <ModalContent pb={4}>
         <Formik
           initialValues={{
-            domainUrl: editingDomainUrl,
             tags: getInitTags(), // convert initial tags to input type
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
             cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
-          }}
-          initialTouched={{
-            domainUrl: true,
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
@@ -429,7 +425,6 @@ AdminDomainModal.propTypes = {
   mutation: string,
   orgCount: number,
   refetchQueries: array,
-  myOrg: object,
   assetState: string,
   cvdEnrollment: object,
   availableTags: array,
