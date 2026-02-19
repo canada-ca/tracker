@@ -24,7 +24,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
   return (
     <Box {...rest}>
       <FormControl mb="2">
-        <FormLabel htmlFor="cvdEnrollment" fontWeight="bold">
+        <FormLabel htmlFor="cvdEnrollment.status" fontWeight="bold">
           <Flex align="center">
             <Trans>CVD Enrollment Status</Trans>
             <Popover placement="right" isLazy borderColor="black">
@@ -84,12 +84,11 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
           <option value="NOT_ENROLLED">
             <Trans>Not Enrolled</Trans>
           </option>
-          {permission === 'ADMIN' ||
-            (values.cvdEnrollment.status === 'PENDING' && (
-              <option value="PENDING">
-                <Trans>Pending</Trans>
-              </option>
-            ))}
+          {(permission === 'ADMIN' || values.cvdEnrollment.status === 'PENDING') && (
+            <option value="PENDING">
+              <Trans>Pending</Trans>
+            </option>
+          )}
           {['OWNER', 'SUPER_ADMIN'].includes(permission) && (
             <option value="ENROLLED">
               <Trans>Enrolled</Trans>
