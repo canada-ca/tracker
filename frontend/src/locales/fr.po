@@ -222,7 +222,7 @@ msgstr "404 - Page non trouvée"
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
-#: src/admin/AdminDomains.js:507
+#: src/admin/AdminDomains.js:505
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous. Pour qu'un domaine n'existe plus, il doit être supprimé du DNS. Si vous devez supprimer ce domaine pour une autre raison, veuillez contacter TBS Cyber Security."
 
@@ -299,11 +299,11 @@ msgstr "Acronyme (FR)"
 msgid "Acronym:"
 msgstr "Acronyme:"
 
-#: src/utilities/fieldRequirements.js:36
+#: src/utilities/fieldRequirements.js:37
 msgid "Acronyms can only use upper case letters and underscores"
 msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des caractères de soulignement."
 
-#: src/utilities/fieldRequirements.js:37
+#: src/utilities/fieldRequirements.js:38
 msgid "Acronyms must be at most 50 characters"
 msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 
@@ -323,7 +323,7 @@ msgstr "Activité"
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/admin/AdminDomains.js:425
+#: src/admin/AdminDomains.js:423
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -413,27 +413,27 @@ msgstr "Tout le temps"
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Vous avez déjà un compte ? <0>Connecter</0>"
 
-#: src/admin/AdminDomains.js:556
+#: src/admin/AdminDomains.js:554
 #: src/organizationDetails/OrganizationDomains.js:262
 msgid "An asset confirmed to belong to the organization."
 msgstr "Se confirma que un activo pertenece a la organización."
 
-#: src/admin/AdminDomains.js:559
+#: src/admin/AdminDomains.js:557
 #: src/organizationDetails/OrganizationDomains.js:265
 msgid "An asset that is owned by a third party and supports the operation of organization-owned assets."
 msgstr "Activo propiedad de un tercero que sirve de apoyo al funcionamiento de los activos propiedad de la organización."
 
-#: src/admin/AdminDomains.js:563
+#: src/admin/AdminDomains.js:561
 #: src/organizationDetails/OrganizationDomains.js:269
 msgid "An asset that is relevant to the organization but is not a direct part of the attack surface."
 msgstr "Un activo que es relevante para la organización pero que no forma parte directamente de la superficie de ataque."
 
-#: src/admin/AdminDomains.js:567
+#: src/admin/AdminDomains.js:565
 #: src/organizationDetails/OrganizationDomains.js:273
 msgid "An asset that is suspected to belong to the organization but has not been confirmed."
 msgstr "Activo que se sospecha que pertenece a la organización pero que no se ha confirmado."
 
-#: src/admin/AdminDomains.js:571
+#: src/admin/AdminDomains.js:569
 #: src/organizationDetails/OrganizationDomains.js:277
 msgid "An asset that requires further investigation to determine its relationship to the organization."
 msgstr "Un activo que requiere más investigación para determinar su relación con la organización."
@@ -604,7 +604,7 @@ msgstr "Appliquer les balises"
 #: src/admin/AdminDomainCard.js:8
 #: src/admin/AdminDomainModal.js:293
 #: src/admin/AdminDomains.js:279
-#: src/admin/AdminDomains.js:556
+#: src/admin/AdminDomains.js:554
 #: src/domains/DomainCard.js:111
 #: src/domains/FilterList.js:22
 #: src/organizationDetails/OrganizationDomains.js:124
@@ -632,7 +632,7 @@ msgstr "Archiver ce domaine"
 msgid "Archived"
 msgstr "Archivé"
 
-#: src/admin/AdminDomainCard.js:48
+#: src/admin/AdminDomainCard.js:49
 msgid "ARCHIVED"
 msgstr "ARCHIVES"
 
@@ -682,7 +682,7 @@ msgstr "Évaluer l’état actuel."
 msgid "Asset State"
 msgstr "État des actifs"
 
-#: src/admin/AdminDomains.js:550
+#: src/admin/AdminDomains.js:548
 msgid "Asset States"
 msgstr "Estados del activo"
 
@@ -778,7 +778,7 @@ msgstr "Annuler"
 #: src/admin/AdminDomainCard.js:11
 #: src/admin/AdminDomainModal.js:302
 #: src/admin/AdminDomains.js:288
-#: src/admin/AdminDomains.js:566
+#: src/admin/AdminDomains.js:564
 #: src/domains/DomainCard.js:114
 #: src/domains/FilterList.js:25
 #: src/organizationDetails/OrganizationDomains.js:127
@@ -960,7 +960,7 @@ msgstr "Fermer le compte"
 msgid "CNAME:"
 msgstr "CNAME:"
 
-#: src/utilities/fieldRequirements.js:30
+#: src/utilities/fieldRequirements.js:29
 msgid "Code field must not be empty"
 msgstr "Le champ de code ne doit pas être vide"
 
@@ -991,7 +991,7 @@ msgid "Configuration requirements for web sites and services completely met"
 msgstr "Les exigences de configuration des sites et services web sont entièrement satisfaites"
 
 #: src/admin/AdminDomainModal.js:323
-#: src/admin/AdminDomains.js:542
+#: src/admin/AdminDomains.js:540
 #: src/admin/OrganizationInformation.js:347
 #: src/admin/OrganizationInformation.js:445
 #: src/admin/SuperAdminUserList.js:427
@@ -1018,7 +1018,7 @@ msgstr "Confirmer le nouveau mot de passe:"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe:"
 
-#: src/admin/AdminDomains.js:502
+#: src/admin/AdminDomains.js:500
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine:"
 
@@ -1030,7 +1030,7 @@ msgstr "Confirmer la suppression du domaine:"
 msgid "Confirm subdomain discovery for <0>{domainUrl}</0>:"
 msgstr "Confirmer la découverte du sous-domaine pour <0>{domainUrl}</0> :"
 
-#: src/guidance/WebConnectionResults.js:112
+#: src/guidance/WebConnectionResults.js:116
 msgid "Connection Results"
 msgstr "Résultats de la connexion"
 
@@ -1224,7 +1224,7 @@ msgstr "Supprimer"
 #: src/admin/AdminDomainCard.js:9
 #: src/admin/AdminDomainModal.js:296
 #: src/admin/AdminDomains.js:282
-#: src/admin/AdminDomains.js:558
+#: src/admin/AdminDomains.js:556
 #: src/domains/DomainCard.js:112
 #: src/domains/FilterList.js:23
 #: src/organizationDetails/OrganizationDomains.js:125
@@ -1527,12 +1527,12 @@ msgstr "Tags du domaine"
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
-#: src/admin/AdminDomains.js:414
+#: src/admin/AdminDomains.js:412
 #: src/components/fields/DomainField.js:38
 msgid "Domain URL"
 msgstr "URL du domaine"
 
-#: src/utilities/fieldRequirements.js:31
+#: src/utilities/fieldRequirements.js:32
 msgid "Domain url field must not be empty"
 msgstr "Le champ de l'url du domaine ne doit pas être vide"
 
@@ -1817,8 +1817,8 @@ msgstr "Erreur lors de la récupération des données DMARC pour {domainSlug}. <
 #~ msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
 #~ msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <0/>Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système. Vous pouvez demander l'accès à une organisation ci-dessous pour voir les résultats du domaine."
 
-#: src/guidance/WebConnectionResults.js:148
-#: src/guidance/WebConnectionResults.js:196
+#: src/guidance/WebConnectionResults.js:152
+#: src/guidance/WebConnectionResults.js:200
 msgid "Eventually"
 msgstr "Éventuellement"
 
@@ -2240,19 +2240,19 @@ msgstr "HSTS"
 #~ msgid "HSTS Age:"
 #~ msgstr "Âge du HSTS:"
 
-#: src/guidance/WebConnectionResults.js:220
+#: src/guidance/WebConnectionResults.js:224
 msgid "HSTS Includes Subdomains"
 msgstr "HSTS inclut les sous-domaines"
 
-#: src/guidance/WebConnectionResults.js:208
+#: src/guidance/WebConnectionResults.js:212
 msgid "HSTS Max Age"
 msgstr "HSTS Âge maximum"
 
-#: src/guidance/WebConnectionResults.js:202
+#: src/guidance/WebConnectionResults.js:206
 msgid "HSTS Parsed"
 msgstr "HSTS analysé"
 
-#: src/guidance/WebConnectionResults.js:214
+#: src/guidance/WebConnectionResults.js:218
 msgid "HSTS Preloaded"
 msgstr "HSTS préchargé"
 
@@ -2265,15 +2265,15 @@ msgstr "Statut HSTS"
 #~ msgid "HSTS Status:"
 #~ msgstr "Statut HSTS:"
 
-#: src/guidance/WebConnectionResults.js:126
+#: src/guidance/WebConnectionResults.js:130
 msgid "HTTP (80) Chain"
 msgstr "Chaîne HTTP (80)"
 
-#: src/guidance/WebConnectionResults.js:136
+#: src/guidance/WebConnectionResults.js:140
 msgid "HTTP Live"
 msgstr "HTTP Live"
 
-#: src/guidance/WebConnectionResults.js:142
+#: src/guidance/WebConnectionResults.js:146
 msgid "HTTP Upgrades"
 msgstr "Mises à jour HTTP"
 
@@ -2283,7 +2283,7 @@ msgstr "Mises à jour HTTP"
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/guidance/WebConnectionResults.js:166
+#: src/guidance/WebConnectionResults.js:170
 msgid "HTTPS (443) Chain"
 msgstr "Chaîne HTTPS (443)"
 
@@ -2300,7 +2300,7 @@ msgstr "Résumé de la configuration HTTPS"
 msgid "HTTPS Configured"
 msgstr "HTTPS configuré"
 
-#: src/guidance/WebConnectionResults.js:192
+#: src/guidance/WebConnectionResults.js:196
 msgid "HTTPS Downgrades"
 msgstr "Déclassements HTTPS"
 
@@ -2316,7 +2316,7 @@ msgstr "HTTPS est configuré et les connexions HTTP sont redirigées vers HTTPS.
 msgid "HTTPS is configured, HTTP redirects, and HSTS is enabled"
 msgstr "HTTPS est configuré, les redirections HTTP et HSTS sont activés."
 
-#: src/guidance/WebConnectionResults.js:176
+#: src/guidance/WebConnectionResults.js:180
 msgid "HTTPS Live"
 msgstr "HTTPS Live"
 
@@ -2420,8 +2420,8 @@ msgstr "Ignoré"
 #~ msgid "Ignored CVEs:"
 #~ msgstr "CVE ignorés :"
 
-#: src/guidance/WebConnectionResults.js:146
-#: src/guidance/WebConnectionResults.js:194
+#: src/guidance/WebConnectionResults.js:150
+#: src/guidance/WebConnectionResults.js:198
 msgid "Immediately"
 msgstr "Immédiatement"
 
@@ -2693,7 +2693,7 @@ msgstr "Courriel non valide"
 msgid "Invite Requested"
 msgstr "Invitation demandée"
 
-#: src/admin/UserList.js:169
+#: src/admin/UserList.js:163
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
@@ -2962,7 +2962,7 @@ msgstr "Surveiller les rapports DMARC."
 #: src/admin/AdminDomainCard.js:10
 #: src/admin/AdminDomainModal.js:299
 #: src/admin/AdminDomains.js:285
-#: src/admin/AdminDomains.js:562
+#: src/admin/AdminDomains.js:560
 #: src/domains/DomainCard.js:113
 #: src/domains/FilterList.js:24
 #: src/organizationDetails/OrganizationDomains.js:126
@@ -3061,8 +3061,8 @@ msgstr "Constatations négatives"
 #~ msgid "Neutral tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 #~ msgstr "Les balises neutres mettent en évidence les détails pertinents de la configuration, mais ne sont pas traitées dans le cadre des exigences de la politique et n'ont aucun impact sur la notation."
 
-#: src/guidance/WebConnectionResults.js:149
-#: src/guidance/WebConnectionResults.js:197
+#: src/guidance/WebConnectionResults.js:153
+#: src/guidance/WebConnectionResults.js:201
 msgid "Never"
 msgstr "Jamais"
 
@@ -3113,11 +3113,11 @@ msgstr "Suivant"
 msgid "Next Steps:"
 msgstr "Prochaines étapes :"
 
-#: src/guidance/WebConnectionResults.js:137
-#: src/guidance/WebConnectionResults.js:177
-#: src/guidance/WebConnectionResults.js:203
-#: src/guidance/WebConnectionResults.js:215
-#: src/guidance/WebConnectionResults.js:221
+#: src/guidance/WebConnectionResults.js:141
+#: src/guidance/WebConnectionResults.js:181
+#: src/guidance/WebConnectionResults.js:207
+#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:225
 #: src/guidance/WebTLSResults.js:216
 #: src/guidance/WebTLSResults.js:274
 #: src/guidance/WebTLSResults.js:285
@@ -3210,7 +3210,7 @@ msgstr "Aucune phase de mise en œuvre DMARC"
 #~ msgid "No DMARC phase information available for this organization."
 #~ msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
 
-#: src/admin/AdminDomainList.js:28
+#: src/admin/AdminDomainList.js:24
 #: src/domains/DomainsPage.js:232
 #: src/organizationDetails/OrganizationDomains.js:160
 msgid "No Domains"
@@ -3289,7 +3289,7 @@ msgid "No Top 25 Vulnerabilites Detected"
 msgstr "Aucune des 25 principales vulnérabilités détectées"
 
 #: src/admin/SuperAdminUserList.js:157
-#: src/admin/UserList.js:83
+#: src/admin/UserList.js:82
 msgid "No users"
 msgstr "Aucun utilisateur"
 
@@ -3319,10 +3319,10 @@ msgstr "Aucun"
 msgid "Not After:"
 msgstr "Pas après :"
 
-#: src/guidance/WebConnectionResults.js:144
-#: src/guidance/WebConnectionResults.js:209
-#: src/guidance/WebConnectionResults.js:215
-#: src/guidance/WebConnectionResults.js:221
+#: src/guidance/WebConnectionResults.js:148
+#: src/guidance/WebConnectionResults.js:213
+#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:225
 msgid "Not available"
 msgstr "Non disponible"
 
@@ -3612,11 +3612,11 @@ msgstr "abandonnées"
 msgid "Phone"
 msgstr "Téléphone"
 
-#: src/utilities/fieldRequirements.js:33
+#: src/utilities/fieldRequirements.js:34
 msgid "Phone number field must not be empty"
 msgstr "Le champ du numéro de téléphone ne doit pas être vide"
 
-#: src/utilities/fieldRequirements.js:34
+#: src/utilities/fieldRequirements.js:35
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Le numéro de téléphone doit être un numéro de téléphone valide de 10 à 15 chiffres."
 
@@ -3809,7 +3809,7 @@ msgstr "Conseils de lecture"
 msgid "Read Guidance"
 msgstr "Conseils de lecture"
 
-#: src/admin/AdminDomains.js:516
+#: src/admin/AdminDomains.js:514
 #: src/admin/AuditLogTable.js:133
 msgid "Reason"
 msgstr "Raison"
@@ -3858,7 +3858,7 @@ msgstr "Rappelle-toi de moi"
 msgid "Remove"
 msgstr "Retirer"
 
-#: src/admin/AdminDomains.js:496
+#: src/admin/AdminDomains.js:494
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -3927,7 +3927,7 @@ msgstr "Exigences : <0>Exigences de configuration de la gestion des sites et ser
 #: src/admin/AdminDomainCard.js:12
 #: src/admin/AdminDomainModal.js:305
 #: src/admin/AdminDomains.js:291
-#: src/admin/AdminDomains.js:570
+#: src/admin/AdminDomains.js:568
 #: src/domains/DomainCard.js:115
 #: src/domains/FilterList.js:26
 #: src/organizationDetails/OrganizationDomains.js:128
@@ -4057,7 +4057,7 @@ msgstr "Demande de numérisation"
 msgid "Scope:"
 msgstr "Portée :"
 
-#: src/admin/AdminDomains.js:415
+#: src/admin/AdminDomains.js:413
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
@@ -4124,8 +4124,8 @@ msgstr "Rechercher les éléments défaillants du SPF"
 msgid "Search:"
 msgstr "Recherche:"
 
-#: src/admin/AdminDomains.js:404
-#: src/admin/UserList.js:153
+#: src/admin/AdminDomains.js:402
+#: src/admin/UserList.js:147
 #: src/components/SearchBox.js:46
 msgid "Search: "
 msgstr "Recherche: "
@@ -4134,7 +4134,7 @@ msgstr "Recherche: "
 #~ msgid "Sector:"
 #~ msgstr "Secteur:"
 
-#: src/guidance/WebConnectionResults.js:90
+#: src/guidance/WebConnectionResults.js:94
 msgid "See headers"
 msgstr "Voir les en-têtes"
 
@@ -4142,7 +4142,7 @@ msgstr "Voir les en-têtes"
 #~ msgid "Select a reason for adding this outside domain"
 #~ msgstr "Sélectionnez une raison pour l'ajout de ce domaine extérieur"
 
-#: src/admin/AdminDomains.js:527
+#: src/admin/AdminDomains.js:525
 msgid "Select a reason for removing this domain"
 msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 
@@ -4179,11 +4179,11 @@ msgstr "Sélectionnez votre langue préférée"
 msgid "Select the data period to view."
 msgstr "Sélectionnez la période de données à visualiser."
 
-#: src/utilities/fieldRequirements.js:78
+#: src/utilities/fieldRequirements.js:79
 msgid "Selector cannot be empty"
 msgstr "Le sélecteur ne peut pas être vide"
 
-#: src/utilities/fieldRequirements.js:82
+#: src/utilities/fieldRequirements.js:83
 msgid "Selector must be either a string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters, or an asterisk"
 msgstr "Le sélecteur doit être soit une chaîne contenant des caractères alphanumériques et des points, commençant et se terminant uniquement par des caractères alphanumériques, soit un astérisque"
 
@@ -4330,31 +4330,31 @@ msgstr "Indique si le domaine utilise uniquement des courbes fortes ou acceptabl
 msgid "Shows if the hostname on the server certificate matches the the hostname from the HTTP request."
 msgstr "Indique si le nom d'hôte figurant sur le certificat du serveur correspond au nom d'hôte figurant dans la requête HTTP."
 
-#: src/guidance/WebConnectionResults.js:200
+#: src/guidance/WebConnectionResults.js:204
 msgid "Shows if the HSTS (HTTP Strict Transport Security) header is present."
 msgstr "Indique si l'en-tête HSTS (HTTP Strict Transport Security) est présent."
 
-#: src/guidance/WebConnectionResults.js:218
+#: src/guidance/WebConnectionResults.js:222
 msgid "Shows if the HSTS header includes the includeSubdomains directive."
 msgstr "Indique si l'en-tête HSTS inclut la directive includeSubdomains."
 
-#: src/guidance/WebConnectionResults.js:212
+#: src/guidance/WebConnectionResults.js:216
 msgid "Shows if the HSTS header includes the preload directive."
 msgstr "Indique si l'en-tête HSTS inclut la directive preload."
 
-#: src/guidance/WebConnectionResults.js:134
+#: src/guidance/WebConnectionResults.js:138
 msgid "Shows if the HTTP connection is live."
 msgstr "Indique si la connexion HTTP est active."
 
-#: src/guidance/WebConnectionResults.js:140
+#: src/guidance/WebConnectionResults.js:144
 msgid "Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never."
 msgstr "Indique si le point d'extrémité HTTP passe à la mise à niveau HTTPS immédiatement, éventuellement (après la première redirection) ou jamais."
 
-#: src/guidance/WebConnectionResults.js:174
+#: src/guidance/WebConnectionResults.js:178
 msgid "Shows if the HTTPS connection is live."
 msgstr "Indique si la connexion HTTPS est active."
 
-#: src/guidance/WebConnectionResults.js:180
+#: src/guidance/WebConnectionResults.js:184
 msgid "Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never."
 msgstr "Indique si le point de terminaison HTTPS passe en HTTP non sécurisé immédiatement, éventuellement ou jamais."
 
@@ -4386,7 +4386,7 @@ msgstr "Indique si le serveur s'est avéré vulnérable à la faille Heartbleed.
 msgid "Shows if the server was found to be vulnerable to the ROBOT vulnerability."
 msgstr "Indique si le serveur a été jugé vulnérable à la vulnérabilité ROBOT."
 
-#: src/guidance/WebConnectionResults.js:206
+#: src/guidance/WebConnectionResults.js:210
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Indique la durée, en secondes, pendant laquelle l'en-tête HSTS est valide."
 
@@ -4618,7 +4618,7 @@ msgstr "Statut"
 msgid "Status Value"
 msgstr "Valeur du statut"
 
-#: src/guidance/WebConnectionResults.js:78
+#: src/guidance/WebConnectionResults.js:82
 msgid "Status:"
 msgstr "Statut :"
 
@@ -4857,7 +4857,7 @@ msgstr "Conditions d'utilisation"
 msgid "TEST"
 msgstr "TEST"
 
-#: src/admin/AdminDomains.js:551
+#: src/admin/AdminDomains.js:549
 msgid "The \"Asset State\" describes how the domain relates to your organization. These states are used by Tracker to give you a more accurate summary of your attack surface."
 msgstr "El «Estado del Activo» describe cómo el dominio se relaciona con su organización. Suivi utiliza estos estados para ofrecerle un resumen más preciso de su superficie de ataque."
 
@@ -5012,12 +5012,12 @@ msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la 
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
-#: src/admin/AdminDomains.js:533
+#: src/admin/AdminDomains.js:531
 #: src/admin/AuditLogTable.js:148
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
-#: src/admin/AdminDomains.js:530
+#: src/admin/AdminDomains.js:528
 #: src/admin/AuditLogTable.js:146
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
@@ -5473,11 +5473,11 @@ msgstr "Mettre à niveau la politique DMARC pour qu'elle rejette (augmentation p
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
 msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer progressivement pour passer de 25 % à 100 %)."
 
-#: src/guidance/WebConnectionResults.js:156
+#: src/guidance/WebConnectionResults.js:160
 msgid "URL:"
 msgstr "URL :"
 
-#: src/guidance/WebConnectionResults.js:228
+#: src/guidance/WebConnectionResults.js:232
 msgid "URL: "
 msgstr "URL :"
 
@@ -5521,7 +5521,7 @@ msgstr "UTILISATEUR"
 #~ msgid "user email"
 #~ msgstr "e-mail de l'utilisateur"
 
-#: src/admin/UserList.js:163
+#: src/admin/UserList.js:157
 msgid "User email"
 msgstr "Courriel de l'utilisateur"
 
@@ -5539,7 +5539,7 @@ msgid "User invited"
 msgstr "Utilisateur invité"
 
 #: src/admin/SuperAdminUserList.js:153
-#: src/admin/UserList.js:79
+#: src/admin/UserList.js:78
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
@@ -5574,7 +5574,11 @@ msgstr "Les utilisateurs font preuve de diligence raisonnable en s'assurant de l
 msgid "Value"
 msgstr "Valeur"
 
-#: src/utilities/fieldRequirements.js:29
+#: src/utilities/fieldRequirements.js:31
+msgid "Verification code must be exactly 6 digits long"
+msgstr "Le code de vérification doit comporter exactement 6 chiffres."
+
+#: src/utilities/fieldRequirements.js:30
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
 
@@ -5857,11 +5861,11 @@ msgstr "Souhaitez-vous demander une invitation à {orgName} ?"
 msgid "Year to Date"
 msgstr "Depuis le début de l'année"
 
-#: src/guidance/WebConnectionResults.js:137
-#: src/guidance/WebConnectionResults.js:177
-#: src/guidance/WebConnectionResults.js:203
-#: src/guidance/WebConnectionResults.js:215
-#: src/guidance/WebConnectionResults.js:221
+#: src/guidance/WebConnectionResults.js:141
+#: src/guidance/WebConnectionResults.js:181
+#: src/guidance/WebConnectionResults.js:207
+#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:225
 #: src/guidance/WebTLSResults.js:216
 #: src/guidance/WebTLSResults.js:274
 #: src/guidance/WebTLSResults.js:285
