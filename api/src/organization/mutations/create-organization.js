@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
@@ -26,45 +26,13 @@ export const createOrganization = new mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString),
       description: 'The French name of the organization.',
     },
-    zoneEN: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The English translation of the zone the organization belongs to.',
+    externalId: {
+      type: GraphQLString,
+      description: 'String ID used to identify the organization in an external system.',
     },
-    zoneFR: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The English translation of the zone the organization belongs to.',
-    },
-    sectorEN: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The English translation of the sector the organization belongs to.',
-    },
-    sectorFR: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The French translation of the sector the organization belongs to.',
-    },
-    countryEN: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The English translation of the country the organization resides in.',
-    },
-    countryFR: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The French translation of the country the organization resides in.',
-    },
-    provinceEN: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The English translation of the province the organization resides in.',
-    },
-    provinceFR: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The French translation of the province the organization resides in.',
-    },
-    cityEN: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The English translation of the city the organization resides in.',
-    },
-    cityFR: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'The French translation of the city the organization resides in.',
+    verified: {
+      type: GraphQLBoolean,
+      description: 'If the organization is verified.',
     },
   }),
   outputFields: () => ({
@@ -99,16 +67,7 @@ export const createOrganization = new mutationWithClientMutationId({
     const acronymFR = cleanseInput(args.acronymFR)
     const nameEN = cleanseInput(args.nameEN)
     const nameFR = cleanseInput(args.nameFR)
-    const zoneEN = cleanseInput(args.zoneEN)
-    const zoneFR = cleanseInput(args.zoneFR)
-    const sectorEN = cleanseInput(args.sectorEN)
-    const sectorFR = cleanseInput(args.sectorFR)
-    const countryEN = cleanseInput(args.countryEN)
-    const countryFR = cleanseInput(args.countryFR)
-    const provinceEN = cleanseInput(args.provinceEN)
-    const provinceFR = cleanseInput(args.provinceFR)
-    const cityEN = cleanseInput(args.cityEN)
-    const cityFR = cleanseInput(args.cityFR)
+    const externalId = cleanseInput(args.externalId)
 
     // Create EN and FR slugs
     const slugEN = slugify(nameEN)
@@ -128,28 +87,19 @@ export const createOrganization = new mutationWithClientMutationId({
 
     // Create new organization
     const organizationDetails = {
-      verified: false,
+      verified: args.verified || false,
       externallyManaged: false,
+      externalId,
       orgDetails: {
         en: {
           slug: slugEN,
           acronym: acronymEN,
           name: nameEN,
-          zone: zoneEN,
-          sector: sectorEN,
-          country: countryEN,
-          province: provinceEN,
-          city: cityEN,
         },
         fr: {
           slug: slugFR,
           acronym: acronymFR,
           name: nameFR,
-          zone: zoneFR,
-          sector: sectorFR,
-          country: countryFR,
-          province: provinceFR,
-          city: cityFR,
         },
       },
     }

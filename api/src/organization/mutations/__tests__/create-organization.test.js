@@ -74,16 +74,8 @@ describe('create an organization', () => {
                   acronymFR: "SCT"
                   nameEN: "Treasury Board of Canada Secretariat"
                   nameFR: "Secrétariat du Conseil Trésor du Canada"
-                  zoneEN: "FED"
-                  zoneFR: "FED"
-                  sectorEN: "TBS"
-                  sectorFR: "TBS"
-                  countryEN: "Canada"
-                  countryFR: "Canada"
-                  provinceEN: "Ontario"
-                  provinceFR: "Ontario"
-                  cityEN: "Ottawa"
-                  cityFR: "Ottawa"
+                  externalId: "EXT123"
+                  verified: true
                 }
               ) {
                 result {
@@ -92,12 +84,8 @@ describe('create an organization', () => {
                     acronym
                     slug
                     name
-                    zone
-                    sector
-                    country
-                    province
-                    city
                     verified
+                    externalId
                   }
                 }
               }
@@ -146,17 +134,15 @@ describe('create an organization', () => {
                 acronym: org.acronym,
                 slug: org.slug,
                 name: org.name,
-                zone: org.zone,
-                sector: org.sector,
-                country: org.country,
-                province: org.province,
-                city: org.city,
                 verified: org.verified,
+                externalId: org.externalId,
               },
             },
           },
         }
 
+        // externalId is returned as null if not set, not undefined
+        expectedResponse.data.createOrganization.result.externalId = null
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([`User: ${user._key} successfully created a new organization: ${org.slug}`])
       })
@@ -173,16 +159,8 @@ describe('create an organization', () => {
                   acronymFR: "SCT"
                   nameEN: "Treasury Board of Canada Secretariat"
                   nameFR: "Secrétariat du Conseil Trésor du Canada"
-                  zoneEN: "FED"
-                  zoneFR: "FED"
-                  sectorEN: "TBS"
-                  sectorFR: "TBS"
-                  countryEN: "Canada"
-                  countryFR: "Canada"
-                  provinceEN: "Ontario"
-                  provinceFR: "Ontario"
-                  cityEN: "Ottawa"
-                  cityFR: "Ottawa"
+                  externalId: "EXT123"
+                  verified: true
                 }
               ) {
                 result {
@@ -191,12 +169,8 @@ describe('create an organization', () => {
                     acronym
                     slug
                     name
-                    zone
-                    sector
-                    country
-                    province
-                    city
                     verified
+                    externalId
                   }
                 }
               }
@@ -245,17 +219,15 @@ describe('create an organization', () => {
                 acronym: org.acronym,
                 slug: org.slug,
                 name: org.name,
-                zone: org.zone,
-                sector: org.sector,
-                country: org.country,
-                province: org.province,
-                city: org.city,
                 verified: org.verified,
+                externalId: org.externalId,
               },
             },
           },
         }
 
+        // externalId is returned as null if not set, not undefined
+        expectedResponse.data.createOrganization.result.externalId = null
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully created a new organization: treasury-board-of-canada-secretariat`,
@@ -292,16 +264,6 @@ describe('create an organization', () => {
                     acronymFR: "SCT"
                     nameEN: "Treasury Board of Canada Secretariat"
                     nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    zoneEN: "FED"
-                    zoneFR: "FED"
-                    sectorEN: "TBS"
-                    sectorFR: "TBS"
-                    countryEN: "Canada"
-                    countryFR: "Canada"
-                    provinceEN: "Ontario"
-                    provinceFR: "Ontario"
-                    cityEN: "Ottawa"
-                    cityFR: "Ottawa"
                   }
                 ) {
                   result {
@@ -310,11 +272,6 @@ describe('create an organization', () => {
                       acronym
                       slug
                       name
-                      zone
-                      sector
-                      country
-                      province
-                      city
                       verified
                     }
                     ... on OrganizationError {
@@ -384,16 +341,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -402,11 +349,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -469,16 +411,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -487,11 +419,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -557,16 +484,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -575,11 +492,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -660,16 +572,6 @@ describe('create an organization', () => {
                     acronymFR: "SCT"
                     nameEN: "Treasury Board of Canada Secretariat"
                     nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    zoneEN: "FED"
-                    zoneFR: "FED"
-                    sectorEN: "TBS"
-                    sectorFR: "TBS"
-                    countryEN: "Canada"
-                    countryFR: "Canada"
-                    provinceEN: "Ontario"
-                    provinceFR: "Ontario"
-                    cityEN: "Ottawa"
-                    cityFR: "Ottawa"
                   }
                 ) {
                   result {
@@ -678,11 +580,6 @@ describe('create an organization', () => {
                       acronym
                       slug
                       name
-                      zone
-                      sector
-                      country
-                      province
-                      city
                       verified
                     }
                     ... on OrganizationError {
@@ -752,16 +649,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -770,11 +657,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -837,16 +719,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -855,11 +727,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -925,16 +792,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -943,11 +800,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
