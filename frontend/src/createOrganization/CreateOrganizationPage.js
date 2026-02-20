@@ -13,6 +13,7 @@ import { getRequirement, schemaToValidation } from '../utilities/fieldRequiremen
 import { CREATE_ORGANIZATION } from '../graphql/mutations'
 import { FormField } from '../components/fields/FormField'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function CreateOrganizationPage() {
   const toast = useToast()
@@ -117,24 +118,7 @@ export default function CreateOrganizationPage() {
               <CreateOrganizationField name="acronymFR" language={t`French`} label={t`Acronym`} />
 
               <FormField name="externalId" label={t`External ID`} />
-              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                <Flex p="1" align="center">
-                  <Switch
-                    isFocusable={true}
-                    id="verified"
-                    name="verified"
-                    aria-label="verified"
-                    mx="2"
-                    onChange={handleChange}
-                  />
-                  <Badge variant="outline" color="gray.900" p="1.5">
-                    <Flex align="center">
-                      <Trans>Verified</Trans>
-                      <CheckCircleIcon color="blue.500" boxSize="icons.sm" ml="1" />
-                    </Flex>
-                  </Badge>
-                </Flex>
-              </Box>
+              <VerifiedSwitch handleChange={handleChange} />
             </SimpleGrid>
 
             <Stack spacing={4} isInline justifyContent="space-between" my="6">
@@ -152,3 +136,19 @@ export default function CreateOrganizationPage() {
     </Box>
   )
 }
+
+const VerifiedSwitch = withSuperAdmin(({ handleChange }) => {
+  return (
+    <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+      <Flex p="1" align="center">
+        <Switch isFocusable={true} id="verified" name="verified" aria-label="verified" mx="2" onChange={handleChange} />
+        <Badge variant="outline" color="gray.900" p="1.5">
+          <Flex align="center">
+            <Trans>Verified</Trans>
+            <CheckCircleIcon color="blue.500" boxSize="icons.sm" ml="1" />
+          </Flex>
+        </Badge>
+      </Flex>
+    </Box>
+  )
+})

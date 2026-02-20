@@ -52,7 +52,7 @@ export const createOrganization = new mutationWithClientMutationId({
       query,
       userKey,
       request: { ip },
-      auth: { userRequired, verifiedRequired },
+      auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
       loaders: { loadOrgBySlug },
       validators: { cleanseInput, slugify },
     },
@@ -61,6 +61,11 @@ export const createOrganization = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
+    const isSuperAdmin = await checkSuperAdmin()
+
+    if (args.verified === true) {
+      superAdminRequired({ user, isSuperAdmin })
+    }
 
     // Cleanse Input
     const acronymEN = cleanseInput(args.acronymEN)
