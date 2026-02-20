@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Flex, SimpleGrid, Heading, Stack, useToast, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Flex, SimpleGrid, Heading, Stack, useToast, Switch, Badge } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -8,17 +8,16 @@ import { useLingui } from '@lingui/react'
 
 import { CreateOrganizationField } from '../components/fields/CreateOrganizationField'
 
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CREATE_ORGANIZATION } from '../graphql/mutations'
+import { FormField } from '../components/fields/FormField'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 
 export default function CreateOrganizationPage() {
   const toast = useToast()
   const navigate = useNavigate()
   const { i18n } = useLingui()
-
-  const { isOpen, onToggle } = useDisclosure()
 
   const fieldRequirement = getRequirement('field')
   const acronymRequirement = getRequirement('acronym').required(i18n._(t`This field cannot be empty`))
@@ -28,12 +27,6 @@ export default function CreateOrganizationPage() {
     nameFR: fieldRequirement,
     acronymEN: acronymRequirement,
     acronymFR: acronymRequirement,
-    cityEN: fieldRequirement,
-    cityFR: fieldRequirement,
-    provinceEN: fieldRequirement,
-    provinceFR: fieldRequirement,
-    countryEN: fieldRequirement,
-    countryFR: fieldRequirement,
   })
 
   const [createOrganization, { loading }] = useMutation(CREATE_ORGANIZATION, {
@@ -92,12 +85,8 @@ export default function CreateOrganizationPage() {
           nameFR: '',
           acronymEN: '',
           acronymFR: '',
-          cityEN: '',
-          cityFR: '',
-          provinceEN: '',
-          provinceFR: '',
-          countryEN: '',
-          countryFR: '',
+          externalId: '',
+          verified: false,
         }}
         onSubmit={async (values) => {
           createOrganization({
@@ -106,35 +95,19 @@ export default function CreateOrganizationPage() {
               nameFR: values.nameFR,
               acronymEN: values.acronymEN,
               acronymFR: values.acronymFR,
-              zoneEN: '',
-              zoneFR: '',
-              sectorEN: '',
-              sectorFR: '',
-              countryEN: values.countryEN,
-              countryFR: values.countryFR,
-              provinceEN: values.provinceEN,
-              provinceFR: values.provinceFR,
-              cityEN: values.cityEN,
-              cityFR: values.cityFR,
+              externalId: values.externalId,
+              verified: values.verified,
             },
           })
         }}
       >
-        {({ handleSubmit, isSubmitting }) => (
+        {({ handleSubmit, isSubmitting, handleChange }) => (
           <form id="form" onSubmit={handleSubmit}>
             <Flex>
               <Heading as="h1" fontSize="2xl" textAlign="center">
                 <Trans>Create an organization</Trans>
               </Heading>
             </Flex>
-
-            <InfoPanel isOpen={isOpen} onToggle={onToggle}>
-              <InfoBox title="Name" info="The name of the Organization." />
-              <InfoBox title="Acronym" info="The acronym of the Organization." />
-              <InfoBox title="City" info="The city the Organization is based in." />
-              <InfoBox title="Province" info="The province the Organization is based in." />
-              <InfoBox title="Country" info="The country the Organization is based in." />
-            </InfoPanel>
 
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 2, lg: 4 }} mt="4">
               <CreateOrganizationField name="nameEN" language={t`English`} label={t`Name`} />
@@ -143,14 +116,25 @@ export default function CreateOrganizationPage() {
               <CreateOrganizationField name="acronymEN" language={t`English`} label={t`Acronym`} />
               <CreateOrganizationField name="acronymFR" language={t`French`} label={t`Acronym`} />
 
-              <CreateOrganizationField name="cityEN" language={t`English`} label={t`City`} />
-              <CreateOrganizationField name="cityFR" language={t`French`} label={t`City`} />
-
-              <CreateOrganizationField name="provinceEN" language={t`English`} label={t`Province`} />
-              <CreateOrganizationField name="provinceFR" language={t`French`} label={t`Province`} />
-
-              <CreateOrganizationField name="countryEN" language={t`English`} label={t`Country`} />
-              <CreateOrganizationField name="countryFR" language={t`French`} label={t`Country`} />
+              <FormField name="externalId" label={t`External ID`} />
+              <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                <Flex p="1" align="center">
+                  <Switch
+                    isFocusable={true}
+                    id="verified"
+                    name="verified"
+                    aria-label="verified"
+                    mx="2"
+                    onChange={handleChange}
+                  />
+                  <Badge variant="outline" color="gray.900" p="1.5">
+                    <Flex align="center">
+                      <Trans>Verified</Trans>
+                      <CheckCircleIcon color="blue.500" boxSize="icons.sm" ml="1" />
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
             </SimpleGrid>
 
             <Stack spacing={4} isInline justifyContent="space-between" my="6">
@@ -165,7 +149,6 @@ export default function CreateOrganizationPage() {
           </form>
         )}
       </Formik>
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }
