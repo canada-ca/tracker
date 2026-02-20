@@ -31,13 +31,31 @@ import { AddIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { array, bool, func, number, object, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
+import { CvdEnrollmentForm } from './CvdEnrollmentForm'
 
-export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, availableTags, ...props }) {
-  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
+export function AdminDomainModal({
+  isOpen,
+  onClose,
+  validationSchema,
+  orgId,
+  availableTags,
+  editingDomainId,
+  editingDomainUrl,
+  tagInputList,
+  orgSlug,
+  archived,
+  assetState,
+  mutation,
+  orgCount,
+  cvdEnrollment,
+  permission,
+  ...rest
+}) {
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -105,9 +123,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
         onClose()
         toast({
           title: i18n._(t`Domain updated`),
-          description: i18n._(
-            t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
-          ),
+          description: i18n._(t`${editingDomainUrl} from ${orgSlug} successfully updated.`),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -187,16 +203,23 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom">
+    <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom" {...rest}>
       <ModalOverlay />
       <ModalContent pb={4}>
         <Formik
           initialValues={{
             domainUrl: editingDomainUrl,
-            // convert initial tags to input type
-            tags: getInitTags(),
+            tags: getInitTags(), // convert initial tags to input type
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
+            cvdEnrollment: cvdEnrollment || {
+              status: 'NOT_ENROLLED',
+              description: '',
+              maxSeverity: '',
+              confidentialityRequirement: '',
+              integrityRequirement: '',
+              availabilityRequirement: '',
+            },
           }}
           initialTouched={{
             domainUrl: true,
@@ -204,6 +227,11 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
+            const sanitizeCvdEnrollment = (enrollment) => {
+              if (!enrollment || typeof enrollment !== 'object') return enrollment
+              const { __typename, ...rest } = enrollment
+              return rest
+            }
             if (mutation === 'update') {
               await updateDomain({
                 variables: {
@@ -213,6 +241,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                   archived: values.archiveDomain,
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
+                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                 },
               })
             } else if (mutation === 'create') {
@@ -223,6 +252,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                   tags: values.tags.map(({ tagId }) => tagId),
                   archived: values.archiveDomain,
                   assetState: values.assetState,
+                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                 },
               })
             }
@@ -306,6 +336,13 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ava
                       </option>
                     </Select>
                   </FormControl>
+
+                  <ABTestWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
+                      <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
+                    </ABTestVariant>
+                  </ABTestWrapper>
+
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
@@ -401,5 +438,7 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
+  cvdEnrollment: object,
   availableTags: array,
+  permission: string,
 }
