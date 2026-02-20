@@ -105,7 +105,7 @@ msgstr "<0><1>Conseil de recherche : Caractère générique <2>%</2></1></0><3>U
 
 #: src/admin/CvdEnrollmentForm.js:46
 msgid "<0>1. What is Coordinated Vulnerability Disclosure (CVD)?</0><1/>A structured process that allows security researchers to report vulnerabilities safely and responsibly. It ensures findings are received, validated, and addressed in an organized way, helping organizations fix issues before they can be exploited."
-msgstr "1. Qu’est-ce que la divulgation coordonnée des vulnérabilités (DCV)?</0><1/>Un processus structuré qui permet aux chercheurs en sécurité de signaler les vulnérabilités de manière sûre et responsable. Il veille à ce que les constatations soient reçues, validées et traitées de manière organisée, ce qui aide les ministères à régler les problèmes avant qu’ils ne puissent être exploités."
+msgstr "<0>1. Qu’est-ce que la divulgation coordonnée des vulnérabilités (DCV)?</0><1/>Un processus structuré qui permet aux chercheurs en sécurité de signaler les vulnérabilités de manière sûre et responsable. Il veille à ce que les constatations soient reçues, validées et traitées de manière organisée, ce qui aide les ministères à régler les problèmes avant qu’ils ne puissent être exploités."
 
 #: src/admin/CvdEnrollmentForm.js:52
 #~ msgid "<0>2. Why enroll your domains?</0><1/>Enrolling your internet‑facing assets ensures researchers can report real vulnerabilities directly to the Government of Canada through an approved and safe channel. This improves early detection, reduces security risk, and strengthens your department’s ability to respond quickly and consistently."

@@ -174,7 +174,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               id="cvdEnrollment.confidentialityRequirement"
               borderColor="black"
               onChange={handleChange}
-              value={values.cvdEnrollment.confidentialityRequirement || ''}
+              value={values.cvdEnrollment.confidentialityRequirement}
             >
               <option value="">
                 <Trans>Select requirement</Trans>
@@ -202,7 +202,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               id="cvdEnrollment.integrityRequirement"
               borderColor="black"
               onChange={handleChange}
-              value={values.cvdEnrollment.integrityRequirement || ''}
+              value={values.cvdEnrollment.integrityRequirement}
             >
               <option value="">
                 <Trans>Select requirement</Trans>
