@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { userRequired, verifiedRequired } from '../../../auth'
+import { checkSuperAdmin, superAdminRequired, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug } from '../../loaders'
 import dbschema from '../../../../database.json'
@@ -18,7 +18,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('create an organization', () => {
-  let query, drop, truncate, schema, collections, transaction, user
+  let query, drop, truncate, schema, collections, transaction, user, i18n
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -32,6 +32,18 @@ describe('create an organization', () => {
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
+    })
+    i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
     })
   })
   afterEach(() => {
@@ -75,7 +87,7 @@ describe('create an organization', () => {
                   nameEN: "Treasury Board of Canada Secretariat"
                   nameFR: "Secrétariat du Conseil Trésor du Canada"
                   externalId: "EXT123"
-                  verified: true
+                  verified: false
                 }
               ) {
                 result {
@@ -106,6 +118,8 @@ describe('create an organization', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               verifiedRequired: verifiedRequired({}),
+              checkSuperAdmin: checkSuperAdmin({ i18n, query, userKey: user._key }),
+              superAdminRequired: superAdminRequired({ i18n }),
             },
             loaders: {
               loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
@@ -160,7 +174,7 @@ describe('create an organization', () => {
                   nameEN: "Treasury Board of Canada Secretariat"
                   nameFR: "Secrétariat du Conseil Trésor du Canada"
                   externalId: "EXT123"
-                  verified: true
+                  verified: false
                 }
               ) {
                 result {
@@ -191,6 +205,8 @@ describe('create an organization', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               verifiedRequired: verifiedRequired({}),
+              checkSuperAdmin: checkSuperAdmin({ i18n, query, userKey: user._key }),
+              superAdminRequired: superAdminRequired({ i18n }),
             },
             loaders: {
               loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
@@ -236,22 +252,7 @@ describe('create an organization', () => {
     })
   })
   describe('given an unsuccessful org creation', () => {
-    let i18n
     describe('users language is set to english', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'en',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
       describe('organization already exists', () => {
         it('returns an error', async () => {
           const response = await graphql({
@@ -297,6 +298,8 @@ describe('create an organization', () => {
                   _key: 123,
                 }),
                 verifiedRequired: jest.fn(),
+                checkSuperAdmin: jest.fn(),
+                superAdminRequired: jest.fn(),
               },
               loaders: {
                 loadOrgBySlug: {
@@ -377,6 +380,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -450,6 +455,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -521,6 +528,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -605,6 +614,8 @@ describe('create an organization', () => {
                   _key: 123,
                 }),
                 verifiedRequired: jest.fn(),
+                checkSuperAdmin: jest.fn(),
+                superAdminRequired: jest.fn(),
               },
               loaders: {
                 loadOrgBySlug: {
@@ -685,6 +696,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -758,6 +771,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -829,6 +844,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {

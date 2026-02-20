@@ -34,7 +34,7 @@ const mocks = [
         acronymEN: 'TESTACREN',
         acronymFR: 'TESTACRFR',
         externalId: 'EXT123',
-        verified: true,
+        verified: false,
       },
     },
     result: {
@@ -179,7 +179,6 @@ describe('<CreateOrganizationPage />', () => {
       })
 
       const externalIdInput = getByRole('textbox', { name: /External ID/ })
-      const verifiedSwitch = getByRole('checkbox', { name: /verified/i })
 
       userEvent.type(nameENInput, 'Test Org Name EN')
       userEvent.type(nameFRInput, 'Test Org Name FR')
@@ -188,7 +187,6 @@ describe('<CreateOrganizationPage />', () => {
       userEvent.type(acronymFRInput, 'TESTACRFR')
 
       userEvent.type(externalIdInput, 'EXT123')
-      userEvent.click(verifiedSwitch)
 
       const createOrganizationButton = getByRole('button', {
         name: /Create Organization/,
@@ -262,9 +260,6 @@ describe('<CreateOrganizationPage />', () => {
       })
 
       const externalIdInput = getByRole('textbox', { name: /External ID/ })
-      const verifiedSwitch = getByRole('checkbox', { name: /verified/i })
-
-      expect(verifiedSwitch).toBeInTheDocument()
 
       userEvent.type(nameENInput, 'Test Org Name EN')
       userEvent.type(nameFRInput, 'Test Org Name FR')
@@ -273,7 +268,6 @@ describe('<CreateOrganizationPage />', () => {
       userEvent.type(acronymFRInput, 'TESTACRFR')
 
       userEvent.type(externalIdInput, '')
-      // leave verifiedSwitch unchecked
 
       const createOrganizationButton = getByRole('button', {
         name: /Create Organization/,
