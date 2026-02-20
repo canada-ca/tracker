@@ -33,16 +33,8 @@ const mocks = [
         nameFR: 'Test Org Name FR',
         acronymEN: 'TESTACREN',
         acronymFR: 'TESTACRFR',
-        cityEN: 'Test Org City EN',
-        cityFR: 'Test Org City FR',
-        provinceEN: 'Test Org Province EN',
-        provinceFR: 'Test Org Province FR',
-        countryEN: 'Test Org Country EN',
-        countryFR: 'Test Org Country FR',
-        zoneEN: '',
-        zoneFR: '',
-        sectorEN: '',
-        sectorFR: '',
+        externalId: 'EXT123',
+        verified: false,
       },
     },
     result: {
@@ -62,9 +54,7 @@ describe('<CreateOrganizationPage />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -144,8 +134,7 @@ describe('<CreateOrganizationPage />', () => {
       await waitFor(() => {
         fireEvent.change(acronymEN, {
           target: {
-            value:
-              'THIS_ACRONYM_IS_OVER_FIFTY_CHARACTERS_WHICH_MAKES_IT_INVALID',
+            value: 'THIS_ACRONYM_IS_OVER_FIFTY_CHARACTERS_WHICH_MAKES_IT_INVALID',
           },
         })
       })
@@ -189,22 +178,7 @@ describe('<CreateOrganizationPage />', () => {
         name: /Acronym \(French\)/,
       })
 
-      const cityENInput = getByRole('textbox', { name: /City \(English\)/ })
-      const cityFRInput = getByRole('textbox', { name: /City \(French\)/ })
-
-      const provinceENInput = getByRole('textbox', {
-        name: /Province \(English\)/,
-      })
-      const provinceFRInput = getByRole('textbox', {
-        name: /Province \(French\)/,
-      })
-
-      const countryENInput = getByRole('textbox', {
-        name: /Country \(English\)/,
-      })
-      const countryFRInput = getByRole('textbox', {
-        name: /Country \(French\)/,
-      })
+      const externalIdInput = getByRole('textbox', { name: /External ID/ })
 
       userEvent.type(nameENInput, 'Test Org Name EN')
       userEvent.type(nameFRInput, 'Test Org Name FR')
@@ -212,14 +186,7 @@ describe('<CreateOrganizationPage />', () => {
       userEvent.type(acronymENInput, 'TESTACREN')
       userEvent.type(acronymFRInput, 'TESTACRFR')
 
-      userEvent.type(cityENInput, 'Test Org City EN')
-      userEvent.type(cityFRInput, 'Test Org City FR')
-
-      userEvent.type(provinceENInput, 'Test Org Province EN')
-      userEvent.type(provinceFRInput, 'Test Org Province FR')
-
-      userEvent.type(countryENInput, 'Test Org Country EN')
-      userEvent.type(countryFRInput, 'Test Org Country FR')
+      userEvent.type(externalIdInput, 'EXT123')
 
       const createOrganizationButton = getByRole('button', {
         name: /Create Organization/,
@@ -241,16 +208,8 @@ describe('<CreateOrganizationPage />', () => {
             nameFR: 'Test Org Name FR',
             acronymEN: 'TESTACREN',
             acronymFR: 'TESTACRFR',
-            cityEN: 'Test Org City EN',
-            cityFR: 'Test Org City FR',
-            provinceEN: 'Test Org Province EN',
-            provinceFR: 'Test Org Province FR',
-            countryEN: 'Test Org Country EN',
-            countryFR: 'Test Org Country FR',
-            zoneEN: '',
-            zoneFR: '',
-            sectorEN: '',
-            sectorFR: '',
+            externalId: '',
+            verified: false,
           },
         },
         result: {
@@ -300,22 +259,7 @@ describe('<CreateOrganizationPage />', () => {
         name: /Acronym \(French\)/,
       })
 
-      const cityENInput = getByRole('textbox', { name: /City \(English\)/ })
-      const cityFRInput = getByRole('textbox', { name: /City \(French\)/ })
-
-      const provinceENInput = getByRole('textbox', {
-        name: /Province \(English\)/,
-      })
-      const provinceFRInput = getByRole('textbox', {
-        name: /Province \(French\)/,
-      })
-
-      const countryENInput = getByRole('textbox', {
-        name: /Country \(English\)/,
-      })
-      const countryFRInput = getByRole('textbox', {
-        name: /Country \(French\)/,
-      })
+      const externalIdInput = getByRole('textbox', { name: /External ID/ })
 
       userEvent.type(nameENInput, 'Test Org Name EN')
       userEvent.type(nameFRInput, 'Test Org Name FR')
@@ -323,14 +267,7 @@ describe('<CreateOrganizationPage />', () => {
       userEvent.type(acronymENInput, 'TESTACREN')
       userEvent.type(acronymFRInput, 'TESTACRFR')
 
-      userEvent.type(cityENInput, 'Test Org City EN')
-      userEvent.type(cityFRInput, 'Test Org City FR')
-
-      userEvent.type(provinceENInput, 'Test Org Province EN')
-      userEvent.type(provinceFRInput, 'Test Org Province FR')
-
-      userEvent.type(countryENInput, 'Test Org Country EN')
-      userEvent.type(countryFRInput, 'Test Org Country FR')
+      userEvent.type(externalIdInput, '')
 
       const createOrganizationButton = getByRole('button', {
         name: /Create Organization/,

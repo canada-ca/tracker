@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { userRequired, verifiedRequired } from '../../../auth'
+import { checkSuperAdmin, superAdminRequired, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug } from '../../loaders'
 import dbschema from '../../../../database.json'
@@ -18,7 +18,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('create an organization', () => {
-  let query, drop, truncate, schema, collections, transaction, user
+  let query, drop, truncate, schema, collections, transaction, user, i18n
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -32,6 +32,18 @@ describe('create an organization', () => {
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
+    })
+    i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
     })
   })
   afterEach(() => {
@@ -74,16 +86,8 @@ describe('create an organization', () => {
                   acronymFR: "SCT"
                   nameEN: "Treasury Board of Canada Secretariat"
                   nameFR: "Secrétariat du Conseil Trésor du Canada"
-                  zoneEN: "FED"
-                  zoneFR: "FED"
-                  sectorEN: "TBS"
-                  sectorFR: "TBS"
-                  countryEN: "Canada"
-                  countryFR: "Canada"
-                  provinceEN: "Ontario"
-                  provinceFR: "Ontario"
-                  cityEN: "Ottawa"
-                  cityFR: "Ottawa"
+                  externalId: "EXT123"
+                  verified: false
                 }
               ) {
                 result {
@@ -92,12 +96,8 @@ describe('create an organization', () => {
                     acronym
                     slug
                     name
-                    zone
-                    sector
-                    country
-                    province
-                    city
                     verified
+                    externalId
                   }
                 }
               }
@@ -118,6 +118,8 @@ describe('create an organization', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               verifiedRequired: verifiedRequired({}),
+              checkSuperAdmin: checkSuperAdmin({ i18n, query, userKey: user._key }),
+              superAdminRequired: superAdminRequired({ i18n }),
             },
             loaders: {
               loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
@@ -146,17 +148,15 @@ describe('create an organization', () => {
                 acronym: org.acronym,
                 slug: org.slug,
                 name: org.name,
-                zone: org.zone,
-                sector: org.sector,
-                country: org.country,
-                province: org.province,
-                city: org.city,
                 verified: org.verified,
+                externalId: org.externalId,
               },
             },
           },
         }
 
+        // externalId is returned as null if not set, not undefined
+        expectedResponse.data.createOrganization.result.externalId = null
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([`User: ${user._key} successfully created a new organization: ${org.slug}`])
       })
@@ -173,16 +173,8 @@ describe('create an organization', () => {
                   acronymFR: "SCT"
                   nameEN: "Treasury Board of Canada Secretariat"
                   nameFR: "Secrétariat du Conseil Trésor du Canada"
-                  zoneEN: "FED"
-                  zoneFR: "FED"
-                  sectorEN: "TBS"
-                  sectorFR: "TBS"
-                  countryEN: "Canada"
-                  countryFR: "Canada"
-                  provinceEN: "Ontario"
-                  provinceFR: "Ontario"
-                  cityEN: "Ottawa"
-                  cityFR: "Ottawa"
+                  externalId: "EXT123"
+                  verified: false
                 }
               ) {
                 result {
@@ -191,12 +183,8 @@ describe('create an organization', () => {
                     acronym
                     slug
                     name
-                    zone
-                    sector
-                    country
-                    province
-                    city
                     verified
+                    externalId
                   }
                 }
               }
@@ -217,6 +205,8 @@ describe('create an organization', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               verifiedRequired: verifiedRequired({}),
+              checkSuperAdmin: checkSuperAdmin({ i18n, query, userKey: user._key }),
+              superAdminRequired: superAdminRequired({ i18n }),
             },
             loaders: {
               loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
@@ -245,17 +235,15 @@ describe('create an organization', () => {
                 acronym: org.acronym,
                 slug: org.slug,
                 name: org.name,
-                zone: org.zone,
-                sector: org.sector,
-                country: org.country,
-                province: org.province,
-                city: org.city,
                 verified: org.verified,
+                externalId: org.externalId,
               },
             },
           },
         }
 
+        // externalId is returned as null if not set, not undefined
+        expectedResponse.data.createOrganization.result.externalId = null
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully created a new organization: treasury-board-of-canada-secretariat`,
@@ -264,22 +252,7 @@ describe('create an organization', () => {
     })
   })
   describe('given an unsuccessful org creation', () => {
-    let i18n
     describe('users language is set to english', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'en',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
       describe('organization already exists', () => {
         it('returns an error', async () => {
           const response = await graphql({
@@ -292,16 +265,6 @@ describe('create an organization', () => {
                     acronymFR: "SCT"
                     nameEN: "Treasury Board of Canada Secretariat"
                     nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    zoneEN: "FED"
-                    zoneFR: "FED"
-                    sectorEN: "TBS"
-                    sectorFR: "TBS"
-                    countryEN: "Canada"
-                    countryFR: "Canada"
-                    provinceEN: "Ontario"
-                    provinceFR: "Ontario"
-                    cityEN: "Ottawa"
-                    cityFR: "Ottawa"
                   }
                 ) {
                   result {
@@ -310,11 +273,6 @@ describe('create an organization', () => {
                       acronym
                       slug
                       name
-                      zone
-                      sector
-                      country
-                      province
-                      city
                       verified
                     }
                     ... on OrganizationError {
@@ -340,6 +298,8 @@ describe('create an organization', () => {
                   _key: 123,
                 }),
                 verifiedRequired: jest.fn(),
+                checkSuperAdmin: jest.fn(),
+                superAdminRequired: jest.fn(),
               },
               loaders: {
                 loadOrgBySlug: {
@@ -384,16 +344,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -402,11 +352,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -435,6 +380,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -469,16 +416,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -487,11 +424,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -523,6 +455,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -557,16 +491,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -575,11 +499,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -609,6 +528,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -660,16 +581,6 @@ describe('create an organization', () => {
                     acronymFR: "SCT"
                     nameEN: "Treasury Board of Canada Secretariat"
                     nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    zoneEN: "FED"
-                    zoneFR: "FED"
-                    sectorEN: "TBS"
-                    sectorFR: "TBS"
-                    countryEN: "Canada"
-                    countryFR: "Canada"
-                    provinceEN: "Ontario"
-                    provinceFR: "Ontario"
-                    cityEN: "Ottawa"
-                    cityFR: "Ottawa"
                   }
                 ) {
                   result {
@@ -678,11 +589,6 @@ describe('create an organization', () => {
                       acronym
                       slug
                       name
-                      zone
-                      sector
-                      country
-                      province
-                      city
                       verified
                     }
                     ... on OrganizationError {
@@ -708,6 +614,8 @@ describe('create an organization', () => {
                   _key: 123,
                 }),
                 verifiedRequired: jest.fn(),
+                checkSuperAdmin: jest.fn(),
+                superAdminRequired: jest.fn(),
               },
               loaders: {
                 loadOrgBySlug: {
@@ -752,16 +660,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -770,11 +668,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -803,6 +696,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -837,16 +732,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -855,11 +740,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -891,6 +771,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
@@ -925,16 +807,6 @@ describe('create an organization', () => {
                       acronymFR: "SCT"
                       nameEN: "Treasury Board of Canada Secretariat"
                       nameFR: "Secrétariat du Conseil Trésor du Canada"
-                      zoneEN: "FED"
-                      zoneFR: "FED"
-                      sectorEN: "TBS"
-                      sectorFR: "TBS"
-                      countryEN: "Canada"
-                      countryFR: "Canada"
-                      provinceEN: "Ontario"
-                      provinceFR: "Ontario"
-                      cityEN: "Ottawa"
-                      cityFR: "Ottawa"
                     }
                   ) {
                     result {
@@ -943,11 +815,6 @@ describe('create an organization', () => {
                         acronym
                         slug
                         name
-                        zone
-                        sector
-                        country
-                        province
-                        city
                         verified
                       }
                       ... on OrganizationError {
@@ -977,6 +844,8 @@ describe('create an organization', () => {
                     _key: 123,
                   }),
                   verifiedRequired: jest.fn(),
+                  checkSuperAdmin: jest.fn(),
+                  superAdminRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgBySlug: {
