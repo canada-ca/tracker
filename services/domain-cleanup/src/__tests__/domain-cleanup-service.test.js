@@ -97,18 +97,22 @@ describe('given the removeNXDomainService', () => {
       })
     })
     it('removes all domains with an rcode of NXDOMAIN', async () => {
-      await removeNXDomainService({ query, log: console.info })
-
-      const domainCursor = await query`
+      const getAllDomains = async () =>
+        await (
+          await query`
             FOR domain IN domains
             RETURN domain
         `
-      const domainList = await domainCursor.all()
-      expect(domainList).toEqual([])
-      expect(consoleInfoOutput).toEqual([
-        'Found 1 domains to cleanup',
-        'Domain "test.domain.gc.ca" and related data successfully removed',
-      ])
+        ).all()
+
+      const initialDomainList = await getAllDomains()
+      expect(initialDomainList).toHaveLength(1)
+      expect(initialDomainList[0].domain).toEqual('test.domain.gc.ca')
+
+      await removeNXDomainService({ query })
+
+      const domainListAfterCleanup = await getAllDomains()
+      expect(domainListAfterCleanup).toEqual([])
     })
   })
 })

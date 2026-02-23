@@ -7,6 +7,7 @@ const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
 const { ensure } = require('arango-tools')
 const { databaseOptions } = require('./database-options')
+const logger = require('./src/logger')
 
 const { removeNXDomainService, unclaimedCleanupService, untagNewDomainsService } = require('./src')
 
@@ -21,26 +22,26 @@ const { removeNXDomainService, unclaimedCleanupService, untagNewDomainsService }
   })
 
   try {
-    console.log('Starting NXDOMAIN cleanup service...')
-    await removeNXDomainService({ query, log: console.log })
-    console.log('NXDOMAIN cleanup service finished successfully.')
+    logger.info('Starting NXDOMAIN cleanup service...')
+    await removeNXDomainService({ query, log: logger.info.bind(logger) })
+    logger.info('NXDOMAIN cleanup service finished successfully.')
   } catch (err) {
-    console.log(err)
+    logger.error({ err }, 'NXDOMAIN cleanup service failed')
   }
 
   try {
-    console.log('Starting unclaimed cleanup service...')
-    await unclaimedCleanupService({ query, log: console.log })
-    console.log('Unclaimed cleanup service finished successfully.')
+    logger.info('Starting unclaimed cleanup service...')
+    await unclaimedCleanupService({ query, log: logger.info.bind(logger) })
+    logger.info('Unclaimed cleanup service finished successfully.')
   } catch (err) {
-    console.log(err)
+    logger.error({ err }, 'Unclaimed cleanup service failed')
   }
 
   try {
-    console.log('Starting untag new domains service...')
-    await untagNewDomainsService({ query, log: console.log })
-    console.log('Untag new domain service finished successfully.')
+    logger.info('Starting untag new domains service...')
+    await untagNewDomainsService({ query, log: logger.info.bind(logger) })
+    logger.info('Untag new domain service finished successfully.')
   } catch (err) {
-    console.log(err)
+    logger.error({ err }, 'Untag new domain service failed')
   }
 })()
