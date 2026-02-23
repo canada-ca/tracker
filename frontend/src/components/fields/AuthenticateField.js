@@ -31,12 +31,12 @@ function AuthenticateField({ name = 'twoFactorCode', sendMethod }) {
               name={name}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
-              <PinInputField borderColor="black" isRequired={true} />
-              <PinInputField borderColor="black" isRequired={true} />
-              <PinInputField borderColor="black" isRequired={true} />
-              <PinInputField borderColor="black" isRequired={true} />
-              <PinInputField borderColor="black" isRequired={true} />
-              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" />
+              <PinInputField borderColor="black" />
+              <PinInputField borderColor="black" />
+              <PinInputField borderColor="black" />
+              <PinInputField borderColor="black" />
+              <PinInputField borderColor="black" />
             </PinInput>
           </HStack>
         </FormControl>
