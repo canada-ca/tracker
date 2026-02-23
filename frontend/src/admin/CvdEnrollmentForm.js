@@ -122,7 +122,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               type="text"
               name="cvdEnrollment.description"
               id="cvdEnrollment.description"
-              value={values.cvdEnrollment.description}
+              value={values.cvdEnrollment.description || ''}
               onChange={handleChange}
               borderColor="black"
               borderRadius={4}
@@ -143,7 +143,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               id="cvdEnrollment.maxSeverity"
               borderColor="black"
               onChange={handleChange}
-              value={values.cvdEnrollment.maxSeverity}
+              value={values.cvdEnrollment.maxSeverity || ''}
             >
               <option value="">
                 <Trans>Select severity</Trans>
@@ -174,7 +174,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               id="cvdEnrollment.confidentialityRequirement"
               borderColor="black"
               onChange={handleChange}
-              value={values.cvdEnrollment.confidentialityRequirement}
+              value={values.cvdEnrollment.confidentialityRequirement || ''}
             >
               <option value="">
                 <Trans>Select requirement</Trans>
@@ -202,7 +202,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               id="cvdEnrollment.integrityRequirement"
               borderColor="black"
               onChange={handleChange}
-              value={values.cvdEnrollment.integrityRequirement}
+              value={values.cvdEnrollment.integrityRequirement || ''}
             >
               <option value="">
                 <Trans>Select requirement</Trans>
@@ -230,7 +230,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               id="cvdEnrollment.availabilityRequirement"
               borderColor="black"
               onChange={handleChange}
-              value={values.cvdEnrollment.availabilityRequirement}
+              value={values.cvdEnrollment.availabilityRequirement || ''}
             >
               <option value="">
                 <Trans>Select requirement</Trans>

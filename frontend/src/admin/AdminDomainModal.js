@@ -212,14 +212,7 @@ export function AdminDomainModal({
             tags: getInitTags(), // convert initial tags to input type
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
-            cvdEnrollment: cvdEnrollment || {
-              status: 'NOT_ENROLLED',
-              description: '',
-              maxSeverity: '',
-              confidentialityRequirement: '',
-              integrityRequirement: '',
-              availabilityRequirement: '',
-            },
+            cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
           }}
           initialTouched={{
             domainUrl: true,
