@@ -1,4 +1,4 @@
-FROM python:3.13.3-slim-bookworm AS python-builder
+FROM python:3.14.2-slim-bookworm AS python-builder
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -21,7 +21,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.13.3-slim-bookworm
+FROM python:3.14.2-slim-bookworm
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
