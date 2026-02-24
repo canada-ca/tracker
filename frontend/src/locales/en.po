@@ -370,11 +370,11 @@ msgstr "Acronym (FR)"
 msgid "Acronym:"
 msgstr "Acronym:"
 
-#: src/utilities/fieldRequirements.js:36
+#: src/utilities/fieldRequirements.js:37
 msgid "Acronyms can only use upper case letters and underscores"
 msgstr "Acronyms can only use upper case letters and underscores"
 
-#: src/utilities/fieldRequirements.js:37
+#: src/utilities/fieldRequirements.js:38
 msgid "Acronyms must be at most 50 characters"
 msgstr "Acronyms must be at most 50 characters"
 
@@ -1047,7 +1047,7 @@ msgstr "Close Account"
 msgid "CNAME:"
 msgstr "CNAME:"
 
-#: src/utilities/fieldRequirements.js:30
+#: src/utilities/fieldRequirements.js:29
 msgid "Code field must not be empty"
 msgstr "Code field must not be empty"
 
@@ -1121,6 +1121,7 @@ msgstr "Confirm removal of domain:"
 msgid "Confirm subdomain discovery for <0>{domainUrl}</0>:"
 msgstr "Confirm subdomain discovery for <0>{domainUrl}</0>:"
 
+#: src/guidance/WebConnectionResults.js:116
 #: src/guidance/WebConnectionResults.js:116
 msgid "Connection Results"
 msgstr "Connection Results"
@@ -1639,7 +1640,7 @@ msgstr "Domain updated"
 msgid "Domain URL"
 msgstr "Domain URL"
 
-#: src/utilities/fieldRequirements.js:31
+#: src/utilities/fieldRequirements.js:32
 msgid "Domain url field must not be empty"
 msgstr "Domain url field must not be empty"
 
@@ -1944,6 +1945,8 @@ msgstr "Error while retrieving DMARC data for {domainSlug}. <0/>This could be du
 #~ msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
 #~ msgstr "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
 
+#: src/guidance/WebConnectionResults.js:152
+#: src/guidance/WebConnectionResults.js:200
 #: src/guidance/WebConnectionResults.js:152
 #: src/guidance/WebConnectionResults.js:200
 msgid "Eventually"
@@ -2384,17 +2387,21 @@ msgstr "HSTS"
 #~ msgstr "HSTS Age:"
 
 #: src/guidance/WebConnectionResults.js:224
+#: src/guidance/WebConnectionResults.js:224
 msgid "HSTS Includes Subdomains"
 msgstr "HSTS Includes Subdomains"
 
+#: src/guidance/WebConnectionResults.js:212
 #: src/guidance/WebConnectionResults.js:212
 msgid "HSTS Max Age"
 msgstr "HSTS Max Age"
 
 #: src/guidance/WebConnectionResults.js:206
+#: src/guidance/WebConnectionResults.js:206
 msgid "HSTS Parsed"
 msgstr "HSTS Parsed"
 
+#: src/guidance/WebConnectionResults.js:218
 #: src/guidance/WebConnectionResults.js:218
 msgid "HSTS Preloaded"
 msgstr "HSTS Preloaded"
@@ -2409,13 +2416,16 @@ msgstr "HSTS Status"
 #~ msgstr "HSTS Status:"
 
 #: src/guidance/WebConnectionResults.js:130
+#: src/guidance/WebConnectionResults.js:130
 msgid "HTTP (80) Chain"
 msgstr "HTTP (80) Chain"
 
 #: src/guidance/WebConnectionResults.js:140
+#: src/guidance/WebConnectionResults.js:140
 msgid "HTTP Live"
 msgstr "HTTP Live"
 
+#: src/guidance/WebConnectionResults.js:146
 #: src/guidance/WebConnectionResults.js:146
 msgid "HTTP Upgrades"
 msgstr "HTTP Upgrades"
@@ -2426,6 +2436,7 @@ msgstr "HTTP Upgrades"
 msgid "HTTPS"
 msgstr "HTTPS"
 
+#: src/guidance/WebConnectionResults.js:170
 #: src/guidance/WebConnectionResults.js:170
 msgid "HTTPS (443) Chain"
 msgstr "HTTPS (443) Chain"
@@ -2444,6 +2455,7 @@ msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
 
 #: src/guidance/WebConnectionResults.js:196
+#: src/guidance/WebConnectionResults.js:196
 msgid "HTTPS Downgrades"
 msgstr "HTTPS Downgrades"
 
@@ -2459,6 +2471,7 @@ msgstr "HTTPS is configured and HTTP connections redirect to HTTPS"
 msgid "HTTPS is configured, HTTP redirects, and HSTS is enabled"
 msgstr "HTTPS is configured, HTTP redirects, and HSTS is enabled"
 
+#: src/guidance/WebConnectionResults.js:180
 #: src/guidance/WebConnectionResults.js:180
 msgid "HTTPS Live"
 msgstr "HTTPS Live"
@@ -2563,6 +2576,8 @@ msgstr "Ignored"
 #~ msgid "Ignored CVEs:"
 #~ msgstr "Ignored CVEs:"
 
+#: src/guidance/WebConnectionResults.js:150
+#: src/guidance/WebConnectionResults.js:198
 #: src/guidance/WebConnectionResults.js:150
 #: src/guidance/WebConnectionResults.js:198
 msgid "Immediately"
@@ -2842,6 +2857,7 @@ msgstr "Invalid email"
 msgid "Invite Requested"
 msgstr "Invite Requested"
 
+#: src/admin/UserList.js:163
 #: src/admin/UserList.js:163
 msgid "Invite User"
 msgstr "Invite User"
@@ -3233,6 +3249,8 @@ msgstr "Negative Findings"
 
 #: src/guidance/WebConnectionResults.js:153
 #: src/guidance/WebConnectionResults.js:201
+#: src/guidance/WebConnectionResults.js:153
+#: src/guidance/WebConnectionResults.js:201
 msgid "Never"
 msgstr "Never"
 
@@ -3285,6 +3303,11 @@ msgstr "Next"
 msgid "Next Steps:"
 msgstr "Next Steps:"
 
+#: src/guidance/WebConnectionResults.js:141
+#: src/guidance/WebConnectionResults.js:181
+#: src/guidance/WebConnectionResults.js:207
+#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:225
 #: src/guidance/WebConnectionResults.js:141
 #: src/guidance/WebConnectionResults.js:181
 #: src/guidance/WebConnectionResults.js:207
@@ -3383,6 +3406,7 @@ msgstr "No DMARC Implementation Phase"
 #~ msgstr "No DMARC phase information available for this organization."
 
 #: src/admin/AdminDomainList.js:24
+#: src/admin/AdminDomainList.js:24
 #: src/domains/DomainsPage.js:232
 #: src/organizationDetails/OrganizationDomains.js:160
 msgid "No Domains"
@@ -3462,6 +3486,7 @@ msgstr "No Top 25 Vulnerabilites Detected"
 
 #: src/admin/SuperAdminUserList.js:157
 #: src/admin/UserList.js:82
+#: src/admin/UserList.js:82
 msgid "No users"
 msgstr "No users"
 
@@ -3494,6 +3519,10 @@ msgstr "None"
 msgid "Not After:"
 msgstr "Not After:"
 
+#: src/guidance/WebConnectionResults.js:148
+#: src/guidance/WebConnectionResults.js:213
+#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:225
 #: src/guidance/WebConnectionResults.js:148
 #: src/guidance/WebConnectionResults.js:213
 #: src/guidance/WebConnectionResults.js:219
@@ -3793,11 +3822,11 @@ msgstr "phase out"
 msgid "Phone"
 msgstr "Phone"
 
-#: src/utilities/fieldRequirements.js:33
+#: src/utilities/fieldRequirements.js:34
 msgid "Phone number field must not be empty"
 msgstr "Phone number field must not be empty"
 
-#: src/utilities/fieldRequirements.js:34
+#: src/utilities/fieldRequirements.js:35
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Phone number must be a valid phone number that is 10-15 digits long"
 
@@ -4322,6 +4351,7 @@ msgstr "Search: "
 #~ msgstr "Sector:"
 
 #: src/guidance/WebConnectionResults.js:94
+#: src/guidance/WebConnectionResults.js:94
 msgid "See headers"
 msgstr "See headers"
 
@@ -4380,11 +4410,11 @@ msgstr "Select severity"
 msgid "Select the data period to view."
 msgstr "Select the data period to view."
 
-#: src/utilities/fieldRequirements.js:78
+#: src/utilities/fieldRequirements.js:79
 msgid "Selector cannot be empty"
 msgstr "Selector cannot be empty"
 
-#: src/utilities/fieldRequirements.js:82
+#: src/utilities/fieldRequirements.js:83
 msgid "Selector must be either a string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters, or an asterisk"
 msgstr "Selector must be either a string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters, or an asterisk"
 
@@ -4526,29 +4556,36 @@ msgid "Shows if the hostname on the server certificate matches the the hostname 
 msgstr "Shows if the hostname on the server certificate matches the the hostname from the HTTP request."
 
 #: src/guidance/WebConnectionResults.js:204
+#: src/guidance/WebConnectionResults.js:204
 msgid "Shows if the HSTS (HTTP Strict Transport Security) header is present."
 msgstr "Shows if the HSTS (HTTP Strict Transport Security) header is present."
 
+#: src/guidance/WebConnectionResults.js:222
 #: src/guidance/WebConnectionResults.js:222
 msgid "Shows if the HSTS header includes the includeSubdomains directive."
 msgstr "Shows if the HSTS header includes the includeSubdomains directive."
 
 #: src/guidance/WebConnectionResults.js:216
+#: src/guidance/WebConnectionResults.js:216
 msgid "Shows if the HSTS header includes the preload directive."
 msgstr "Shows if the HSTS header includes the preload directive."
 
+#: src/guidance/WebConnectionResults.js:138
 #: src/guidance/WebConnectionResults.js:138
 msgid "Shows if the HTTP connection is live."
 msgstr "Shows if the HTTP connection is live."
 
 #: src/guidance/WebConnectionResults.js:144
+#: src/guidance/WebConnectionResults.js:144
 msgid "Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never."
 msgstr "Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never."
 
 #: src/guidance/WebConnectionResults.js:178
+#: src/guidance/WebConnectionResults.js:178
 msgid "Shows if the HTTPS connection is live."
 msgstr "Shows if the HTTPS connection is live."
 
+#: src/guidance/WebConnectionResults.js:184
 #: src/guidance/WebConnectionResults.js:184
 msgid "Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never."
 msgstr "Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never."
@@ -4581,6 +4618,7 @@ msgstr "Shows if the server was found to be vulnerable to the Heartbleed vulnera
 msgid "Shows if the server was found to be vulnerable to the ROBOT vulnerability."
 msgstr "Shows if the server was found to be vulnerable to the ROBOT vulnerability."
 
+#: src/guidance/WebConnectionResults.js:210
 #: src/guidance/WebConnectionResults.js:210
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Shows the duration of time, in seconds, that the HSTS header is valid."
@@ -4815,6 +4853,7 @@ msgstr "Status"
 msgid "Status Value"
 msgstr "Status Value"
 
+#: src/guidance/WebConnectionResults.js:82
 #: src/guidance/WebConnectionResults.js:82
 msgid "Status:"
 msgstr "Status:"
@@ -5714,9 +5753,11 @@ msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%t
 msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
 
 #: src/guidance/WebConnectionResults.js:160
+#: src/guidance/WebConnectionResults.js:160
 msgid "URL:"
 msgstr "URL:"
 
+#: src/guidance/WebConnectionResults.js:232
 #: src/guidance/WebConnectionResults.js:232
 msgid "URL: "
 msgstr "URL: "
@@ -5762,6 +5803,7 @@ msgstr "USER"
 #~ msgstr "user email"
 
 #: src/admin/UserList.js:157
+#: src/admin/UserList.js:157
 msgid "User email"
 msgstr "User email"
 
@@ -5779,6 +5821,7 @@ msgid "User invited"
 msgstr "User invited"
 
 #: src/admin/SuperAdminUserList.js:153
+#: src/admin/UserList.js:78
 #: src/admin/UserList.js:78
 msgid "User List"
 msgstr "User List"
@@ -5814,7 +5857,11 @@ msgstr "Users exercise due diligence in ensuring the accuracy of the materials r
 msgid "Value"
 msgstr "Value"
 
-#: src/utilities/fieldRequirements.js:29
+#: src/utilities/fieldRequirements.js:31
+msgid "Verification code must be exactly 6 digits long"
+msgstr "Verification code must be exactly 6 digits long"
+
+#: src/utilities/fieldRequirements.js:30
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
@@ -6113,6 +6160,11 @@ msgstr "Would you like to request an invite to {orgName}?"
 msgid "Year to Date"
 msgstr "Year to Date"
 
+#: src/guidance/WebConnectionResults.js:141
+#: src/guidance/WebConnectionResults.js:181
+#: src/guidance/WebConnectionResults.js:207
+#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:225
 #: src/guidance/WebConnectionResults.js:141
 #: src/guidance/WebConnectionResults.js:181
 #: src/guidance/WebConnectionResults.js:207

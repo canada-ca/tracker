@@ -1,13 +1,14 @@
 const { UNCLAIMED_ORG_ID } = process.env
 const { findDomainClaims, findUnclaimedDomains } = require('./database')
+const logger = require('./logger')
 
-const unclaimedCleanupService = async ({ query, log }) => {
+const unclaimedCleanupService = async ({ query }) => {
   const unclaimedDomains = await findUnclaimedDomains({ query, orgId: UNCLAIMED_ORG_ID })
-  log(`Found ${unclaimedDomains.length} unclaimed domains`)
-  unclaimedDomains.forEach(async ({ domain, _id: domainId }) => {
+  logger.info({ count: unclaimedDomains.length }, 'Found unclaimed domains')
+  for (const { domain, _id: domainId } of unclaimedDomains) {
     const claims = await findDomainClaims({ query, domainId })
     if (claims.length > 1) {
-      log(`Attempting to remove ${domain} from the 'Unclaimed' org...`)
+      logger.info({ domain }, "Attempting to remove domain from the 'Unclaimed' org")
       try {
         await (
           await query`
@@ -16,12 +17,12 @@ const unclaimedCleanupService = async ({ query, log }) => {
                   REMOVE e IN claims
               `
         ).all()
-        log(`Successfully removed ${domain} from the 'Unclaimed' org.`)
+        logger.info({ domain }, "Successfully removed domain from the 'Unclaimed' org.")
       } catch (err) {
-        console.error(`Error while removing claims for domain: ${domain._key}, error: ${err})`)
+        logger.error({ err, domain }, "Error while removing claims for domain from the 'Unclaimed' org")
       }
     }
-  })
+  }
 }
 
 module.exports = {

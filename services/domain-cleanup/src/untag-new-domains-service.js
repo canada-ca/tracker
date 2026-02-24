@@ -1,8 +1,9 @@
 const { getNewDomains } = require('./database')
+const logger = require('./logger')
 
-const untagNewDomainsService = async ({ query, log }) => {
-  const newClaims = await getNewDomains({ query, log })
-  log(`Found ${newClaims.length} new claims`)
+const untagNewDomainsService = async ({ query }) => {
+  const newClaims = await getNewDomains({ query })
+  logger.info({ count: newClaims.length }, `New claims found`)
   // create date for 120 days ago
   const newCutOff = new Date()
   newCutOff.setDate(newCutOff.getDate() - 120)
@@ -16,7 +17,7 @@ const untagNewDomainsService = async ({ query, log }) => {
     const claimDate = new Date(claim?.firstSeen)
     if (claimDate < newCutOff) oldClaimKeys.push(claim._key)
   })
-  log(`Found ${oldClaimKeys.length} new claims to untag`)
+  logger.info({ count: oldClaimKeys.length }, 'New claims to untag')
 
   try {
     query`
@@ -26,7 +27,7 @@ const untagNewDomainsService = async ({ query, log }) => {
           UPDATE c WITH { tags: REMOVE_VALUE(c.tags, 'new-nouveau') } IN claims
       `
   } catch (err) {
-    console.error(`Error while untagging new claims, error: ${err})`)
+    logger.error({ err }, 'Error while untagging new claims')
   }
 }
 

@@ -1,4 +1,4 @@
-import { array, number, object, ref, string } from 'yup'
+import { array, object, ref, string } from 'yup'
 import { t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { array as arrayProp, object as objectProp, string as stringProp } from 'prop-types'
@@ -25,9 +25,10 @@ const getSchema = (options) => {
     lang: string()
       .required(i18n._(t`Please choose your preferred language`))
       .oneOf(['ENGLISH', 'FRENCH'], ''),
-    twoFactorCode: number()
-      .typeError(i18n._(t`Verification code must only contains numbers`))
-      .required(i18n._(t`Code field must not be empty`)),
+    twoFactorCode: string()
+      .required(i18n._(t`Code field must not be empty`))
+      .matches(/^\d+$/, i18n._(t`Verification code must only contains numbers`))
+      .length(6, i18n._(t`Verification code must be exactly 6 digits long`)),
     domainUrl: string().required(i18n._(t`Domain url field must not be empty`)),
     phoneNumber: string()
       .required(i18n._(t`Phone number field must not be empty`))

@@ -224,7 +224,7 @@ given organization.`,
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
-    await sendRoleChangeEmail({ user, newRole: role, oldRole: affiliation.permission, orgNames })
+    await sendRoleChangeEmail({ user: requestedUser, newRole: role, oldRole: affiliation.permission, orgNames })
 
     console.info(`User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`)
     await logActivity({

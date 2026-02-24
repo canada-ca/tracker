@@ -461,16 +461,8 @@ export const CREATE_ORGANIZATION = gql`
     $acronymFR: Acronym!
     $nameEN: String!
     $nameFR: String!
-    $zoneEN: String!
-    $zoneFR: String!
-    $sectorEN: String!
-    $sectorFR: String!
-    $countryEN: String!
-    $countryFR: String!
-    $provinceEN: String!
-    $provinceFR: String!
-    $cityEN: String!
-    $cityFR: String!
+    $externalId: String
+    $verified: Boolean
   ) {
     createOrganization(
       input: {
@@ -478,16 +470,8 @@ export const CREATE_ORGANIZATION = gql`
         acronymFR: $acronymFR
         nameEN: $nameEN
         nameFR: $nameFR
-        zoneEN: $zoneEN
-        zoneFR: $zoneFR
-        sectorEN: $sectorEN
-        sectorFR: $sectorFR
-        countryEN: $countryEN
-        countryFR: $countryFR
-        provinceEN: $provinceEN
-        provinceFR: $provinceFR
-        cityEN: $cityEN
-        cityFR: $cityFR
+        externalId: $externalId
+        verified: $verified
       }
     ) {
       result {
