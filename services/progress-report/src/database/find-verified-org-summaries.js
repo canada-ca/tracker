@@ -1,4 +1,6 @@
 const { aql } = require('arangojs')
+const logger = require('../logger')
+
 const { UNCLAIMED_ORG_ID } = process.env
 
 const findVerifiedOrgs = async ({ query }) => {
@@ -26,7 +28,7 @@ const findVerifiedOrgs = async ({ query }) => {
   return verifiedOrgs
 }
 
-const findOrgSummaries = async ({ log, query, startDate }) => {
+const findOrgSummaries = async ({ query, startDate }) => {
   const verifiedOrgs = await findVerifiedOrgs({ query })
   const orgSummaries = {}
   for (const org of verifiedOrgs) {
@@ -61,7 +63,7 @@ const findOrgSummaries = async ({ log, query, startDate }) => {
     }
   }
 
-  log(`Successfully found ${Object.keys(orgSummaries).length} verified org summaries`)
+  logger.info({ orgCount: Object.keys(orgSummaries).length }, 'Successfully found verified org summaries')
   return orgSummaries
 }
 

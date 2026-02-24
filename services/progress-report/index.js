@@ -29,5 +29,5 @@ const notifyClient = new NotifyClient(NOTIFICATION_API_URL, NOTIFICATION_API_KEY
     options: databaseOptions({ rootPass }),
   })
 
-  await progressReportService({ query, log: console.log, notifyClient })
+  await progressReportService({ query, notifyClient })
 })()

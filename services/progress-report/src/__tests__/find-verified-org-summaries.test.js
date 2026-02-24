@@ -7,11 +7,6 @@ const { databaseOptions } = require('../../database-options')
 const { findOrgSummaries } = require('../database')
 
 describe('given the findChartSummaries function', () => {
-  const consoleErrorOutput = []
-  const consoleInfoOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
-
   let query, drop, truncate, collections
 
   beforeAll(async () => {
@@ -26,11 +21,6 @@ describe('given the findChartSummaries function', () => {
   })
 
   beforeEach(async () => {
-    console.error = mockedError
-    console.info = mockedInfo
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
-
     await truncate()
   })
 
@@ -74,7 +64,7 @@ describe('given the findChartSummaries function', () => {
       })
     })
     it('returns the recent chart summaries', async () => {
-      const orgSummaries = await findOrgSummaries({ log: console.log, query, startDate: '2021-01-01' })
+      const orgSummaries = await findOrgSummaries({ query, startDate: '2021-01-01' })
 
       const expectedOrgSummaries = {
         _id: org._id,
