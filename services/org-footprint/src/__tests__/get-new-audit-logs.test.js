@@ -7,11 +7,6 @@ const { databaseOptions } = require('../../database-options')
 const { getNewAuditLogs } = require('../database')
 
 describe('given the getNewAuditLogs function', () => {
-  const consoleErrorOutput = []
-  const consoleInfoOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
-
   let query, drop, truncate, collections
 
   beforeAll(async () => {
@@ -26,11 +21,6 @@ describe('given the getNewAuditLogs function', () => {
   })
 
   beforeEach(async () => {
-    console.error = mockedError
-    console.info = mockedInfo
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
-
     await truncate()
   })
 
