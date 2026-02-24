@@ -283,14 +283,11 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (
-      typeof cvdEnrollment !== 'undefined' &&
-      JSON.stringify(cvdEnrollment) !== JSON.stringify(domain.cvdEnrollment)
-    ) {
+    if (typeof cvdEnrollment !== 'undefined' && cvdEnrollment?.status !== domain?.cvdEnrollment?.status) {
       updatedProperties.push({
         name: 'cvdEnrollment',
-        oldValue: domain.cvdEnrollment,
-        newValue: cvdEnrollment,
+        oldValue: JSON.stringify(domain.cvdEnrollment.status),
+        newValue: JSON.stringify(cvdEnrollment.status),
       })
     }
 

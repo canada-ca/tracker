@@ -231,6 +231,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               archived: false,
               assetState: 'APPROVED',
+              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {
@@ -327,6 +328,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               archived: false,
               assetState: 'APPROVED',
+              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {
@@ -503,6 +505,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               archived: false,
               assetState: 'MONITOR_ONLY',
+              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {

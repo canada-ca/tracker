@@ -25,7 +25,7 @@ export function AdminDomainList({
         </Text>
       )}
     >
-      {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
+      {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState, cvdEnrollment }, index) => (
         <React.Fragment key={`admindomain-${index}`}>
           <AdminDomainCard
             url={domain}
@@ -33,6 +33,7 @@ export function AdminDomainList({
             assetState={assetState}
             isArchived={archived}
             rcode={rcode}
+            cvdEnrollment={cvdEnrollment}
             locale={i18n.locale}
             flexGrow={1}
             fontSize={{ base: '75%', sm: '100%' }}
@@ -64,6 +65,8 @@ export function AdminDomainList({
                   editingDomainId: domainId,
                   editingDomainUrl: domain,
                   orgCount: organizations.totalCount,
+                  cvdEnrollment,
+                  permission,
                 })
                 updateOnOpen()
               }}
