@@ -1,3 +1,5 @@
+const logger = require('../logger')
+
 async function createOwnership({ arangoCtx, domain, orgAcronymEn }) {
   // Generate list of collections names
   const collectionStrings = Object.keys(arangoCtx.collections)
@@ -26,14 +28,14 @@ async function createOwnership({ arangoCtx, domain, orgAcronymEn }) {
     `,
     )
   } catch (err) {
-    console.error(`Transaction step error occurred for dmarc summaries service when creating ownership data: ${err}`)
+    logger.error({ err }, 'Transaction step error occurred for dmarc summaries service when creating ownership data')
     await trx.abort()
   }
 
   try {
     await trx.commit()
   } catch (err) {
-    console.error(`Transaction commit error occurred for dmarc summaries service when creating ownership data: ${err}`)
+    logger.error({ err }, 'Transaction commit error occurred for dmarc summaries service when creating ownership data')
     await trx.abort()
   }
 }
