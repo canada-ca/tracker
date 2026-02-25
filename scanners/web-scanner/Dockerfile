@@ -4,18 +4,19 @@ RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --re
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.12.8-alpine AS python-builder
+FROM python:3.12.8-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
 WORKDIR /working/install
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+    apt-utils \
     python3 \
-    py3-pip \
-    py3-wheel \
-    build-base \
+    python3-pip \
+    python3-wheel \
+    build-essential \
     python3-dev
 
 COPY requirements.txt /requirements.txt
@@ -25,7 +26,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.12.8-alpine
+FROM python:3.12.8-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -43,7 +44,7 @@ COPY scan ./scan
 # Update Mozilla CRLite DB for revocation checks
 RUN rust-query-crlite -vvv --update prod x509
 
-RUN adduser -D scanner
+RUN useradd -ms /bin/bash scanner
 USER scanner
 
 CMD ["python3", "service.py"]
