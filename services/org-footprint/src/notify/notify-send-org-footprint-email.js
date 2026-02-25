@@ -1,3 +1,5 @@
+const logger = require('../logger')
+
 const { NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
 
 const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }) => {
@@ -48,7 +50,7 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
       },
     })
   } catch (err) {
-    console.error(`Error occurred when sending org footprint changes via email for ${user._key}: ${err}`)
+    logger.error({ err, userKey: user._key }, 'Error occurred when sending org footprint changes via email')
   }
 }
 

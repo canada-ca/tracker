@@ -1,14 +1,12 @@
+jest.mock('../logger')
+
+const logger = require('../logger')
 const { sendOrgFootprintEmail } = require('../notify')
 const { NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
 
 describe('given the sendOrgFootprintEmail function', () => {
-  let consoleOutput = []
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
-    console.error = mockedError
-  })
   beforeEach(async () => {
-    consoleOutput = []
+    jest.clearAllMocks()
   })
   describe('email successfully sent', () => {
     it('returns nothing', async () => {
@@ -100,9 +98,13 @@ describe('given the sendOrgFootprintEmail function', () => {
         },
       })
 
-      expect(consoleOutput).toEqual([
-        `Error occurred when sending org footprint changes via email for ${user._key}: Error: Notification error occurred.`,
-      ])
+      expect(logger.error).toHaveBeenCalledWith(
+        {
+          err: new Error('Notification error occurred.'),
+          userKey: user._key,
+        },
+        'Error occurred when sending org footprint changes via email',
+      )
     })
   })
 })

@@ -1,3 +1,5 @@
+const logger = require('../logger')
+
 const { NOTIFICATION_PENDING_USERS } = process.env
 
 const sendPendingOrgUsersEmail = async ({ notifyClient, user, orgNames }) => {
@@ -13,7 +15,7 @@ const sendPendingOrgUsersEmail = async ({ notifyClient, user, orgNames }) => {
       },
     })
   } catch (err) {
-    console.error(`Error occurred when sending pending users alert via email for ${user._key}: ${err}`)
+    logger.error({ err, userKey: user._key }, 'Error occurred when sending pending users alert via email')
   }
 }
 
