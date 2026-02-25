@@ -1,6 +1,8 @@
+const logger = require('../logger')
+
 const { NOTIFICATION_ORG_PROGRESS_REPORT } = process.env
 
-const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient, vulnerableAssets }) => {
+const sendOrgProgressReport = async ({ user, orgStats, notifyClient, vulnerableAssets }) => {
   const templateId = NOTIFICATION_ORG_PROGRESS_REPORT
   const { httpsScore, dmarcScore, domainCount, httpsScoreDiff, dmarcScoreDiff, domainCountDiff, orgDetails } = orgStats
 
@@ -19,9 +21,12 @@ const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient, vulner
         vulnerable_domain_count: vulnerableAssets,
       },
     })
-    log(`Successfully sent ${orgDetails.en.name} progress report via email to user:, ${user._key}`)
+    logger.info({ userKey: user._key, orgName: orgDetails.en.name }, 'Successfully sent progress report via email')
   } catch (err) {
-    console.error(`Error occurred when sending org progress report via email for ${user._key}: ${err}`)
+    logger.error(
+      { err: err, userKey: user._key, orgName: orgDetails.en.name },
+      'Error occurred when sending org progress report via email',
+    )
   }
 }
 

@@ -1,14 +1,12 @@
+jest.mock('../logger')
+
+const logger = require('../logger')
 const { sendOrgProgressReport } = require('../notify')
 const { NOTIFICATION_ORG_PROGRESS_REPORT } = process.env
 
 describe('given the sendOrgProgressReport function', () => {
-  let consoleOutput = []
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
-    console.error = mockedError
-  })
   beforeEach(async () => {
-    consoleOutput = []
+    jest.clearAllMocks()
   })
   describe('email successfully sent', () => {
     it('returns nothing', async () => {
@@ -95,9 +93,14 @@ describe('given the sendOrgProgressReport function', () => {
         orgStats,
       })
 
-      expect(consoleOutput).toEqual([
-        `Error occurred when sending org progress report via email for ${user._key}: Error: Notification error occurred.`,
-      ])
+      expect(logger.error).toHaveBeenCalledWith(
+        {
+          err: new Error('Notification error occurred.'),
+          userKey: user._key,
+          orgName: orgStats.orgDetails.en.name,
+        },
+        'Error occurred when sending org progress report via email',
+      )
     })
   })
 })
