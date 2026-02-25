@@ -1,4 +1,4 @@
-FROM python:3.14.2-slim-bookworm AS python-builder
+FROM python:3.14.2-alpine AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -6,13 +6,12 @@ ENV PYTHONWARNINGS ignore
 
 WORKDIR /working/install
 
-RUN apt-get update && apt-get install -y  --no-install-recommends \
-    apt-utils \
+RUN apk add --no-cache \
     python3 \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    build-essential \
+    py3-pip \
+    py3-setuptools \
+    py3-wheel \
+    build-base \
     python3-dev \
     curl \
     unzip
@@ -30,7 +29,7 @@ RUN curl -LO https://github.com/findomain/findomain/releases/latest/download/fin
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.2-slim-bookworm
+FROM python:3.14.2-alpine
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -45,7 +44,7 @@ COPY --from=python-builder /usr/bin/findomain /usr/bin/findomain
 
 COPY domain_discovery.py ./
 
-RUN useradd -ms /bin/bash discovery
+RUN adduser -D discovery
 USER discovery
 
 CMD ["python3", "domain_discovery.py"]

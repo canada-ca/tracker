@@ -1,17 +1,16 @@
-FROM python:3.13.5-slim-bookworm AS python-builder
+FROM python:3.13.5-alpine AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONWARNINGS ignore
 ENV PYTHONUNBUFFERED 1
 WORKDIR /working/install
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-utils \
+RUN apk add --no-cache \
     python3 \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    build-essential \
+    py3-pip \
+    py3-setuptools \
+    py3-wheel \
+    build-base \
     python3-dev
 
 COPY requirements.txt /requirements.txt
@@ -21,7 +20,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.13.5-slim-bookworm
+FROM python:3.13.5-alpine
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -34,7 +33,7 @@ COPY --from=python-builder /working/install/lib /usr/local/lib
 COPY service.py dns_scan_cli.py ./
 COPY dns_scanner ./dns_scanner
 
-RUN useradd -ms /bin/bash scanner
+RUN adduser -D scanner
 USER scanner
 
 CMD ["python3", "service.py"]
