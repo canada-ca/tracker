@@ -8,6 +8,7 @@ const {
   updateDomainMailStatus,
 } = require('./database')
 const { calculatePercentages } = require('./utils')
+const logger = require('./logger')
 
 async function updateDomain({
   arangoCtx,
@@ -22,11 +23,11 @@ async function updateDomain({
   // check to see if domain exists
   const checkDomain = await loadCheckDomain({ arangoCtx, domain })
   if (!checkDomain) {
-    console.warn(`\t${domain} cannot be found in the datastore`)
+    logger.warn({ domain }, 'Domain cannot be found in the datastore')
     return
   }
 
-  console.info(`\tWorking on domain: ${domain}`)
+  logger.info({ domain }, 'Working on domain')
 
   // get the current owner of the domain
   const orgOwner = await loadOrgOwner({
@@ -36,18 +37,18 @@ async function updateDomain({
 
   // if the domain is not owned create ownership
   if (!orgOwner) {
-    console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`)
+    logger.info({ domain, orgAcronym: String(orgAcronym) }, 'Assigning domain ownership')
     await createOwnership({ arangoCtx, domain, orgAcronymEn })
   }
   // if the domain is owned by another org, remove ownership and assign a new one
   else if (orgOwner !== orgAcronymEn) {
-    console.info(`\t\tRemoving ${domain} ownership from: ${orgOwner}`)
+    logger.info({ domain, orgOwner }, 'Removing domain ownership from current owner')
     await removeOwnership({ arangoCtx, domain, orgAcronymEn: orgOwner })
 
-    console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`)
+    logger.info({ domain, orgAcronym: String(orgAcronym) }, 'Assigning domain ownership to new owner')
     await createOwnership({ arangoCtx, domain, orgAcronymEn })
   } else {
-    console.info(`\t\tOwnership of ${domain} is already assigned to ${String(orgAcronym)}`)
+    logger.info({ domain, orgAcronym: String(orgAcronym) }, 'Domain ownership is already correct, no changes needed')
   }
 
   const arangoDates = await loadArangoDates({ arangoCtx, domain })
@@ -55,7 +56,7 @@ async function updateDomain({
     if (date === 'thirtyDays') continue // Do not remove thirtyDays summary
     if (cosmosDates.indexOf(date) === -1) {
       // remove periods in arango
-      console.info(`\t\tRemoving ${date} for ${domain}`)
+      logger.info({ domain, date }, 'Removing out of date summary')
       await removeSummary({
         arangoCtx,
         domain,
@@ -66,7 +67,7 @@ async function updateDomain({
 
   const domainData = queryResults.resources.filter((resource) => resource.domain === domain)
   if (!domainData.length > 0) {
-    console.warn(`\t\t${domain} cannot be found in the summaries container`)
+    logger.warn({ domain }, 'Domain cannot be found in the summaries container')
   }
 
   for (const date of cosmosDates) {
@@ -170,7 +171,7 @@ async function updateDomain({
     summaryDataToInput.totalMessages = totalMessages
 
     if (arangoDates.indexOf(arangoDate) === -1) {
-      console.info(`\t\tInitializing ${arangoDate} for ${domain}`)
+      logger.info({ domain, date: arangoDate }, 'Creating new summary for date')
       await createSummary({
         arangoCtx,
         domain,
@@ -178,7 +179,8 @@ async function updateDomain({
         summaryData: summaryDataToInput,
       })
     } else if ([currentDate, 'thirtyDays'].includes(arangoDate) || updateAllDates) {
-      console.info(`\t\tUpdating ${arangoDate} for ${domain}`)
+      logger.info({ domain, date: arangoDate }, 'Updating existing summary for date')
+
       await upsertSummary({
         arangoCtx,
         domain,
@@ -199,7 +201,7 @@ async function updateDomain({
       ) {
         sendsEmail = 'true'
       }
-      console.info(`\t\tUpdating domain mail status for ${domain} to ${sendsEmail}`)
+      logger.info({ domain, sendsEmail }, 'Updating domain mail status')
       await updateDomainMailStatus({ arangoCtx, domain, sendsEmail })
     }
   }

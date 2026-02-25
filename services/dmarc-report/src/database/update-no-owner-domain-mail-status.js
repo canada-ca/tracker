@@ -1,5 +1,7 @@
+const logger = require('../logger')
+
 async function updateNoOwnerDomainMailStatus({ arangoCtx }) {
-  console.info(`Updating no owner domain mail statuses`)
+  logger.info('Updating no owner domain mail statuses')
   const updateNoOwnerDomainMailStatusCursor = await arangoCtx.query`
       FOR domain IN domains
           LET ownerships = (

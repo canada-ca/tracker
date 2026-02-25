@@ -1,3 +1,10 @@
+jest.mock('../logger', () => ({
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+}))
+
+const logger = require('../logger')
 const { arangoConnection } = require('../database')
 const { dmarcReport } = require('../dmarc-report')
 const { dbNameFromFile } = require('arango-tools')
@@ -7,13 +14,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('given the dmarcReport function', () => {
   let query, truncate, collections, transaction, arangoCtx, dbName, arangoDB, domain, acrOrg, ecrOrg
 
-  const consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-
   beforeAll(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
     dbName = dbNameFromFile(__filename)
     ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
@@ -24,6 +25,7 @@ describe('given the dmarcReport function', () => {
   })
 
   beforeEach(async () => {
+    jest.clearAllMocks()
     domain = await collections.domains.save({
       domain: 'domain.ca',
     })
@@ -45,7 +47,6 @@ describe('given the dmarcReport function', () => {
 
   afterEach(async () => {
     await truncate()
-    consoleOutput.length = 0
   })
 
   afterAll(async () => {
@@ -54,7 +55,7 @@ describe('given the dmarcReport function', () => {
   })
 
   describe('org is not found in arango', () => {
-    it('logs message to console', async () => {
+    it('logs message', async () => {
       await dmarcReport({
         ownerships: { NOEXISTORG: [] },
         arangoCtx,
@@ -70,11 +71,16 @@ describe('given the dmarcReport function', () => {
         updateAllDates: false,
       })
 
-      expect(consoleOutput[0]).toEqual('Org: NOEXISTORG cannot be found in datastore')
+      expect(logger.warn).toHaveBeenCalledWith(
+        {
+          orgAcronym: 'NOEXISTORG',
+        },
+        'Org cannot be found in the datastore, skipping to next org',
+      )
     })
   })
   describe('domain is not found in arango', () => {
-    it('logs message to console', async () => {
+    it('logs message', async () => {
       await dmarcReport({
         ownerships: { ACR: ['domain.doesnt.exist'] },
         arangoCtx,
@@ -90,7 +96,12 @@ describe('given the dmarcReport function', () => {
         updateAllDates: false,
       })
 
-      expect(consoleOutput).toContain('\tdomain.doesnt.exist cannot be found in the datastore')
+      expect(logger.warn).toHaveBeenCalledWith(
+        {
+          domain: 'domain.doesnt.exist',
+        },
+        'Domain cannot be found in the datastore',
+      )
     })
   })
   describe('no org owns the domain', () => {
@@ -122,7 +133,13 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkOwner).toEqual(expectedResult)
-      expect(consoleOutput).toContain('\t\tAssigning domain.ca ownership to: ACR')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          orgAcronym: 'ACR',
+        },
+        'Assigning domain ownership',
+      )
     })
   })
   describe('another org owns the domain', () => {
@@ -158,7 +175,13 @@ describe('given the dmarcReport function', () => {
       const checkOwner = await checkCursor.next()
 
       expect(checkOwner).toBeUndefined()
-      expect(consoleOutput).toContain('\t\tRemoving domain.ca ownership from: ECR')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          orgOwner: 'ECR',
+        },
+        'Removing domain ownership from current owner',
+      )
 
       const newCursor =
         await query`FOR item IN ownership FILTER item._from == ${acrOrg._id} RETURN {_id: item._id, _from: item._from, _to: item._to}`
@@ -170,7 +193,13 @@ describe('given the dmarcReport function', () => {
         _to: domain._id,
       }
       expect(newOwner).toEqual(expectedResult)
-      expect(consoleOutput).toContain('\t\tAssigning domain.ca ownership to: ACR')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          orgAcronym: 'ACR',
+        },
+        'Assigning domain ownership to new owner',
+      )
     })
   })
   describe('org already owns the domain', () => {
@@ -180,7 +209,7 @@ describe('given the dmarcReport function', () => {
         _to: domain._id,
       })
     })
-    it('logs to console', async () => {
+    it('logs message', async () => {
       await dmarcReport({
         ownerships: { ACR: ['domain.ca'] },
         arangoCtx,
@@ -196,7 +225,13 @@ describe('given the dmarcReport function', () => {
         updateAllDates: false,
       })
 
-      expect(consoleOutput).toContain('\t\tOwnership of domain.ca is already assigned to ACR')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          orgAcronym: 'ACR',
+        },
+        'Domain ownership is already correct, no changes needed',
+      )
     })
   })
   describe('old date is found in arango', () => {
@@ -235,13 +270,25 @@ describe('given the dmarcReport function', () => {
       const checkEdge = await checkCursor.next()
 
       expect(checkEdge).toBeUndefined()
-      expect(consoleOutput).toContain('\t\tRemoving 2000-01-01 for domain.ca')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          date: '2000-01-01',
+        },
+        'Removing out of date summary',
+      )
 
       const checkSummaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
       const checkSummary = await checkSummaryCursor.next()
 
       expect(checkSummary).toBeUndefined()
-      expect(consoleOutput).toContain('\t\tRemoving 2000-01-01 for domain.ca')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          date: '2000-01-01',
+        },
+        'Removing out of date summary',
+      )
     })
   })
   describe('date is not found in arango dates', () => {
@@ -274,7 +321,13 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkEdge).toEqual(expectedResult)
-      expect(consoleOutput).toContain('\t\tInitializing 2021-01-01 for domain.ca')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          date: '2021-01-01',
+        },
+        'Creating new summary for date',
+      )
 
       const checkSummaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
       const checkSummary = await checkSummaryCursor.next()
@@ -407,7 +460,13 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkSummary).toEqual(expectedResult)
-      expect(consoleOutput).toContain('\t\tUpdating 2021-01-01 for domain.ca')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          date: '2021-01-01',
+        },
+        'Updating existing summary for date',
+      )
     })
   })
   describe('thirty days is not found in arango', () => {
@@ -476,7 +535,13 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkSummaryEdge).toEqual(expectedResult)
-      expect(consoleOutput).toContain('\t\tInitializing thirtyDays for domain.ca')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          date: 'thirtyDays',
+        },
+        'Creating new summary for date',
+      )
 
       const sumIdCursor =
         await query`FOR item IN domainsToDmarcSummaries FILTER item.startDate == "thirtyDays" RETURN item`
@@ -638,7 +703,13 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkSummary).toEqual(expectedResult)
-      expect(consoleOutput).toContain('\t\tUpdating thirtyDays for domain.ca')
+      expect(logger.info).toHaveBeenCalledWith(
+        {
+          domain: 'domain.ca',
+          date: 'thirtyDays',
+        },
+        'Updating existing summary for date',
+      )
     })
   })
 })

@@ -1,5 +1,7 @@
 const { Octokit } = require('octokit')
 
+const logger = require('../logger')
+
 const { GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_FILE, GITHUB_OWNER, GITHUB_REPO } = process.env
 
 function getDecodedData(resp) {
@@ -22,7 +24,7 @@ async function loadDomainOwnership() {
     })
     return getDecodedData(resp)
   } catch (err) {
-    console.error(`Error loading domain ownership: ${err}`)
+    logger.error({ err }, 'Error loading domain ownership')
     throw err
   }
 }
