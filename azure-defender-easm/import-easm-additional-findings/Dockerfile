@@ -6,13 +6,12 @@ ENV PYTHONWARNINGS ignore
 
 WORKDIR /working/install
 
-RUN apt-get update && apt-get install -y  --no-install-recommends \
-    apt-utils \
+RUN apk add --no-cache \
     python3 \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    build-essential \
+    py3-pip \
+    py3-setuptools \
+    py3-wheel \
+    build-base \
     python3-dev
 
 COPY requirements.txt /requirements.txt
@@ -36,7 +35,7 @@ COPY --from=python-builder /working/install/lib /usr/local/lib
 COPY service.py ./
 COPY clients ./clients
 
-RUN useradd -ms /bin/bash defender
+RUN adduser -D defender
 USER defender
 
 CMD ["python3", "service.py"]
