@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm ci && npm run build && npm prune --production
 
-FROM gcr.io/distroless/nodejs20-debian12
+FROM node:20.16-alpine3.19
 
 ENV HOST 0.0.0.0
 ENV PORT 3000

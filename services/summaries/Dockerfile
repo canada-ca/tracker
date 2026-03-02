@@ -1,20 +1,19 @@
-FROM python:3.14.2-slim-bookworm
+FROM python:3.14.2-alpine
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN useradd -ms /bin/bash summary
+RUN adduser -D summary
 
 WORKDIR /home/summaries
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  apt-utils \
+RUN apk add --no-cache \
   python3 \
-  python3-pip \
-  python3-setuptools \
-  python3-wheel \
-  build-essential \
+  py3-pip \
+  py3-setuptools \
+  py3-wheel \
+  build-base \
   python3-dev
 
 COPY . .
