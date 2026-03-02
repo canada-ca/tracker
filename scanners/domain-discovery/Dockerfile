@@ -1,4 +1,4 @@
-FROM python:3.14.2-alpine AS python-builder
+FROM python:3.14.3-alpine AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -29,7 +29,7 @@ RUN curl -LO https://github.com/findomain/findomain/releases/latest/download/fin
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.2-alpine
+FROM python:3.14.3-alpine
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
