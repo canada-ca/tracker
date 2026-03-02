@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: detect-decay
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/detect-decay:master-0ba16ae-1771942405 # {"$imagepolicy": "flux-system:detect-decay"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/detect-decay:master-f5ec985-1772475755 # {"$imagepolicy": "flux-system:detect-decay"}
               env:
                 - name: DB_USER
                   valueFrom:
