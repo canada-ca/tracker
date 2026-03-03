@@ -31,6 +31,10 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'cve-detected',
       description: 'Label for tagging domains that have vulnerabilities.',
     },
+    CVD_ENROLLED: {
+      value: 'cvd-enrolled',
+      description: 'Label for tagging domains that are enrolled in the Coordinated Vulnerability Disclosure program.',
+    },
   },
   description: 'An enum used to assign and test user-generated domain tags',
 })
