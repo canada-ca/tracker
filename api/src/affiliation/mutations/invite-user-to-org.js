@@ -6,6 +6,7 @@ import { t } from '@lingui/macro'
 import { inviteUserToOrgUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { InvitationRoleEnums } from '../../enums'
+import ac from '../../access-control'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
@@ -88,11 +89,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     const permission = await checkPermission({ orgId: org._id })
 
     // Only admins, owners, and super admins may invite users to an org
-    // Only super admins may create owners and other super admins
-    if (
-      (['user', 'admin'].includes(requestedRole) && !['admin', 'owner', 'super_admin'].includes(permission)) ||
-      (['super_admin', 'owner'].includes(requestedRole) && permission !== 'super_admin')
-    ) {
+    if (!ac.can(permission).createOwn('affiliation').granted) {
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
       )
@@ -100,6 +97,18 @@ able to sign-up and be assigned to that organization in one mutation.`,
         _type: 'error',
         code: 403,
         description: i18n._(t`Permission Denied: Please contact organization admin for help with user invitations.`),
+      }
+    }
+
+    // Only super admins may create owners and other super admins
+    if (['super_admin', 'owner'].includes(requestedRole) && permission !== 'super_admin') {
+      console.warn(
+        `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with user invitations.`),
       }
     }
 

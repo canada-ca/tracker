@@ -4,6 +4,7 @@ import { logConnection } from '../objects/log-connection'
 import { logOrder } from '../input/log-order'
 import { t } from '@lingui/macro'
 import { logFilters } from '../input/log-filters'
+import ac from '../../access-control'
 
 export const findAuditLogs = {
   type: logConnection.connectionType,
@@ -47,7 +48,7 @@ export const findAuditLogs = {
 
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org?._id })
-    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+    if (!ac.can(permission).readOwn('log').granted) {
       throw new Error(i18n._(t`Cannot query audit logs on organization without admin permission or higher.`))
     }
     const auditLogCollection = await loadAuditLogsByOrgId({

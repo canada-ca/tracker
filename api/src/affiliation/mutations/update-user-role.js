@@ -6,6 +6,7 @@ import { t } from '@lingui/macro'
 import { RoleEnums } from '../../enums'
 import { updateUserRoleUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ac from '../../access-control'
 
 export const updateUserRole = new mutationWithClientMutationId({
   name: 'UpdateUserRole',
@@ -101,7 +102,7 @@ given organization.`,
     const permission = await checkPermission({ orgId: org._id })
 
     // Only admins, owners, and super admins can update a user's role
-    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+    if (!ac.can(permission).updateOwn('affiliation').granted) {
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )

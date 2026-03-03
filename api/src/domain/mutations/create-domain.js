@@ -8,6 +8,7 @@ import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
 import { headers } from 'nats'
 import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
+import ac from '../../access-control'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -119,7 +120,7 @@ export const createDomain = new mutationWithClientMutationId({
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org._id })
 
-    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
+    if (!ac.can(permission).createOwn('domain').granted) {
       console.warn(
         `User: ${userKey} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
       )

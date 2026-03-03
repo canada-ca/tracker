@@ -6,6 +6,7 @@ import { updateDomainUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
 import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
+import ac from '../../access-control'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -140,7 +141,7 @@ export const updateDomain = new mutationWithClientMutationId({
     // Check permission
     const permission = await checkPermission({ orgId: org._id })
 
-    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
+    if (!ac.can(permission).updateOwn('domain').granted) {
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )

@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { removeOrganizationUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ac from '../../access-control'
 
 export const removeOrganization = new mutationWithClientMutationId({
   name: 'RemoveOrganization',
@@ -59,7 +60,7 @@ export const removeOrganization = new mutationWithClientMutationId({
     // Get users permission
     const permission = await checkPermission({ orgId: organization._id })
 
-    if (['owner', 'super_admin'].includes(permission) === false) {
+    if (!ac.can(permission).deleteOwn('organization').granted) {
       console.warn(
         `User: ${userKey} attempted to remove org: ${organization._key}, however the user does not have permission to this organization.`,
       )
@@ -73,7 +74,7 @@ export const removeOrganization = new mutationWithClientMutationId({
     }
 
     // Check to see if org is verified check, and the user is super admin
-    if (organization.verified && permission !== 'super_admin') {
+    if (organization.verified && !ac.can(permission).deleteAny('organization').granted) {
       console.warn(
         `User: ${userKey} attempted to remove org: ${organization._key}, however the user is not a super admin.`,
       )
