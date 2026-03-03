@@ -118,6 +118,7 @@ export function OrganizationDomains({
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
+    { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
   ]
 
   const assetStateOptions = [
