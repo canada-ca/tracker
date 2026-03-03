@@ -90,6 +90,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'cvd-enrolled') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.cvdEnrollment.status ${comparison} "enrolled"
+          `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`${domainFilters}`
           } else if (filterValue === 'archived') {
@@ -125,7 +130,7 @@ export const loadOrganizationDomainStatuses =
           WITH claims, domains, organizations
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             ${archivedFilter}
-            LET negativeTags = APPEND(v.negativeTags.dns, v.negativeTags.web) 
+            LET negativeTags = APPEND(v.negativeTags.dns, v.negativeTags.web)
             ${domainFilters}
             LET ipAddresses = FIRST(
               FILTER v.latestDnsScan
@@ -158,6 +163,7 @@ export const loadOrganizationDomainStatuses =
               wildcardEntry: v.wildcardEntry,
               hasEntrustCertificate: v.hasEntrustCertificate,
               top25Vulnerabilities: vulnerabilities
+              cvdEnrollmentStatus: v.cvdEnrollment.status
             }
           `
       ).all()
