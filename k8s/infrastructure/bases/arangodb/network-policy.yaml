@@ -116,6 +116,12 @@ spec:
               app: domain-cleanup
         - namespaceSelector:
             matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: cvd-enrollment
+        - namespaceSelector:
+            matchLabels:
               kubernetes.io/metadata.name: azure-defender-easm
           podSelector:
             matchLabels:
