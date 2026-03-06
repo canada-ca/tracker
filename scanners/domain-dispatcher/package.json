@@ -29,7 +29,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-standard": "^4.1.0",
-    "jest": "^27.0.6",
+    "jest": "^30.2.0",
     "prettier": "^2.3.2"
   },
   "jest": {
