@@ -3,7 +3,7 @@ azure-cosmos==4.5.1
 certifi==2024.7.4
 charset-normalizer==3.3.2
 docopt==0.6.2
-idna==3.7
+idna==3.11
 nats-py==2.6.0
 notifications-python-client==8.0.1
 PyJWT==2.8.0
