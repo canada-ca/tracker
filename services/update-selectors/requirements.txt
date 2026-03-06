@@ -1,5 +1,5 @@
 azure-core==1.38.0
-azure-cosmos==4.5.1
+azure-cosmos==4.14.4
 certifi==2024.7.4
 charset-normalizer==3.3.2
 docopt==0.6.2
