@@ -223,6 +223,7 @@ export const organizationType = new GraphQLObjectType({
           'wildcardEntry',
           'hasEntrustCertificate',
           'top25Vulnerabilities',
+          'cvdEnrollmentStatus',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domainDoc) => {
@@ -230,15 +231,13 @@ export const organizationType = new GraphQLObjectType({
             .map((header) => {
               if (['ipAddresses', 'tags', 'top25Vulnerabilities'].includes(header)) {
                 return `"${domainDoc[header]?.join('|') || []}"`
-              }
-              if (
+              } else if (
                 ['https', 'hsts', 'certificates', 'protocols', 'ciphers', 'curves', 'spf', 'dkim', 'dmarc'].includes(
                   header,
                 )
               ) {
                 return `"${domainDoc?.status[header]}"`
-              }
-              if (header === 'phase') {
+              } else if (header === 'phase') {
                 switch (domainDoc[header]) {
                   case 'assess':
                     return i18n._(t`Assess`)

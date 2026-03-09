@@ -387,6 +387,11 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER v.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'cvd-enrolled') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.cvdEnrollment.status ${comparison} "enrolled"
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}
