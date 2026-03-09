@@ -54,14 +54,21 @@ def main(db: StandardDatabase):
                 FILTER d.archived != true
                 FILTER d.rcode != "NXDOMAIN"
                 FILTER d.blocked != true
-                FILTER d.cvdEnrollment.status == "enrolled"
                 RETURN d
             """
         )
-        enrolled_domains = [domain for domain in cursor]
+        all_domains = [domain for domain in cursor]
     except Exception as e:
         logger.error(f"Error(s) while fetching CVD enrolled domains: {e}")
         return
+
+    enrolled_domains = [
+        domain
+        for domain in all_domains
+        if isinstance(domain.get("cvdEnrollment"), dict)
+        and domain.get("cvdEnrollment", {}).get("status") == "enrolled"
+    ]
+    logger.info(f"Found {len(enrolled_domains)} enrolled domains.")
 
     try:
         cvd_assets = get_all_assets().get("data", [])
