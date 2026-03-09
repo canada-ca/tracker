@@ -83,31 +83,34 @@ def main(db: StandardDatabase):
         if d.get("domain", None) not in get_asset_identifiers(cvd_assets)
     ]
 
-    logger.info(f"Creating {len(new_assets)} assets from CVD program.")
-    for a in new_assets:
-        try:
-            res = create_asset(
-                domain=a.get("domain"), options=a.get("cvdEnrollment", {})
-            )
-            logger.info(res)
-        except Exception as e:
-            logger.error(f"Error(s) while attempting to create new asset: {e}")
-            continue
+    if (new_asset_count := len(new_assets)) > 0:
+        logger.info(f"Creating {new_asset_count} assets in CVD program.")
+        for a in new_assets:
+            try:
+                res = create_asset(
+                    domain=a.get("domain"), options=a.get("cvdEnrollment", {})
+                )
+                logger.info(res)
+            except Exception as e:
+                logger.error(f"Error(s) while attempting to create new asset: {e}")
+                continue
 
     # TODO handle re-adding archived assets: The hackerone API currently does not support this function. Revisit once possible
 
-    # find h1 assets to archive
-    # TODO handle existing h1 assets that are not in Tracker
+    # find h1 assets to archive + exclude domains that are not in DB
     archive_list = [
         a
         for a in cvd_assets
-        if a.get("attributes", {}).get("identifier", None)
-        not in get_domain_names(enrolled_domains)
+        if (
+            (identifier := a.get("attributes", {}).get("identifier"))
+            and identifier not in get_domain_names(enrolled_domains)
+            and identifier in get_domain_names(all_domains)
+        )
     ]
 
     # archive assets no longer enrolled
-    if len(archive_list) > 0:
-        logger.info(f"Archiving {len(archive_list)} assets from CVD program.")
+    if (archive_count := len(archive_list)) > 0:
+        logger.info(f"Archiving {archive_count} assets from CVD program.")
         try:
             res = archive_assets(data={"data": archive_list})
             logger.info(res)
