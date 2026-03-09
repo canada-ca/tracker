@@ -162,7 +162,7 @@ export const loadOrganizationDomainStatuses =
               wildcardSibling: v.wildcardSibling,
               wildcardEntry: v.wildcardEntry,
               hasEntrustCertificate: v.hasEntrustCertificate,
-              top25Vulnerabilities: vulnerabilities
+              top25Vulnerabilities: vulnerabilities,
               cvdEnrollmentStatus: v.cvdEnrollment.status
             }
           `
