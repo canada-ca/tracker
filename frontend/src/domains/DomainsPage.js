@@ -115,6 +115,7 @@ export default function DomainsPage() {
     },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore',
   })
 
   const { isOpen, onToggle } = useDisclosure()
