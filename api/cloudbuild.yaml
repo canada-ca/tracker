@@ -16,7 +16,7 @@ steps:
     id: install
     dir: api
     entrypoint: npm
-    args: ['ci', '--no-optional']
+    args: ['ci']
 
   - name: node:20-alpine
     id: lint
