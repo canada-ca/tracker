@@ -57,6 +57,16 @@ steps:
     args: ['run', 'compile']
 
   - name: node:20-alpine
+    id: check-src-files
+    dir: api
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        "=== checking src directory content ==="
+        ls -la src
+
+  - name: node:20-alpine
     id: test
     dir: api
     entrypoint: npm
