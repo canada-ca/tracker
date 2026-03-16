@@ -68,6 +68,11 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_PENDING_USERS
+                - name: NOTIFICATION_PENDING_CVD_ENROLLMENT
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_PENDING_CVD_ENROLLMENT
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000

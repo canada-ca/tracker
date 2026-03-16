@@ -1,9 +1,9 @@
 const logger = require('../logger')
 
-const { NOTIFICATION_PENDING_ENROLLMENT } = process.env
+const { NOTIFICATION_PENDING_CVD_ENROLLMENT } = process.env
 
 const sendPendingCvdEnrollmentEmail = async ({ notifyClient, user, orgNames }) => {
-  const templateId = NOTIFICATION_PENDING_ENROLLMENT
+  const templateId = NOTIFICATION_PENDING_CVD_ENROLLMENT
 
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
