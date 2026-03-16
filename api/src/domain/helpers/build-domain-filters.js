@@ -105,6 +105,11 @@ export function buildDomainFilters({ filters }) {
             ${domainFilters}
             FILTER v.cvdEnrollment.status ${comparison} "enrolled"
           `
+        } else if (filterValue === 'cvd-pending') {
+          domainFilters = aql`
+            ${domainFilters}
+            FILTER v.cvdEnrollment.status ${comparison} "pending"
+          `
         } else {
           domainFilters = aql`
             ${domainFilters}
