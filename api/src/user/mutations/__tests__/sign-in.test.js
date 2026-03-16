@@ -146,7 +146,7 @@ describe('authenticate user account', () => {
           await query`
             FOR user IN users
               UPDATE ${user._key} WITH { tfaSendMethod: 'not_none', lastLogin: ${new Date(
-            new Date().setDate(new Date().getDate() - 30),
+            new Date().setDate(new Date().getDate() - 31),
           ).toISOString()} } IN users
           `
 
