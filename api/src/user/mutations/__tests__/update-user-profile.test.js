@@ -239,7 +239,7 @@ describe('authenticate user account', () => {
           }
           expect(response).toEqual(expectedResponse)
 
-          expect(sendVerificationEmail).toBeCalledWith({
+          expect(sendVerificationEmail).toHaveBeenCalledWith({
             verifyUrl: verifyUrl,
             userKey: user._key,
             displayName: user.displayName,
@@ -939,7 +939,7 @@ describe('authenticate user account', () => {
             }
             expect(response).toEqual(expectedResponse)
 
-            expect(sendVerificationEmail).toBeCalledWith({
+            expect(sendVerificationEmail).toHaveBeenCalledWith({
               verifyUrl: verifyUrl,
               userKey: user._key,
               displayName: user.displayName,

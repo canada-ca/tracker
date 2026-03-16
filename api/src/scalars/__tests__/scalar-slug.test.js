@@ -1,6 +1,6 @@
-import {Kind} from 'graphql'
-import {stringify} from 'jest-matcher-utils'
-import {Slug} from '../index'
+import { GraphQLError, Kind } from 'graphql'
+import { stringify } from 'jest-matcher-utils'
+import { Slug } from '../index'
 
 describe('given a slug scalar', () => {
   describe('serializing inputs', () => {
@@ -15,18 +15,14 @@ describe('given a slug scalar', () => {
       describe('given an invalid slug', () => {
         it('throws an error', () => {
           const testSlug = 'This is an invalid slug'
-          expect(() => Slug.serialize(testSlug)).toThrow(
-            new TypeError(`Value is not a valid slug: ${testSlug}`),
-          )
+          expect(() => Slug.serialize(testSlug)).toThrow(new TypeError(`Value is not a valid slug: ${testSlug}`))
         })
       })
     })
 
     describe('given invalid inputs', () => {
       ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(
-          invalidInput,
-        )}`, () => {
+        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
           expect(() => Slug.serialize(invalidInput)).toThrow(
             new TypeError(`Value is not string: ${typeof invalidInput}`),
           )
@@ -46,17 +42,13 @@ describe('given a slug scalar', () => {
       describe('given an invalid slug', () => {
         it('throws a type error', () => {
           const testSlug = 'invalid slug'
-          expect(() => Slug.parseValue(testSlug)).toThrow(
-            new TypeError(`Value is not a valid slug: ${testSlug}`),
-          )
+          expect(() => Slug.parseValue(testSlug)).toThrow(new TypeError(`Value is not a valid slug: ${testSlug}`))
         })
       })
     })
     describe('given invalid inputs', () => {
       ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when value parsing ${stringify(
-          invalidInput,
-        )}`, () => {
+        it(`throws an error when value parsing ${stringify(invalidInput)}`, () => {
           expect(() => Slug.parseValue(invalidInput)).toThrow(
             new TypeError(`Value is not string: ${typeof invalidInput}`),
           )
@@ -96,13 +88,9 @@ describe('given a slug scalar', () => {
           kind: Kind.DOCUMENT,
         },
       ].forEach((literal) => {
-        it(`throws an error when parsing invalid literal ${stringify(
-          literal,
-        )}`, () => {
+        it(`throws an error when parsing invalid literal ${stringify(literal)}`, () => {
           expect(() => Slug.parseLiteral(literal, {})).toThrow(
-            new TypeError(
-              `Can only validate strings as slug but got a: ${literal.kind}`,
-            ),
+            new GraphQLError(`Can only validate strings as slug but got a: ${literal.kind}`),
           )
         })
       })

@@ -16,7 +16,7 @@ steps:
     id: install
     dir: api
     entrypoint: npm
-    args: ['ci', '--no-optional']
+    args: ['ci']
 
   - name: node:20-alpine
     id: lint
@@ -55,6 +55,16 @@ steps:
     dir: api
     entrypoint: npm
     args: ['run', 'compile']
+
+  - name: node:20-alpine
+    id: check-src-files
+    dir: api
+    entrypoint: ash
+    args:
+      - '-c'
+      - |
+        "=== checking src directory content ==="
+        ls -la src
 
   - name: node:20-alpine
     id: test
