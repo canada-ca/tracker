@@ -17,7 +17,6 @@ const sys = new Database({
   auth: { username, password },
 })
 
-
 const databaseName = `${DB_NAME}-${Date.now()}`
 
 const logger = {
