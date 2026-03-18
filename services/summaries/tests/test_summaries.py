@@ -41,17 +41,17 @@ class TestSummaries:
             from_vertex_collections=["organizations"],
             to_vertex_collections=["domains"],
         )
-        domains_dns = graph.create_edge_definition(
+        graph.create_edge_definition(
             edge_collection="domainsDNS",
             from_vertex_collections=["domains"],
             to_vertex_collections=["dns"],
         )
-        domains_web = graph.create_edge_definition(
+        graph.create_edge_definition(
             edge_collection="domainsWeb",
             from_vertex_collections=["domains"],
             to_vertex_collections=["web"],
         )
-        web_to_web_scans = graph.create_edge_definition(
+        graph.create_edge_definition(
             edge_collection="webToWebScans",
             from_vertex_collections=["web"],
             to_vertex_collections=["webScan"],
