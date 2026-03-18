@@ -16,6 +16,10 @@ steps:
     id: test-results
     dir: services/summaries
     entrypoint: /bin/sh
+    env:
+        - "DB_URL=http://testdb:8529"
+        - "DB_USER=root"
+        - "DB_PASSWORD=test"
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: "gcr.io/cloud-builders/docker"
