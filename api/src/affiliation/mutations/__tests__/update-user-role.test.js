@@ -1172,15 +1172,14 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       code: 400,
-                      description:
-                        'Permission Denied: Please contact organization admin for help with user role changes.',
+                      description: 'Permission Denied: Please contact super admin for help with user role changes.',
                     },
                   },
                 },
               }
 
               expect(consoleOutput).toEqual([
-                `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to update a super_admin.`,
+                `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to update a super_admin or assign the user role.`,
               ])
               expect(response).toEqual(error)
             })
