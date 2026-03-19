@@ -108,7 +108,7 @@ given organization.`,
       )
       return {
         _type: 'error',
-        code: 400,
+        code: 403,
         description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
       }
     }
@@ -163,7 +163,7 @@ given organization.`,
       )
       return {
         _type: 'error',
-        code: 400,
+        code: 403,
         description: i18n._(t`Permission Denied: Please contact super admin for help with user role changes.`),
       }
     }
