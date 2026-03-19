@@ -9,7 +9,7 @@ iniconfig==2.0.0
 packaging==24.2
 pluggy==1.5.0
 pretend==1.0.9
-PyJWT==2.6.0
+PyJWT[crypto]==2.12.0
 pytest==8.3.5
 python-arango==8.1.7
 python-dotenv==1.1.0
