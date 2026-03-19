@@ -42,6 +42,10 @@ ac.grant('super_admin')
   .updateAny(['organization', 'domain', 'user', 'tag', 'affiliation'])
   .deleteAny(['organization', 'domain', 'user', 'tag', 'affiliation'])
 
+ac.grant('none') // no permissions — fallback for users with no org affiliation
+const _can = ac.can.bind(ac)
+ac.can = (role) => _can(role || 'none')
+
 ac.lock()
 
 export default ac
