@@ -14,7 +14,7 @@ def query_crlite(pem_cert: bytes) -> tuple[bool, str]:
 
         query_crlite_path = find_query_crlite.decode("ascii").splitlines()[0]
         if not query_crlite_path:
-            FileNotFoundError("rust-query-crlite not found")
+            raise FileNotFoundError("rust-query-crlite not found")
 
         completed = subprocess.run(
             [query_crlite_path, "x509", filename],
