@@ -101,7 +101,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Only super admins may create owners and other super admins
-    if (['super_admin', 'owner'].includes(requestedRole) && permission !== 'super_admin') {
+    const privilegedRoles = ac.getRoles().filter((r) => ac.can(r).deleteOwn('organization').granted)
+    if (privilegedRoles.includes(requestedRole) && !ac.can(permission).createAny('affiliation').granted) {
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
       )
