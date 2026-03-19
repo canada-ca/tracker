@@ -48,6 +48,8 @@ export const findOrganizationBySlug = {
     if (loginRequiredBool && !ac.can(permission).readOwn('organization').granted) {
       console.warn(`User ${userKey} could not retrieve organization.`)
       throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
+    } else if (!loginRequiredBool && org.verified !== true && !ac.can(permission).readOwn('organization').granted) {
+      throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
     }
 
     console.info(`User ${userKey} successfully retrieved organization ${org._key}.`)
