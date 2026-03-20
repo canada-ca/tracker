@@ -934,7 +934,7 @@ describe('update a users role', () => {
               data: {
                 updateUserRole: {
                   result: {
-                    code: 400,
+                    code: 403,
                     description:
                       'Permission Denied: Please contact organization admin for help with user role changes.',
                   },
@@ -1012,7 +1012,7 @@ describe('update a users role', () => {
               data: {
                 updateUserRole: {
                   result: {
-                    code: 400,
+                    code: 403,
                     description:
                       'Permission Denied: Please contact organization admin for help with user role changes.',
                   },
@@ -1171,7 +1171,7 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      code: 400,
+                      code: 403,
                       description: 'Permission Denied: Please contact super admin for help with user role changes.',
                     },
                   },
