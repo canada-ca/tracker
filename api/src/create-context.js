@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken'
 import { loadUserByKey } from './user/loaders'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
+import { SummariesDataSource } from './summaries/data-sources'
+
 import {
   checkDomainOwnership,
   checkDomainPermission,
@@ -132,6 +134,9 @@ export async function createContext({
       }),
       sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
       sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
+    },
+    dataSources: {
+      summaries: new SummariesDataSource({ query, userKey, cleanseInput, i18n }),
     },
     loaders: initializeLoaders({
       query,
