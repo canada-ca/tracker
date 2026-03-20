@@ -27,7 +27,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       initContainers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-3185bb6-1772652458 # {"$imagepolicy": "flux-system:database-migration"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-fba8d01-1774016622 # {"$imagepolicy": "flux-system:database-migration"}
           name: database-migration
           env:
             - name: DB_USER
