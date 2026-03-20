@@ -13,7 +13,6 @@ describe('initializeLoaders', () => {
     })
 
     expect(loaders).toHaveProperty(
-      'loadChartSummaryByKey',
       'loadAggregateGuidanceTagByTagId',
       'loadAggregateGuidanceTagConnectionsByTagId',
       'loadDkimFailConnectionsBySumId',

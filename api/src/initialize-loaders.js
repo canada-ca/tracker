@@ -64,7 +64,6 @@ import {
   loadVerifiedOrgConnectionsByDomainId,
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
-import { loadChartSummaryByKey, loadChartSummariesByPeriod } from './summaries/loaders'
 import { loadDnsConnectionsByDomainId } from './dns-scan'
 import { loadAllTags, loadTagByTagId, loadTagsByOrg } from './tags'
 
@@ -98,13 +97,6 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       userKey,
       i18n,
       language,
-    }),
-    loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
-    loadChartSummariesByPeriod: loadChartSummariesByPeriod({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
     }),
     loadAggregateGuidanceTagByTagId: loadAggregateGuidanceTagByTagId({
       query,
