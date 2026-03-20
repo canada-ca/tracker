@@ -21,8 +21,8 @@ export const webType = new GraphQLObjectType({
     results: {
       type: new GraphQLList(webScanType),
       description: `Results of the web scan at each IP address.`,
-      resolve: async ({ _id }, args, { loaders: { loadWebScansByWebId } }) => {
-        return await loadWebScansByWebId({
+      resolve: async ({ _id }, args, { dataSources: { webScan } }) => {
+        return await webScan.getScansByWebId({
           webId: _id,
           ...args,
         })
