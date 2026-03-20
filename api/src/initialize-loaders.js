@@ -4,7 +4,6 @@ import {
   loadAffiliationConnectionsByUserId,
   loadAffiliationConnectionsByOrgId,
 } from './affiliation/loaders'
-import { loadAuditLogsByOrgId } from './audit-logs/loaders'
 import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
@@ -116,12 +115,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
       cleanseInput,
       language,
-    }),
-    loadAuditLogsByOrgId: loadAuditLogsByOrgId({
-      query,
-      userKey,
-      i18n,
-      cleanseInput,
     }),
     loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
       query,

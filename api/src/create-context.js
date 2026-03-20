@@ -9,6 +9,7 @@ import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
 import { DnsScanDataSource } from './dns-scan/data-sources'
 import { WebScanDataSource } from './web-scan/data-sources'
+import { AuditLogsDataSource } from './audit-logs/data-sources'
 import {
   checkDomainOwnership,
   checkDomainPermission,
@@ -136,6 +137,7 @@ export async function createContext({
       sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
     },
     dataSources: {
+      auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
       webScan: new WebScanDataSource({ query, userKey, cleanseInput, i18n }),
     },
