@@ -238,13 +238,10 @@ describe('given getTop25Reports', () => {
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadTop25Reports: loadTop25Reports({
-                query,
-                userKey: user._key,
-                i18n,
-                language: 'en',
-              }),
+            dataSources: {
+              additionalFindings: {
+                getTop25Reports: loadTop25Reports({ query, userKey: user._key, i18n, language: 'en' }),
+              },
             },
           },
         })
@@ -298,13 +295,10 @@ describe('given getTop25Reports', () => {
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadTop25Reports: loadTop25Reports({
-                query,
-                userKey: user._key,
-                i18n,
-                language: 'en',
-              }),
+            dataSources: {
+              additionalFindings: {
+                getTop25Reports: loadTop25Reports({ query, userKey: user._key, i18n, language: 'en' }),
+              },
             },
           },
         })
@@ -360,13 +354,10 @@ Government of Canada,GC,2`,
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadTop25Reports: loadTop25Reports({
-                query,
-                userKey: user._key,
-                i18n,
-                language: 'en',
-              }),
+            dataSources: {
+              additionalFindings: {
+                getTop25Reports: loadTop25Reports({ query, userKey: user._key, i18n, language: 'en' }),
+              },
             },
           },
         })
@@ -421,13 +412,10 @@ Government of Canada,GC,2`,
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadTop25Reports: loadTop25Reports({
-                query,
-                userKey: user._key,
-                i18n,
-                language: 'en',
-              }),
+            dataSources: {
+              additionalFindings: {
+                getTop25Reports: loadTop25Reports({ query, userKey: user._key, i18n, language: 'en' }),
+              },
             },
           },
         })

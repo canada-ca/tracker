@@ -226,7 +226,7 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadAdditionalFindingsByDomainId } },
+        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { additionalFindings } },
       ) => {
         await userRequired()
         const permitted = await checkDomainPermission({ domainId: _id })
@@ -237,7 +237,7 @@ export const domainType = new GraphQLObjectType({
           throw new Error(t`Cannot query additional findings without permission.`)
         }
 
-        return await loadAdditionalFindingsByDomainId({
+        return await additionalFindings.getByDomainId({
           domainId: _id,
         })
       },

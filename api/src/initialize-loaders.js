@@ -1,4 +1,3 @@
-import { loadAdditionalFindingsByDomainId, loadTop25Reports } from './additional-findings/loaders'
 import {
   loadAffiliationByKey,
   loadAffiliationConnectionsByUserId,
@@ -67,11 +66,6 @@ import { loadAllTags, loadTagByTagId, loadTagsByOrg } from './tags'
 
 export function initializeLoaders({ query, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
-    loadAdditionalFindingsByDomainId: loadAdditionalFindingsByDomainId({
-      query,
-      userKey,
-      i18n,
-    }),
     loadAllTags: loadAllTags({
       query,
       userKey,
@@ -85,12 +79,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       language,
     }),
     loadTagsByOrg: loadTagsByOrg({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadTop25Reports: loadTop25Reports({
       query,
       userKey,
       i18n,
