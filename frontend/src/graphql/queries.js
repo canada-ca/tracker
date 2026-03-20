@@ -96,35 +96,39 @@ export const FIND_ORGANIZATION_BY_SLUG = gql`
 
 export const LANDING_PAGE_SUMMARIES = gql`
   query LandingPageSummaries {
-    # Tier 1
-    httpsSummary {
-      ...RequiredSummaryFields
-    }
-    dmarcSummary {
-      ...RequiredSummaryFields
-    }
-    # Tier 2
-    webConnectionsSummary {
-      ...RequiredSummaryFields
-    }
-    sslSummary {
-      ...RequiredSummaryFields
-    }
-    spfSummary {
-      ...RequiredSummaryFields
-    }
-    dkimSummary {
-      ...RequiredSummaryFields
-    }
-    dmarcPhaseSummary {
-      ...RequiredSummaryFields
-    }
-    # Tier 3
-    webSummary {
-      ...RequiredSummaryFields
-    }
-    mailSummary {
-      ...RequiredSummaryFields
+    findChartSummaries(limit: 1, sortDirection: DESC) {
+      # Tier 1
+      https {
+        ...RequiredSummaryFields
+      }
+      dmarc {
+        ...RequiredSummaryFields
+      }
+
+      # Tier 2
+      webConnections {
+        ...RequiredSummaryFields
+      }
+      ssl {
+        ...RequiredSummaryFields
+      }
+      spf {
+        ...RequiredSummaryFields
+      }
+      dkim {
+        ...RequiredSummaryFields
+      }
+      dmarcPhase {
+        ...RequiredSummaryFields
+      }
+
+      # Tier 3
+      web {
+        ...RequiredSummaryFields
+      }
+      mail {
+        ...RequiredSummaryFields
+      }
     }
   }
   ${Summary.fragments.requiredFields}
