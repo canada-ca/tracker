@@ -157,7 +157,7 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDnsConnectionsByDomainId } },
+        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { dnsScan } },
       ) => {
         await userRequired()
         const permitted = await checkDomainPermission({ domainId: _id })
@@ -168,7 +168,7 @@ export const domainType = new GraphQLObjectType({
           throw new Error(t`Cannot query dns scan results without permission.`)
         }
 
-        return await loadDnsConnectionsByDomainId({
+        return await dnsScan.getConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
@@ -203,7 +203,7 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadWebConnectionsByDomainId } },
+        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { webScan } },
       ) => {
         await userRequired()
         const permitted = await checkDomainPermission({ domainId: _id })
@@ -214,7 +214,7 @@ export const domainType = new GraphQLObjectType({
           throw new Error(t`Cannot query web scan results without permission.`)
         }
 
-        return await loadWebConnectionsByDomainId({
+        return await webScan.getConnectionsByDomainId({
           domainId: _id,
           ...args,
         })

@@ -323,8 +323,8 @@ describe('given the domain object', () => {
           { _id: '1' },
           { limit: 1 },
           {
-            loaders: {
-              loadWebConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }),
+            dataSources: {
+              webScan: { getConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }) },
             },
             auth: {
               checkDomainPermission: jest.fn().mockReturnValue(true),
@@ -348,8 +348,8 @@ describe('given the domain object', () => {
           { _id: '1' },
           { limit: 1 },
           {
-            loaders: {
-              loadDnsConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }),
+            dataSources: {
+              dnsScan: { getConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }) },
             },
             auth: {
               checkDomainPermission: jest.fn().mockReturnValue(true),

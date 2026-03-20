@@ -33,7 +33,8 @@ export const requestScan = new mutationWithClientMutationId({
       request: { ip },
       publish,
       auth: { checkDomainPermission, userRequired, verifiedRequired },
-      loaders: { loadDomainByDomain, loadWebConnectionsByDomainId, loadWebScansByWebId },
+      loaders: { loadDomainByDomain },
+      dataSources: { webScan },
       validators: { cleanseInput },
     },
   ) => {
@@ -101,7 +102,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     // Check to see if a scan is already pending
     try {
-      const webConnections = await loadWebConnectionsByDomainId({
+      const webConnections = await webScan.getConnectionsByDomainId({
         domainId: domain._id,
         limit: 1,
         orderBy: { field: 'timestamp', direction: 'DESC' },
@@ -109,7 +110,7 @@ export const requestScan = new mutationWithClientMutationId({
       })
       if (webConnections.edges.length > 0) {
         const webConnection = webConnections.edges[0].node
-        const webScans = await loadWebScansByWebId({ webId: webConnection._id })
+        const webScans = await webScan.getScansByWebId({ webId: webConnection._id })
         webScans.forEach((result) => {
           const timeDifferenceInMinutes = (Date.now() - new Date(webConnection.timestamp).getTime()) / 1000 / 60
           if (result.status.toUpperCase() === 'PENDING' && timeDifferenceInMinutes < 30) {

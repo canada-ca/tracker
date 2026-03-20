@@ -51,7 +51,6 @@ import {
   loadOrganizationNamesById,
 } from './organization/loaders'
 import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
-import { loadWebConnectionsByDomainId, loadWebScansByWebId } from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
@@ -65,10 +64,9 @@ import {
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey, loadChartSummariesByPeriod } from './summaries/loaders'
-import { loadDnsConnectionsByDomainId } from './dns-scan'
 import { loadAllTags, loadTagByTagId, loadTagsByOrg } from './tags'
 
-export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
+export function initializeLoaders({ query, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
     loadAdditionalFindingsByDomainId: loadAdditionalFindingsByDomainId({
       query,
@@ -196,27 +194,6 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       cleanseInput,
       i18n,
       auth: { loginRequiredBool },
-    }),
-    loadDnsConnectionsByDomainId: loadDnsConnectionsByDomainId({
-      query,
-      db,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadWebConnectionsByDomainId: loadWebConnectionsByDomainId({
-      query,
-      db,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadWebScansByWebId: loadWebScansByWebId({
-      query,
-      db,
-      userKey,
-      cleanseInput,
-      i18n,
     }),
     loadDkimGuidanceTagByTagId: loadDkimGuidanceTagByTagId({
       query,

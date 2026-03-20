@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken'
 import { loadUserByKey } from './user/loaders'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
+import { DnsScanDataSource } from './dns-scan/data-sources'
+import { WebScanDataSource } from './web-scan/data-sources'
 import {
   checkDomainOwnership,
   checkDomainPermission,
@@ -133,9 +135,12 @@ export async function createContext({
       sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
       sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
     },
+    dataSources: {
+      dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
+      webScan: new WebScanDataSource({ query, userKey, cleanseInput, i18n }),
+    },
     loaders: initializeLoaders({
       query,
-      db,
       userKey,
       i18n,
       language: request.language,
