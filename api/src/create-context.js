@@ -7,10 +7,10 @@ import jwt from 'jsonwebtoken'
 import { loadUserByKey } from './user/loaders'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
-import { DnsScanDataSource } from './dns-scan/data-sources'
-import { WebScanDataSource } from './web-scan/data-sources'
-import { AuditLogsDataSource } from './audit-logs/data-sources'
-import { AdditionalFindingsDataSource } from './additional-findings/data-sources'
+import { DnsScanDataSource } from './dns-scan/data-source'
+import { WebScanDataSource } from './web-scan/data-source'
+import { AuditLogsDataSource } from './audit-logs/data-source'
+import { AdditionalFindingsDataSource } from './additional-findings/data-source'
 import {
   checkDomainOwnership,
   checkDomainPermission,
