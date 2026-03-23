@@ -1,4 +1,4 @@
-import { loadWebConnectionsByDomainId, loadWebScansByWebId } from '../loaders'
+import { loadWebConnectionsByDomainId, loadWebScansByWebId } from './loaders'
 
 export class WebScanDataSource {
   constructor({ query, userKey, cleanseInput, i18n }) {

@@ -1,4 +1,4 @@
-import { loadAdditionalFindingsByDomainId, loadTop25Reports } from '../loaders'
+import { loadAdditionalFindingsByDomainId, loadTop25Reports } from './loaders'
 
 export class AdditionalFindingsDataSource {
   constructor({ query, userKey, i18n, language }) {

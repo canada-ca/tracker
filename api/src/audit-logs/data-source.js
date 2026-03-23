@@ -1,4 +1,4 @@
-import { loadAuditLogByKey, loadAuditLogsByOrgId } from '../loaders'
+import { loadAuditLogByKey, loadAuditLogsByOrgId } from './loaders'
 
 export class AuditLogsDataSource {
   constructor({ query, userKey, cleanseInput, i18n }) {

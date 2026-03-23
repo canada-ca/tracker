@@ -1,4 +1,4 @@
-import { loadDnsByKey, loadDnsConnectionsByDomainId } from '../loaders'
+import { loadDnsByKey, loadDnsConnectionsByDomainId } from './loaders'
 
 export class DnsScanDataSource {
   constructor({ query, userKey, cleanseInput, i18n }) {
