@@ -5,8 +5,8 @@
   // The service in docker-compose that VS Code / Codespaces attaches to
   "service": "dev",
 
-  // Workspace points to the scanners directory — cd into whichever service you're working on
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/scanners",
+  // docker-compose.yml mounts the repo root at /workspaces, so scanners/ is at /workspaces/scanners.
+  "workspaceFolder": "/workspaces/scanners",
 
   "forwardPorts": [8529, 8222],
   "portsAttributes": {
@@ -27,16 +27,11 @@
   // python-dotenv will not override env vars already set in docker-compose, so the
   // container-friendly host names (arangodb, nats) take precedence over any localhost
   // values in local .env files.
-  "postCreateCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/scanners/setup.sh",
+  "postCreateCommand": "bash /workspaces/.devcontainer/scanners/setup.sh",
 
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-python.debugpy",
-        "ms-python.black-formatter"
-      ],
+      "extensions": ["ms-python.python", "ms-python.vscode-pylance", "ms-python.debugpy", "ms-python.black-formatter"],
       "settings": {
         "editor.formatOnSave": true,
         "python.defaultInterpreterPath": "${workspaceFolder}/dns-scanner/.venv/bin/python",

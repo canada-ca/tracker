@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   dev:
-    image: mcr.microsoft.com/devcontainers/python:1-3.14
+    image: mcr.microsoft.com/devcontainers/python:dev-3.14-bookworm
     volumes:
       # Mount the monorepo root so all relative paths within the project work
       - ../..:/workspaces:cached
