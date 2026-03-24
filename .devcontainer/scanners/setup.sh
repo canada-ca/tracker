@@ -20,10 +20,38 @@ rm -rf /tmp/nats /tmp/nats.zip
 echo "    nats $(nats --version)"
 
 # ---------------------------------------------------------------------------
-# Python versions — each service pins its own version in its Dockerfile.
-# The devcontainer base image ships Python 3.14. We install the others via
-# pyenv (pre-installed in mcr.microsoft.com/devcontainers/python).
+# pyenv — install if not already present, then bootstrap for this session.
+# Each scanner service pins its own Python version in its Dockerfile; we
+# use pyenv to create isolated venvs per service without touching system Python.
 # ---------------------------------------------------------------------------
+export PYENV_ROOT="$HOME/.pyenv"
+if [ ! -x "$PYENV_ROOT/bin/pyenv" ]; then
+  echo ">>> Installing build dependencies..."
+  # Required to compile CPython (pyenv) and native Python extensions (e.g. pydantic-core)
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq \
+    build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
+    libsqlite3-dev libffi-dev liblzma-dev libncurses-dev
+
+  echo ">>> Installing Rust (required for pydantic-core and other native extensions)..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+  # Source immediately so cargo is available for the rest of this block
+  source "$HOME/.cargo/env"
+
+  echo ">>> Installing pyenv..."
+  curl -fsSL https://pyenv.run | bash
+
+  echo ">>> Installing rust-query-crlite (used by web-scanner for TLS revocation checks)..."
+  cargo install \
+    --git https://github.com/mozilla/crlite rust-query-crlite \
+    --rev dcb8a4d \
+    --features=rustls/dangerous_configuration
+fi
+
+# Make Rust and pyenv available for this session
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
 
 # Map service → Python version (sourced from each service's Dockerfile)
 declare -A SERVICE_PYTHON=(
@@ -39,13 +67,16 @@ for service in "${!SERVICE_PYTHON[@]}"; do
 
   echo ">>> [$service] Setting up Python $version venv..."
 
-  # Install the version if pyenv doesn't have it yet
+  # Install the version if pyenv doesn't have it yet.
+  # --enable-shared is required for maturin/pyo3 (e.g. pydantic-core) to link
+  # against libpython. Without it, maturin ignores the venv and falls back to
+  # the system Python, causing version mismatches and build failures.
   if ! pyenv versions --bare | grep -qx "$version"; then
-    pyenv install "$version"
+    PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install "$version"
   fi
 
   # Create venv using the pinned version
-  "$HOME/.pyenv/versions/$version/bin/python" -m venv "$svc_dir/.venv"
+  "$PYENV_ROOT/versions/$version/bin/python" -m venv "$svc_dir/.venv"
 
   # Install dependencies
   "$svc_dir/.venv/bin/pip" install --quiet --upgrade pip
