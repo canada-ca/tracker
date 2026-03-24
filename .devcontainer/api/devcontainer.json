@@ -1,0 +1,50 @@
+{
+  "name": "Tracker API",
+  "dockerComposeFile": "docker-compose.yml",
+
+  // The service in docker-compose that VS Code / Codespaces attaches to
+  "service": "api",
+
+  // Set the workspace to the api subdirectory of the monorepo
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/api",
+
+  "forwardPorts": [4000, 8529, 4222],
+  "portsAttributes": {
+    "4000": {
+      "label": "GraphQL API",
+      "onAutoForward": "notify"
+    },
+    "8529": {
+      "label": "ArangoDB Web UI"
+    },
+    "4222": {
+      "label": "NATS"
+    }
+  },
+
+  // Install dependencies after the container is created.
+  // Copy .env.example to .env so the API can start without manual setup.
+  "postCreateCommand": "npm install && [ ! -f .env ] && cp .env.example .env || true",
+
+  // Start the API in watch mode automatically
+  "postStartCommand": "npm run dev:watch",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "apollographql.vscode-apollo",
+        "lokalise.i18n-ally",
+        "Orta.vscode-jest"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "eslint.workingDirectories": ["./api"]
+      }
+    }
+  },
+
+  "remoteUser": "node"
+}
