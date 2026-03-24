@@ -20,7 +20,7 @@
   "postCreateCommand": "npm install",
 
   // Start the dev server automatically when the container starts
-  "postStartCommand": "npm run start:dev",
+  "postStartCommand": "npm run dev",
 
   "customizations": {
     "vscode": {
