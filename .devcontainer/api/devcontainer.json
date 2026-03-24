@@ -5,8 +5,9 @@
   // The service in docker-compose that VS Code / Codespaces attaches to
   "service": "api",
 
-  // Set the workspace to the api subdirectory of the monorepo
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/api",
+  // Set the workspace to the api subdirectory of the monorepo.
+  // docker-compose.yml mounts the repo root at /workspaces, so api/ is at /workspaces/api.
+  "workspaceFolder": "/workspaces/api",
 
   "forwardPorts": [4000, 8529, 4222],
   "portsAttributes": {
@@ -41,7 +42,7 @@
       "settings": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "eslint.workingDirectories": ["./api"]
+        "eslint.workingDirectories": ["."]
       }
     }
   },
