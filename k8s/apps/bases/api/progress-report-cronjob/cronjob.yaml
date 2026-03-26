@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: progress-report
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report:master-59a0af4-1772733130 # {"$imagepolicy": "flux-system:progress-report"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report:master-2fefc72-1774541827 # {"$imagepolicy": "flux-system:progress-report"}
               env:
                 - name: DB_PASS
                   valueFrom:
