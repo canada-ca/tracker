@@ -56,10 +56,10 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDkimSelectorsByDomainId } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS }, loaders: { loadDkimSelectorsByDomainId } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(`User: ${userKey} attempted to access selectors for ${_id}, but does not have permission.`)
           throw new Error(t`Cannot query domain selectors without permission.`)
@@ -157,10 +157,10 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { dnsScan } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS, dnsScan } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access dns scan results for ${_id}, but does not have permission.`,
@@ -203,10 +203,10 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { webScan } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS, webScan } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
@@ -226,10 +226,10 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { additionalFindings } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS, additionalFindings } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access additional findings for domain: ${_id}, but does not have permission.`,
@@ -349,10 +349,8 @@ export const domainType = new GraphQLObjectType({
       description:
         'Value that determines if a user is affiliated with a domain, whether through organization affiliation, verified organization network affiliation, or through super admin status.',
       type: GraphQLBoolean,
-      resolve: async ({ _id }, __, { auth: { checkDomainPermission } }) => {
-        return await checkDomainPermission({
-          domainId: _id,
-        })
+      resolve: async ({ _id }, __, { dataSources: { auth: authDS } }) => {
+        return await authDS.domainPermissionByDomainId.load(_id)
       },
     },
     ignoreRua: {

@@ -183,14 +183,15 @@ export const organizationType = new GraphQLObjectType({
           transaction,
           collections,
           request: { ip },
-          auth: { checkPermission, userRequired, verifiedRequired },
+          auth: { userRequired, verifiedRequired },
+          dataSources: { auth: authDS },
           loaders: { loadOrganizationDomainStatuses, loadOrganizationNamesById },
         },
       ) => {
         const user = await userRequired()
         verifiedRequired({ user })
 
-        const permission = await checkPermission({ orgId: _id })
+        const permission = await authDS.permissionByOrgId.load(_id)
         if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
           console.error(
             `User "${userKey}" attempted to retrieve CSV output for organization "${_id}". Permission: ${permission}`,
@@ -321,10 +322,9 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        { auth: { checkPermission }, loaders: { loadDomainConnectionsByOrgId } },
+        { dataSources: { auth: authDS }, loaders: { loadDomainConnectionsByOrgId } },
       ) => {
-        // Check to see requesting users permission to the org is
-        const permission = await checkPermission({ orgId: _id })
+        const permission = await authDS.permissionByOrgId.load(_id)
         const connections = await loadDomainConnectionsByOrgId({
           orgId: _id,
           permission,
@@ -354,9 +354,9 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { i18n, auth: { checkPermission, loginRequiredBool }, loaders: { loadAffiliationConnectionsByOrgId } },
+        { i18n, auth: { loginRequiredBool }, dataSources: { auth: authDS }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
-        const permission = await checkPermission({ orgId: _id })
+        const permission = await authDS.permissionByOrgId.load(_id)
         if (['user', 'admin', 'owner', 'super_admin'].includes(permission) === false && loginRequiredBool) {
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
@@ -372,8 +372,8 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description:
         'Value that determines if a user is affiliated with an organization, whether through organization affiliation, verified affiliation, or through super admin status.',
-      resolve: async ({ _id }, _args, { auth: { checkPermission } }) => {
-        const permission = await checkPermission({ orgId: _id })
+      resolve: async ({ _id }, _args, { dataSources: { auth: authDS } }) => {
+        const permission = await authDS.permissionByOrgId.load(_id)
         return ['user', 'admin', 'super_admin', 'owner'].includes(permission)
       },
     },
