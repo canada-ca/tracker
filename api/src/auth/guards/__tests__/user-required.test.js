@@ -1,12 +1,12 @@
 import { dbNameFromFile } from 'arango-tools'
-import { ensureDatabase as ensure } from '../../testUtilities'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
-import { loadUserByKey, loadUserByUserName } from '../../user/loaders'
+import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
 import { userRequired } from '../index'
-import englishMessages from '../../locale/en/messages'
-import frenchMessages from '../../locale/fr/messages'
-import dbschema from '../../../database.json'
+import englishMessages from '../../../locale/en/messages'
+import frenchMessages from '../../../locale/fr/messages'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
