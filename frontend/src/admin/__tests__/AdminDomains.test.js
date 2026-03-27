@@ -3,29 +3,17 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 import { en } from 'make-plural/plurals'
-
 import { AdminDomains } from '../AdminDomains'
-
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawOrgDomainListData, rawOrgDomainListDataEmpty } from '../../fixtures/orgDomainListData'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../../graphql/queries'
 import { CREATE_DOMAIN, REMOVE_DOMAIN, UPDATE_DOMAIN } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 const mocks = [
   {

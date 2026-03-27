@@ -4,26 +4,14 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
-
 import { SuperAdminUserList } from '../SuperAdminUserList'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
 import { FIND_MY_USERS } from '../../graphql/queries'
 import { UPDATE_USER_ROLE, REMOVE_USER_FROM_ORG } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 const saUserListMockData = {
   data: {

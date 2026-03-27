@@ -1,12 +1,12 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
-import { t } from "@lingui/core/macro"
+import { t } from '@lingui/core/macro'
 import { IconButton } from '@chakra-ui/react'
 import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { FormField } from './FormField'
 
-function PasswordField({ forwardedRef, name, label, inputProps, ...props }) {
+function PasswordField({ forwardedRef, name = 'password', label = t`Password`, inputProps, ...props }) {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
 
@@ -39,11 +39,6 @@ PasswordField.propTypes = {
   label: string,
   inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
-}
-
-PasswordField.defaultProps = {
-  name: 'password',
-  label: t`Password:`,
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

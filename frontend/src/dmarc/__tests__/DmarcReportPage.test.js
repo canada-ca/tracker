@@ -4,18 +4,15 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 import userEvent from '@testing-library/user-event'
-
 import DmarcReportPage from '../DmarcReportPage'
-
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcReportGraphData, rawDmarcReportGraphDataWithoutReport } from '../../fixtures/dmarcReportGraphData'
 import { rawDmarcReportData, augustDmarcReportData } from '../../fixtures/dmarcReportData.js'
-
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../../graphql/queries'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors
@@ -34,10 +31,13 @@ class ResizeObserver {
 }
 
 window.ResizeObserver = ResizeObserver
+
 // **
 
 const d = new Date()
+
 const currentYear = d.getFullYear()
+
 // dynamic year value, changes in September
 const getDynamicYear = () => {
   const currentMonth = d.getMonth()
@@ -47,16 +47,6 @@ const getDynamicYear = () => {
     return String(currentYear - 1)
   }
 }
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

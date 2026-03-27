@@ -3,24 +3,12 @@ import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
-
 import { AggregatedGuidanceSummary } from '../AggregatedGuidanceSummary'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { ORG_NEGATIVE_FINDINGS } from '../../graphql/queries'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<AggregatedGuidanceSummary />', () => {
   const mocks = [

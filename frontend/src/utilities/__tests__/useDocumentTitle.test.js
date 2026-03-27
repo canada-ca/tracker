@@ -1,20 +1,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { en } from 'make-plural/plurals'
-
 import { useDocumentTitle } from '../useDocumentTitle'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('useDocumentTitle', () => {
   describe('when passed a string', () => {

@@ -4,28 +4,16 @@ import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-d
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 import { en } from 'make-plural/plurals'
-
 import Organizations from '../Organizations'
-
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { matchMediaSize } from '../../helpers/matchMedia'
 import { PAGINATED_ORGANIZATIONS } from '../../graphql/queries'
 import { TourProvider } from '../../userOnboarding/contexts/TourContext'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 const summaries = {
   dmarc: {

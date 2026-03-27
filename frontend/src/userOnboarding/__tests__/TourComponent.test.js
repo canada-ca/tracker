@@ -8,20 +8,10 @@ import { I18nProvider } from '@lingui/react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { TourProvider } from '../contexts/TourContext'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { en } from 'make-plural'
 import { fireEvent } from '@testing-library/dom'
 import { COMPLETE_TOUR } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 jest.mock('../config/tourSteps', () => ({
   mainTourSteps: {

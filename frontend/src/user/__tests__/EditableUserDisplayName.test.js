@@ -2,26 +2,14 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 import { makeVar } from '@apollo/client'
-
 import { EditableUserDisplayName } from '../EditableUserDisplayName'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { UPDATE_USER_PROFILE } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<EditableUserDisplayName>', () => {
   it('renders', async () => {

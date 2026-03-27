@@ -2,20 +2,9 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { en } from 'make-plural/plurals'
-
 import { InfoButton, InfoBox, InfoPanel } from '../InfoPanel'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<InfoPanel>', () => {
   it('successfully renders with mocked data', async () => {

@@ -4,26 +4,13 @@ import { MockedProvider } from '@apollo/client/testing'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
-
 import { OrganizationAffiliations } from '../OrganizationAffiliations'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { PAGINATED_ORG_AFFILIATIONS } from '../../graphql/queries'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
-
 matchMediaPolyfill(window)
 
 window

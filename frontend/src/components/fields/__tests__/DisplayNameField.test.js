@@ -4,19 +4,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-
+import { i18n } from '@lingui/core'
 import { DisplayNameField } from '../DisplayNameField'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<DisplayNameField />', () => {
   describe('when validation fails', () => {
