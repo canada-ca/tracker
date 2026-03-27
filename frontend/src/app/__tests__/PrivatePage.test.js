@@ -5,7 +5,6 @@ import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { MockedProvider } from '@apollo/client/testing'
-import { en } from 'make-plural/plurals'
 import { PrivatePage } from '../PrivatePage'
 import { UserVarProvider } from '../../utilities/userState'
 

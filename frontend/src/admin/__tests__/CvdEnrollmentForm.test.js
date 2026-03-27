@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
 import { CvdEnrollmentForm } from '../CvdEnrollmentForm'
 import '@testing-library/jest-dom'
 

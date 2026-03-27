@@ -4,7 +4,6 @@ import { ChakraProvider, theme } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { en } from 'make-plural/plurals'
 import { DomainUpdateList } from '../DomainUpdateList'
 import { UPDATE_DOMAINS_BY_DOMAIN_IDS, UPDATE_DOMAINS_BY_FILTERS } from '../../graphql/mutations'
 

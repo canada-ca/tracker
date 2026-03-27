@@ -2,7 +2,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { en } from 'make-plural/plurals'
 import { useDocumentTitle } from '../useDocumentTitle'
 
 describe('useDocumentTitle', () => {

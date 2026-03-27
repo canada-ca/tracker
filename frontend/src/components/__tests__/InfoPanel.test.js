@@ -3,7 +3,6 @@ import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
 import { InfoButton, InfoBox, InfoPanel } from '../InfoPanel'
 
 describe('<InfoPanel>', () => {

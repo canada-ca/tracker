@@ -8,7 +8,6 @@ import { I18nProvider } from '@lingui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { i18n } from '@lingui/core'
-import { en } from 'make-plural'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../../graphql/queries'
 
 const mocks = [

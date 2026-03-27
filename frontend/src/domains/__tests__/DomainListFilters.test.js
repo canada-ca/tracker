@@ -9,7 +9,6 @@ import { makeVar } from '@apollo/client'
 import { createCache } from '../../client'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
-import { en } from 'make-plural/plurals'
 
 describe('DomainListFilters', () => {
   let setFilters

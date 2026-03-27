@@ -5,7 +5,6 @@ import { List, theme, ChakraProvider, ListItem } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
 import { OrganizationCard } from '../OrganizationCard'
 import { matchMediaSize } from '../../helpers/matchMedia'
 matchMediaSize()

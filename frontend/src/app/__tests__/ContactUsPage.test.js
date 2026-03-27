@@ -6,7 +6,6 @@ import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
 import ContactUsPage from '../ContactUsPage'
 import { UserVarProvider } from '../../utilities/userState'
 
@@ -56,9 +55,7 @@ describe('<ContactUsPage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    const button = await waitFor(() =>
-      getByRole('link', { name: /Contact Us/i }),
-    )
+    const button = await waitFor(() => getByRole('link', { name: /Contact Us/i }))
     await waitFor(() => {
       expect(button)
       fireEvent.click(button)
