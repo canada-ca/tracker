@@ -1,13 +1,13 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
-import { t } from "@lingui/core/macro"
+import { t } from '@lingui/core/macro'
 
 import { FormField } from './FormField'
 
 function DomainField({
-  name,
-  label,
-  placeholder,
+  name = 'domainURL',
+  label = t`Domain URL:`,
+  placeholder = t`Domain URL`,
   forwardedRef,
   inputProps,
   ...props
@@ -30,12 +30,6 @@ DomainField.propTypes = {
   placeholder: string,
   inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
-}
-
-DomainField.defaultProps = {
-  name: 'domainURL',
-  label: t`Domain URL:`,
-  placeholder: t`Domain URL`,
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {
