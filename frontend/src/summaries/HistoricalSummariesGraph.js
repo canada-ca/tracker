@@ -14,7 +14,8 @@ import { Line, LinePath } from '@visx/shape'
 import { useTooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip'
 import { utcFormat } from '@visx/vendor/d3-time-format'
 import { GlyphCircle } from '@visx/glyph'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { func } from 'prop-types'
 import useSearchParam from '../utilities/useSearchParam'
 import { useLocation } from 'react-router-dom'

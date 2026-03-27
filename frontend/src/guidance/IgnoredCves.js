@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Button, Divider, Flex, SimpleGrid, Text } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import withSuperAdmin from '../app/withSuperAdmin'
 import PropTypes from 'prop-types'
 

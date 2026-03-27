@@ -30,7 +30,8 @@ import {
 } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { array, func, number, string } from 'prop-types'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { UPDATE_DOMAINS_BY_DOMAIN_IDS, UPDATE_DOMAINS_BY_FILTERS } from '../graphql/mutations'
 
 export function DomainUpdateList({ orgId, domains, availableTags, filters, search, domainCount, resetToFirstPage }) {

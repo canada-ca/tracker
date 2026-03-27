@@ -1,6 +1,6 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { IconButton } from '@chakra-ui/react'
 import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 

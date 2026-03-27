@@ -22,7 +22,8 @@ import {
 import { CheckCircleIcon, MinusIcon, EditIcon } from '@chakra-ui/icons'
 import { bool, func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Formik } from 'formik'
 
 import { ORGANIZATION_INFORMATION } from '../graphql/queries'

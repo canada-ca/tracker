@@ -1,5 +1,5 @@
 import React from 'react'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { Flex } from '@chakra-ui/react'
 import { array } from 'prop-types'
 
