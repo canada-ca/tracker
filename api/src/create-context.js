@@ -12,6 +12,7 @@ import { WebScanDataSource } from './web-scan'
 import { AuditLogsDataSource } from './audit-logs'
 import { AdditionalFindingsDataSource } from './additional-findings'
 import {
+  AuthDataSource,
   checkDomainOwnership,
   checkDomainPermission,
   checkOrgOwner,
@@ -138,6 +139,7 @@ export async function createContext({
       sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
     },
     dataSources: {
+      auth: new AuthDataSource({ query, userKey, i18n }),
       additionalFindings: new AdditionalFindingsDataSource({ query, userKey, i18n, language: request.language }),
       auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
