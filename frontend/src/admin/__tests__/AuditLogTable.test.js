@@ -1,27 +1,15 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { AuditLogTable } from '../AuditLogTable'
 import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
 import userEvent from '@testing-library/user-event'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { AUDIT_LOGS } from '../../graphql/queries'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<AuditLogTable />', () => {
   it('shows a table displaying activity logs from organizations', async () => {

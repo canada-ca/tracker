@@ -1,5 +1,5 @@
 import { Select, Flex, Text, IconButton, Divider } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import React from 'react'
 import { array, bool, func, number } from 'prop-types'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'

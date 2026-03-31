@@ -15,7 +15,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { array, string } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { WebTLSResults } from './WebTLSResults'
 import { WebConnectionResults } from './WebConnectionResults'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'

@@ -4,8 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider, useDisclosure } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
+import { i18n } from '@lingui/core'
 import userEvent from '@testing-library/user-event'
 import { RequestOrgInviteModal } from '../RequestOrgInviteModal'
 import { REQUEST_INVITE_TO_ORG } from '../../graphql/mutations'
@@ -13,19 +12,7 @@ import { matchMediaSize } from '../../helpers/matchMedia'
 import { createCache } from '../../client'
 import { makeVar } from '@apollo/client'
 import { UserVarProvider } from '../../utilities/userState'
-
 matchMediaSize()
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
-
 const orgId = 'test-id'
 const orgName = 'test-org-name'
 

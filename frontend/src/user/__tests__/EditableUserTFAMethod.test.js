@@ -2,25 +2,13 @@ import React from 'react'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
-
 import { EditableUserTFAMethod } from '../EditableUserTFAMethod'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { UPDATE_USER_PROFILE } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<EditableUserTFAMethod />', () => {
   it('renders', async () => {

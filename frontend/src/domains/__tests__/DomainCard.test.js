@@ -4,21 +4,11 @@ import { MemoryRouter } from 'react-router-dom'
 import { List, theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
-
+import { i18n } from '@lingui/core'
 import { DomainCard } from '../DomainCard'
 import { UserVarProvider } from '../../utilities/userState'
 import { makeVar } from '@apollo/client'
 
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 const status = {
   policy: 'pass',
   ciphers: 'pass',

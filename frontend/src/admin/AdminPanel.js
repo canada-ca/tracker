@@ -1,6 +1,6 @@
 import React from 'react'
 import { Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { array, bool, string } from 'prop-types'
 import { ErrorBoundary } from 'react-error-boundary'
 

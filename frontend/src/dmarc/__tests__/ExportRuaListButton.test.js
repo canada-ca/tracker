@@ -2,23 +2,12 @@ import React from 'react'
 import { UserVarProvider } from '../../utilities/userState'
 import { theme, ThemeProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-
 import { ExportRuaListButton } from '../ExportRuaListButton'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<ExportButton />', () => {
   it('renders without error', async () => {

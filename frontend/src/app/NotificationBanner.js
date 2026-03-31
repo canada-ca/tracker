@@ -3,7 +3,8 @@ import { Flex, Box, CloseButton, Button, Alert, AlertIcon, useToast } from '@cha
 
 import { any, bool, oneOf, string } from 'prop-types'
 import { CloseIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useMutation } from '@apollo/client'
 import { DISMISS_MESSAGE } from '../graphql/mutations'
 import { useUserVar } from '../utilities/userState'

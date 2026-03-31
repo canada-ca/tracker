@@ -1,19 +1,11 @@
 // frontend/src/guidance/SecurityTxt.test.js
 import React from 'react'
+
 import { render } from '@testing-library/react'
 import { SecurityTxt } from '../SecurityTxt'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 describe('SecurityTxt', () => {
   it('renders error message when data is undefined', () => {
     const { getByText } = render(

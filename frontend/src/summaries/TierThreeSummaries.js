@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { object } from 'prop-types'
 import { SummaryGroup } from './SummaryGroup'
 

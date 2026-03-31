@@ -2,24 +2,12 @@ import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-
 import { NotificationBanner } from '../NotificationBanner'
-
 import { UserVarProvider } from '../../utilities/userState'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<NotificationBanner />', () => {
   it('renders correctly', () => {

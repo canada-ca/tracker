@@ -3,19 +3,8 @@ import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-
+import { i18n } from '@lingui/core'
 import { LanguageSelect } from '../LanguageSelect'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<LanguageSelect />', () => {
   describe('by default', () => {

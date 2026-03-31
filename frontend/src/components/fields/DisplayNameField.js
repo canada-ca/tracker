@@ -1,6 +1,6 @@
 import React from 'react'
 import { func, object, oneOfType, shape } from 'prop-types'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { PersonIcon } from '../../theme/Icons'
 
 import { FormField } from './FormField'

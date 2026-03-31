@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import Joyride from 'react-joyride'
 import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useUserVar } from '../../utilities/userState'
 import theme from '../../theme/canada'
 import { useLocation } from 'react-router-dom'

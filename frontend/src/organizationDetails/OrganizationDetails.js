@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import {
   Box,
   Button,

@@ -1,15 +1,13 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import AdminPage from '../AdminPage'
 import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
 import userEvent from '@testing-library/user-event'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
@@ -19,16 +17,6 @@ import {
   PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
   PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
 } from '../../graphql/queries'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<AdminPage />', () => {
   it('shows a list of the users organizations', async () => {

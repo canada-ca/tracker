@@ -7,21 +7,11 @@ import { UPDATE_USER_PROFILE } from '../../graphql/mutations'
 import { useUserVar } from '../../utilities/userState'
 import { ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 
 jest.mock('../../utilities/userState', () => ({
   useUserVar: jest.fn(),
 }))
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 const mocks = [
   {

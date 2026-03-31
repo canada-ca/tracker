@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 export default function PageNotFound() {
   return (

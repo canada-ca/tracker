@@ -2,24 +2,13 @@ import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { DomainListFilters } from '../DomainListFilters'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserVarProvider } from '../../utilities/userState'
 import { makeVar } from '@apollo/client'
 import { createCache } from '../../client'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
-import { en } from 'make-plural/plurals'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('DomainListFilters', () => {
   let setFilters

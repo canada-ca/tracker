@@ -1,7 +1,8 @@
 import { useMutation } from '@apollo/client'
 import { QuestionOutlineIcon } from '@chakra-ui/icons'
 import { Badge, Flex, Switch, useToast, Tooltip } from '@chakra-ui/react'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { bool } from 'prop-types'
 import React from 'react'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'

@@ -1,7 +1,8 @@
 import React, { Suspense } from 'react'
 import { Link as RouteLink, Routes, Route, Navigate } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
