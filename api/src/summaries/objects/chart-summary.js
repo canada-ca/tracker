@@ -143,46 +143,46 @@ export const chartSummaryType = new GraphQLObjectType({
     dmarcPhase: {
       type: categorizedSummaryType,
       description: 'Summary based on DMARC phases for all domains.',
-      resolve: ({ dmarc_phase }, _) => {
+      resolve: ({ dmarc_phase: dmarcPhase }, _) => {
         let percentAssess, percentDeploy, percentEnforce, percentMaintain
-        if (dmarc_phase.total <= 0) {
+        if (dmarcPhase.total <= 0) {
           percentAssess = 0
           percentDeploy = 0
           percentEnforce = 0
           percentMaintain = 0
         } else {
-          percentAssess = Number(((dmarc_phase.assess / dmarc_phase.total) * 100).toFixed(1))
-          percentDeploy = Number(((dmarc_phase.deploy / dmarc_phase.total) * 100).toFixed(1))
-          percentEnforce = Number(((dmarc_phase.enforce / dmarc_phase.total) * 100).toFixed(1))
-          percentMaintain = Number(((dmarc_phase.maintain / dmarc_phase.total) * 100).toFixed(1))
+          percentAssess = Number(((dmarcPhase.assess / dmarcPhase.total) * 100).toFixed(1))
+          percentDeploy = Number(((dmarcPhase.deploy / dmarcPhase.total) * 100).toFixed(1))
+          percentEnforce = Number(((dmarcPhase.enforce / dmarcPhase.total) * 100).toFixed(1))
+          percentMaintain = Number(((dmarcPhase.maintain / dmarcPhase.total) * 100).toFixed(1))
         }
 
         const categories = [
           {
             name: 'assess',
-            count: dmarc_phase.assess,
+            count: dmarcPhase.assess,
             percentage: percentAssess,
           },
           {
             name: 'deploy',
-            count: dmarc_phase.deploy,
+            count: dmarcPhase.deploy,
             percentage: percentDeploy,
           },
           {
             name: 'enforce',
-            count: dmarc_phase.enforce,
+            count: dmarcPhase.enforce,
             percentage: percentEnforce,
           },
           {
             name: 'maintain',
-            count: dmarc_phase.maintain,
+            count: dmarcPhase.maintain,
             percentage: percentMaintain,
           },
         ]
 
         return {
           categories,
-          total: dmarc_phase.total,
+          total: dmarcPhase.total,
         }
       },
     },
@@ -221,32 +221,32 @@ export const chartSummaryType = new GraphQLObjectType({
     webConnections: {
       type: categorizedSummaryType,
       description: 'Summary based on HTTPS and HSTS scan results for all domains.',
-      resolve: ({ web_connections }, _) => {
+      resolve: ({ web_connections: webConnections }, _) => {
         let percentPass, percentageFail
-        if (web_connections.total <= 0) {
+        if (webConnections.total <= 0) {
           percentPass = 0
           percentageFail = 0
         } else {
-          percentPass = Number(((web_connections.pass / web_connections.total) * 100).toFixed(1))
-          percentageFail = Number(((web_connections.fail / web_connections.total) * 100).toFixed(1))
+          percentPass = Number(((webConnections.pass / webConnections.total) * 100).toFixed(1))
+          percentageFail = Number(((webConnections.fail / webConnections.total) * 100).toFixed(1))
         }
 
         const categories = [
           {
             name: 'pass',
-            count: web_connections.pass,
+            count: webConnections.pass,
             percentage: percentPass,
           },
           {
             name: 'fail',
-            count: web_connections.fail,
+            count: webConnections.fail,
             percentage: percentageFail,
           },
         ]
 
         return {
           categories,
-          total: web_connections.total,
+          total: webConnections.total,
         }
       },
     },
