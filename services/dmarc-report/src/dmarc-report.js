@@ -1,6 +1,7 @@
 const { updateDomain } = require('./update-domain')
 const { loadCheckOrg } = require('./loaders')
 const { updateNoOwnerDomainMailStatus } = require('./database')
+const logger = require('./logger')
 
 async function dmarcReport({ ownerships, arangoCtx, currentDate, cosmosDates, container, updateAllDates }) {
   // get org acronyms
@@ -12,11 +13,11 @@ async function dmarcReport({ ownerships, arangoCtx, currentDate, cosmosDates, co
     // check if org exists
     const checkOrg = await loadCheckOrg({ arangoCtx, orgAcronymEn })
     if (!checkOrg) {
-      console.warn(`Org: ${orgAcronym} cannot be found in datastore`)
+      logger.warn({ orgAcronym: String(orgAcronym) }, 'Org cannot be found in the datastore, skipping to next org')
       continue
     }
 
-    console.info(`Updating DMARC summary info for org: ${String(orgAcronym)}`)
+    logger.info({ orgAcronym: String(orgAcronym) }, 'Updating DMARC summary info for org')
 
     const batchSize = 60
 
@@ -24,7 +25,7 @@ async function dmarcReport({ ownerships, arangoCtx, currentDate, cosmosDates, co
       // Batch update domains, process 20 at a time
       const domains = ownerships[orgAcronym].slice(i, i + batchSize)
 
-      console.log(`Checking ${domains.length} domains for ${orgAcronym}: ${domains}`)
+      logger.info({ orgAcronym: String(orgAcronym), batchSize: domains.length }, 'Processing batch of domains for org')
 
       const queryResults = await container.items
         .query({
@@ -56,7 +57,7 @@ async function dmarcReport({ ownerships, arangoCtx, currentDate, cosmosDates, co
   // Update send status for all domains without ownership
   await updateNoOwnerDomainMailStatus({ arangoCtx })
 
-  console.info('Completed assigning ownerships.')
+  logger.info('Completed updating DMARC summary info for all orgs')
 }
 
 module.exports = { dmarcReport }

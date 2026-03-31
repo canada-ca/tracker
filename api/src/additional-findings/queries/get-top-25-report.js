@@ -9,7 +9,7 @@ export const getTop25Reports = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
-      loaders: { loadTop25Reports },
+      dataSources: { additionalFindings },
       language,
     },
   ) => {
@@ -19,7 +19,7 @@ export const getTop25Reports = {
     const isSuperAdmin = await checkSuperAdmin()
     superAdminRequired({ user, isSuperAdmin })
 
-    const top25Reports = await loadTop25Reports({ ...args })
+    const top25Reports = await additionalFindings.getTop25Reports({ ...args })
 
     console.info(`User ${userKey} successfully retrieved all top 25 reports.`)
 

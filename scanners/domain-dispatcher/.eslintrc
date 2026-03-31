@@ -9,6 +9,11 @@
   "env": {
     "jest/globals": true
   },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
     "no-unused-vars": [

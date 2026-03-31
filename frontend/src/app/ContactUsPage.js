@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { Box, Divider, Heading, Button, Text, Link } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 

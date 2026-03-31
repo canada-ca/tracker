@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Button, Flex, Select, Text } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Formik } from 'formik'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { array, func } from 'prop-types'

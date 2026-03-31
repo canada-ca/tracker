@@ -27,7 +27,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       initContainers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-44d0896-1769017858 # {"$imagepolicy": "flux-system:database-migration"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-fba8d01-1774016622 # {"$imagepolicy": "flux-system:database-migration"}
           name: database-migration
           env:
             - name: DB_USER
@@ -53,7 +53,7 @@ spec:
                   name: api
                   key: DB_URL
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-c937724-1771969330 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-616e84b-1774973852 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000

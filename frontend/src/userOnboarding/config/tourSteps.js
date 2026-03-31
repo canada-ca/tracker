@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 //Tour steps for each page labeled by the page name, with option for requiring authentication
 export const mainTourSteps = {

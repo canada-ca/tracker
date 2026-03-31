@@ -1,17 +1,16 @@
-FROM python:3.14.2-slim-bookworm AS python-builder
+FROM python:3.14.2-alpine AS python-builder
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DEBIAN_FRONTEND noninteractive
 WORKDIR /working/install
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  apt-utils \
+RUN apk add --no-cache \
   python3 \
-  python3-pip \
-  python3-setuptools \
-  python3-wheel \
-  build-essential \
+  py3-pip \
+  py3-setuptools \
+  py3-wheel \
+  build-base \
   python3-dev
 
 COPY requirements.txt /requirements.txt
@@ -21,7 +20,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.2-slim-bookworm
+FROM python:3.14.2-alpine
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -34,7 +33,7 @@ COPY detect_decay.py ./
 COPY config.py ./
 COPY notify /decay/notify
 
-RUN useradd -ms /bin/bash decay
+RUN adduser -D decay
 USER decay
 
 CMD ["python3", "detect_decay.py"]

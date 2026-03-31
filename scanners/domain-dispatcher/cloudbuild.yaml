@@ -13,19 +13,19 @@ steps:
     id: wait_arango
     args: ['arangodb:8529']
 
-  - name: node:16-alpine
+  - name: node:22-alpine
     id: install
     dir: scanners/domain-dispatcher
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: node:16-alpine
+  - name: node:22-alpine
     id: lint
     dir: scanners/domain-dispatcher
     entrypoint: npm
     args: ['run', 'lint']
 
-  - name: node:16-alpine
+  - name: node:22-alpine
     id: test
     dir: scanners/domain-dispatcher
     entrypoint: npm

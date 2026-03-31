@@ -35,7 +35,8 @@ export const findAuditLogs = {
       userKey,
       i18n,
       auth: { checkPermission, userRequired, verifiedRequired },
-      loaders: { loadAuditLogsByOrgId, loadOrgByKey },
+      loaders: { loadOrgByKey },
+      dataSources: { auditLogs },
       validators: { cleanseInput },
     },
   ) => {
@@ -51,7 +52,7 @@ export const findAuditLogs = {
     if (!ac.can(permission).readOwn('log').granted) {
       throw new Error(i18n._(t`Cannot query audit logs on organization without admin permission or higher.`))
     }
-    const auditLogCollection = await loadAuditLogsByOrgId({
+    const auditLogCollection = await auditLogs.getConnectionsByOrgId({
       ...args,
       orgId: org?._key,
       permission,

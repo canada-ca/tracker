@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import {
   Box,
   Code,
@@ -115,6 +116,7 @@ export default function DomainsPage() {
     },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore',
   })
 
   const { isOpen, onToggle } = useDisclosure()

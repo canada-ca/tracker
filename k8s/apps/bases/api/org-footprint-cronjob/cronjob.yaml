@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: org-footprint
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-f63153a-1770835371 # {"$imagepolicy": "flux-system:org-footprint"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-a25fa5d-1774545021 # {"$imagepolicy": "flux-system:org-footprint"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -68,6 +68,11 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_PENDING_USERS
+                - name: NOTIFICATION_PENDING_CVD_ENROLLMENT
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_PENDING_CVD_ENROLLMENT
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000

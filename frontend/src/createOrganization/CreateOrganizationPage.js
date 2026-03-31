@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Button, Flex, SimpleGrid, Heading, Stack, useToast, Switch, Badge } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { Link as RouteLink, useNavigate } from 'react-router-dom'

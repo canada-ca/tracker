@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cvd-enrollment
+  namespace: api
+spec:
+  timeZone: America/Toronto
+  schedule: "0 3 * * *" # Nightly at 3am UTC
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: cvd-enrollment
+        spec:
+          securityContext:
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: cvd-enrollment
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:master-c3fd46c-1774544946 # {"$imagepolicy": "flux-system:cvd-enrollment"}
+              env:
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_USER
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_PASS
+                - name: DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_URL
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_NAME
+                - name: API_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: H1_USERNAME
+                - name: API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: H1_TOKEN
+                - name: ORG_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: H1_ORG_ID
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+          restartPolicy: Never
+      backoffLimit: 4

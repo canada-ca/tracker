@@ -1,17 +1,16 @@
-FROM python:3.11.11-slim-bookworm AS python-builder
+FROM python:3.11.11-alpine AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONWARNINGS ignore
 ENV PYTHONUNBUFFERED 1
 WORKDIR /working/install
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-utils \
+RUN apk add --no-cache \
     python3 \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    build-essential \
+    py3-pip \
+    py3-setuptools \
+    py3-wheel \
+    build-base \
     python3-dev
 
 COPY requirements.txt /requirements.txt
@@ -21,7 +20,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.11.11-slim-bookworm
+FROM python:3.11.11-alpine
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -33,7 +32,7 @@ COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
 COPY update_selectors.py main.py ./
 
-RUN useradd -ms /bin/bash selectors
+RUN adduser -D selectors
 USER selectors
 
 CMD ["python3", "main.py"]

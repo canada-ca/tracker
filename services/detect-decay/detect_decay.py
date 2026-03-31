@@ -225,6 +225,7 @@ def get_users(org_id, db):
         FOR v, e IN 1 OUTBOUND @org_id affiliations
             FILTER e.permission == "admin" OR e.permission == "owner"
             FILTER v.emailUpdateOptions.detectDecay == true
+            FILTER v.insideUser == true
             RETURN v
         """,
         bind_vars={"org_id": org_id},

@@ -1,6 +1,6 @@
-import {Kind} from 'graphql'
-import {stringify} from 'jest-matcher-utils'
-import {Acronym} from '../index'
+import { GraphQLError, Kind } from 'graphql'
+import { stringify } from 'jest-matcher-utils'
+import { Acronym } from '../index'
 
 describe('given a acronym scalar', () => {
   describe('serializing inputs', () => {
@@ -22,9 +22,7 @@ describe('given a acronym scalar', () => {
     })
     describe('given invalid inputs', () => {
       ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(
-          invalidInput,
-        )}`, () => {
+        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
           expect(() => Acronym.serialize(invalidInput)).toThrow(
             new TypeError(`Value is not string: ${typeof invalidInput}`),
           )
@@ -47,9 +45,7 @@ describe('given a acronym scalar', () => {
     })
     describe('given invalid inputs', () => {
       ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(
-          invalidInput,
-        )}`, () => {
+        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
           expect(() => Acronym.parseValue(invalidInput)).toThrow(
             new TypeError(`Value is not string: ${typeof invalidInput}`),
           )
@@ -88,13 +84,9 @@ describe('given a acronym scalar', () => {
           kind: Kind.DOCUMENT,
         },
       ].forEach((literal) => {
-        it(`throws an error when parsing invalid literal ${stringify(
-          literal,
-        )}`, () => {
+        it(`throws an error when parsing invalid literal ${stringify(literal)}`, () => {
           expect(() => Acronym.parseLiteral(literal, {})).toThrow(
-            new TypeError(
-              `Can only validate strings as acronyms but got a: ${literal.kind}`,
-            ),
+            new GraphQLError(`Can only validate strings as acronyms but got a: ${literal.kind}`),
           )
         })
       })

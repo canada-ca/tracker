@@ -3,25 +3,12 @@ import { theme, ChakraProvider, Accordion } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
-
 import { GuidanceTagDetails } from '../GuidanceTagDetails'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
-
 const guidanceTag = rawDmarcGuidancePageData.data.findDomainByDomain.dnsScan.edges[0].node.spf.positiveTags[0]
 
 Object.defineProperty(window, 'matchMedia', {

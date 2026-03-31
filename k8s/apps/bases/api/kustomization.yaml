@@ -8,3 +8,4 @@ resources:
   - virtual-service.yaml
   - network-policy.yaml
   - domain-cleanup-cronjob.yaml
+  - cvd-enrollment-cronjob.yaml

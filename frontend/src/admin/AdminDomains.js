@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import {
   Box,
   Button,
@@ -186,6 +187,8 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
+    { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
+    { value: 'CVD_PENDING', text: t`CVD Pending` },
   ]
 
   const adminDomainList = loading ? (

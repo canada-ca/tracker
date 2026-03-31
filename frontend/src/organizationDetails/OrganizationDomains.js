@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { array, bool, string } from 'prop-types'
@@ -118,6 +119,7 @@ export function OrganizationDomains({
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
+    { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
   ]
 
   const assetStateOptions = [
@@ -130,7 +132,7 @@ export function OrganizationDomains({
 
   const guidanceTagOptions = negativeFindings?.map(({ tagId, tagName }) => {
     const getTagCategoryFromId = (id) => {
-      return id.split(/[0-9]/)[0].toUpperCase()
+      return id.split(/[0-9]/)[0].toUpperCase();
     }
     return { value: tagId, text: `${getTagCategoryFromId(tagId)}: ${tagName}` }
   })

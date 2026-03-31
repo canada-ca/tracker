@@ -1,3 +1,5 @@
+const logger = require('../logger')
+
 async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
   // get current summary info
   const edgeCursor = await arangoCtx.query`
@@ -35,14 +37,14 @@ async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
       `,
     )
   } catch (err) {
-    console.error(`Transaction step error occurred for dmarc summaries service when upserting summary data: ${err}`)
+    logger.error({ err }, 'Transaction step error occurred for dmarc summaries service when upserting summary data')
     await trx.abort()
   }
 
   try {
     await trx.commit()
   } catch (err) {
-    console.error(`Transaction commit error occurred for dmarc summaries service when upserting summary data: ${err}`)
+    logger.error({ err }, 'Transaction commit error occurred for dmarc summaries service when upserting summary data')
     await trx.abort()
   }
 }

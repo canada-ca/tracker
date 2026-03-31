@@ -1,3 +1,5 @@
+const logger = require('../logger')
+
 async function removeSummary({ arangoCtx, domain, date }) {
   // Generate list of collections names
   const collectionStrings = Object.keys(arangoCtx.collections)
@@ -32,14 +34,14 @@ async function removeSummary({ arangoCtx, domain, date }) {
     `,
     )
   } catch (err) {
-    console.error(`Transaction step error occurred for dmarc summaries service when removing summary data: ${err}`)
+    logger.error({ err }, 'Transaction step error occurred for dmarc summaries service when removing summary data')
     await trx.abort()
   }
 
   try {
     await trx.commit()
   } catch (err) {
-    console.error(`Transaction commit error occurred for dmarc summaries service when removing summary data: ${err}`)
+    logger.error({ err }, 'Transaction commit error occurred for dmarc summaries service when removing summary data')
     await trx.abort()
   }
 }

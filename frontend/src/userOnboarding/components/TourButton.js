@@ -4,7 +4,7 @@ import { useTour } from '../hooks/useTour'
 // import { QuestionOutlineIcon } from '@chakra-ui/icons'
 // import { IconButton } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 export const toursConfig = {
   // list of pages with their paths

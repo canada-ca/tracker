@@ -18,7 +18,8 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { useMutation } from '@apollo/client'
 

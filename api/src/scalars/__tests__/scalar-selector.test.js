@@ -1,4 +1,4 @@
-import { Kind } from 'graphql'
+import { GraphQLError, Kind } from 'graphql'
 import { stringify } from 'jest-matcher-utils'
 import { Selectors, SelectorsInput } from '../index'
 
@@ -48,7 +48,7 @@ describe("checking a 'selector' type", () => {
         ].forEach((literal) => {
           it(`throws an error when parsing invalid literal ${stringify(literal)}`, () => {
             expect(() => Selectors.parseLiteral(literal, {})).toThrow(
-              new TypeError(`Can only validate strings as selectors but got a: ${literal.kind}`),
+              new GraphQLError(`Can only validate strings as selectors but got a: ${literal.kind}`),
             )
           })
         })

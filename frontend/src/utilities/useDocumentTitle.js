@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { useLingui } from '@lingui/react'
 
 export const useDocumentTitle = (title, setTitle = true) => {

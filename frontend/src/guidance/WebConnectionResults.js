@@ -14,7 +14,8 @@ import { bool, object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { DetailTooltip } from './DetailTooltip'
 import { SecurityTxt } from './SecurityTxt'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
