@@ -33,13 +33,13 @@ ac.grant('admin')
   .updateOwn('affiliation')
   .deleteOwn('affiliation')
 
-ac.grant('owner').extend('admin').deleteOwn('organization')
+ac.grant('owner').extend('admin').deleteOwn('organization').createOwn('cvd-enrollment').updateOwn('cvd-enrollment')
 
 ac.grant('super_admin')
   .extend('owner')
-  .createAny(['organization', 'domain', 'user', 'tag', 'affiliation', 'csv', 'scan-request'])
+  .createAny(['organization', 'domain', 'user', 'tag', 'affiliation', 'csv', 'scan-request', 'cvd-enrollment'])
   .readAny(['organization', 'domain', 'user', 'tag', 'log', 'affiliation'])
-  .updateAny(['organization', 'domain', 'user', 'tag', 'affiliation'])
+  .updateAny(['organization', 'domain', 'user', 'tag', 'affiliation', 'cvd-enrollment'])
   .deleteAny(['organization', 'domain', 'user', 'tag', 'affiliation'])
 
 ac.grant('none') // no permissions — fallback for users with no org affiliation

@@ -132,7 +132,7 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     // ensure only owners can enroll domains
-    if (!['super_admin', 'owner'].includes(permission) && cvdEnrollment.status === 'enrolled') {
+    if (!ac.can(permission).createOwn('cvd-enrollment').granted && cvdEnrollment.status === 'enrolled') {
       console.warn(
         `User: ${userKey} attempted to update the CVD enrollment for domain: ${domain} in org: ${orgId}, however they do not have permission in that org.`,
       )
