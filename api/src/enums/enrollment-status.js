@@ -15,6 +15,10 @@ export const EnrollmentStatusEnums = new GraphQLEnumType({
       value: 'not-enrolled',
       description: 'The asset is not enrolled in the CVD program.',
     },
+    DENY: {
+      value: 'deny',
+      description: 'The asset has been explicitly excluded from the CVD program.',
+    },
   },
   description: 'Enumerates the possible enrollment states for the Coordinated Vulnerability Disclosure (CVD) program.',
 })
