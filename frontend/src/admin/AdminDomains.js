@@ -189,6 +189,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
     { value: 'CVD_PENDING', text: t`CVD Pending` },
+    { value: 'CVD_DENY', text: t`CVD Denied` },
   ]
 
   const adminDomainList = loading ? (
