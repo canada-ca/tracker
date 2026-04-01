@@ -43,16 +43,16 @@ export const chartSummaryType = new GraphQLObjectType({
     dmarcPhase: {
       type: categorizedSummaryType,
       description: 'Summary based on DMARC phases for all domains.',
-      resolve: ({ dmarc_phase }) => {
-        const total = dmarc_phase.total
+      resolve: ({ dmarc_phase: dmarcPhase }) => {
+        const total = dmarcPhase.total
         const safe = total > 0
         const phaseNames = ['assess', 'deploy', 'enforce', 'maintain']
         return {
           total,
           categories: phaseNames.map((name) => ({
             name,
-            count: dmarc_phase[name],
-            percentage: safe ? Number(((dmarc_phase[name] / total) * 100).toFixed(1)) : 0,
+            count: dmarcPhase[name],
+            percentage: safe ? Number(((dmarcPhase[name] / total) * 100).toFixed(1)) : 0,
           })),
         }
       },
