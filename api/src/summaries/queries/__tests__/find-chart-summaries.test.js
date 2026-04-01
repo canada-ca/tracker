@@ -155,14 +155,14 @@ describe('given findMyOrganizationsQuery', () => {
                     }),
                     verifiedRequired: verifiedRequired({}),
                   },
-                  loaders: {
-                    loadChartSummariesByPeriod: loadChartSummariesByPeriod({
+                  dataSources: {
+                    summaries: { getConnectionsByPeriod: loadChartSummariesByPeriod({
                       query,
                       userKey: user._key,
                       cleanseInput,
                       auth: { loginRequired: true },
                       language: 'en',
-                    }),
+                    }) },
                   },
                 },
               })
@@ -305,15 +305,15 @@ describe('given findMyOrganizationsQuery', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadChartSummariesByPeriod: loadChartSummariesByPeriod({
+              dataSources: {
+                summaries: { getConnectionsByPeriod: loadChartSummariesByPeriod({
                   query: mockedQuery,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   language: 'en',
                   i18n,
-                }),
+                }) },
               },
             },
           })

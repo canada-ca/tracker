@@ -27,14 +27,14 @@ export const findChartSummaries = {
   resolve: async (
     _,
     args,
-    { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadChartSummariesByPeriod } },
+    { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, dataSources: { summaries } },
   ) => {
     if (loginRequiredBool) {
       const user = await userRequired()
       verifiedRequired({ user })
     }
 
-    const summaryConnections = await loadChartSummariesByPeriod({ ...args })
+    const summaryConnections = await summaries.getConnectionsByPeriod({ ...args })
 
     console.info(`User: ${userKey} successfully retrieved their chart summaries.`)
     return summaryConnections
