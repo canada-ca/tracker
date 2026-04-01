@@ -21,7 +21,8 @@ export const findAllTags = {
     {
       userKey,
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      loaders: { loadAllTags, loadOrgByKey },
+      loaders: { loadOrgByKey },
+      dataSources: { tags: tagsSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -39,7 +40,7 @@ export const findAllTags = {
       superAdminRequired({ user, isSuperAdmin })
     }
 
-    const tags = await loadAllTags({ ...args, orgId: orgKey })
+    const tags = await tagsSource.all({ ...args, orgId: orgKey })
     console.info(`User: ${userKey} successfully retrieved tags.`)
     return tags
   },

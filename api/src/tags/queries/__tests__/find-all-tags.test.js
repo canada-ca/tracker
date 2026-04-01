@@ -1,10 +1,10 @@
 import { findAllTags } from '../find-all-tags'
 
 describe('findAllTags', () => {
-  let loadAllTags, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, userKey, context, cleanseInput
+  let tagsAll, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, userKey, context, cleanseInput
 
   beforeEach(() => {
-    loadAllTags = jest.fn()
+    tagsAll = jest.fn()
     userRequired = jest.fn()
     verifiedRequired = jest.fn()
     checkSuperAdmin = jest.fn()
@@ -14,7 +14,8 @@ describe('findAllTags', () => {
     userKey = 'test-user'
     context = {
       userKey,
-      loaders: { loadAllTags },
+      dataSources: { tags: { all: tagsAll } },
+      loaders: { loadOrgByKey: jest.fn() },
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
       validators: { cleanseInput },
     }
@@ -32,27 +33,27 @@ describe('findAllTags', () => {
         organizations: [],
       },
     ]
-    loadAllTags.mockResolvedValue(tags)
+    tagsAll.mockResolvedValue(tags)
 
     const result = await findAllTags.resolve(null, { isVisible: false }, context)
 
-    expect(loadAllTags).toHaveBeenCalledWith({ isVisible: false, orgId: null })
+    expect(tagsAll).toHaveBeenCalledWith({ isVisible: false, orgId: null })
     expect(result).toEqual(tags)
   })
 
   it('should apply visible filter when isVisible is true', async () => {
     const tags = [{ tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global' }]
-    loadAllTags.mockResolvedValue(tags)
+    tagsAll.mockResolvedValue(tags)
 
     const result = await findAllTags.resolve(null, { isVisible: true }, context)
 
-    expect(loadAllTags).toHaveBeenCalledWith({ isVisible: true, orgId: null })
+    expect(tagsAll).toHaveBeenCalledWith({ isVisible: true, orgId: null })
     expect(result).toEqual(tags)
   })
 
   it('should log a message when tags are successfully retrieved', async () => {
     const tags = [{ tagId: '1', label: 'Tag1', description: 'Description1', visible: true, ownership: 'global' }]
-    loadAllTags.mockResolvedValue(tags)
+    tagsAll.mockResolvedValue(tags)
     console.info = jest.fn()
 
     await findAllTags.resolve(null, { isVisible: false }, context)
@@ -61,7 +62,7 @@ describe('findAllTags', () => {
   })
 
   it('should throw an error when loadAllTags fails', async () => {
-    loadAllTags.mockRejectedValue(new Error('Load error'))
+    tagsAll.mockRejectedValue(new Error('Load error'))
 
     await expect(findAllTags.resolve(null, { isVisible: false }, context)).rejects.toThrow('Load error')
   })

@@ -12,6 +12,7 @@ import { DnsScanDataSource } from './dns-scan'
 import { WebScanDataSource } from './web-scan'
 import { AuditLogsDataSource } from './audit-logs'
 import { AdditionalFindingsDataSource } from './additional-findings'
+import { TagsDataSource } from './tags'
 import {
   checkDomainOwnership,
   checkDomainPermission,
@@ -141,8 +142,9 @@ export async function createContext({
     dataSources: {
       summaries: new SummariesDataSource({ query, userKey, cleanseInput, i18n }),
       additionalFindings: new AdditionalFindingsDataSource({ query, userKey, i18n, language: request.language }),
-      auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n }),
+      auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
+      tags: new TagsDataSource({ query, userKey, i18n, language: request.language, transaction, collections }),
       webScan: new WebScanDataSource({ query, userKey, cleanseInput, i18n }),
     },
     loaders: initializeLoaders({
