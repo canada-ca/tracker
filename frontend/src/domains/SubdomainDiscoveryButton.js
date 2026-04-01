@@ -18,7 +18,8 @@ import {
 import { Search2Icon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { REQUEST_DISCOVERY } from '../graphql/mutations'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import withSuperAdmin from '../app/withSuperAdmin'
 
 function SubdomainDiscoveryButton({ orgId, orgSlug, domainUrl, ...props }) {

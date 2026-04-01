@@ -4,7 +4,7 @@ import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, Accordi
 import { TierOneSummaries } from './TierOneSummaries'
 import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { object } from 'prop-types'
 
 export function TieredSummaries({ summaries }) {

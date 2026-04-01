@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Code, Text } from '@chakra-ui/react'
 import { array } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 export function SecurityTxt({ data, ...props }) {
   let validRecords = []

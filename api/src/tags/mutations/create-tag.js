@@ -3,6 +3,7 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { createTagUnion } from '../unions'
 import { TagOwnershipEnums } from '../../enums'
+import ac from '../../access-control'
 
 export const createTag = new mutationWithClientMutationId({
   name: 'CreateTag',
@@ -120,7 +121,7 @@ export const createTag = new mutationWithClientMutationId({
       }
 
       permission = await checkPermission({ orgId: org._id })
-      if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+      if (!ac.can(permission).createOwn('tag').granted) {
         console.warn(
           `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
         )

@@ -4,24 +4,14 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import userEvent from '@testing-library/user-event'
-
 import { PasswordField } from '../PasswordField'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<PasswordField />', () => {
   describe('when validation fails', () => {
     it('displays an error message', async () => {
+      i18n.activate('en')
       const validationSchema = object().shape({
         password: string().required('sadness'),
       })
@@ -35,9 +25,7 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => (
-                <PasswordField name="password" label="Test Password Input" />
-              )}
+              {() => <PasswordField name="password" label="Test Password Input" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
@@ -63,9 +51,7 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => (
-                <PasswordField name="password" label="Test Password Input" />
-              )}
+              {() => <PasswordField name="password" label="Test Password Input" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,

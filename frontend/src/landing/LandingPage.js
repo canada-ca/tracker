@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'

@@ -2,7 +2,7 @@ import React from 'react'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 import { Text } from '@chakra-ui/layout'
 import { Tag, TagCloseButton, TagLabel, TagRightIcon } from '@chakra-ui/tag'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { array, func } from 'prop-types'
 
 export function FilterList({ filters, setFilters, resetToFirstPage, filterTagOptions, guidanceTagOptions }) {

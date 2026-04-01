@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'
 import { loadUserByKey } from './user/loaders'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
+import { SummariesDataSource } from './summaries'
 import { DnsScanDataSource } from './dns-scan'
 import { WebScanDataSource } from './web-scan'
 import { AuditLogsDataSource } from './audit-logs'
@@ -139,6 +140,7 @@ export async function createContext({
       sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
     },
     dataSources: {
+      summaries: new SummariesDataSource({ query, userKey, cleanseInput, i18n }),
       additionalFindings: new AdditionalFindingsDataSource({ query, userKey, i18n, language: request.language }),
       auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),

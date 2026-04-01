@@ -7,19 +7,8 @@ import { ChakraProvider, theme } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-import { setupI18n } from '@lingui/core'
-import { en } from 'make-plural'
+import { i18n } from '@lingui/core'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../../graphql/queries'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 const mocks = [
   {

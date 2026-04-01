@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: cvd-enrollment
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:master-4a84683-1773070079 # {"$imagepolicy": "flux-system:cvd-enrollment"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:master-c3fd46c-1774544946 # {"$imagepolicy": "flux-system:cvd-enrollment"}
               env:
                 - name: DB_USER
                   valueFrom:

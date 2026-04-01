@@ -4,7 +4,7 @@ import { IconButton, keyframes, useToast } from '@chakra-ui/react'
 import { RepeatIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { REQUEST_SCAN } from '../graphql/mutations'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 
 const spin = keyframes`
   from {transform: rotate(0deg);}

@@ -12,6 +12,7 @@ import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
 import { OrderDirection } from '../../enums'
 import { tagType } from '../../tags/objects'
+import ac from '../../access-control'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -191,7 +192,7 @@ export const organizationType = new GraphQLObjectType({
         verifiedRequired({ user })
 
         const permission = await checkPermission({ orgId: _id })
-        if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
+        if (!ac.can(permission).createOwn('csv').granted) {
           console.error(
             `User "${userKey}" attempted to retrieve CSV output for organization "${_id}". Permission: ${permission}`,
           )
@@ -357,7 +358,7 @@ export const organizationType = new GraphQLObjectType({
         { i18n, auth: { checkPermission, loginRequiredBool }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
-        if (['user', 'admin', 'owner', 'super_admin'].includes(permission) === false && loginRequiredBool) {
+        if (!ac.can(permission).readOwn('affiliation').granted && loginRequiredBool) {
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 

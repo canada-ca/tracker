@@ -14,7 +14,8 @@ import {
   Select,
   Text,
 } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { bool, func, string } from 'prop-types'

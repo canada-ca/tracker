@@ -11,7 +11,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { array, bool, element, func, number, string } from 'prop-types'

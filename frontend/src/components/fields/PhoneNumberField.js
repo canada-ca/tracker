@@ -1,6 +1,6 @@
 import React from 'react'
 import { string } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react'
 import { useField, useFormikContext } from 'formik'
 import PhoneInput from 'react-phone-input-2'

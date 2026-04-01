@@ -13,7 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { arrayOf, object, string, func } from 'prop-types'
 import { json2csvAsync } from 'json-2-csv'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { any } from 'prop-types'
 import { Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton } from '@chakra-ui/react'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
