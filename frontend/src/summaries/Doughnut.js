@@ -1,7 +1,7 @@
 import React from 'react'
 import { arrayOf, func, number, object, string } from 'prop-types'
 import { Box, Image, Stack, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 
 import { useArcs } from '../utilities/useArcs'

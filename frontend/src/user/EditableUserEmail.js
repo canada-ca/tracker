@@ -18,7 +18,8 @@ import {
 } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import { Formik } from 'formik'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useMutation } from '@apollo/client'
 import { string } from 'prop-types'
 

@@ -4,27 +4,14 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import { UserList } from '../UserList'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../../graphql/queries'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG, REMOVE_USER_FROM_ORG } from '../../graphql/mutations'
 import { rawOrgUserListData } from '../../fixtures/orgUserListData'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 const successMocks = [
   {

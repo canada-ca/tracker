@@ -10,7 +10,8 @@ import {
   Stack,
   useToast,
 } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 

@@ -1,6 +1,7 @@
 import { GraphQLNonNull } from 'graphql'
 import { t } from '@lingui/macro'
 import { Slug } from '../../scalars'
+import ac from '../../access-control'
 
 const { organizationType } = require('../objects')
 
@@ -44,16 +45,11 @@ export const findOrganizationBySlug = {
     // Check user permission for organization access
     const permission = await checkPermission({ orgId: org._id })
 
-    if (loginRequiredBool) {
-      if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
-        console.warn(`User ${userKey} could not retrieve organization.`)
-        throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
-      }
-    } else {
-      if (org.verified !== true && !['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
-        console.warn(`User ${userKey} could not retrieve organization.`)
-        throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
-      }
+    if (loginRequiredBool && !ac.can(permission).readOwn('organization').granted) {
+      console.warn(`User ${userKey} could not retrieve organization.`)
+      throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
+    } else if (!loginRequiredBool && org.verified !== true && !ac.can(permission).readOwn('organization').granted) {
+      throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
     }
 
     console.info(`User ${userKey} successfully retrieved organization ${org._key}.`)

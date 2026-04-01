@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSubscription } from '@apollo/client'
 import { Box, useToast } from '@chakra-ui/react'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { node } from 'prop-types'
 
 import { useUserVar } from '../utilities/userState'

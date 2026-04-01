@@ -4,17 +4,7 @@ import { TourButton } from '../components/TourButton'
 import * as useTourModule from '../hooks/useTour'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
+import { i18n } from '@lingui/core'
 
 // Mock the useTour hook
 jest.mock('../hooks/useTour', () => ({

@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 import { Acronym } from '../../scalars'
 import { updateOrganizationUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ac from '../../access-control'
 
 export const updateOrganization = new mutationWithClientMutationId({
   name: 'UpdateOrganization',
@@ -144,7 +145,7 @@ export const updateOrganization = new mutationWithClientMutationId({
     // Check to see if user has permission
     const permission = await checkPermission({ orgId: currentOrg._id })
 
-    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
+    if (!ac.can(permission).updateOwn('organization').granted) {
       console.error(
         `User: ${userKey} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
@@ -233,11 +234,11 @@ export const updateOrganization = new mutationWithClientMutationId({
       },
     }
 
-    if (permission === 'super_admin' && typeof args.externallyManaged !== 'undefined') {
+    if (ac.can(permission).updateAny('organization').granted && typeof args.externallyManaged !== 'undefined') {
       updatedOrgDetails.externallyManaged = args.externallyManaged
     }
 
-    if (permission === 'super_admin') {
+    if (ac.can(permission).updateAny('organization').granted) {
       updatedOrgDetails.externalId = externalId || compareOrg?.externalId
     }
 

@@ -3,6 +3,7 @@ import { bulkModifyDomainsUnion } from '../unions'
 import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
 import { t } from '@lingui/macro'
 import { logActivity } from '../../audit-logs'
+import ac from '../../access-control'
 
 export const updateDomainsByDomainIds = new mutationWithClientMutationId({
   name: 'UpdateDomainsByDomainIds',
@@ -70,7 +71,7 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
 
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org._id })
-    if (!['super_admin', 'owner', 'admin'].includes(permission)) {
+    if (!ac.can(permission).updateOwn('domain').granted) {
       console.warn(
         `User: ${userKey} attempted to update domains in: ${org.slug}, however they do not have permission to do so.`,
       )

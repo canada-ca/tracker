@@ -18,7 +18,8 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { useNavigate } from 'react-router-dom'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
 import { string } from 'prop-types'

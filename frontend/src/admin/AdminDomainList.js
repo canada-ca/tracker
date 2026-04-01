@@ -1,7 +1,7 @@
 import React from 'react'
 import { IconButton, Text } from '@chakra-ui/react'
 import { ListOf } from '../components/ListOf'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { EditIcon, MinusIcon } from '@chakra-ui/icons'
 import { AdminDomainCard } from './AdminDomainCard'
 import { array, bool, func, object, string } from 'prop-types'

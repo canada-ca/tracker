@@ -27,7 +27,8 @@ import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useMutation, useQuery } from '@apollo/client'
 import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
 import { FAVOURITE_DOMAIN } from '../graphql/mutations'

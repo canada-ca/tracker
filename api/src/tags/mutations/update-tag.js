@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 import { updateTagUnion } from '../unions'
 import { TagOwnershipEnums } from '../../enums'
 import { logActivity } from '../../audit-logs'
+import ac from '../../access-control'
 
 export const updateTag = new mutationWithClientMutationId({
   name: 'UpdateTag',
@@ -136,7 +137,7 @@ export const updateTag = new mutationWithClientMutationId({
       }
 
       permission = await checkPermission({ orgId: org._id })
-      if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+      if (!ac.can(permission).updateOwn('tag').granted) {
         console.warn(
           `User: ${userKey} attempted to update a tag in: ${org.slug}, however they do not have permission to do so.`,
         )

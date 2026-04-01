@@ -4,29 +4,16 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import GuidancePage from '../GuidancePage'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData, rawDomainGuidancePageDataNoAffiliations } from '../../fixtures/dmarcGuidancePageData'
 import { DOMAIN_GUIDANCE_PAGE } from '../../graphql/queries'
 import { REQUEST_INVITE_TO_ORG } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
-
 matchMediaPolyfill(window)
+
 window
   .matchMedia('(min-width: 920px)') // Create MediaQueryList instance
   .addListener(console.log) // Subscribe to MQ mode changes

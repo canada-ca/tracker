@@ -33,7 +33,8 @@ import {
   ChevronRightIcon,
   ExternalLinkIcon,
 } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { ExportButton } from './ExportButton'
 import { InfoButton } from './InfoPanel'
@@ -142,7 +143,6 @@ export function TrackerTable({ ...props }) {
           />
         )}
       </Flex>
-
       <Table variant="med" {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => (
@@ -204,7 +204,6 @@ export function TrackerTable({ ...props }) {
           })}
         </Tbody>
       </Table>
-
       {frontendPagination && (
         <Box mt="0.25em">
           <Stack
@@ -302,7 +301,7 @@ export function TrackerTable({ ...props }) {
         </Box>
       )}
     </Box>
-  )
+  );
 }
 
 TrackerTable.propTypes = {

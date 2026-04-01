@@ -3,7 +3,7 @@ import { Box, Flex, Progress, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 export function OrganizationCard({
   name,

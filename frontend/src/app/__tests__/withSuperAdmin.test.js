@@ -4,8 +4,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import withSuperAdmin from '../withSuperAdmin'
 import { IS_USER_SUPER_ADMIN } from '../../graphql/queries'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
+import { i18n } from '@lingui/core'
 import { UserVarProvider } from '../../utilities/userState'
 import { makeVar } from '@apollo/client'
 
@@ -35,16 +34,6 @@ const mocks = [
     },
   },
 ]
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('withSuperAdmin', () => {
   it('renders the component if the user is a super admin', async () => {

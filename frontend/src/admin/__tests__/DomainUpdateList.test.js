@@ -2,26 +2,21 @@ import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { en } from 'make-plural/plurals'
 import { DomainUpdateList } from '../DomainUpdateList'
 import { UPDATE_DOMAINS_BY_DOMAIN_IDS, UPDATE_DOMAINS_BY_FILTERS } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: { en: {} },
-  localeData: { en: { plurals: en } },
-})
 
 const domains = [
   { id: '1', domain: 'example.com', tags: ['tag1'] },
   { id: '2', domain: 'test.com', tags: ['tag2'] },
 ]
+
 const availableTags = [
   { label: 'Tag 1', tagId: 'tag1' },
   { label: 'Tag 2', tagId: 'tag2' },
 ]
+
 const filters = []
 const orgId = 'org-1'
 const search = ''
