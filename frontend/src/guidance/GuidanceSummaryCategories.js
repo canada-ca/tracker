@@ -2,7 +2,7 @@ import React from 'react'
 import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import { Flex, Text } from '@chakra-ui/react'
 import { number } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 export function GuidanceSummaryCategories({ passCount, infoCount, failCount }) {
   const summaryCategoryStyleProps = {

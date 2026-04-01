@@ -2,26 +2,14 @@ import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-
 import { TopBanner } from '../TopBanner'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { SIGN_OUT } from '../../graphql/mutations'
 import { TourProvider } from '../../userOnboarding/contexts/TourContext'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<TopBanner />', () => {
   afterEach(cleanup)

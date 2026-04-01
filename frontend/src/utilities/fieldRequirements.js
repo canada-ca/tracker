@@ -1,5 +1,5 @@
 import { array, object, ref, string } from 'yup'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { i18n } from '@lingui/core'
 import { array as arrayProp, object as objectProp, string as stringProp } from 'prop-types'
 
@@ -89,7 +89,7 @@ const getSchema = (options) => {
       then: (schema) => schema.required(nonEmptyMessage()),
       otherwise: (schema) => schema.notRequired(),
     }),
-  }
+  };
 }
 
 const filterSchema = (keyArray, options) => {

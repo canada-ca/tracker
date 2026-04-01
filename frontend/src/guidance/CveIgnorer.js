@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { IGNORE_CVE, UNIGNORE_CVE } from '../graphql/mutations'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Box, Button, Text, useToast } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import withSuperAdmin from '../app/withSuperAdmin'

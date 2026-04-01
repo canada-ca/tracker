@@ -4,26 +4,13 @@ import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-d
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import DomainsPage from '../DomainsPage'
-
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { PAGINATED_DOMAINS } from '../../graphql/queries'
 import { TourProvider } from '../../userOnboarding/contexts/TourContext'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<DomainsPage />', () => {
   const mocks = [

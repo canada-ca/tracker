@@ -9,7 +9,8 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 
 export function ReactTableGlobalFilter({
@@ -35,7 +36,6 @@ export function ReactTableGlobalFilter({
       >
         <Trans>Search:</Trans>
       </Text>
-
       <InputGroup w={{ sm: '100%', md: '20rem' }}>
         <InputLeftElement aria-hidden="true">
           <SearchIcon />
@@ -52,7 +52,7 @@ export function ReactTableGlobalFilter({
         />
       </InputGroup>
     </Stack>
-  )
+  );
 }
 
 ReactTableGlobalFilter.propTypes = {

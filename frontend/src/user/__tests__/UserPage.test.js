@@ -1,30 +1,17 @@
 import React from 'react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import UserPage from '../UserPage'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { QUERY_CURRENT_USER } from '../../graphql/queries'
 import userEvent from '@testing-library/user-event'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from '../../components/ErrorFallbackMessage'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<UserPage />', () => {
   const userName = 'testuser@testemail.gc.ca'

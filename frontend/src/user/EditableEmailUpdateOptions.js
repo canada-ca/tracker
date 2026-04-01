@@ -19,7 +19,8 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { useUserVar } from '../utilities/userState'
 import { object } from 'prop-types'

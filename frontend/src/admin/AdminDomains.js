@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import {
   Box,
   Button,

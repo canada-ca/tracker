@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useLingui } from '@lingui/react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import sigEn from '../images/goc-header-logo-en.svg'
 import sigFr from '../images/goc-header-logo-fr.svg'
 

@@ -29,7 +29,8 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { CheckCircleIcon, EditIcon, MinusIcon } from '@chakra-ui/icons'
 import { SearchBox } from '../components/SearchBox'
 import { UserListModal } from './UserListModal'

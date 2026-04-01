@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Switch, Tooltip } from '@chakra-ui/react'
 import { bool, func } from 'prop-types'
 import { UserIcon } from '../theme/Icons'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { useUserVar } from '../utilities/userState'
 
 export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated, resetToFirstPage }) {

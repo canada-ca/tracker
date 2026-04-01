@@ -6,6 +6,7 @@ import { t } from '@lingui/macro'
 import { RoleEnums } from '../../enums'
 import { updateUserRoleUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ac from '../../access-control'
 
 export const updateUserRole = new mutationWithClientMutationId({
   name: 'UpdateUserRole',
@@ -101,13 +102,13 @@ given organization.`,
     const permission = await checkPermission({ orgId: org._id })
 
     // Only admins, owners, and super admins can update a user's role
-    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+    if (!ac.can(permission).updateOwn('affiliation').granted) {
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
-        code: 400,
+        code: 403,
         description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
       }
     }
@@ -151,27 +152,19 @@ given organization.`,
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
-    // Only super admins can update other super admins or owners
-    if (['owner', 'super_admin'].includes(affiliation.permission) && permission !== 'super_admin') {
+    // Only super admins can update or assign privileged roles (those with org-level authority)
+    const privilegedRoles = ac.getRoles().filter((r) => ac.can(r).deleteOwn('organization').granted)
+    if (
+      (privilegedRoles.includes(affiliation.permission) || privilegedRoles.includes(role)) &&
+      !ac.can(permission).updateAny('affiliation').granted
+    ) {
       console.warn(
-        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to update a ${affiliation.permission}.`,
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to update a ${affiliation.permission} or assign the ${role} role.`,
       )
       return {
         _type: 'error',
-        code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
-      }
-    }
-
-    // Only super admins can make other users super admins or owners
-    if (['owner', 'super_admin'].includes(role) && permission !== 'super_admin') {
-      console.warn(
-        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to make a user a ${role}.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with user role changes.`),
       }
     }
 

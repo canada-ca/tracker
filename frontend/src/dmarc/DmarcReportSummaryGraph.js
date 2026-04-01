@@ -8,7 +8,8 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
 import { LegendOrdinal } from '@visx/legend'
 import { withScreenSize } from '@visx/responsive'
 import { localPoint } from '@visx/event'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { Box, Flex, Select, Stack, Text } from '@chakra-ui/react'
 import { number, array, object } from 'prop-types'
@@ -42,7 +43,7 @@ const getDate = (d) => d.date
 let tooltipTimeout
 
 function formatLargeInt(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export function DmarcReportSummaryGraph({ ...props }) {

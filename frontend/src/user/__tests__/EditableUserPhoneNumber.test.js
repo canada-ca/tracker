@@ -2,27 +2,15 @@ import React, { Suspense } from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
-
 import { EditableUserPhoneNumber } from '../EditableUserPhoneNumber'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { VERIFY_PHONE_NUMBER, SET_PHONE_NUMBER } from '../../graphql/mutations'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<EditableUserPhoneNumber />', () => {
   it('renders', async () => {

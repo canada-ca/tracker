@@ -4,24 +4,10 @@ import { MemoryRouter } from 'react-router-dom'
 import { List, theme, ChakraProvider, ListItem } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
+import { i18n } from '@lingui/core'
 import { OrganizationCard } from '../OrganizationCard'
-
 import { matchMediaSize } from '../../helpers/matchMedia'
-
 matchMediaSize()
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 const summaries = {
   mail: {
