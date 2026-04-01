@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
@@ -80,11 +80,6 @@ services:
         echo "[nats-stream-init] Stream initialization complete."
         exec sleep infinity
       '
-    networks:
-      - tracker-dev
-
-  redis:
-    image: redis:7-alpine
     networks:
       - tracker-dev
 
