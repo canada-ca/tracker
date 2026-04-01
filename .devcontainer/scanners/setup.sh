@@ -44,8 +44,7 @@ if [ ! -x "$PYENV_ROOT/bin/pyenv" ]; then
   echo ">>> Installing rust-query-crlite (used by web-scanner for TLS revocation checks)..."
   cargo install \
     --git https://github.com/mozilla/crlite rust-query-crlite \
-    --rev dcb8a4d \
-    --features=rustls/dangerous_configuration
+    --tag v1.0.39
 fi
 
 # Make Rust and pyenv available for this session
