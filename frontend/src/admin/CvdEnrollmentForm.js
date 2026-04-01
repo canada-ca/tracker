@@ -1,6 +1,6 @@
 import React from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 import {
   Box,
   Flex,
@@ -104,9 +104,14 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
             </option>
           )}
           {['OWNER', 'SUPER_ADMIN'].includes(permission) && (
-            <option value="ENROLLED">
-              <Trans>Enrolled</Trans>
-            </option>
+            <>
+              <option value="ENROLLED">
+                <Trans>Enrolled</Trans>
+              </option>
+              <option value="DENY">
+                <Trans>Denied</Trans>
+              </option>
+            </>
           )}
         </Select>
       </FormControl>

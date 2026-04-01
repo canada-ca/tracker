@@ -120,6 +120,7 @@ export function OrganizationDomains({
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
+    { value: 'CVD_DENY', text: t`CVD Denied` },
   ]
 
   const assetStateOptions = [

@@ -179,11 +179,14 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    if (!ac.can(permission).updateOwn('cvd-enrollment').granted && cvdEnrollment?.status === 'enrolled') {
+    if (
+      !ac.can(permission).updateOwn('cvd-enrollment').granted &&
+      ['enrolled', 'deny'].includes(cvdEnrollment?.status)
+    ) {
       console.warn(
         `User: ${userKey} attempted to update the CVD enrollment for domain: ${domainId} in org: ${orgId}, however they do not have permission in that org.`,
       )
-      cvdEnrollment.status = 'pending'
+      cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
     }
 
     // Setup Transaction

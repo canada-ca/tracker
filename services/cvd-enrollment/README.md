@@ -42,7 +42,6 @@ python main.py
 ## Notes
 
 - Re-adding archived assets is not currently supported by the HackerOne API.
-- Existing HackerOne assets not in Tracker are not handled yet (see TODOs in [`main.py`](services/cvd-enrollment/main.py:93)).
 
 ## Requirements
 
