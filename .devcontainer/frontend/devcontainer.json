@@ -1,0 +1,43 @@
+{
+  "name": "Tracker Frontend",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+
+  // Set the workspace to the frontend subdirectory of the monorepo
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/frontend",
+
+  "forwardPorts": [3000, 3001],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend Dev Server",
+      "onAutoForward": "openBrowser"
+    },
+    "3001": {
+      "label": "Webpack Dev Server (internal)"
+    }
+  },
+
+  // Install dependencies after the container is created
+  "postCreateCommand": "npm install",
+
+  // Start the dev server automatically when the container starts
+  "postStartCommand": "npm run dev",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "dsznajder.es7-react-js-snippets",
+        "apollographql.vscode-apollo",
+        "lokalise.i18n-ally"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "eslint.workingDirectories": ["./frontend"]
+      }
+    }
+  },
+
+  "remoteUser": "node"
+}
