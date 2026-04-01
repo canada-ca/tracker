@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { removeOrganizationUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ac from '../../access-control'
 
 export const archiveOrganization = new mutationWithClientMutationId({
   name: 'ArchiveOrganization',
@@ -59,7 +60,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
     // Get users permission
     const permission = await checkPermission({ orgId: organization._id })
 
-    if (permission !== 'super_admin') {
+    if (!ac.can(permission).deleteAny('organization').granted) {
       console.warn(
         `User: ${userKey} attempted to archive org: ${organization._key}, however they do not have the correct permission level. Permission: ${permission}`,
       )

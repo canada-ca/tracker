@@ -3,7 +3,7 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { updateTagUnion } from '../unions'
 import { TagOwnershipEnums } from '../../enums'
-import { logActivity } from '../../audit-logs'
+import ac from '../../access-control'
 
 export const updateTag = new mutationWithClientMutationId({
   name: 'UpdateTag',
@@ -54,13 +54,11 @@ export const updateTag = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      query,
-      collections,
-      transaction,
       userKey,
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, checkPermission },
       validators: { cleanseInput, slugify },
-      loaders: { loadTagByTagId, loadOrgByKey },
+      loaders: { loadOrgByKey },
+      dataSources: { tags, auditLogs },
     },
   ) => {
     // Get User
@@ -77,26 +75,7 @@ export const updateTag = new mutationWithClientMutationId({
     const isVisible = args.isVisible
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
-    let tagCursor
-    try {
-      tagCursor = await query`
-        WITH tags
-        FOR tag IN tags
-          FILTER tag.tagId == ${tagId}
-          RETURN tag
-      `
-    } catch (err) {
-      console.error(`Database error occurred while retrieving tag: ${tagId} for update, err: ${err}`)
-      throw new Error(i18n._(t`Unable to update tag. Please try again.`))
-    }
-
-    let compareTag
-    try {
-      compareTag = await tagCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred while retrieving tag: ${tagId} for update, err: ${err}`)
-      throw new Error(i18n._(t`Unable to update tag. Please try again.`))
-    }
+    const compareTag = await tags.getRaw(tagId)
 
     if (typeof compareTag === 'undefined') {
       console.warn(
@@ -136,7 +115,7 @@ export const updateTag = new mutationWithClientMutationId({
       }
 
       permission = await checkPermission({ orgId: org._id })
-      if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+      if (!ac.can(permission).updateOwn('tag').granted) {
         console.warn(
           `User: ${userKey} attempted to update a tag in: ${org.slug}, however they do not have permission to do so.`,
         )
@@ -173,7 +152,7 @@ export const updateTag = new mutationWithClientMutationId({
     const updatedTagId = slugify(`${labelEn || compareTag.label.en}-${labelFr || compareTag.label.fr}`)
 
     if (tagId !== updatedTagId) {
-      const existingTag = await loadTagByTagId.load(updatedTagId)
+      const existingTag = await tags.byTagId.load(updatedTagId)
       if (typeof existingTag !== 'undefined' && !['org', 'pending'].includes(compareTag.ownership)) {
         console.warn(`User: ${userKey} attempted to update a tag that already exists: ${updatedTagId}`)
         return {
@@ -199,42 +178,7 @@ export const updateTag = new mutationWithClientMutationId({
       ownership: ownership || compareTag.ownership,
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        async () =>
-          await query`
-          WITH tags
-          UPSERT { tagId: ${tagId} }
-            INSERT ${updatedTag}
-            UPDATE ${updatedTag}
-            IN tags
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update tag: ${tagId}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update tag. Please try again.`))
-    }
-
-    // Commit transaction
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction commit error occurred when user: ${userKey} attempted to update tag: ${tagId}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update tag. Please try again.`))
-    }
-
-    // Clear dataloader and load updated tag
-    await loadTagByTagId.clear(updatedTag.tagId)
-    const returnTag = await loadTagByTagId.load(updatedTag.tagId)
+    const returnTag = await tags.save(tagId, updatedTag)
 
     console.info(`User: ${userKey} successfully updated tag: ${tagId}.`)
 
@@ -282,10 +226,7 @@ export const updateTag = new mutationWithClientMutationId({
       })
     }
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogs.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

@@ -26,17 +26,7 @@ export function LandingPageSummaries() {
   if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const summaries = {
-    https: data?.httpsSummary,
-    dmarc: data?.dmarcSummary,
-    webConnections: data?.webConnectionsSummary,
-    ssl: data?.sslSummary,
-    spf: data?.spfSummary,
-    dkim: data?.dkimSummary,
-    dmarcPhase: data?.dmarcPhaseSummary,
-    web: data?.webSummary,
-    mail: data?.mailSummary,
-  }
+  const summaries = data?.findChartSummaries?.[0]
 
   return (
     <Box>

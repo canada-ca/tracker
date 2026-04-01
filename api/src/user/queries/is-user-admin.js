@@ -24,20 +24,14 @@ export const isUserAdmin = {
     },
   ) => {
     const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
-
     const user = await userRequired()
 
     // check if for a specific org
-    if (orgKey !== '') {
+    if (orgKey) {
       const org = await loadOrgByKey.load(orgKey)
-
       const permission = await checkPermission({ orgId: org._id })
 
-      if (permission === 'admin' || permission === 'super_admin') {
-        return true
-      }
-
-      return false
+      return ['admin', 'owner', 'super_admin'].includes(permission)
     }
 
     // check to see if user is an admin or higher for at least one org
@@ -55,10 +49,6 @@ export const isUserAdmin = {
       throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
     }
 
-    if (userAdmin.count > 0) {
-      return true
-    }
-
-    return false
+    return userAdmin.count > 0
   },
 }

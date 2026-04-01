@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { removeUserFromOrgUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ac from '../../access-control'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
   name: 'RemoveUserFromOrg',
@@ -117,7 +118,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     }
 
     // Only admins, owners, and super admins can remove users
-    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+    if (!ac.can(permission).deleteOwn('affiliation').granted) {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, but they do not have the right permission.`,
       )
