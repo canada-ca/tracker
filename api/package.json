@@ -32,7 +32,7 @@
     "@lingui/core": "^4.13.0",
     "accesscontrol": "^2.2.1",
     "arango-tools": "^0.6.0",
-    "arangojs": "^8.0.0",
+    "arangojs": "^10.2.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.4",
     "compression": "^1.8.1",
