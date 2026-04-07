@@ -9,7 +9,14 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, userRequired, verifiedRequired, tfaRequired, checkDomainPermission } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  verifiedRequired,
+  tfaRequired,
+  checkDomainPermission,
+  AuthDataSource,
+} from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -181,6 +188,9 @@ describe('updating a domain', () => {
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+              },
               validators: {
                 cleanseInput,
                 slugify,
@@ -274,6 +284,9 @@ describe('updating a domain', () => {
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+              },
               validators: {
                 cleanseInput,
                 slugify,
@@ -366,6 +379,9 @@ describe('updating a domain', () => {
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
+              },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
               },
               validators: {
                 cleanseInput,

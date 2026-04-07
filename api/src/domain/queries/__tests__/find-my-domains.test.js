@@ -9,7 +9,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
+import { AuthDataSource, checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user'
 import dbschema from '../../../../database.json'
@@ -194,6 +194,9 @@ describe('given findMyDomainsQuery', () => {
                 }),
               }),
               verifiedRequired: verifiedRequired({}),
+            },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
             },
             loaders: {
               loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
