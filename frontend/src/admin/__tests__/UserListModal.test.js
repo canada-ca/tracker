@@ -4,27 +4,14 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider, useDisclosure } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG, REMOVE_USER_FROM_ORG } from '../../graphql/mutations'
 import { UserListModal } from '../UserListModal'
 import userEvent from '@testing-library/user-event'
 import canada from '../../theme/canada'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
-
 const orgId = 'test-id'
 const editingUserId = 'test-id'
 const editingUserName = 'test-username@email.com'

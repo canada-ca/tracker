@@ -89,17 +89,17 @@ export const organizationSummaryType = new GraphQLObjectType({
     dmarcPhase: {
       type: categorizedSummaryType,
       description: 'Summary based on DMARC phases for a given organization.',
-      resolve: ({ dmarc_phase }, _) => {
+      resolve: ({ dmarc_phase: dmarcPhase }, _) => {
         const categories = [
-          createCategory('assess', dmarc_phase.assess, dmarc_phase.total),
-          createCategory('deploy', dmarc_phase.deploy, dmarc_phase.total),
-          createCategory('enforce', dmarc_phase.enforce, dmarc_phase.total),
-          createCategory('maintain', dmarc_phase.maintain, dmarc_phase.total),
+          createCategory('assess', dmarcPhase.assess, dmarcPhase.total),
+          createCategory('deploy', dmarcPhase.deploy, dmarcPhase.total),
+          createCategory('enforce', dmarcPhase.enforce, dmarcPhase.total),
+          createCategory('maintain', dmarcPhase.maintain, dmarcPhase.total),
         ]
 
         return {
           categories,
-          total: dmarc_phase.total,
+          total: dmarcPhase.total,
         }
       },
     },
@@ -118,15 +118,15 @@ export const organizationSummaryType = new GraphQLObjectType({
     webConnections: {
       type: categorizedSummaryType,
       description: 'Summary based on HTTPS and HSTS scan results for a given organization.',
-      resolve: ({ web_connections }, _) => {
+      resolve: ({ web_connections: webConnections }, _) => {
         const categories = [
-          createCategory('pass', web_connections.pass, web_connections.total),
-          createCategory('fail', web_connections.fail, web_connections.total),
+          createCategory('pass', webConnections.pass, webConnections.total),
+          createCategory('fail', webConnections.fail, webConnections.total),
         ]
 
         return {
           categories,
-          total: web_connections.total,
+          total: webConnections.total,
         }
       },
     },
@@ -167,7 +167,7 @@ export const organizationSummaryType = new GraphQLObjectType({
         },
       },
       resolve: async (
-        { negative_tags },
+        { negative_tags: negativeTags },
         args,
         {
           auth: { loginRequiredBool, userRequired, verifiedRequired },
@@ -180,7 +180,7 @@ export const organizationSummaryType = new GraphQLObjectType({
         }
 
         const guidanceTags = await loadGuidanceTagSummaryConnectionsByTagId({
-          guidanceTags: negative_tags,
+          guidanceTags: negativeTags,
           ...args,
         })
         return guidanceTags

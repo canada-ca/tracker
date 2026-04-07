@@ -4,23 +4,10 @@ import { MemoryRouter } from 'react-router-dom'
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import ContactUsPage from '../ContactUsPage'
-
 import { UserVarProvider } from '../../utilities/userState'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<ContactUsPage />', () => {
   afterEach(cleanup)
@@ -68,9 +55,7 @@ describe('<ContactUsPage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    const button = await waitFor(() =>
-      getByRole('link', { name: /Contact Us/i }),
-    )
+    const button = await waitFor(() => getByRole('link', { name: /Contact Us/i }))
     await waitFor(() => {
       expect(button)
       fireEvent.click(button)

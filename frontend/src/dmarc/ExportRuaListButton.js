@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { Button, useToast } from '@chakra-ui/react'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLazyQuery } from '@apollo/client'
 import { GET_ALL_VERIFIED_RUA_DOMAINS as EXPORT } from '../graphql/queries'
 

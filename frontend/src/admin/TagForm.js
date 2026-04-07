@@ -2,7 +2,8 @@ import React from 'react'
 import { Badge, Box, Button, Flex, FormLabel, Grid, Select, Switch, Text, useToast } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { CREATE_TAG, UPDATE_TAG } from '../graphql/mutations'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Formik } from 'formik'
 import { FormField } from '../components/fields/FormField'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'

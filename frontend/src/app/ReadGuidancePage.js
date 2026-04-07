@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { Box, Heading, Text, Link, ListItem, OrderedList, UnorderedList, Divider, Code } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 

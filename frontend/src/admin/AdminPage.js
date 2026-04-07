@@ -1,7 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { Button, Flex, Stack, Text, useToast, Select } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useQuery } from '@apollo/client'
 import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
 import { useLingui } from '@lingui/react'

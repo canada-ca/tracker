@@ -13,7 +13,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
 import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'

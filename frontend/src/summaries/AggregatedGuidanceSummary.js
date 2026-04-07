@@ -6,7 +6,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ListOf } from '../components/ListOf'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { ErrorBoundary } from 'react-error-boundary'
 import { GuidanceTagDetails } from '../guidance/GuidanceTagDetails'
 import { useQuery } from '@apollo/client'

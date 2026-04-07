@@ -3,7 +3,7 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { createTagUnion } from '../unions'
 import { TagOwnershipEnums } from '../../enums'
-import { logActivity } from '../../audit-logs'
+import ac from '../../access-control'
 
 export const createTag = new mutationWithClientMutationId({
   name: 'CreateTag',
@@ -50,12 +50,10 @@ export const createTag = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      query,
-      collections,
-      transaction,
       userKey,
       auth: { userRequired, verifiedRequired, checkPermission, checkSuperAdmin, superAdminRequired },
-      loaders: { loadTagByTagId, loadOrgByKey },
+      loaders: { loadOrgByKey },
+      dataSources: { tags, auditLogs },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -83,7 +81,7 @@ export const createTag = new mutationWithClientMutationId({
       organizations: [],
     }
 
-    const tag = await loadTagByTagId.load(insertTag.tagId)
+    const tag = await tags.byTagId.load(insertTag.tagId)
 
     const isSuperAdmin = await checkSuperAdmin()
     if (ownership === 'global') {
@@ -97,9 +95,6 @@ export const createTag = new mutationWithClientMutationId({
         }
       }
     }
-
-    // Setup Transaction
-    const trx = await transaction(collections)
 
     let permission, org
     if (ownership === 'org') {
@@ -126,7 +121,7 @@ export const createTag = new mutationWithClientMutationId({
       }
 
       permission = await checkPermission({ orgId: org._id })
-      if (!['super_admin', 'admin', 'owner'].includes(permission)) {
+      if (!ac.can(permission).createOwn('tag').granted) {
         console.warn(
           `User: ${userKey} attempted to create a tag in: ${org.slug}, however they do not have permission to do so.`,
         )
@@ -155,41 +150,11 @@ export const createTag = new mutationWithClientMutationId({
       }
     }
 
-    try {
-      await trx.step(
-        () =>
-          query`
-            UPSERT { tagId: ${insertTag.tagId} }
-              INSERT ${insertTag}
-              UPDATE ${insertTag}
-              IN tags
-              RETURN NEW
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction step error occurred for user: ${userKey} when inserting new tag: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to create tag. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Transaction commit error occurred while user: ${userKey} was creating tag: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to create tag. Please try again.`))
-    }
-
-    // Clear dataloader incase anything was updated or inserted into tag
-    await loadTagByTagId.clear(insertTag.tagId)
-    const returnTag = await loadTagByTagId.load(insertTag.tagId)
+    const returnTag = await tags.create(insertTag)
 
     console.info(`User: ${userKey} successfully created tag ${returnTag.tagId}`)
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogs.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

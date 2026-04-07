@@ -3,17 +3,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
+import { i18n } from '@lingui/core'
 import { TagForm } from '../TagForm'
 import { CREATE_TAG, UPDATE_TAG } from '../../graphql/mutations'
 import '@testing-library/jest-dom'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: { en: {} },
-  localeData: { en: { plurals: en } },
-})
 
 jest.mock('@chakra-ui/react', () => {
   const actual = jest.requireActual('@chakra-ui/react')

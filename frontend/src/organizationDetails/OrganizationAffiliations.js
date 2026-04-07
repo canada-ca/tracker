@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { Box, Divider, Text } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { string } from 'prop-types'

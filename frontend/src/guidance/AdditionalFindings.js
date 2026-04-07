@@ -19,7 +19,8 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import { CheckIcon, ExternalLinkIcon } from '@chakra-ui/icons'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { any, bool, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { useQuery } from '@apollo/client'

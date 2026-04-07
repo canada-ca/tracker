@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { object } from 'prop-types'
 import { SummaryGroup } from './SummaryGroup'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import * as d3 from 'd3'
 import { arrayOf, number, object } from 'prop-types'
 import theme from '../theme/canada'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 import { useD3 } from '../utilities/useD3'
 import { Box } from '@chakra-ui/react'
 

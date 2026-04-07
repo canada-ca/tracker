@@ -3,7 +3,8 @@ import { Box, Button, Heading, Stack, Text, useToast, Checkbox, Link } from '@ch
 import { useMutation } from '@apollo/client'
 import { Link as RouteLink, useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Formik } from 'formik'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { EmailField } from '../components/fields/EmailField'

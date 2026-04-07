@@ -7,7 +7,8 @@ import {
   FormLabel,
   Select,
 } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 
 export function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)

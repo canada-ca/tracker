@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 import { removeDomainUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { DomainRemovalReasonEnum } from '../../enums'
+import ac from '../../access-control'
 
 export const removeDomain = new mutationWithClientMutationId({
   name: 'RemoveDomain',
@@ -85,7 +86,7 @@ export const removeDomain = new mutationWithClientMutationId({
     // Get permission
     const permission = await checkPermission({ orgId: org._id })
 
-    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+    if (!ac.can(permission).deleteOwn('domain').granted) {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} however they do not have permission in that org.`,
       )
@@ -98,7 +99,7 @@ export const removeDomain = new mutationWithClientMutationId({
 
     // Check to see if domain belongs to verified check org
     // if domain returns NXDOMAIN, allow removal
-    if (org.verified && permission !== 'super_admin' && domain.rcode !== 'NXDOMAIN') {
+    if (org.verified && !ac.can(permission).deleteAny('domain').granted && domain.rcode !== 'NXDOMAIN') {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
       )

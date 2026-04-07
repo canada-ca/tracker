@@ -12,7 +12,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon, EmailIcon, MinusIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { string } from 'prop-types'
 
 import { UserListModal } from './UserListModal'

@@ -1,0 +1,46 @@
+{
+  "name": "Tracker Scanners",
+  "dockerComposeFile": "docker-compose.yml",
+
+  // The service in docker-compose that VS Code / Codespaces attaches to
+  "service": "dev",
+
+  // docker-compose.yml mounts the repo root at /workspaces, so scanners/ is at /workspaces/scanners.
+  "workspaceFolder": "/workspaces/scanners",
+
+  "forwardPorts": [8529, 8222],
+  "portsAttributes": {
+    "8529": {
+      "label": "ArangoDB Web UI"
+    },
+    "8222": {
+      "label": "NATS Monitor"
+    }
+  },
+
+  // Install the NATS CLI for injecting test messages, then set up a venv per service.
+  //
+  // Each service pins its own Python version. The Microsoft Python devcontainer image
+  // ships with pyenv, so we install the versions that differ from the container's
+  // default (3.14) and create isolated venvs per service directory.
+  //
+  // python-dotenv will not override env vars already set in docker-compose, so the
+  // container-friendly host names (arangodb, nats) take precedence over any localhost
+  // values in local .env files.
+  "postCreateCommand": "bash /workspaces/.devcontainer/scanners/setup.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-python.vscode-pylance", "ms-python.debugpy", "ms-python.black-formatter"],
+      "settings": {
+        "editor.formatOnSave": true,
+        "python.defaultInterpreterPath": "${workspaceFolder}/dns-scanner/.venv/bin/python",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        }
+      }
+    }
+  },
+
+  "remoteUser": "vscode"
+}

@@ -13,7 +13,8 @@ import { object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
-import { Trans, t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { DetailTooltip } from './DetailTooltip'
 
 export function WebTLSResults({ tlsResult }) {

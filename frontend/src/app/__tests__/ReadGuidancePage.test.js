@@ -4,23 +4,10 @@ import { MemoryRouter } from 'react-router-dom'
 import { cleanup, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-
 import ReadGuidancePage from '../ReadGuidancePage'
-
 import { UserVarProvider } from '../../utilities/userState'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
 
 describe('<ReadGuidancePage />', () => {
   afterEach(cleanup)
@@ -45,8 +32,6 @@ describe('<ReadGuidancePage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() =>
-      expect(getByText('Getting Started')).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(getByText('Getting Started')).toBeInTheDocument())
   })
 })

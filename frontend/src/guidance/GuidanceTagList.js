@@ -2,7 +2,7 @@ import React from 'react'
 import { array, string } from 'prop-types'
 import { Box, Heading, Text, Flex, Link, Accordion } from '@chakra-ui/react'
 import { ExternalLinkIcon, WarningTwoIcon } from '@chakra-ui/icons'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 
 export function GuidanceTagList({ negativeTags, positiveTags, neutralTags, selector }) {

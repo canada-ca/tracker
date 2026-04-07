@@ -15,7 +15,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { LinkIcon, SearchIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link as RouteLink } from 'react-router-dom'

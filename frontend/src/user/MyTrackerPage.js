@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'

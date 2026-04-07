@@ -1,5 +1,6 @@
 import React from 'react'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'

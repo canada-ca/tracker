@@ -1,7 +1,7 @@
 import React from 'react'
 import { Spinner, Stack, Text } from '@chakra-ui/react'
 import { any } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans } from "@lingui/react/macro"
 
 export function LoadingMessage({ children, ...rest }) {
   return (

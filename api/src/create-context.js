@@ -7,10 +7,12 @@ import jwt from 'jsonwebtoken'
 import { loadUserByKey } from './user/loaders'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
+import { SummariesDataSource } from './summaries'
 import { DnsScanDataSource } from './dns-scan'
 import { WebScanDataSource } from './web-scan'
 import { AuditLogsDataSource } from './audit-logs'
 import { AdditionalFindingsDataSource } from './additional-findings'
+import { TagsDataSource } from './tags'
 import {
   AuthDataSource,
   checkDomainOwnership,
@@ -140,9 +142,11 @@ export async function createContext({
     },
     dataSources: {
       auth: new AuthDataSource({ query, userKey, i18n }),
+      summaries: new SummariesDataSource({ query, userKey, cleanseInput, i18n }),
       additionalFindings: new AdditionalFindingsDataSource({ query, userKey, i18n, language: request.language }),
-      auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n }),
+      auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
+      tags: new TagsDataSource({ query, userKey, i18n, language: request.language, transaction, collections }),
       webScan: new WebScanDataSource({ query, userKey, cleanseInput, i18n }),
     },
     loaders: initializeLoaders({

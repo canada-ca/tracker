@@ -2,9 +2,8 @@ import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
 import { render, screen, fireEvent, within } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { DomainTagsList } from '../DomainTagsList'
@@ -12,12 +11,6 @@ import { DOMAIN_TAGS } from '../../graphql/queries'
 import { CREATE_TAG, UPDATE_TAG } from '../../graphql/mutations'
 import { UserVarProvider } from '../../utilities/userState'
 import '@testing-library/jest-dom'
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: { en: {} },
-  localeData: { en: { plurals: en } },
-})
 
 jest.mock('@chakra-ui/react', () => {
   const actual = jest.requireActual('@chakra-ui/react')

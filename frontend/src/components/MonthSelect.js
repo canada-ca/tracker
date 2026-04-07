@@ -1,7 +1,7 @@
 import { Select } from '@chakra-ui/react'
 import { any, func } from 'prop-types'
 import React from 'react'
-import { t } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
 
 export function MonthSelect({ selectedValue, handleChange, ...props }) {
   const currentDate = new Date()

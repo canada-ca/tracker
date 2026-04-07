@@ -2,10 +2,8 @@ import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
-
+import { i18n } from '@lingui/core'
 import { DmarcReportSummaryGraph } from '../DmarcReportSummaryGraph'
-
 import { formattedBarData } from '../../fixtures/summaryListData'
 import userEvent from '@testing-library/user-event'
 import canada from '../../theme/canada'
@@ -26,17 +24,6 @@ class ResizeObserver {
 }
 
 window.ResizeObserver = ResizeObserver
-// **
-
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: {},
-  },
-})
 
 describe('<DmarcReportSummaryGraph />', () => {
   it('renders correctly', async () => {

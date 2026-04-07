@@ -12,7 +12,8 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { CheckCircleIcon, ExternalLinkIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 
 export function GuidanceTagDetails({ guidanceTag, tagType }) {
   const tagTypeList = {
@@ -28,7 +29,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
   }
 
   const getTagCategoryFromId = (tagId) => {
-    return tagId.split(/[0-9]/)[0].toUpperCase()
+    return tagId.split(/[0-9]/)[0].toUpperCase();
   }
 
   const cccsGuidance =
