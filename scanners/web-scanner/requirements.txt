@@ -1,4 +1,4 @@
-annotated-types==0.5.0
+annotated-types==0.7.0
 attrs==23.2.0
 certifi==2024.7.4
 cffi==2.0.0
@@ -11,13 +11,13 @@ psutil==5.9.8
 pyasn1==0.6.3
 pyasn1_modules==0.4.0
 pycparser==2.21
-pydantic==2.4.0
-pydantic_core==2.10.0
+pydantic==2.12.5
+pydantic_core==2.41.5
 python-dotenv==0.21.0
 requests==2.33.0
 requests-toolbelt==0.10.1
 service-identity==24.1.0
 sslyze==6.3.1
 tls-parser==2.0.0
-typing_extensions==4.12.2
+typing_extensions==4.14.1
 urllib3==2.6.3
