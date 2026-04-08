@@ -11,8 +11,8 @@ psutil==5.9.8
 pyasn1==0.6.3
 pyasn1_modules==0.4.0
 pycparser==2.21
-pydantic==2.4.0
-pydantic_core==2.10.0
+pydantic==2.12.5
+pydantic_core==2.41.5
 python-dotenv==0.21.0
 requests==2.33.0
 requests-toolbelt==0.10.1
