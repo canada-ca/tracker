@@ -42,7 +42,6 @@ steps:
           -e ARANGO_DB_USER=root \
           -e ARANGO_DB_PASSWORD=test \
           -e COSMOS_DB_HOST=cosmosdb \
-          -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=cosmosdb
           ci-image python3 -m pytest -v
 
   - name: "gcr.io/cloud-builders/docker"
