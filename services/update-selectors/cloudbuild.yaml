@@ -18,7 +18,7 @@ steps:
     args:
       [
         "-c",
-        "docker run --net cloudbuild --name cosmosdb -d -p 8081:8081 -p 10250-10255:10250-10255 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview",
+        "docker run --net cloudbuild --name cosmosdb -d -p 8081:8081 -p 10250-10255:10250-10255 -e PROTOCOL=https -e GATEWAY_PUBLIC_ENDPOINT=cosmosdb mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview",
       ]
 
   - name: mikewilliamson/wait-for
@@ -42,6 +42,7 @@ steps:
           -e ARANGO_DB_USER=root \
           -e ARANGO_DB_PASSWORD=test \
           -e COSMOS_DB_HOST=cosmosdb \
+          -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=cosmosdb
           ci-image python3 -m pytest -v
 
   - name: "gcr.io/cloud-builders/docker"

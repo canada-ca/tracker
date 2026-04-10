@@ -11,3 +11,6 @@ services:
     ports:
       - '8081:8081'
       - '10250-10255:10250-10255'
+    environment:
+      - PROTOCOL=https
+      - GATEWAY_PUBLIC_ENDPOINT=cosmosdb
