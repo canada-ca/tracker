@@ -25,16 +25,24 @@ steps:
     id: wait_test_cosmosdb
     args: ["cosmosdb:8081", "--timeout=180"]
 
-  - name: "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci"
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-ci-image
+    dir: services/update-selectors
+    args: ["build", "--target=ci", "-t", "ci-image", "."]
+
+  - name: "gcr.io/cloud-builders/docker"
     id: test-results
     dir: services/update-selectors
     entrypoint: /bin/sh
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest -v"]
-    env:
-      - ARANGO_DB_URL=http://arangodb:8529
-      - ARANGO_DB_USER=root
-      - ARANGO_DB_PASSWORD=test
-      - COSMOS_DB_HOST=cosmosdb
+    args:
+      - "-c"
+      - |
+        docker run --net cloudbuild \
+          -e ARANGO_DB_URL=http://arangodb:8529 \
+          -e ARANGO_DB_USER=root \
+          -e ARANGO_DB_PASSWORD=test \
+          -e COSMOS_DB_HOST=cosmosdb \
+          ci-image python3 -m pytest -v
 
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
