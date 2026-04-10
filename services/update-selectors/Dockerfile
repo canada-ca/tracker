@@ -13,14 +13,20 @@ RUN apk add --no-cache \
     build-base \
     python3-dev
 
-COPY requirements.txt /requirements.txt
+COPY requirements.txt ./requirements.txt
 # Install python requirements to /working/install directory for cleaner copy
-RUN pip3 install --prefix=/working/install -r /requirements.txt
+RUN pip3 install --prefix=/working/install -r ./requirements.txt
 
 #===============================================================================================
 #===============================================================================================
 
 FROM python-builder AS ci
+
+WORKDIR /selectors
+COPY . .
+
+# Copy installed python modules
+COPY --from=python-builder /working/install/lib /usr/local/lib
 
 RUN pip3 install pytest
 
