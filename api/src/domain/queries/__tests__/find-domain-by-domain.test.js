@@ -9,7 +9,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkDomainPermission, userRequired, verifiedRequired } from '../../../auth'
+import { checkDomainPermission, userRequired, verifiedRequired, AuthDataSource } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
@@ -142,7 +142,7 @@ describe('given findDomainByDomain query', () => {
           contextValue: {
             i18n,
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               loginRequiredBool: true,
               checkDomainPermission: checkDomainPermission({
@@ -154,6 +154,9 @@ describe('given findDomainByDomain query', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               verifiedRequired: verifiedRequired({}),
+            },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
             },
             validators: {
               cleanseInput,
@@ -236,7 +239,7 @@ describe('given findDomainByDomain query', () => {
               contextValue: {
                 i18n,
                 userKey: 1,
-                query: query,
+                query,
                 auth: {
                   checkDomainPermission: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({
@@ -351,7 +354,7 @@ describe('given findDomainByDomain query', () => {
             contextValue: {
               i18n,
               userKey: 1,
-              query: query,
+              query,
               auth: {
                 checkDomainPermission: jest.fn().mockReturnValue(true),
                 userRequired: jest.fn().mockReturnValue({

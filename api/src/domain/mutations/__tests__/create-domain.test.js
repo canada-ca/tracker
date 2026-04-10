@@ -17,6 +17,7 @@ import {
   verifiedRequired,
   tfaRequired,
   checkDomainPermission,
+  AuthDataSource,
 } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadOrgByKey, loadOrgConnectionsByDomainId } from '../../../organization/loaders'
@@ -206,6 +207,9 @@ describe('create a domain', () => {
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+              },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
                   query,
@@ -367,6 +371,9 @@ describe('create a domain', () => {
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+              },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
                   query,
@@ -503,6 +510,9 @@ describe('create a domain', () => {
               checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
+            },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
             },
             loaders: {
               loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -681,6 +691,9 @@ describe('create a domain', () => {
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
             },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
+            },
             loaders: {
               loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
                 query,
@@ -820,6 +833,9 @@ describe('create a domain', () => {
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
+              },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -961,6 +977,9 @@ describe('create a domain', () => {
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
+              },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
