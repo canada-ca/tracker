@@ -1,228 +1,393 @@
 version: 2
+
 updates:
-  - package-ecosystem: docker
-    directory: "/api"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
-  - package-ecosystem: npm
-    directory: "/api"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
+  # Monday — frontend (standalone, largest dep file)
   - package-ecosystem: docker
     directory: "/frontend"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/frontend"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
-  # scanners
-  - package-ecosystem: pip
-    directory: "/scanners/web-scanner"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
+  # Tuesday — api (standalone, large dep file)
   - package-ecosystem: docker
-    directory: "/scanners/web-scanner"
+    directory: "/api"
     schedule:
-      interval: daily
+      interval: weekly
+      day: tuesday
       time: "11:00"
-    open-pull-requests-limit: 5
-
-  - package-ecosystem: docker
-    directory: "/scanners/dns-scanner"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
-  - package-ecosystem: pip
-    directory: "/scanners/dns-scanner"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
-  - package-ecosystem: docker
-    directory: "/scanners/domain-discovery"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
-  - package-ecosystem: pip
-    directory: "/scanners/domain-discovery"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
-
-  - package-ecosystem: docker
-    directory: "/scanners/domain-dispatcher"
-    schedule:
-      interval: daily
-      time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
-    directory: "/scanners/domain-dispatcher"
+    directory: "/api"
     schedule:
-      interval: daily
+      interval: weekly
+      day: tuesday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
-  # services
+  # Wednesday — dmarc-report + super-admin (medium services)
   - package-ecosystem: docker
     directory: "/services/dmarc-report"
     schedule:
-      interval: daily
+      interval: weekly
+      day: wednesday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/dmarc-report"
     schedule:
-      interval: daily
+      interval: weekly
+      day: wednesday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: docker
     directory: "/services/super-admin"
     schedule:
-      interval: daily
+      interval: weekly
+      day: wednesday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/super-admin"
     schedule:
-      interval: daily
+      interval: weekly
+      day: wednesday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
+  # Thursday — domain-cleanup + org-footprint (medium services)
   - package-ecosystem: docker
     directory: "/services/domain-cleanup"
     schedule:
-      interval: daily
+      interval: weekly
+      day: thursday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/domain-cleanup"
     schedule:
-      interval: daily
+      interval: weekly
+      day: thursday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: docker
     directory: "/services/org-footprint"
     schedule:
-      interval: daily
+      interval: weekly
+      day: thursday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/org-footprint"
     schedule:
-      interval: daily
+      interval: weekly
+      day: thursday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
+  # Friday — progress-report + domain-dispatcher (medium services)
   - package-ecosystem: docker
     directory: "/services/progress-report"
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/progress-report"
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
+  - package-ecosystem: docker
+    directory: "/scanners/domain-dispatcher"
+    schedule:
+      interval: weekly
+      day: friday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: npm
+    directory: "/scanners/domain-dispatcher"
+    schedule:
+      interval: weekly
+      day: friday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  # Saturday — web-scanner + dns-scanner + domain-discovery (small scanners)
+  - package-ecosystem: docker
+    directory: "/scanners/web-scanner"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: pip
+    directory: "/scanners/web-scanner"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: docker
+    directory: "/scanners/dns-scanner"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: pip
+    directory: "/scanners/dns-scanner"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: docker
+    directory: "/scanners/domain-discovery"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: pip
+    directory: "/scanners/domain-discovery"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  # Sunday — update-selectors + summaries + azure-defender-easm (smallest services)
   - package-ecosystem: docker
     directory: "/services/update-selectors"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/services/update-selectors"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: docker
     directory: "/services/summaries"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/services/summaries"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
-  # azure-defender-easm
   - package-ecosystem: docker
     directory: "/azure-defender-easm/import-easm-additional-findings"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/azure-defender-easm/import-easm-additional-findings"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: docker
     directory: "/azure-defender-easm/label-known-easm-assets"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/azure-defender-easm/label-known-easm-assets"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: docker
     directory: "/azure-defender-easm/add-domain-to-easm"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/azure-defender-easm/add-domain-to-easm"
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
       time: "11:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
