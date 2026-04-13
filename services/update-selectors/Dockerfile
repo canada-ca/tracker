@@ -1,4 +1,8 @@
-FROM python:3.14.3-alpine AS python-builder
+FROM python:3.14.3-alpine AS base
+
+#===============================================================================================
+
+FROM base AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONWARNINGS ignore
@@ -18,7 +22,6 @@ COPY requirements.txt ./requirements.txt
 RUN pip3 install --prefix=/working/install -r ./requirements.txt
 
 #===============================================================================================
-#===============================================================================================
 
 FROM python-builder AS ci
 
@@ -33,7 +36,7 @@ RUN pip3 install pytest
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.3-alpine
+FROM base as release
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
