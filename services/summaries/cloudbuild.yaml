@@ -12,15 +12,23 @@ steps:
     id: wait_testdb
     args: ["testdb:8529"]
 
-  - name: "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci"
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-ci-image
+    dir: services/summaries
+    args: ["build", "--target=ci", "-t", "ci-image", "."]
+
+  - name: "gcr.io/cloud-builders/docker"
     id: test-results
     dir: services/summaries
     entrypoint: /bin/sh
-    env:
-        - "DB_URL=http://testdb:8529"
-        - "DB_USER=root"
-        - "DB_PASSWORD=test"
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+    args:
+      - "-c"
+      - |
+        docker run --net cloudbuild \
+          -e DB_URL=http://testdb:8529 \
+          -e DB_USER=root \
+          -e DB_PASSWORD=test \
+          ci-image python3 -m pytest -v
 
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
