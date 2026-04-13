@@ -8,15 +8,19 @@ steps:
       - |
         echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: "python:3.14.2-alpine"
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-ci-image
+    dir: services/cvd-enrollment
+    args: ["build", "--target=ci", "-t", "ci-image", "."]
+
+  - name: "gcr.io/cloud-builders/docker"
     id: test-enrollment
     dir: services/cvd-enrollment
     entrypoint: "sh"
     args:
       - "-c"
       - |
-        pip install --quiet -r requirements.txt
-        python -m pytest tests/ -v
+        docker run ci-image python3 -m pytest tests/ -v
 
   - name: "gcr.io/cloud-builders/docker"
     id: build-enrollment
