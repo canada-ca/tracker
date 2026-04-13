@@ -1,4 +1,6 @@
-FROM python:3.14.3-alpine AS python-builder
+ARG PYTHON_VERSION=3.14.3-alpine
+
+FROM python:${PYTHON_VERSION} AS python-builder
 
 ENV PYTHONWARNINGS ignore
 ENV PYTHONUNBUFFERED 1
@@ -33,7 +35,7 @@ RUN pip3 install pytest
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.3-alpine
+FROM python:${PYTHON_VERSION}
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
