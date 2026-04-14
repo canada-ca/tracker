@@ -1,4 +1,4 @@
-import {initializeLoaders} from '../initialize-loaders'
+import { initializeLoaders } from '../initialize-loaders'
 
 describe('initializeLoaders', () => {
   it('returns a object with a key for each loader', () => {
@@ -13,8 +13,6 @@ describe('initializeLoaders', () => {
     })
 
     expect(loaders).toHaveProperty(
-      'loadAggregateGuidanceTagByTagId',
-      'loadAggregateGuidanceTagConnectionsByTagId',
       'loadDkimFailConnectionsBySumId',
       'loadDmarcFailConnectionsBySumId',
       'loadDmarcSummaryConnectionsByUserId',
@@ -28,16 +26,6 @@ describe('initializeLoaders', () => {
       'loadDomainByKey',
       'loadDomainConnectionsByOrgId',
       'loadDomainConnectionsByUserId',
-      'loadDkimGuidanceTagByTagId',
-      'loadDkimGuidanceTagConnectionsByTagId',
-      'loadDmarcGuidanceTagByTagId',
-      'loadDmarcGuidanceTagConnectionsByTagId',
-      'loadHttpsGuidanceTagByTagId',
-      'loadHttpsGuidanceTagConnectionsByTagId',
-      'loadSpfGuidanceTagByTagId',
-      'loadSpfGuidanceTagConnectionsByTagId',
-      'loadSslGuidanceTagByTagId',
-      'loadSslGuidanceTagConnectionsByTagId',
       'loadOrgByKey',
       'loadOrgBySlug',
       'loadOrgConnectionsByDomainId',
