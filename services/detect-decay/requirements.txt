@@ -9,7 +9,7 @@ packaging==25.0
 pluggy==1.6.0
 Pygments==2.20.0
 PyJWT==2.12.0
-pytest==8.4.1
+pytest==9.0.3
 python-arango==8.2.0
 python-dotenv==1.1.0
 requests==2.33.0
