@@ -406,7 +406,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     {"organization": org.get("_id"), **current_summary}
                 )
             org.update({"summaries": summary_data})
-            db.collection("organizations").update(org)
+            db.collection("organizations").update(org, merge=False)
         except Exception as e:
             logging.error(f"Error processing organization {org['_id']}: {e}")
             continue
