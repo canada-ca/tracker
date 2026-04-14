@@ -42,22 +42,22 @@ export const dkimSelectorResultType = new GraphQLObjectType({
     positiveTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({ positiveTags }, _, { loaders: { loadDkimGuidanceTagByTagId } }) => {
-        return await loadDkimGuidanceTagByTagId({ tags: positiveTags })
+      resolve: async ({ positiveTags }, _, { dataSources: { guidanceTag } }) => {
+        return await guidanceTag.dkimByTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({ neutralTags }, _, { loaders: { loadDkimGuidanceTagByTagId } }) => {
-        return await loadDkimGuidanceTagByTagId({ tags: neutralTags })
+      resolve: async ({ neutralTags }, _, { dataSources: { guidanceTag } }) => {
+        return await guidanceTag.dkimByTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({ negativeTags }, _, { loaders: { loadDkimGuidanceTagByTagId } }) => {
-        return await loadDkimGuidanceTagByTagId({ tags: negativeTags })
+      resolve: async ({ negativeTags }, _, { dataSources: { guidanceTag } }) => {
+        return await guidanceTag.dkimByTagId({ tags: negativeTags })
       },
     },
   }),

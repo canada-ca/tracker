@@ -53,22 +53,22 @@ export const tlsResultType = new GraphQLObjectType({
     positiveTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned server from this scan.`,
-      resolve: async ({ positiveTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
-        return await loadGuidanceTagByTagId({ tags: positiveTags })
+      resolve: async ({ positiveTags }, _, { dataSources: { guidanceTag } }) => {
+        return await guidanceTag.byTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned server from this scan.`,
-      resolve: async ({ neutralTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
-        return await loadGuidanceTagByTagId({ tags: neutralTags })
+      resolve: async ({ neutralTags }, _, { dataSources: { guidanceTag } }) => {
+        return await guidanceTag.byTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned server from this scan.`,
-      resolve: async ({ negativeTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
-        return await loadGuidanceTagByTagId({ tags: negativeTags })
+      resolve: async ({ negativeTags }, _, { dataSources: { guidanceTag } }) => {
+        return await guidanceTag.byTagId({ tags: negativeTags })
       },
     },
     certificateStatus: {
