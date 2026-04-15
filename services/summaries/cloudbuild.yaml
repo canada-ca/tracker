@@ -13,12 +13,12 @@ steps:
     args: ["testdb:8529"]
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-ci-image
+    id: build-test-image
     dir: services/summaries
-    args: ["build", "--target=ci", "-t", "ci-image", "."]
+    args: ["build", "--target=test", "-t", "test-image", "."]
 
   - name: "gcr.io/cloud-builders/docker"
-    id: test-results
+    id: run-tests
     dir: services/summaries
     entrypoint: /bin/sh
     args:
@@ -28,7 +28,7 @@ steps:
           -e DB_URL=http://testdb:8529 \
           -e DB_USER=root \
           -e DB_PASSWORD=test \
-          ci-image python3 -m pytest -v
+          test-image python3 -m pytest
 
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
@@ -40,7 +40,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-results
+    id: build-production-image
     entrypoint: "bash"
     dir: services/summaries
     args:
