@@ -26,9 +26,9 @@ steps:
     args: ["cosmosdb:8081", "--timeout=180"]
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-ci-image
+    id: build-test-image
     dir: services/update-selectors
-    args: ["build", "--target=ci", "-t", "ci-image", "."]
+    args: ["build", "--target=test", "-t", "test-image", "."]
 
   - name: "gcr.io/cloud-builders/docker"
     id: test-results
@@ -42,7 +42,7 @@ steps:
           -e ARANGO_DB_USER=root \
           -e ARANGO_DB_PASSWORD=test \
           -e COSMOS_DB_HOST=cosmosdb \
-          ci-image python3 -m pytest -v
+          test-image python3 -m pytest -v
 
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
