@@ -9,7 +9,6 @@ import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
-import { logActivity } from '../../audit-logs'
 import { OrderDirection } from '../../enums'
 import { tagType } from '../../tags/objects'
 import ac from '../../access-control'
@@ -142,7 +141,7 @@ export const organizationType = new GraphQLObjectType({
         {
           userKey,
           auth: { userRequired, loginRequiredBool, verifiedRequired },
-          loaders: { loadOrganizationSummariesByPeriod },
+          dataSources: { organization: organizationDS },
         },
       ) => {
         if (loginRequiredBool) {
@@ -150,7 +149,7 @@ export const organizationType = new GraphQLObjectType({
           verifiedRequired({ user })
         }
 
-        const historicalSummaries = await loadOrganizationSummariesByPeriod({
+        const historicalSummaries = await organizationDS.summariesByPeriod({
           orgId: _id,
           ...args,
         })
@@ -180,13 +179,9 @@ export const organizationType = new GraphQLObjectType({
         {
           i18n,
           userKey,
-          query,
-          transaction,
-          collections,
           request: { ip },
           auth: { userRequired, verifiedRequired },
-          dataSources: { auth: authDS },
-          loaders: { loadOrganizationDomainStatuses, loadOrganizationNamesById },
+          dataSources: { auth: authDS, auditLogs, organization: organizationDS },
         },
       ) => {
         const user = await userRequired()
@@ -200,7 +195,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
         }
 
-        const domains = await loadOrganizationDomainStatuses({
+        const domains = await organizationDS.domainStatuses({
           orgId: _id,
           ...args,
         })
@@ -262,7 +257,7 @@ export const organizationType = new GraphQLObjectType({
         // Get org names to use in activity log
         let orgNames
         try {
-          orgNames = await loadOrganizationNamesById.load(_id)
+          orgNames = await organizationDS.namesById.load(_id)
         } catch (err) {
           console.error(
             `Error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
@@ -270,10 +265,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(i18n._(t`Unable to export organization. Please try again.`))
         }
 
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -289,7 +281,7 @@ export const organizationType = new GraphQLObjectType({
             organization: {
               id: _id,
               name: orgNames.orgNameEN,
-            }, // name of resource being acted upon
+            },
             resourceType: 'organization',
           },
         })
