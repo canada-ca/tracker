@@ -9,21 +9,21 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-ci-image
+    id: build-test-image
     dir: services/cvd-enrollment
-    args: ["build", "--target=ci", "-t", "ci-image", "."]
+    args: ["build", "--target=test", "-t", "test-image", "."]
 
   - name: "gcr.io/cloud-builders/docker"
-    id: test-enrollment
+    id: run-tests
     dir: services/cvd-enrollment
-    entrypoint: "sh"
+    entrypoint: /bin/sh
     args:
       - "-c"
       - |
-        docker run ci-image python3 -m pytest tests/ -v
+        docker run test-image python3 -m pytest tests/ -v
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-enrollment
+    id: build-production-image
     entrypoint: "bash"
     dir: services/cvd-enrollment
     args:

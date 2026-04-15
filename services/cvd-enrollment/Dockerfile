@@ -1,13 +1,12 @@
-FROM python:3.14.3-alpine AS base
+FROM python:3.14.2-alpine AS base
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONWARNINGS ignore
 
-# ===============================================================================================
+#===============================================================================================
 
 FROM base AS python-builder
 
 # Copy local code to the container image.
-ENV PYTHONWARNINGS ignore
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
 WORKDIR /working/install
 
 RUN apk add --no-cache \
@@ -22,24 +21,10 @@ COPY requirements.txt ./requirements.txt
 # Install python requirements to /working/install directory for cleaner copy
 RUN pip3 install --prefix=/working/install -r ./requirements.txt
 
-# ===============================================================================================
+#===============================================================================================
 
-FROM python-builder AS ci
+FROM base AS production
 
-WORKDIR /cvd-enrollment
-COPY . .
-
-# Copy installed python modules
-COPY --from=python-builder /working/install/lib /usr/local/lib
-
-# ===============================================================================================
-
-FROM base AS release
-
-# Copy local code to the container image.
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONWARNINGS ignore
-ENV PYTHONDONTWRITEBYTECODE 1
 WORKDIR /cvd-enrollment
 
 # Copy installed python modules
@@ -51,3 +36,15 @@ RUN adduser -D enrollment
 USER enrollment
 
 CMD ["python3", "main.py"]
+
+#===============================================================================================
+
+FROM production AS test
+
+# Copy test files (which were excluded from production)
+COPY . .
+USER enrollment
+
+#===============================================================================================
+
+FROM production AS final
