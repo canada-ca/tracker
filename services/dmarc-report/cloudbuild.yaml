@@ -12,20 +12,19 @@ steps:
   id: wait
   args: ['arangodb:8529']
 
-- name: node:alpine
-  id: install-dependencies
+- name: 'gcr.io/cloud-builders/docker'
+  id: build-test-image
+  dir: services/dmarc-report
+  args: ['build', '--target=test', '-t', 'test-image', '.']
+
+- name: 'test-image'
+  id: run-lint
   dir: services/dmarc-report
   entrypoint: npm
-  args: ['ci', '--no-optional']
+  args: ['run', 'lint']
 
-- name: node:alpine
-  id: run-eslint
-  dir: services/dmarc-report
-  entrypoint: npm
-  args: ['run', lint]
-
-- name: node:alpine
-  id: test
+- name: 'test-image'
+  id: run-tests
   dir: services/dmarc-report
   entrypoint: npm
   args: ['test']
