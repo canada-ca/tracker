@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
 import { updateOrganizationUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ac from '../../access-control'
 
 export const updateOrganization = new mutationWithClientMutationId({
@@ -91,13 +90,10 @@ export const updateOrganization = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired },
-      loaders: { loadOrgByKey },
+      dataSources: { auditLogs, organization: organizationDS },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -129,7 +125,7 @@ export const updateOrganization = new mutationWithClientMutationId({
     const slugFR = slugify(nameFR)
 
     // Check to see if org exists
-    const currentOrg = await loadOrgByKey.load(orgKey)
+    const currentOrg = await organizationDS.byKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
@@ -160,21 +156,7 @@ export const updateOrganization = new mutationWithClientMutationId({
 
     // Check to see if any orgs already have the name in use
     if (nameEN !== '' || nameFR !== '') {
-      let orgNameCheckCursor
-      try {
-        orgNameCheckCursor = await query`
-          WITH organizations
-          FOR org IN organizations
-            FILTER (org.orgDetails.en.name == ${nameEN}) OR (org.orgDetails.fr.name == ${nameFR})
-            RETURN org
-        `
-      } catch (err) {
-        console.error(
-          `Database error occurred during name check when user: ${userKey} attempted to update org: ${currentOrg._key}, ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to update organization. Please try again.`))
-      }
-
+      const orgNameCheckCursor = await organizationDS.checkNameInUse({ nameEN, nameFR })
       if (orgNameCheckCursor.count > 0) {
         console.error(
           `User: ${userKey} attempted to change the name of org: ${currentOrg._key} however it is already in use.`,
@@ -187,27 +169,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       }
     }
 
-    // Get all org details for comparison
-    let orgCursor
-    try {
-      orgCursor = await query`
-        WITH organizations
-        FOR org IN organizations
-          FILTER org._key == ${orgKey}
-          RETURN org
-      `
-    } catch (err) {
-      console.error(`Database error occurred while retrieving org: ${orgKey} for update, err: ${err}`)
-      throw new Error(i18n._(t`Unable to update organization. Please try again.`))
-    }
-
-    let compareOrg
-    try {
-      compareOrg = await orgCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred while retrieving org: ${orgKey} for update, err: ${err}`)
-      throw new Error(i18n._(t`Unable to update organization. Please try again.`))
-    }
+    const compareOrg = await organizationDS.getRawByKey({ orgKey })
 
     const updatedOrgDetails = {
       orgDetails: {
@@ -242,37 +204,10 @@ export const updateOrganization = new mutationWithClientMutationId({
       updatedOrgDetails.externalId = externalId || compareOrg?.externalId
     }
 
-    // Setup Trans action
-    const trx = await transaction(collections)
+    await organizationDS.update({ orgKey, updatedOrgDetails })
 
-    // Upsert new org details
-    try {
-      await trx.step(
-        async () =>
-          await query`
-            WITH organizations
-            UPSERT { _key: ${orgKey} }
-              INSERT ${updatedOrgDetails}
-              UPDATE ${updatedOrgDetails}
-              IN organizations
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction error occurred while upserting org: ${orgKey}, err: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update organization. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Transaction error occurred while committing org: ${orgKey}, err: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update organization. Please try again.`))
-    }
-
-    await loadOrgByKey.clear(orgKey)
-    const organization = await loadOrgByKey.load(orgKey)
+    await organizationDS.byKey.clear(orgKey)
+    const organization = await organizationDS.byKey.load(orgKey)
 
     console.info(`User: ${userKey}, successfully updated org ${orgKey}.`)
 
@@ -306,10 +241,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       })
     }
     if (updatedProperties.length > 0) {
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
@@ -322,7 +254,7 @@ export const updateOrganization = new mutationWithClientMutationId({
             en: compareOrg.orgDetails.en.name,
             fr: compareOrg.orgDetails.fr.name,
           },
-          resourceType: 'organization', // user, org, domain
+          resourceType: 'organization',
           updatedProperties,
         },
       })
