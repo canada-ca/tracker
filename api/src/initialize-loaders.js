@@ -22,16 +22,7 @@ import {
   loadDomainConnectionsByUserId,
   loadDkimSelectorsByDomainId,
 } from './domain/loaders'
-import {
-  loadOrgByKey,
-  loadOrgBySlug,
-  loadOrgConnectionsByDomainId,
-  loadOrgConnectionsByUserId,
-  loadAllOrganizationDomainStatuses,
-  loadOrganizationDomainStatuses,
-  loadOrganizationSummariesByPeriod,
-  loadOrganizationNamesById,
-} from './organization/loaders'
+import { loadOrgByKey, loadOrganizationNamesById } from './organization/loaders'
 import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
 import {
   loadVerifiedDomainsById,
@@ -133,63 +124,8 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
       auth: { loginRequiredBool },
     }),
-    loadOrgByKey: loadOrgByKey({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadOrgBySlug: loadOrgBySlug({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-      query,
-      language,
-      userKey,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadOrganizationSummariesByPeriod: loadOrganizationSummariesByPeriod({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadOrganizationNamesById: loadOrganizationNamesById({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-    }),
-    loadOrganizationDomainStatuses: loadOrganizationDomainStatuses({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
+    loadOrgByKey: loadOrgByKey({ query, language, userKey, i18n }),
+    loadOrganizationNamesById: loadOrganizationNamesById({ query, userKey, i18n }),
     loadMyTrackerByUserId: loadMyTrackerByUserId({
       query,
       language,
