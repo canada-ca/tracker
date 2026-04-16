@@ -1,5 +1,5 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'docker:29'
   id: start_arango
   entrypoint: /bin/sh
   args:
@@ -12,7 +12,7 @@ steps:
   id: wait
   args: ['arangodb:8529']
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'docker:29'
   id: build-test-image
   dir: services/dmarc-report
   args: ['build', '--target=test', '-t', 'test-image', '.']
@@ -42,7 +42,7 @@ steps:
     - DATABASE=$_DATABASE
     - SUMMARIES_CONTAINER=$_SUMMARIES_CONTAINER
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'docker:29'
   id: generate-image-name
   entrypoint: 'bash'
   dir: services/dmarc-report
@@ -51,7 +51,7 @@ steps:
     - |
       echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'docker:29'
   id: build
   entrypoint: 'bash'
   dir: services/dmarc-report
@@ -61,7 +61,7 @@ steps:
       image=$(cat /workspace/imagename)
       docker build -t $image .
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'docker:29'
   id: push-if-master
   entrypoint: 'bash'
   dir: services/dmarc-report
