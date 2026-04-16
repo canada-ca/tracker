@@ -56,7 +56,7 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { userKey, auth: { userRequired }, dataSources: { auth: authDS }, loaders: { loadDkimSelectorsByDomainId } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS, domain: domainDataSource } },
       ) => {
         await userRequired()
         const permitted = await authDS.domainPermissionByDomainId.load(_id)
@@ -65,7 +65,7 @@ export const domainType = new GraphQLObjectType({
           throw new Error(t`Cannot query domain selectors without permission.`)
         }
 
-        return await loadDkimSelectorsByDomainId({
+        return await domainDataSource.dkimSelectorsByDomainId({
           domainId: _id,
         })
       },
@@ -330,8 +330,8 @@ export const domainType = new GraphQLObjectType({
           defaultValue: true,
         },
       },
-      resolve: async ({ claimTags }, args, { loaders: { loadTagByTagId } }) => {
-        const loadedTags = await loadTagByTagId.loadMany(claimTags)
+      resolve: async ({ claimTags }, args, { dataSources: { tags } }) => {
+        const loadedTags = await tags.byTagId(claimTags)
         return loadedTags.filter((tag) => {
           return args.isVisible ? tag.visible : true
         })

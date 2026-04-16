@@ -92,14 +92,14 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _key },
         args,
-        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, dataSources: { tags } },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
         }
 
-        const orgTags = await loadTagsByOrg({
+        const orgTags = await tags.byOrg({
           orgId: _key,
           ...args,
         })
@@ -315,10 +315,10 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        { dataSources: { auth: authDS }, loaders: { loadDomainConnectionsByOrgId } },
+        { dataSources: { auth: authDS, domain: domainDataSource } },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
-        const connections = await loadDomainConnectionsByOrgId({
+        const connections = await domainDataSource.connectionsByOrgId({
           orgId: _id,
           permission,
           ...args,
