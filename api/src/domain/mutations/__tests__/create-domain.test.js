@@ -21,6 +21,7 @@ import {
 } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadOrgByKey, loadOrgConnectionsByDomainId } from '../../../organization/loaders'
+import { OrganizationDataSource } from '../../../organization/data-source'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -209,6 +210,16 @@ describe('create a domain', () => {
               },
               dataSources: {
                 auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -373,6 +384,16 @@ describe('create a domain', () => {
               },
               dataSources: {
                 auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -513,6 +534,16 @@ describe('create a domain', () => {
             },
             dataSources: {
               auth: new AuthDataSource({ query, userKey: user._key }),
+              organization: new OrganizationDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+                loginRequiredBool: true,
+                transaction,
+                collections: collectionNames,
+              }),
             },
             loaders: {
               loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -693,6 +724,16 @@ describe('create a domain', () => {
             },
             dataSources: {
               auth: new AuthDataSource({ query, userKey: user._key }),
+              organization: new OrganizationDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+                loginRequiredBool: true,
+                transaction,
+                collections: collectionNames,
+              }),
             },
             loaders: {
               loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -836,6 +877,16 @@ describe('create a domain', () => {
               },
               dataSources: {
                 auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -980,6 +1031,16 @@ describe('create a domain', () => {
               },
               dataSources: {
                 auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
