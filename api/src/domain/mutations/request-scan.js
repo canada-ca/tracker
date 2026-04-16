@@ -33,8 +33,7 @@ export const requestScan = new mutationWithClientMutationId({
       request: { ip },
       publish,
       auth: { checkDomainPermission, userRequired, verifiedRequired },
-      loaders: { loadDomainByDomain },
-      dataSources: { webScan },
+      dataSources: { webScan, domain: domainDS },
       validators: { cleanseInput },
     },
   ) => {
@@ -46,7 +45,7 @@ export const requestScan = new mutationWithClientMutationId({
     const domainInput = cleanseInput(args.domain)
 
     // Check to see if domain exists
-    const domain = await loadDomainByDomain.load(domainInput)
+    const domain = await domainDS.byDomain.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(

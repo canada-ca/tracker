@@ -45,7 +45,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByDomain, loadOrgByKey },
+      dataSources: { domain: domainDS, organization: orgDS },
     },
   ) => {
     // Get User
@@ -78,7 +78,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
     }
 
     // Get Org from db
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     // Check to see if org exists
     if (typeof org === 'undefined') {
@@ -136,7 +136,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       const trx = await transaction(collections)
 
       // Get domain from db
-      const checkDomain = await loadDomainByDomain.load(domain)
+      const checkDomain = await domainDS.byDomain.load(domain)
 
       // Check to see if domain exists
       if (typeof checkDomain === 'undefined') {

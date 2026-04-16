@@ -54,7 +54,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       userKey,
       request: { ip },
       auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadDomainByDomain, loadOrgByKey },
+      dataSources: { domain: domainDS, organization: orgDS },
       validators: { cleanseInput },
     },
   ) => {
@@ -98,7 +98,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(`User: ${userKey} attempted to add domains to an organization: ${orgId} that does not exist.`)
@@ -192,7 +192,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       }
 
       // Check to see if domain already exists in db
-      const checkDomain = await loadDomainByDomain.load(insertDomain.domain)
+      const checkDomain = await domainDS.byDomain.load(insertDomain.domain)
 
       // Setup Transaction
       const trx = await transaction(collections)

@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { CveID } from '../../scalars'
 import { ignoreCveUnion } from '../unions/ignore-cve-union'
-import { logActivity } from '../../audit-logs'
 
 export const unignoreCve = new mutationWithClientMutationId({
   name: 'UnignoreCve',
@@ -31,13 +30,11 @@ export const unignoreCve = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      collections,
-      transaction,
       userKey,
       request: { ip },
       auth: { userRequired, checkSuperAdmin, superAdminRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByKey },
+      dataSources: { domain: domainDataSource, auditLogs },
     },
   ) => {
     // Get User
@@ -54,7 +51,7 @@ export const unignoreCve = new mutationWithClientMutationId({
     const ignoredCve = cleanseInput(args.ignoredCve)
 
     // Check to see if domain exists
-    const domain = await loadDomainByKey.load(domainId)
+    const domain = await domainDataSource.byKey.load(domainId)
 
     if (typeof domain === 'undefined') {
       console.warn(`User: "${userKey}" attempted to unignore CVE "${ignoredCve}" on unknown domain: "${domainId}".`)
@@ -80,74 +77,7 @@ export const unignoreCve = new mutationWithClientMutationId({
 
     const newIgnoredCves = Array.from(new Set([...oldIgnoredCves.filter((cve) => cve !== ignoredCve)]))
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        async () =>
-          await query`
-          UPSERT { _key: ${domain._key} }
-            INSERT ${{ ignoredCves: newIgnoredCves }}
-            UPDATE ${{ ignoredCves: newIgnoredCves }}
-            IN domains
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}", error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
-    }
-
-    let currentDomainVulnerabilitiesCursor
-    try {
-      currentDomainVulnerabilitiesCursor = await trx.step(
-        () => query`
-        FOR finding IN additionalFindings
-          FILTER finding.domain == ${domain._id}
-          LIMIT 1
-          FOR wc IN finding.webComponents
-            FILTER LENGTH(wc.WebComponentCves) > 0
-            FOR vuln IN wc.WebComponentCves
-              FILTER vuln.Cve NOT IN ${newIgnoredCves}
-              RETURN DISTINCT vuln.Cve
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}" when getting current CVEs, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
-    }
-
-    try {
-      await trx.step(
-        () =>
-          query`
-          UPDATE { _key: ${domain._key}, cveDetected: ${currentDomainVulnerabilitiesCursor.count > 0} } IN domains
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}" when updating domain, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
-    }
-
-    // Commit transaction
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction commit error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}", error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to stop ignoring CVE. Please try again.`))
-    }
+    const returnDomain = await domainDataSource.unignoreCve({ domain, ignoredCve, newIgnoredCves })
 
     // Get all verified claims to domain and activityLog those organizations
     try {
@@ -160,10 +90,7 @@ export const unignoreCve = new mutationWithClientMutationId({
         }
     `
       for await (const org of orgs) {
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -189,10 +116,7 @@ export const unignoreCve = new mutationWithClientMutationId({
         })
       }
       // Log activity for super admin logging
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
@@ -217,10 +141,6 @@ export const unignoreCve = new mutationWithClientMutationId({
         `Database error occurred when user: "${userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domainId}" during activity logs, error: ${err}`,
       )
     }
-
-    // Clear dataloader and load updated domain
-    await loadDomainByKey.clear(domain._key)
-    const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: "${userKey}" successfully unignored CVE "${ignoredCve}" on domain: "${domainId}".`)
 

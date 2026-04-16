@@ -36,7 +36,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
       publish,
       request: { ip },
       auth: { checkDomainPermission, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      loaders: { loadDomainByDomain, loadOrgByKey },
+      dataSources: { domain: domainDS, organization: orgDS },
       validators: { cleanseInput },
     },
   ) => {
@@ -64,7 +64,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
     }
 
     // Check to see if domain exists
-    const domain = await loadDomainByDomain.load(domainInput)
+    const domain = await domainDS.byDomain.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(
@@ -74,7 +74,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

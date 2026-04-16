@@ -25,11 +25,9 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      collections,
-      transaction,
       userKey,
       auth: { userRequired, verifiedRequired },
-      loaders: { loadDomainByKey },
+      dataSources: { domain: domainDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -41,7 +39,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
     const { type: _domainType, id: domainId } = fromGlobalId(cleanseInput(args.domainId))
 
     // Get domain from db
-    const domain = await loadDomainByKey.load(domainId)
+    const domain = await domainDataSource.byKey.load(domainId)
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
       console.warn(
@@ -85,39 +83,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () =>
-          query`
-            WITH favourites, domains, users
-            LET domainEdges = (FOR v, e IN 1..1 INBOUND ${domain._id} favourites RETURN { _key: e._key, _from: e._from, _to: e._to })
-            LET edgeKeys = (
-              FOR domainEdge IN domainEdges
-                FILTER domainEdge._to ==  ${domain._id}
-                FILTER domainEdge._from == ${user._id}
-                RETURN domainEdge._key
-            )
-            FOR edgeKey IN edgeKeys
-              REMOVE edgeKey IN favourites
-              OPTIONS { waitForSync: true }
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction step error occurred for user: ${userKey} when removing domain edge: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to unfavourite domain. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Transaction commit error occurred while user: ${userKey} was unfavouriting domain: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to unfavourite domain. Please try again.`))
-    }
+    await domainDataSource.unfavourite({ domain, user })
 
     console.info(`User: ${userKey} successfully removed domain ${domain.domain} from favourites.`)
 

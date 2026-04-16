@@ -25,11 +25,9 @@ export const favouriteDomain = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      collections,
-      transaction,
       userKey,
       auth: { userRequired, verifiedRequired },
-      loaders: { loadDomainByKey },
+      dataSources: { domain: domainDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -41,7 +39,7 @@ export const favouriteDomain = new mutationWithClientMutationId({
     const { type: _domainType, id: domainId } = fromGlobalId(cleanseInput(args.domainId))
 
     // Get domain from db
-    const domain = await loadDomainByKey.load(domainId)
+    const domain = await domainDataSource.byKey.load(domainId)
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
       console.warn(`User: ${userKey} attempted to favourite ${domainId} however no domain is associated with that id.`)
@@ -83,33 +81,7 @@ export const favouriteDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () =>
-          query`
-            WITH favourites
-            INSERT {
-              _from: ${user._id},
-              _to: ${domain._id},
-            } INTO favourites
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
-    }
+    await domainDataSource.favourite({ domain, user })
 
     console.info(`User: ${userKey} successfully favourited domain ${domain.domain}.`)
 
