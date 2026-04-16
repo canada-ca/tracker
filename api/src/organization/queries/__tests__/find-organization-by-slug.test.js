@@ -159,9 +159,13 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey(query, 'en'),
+                  bySlug: loadOrgBySlug({ query, language: 'en' }),
+                },
+              },
               loaders: {
-                loadOrgByKey: loadOrgByKey(query, 'en'),
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
@@ -265,9 +269,13 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey(query, 'fr'),
+                  bySlug: loadOrgBySlug({ query, language: 'fr' }),
+                },
+              },
               loaders: {
-                loadOrgByKey: loadOrgByKey(query, 'fr'),
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
@@ -361,11 +369,9 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue(),
-                },
-              },
+                } } },
             },
           })
 
@@ -410,11 +416,9 @@ describe('given findOrganizationBySlugQuery', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue({}),
-                },
-              },
+                } } },
             },
           })
 
@@ -477,11 +481,9 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue(),
-                },
-              },
+                } } },
             },
           })
 
@@ -526,11 +528,9 @@ describe('given findOrganizationBySlugQuery', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue({}),
-                },
-              },
+                } } },
             },
           })
 

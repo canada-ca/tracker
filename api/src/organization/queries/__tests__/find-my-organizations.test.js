@@ -194,15 +194,13 @@ describe('given findMyOrganizationsQuery', () => {
                     }),
                     verifiedRequired: verifiedRequired({}),
                   },
-                  loaders: {
-                    loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+                  dataSources: { organization: { connectionsByUserId: loadOrgConnectionsByUserId({
                       query,
                       userKey: user._key,
                       cleanseInput,
                       auth: { loginRequired: true },
                       language: 'en',
-                    }),
-                  },
+                    }) } },
                 },
               })
 
@@ -337,15 +335,13 @@ describe('given findMyOrganizationsQuery', () => {
                     }),
                     verifiedRequired: verifiedRequired({}),
                   },
-                  loaders: {
-                    loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+                  dataSources: { organization: { connectionsByUserId: loadOrgConnectionsByUserId({
                       query,
                       userKey: user._key,
                       cleanseInput,
                       auth: { loginRequired: true },
                       language: 'fr',
-                    }),
-                  },
+                    }) } },
                 },
               })
 
@@ -457,16 +453,14 @@ describe('given findMyOrganizationsQuery', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+              dataSources: { organization: { connectionsByUserId: loadOrgConnectionsByUserId({
                   query: mockedQuery,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   language: 'en',
                   i18n,
-                }),
-              },
+                }) } },
             },
           })
 
@@ -535,16 +529,14 @@ describe('given findMyOrganizationsQuery', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+              dataSources: { organization: { connectionsByUserId: loadOrgConnectionsByUserId({
                   query: mockedQuery,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   language: 'en',
                   i18n,
-                }),
-              },
+                }) } },
             },
           })
 

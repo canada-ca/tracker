@@ -11,8 +11,8 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadOrgByKey } from '../../loaders'
 import { loadDomainByKey } from '../../../domain/loaders'
+import { OrganizationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -172,13 +172,18 @@ describe('removing an organization', () => {
                 verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
+              dataSources: {
+                organization: new OrganizationDataSource({
                   query,
-                  language: 'en',
                   userKey: user._key,
                   i18n,
+                  language: 'en',
+                  cleanseInput,
+                  transaction,
+                  collections: collectionNames,
                 }),
+              },
+              loaders: {
                 loadUserByKey: loadUserByKey({
                   query,
                   userKey: user._key,
@@ -204,13 +209,8 @@ describe('removing an organization', () => {
           expect(response).toEqual(expectedResponse)
           expect(consoleOutput).toEqual([`User: ${user._key}, successfully verified org: ${org._key}.`])
 
-          const orgLoader = loadOrgByKey({
-            query,
-            language: 'en',
-            userKey: user._key,
-            i18n,
-          })
-          const verifiedOrg = await orgLoader.load(org._key)
+          const orgDS = new OrganizationDataSource({ query, userKey: user._key, i18n, language: 'en', cleanseInput, transaction, collections: collectionNames })
+          const verifiedOrg = await orgDS.byKey.load(org._key)
           expect(verifiedOrg.verified).toEqual(true)
 
           const domainLoader = loadDomainByKey({ query, userKey: user._key, i18n })
@@ -286,13 +286,18 @@ describe('removing an organization', () => {
                 verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
+              dataSources: {
+                organization: new OrganizationDataSource({
                   query,
-                  language: 'fr',
                   userKey: user._key,
                   i18n,
+                  language: 'fr',
+                  cleanseInput,
+                  transaction,
+                  collections: collectionNames,
                 }),
+              },
+              loaders: {
                 loadUserByKey: loadUserByKey({
                   query,
                   userKey: user._key,
@@ -318,13 +323,8 @@ describe('removing an organization', () => {
           expect(response).toEqual(expectedResponse)
           expect(consoleOutput).toEqual([`User: ${user._key}, successfully verified org: ${org._key}.`])
 
-          const orgLoader = loadOrgByKey({
-            query,
-            language: 'fr',
-            userKey: user._key,
-            i18n,
-          })
-          const verifiedOrg = await orgLoader.load(org._key)
+          const orgDS = new OrganizationDataSource({ query, userKey: user._key, i18n, language: 'fr', cleanseInput, transaction, collections: collectionNames })
+          const verifiedOrg = await orgDS.byKey.load(org._key)
           expect(verifiedOrg.verified).toEqual(true)
         })
       })
@@ -385,11 +385,9 @@ describe('removing an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
+              dataSources: { organization: { byKey: {
                   load: jest.fn().mockReturnValue(undefined),
-                },
-              },
+                } } },
             },
           })
 
@@ -450,13 +448,11 @@ describe('removing an organization', () => {
                   verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _id: 'organizations/123',
                     }),
-                  },
-                },
+                  } } },
               },
             })
 
@@ -517,13 +513,11 @@ describe('removing an organization', () => {
                   verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _id: 'organizations/123',
                     }),
-                  },
-                },
+                  } } },
               },
             })
 
@@ -585,13 +579,11 @@ describe('removing an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
+              dataSources: { organization: { byKey: {
                   load: jest.fn().mockReturnValue({
                     verified: true,
                   }),
-                },
-              },
+                } } },
             },
           })
 
@@ -612,192 +604,55 @@ describe('removing an organization', () => {
           ])
         })
       })
-      describe('transaction error occurs', () => {
-        describe('when stepping transaction', () => {
-          describe('when upserting org information', () => {
-            it('throws an error message', async () => {
-              const response = await graphql({
-                schema,
-                source: `
-                  mutation {
-                    verifyOrganization(
-                      input: {
-                        orgId: "${toGlobalId('organization', 123)}"
-                      }
-                    ) {
-                      result {
-                        ... on OrganizationResult {
-                          status
-                          organization {
-                            name
-                          }
-                        }
-                        ... on OrganizationError {
-                          code
-                          description
-                        }
-                      }
-                    }
+      describe('data source error occurs', () => {
+        it('throws an error message', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+              mutation {
+                verifyOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
-                `,
-                rootValue: null,
-                contextValue: {
-                  i18n,
-                  query,
-                  collections: collectionNames,
-                  transaction: jest.fn().mockReturnValue({
-                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
-                    abort: jest.fn(),
-                  }),
-                  userKey: 123,
-                  auth: {
-                    checkPermission: jest.fn().mockReturnValue('super_admin'),
-                    userRequired: jest.fn(),
-                    verifiedRequired: jest.fn(),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        verified: false,
-                      }),
-                    },
-                  },
-                },
-              })
-
-              const error = [new GraphQLError('Unable to verify organization. Please try again.')]
-
-              expect(response.errors).toEqual(error)
-
-              expect(consoleOutput).toEqual([
-                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
-              ])
-            })
-          })
-          describe('when clearing owners', () => {
-            it('throws an error message', async () => {
-              const response = await graphql({
-                schema,
-                source: `
-                  mutation {
-                    verifyOrganization(
-                      input: {
-                        orgId: "${toGlobalId('organization', 123)}"
-                      }
-                    ) {
-                      result {
-                        ... on OrganizationResult {
-                          status
-                          organization {
-                            name
-                          }
-                        }
-                        ... on OrganizationError {
-                          code
-                          description
-                        }
+                ) {
+                  result {
+                    ... on OrganizationResult {
+                      status
+                      organization {
+                        name
                       }
                     }
-                  }
-                `,
-                rootValue: null,
-                contextValue: {
-                  i18n,
-                  query,
-                  collections: collectionNames,
-                  transaction: jest.fn().mockReturnValue({
-                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
-                    abort: jest.fn(),
-                  }),
-                  userKey: 123,
-                  auth: {
-                    checkPermission: jest.fn().mockReturnValue('super_admin'),
-                    userRequired: jest.fn(),
-                    verifiedRequired: jest.fn(),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        verified: false,
-                      }),
-                    },
-                  },
-                },
-              })
-
-              const error = [new GraphQLError('Unable to verify organization. Please try again.')]
-
-              expect(response.errors).toEqual(error)
-
-              expect(consoleOutput).toEqual([
-                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
-              ])
-            })
-          })
-        })
-        describe('when committing transaction', () => {
-          it('throws an error message', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  verifyOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
+                    ... on OrganizationError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
-                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('super_admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      verified: false,
-                    }),
-                  },
+              }
+            `,
+            rootValue: null,
+            contextValue: {
+              i18n,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('super_admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
+              },
+              validators: { cleanseInput },
+              dataSources: {
+                organization: {
+                  byKey: { load: jest.fn().mockReturnValue({ verified: false, _key: 123 }) },
+                  verify: jest.fn().mockRejectedValue(new Error('Unable to verify organization. Please try again.')),
                 },
               },
-            })
-
-            const error = [new GraphQLError('Unable to verify organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred while committing newly verified org: 123, err: Error: trx commit error`,
-            ])
+            },
           })
+
+          const error = [new GraphQLError('Unable to verify organization. Please try again.')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([])
         })
       })
     })
@@ -855,11 +710,9 @@ describe('removing an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
+              dataSources: { organization: { byKey: {
                   load: jest.fn().mockReturnValue(undefined),
-                },
-              },
+                } } },
             },
           })
 
@@ -920,13 +773,11 @@ describe('removing an organization', () => {
                   verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _id: 'organizations/123',
                     }),
-                  },
-                },
+                  } } },
               },
             })
 
@@ -987,13 +838,11 @@ describe('removing an organization', () => {
                   verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _id: 'organizations/123',
                     }),
-                  },
-                },
+                  } } },
               },
             })
 
@@ -1055,13 +904,11 @@ describe('removing an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
+              dataSources: { organization: { byKey: {
                   load: jest.fn().mockReturnValue({
                     verified: true,
                   }),
-                },
-              },
+                } } },
             },
           })
 
@@ -1082,192 +929,55 @@ describe('removing an organization', () => {
           ])
         })
       })
-      describe('transaction error occurs', () => {
-        describe('when stepping transaction', () => {
-          describe('when upserting org information', () => {
-            it('throws an error message', async () => {
-              const response = await graphql({
-                schema,
-                source: `
-                  mutation {
-                    verifyOrganization(
-                      input: {
-                        orgId: "${toGlobalId('organization', 123)}"
-                      }
-                    ) {
-                      result {
-                        ... on OrganizationResult {
-                          status
-                          organization {
-                            name
-                          }
-                        }
-                        ... on OrganizationError {
-                          code
-                          description
-                        }
-                      }
-                    }
+      describe('data source error occurs', () => {
+        it('throws an error message', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+              mutation {
+                verifyOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
-                `,
-                rootValue: null,
-                contextValue: {
-                  i18n,
-                  query,
-                  collections: collectionNames,
-                  transaction: jest.fn().mockReturnValue({
-                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
-                    abort: jest.fn(),
-                  }),
-                  userKey: 123,
-                  auth: {
-                    checkPermission: jest.fn().mockReturnValue('super_admin'),
-                    userRequired: jest.fn(),
-                    verifiedRequired: jest.fn(),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        verified: false,
-                      }),
-                    },
-                  },
-                },
-              })
-
-              const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
-
-              expect(response.errors).toEqual(error)
-
-              expect(consoleOutput).toEqual([
-                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
-              ])
-            })
-          })
-          describe('when clearing owners', () => {
-            it('throws an error message', async () => {
-              const response = await graphql({
-                schema,
-                source: `
-                  mutation {
-                    verifyOrganization(
-                      input: {
-                        orgId: "${toGlobalId('organization', 123)}"
-                      }
-                    ) {
-                      result {
-                        ... on OrganizationResult {
-                          status
-                          organization {
-                            name
-                          }
-                        }
-                        ... on OrganizationError {
-                          code
-                          description
-                        }
+                ) {
+                  result {
+                    ... on OrganizationResult {
+                      status
+                      organization {
+                        name
                       }
                     }
-                  }
-                `,
-                rootValue: null,
-                contextValue: {
-                  i18n,
-                  query,
-                  collections: collectionNames,
-                  transaction: jest.fn().mockReturnValue({
-                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
-                    abort: jest.fn(),
-                  }),
-                  userKey: 123,
-                  auth: {
-                    checkPermission: jest.fn().mockReturnValue('super_admin'),
-                    userRequired: jest.fn(),
-                    verifiedRequired: jest.fn(),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        verified: false,
-                      }),
-                    },
-                  },
-                },
-              })
-
-              const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
-
-              expect(response.errors).toEqual(error)
-
-              expect(consoleOutput).toEqual([
-                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
-              ])
-            })
-          })
-        })
-        describe('when committing transaction', () => {
-          it('throws an error message', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  verifyOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
+                    ... on OrganizationError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
-                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('super_admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      verified: false,
-                    }),
-                  },
+              }
+            `,
+            rootValue: null,
+            contextValue: {
+              i18n,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('super_admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
+              },
+              validators: { cleanseInput },
+              dataSources: {
+                organization: {
+                  byKey: { load: jest.fn().mockReturnValue({ verified: false, _key: 123 }) },
+                  verify: jest.fn().mockRejectedValue(new Error("Impossible de vérifier l'organisation. Veuillez réessayer.")),
                 },
               },
-            })
-
-            const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred while committing newly verified org: 123, err: Error: trx commit error`,
-            ])
+            },
           })
+
+          const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([])
         })
       })
     })

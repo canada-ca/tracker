@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadOrgByKey } from '../../loaders'
+import { OrganizationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -209,8 +209,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -274,8 +285,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -333,8 +355,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -400,8 +433,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -458,8 +502,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -522,8 +577,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -580,8 +646,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -653,8 +730,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -709,8 +797,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -768,8 +867,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -826,8 +936,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -950,8 +1071,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1015,8 +1147,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1074,8 +1217,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1141,8 +1295,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1197,8 +1362,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1257,8 +1433,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1315,8 +1502,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1388,8 +1586,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1444,8 +1653,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1503,8 +1723,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1561,8 +1792,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1674,8 +1916,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1739,8 +1992,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1798,8 +2062,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1865,8 +2140,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1922,8 +2208,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1982,8 +2279,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -2040,8 +2348,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -2113,8 +2432,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -2169,8 +2499,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -2228,8 +2569,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -2286,8 +2638,19 @@ describe('removing an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  auditLogs: { logActivity: jest.fn() },
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -2366,11 +2729,9 @@ describe('removing an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
+              dataSources: { organization: { byKey: {
                   load: jest.fn().mockReturnValue(undefined),
-                },
-              },
+                } } },
             },
           })
 
@@ -2434,8 +2795,7 @@ describe('removing an organization', () => {
                       verifiedRequired: jest.fn(),
                     },
                     validators: { cleanseInput },
-                    loaders: {
-                      loadOrgByKey: {
+                    dataSources: { organization: { byKey: {
                         load: jest.fn().mockReturnValue({
                           _key: 123,
                           verified: true,
@@ -2462,8 +2822,7 @@ describe('removing an organization', () => {
                             },
                           },
                         }),
-                      },
-                    },
+                      } } },
                   },
                 })
 
@@ -2527,8 +2886,7 @@ describe('removing an organization', () => {
                       verifiedRequired: jest.fn(),
                     },
                     validators: { cleanseInput },
-                    loaders: {
-                      loadOrgByKey: {
+                    dataSources: { organization: { byKey: {
                         load: jest.fn().mockReturnValue({
                           _key: 123,
                           verified: false,
@@ -2555,8 +2913,7 @@ describe('removing an organization', () => {
                             },
                           },
                         }),
-                      },
-                    },
+                      } } },
                   },
                 })
 
@@ -2581,961 +2938,8 @@ describe('removing an organization', () => {
           })
         })
       })
-      describe('given a database error', () => {
-        describe('when getting the ownership information', () => {
-          it('throws an error', async () => {
-            const mockedQuery = jest.fn().mockRejectedValue(new Error('Database Error'))
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123 while attempting to get dmarcSummaryInfo while removing org: 123, Error: Database Error`,
-            ])
-          })
-        })
-        describe('when getting the domain claim count', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([]),
-            }
-
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce(mockedCursor)
-              .mockRejectedValue(new Error('Database Error'))
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123 while attempting to gather domain count while removing org: 123, Error: Database Error`,
-            ])
-          })
-        })
-      })
-      describe('given a cursor error', () => {
-        describe('when getting getting ownership information', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockRejectedValue(new Error('Cursor Error')),
-            }
-
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce(mockedCursor)
-              .mockRejectedValue(new Error('Database Error'))
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred for user: 123 while attempting to get dmarcSummaryInfo while removing org: 123, Error: Cursor Error`,
-            ])
-          })
-        })
-        describe('when getting getting domain claim count', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValueOnce([]).mockRejectedValue(new Error('Cursor Error')),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred for user: 123 while attempting to gather domain count while removing org: 123, Error: Cursor Error`,
-            ])
-          })
-        })
-      })
-      describe('given a trx step error', () => {
-        describe('when removing dmarc summary data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([{}]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValueOnce(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Trx Step')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove dmarc summaries while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing ownership data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([{}]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValueOnce(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove ownerships while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing web scan results data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Trx Step')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove web data for test.gc.ca in org: undefined, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing scan data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove DNS data for test.gc.ca in org: undefined, error: Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing domain', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', 123)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove domains while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing affiliations and org', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', 123)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('owner'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove affiliations, and the org while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-      })
-      describe('given a trx commit error', () => {
+      describe('given a data source error', () => {
         it('throws an error', async () => {
-          const mockedCursor = {
-            all: jest.fn().mockReturnValueOnce([]).mockReturnValue([]),
-          }
-
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest.fn().mockReturnValue({}),
-            commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
-            abort: jest.fn(),
-          })
-
           const response = await graphql({
             schema,
             source: `
@@ -3563,9 +2967,6 @@ describe('removing an organization', () => {
             rootValue: null,
             contextValue: {
               i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction: mockedTransaction,
               userKey: 123,
               request: { ip: '127.0.0.1' },
               auth: {
@@ -3574,34 +2975,25 @@ describe('removing an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    verified: false,
+              dataSources: {
+                auditLogs: { logActivity: jest.fn() },
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _id: 'organizations/123',
+                      _key: '123',
+                      verified: false,
+                      slug: 'treasury-board-secretariat',
+                      name: 'Treasury Board of Canada Secretariat',
+                    }),
+                  },
+                  getRawByKey: jest.fn().mockResolvedValue({
                     orgDetails: {
-                      en: {
-                        slug: 'treasury-board-secretariat',
-                        acronym: 'TBS',
-                        name: 'Treasury Board of Canada Secretariat',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                      fr: {
-                        slug: 'secretariat-conseil-tresor',
-                        acronym: 'SCT',
-                        name: 'Secrétariat du Conseil Trésor du Canada',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
+                      en: { name: 'Treasury Board of Canada Secretariat' },
+                      fr: { name: 'Secrétariat du Conseil Trésor du Canada' },
                     },
                   }),
+                  remove: jest.fn().mockRejectedValue(new Error('Unable to remove organization. Please try again.')),
                 },
               },
             },
@@ -3610,9 +3002,7 @@ describe('removing an organization', () => {
           const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx commit error occurred for user: 123 while attempting remove of org: 123, Error: Commit Error`,
-          ])
+          expect(consoleOutput).toEqual([])
         })
       })
     })

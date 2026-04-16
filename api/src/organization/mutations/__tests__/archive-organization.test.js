@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadOrgByKey } from '../../loaders'
+import { OrganizationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -176,8 +176,18 @@ describe('archiving an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -242,8 +252,18 @@ describe('archiving an organization', () => {
                   verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
+                dataSources: {
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -315,11 +335,9 @@ describe('archiving an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
+              dataSources: { organization: { byKey: {
                   load: jest.fn().mockReturnValue(undefined),
-                },
-              },
+                } } },
             },
           })
 
@@ -383,8 +401,7 @@ describe('archiving an organization', () => {
                       verifiedRequired: jest.fn(),
                     },
                     validators: { cleanseInput },
-                    loaders: {
-                      loadOrgByKey: {
+                    dataSources: { organization: { byKey: {
                         load: jest.fn().mockReturnValue({
                           _key: 123,
                           verified: true,
@@ -411,8 +428,7 @@ describe('archiving an organization', () => {
                             },
                           },
                         }),
-                      },
-                    },
+                      } } },
                   },
                 })
 
@@ -437,20 +453,8 @@ describe('archiving an organization', () => {
           })
         })
       })
-      describe('given a trx commit error', () => {
+      describe('given a data source error', () => {
         it('throws an error', async () => {
-          const mockedCursor = {
-            all: jest.fn().mockReturnValueOnce([]).mockReturnValue([]),
-          }
-
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest.fn().mockReturnValue({}),
-            commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
-            abort: jest.fn(),
-          })
-
           const response = await graphql({
             schema,
             source: `
@@ -478,9 +482,6 @@ describe('archiving an organization', () => {
             rootValue: null,
             contextValue: {
               i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction: mockedTransaction,
               userKey: 123,
               request: { ip: '127.0.0.1' },
               auth: {
@@ -489,34 +490,18 @@ describe('archiving an organization', () => {
                 verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    verified: false,
-                    orgDetails: {
-                      en: {
-                        slug: 'treasury-board-secretariat',
-                        acronym: 'TBS',
-                        name: 'Treasury Board of Canada Secretariat',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                      fr: {
-                        slug: 'secretariat-conseil-tresor',
-                        acronym: 'SCT',
-                        name: 'Secrétariat du Conseil Trésor du Canada',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                    },
-                  }),
+              dataSources: {
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _id: 'organizations/123',
+                      _key: 123,
+                      verified: false,
+                      slug: 'treasury-board-secretariat',
+                      name: 'Treasury Board of Canada Secretariat',
+                    }),
+                  },
+                  archive: jest.fn().mockRejectedValue(new Error('Unable to archive organization. Please try again.')),
                 },
               },
             },
@@ -525,9 +510,7 @@ describe('archiving an organization', () => {
           const error = [new GraphQLError('Unable to archive organization. Please try again.')]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx commit error occurred for user: 123 while attempting archive of org: 123, Error: Commit Error`,
-          ])
+          expect(consoleOutput).toEqual([])
         })
       })
     })
