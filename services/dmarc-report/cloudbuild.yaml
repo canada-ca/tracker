@@ -19,13 +19,11 @@ steps:
 
 - name: 'test-image'
   id: run-lint
-  dir: services/dmarc-report
   entrypoint: npm
   args: ['run', 'lint']
 
 - name: 'test-image'
   id: run-tests
-  dir: services/dmarc-report
   entrypoint: npm
   args: ['test']
   env:

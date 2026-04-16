@@ -22,6 +22,8 @@ CMD ["npm", "start"]
 FROM production AS test
 
 USER root
+
+ENV NODE_ENV=development
 RUN npm install
 COPY . .
 
