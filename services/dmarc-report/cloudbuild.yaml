@@ -44,7 +44,7 @@ steps:
 
 - name: 'docker:29'
   id: generate-image-name
-  entrypoint: 'bash'
+  entrypoint: 'ash'
   dir: services/dmarc-report
   args:
     - '-c'
@@ -53,7 +53,7 @@ steps:
 
 - name: 'docker:29'
   id: build
-  entrypoint: 'bash'
+  entrypoint: 'ash'
   dir: services/dmarc-report
   args:
     - '-c'
@@ -63,7 +63,7 @@ steps:
 
 - name: 'docker:29'
   id: push-if-master
-  entrypoint: 'bash'
+  entrypoint: 'ash'
   dir: services/dmarc-report
   args:
     - '-c'
