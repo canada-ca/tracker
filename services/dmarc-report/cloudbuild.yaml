@@ -19,11 +19,13 @@ steps:
 
 - name: 'test-image'
   id: run-lint
+  dir: /app
   entrypoint: npm
   args: ['run', 'lint']
 
 - name: 'test-image'
   id: run-tests
+  dir: /app
   entrypoint: npm
   args: ['test']
   env:
