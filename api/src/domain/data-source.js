@@ -212,6 +212,37 @@ export class DomainDataSource {
     return this.byKey.load(domain._key)
   }
 
+  async updateClaim({ claim, claimToInsert }) {
+    const trx = await this._transaction(this._collections)
+
+    try {
+      await trx.step(
+        async () =>
+          await this._query`
+            WITH claims
+            UPSERT { _key: ${claim._key} }
+              INSERT ${claimToInsert}
+              UPDATE ${claimToInsert}
+              IN claims
+          `,
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: ${this._userKey} attempted to update domain edge, error: ${err}`,
+      )
+      await trx.abort()
+      throw new Error(this._i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(`Transaction commit error occurred while user: ${this._userKey} was updating domain claim: ${err}`)
+      await trx.abort()
+      throw new Error(this._i18n._(t`Unable to update domain. Please try again.`))
+    }
+  }
+
   async remove({ domain, org, orgsClaimingDomain, hasOwnership }) {
     const trx = await this._transaction(this._collections)
 

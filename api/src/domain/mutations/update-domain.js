@@ -57,8 +57,7 @@ export const updateDomain = new mutationWithClientMutationId({
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      dataSources: { domain: domainDataSource, auditLogs },
-      loaders: { loadOrgByKey, loadTagByTagId },
+      dataSources: { domain: domainDataSource, auditLogs, tags: tagsDS, organization: orgDS },
     },
   ) => {
     // Get User
@@ -72,7 +71,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     let tags
     if (typeof args.tags !== 'undefined') {
-      tags = await loadTagByTagId.loadMany(
+      tags = await tagsDS.byTagId.loadMany(
         args.tags.map((tag) => {
           return cleanseInput(tag)
         }),
@@ -123,7 +122,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

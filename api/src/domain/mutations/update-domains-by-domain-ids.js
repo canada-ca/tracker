@@ -2,7 +2,6 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { bulkModifyDomainsUnion } from '../unions'
 import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
 import { t } from '@lingui/macro'
-import { logActivity } from '../../audit-logs'
 import ac from '../../access-control'
 
 export const updateDomainsByDomainIds = new mutationWithClientMutationId({
@@ -34,12 +33,10 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      collections,
-      transaction,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadTagByTagId, loadOrgByKey },
+      dataSources: { domain: domainDS, auditLogs, tags: tagsDS, organization: orgDS },
       validators: { cleanseInput },
     },
   ) => {
@@ -50,7 +47,7 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
 
     // Cleanse input
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    let tags = (await loadTagByTagId.loadMany(args.tags.map((tag) => cleanseInput(tag)))) ?? []
+    let tags = (await tagsDS.byTagId.loadMany(args.tags.map((tag) => cleanseInput(tag)))) ?? []
     tags = tags
       .filter(
         ({ visible, ownership, organizations }) =>
@@ -59,7 +56,7 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
       .map((tag) => tag.tagId)
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
     if (typeof org === 'undefined') {
       console.warn(`User: ${userKey} attempted to update domains to an organization: ${orgId} that does not exist.`)
       return {
@@ -115,45 +112,18 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
         continue
       }
 
-      // Setup Transaction
-      const trx = await transaction(collections)
       const { claim, domain } = checkClaim
       const claimToInsert = {
         tags: [...new Set([...claim.tags, ...tags])],
       }
 
       try {
-        await trx.step(
-          async () =>
-            await query`
-              WITH claims
-              UPSERT { _key: ${claim._key} }
-                INSERT ${claimToInsert}
-                UPDATE ${claimToInsert}
-                IN claims
-            `,
-        )
+        await domainDS.updateClaim({ claim, claimToInsert })
       } catch (err) {
-        console.error(
-          `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
-        )
-        await trx.abort()
         continue
       }
 
-      // commit and log
-      try {
-        await trx.commit()
-      } catch (err) {
-        console.error(`Transaction commit error occurred while user: ${userKey} was creating domains: ${err}`)
-        await trx.abort()
-        continue
-      }
-
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,

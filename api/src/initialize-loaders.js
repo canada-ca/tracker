@@ -29,22 +29,9 @@ import {
   loadVerifiedOrgConnectionsByDomainId,
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
-import { loadTagByTagId, loadTagsByOrg } from './tags'
 
 export function initializeLoaders({ query, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
-    loadTagByTagId: loadTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadTagsByOrg: loadTagsByOrg({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
     loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
       query,
       userKey,
