@@ -122,10 +122,10 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
-      resolve: async ({ _id }, args, { auth: { checkSuperAdmin }, loaders: { loadOrgConnectionsByDomainId } }) => {
+      resolve: async ({ _id }, args, { auth: { checkSuperAdmin }, dataSources: { organization } }) => {
         const isSuperAdmin = await checkSuperAdmin()
 
-        return await loadOrgConnectionsByDomainId({
+        return await organization.connectionsByDomainId({
           domainId: _id,
           isSuperAdmin,
           ...args,
@@ -154,11 +154,7 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       description: `DNS scan results.`,
-      resolve: async (
-        { _id },
-        args,
-        { userKey, auth: { userRequired }, dataSources: { auth: authDS, dnsScan } },
-      ) => {
+      resolve: async ({ _id }, args, { userKey, auth: { userRequired }, dataSources: { auth: authDS, dnsScan } }) => {
         await userRequired()
         const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
@@ -200,11 +196,7 @@ export const domainType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: async (
-        { _id },
-        args,
-        { userKey, auth: { userRequired }, dataSources: { auth: authDS, webScan } },
-      ) => {
+      resolve: async ({ _id }, args, { userKey, auth: { userRequired }, dataSources: { auth: authDS, webScan } }) => {
         await userRequired()
         const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
@@ -292,7 +284,7 @@ export const domainType = new GraphQLObjectType({
         return {
           domainKey: _key,
           _id: dmarcSummaryEdge._to,
-          startDate: startDate,
+          startDate,
         }
       },
     },

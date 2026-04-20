@@ -13,6 +13,7 @@ import { WebScanDataSource } from './web-scan'
 import { AuditLogsDataSource } from './audit-logs'
 import { AdditionalFindingsDataSource } from './additional-findings'
 import { GuidanceTagDataSource } from './guidance-tag'
+import { OrganizationDataSource } from './organization'
 import { TagsDataSource } from './tags'
 import {
   AuthDataSource,
@@ -148,6 +149,7 @@ export async function createContext({
       auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
       guidanceTag: new GuidanceTagDataSource({ query, userKey, i18n, language: request.language, cleanseInput }),
+      organization: new OrganizationDataSource({ query, userKey, i18n, language: request.language, cleanseInput, loginRequiredBool, transaction, collections }),
       tags: new TagsDataSource({ query, userKey, i18n, language: request.language, transaction, collections }),
       webScan: new WebScanDataSource({ query, userKey, cleanseInput, i18n }),
     },

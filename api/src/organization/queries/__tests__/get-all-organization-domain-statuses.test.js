@@ -200,13 +200,11 @@ describe('given getAllOrganizationDomainStatuses', () => {
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+            dataSources: { organization: { allDomainStatuses: loadAllOrganizationDomainStatuses({
                 query,
                 userKey: user._key,
                 i18n,
-              }),
-            },
+              }) } },
           },
         })
         const error = [
@@ -258,14 +256,12 @@ describe('given getAllOrganizationDomainStatuses', () => {
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+            dataSources: { organization: { allDomainStatuses: loadAllOrganizationDomainStatuses({
                 query,
                 userKey: user._key,
                 i18n,
                 language: 'en',
-              }),
-            },
+              }) } },
           },
         })
 
@@ -318,13 +314,11 @@ describe('given getAllOrganizationDomainStatuses', () => {
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+            dataSources: { organization: { allDomainStatuses: loadAllOrganizationDomainStatuses({
                 query,
                 userKey: user._key,
                 i18n,
-              }),
-            },
+              }) } },
           },
         })
         const error = [
@@ -377,14 +371,12 @@ describe('given getAllOrganizationDomainStatuses', () => {
               superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
-            loaders: {
-              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+            dataSources: { organization: { allDomainStatuses: loadAllOrganizationDomainStatuses({
                 query,
                 userKey: user._key,
                 i18n,
                 language: 'en',
-              }),
-            },
+              }) } },
           },
         })
         const expectedResponse = {

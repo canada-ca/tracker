@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeOrganizationUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ac from '../../access-control'
 
 export const archiveOrganization = new mutationWithClientMutationId({
@@ -26,14 +25,11 @@ export const archiveOrganization = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired },
       validators: { cleanseInput },
-      loaders: { loadOrgByKey },
+      dataSources: { auditLogs, organization: organizationDS },
     },
   ) => {
     // Get user
@@ -45,7 +41,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get org from db
-    const organization = await loadOrgByKey.load(orgId)
+    const organization = await organizationDS.byKey.load(orgId)
 
     // Check to see if org exists
     if (!organization) {
@@ -71,103 +67,11 @@ export const archiveOrganization = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
-    // check to see if any other orgs are using this domain
-    let countCursor
-    try {
-      countCursor = await query`
-        WITH claims, domains, organizations
-        LET domainIds = (
-          FOR v, e IN 1..1 OUTBOUND ${organization._id} claims
-            RETURN e._to
-        )
-        FOR domain IN domains
-          FILTER domain._id IN domainIds
-          LET count = LENGTH(
-            FOR v, e IN 1..1 INBOUND domain._id claims
-              RETURN 1
-          )
-          RETURN {
-            _id: domain._id,
-            _key: domain._key,
-            domain: domain.domain,
-            count
-          }
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred for user: ${userKey} while attempting to gather domain count while archiving org: ${organization._key}, ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
-    }
-
-    let domainInfo
-    try {
-      domainInfo = await countCursor.all()
-    } catch (err) {
-      console.error(
-        `Cursor error occurred for user: ${userKey} while attempting to gather domain count while archiving org: ${organization._key}, ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
-    }
-
-    for (const domain of domainInfo) {
-      if (domain.count === 1) {
-        try {
-          // Archive domain
-          await trx.step(
-            async () =>
-              await query`
-              WITH domains
-              UPDATE { _key: ${domain._key}, archived: true } IN domains
-          `,
-          )
-        } catch (err) {
-          console.error(
-            `Trx step error occurred for user: ${userKey} while attempting to archive domains while archiving org: ${organization._key}, ${err}`,
-          )
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
-        }
-      }
-    }
-
-    try {
-      await trx.step(
-        () =>
-          query`
-            WITH organizations
-            UPDATE { _key: ${organization._key}, verified: false } IN organizations
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Trx step error occurred for user: ${userKey} while attempting to unverify while archiving org: ${organization._key}, ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Trx commit error occurred for user: ${userKey} while attempting archive of org: ${organization._key}, ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
-    }
+    await organizationDS.archive({ organization })
 
     console.info(`User: ${userKey} successfully archived org: ${organization._key}.`)
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogs.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
@@ -186,8 +90,8 @@ export const archiveOrganization = new mutationWithClientMutationId({
         resource: {
           en: organization.name,
           fr: organization.name,
-        }, // name of resource being acted upon
-        resourceType: 'organization', // user, org, domain
+        },
+        resourceType: 'organization',
       },
     })
 

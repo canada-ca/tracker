@@ -306,8 +306,10 @@ describe('given the domain object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadOrgConnectionsByDomainId: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                organization: {
+                  connectionsByDomainId: jest.fn().mockReturnValue(expectedResult),
+                },
               },
               auth: {
                 checkSuperAdmin: jest.fn().mockReturnValue(false),
