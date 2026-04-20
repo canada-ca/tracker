@@ -1,62 +1,59 @@
 steps:
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: start_testdb
-    entrypoint: /bin/sh
+    entrypoint: 'ash'
     args:
       [
-        "-c",
-        "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1",
+        '-c',
+        'docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1',
       ]
 
   - name: mikewilliamson/wait-for
     id: wait_testdb
-    args: ["testdb:8529"]
+    args: ['testdb:8529']
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: build-test-image
     dir: services/summaries
-    args: ["build", "--target=test", "-t", "test-image", "."]
+    args: ['build', '--target=test', '-t', 'test-image', '.']
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'test-image'
     id: run-tests
     dir: services/summaries
-    entrypoint: /bin/sh
-    args:
-      - "-c"
-      - |
-        docker run --net cloudbuild \
-          -e DB_URL=http://testdb:8529 \
-          -e DB_USER=root \
-          -e DB_PASSWORD=test \
-          test-image python3 -m pytest
+    entrypoint: 'python3'
+    args: ['-m', 'pytest', '-v']
+    env:
+      - 'DB_URL=http://testdb:8529'
+      - 'DB_USER=root'
+      - 'DB_PASSWORD=test'
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: generate-image-name
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/summaries
     args:
-      - "-c"
+      - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:'"$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: build-production-image
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/summaries
     args:
-      - "-c"
+      - '-c'
       - |
         image=$(cat /workspace/imagename)
         docker build -t $image .
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: push-results-if-master
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/summaries
     args:
-      - "-c"
+      - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "master" ]]
+        if [[ '$BRANCH_NAME' == 'master' ]]
         then
           image=$(cat /workspace/imagename)
           docker push $image
