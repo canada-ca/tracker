@@ -1,45 +1,42 @@
 steps:
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: generate-image-name
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/cvd-enrollment
     args:
-      - "-c"
+      - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/cvd-enrollment:'"$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: build-test-image
     dir: services/cvd-enrollment
-    args: ["build", "--target=test", "-t", "test-image", "."]
+    args: ['build', '--target=test', '-t', 'test-image', '.']
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'test-image'
     id: run-tests
     dir: services/cvd-enrollment
-    entrypoint: /bin/sh
-    args:
-      - "-c"
-      - |
-        docker run test-image python3 -m pytest tests/ -v
+    entrypoint: 'python3'
+    args: [ '-m', 'pytest', 'tests/', '-v']
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: build-production-image
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/cvd-enrollment
     args:
-      - "-c"
+      - '-c'
       - |
         image=$(cat /workspace/imagename)
         docker build -t $image .
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: push-enrollment-if-master
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/cvd-enrollment
     args:
-      - "-c"
+      - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "master" ]]
+        if [[ '$BRANCH_NAME' == 'master' ]]
         then
           image=$(cat /workspace/imagename)
           docker push $image
