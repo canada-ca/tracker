@@ -21,7 +21,7 @@ steps:
     id: run-tests
     dir: services/detect-decay
     entrypoint: 'python3'
-    args: [ '-m', 'pytest', 'v' ]
+    args: [ '-m', 'pytest', '-v' ]
     env:
       - 'DB_URL=http://arangodb:8529'
       - 'DB_USER=root'
