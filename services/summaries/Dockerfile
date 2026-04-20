@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM python:3.14.2-alpine AS base
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -30,7 +31,7 @@ WORKDIR /home/summaries
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY . .
+COPY --exclude=tests . .
 
 RUN adduser -D summary
 USER summary
@@ -43,6 +44,8 @@ FROM production AS test
 
 # Copy test files
 USER summary
+
+COPY . .
 
 #===============================================================================================
 
