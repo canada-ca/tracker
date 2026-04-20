@@ -17,25 +17,22 @@ steps:
     dir: services/detect-decay
     args: ['build', '--target=test', '-t', 'test-image', '.']
 
-  - name: 'docker:29'
+  - name: 'test-image'
     id: run-tests
     dir: services/detect-decay
-    entrypoint: 'ash'
-    args:
-      - '-c'
-      - |
-        docker run --net cloudbuild \
-          -e DB_URL=http://arangodb:8529 \
-          -e DB_USER=root \
-          -e DB_PASS=test \
-          -e DB_NAME=track_dmarc \
-          -e DETECT_DECAY_START_HOUR=$_DETECT_DECAY_START_HOUR \
-          -e DETECT_DECAY_START_MINUTE=$_DETECT_DECAY_START_MINUTE \
-          -e DETECT_DECAY_MINIMUM_SCANS=$_DETECT_DECAY_MINIMUM_SCANS \
-          -e NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY \
-          -e NOTIFICATION_API_URL=$_NOTIFICATION_API_URL \
-          -e DETECT_DECAY_EMAIL_TEMPLATE_ID=$_DETECT_DECAY_EMAIL_TEMPLATE_ID \
-          test-image python3 -m pytest
+    entrypoint: 'python3'
+    args: [ '-m', 'pytest', 'v' ]
+    env:
+      - 'DB_URL=http://arangodb:8529'
+      - 'DB_USER=root'
+      - 'DB_PASS=test'
+      - 'DB_NAME=track_dmarc'
+      - 'DETECT_DECAY_START_HOUR=$_DETECT_DECAY_START_HOUR'
+      - 'DETECT_DECAY_START_MINUTE=$_DETECT_DECAY_START_MINUTE'
+      - 'DETECT_DECAY_MINIMUM_SCANS=$_DETECT_DECAY_MINIMUM_SCANS'
+      - 'NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY'
+      - 'NOTIFICATION_API_URL=$_NOTIFICATION_API_URL'
+      - 'DETECT_DECAY_EMAIL_TEMPLATE_ID=$_DETECT_DECAY_EMAIL_TEMPLATE_ID'
 
   - name: 'docker:29'
     id: generate-image-name
