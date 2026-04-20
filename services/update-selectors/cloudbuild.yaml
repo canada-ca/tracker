@@ -48,7 +48,7 @@ steps:
     args:
       - '-c'
       - |
-        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)' > /workspace/imagename
+        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:'"$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'docker:29'
     id: build-results
