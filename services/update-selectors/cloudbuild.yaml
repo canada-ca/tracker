@@ -30,7 +30,7 @@ steps:
     dir: services/update-selectors
     args: ['build', '--target=test', '-t', 'test-image', '.']
 
-  - name: 'docker:29'
+  - name: 'test-image'
     id: test-results
     dir: /selectors
     entrypoint: python3
