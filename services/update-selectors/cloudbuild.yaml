@@ -58,6 +58,7 @@ steps:
       - '-c'
       - |
         image=$(cat /workspace/imagename)
+        echo "Building image $image"
         docker build -t $image .
 
   - name: 'docker:29'
