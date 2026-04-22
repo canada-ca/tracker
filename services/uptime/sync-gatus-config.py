@@ -27,15 +27,14 @@ GATUS_CONFIG_PATH = os.getenv("GATUS_CONFIG_PATH", "/config/config.yaml")
 
 
 def build_endpoint(doc):
-    name = doc.get("name") or doc.get("_key", "unknown")
-    url = doc.get("url", "")
+    domain = doc.get("domain")
     interval = doc.get("checkInterval", "30s")
     expected_status = doc.get("expectedStatus", 200)
     response_time_ms = doc.get("responseTimeThresholdMs", 10000)
 
     return {
-        "name": name,
-        "url": url,
+        "name": domain,
+        "url": f"https://{domain}",
         "interval": interval,
         "conditions": [
             f"[STATUS] == {expected_status}",
