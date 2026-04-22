@@ -1,0 +1,22 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: gatus
+  namespace: flux-system
+spec:
+  image: ghcr.io/twin/gatus
+  interval: 1h0m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: gatus
+  namespace: flux-system
+spec:
+  filterTags:
+    pattern: ^v[0-9]+\.[0-9]+\.[0-9]+$
+  imageRepositoryRef:
+    name: gatus
+  policy:
+    semver:
+      range: ">=5.0.0"
