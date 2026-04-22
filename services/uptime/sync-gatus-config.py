@@ -76,7 +76,7 @@ def find_gatus_pid():
 
 
 def main():
-    log.info(f"Connecting to ArangoDB at {ARANGO_URL}, database={ARANGO_DATABASE}")
+    log.info(f"Connecting to ArangoDB...")
     try:
         client = ArangoClient(hosts=ARANGO_URL)
         db = client.db(

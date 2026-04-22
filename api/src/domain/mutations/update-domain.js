@@ -114,13 +114,6 @@ export const updateDomain = new mutationWithClientMutationId({
       cvdEnrollment = null
     }
 
-    let highAvailability
-    if (typeof args.highAvailability !== 'undefined') {
-      highAvailability = args.highAvailability
-    } else {
-      highAvailability = null
-    }
-
     // Check to see if domain exists
     const domain = await loadDomainByKey.load(domainId)
 
@@ -200,7 +193,7 @@ export const updateDomain = new mutationWithClientMutationId({
       cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
     }
 
-    if (!ac.can(permission).updateAny('domain').granted && highAvailability !== null) {
+    if (!ac.can(permission).updateAny('domain').granted && typeof args.highAvailability !== 'undefined') {
       console.warn(
         `User: ${userKey} attempted to update a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
       )
@@ -219,7 +212,7 @@ export const updateDomain = new mutationWithClientMutationId({
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
       cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
-      highAvailability: typeof highAvailability !== 'undefined' ? highAvailability : domain?.highAvailability,
+      highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
     }
 
     try {
