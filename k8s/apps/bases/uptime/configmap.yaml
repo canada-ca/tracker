@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatus-config-seed
+  namespace: uptime
+data:
+  config.yaml: |
+    web:
+      port: 8080
+      path-prefix: /uptime
+    storage:
+      type: memory
+    metrics: false
+    endpoints: []
