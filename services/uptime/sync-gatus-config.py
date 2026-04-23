@@ -59,13 +59,16 @@ def build_config(endpoints):
 
 def find_gatus_pid():
     proc_dir = "/proc"
+    own_pid = os.getpid()
     for pid in os.listdir(proc_dir):
-        if not pid.isdigit():
+        if not pid.isdigit() or int(pid) == own_pid:
             continue
         try:
             with open(f"{proc_dir}/{pid}/cmdline", "rb") as f:
-                cmdline = f.read().decode("utf-8", errors="replace")
-            if "gatus" in cmdline.lower():
+                # cmdline fields are null-separated; check exe name only (first field)
+                cmdline = f.read().split(b"\x00")
+            exe = cmdline[0].decode("utf-8", errors="replace").lower()
+            if exe.endswith("gatus"):
                 return int(pid)
         except (OSError, IOError):
             continue
@@ -128,8 +131,7 @@ def main():
         except ProcessLookupError:
             log.warning(f"Gatus process {pid} not found — may have restarted")
         except PermissionError as e:
-            log.error(f"Permission denied sending SIGHUP: {e}")
-            sys.exit(1)
+            log.warning(f"Permission denied sending SIGHUP to pid={pid}: {e} — Gatus will load config on start")
     else:
         log.warning(
             "Gatus process not found in /proc — skipping SIGHUP (init run or process not started yet)"
