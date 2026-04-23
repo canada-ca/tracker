@@ -28,17 +28,14 @@ GATUS_CONFIG_PATH = os.getenv("GATUS_CONFIG_PATH", "/config/config.yaml")
 
 def build_endpoint(doc):
     domain = doc.get("domain")
-    interval = doc.get("checkInterval", "30s")
-    expected_status = doc.get("expectedStatus", 200)
-    response_time_ms = doc.get("responseTimeThresholdMs", 10000)
 
     return {
         "name": domain,
         "url": f"https://{domain}",
-        "interval": interval,
+        "interval": "30s",
         "conditions": [
-            f"[STATUS] == {expected_status}",
-            f"[RESPONSE_TIME] < {response_time_ms}",
+            "[STATUS] < 300",
+            "[RESPONSE_TIME] < 10000",
         ],
         "alerts": [
             {
@@ -87,9 +84,7 @@ def main():
         log.error(f"ArangoDB connection failed: {e}")
         sys.exit(1)
 
-    log.info(
-        "Running query: FOR d IN domains FILTER d.highAvailability == true RETURN d"
-    )
+    log.info("Querying high availability services...")
     try:
         cursor = db.aql.execute(
             "FOR d IN domains FILTER d.highAvailability == true RETURN d"
