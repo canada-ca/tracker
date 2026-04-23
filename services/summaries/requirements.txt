@@ -12,7 +12,7 @@ pretend==1.0.9
 PyJWT[crypto]==2.12.0
 pytest==9.0.3
 python-arango==8.1.7
-python-dotenv==1.1.0
+python-dotenv==1.2.2
 requests==2.33.0
 requests-toolbelt==1.0.0
 tomli==2.0.1
