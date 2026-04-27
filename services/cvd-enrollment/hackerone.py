@@ -121,7 +121,7 @@ def add_scope(asset_id: str, enrollment_status: str) -> dict:
             },
             "relationships": {
                 "programs": {
-                    "data": [{"id": int(PROGRAM_ID), "type": "program"}]
+                    "data": [{"id": PROGRAM_ID, "type": "program"}]
                 }
             },
         }
