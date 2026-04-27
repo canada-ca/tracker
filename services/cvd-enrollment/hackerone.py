@@ -91,7 +91,7 @@ def create_asset(domain: str, options: EnrollmentOptions) -> dict:
     data = {
         "data": {
             "type": "asset",
-            "attributes": {"asset_type": "domain", "identifier": domain, **options},
+            "attributes": {"asset_type": "domain", "identifier": domain, **{k: v for k, v in options.items() if v is not None}},
             "relationships": {"asset_tags": {"data": []}},
         }
     }
@@ -102,22 +102,44 @@ def archive_assets(data: dict) -> dict:
     return handle_res(_request("POST", f"{ORG_ASSETS_URL}/archive", json=data))
 
 
-def get_scope(asset_name: str) -> dict:
+def get_scope(asset_id: str) -> dict:
     return handle_res(
         _request(
             "GET",
-            f"{BASE_URL}/programs/{PROGRAM_ID}/structured_scopes?filter[asset_identifier]={asset_name}",
+            f"{ORG_ASSETS_URL}/{asset_id}/scopes",
         )
     )
 
 
-def add_scope(asset_name: str, enrollment_status: str) -> dict:
+def add_scope(asset_id: str, enrollment_status: str) -> dict:
     data = {
         "data": {
             "type": "structured-scope",
             "attributes": {
-                "asset_identifier": asset_name,
-                "asset_type": "URL",
+                "eligible_for_bounty": False,
+                "eligible_for_submission": enrollment_status == "enrolled",
+            },
+            "relationships": {
+                "programs": {
+                    "data": [{"id": int(PROGRAM_ID), "type": "program"}]
+                }
+            },
+        }
+    }
+    return handle_res(
+        _request(
+            "POST",
+            f"{ORG_ASSETS_URL}/{asset_id}/scopes",
+            json=data,
+        )
+    )
+
+
+def update_scope(asset_id: str, scope_id: str, enrollment_status: str) -> dict:
+    data = {
+        "data": {
+            "type": "structured-scope",
+            "attributes": {
                 "eligible_for_bounty": False,
                 "eligible_for_submission": enrollment_status == "enrolled",
             },
@@ -125,28 +147,8 @@ def add_scope(asset_name: str, enrollment_status: str) -> dict:
     }
     return handle_res(
         _request(
-            "POST",
-            f"{BASE_URL}/programs/{PROGRAM_ID}/structured_scopes",
-            json=data,
-        )
-    )
-
-
-def update_scope(asset_name: str, scope_id: str, enrollment_status: str) -> dict:
-    data = {
-        "data": {
-            "type": "structured-scope",
-            "attributes": {
-                "asset_identifier": asset_name,
-                "asset_type": "URL",
-                "eligible_for_submission": enrollment_status == "enrolled",
-            },
-        }
-    }
-    return handle_res(
-        _request(
             "PUT",
-            f"{BASE_URL}/programs/{PROGRAM_ID}/structured_scopes/{scope_id}",
+            f"{ORG_ASSETS_URL}/{asset_id}/scopes/{scope_id}",
             json=data,
         )
     )
