@@ -13,11 +13,9 @@ services:
       - DB_NAME=track_dmarc
       - DB_PASS=test
       - NATS_URL=nats://nats:4222
-      - REDIS_URL=redis://redis:6379
     depends_on:
       - arangodb
       - nats
-      - redis
     networks:
       - tracker-dev
 
