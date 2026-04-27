@@ -39,6 +39,10 @@ export const createDomain = new mutationWithClientMutationId({
         'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
       type: CvdEnrollmentInputOptions,
     },
+    highAvailability: {
+      description: 'Value that determines if the service is scanned for uptime.',
+      type: GraphQLBoolean,
+    },
   }),
   outputFields: () => ({
     result: {
@@ -104,6 +108,7 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     const cvdEnrollment = args.cvdEnrollment || { status: 'not-enrolled' }
+    const highAvailability = args.highAvailability || false
 
     // Check to see if org exists
     const org = await loadOrgByKey.load(orgId)
@@ -126,7 +131,7 @@ export const createDomain = new mutationWithClientMutationId({
       )
       return {
         _type: 'error',
-        code: 400,
+        code: 403,
         description: i18n._(t`Permission Denied: Please contact organization user for help with creating domain.`),
       }
     }
@@ -140,6 +145,17 @@ export const createDomain = new mutationWithClientMutationId({
         `User: ${userKey} attempted to update the CVD enrollment for domain: ${domain} in org: ${orgId}, however they do not have permission in that org.`,
       )
       cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
+    }
+
+    if (!ac.can(permission).createAny('domain').granted && highAvailability === true) {
+      console.warn(
+        `User: ${userKey} attempted to create a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with creating domain.`),
+      }
     }
 
     const insertDomain = {
@@ -161,6 +177,7 @@ export const createDomain = new mutationWithClientMutationId({
       archived,
       ignoreRua: false,
       cvdEnrollment,
+      highAvailability,
     }
 
     // Check to see if domain already belongs to same org

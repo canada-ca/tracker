@@ -280,6 +280,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             archived
             ignoreRua
             rcode
+            highAvailability
             cvdEnrollment {
               status
               description

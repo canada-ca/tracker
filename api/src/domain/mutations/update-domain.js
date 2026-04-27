@@ -41,6 +41,10 @@ export const updateDomain = new mutationWithClientMutationId({
         'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
       type: CvdEnrollmentInputOptions,
     },
+    highAvailability: {
+      description: 'Value that determines if the service is scanned for uptime.',
+      type: GraphQLBoolean,
+    },
   }),
   outputFields: () => ({
     result: {
@@ -189,6 +193,17 @@ export const updateDomain = new mutationWithClientMutationId({
       cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
     }
 
+    if (!ac.can(permission).updateAny('domain').granted && typeof args.highAvailability !== 'undefined') {
+      console.warn(
+        `User: ${userKey} attempted to update a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with updating domain.`),
+      }
+    }
+
     // Setup Transaction
     const trx = await transaction(collections)
 
@@ -197,6 +212,7 @@ export const updateDomain = new mutationWithClientMutationId({
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
       cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
+      highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
     }
 
     try {

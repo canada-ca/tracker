@@ -1,0 +1,58 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: start_testdb
+    entrypoint: /bin/sh
+    args:
+      [
+        "-c",
+        "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1",
+      ]
+
+  - name: mikewilliamson/wait-for
+    id: wait_testdb
+    args: ["testdb:8529"]
+
+  - name: "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci"
+    id: test-results
+    dir: services/uptime
+    entrypoint: /bin/sh
+    env:
+        - "ARANGO_URL=http://testdb:8529"
+        - "ARANGO_DATABASE=test"
+        - "ARANGO_USERNAME=root"
+        - "ARANGO_PASSWORD="
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: generate-image-name
+    entrypoint: "bash"
+    dir: services/uptime
+    args:
+      - "-c"
+      - |
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-results
+    entrypoint: "bash"
+    dir: services/uptime
+    args:
+      - "-c"
+      - |
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-results-if-master
+    entrypoint: "bash"
+    dir: services/uptime
+    args:
+      - "-c"
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi

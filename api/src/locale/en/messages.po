@@ -441,7 +441,7 @@ msgstr "Permission Denied: Please contact organization admin for help with user 
 msgid "Permission Denied: Please contact organization admin for help with user role changes."
 msgstr "Permission Denied: Please contact organization admin for help with user role changes."
 
-#: src/domain/mutations/create-domain.js:130
+#: src/domain/mutations/create-domain.js:135
 msgid "Permission Denied: Please contact organization user for help with creating domain."
 msgstr "Permission Denied: Please contact organization user for help with creating domain."
 
@@ -463,13 +463,17 @@ msgstr "Permission Denied: Please contact organization user for help with retrie
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission Denied: Please contact organization user for help with scanning this domain."
 
-#: src/domain/mutations/update-domain.js:151
+#: src/domain/mutations/update-domain.js:162
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Permission Denied: Please contact organization user for help with updating this domain."
 
 #: src/organization/mutations/archive-organization.js:66
 msgid "Permission Denied: Please contact super admin for help with archiving organization."
 msgstr "Permission Denied: Please contact super admin for help with archiving organization."
+
+#: src/domain/mutations/create-domain.js:157
+msgid "Permission Denied: Please contact super admin for help with creating domain."
+msgstr "Permission Denied: Please contact super admin for help with creating domain."
 
 #: src/domain/mutations/remove-domain.js:109
 #: src/domain/mutations/remove-organizations-domains.js:106
@@ -483,6 +487,10 @@ msgstr "Permission Denied: Please contact super admin for help with removing org
 #: src/domain/mutations/request-scan.js:67
 #~ msgid "Permission Denied: Please contact super admin for help with scanning this domain."
 #~ msgstr "Permission Denied: Please contact super admin for help with scanning this domain."
+
+#: src/domain/mutations/update-domain.js:210
+msgid "Permission Denied: Please contact super admin for help with updating domain."
+msgstr "Permission Denied: Please contact super admin for help with updating domain."
 
 #: src/tags/mutations/update-tag.js:147
 msgid "Permission Denied: Please contact super admin for help with updating tag."
@@ -809,20 +817,20 @@ msgstr "Unable to close account. Please try again."
 msgid "Unable to confirm completion of the tour. Please try again."
 msgstr "Unable to confirm completion of the tour. Please try again."
 
-#: src/domain/mutations/create-domain.js:116
+#: src/domain/mutations/create-domain.js:121
 msgid "Unable to create domain in unknown organization."
 msgstr "Unable to create domain in unknown organization."
 
-#: src/domain/mutations/create-domain.js:199
+#: src/domain/mutations/create-domain.js:216
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Unable to create domain, organization has already claimed it."
 
-#: src/domain/mutations/create-domain.js:181
-#: src/domain/mutations/create-domain.js:189
-#: src/domain/mutations/create-domain.js:221
-#: src/domain/mutations/create-domain.js:230
-#: src/domain/mutations/create-domain.js:250
-#: src/domain/mutations/create-domain.js:258
+#: src/domain/mutations/create-domain.js:198
+#: src/domain/mutations/create-domain.js:206
+#: src/domain/mutations/create-domain.js:238
+#: src/domain/mutations/create-domain.js:247
+#: src/domain/mutations/create-domain.js:267
+#: src/domain/mutations/create-domain.js:275
 msgid "Unable to create domain. Please try again."
 msgstr "Unable to create domain. Please try again."
 
@@ -1587,21 +1595,21 @@ msgstr "Unable to unfavourite unknown domain."
 #~ msgid "Unable to unignore CVE. Please try again."
 #~ msgstr "Unable to unignore CVE. Please try again."
 
-#: src/domain/mutations/update-domain.js:261
+#: src/domain/mutations/update-domain.js:284
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
-#: src/domain/mutations/update-domain.js:137
+#: src/domain/mutations/update-domain.js:148
 msgid "Unable to update domain in an unknown org."
 msgstr "Unable to update domain in an unknown org."
 
-#: src/domain/mutations/update-domain.js:178
+#: src/domain/mutations/update-domain.js:189
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Unable to update domain that does not belong to the given organization."
 
-#: src/domain/mutations/update-domain.js:168
-#: src/domain/mutations/update-domain.js:218
-#: src/domain/mutations/update-domain.js:272
+#: src/domain/mutations/update-domain.js:179
+#: src/domain/mutations/update-domain.js:241
+#: src/domain/mutations/update-domain.js:295
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
@@ -1673,7 +1681,7 @@ msgstr "Unable to update tag, orgId is invalid."
 msgid "Unable to update tag. Please try again."
 msgstr "Unable to update tag. Please try again."
 
-#: src/domain/mutations/update-domain.js:123
+#: src/domain/mutations/update-domain.js:134
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
 
