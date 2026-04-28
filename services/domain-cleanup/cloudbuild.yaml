@@ -1,7 +1,7 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'docker:29'
     id: start_arango
-    entrypoint: /bin/sh
+    entrypoint: 'ash'
     args:
       [
         '-c',
@@ -12,21 +12,20 @@ steps:
     id: wait
     args: ['arangodb:8529']
 
-  - name: node:alpine
-    id: install-dependencies
+  - name: 'docker:29'
+    id: build-test-image
     dir: services/domain-cleanup
-    entrypoint: npm
-    args: ['ci', '--no-optional']
+    args: ['build', '--target=test', '-t', 'test-image', '.']
 
-  - name: node:alpine
-    id: run-eslint
-    dir: services/domain-cleanup
+  - name: 'test-image'
+    id: run-lint
+    dir: /app
     entrypoint: npm
-    args: ['run', lint]
+    args: ['run', 'lint']
 
-  - name: node:alpine
-    id: test
-    dir: services/domain-cleanup
+  - name: 'test-image'
+    id: run-tests
+    dir: /app
     entrypoint: npm
     args: ['test']
     env:
@@ -34,18 +33,19 @@ steps:
       - DB_PASS=$_DB_PASS
       - DB_NAME=$_DB_NAME
       - UNCLAIMED_ORG_ID=$_UNCLAIMED_ORG_ID
-  - name: 'gcr.io/cloud-builders/docker'
+
+  - name: 'docker:29'
     id: generate-image-name
-    entrypoint: 'bash'
+    entrypoint: 'ash'
     dir: services/domain-cleanup
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:'"$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'docker:29'
     id: build
-    entrypoint: 'bash'
+    entrypoint: 'ash'
     dir: services/domain-cleanup
     args:
       - '-c'
@@ -53,14 +53,14 @@ steps:
         image=$(cat /workspace/imagename)
         docker build -t $image .
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'docker:29'
     id: push-if-master
-    entrypoint: 'bash'
+    entrypoint: 'ash'
     dir: services/domain-cleanup
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "master" ]]
+        if [[ '$BRANCH_NAME' == 'master' ]]
         then
           image=$(cat /workspace/imagename)
           docker push $image
