@@ -7,7 +7,7 @@
 
   // Set the workspace to the api subdirectory of the monorepo.
   // docker-compose.yml mounts the repo root at /workspaces, so api/ is at /workspaces/api.
-  "workspaceFolder": "/workspaces/api",
+  "workspaceFolder": "/workspaces/tracker/api",
 
   "forwardPorts": [4000, 8529, 4222],
   "portsAttributes": {
@@ -29,6 +29,10 @@
 
   // Start the API in watch mode automatically
   "postStartCommand": "npm run dev:watch",
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
 
   "customizations": {
     "vscode": {
