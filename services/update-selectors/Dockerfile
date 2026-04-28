@@ -1,4 +1,4 @@
-FROM python:3.14.3-alpine AS base
+FROM python:3.15.0a8-alpine AS base
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
 
