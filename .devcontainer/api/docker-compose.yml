@@ -28,7 +28,7 @@ services:
       - TRACING_ENABLED=false
     depends_on:
       arangodb:
-        condition: service_healthy
+        condition: service_started
       nats:
         condition: service_started
     networks:
@@ -43,11 +43,7 @@ services:
     ports:
       - "8529:8529"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8529/_api/version"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 10s
+      disable: true
     networks:
       - tracker-dev
 
