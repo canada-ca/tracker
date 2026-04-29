@@ -43,10 +43,11 @@ services:
     ports:
       - "8529:8529"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8529/_api/version"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8529/_api/version"]
       interval: 5s
-      timeout: 3s
-      retries: 10
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     networks:
       - tracker-dev
 
