@@ -29,7 +29,19 @@
     "SCALAR_COST": "1",
     "OBJECT_COST": "1",
     "LIST_FACTOR": "10",
-    "TRACING_ENABLED": "false"
+    "TRACING_ENABLED": "false",
+    "NOTIFICATION_API_KEY": "devcontainer-notification-api-key",
+    "NOTIFICATION_API_URL": "http://localhost:9999",
+    "NOTIFICATION_AUTHENTICATE_EMAIL_ID": "devcontainer-authenticate-email-id",
+    "NOTIFICATION_AUTHENTICATE_TEXT_ID": "devcontainer-authenticate-text-id",
+    "NOTIFICATION_ORG_INVITE_BILINGUAL": "devcontainer-org-invite-bilingual-id",
+    "NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL": "devcontainer-org-invite-create-account-bilingual-id",
+    "NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL": "devcontainer-org-invite-request-bilingual-id",
+    "NOTIFICATION_PASSWORD_RESET_BILINGUAL": "devcontainer-password-reset-bilingual-id",
+    "NOTIFICATION_TWO_FACTOR_CODE_EN": "devcontainer-two-factor-code-en-id",
+    "NOTIFICATION_TWO_FACTOR_CODE_FR": "devcontainer-two-factor-code-fr-id",
+    "NOTIFICATION_VERIFICATION_EMAIL_BILINGUAL": "devcontainer-verification-email-bilingual-id",
+    "SERVICE_ACCOUNT_EMAIL": "dev@example.com"
   },
 
   "forwardPorts": [4000, 8529, 4222],
