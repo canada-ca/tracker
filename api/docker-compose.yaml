@@ -72,4 +72,7 @@ services:
     network_mode: "host"
     restart: unless-stopped
     volumes:
-      - ${TRACKER_BACKUP_DIR}:/var/lib/arangodb3
+      - ${TRACKER_BACKUP_DIR:-arangodb-data}:/var/lib/arangodb3
+
+volumes:
+  arangodb-data:

@@ -1,13 +1,36 @@
 {
   "name": "Tracker API",
-  "dockerComposeFile": "docker-compose.yml",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
 
-  // The service in docker-compose that VS Code / Codespaces attaches to
-  "service": "api",
-
-  // Set the workspace to the api subdirectory of the monorepo.
-  // docker-compose.yml mounts the repo root at /workspaces, so api/ is at /workspaces/api.
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/tracker,type=bind,consistency=cached",
   "workspaceFolder": "/workspaces/tracker/api",
+
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspaces/tracker,type=bind,consistency=cached"
+  ],
+
+  "containerEnv": {
+    "NODE_ENV": "development",
+    "DB_URL": "http://localhost:8529",
+    "DB_NAME": "track_dmarc",
+    "DB_PASS": "test",
+    "NATS_URL": "nats://localhost:4222",
+    "NODE_OPTIONS": "--dns-result-order=ipv4first",
+    "AUTH_TOKEN_EXPIRY": "1d",
+    "REFRESH_TOKEN_EXPIRY": "30d",
+    "SIGN_IN_KEY": "devcontainer-sign-in-key-not-for-production",
+    "REFRESH_KEY": "devcontainer-refresh-key-not-for-production",
+    "AUTHENTICATED_KEY": "devcontainer-auth-key-not-for-production",
+    "CIPHER_KEY": "devcontainer-cipher-key-not-for-prod",
+    "HASHING_SALT": "12",
+    "LOGIN_REQUIRED": "false",
+    "DEPTH_LIMIT": "10",
+    "COST_LIMIT": "5000",
+    "SCALAR_COST": "1",
+    "OBJECT_COST": "1",
+    "LIST_FACTOR": "10",
+    "TRACING_ENABLED": "false"
+  },
 
   "forwardPorts": [4000, 8529, 4222],
   "portsAttributes": {
@@ -23,12 +46,10 @@
     }
   },
 
-  // Install dependencies after the container is created.
-  // Copy .env.example to .env so the API can start without manual setup.
   "postCreateCommand": "npm install && [ ! -f .env ] && cp .env.example .env || true",
 
-  // Start the API in watch mode automatically
-  "postStartCommand": "npm run dev:watch &",
+  // Start supporting services then API in watch mode
+  "postStartCommand": "docker compose -f /workspaces/tracker/api/docker-compose.yaml up -d && npm run dev:watch &",
 
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
