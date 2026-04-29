@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   api:
     image: mcr.microsoft.com/devcontainers/javascript-node:20
@@ -13,9 +11,26 @@ services:
       - DB_NAME=track_dmarc
       - DB_PASS=test
       - NATS_URL=nats://nats:4222
+      - NODE_OPTIONS=--dns-result-order=ipv4first
+      - AUTH_TOKEN_EXPIRY=1d
+      - REFRESH_TOKEN_EXPIRY=30d
+      - SIGN_IN_KEY=devcontainer-sign-in-key-not-for-production
+      - REFRESH_KEY=devcontainer-refresh-key-not-for-production
+      - AUTHENTICATED_KEY=devcontainer-auth-key-not-for-production
+      - CIPHER_KEY=devcontainer-cipher-key-not-for-prod
+      - HASHING_SALT=12
+      - LOGIN_REQUIRED=false
+      - DEPTH_LIMIT=10
+      - COST_LIMIT=5000
+      - SCALAR_COST=1
+      - OBJECT_COST=1
+      - LIST_FACTOR=10
+      - TRACING_ENABLED=false
     depends_on:
-      - arangodb
-      - nats
+      arangodb:
+        condition: service_healthy
+      nats:
+        condition: service_started
     networks:
       - tracker-dev
 
@@ -27,6 +42,11 @@ services:
       - arangodb-data:/var/lib/arangodb3
     ports:
       - "8529:8529"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8529/_api/version"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     networks:
       - tracker-dev
 
@@ -40,6 +60,7 @@ services:
 
   nats-init:
     image: natsio/nats-box:latest
+    restart: on-failure
     depends_on:
       - nats
     volumes:

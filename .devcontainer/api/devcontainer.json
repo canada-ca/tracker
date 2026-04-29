@@ -28,7 +28,7 @@
   "postCreateCommand": "npm install && [ ! -f .env ] && cp .env.example .env || true",
 
   // Start the API in watch mode automatically
-  "postStartCommand": "npm run dev:watch",
+  "postStartCommand": "npm run dev:watch &",
 
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
