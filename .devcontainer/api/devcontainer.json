@@ -5,9 +5,7 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/tracker,type=bind,consistency=cached",
   "workspaceFolder": "/workspaces/tracker/api",
 
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/workspaces/tracker,type=bind,consistency=cached"
-  ],
+  "mounts": ["source=${localWorkspaceFolder},target=/workspaces/tracker,type=bind,consistency=cached"],
 
   "containerEnv": {
     "NODE_ENV": "development",
@@ -59,9 +57,6 @@
   },
 
   "postCreateCommand": "npm install && [ ! -f .env ] && cp .env.example .env || true",
-
-  // Start supporting services then API in watch mode
-  "postStartCommand": "docker compose -f /workspaces/tracker/api/docker-compose.yaml up -d && npm run dev:watch &",
 
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
