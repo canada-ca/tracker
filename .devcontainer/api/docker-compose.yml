@@ -27,8 +27,8 @@ services:
       - LIST_FACTOR=10
       - TRACING_ENABLED=false
     depends_on:
-      arangodb:
-        condition: service_started
+      # arangodb:
+      #   condition: service_started
       nats:
         condition: service_started
     networks:
