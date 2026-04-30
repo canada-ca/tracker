@@ -11,8 +11,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/frontend"
@@ -36,8 +34,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/api"
@@ -61,8 +57,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/dmarc-report"
@@ -85,8 +79,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/super-admin"
@@ -110,8 +102,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/domain-cleanup"
@@ -134,8 +124,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/org-footprint"
@@ -159,8 +147,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/services/progress-report"
@@ -183,8 +169,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: npm
     directory: "/scanners/domain-dispatcher"
@@ -208,8 +192,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/scanners/web-scanner"
@@ -232,8 +214,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/scanners/dns-scanner"
@@ -256,8 +236,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/scanners/domain-discovery"
@@ -281,8 +259,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/services/update-selectors"
@@ -305,8 +281,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/services/summaries"
@@ -329,8 +303,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/services/uptime"
@@ -353,8 +325,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/azure-defender-easm/import-easm-additional-findings"
@@ -377,8 +347,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/azure-defender-easm/label-known-easm-assets"
@@ -401,8 +369,6 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
-      semver-minor-days: 14
-      semver-major-days: 30
 
   - package-ecosystem: pip
     directory: "/azure-defender-easm/add-domain-to-easm"
