@@ -32,7 +32,7 @@ spec:
           emptyDir: {}
       initContainers:
         - name: sync-init
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-0000000-0000000000 # {"$imagepolicy": "flux-system:uptime-sync"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-3b9d95f-1777569123 # {"$imagepolicy": "flux-system:uptime-sync"}
           command: ["python", "/app/sync-gatus-config.py"]
           env:
             - name: ARANGO_URL
@@ -110,7 +110,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
         - name: sync-sidecar
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-0000000-0000000000 # {"$imagepolicy": "flux-system:uptime-sync"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-3b9d95f-1777569123 # {"$imagepolicy": "flux-system:uptime-sync"}
           command:
             - sh
             - -c
