@@ -54,6 +54,7 @@ export function AdminDomainModal({
   mutation,
   orgCount,
   cvdEnrollment,
+  highAvailability,
   permission,
   ...rest
 }) {
@@ -214,6 +215,7 @@ export function AdminDomainModal({
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
             cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
+            highAvailability: highAvailability || false,
           }}
           initialTouched={{
             domainUrl: true,
@@ -236,6 +238,7 @@ export function AdminDomainModal({
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
                   cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
+                  highAvailability: values.highAvailability,
                 },
               })
             } else if (mutation === 'create') {
@@ -337,6 +340,7 @@ export function AdminDomainModal({
                     </ABTestVariant>
                   </ABTestWrapper>
 
+                  <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
@@ -395,6 +399,31 @@ const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgC
   )
 })
 
+const HighAvailabilitySwitch = withSuperAdmin(({ defaultChecked, handleChange }) => {
+  return (
+    <Box>
+      <Flex align="center">
+        <Tooltip label={t`Mark this domain as high availability. It will be monitored by the uptime dashboard.`}>
+          <QuestionOutlineIcon tabIndex={0} />
+        </Tooltip>
+        <label>
+          <Switch
+            colorScheme="green"
+            isFocusable={true}
+            name="highAvailability"
+            mx="2"
+            defaultChecked={defaultChecked}
+            onChange={handleChange}
+          />
+        </label>
+        <Badge variant="outline" color="gray.900" p="1.5">
+          <Trans>High Availability</Trans>
+        </Badge>
+      </Flex>
+    </Box>
+  )
+})
+
 const IgnoreRuaToggle = withSuperAdmin(({ defaultChecked, handleChange }) => {
   return (
     <Box>
@@ -433,6 +462,7 @@ AdminDomainModal.propTypes = {
   myOrg: object,
   assetState: string,
   cvdEnrollment: object,
+  highAvailability: bool,
   availableTags: array,
   permission: string,
 }

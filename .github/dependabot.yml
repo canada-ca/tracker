@@ -271,7 +271,7 @@ updates:
       semver-minor-days: 14
       semver-major-days: 30
 
-  # Sunday — update-selectors + summaries + azure-defender-easm (smallest services)
+  # Sunday — update-selectors + summaries + uptime + azure-defender-easm (smallest services)
   - package-ecosystem: docker
     directory: "/services/update-selectors"
     schedule:
@@ -310,6 +310,30 @@ updates:
 
   - package-ecosystem: pip
     directory: "/services/summaries"
+    schedule:
+      interval: weekly
+      day: sunday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: docker
+    directory: "/services/uptime"
+    schedule:
+      interval: weekly
+      day: sunday
+      time: "11:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-minor-days: 14
+      semver-major-days: 30
+
+  - package-ecosystem: pip
+    directory: "/services/uptime"
     schedule:
       interval: weekly
       day: sunday

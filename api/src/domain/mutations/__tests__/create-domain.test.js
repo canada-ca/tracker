@@ -1401,7 +1401,7 @@ describe('create a domain', () => {
         data: {
           createDomain: {
             result: {
-              code: 400,
+              code: 403,
               description: 'Permission Denied: Please contact organization user for help with creating domain.',
             },
           },
