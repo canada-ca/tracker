@@ -1,7 +1,6 @@
 import logging
 import os
 import shutil
-import signal
 import sys
 import tempfile
 from dotenv import load_dotenv
@@ -57,23 +56,6 @@ def build_config(endpoints):
     }
 
 
-def find_gatus_pid():
-    proc_dir = "/proc"
-    own_pid = os.getpid()
-    for pid in os.listdir(proc_dir):
-        if not pid.isdigit() or int(pid) == own_pid:
-            continue
-        try:
-            with open(f"{proc_dir}/{pid}/cmdline", "rb") as f:
-                # cmdline fields are null-separated; check exe name only (first field)
-                cmdline = f.read().split(b"\x00")
-            exe = cmdline[0].decode("utf-8", errors="replace").lower()
-            if exe.endswith("gatus"):
-                return int(pid)
-        except (OSError, IOError):
-            continue
-    return None
-
 
 def main():
     log.info(f"Connecting to ArangoDB...")
@@ -123,19 +105,7 @@ def main():
 
     log.info(f"Config written successfully ({len(endpoints)} endpoint(s))")
 
-    pid = find_gatus_pid()
-    if pid:
-        log.info(f"Sending SIGHUP to Gatus (pid={pid})")
-        try:
-            os.kill(pid, signal.SIGHUP)
-        except ProcessLookupError:
-            log.warning(f"Gatus process {pid} not found — may have restarted")
-        except PermissionError as e:
-            log.warning(f"Permission denied sending SIGHUP to pid={pid}: {e} — Gatus will load config on start")
-    else:
-        log.warning(
-            "Gatus process not found in /proc — skipping SIGHUP (init run or process not started yet)"
-        )
+    log.info("Config written — Gatus will detect file change and reload automatically")
 
 
 if __name__ == "__main__":

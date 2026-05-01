@@ -37,7 +37,7 @@ kubectl create secret generic uptime \
    ```sh
    kubectl exec -n uptime deploy/tracker-uptime -c sync-sidecar -- python /app/sync-gatus-config.py
    kubectl logs -n uptime deploy/tracker-uptime -c gatus --follow
-   # Expect: "Reloading configuration" within a few seconds
+   # Expect: Gatus detects config file change and reloads automatically
    ```
 
 ## Architecture
@@ -48,7 +48,7 @@ kubectl create secret generic uptime \
 | `gatus` | `ghcr.io/twin/gatus:v5.12.0` | Serves dashboard on port 8080; reloads config on SIGHUP |
 | `sync-sidecar` | `uptime-sync` | Re-runs sync every `SYNC_INTERVAL_SECONDS` (default: 300s); sends SIGHUP to Gatus |
 
-`shareProcessNamespace: true` is required on the pod so the sidecar can find and signal the Gatus process via `/proc`.
+Gatus watches `GATUS_CONFIG_PATH` for file changes and reloads automatically — no SIGHUP required.
 
 ## Future work
 
