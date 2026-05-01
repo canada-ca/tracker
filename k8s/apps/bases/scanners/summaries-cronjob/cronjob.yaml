@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: summaries
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:master-ec8c3ff-1776966895 # {"$imagepolicy": "flux-system:summaries"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:master-026a389-1777649014 # {"$imagepolicy": "flux-system:summaries"}
               env:
                 - name: DB_USER
                   valueFrom:
