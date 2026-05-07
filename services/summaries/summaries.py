@@ -201,6 +201,21 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         logging.info(f"Working on organization {org['orgDetails']['en']['name']}...")
 
         try:
+            # One-time migration: inline `summaries` -> organizationSummaries doc
+            if org.get("latestSummaryId") is None and org.get("summaries"):
+                inline = org["summaries"]
+                inserted = org_summaries_col.insert(
+                    {"organization": org["_id"], **inline}
+                )
+                organizations_col.update(
+                    {
+                        "_key": org["_key"],
+                        "latestSummaryId": inserted["_id"],
+                        "summaries": None,
+                    },
+                    keep_none=False,
+                )
+
             # tier 1
             https_fail = 0
             https_pass = 0
