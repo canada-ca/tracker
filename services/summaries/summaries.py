@@ -166,12 +166,12 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     }
 
     # Update chart summaries in DB
-    todayISO = date.today().isoformat()
-    cursor = chartSummariesCol.find({"date": todayISO})
+    today_iso = date.today().isoformat()
+    cursor = chartSummariesCol.find({"date": today_iso})
     if cursor.empty():
         chartSummariesCol.insert(
             {
-                "date": todayISO,
+                "date": today_iso,
                 **chartSummaries,
                 "dmarc_phase": dmarc_phase_summary,
             }
@@ -179,7 +179,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     else:
         logging.info("Chart summary from today already present. Updating summary...")
         chartSummariesCol.update_match(
-            {"date": todayISO},
+            {"date": today_iso},
             {
                 **chartSummaries,
                 "dmarc_phase": dmarc_phase_summary,
@@ -196,6 +196,8 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     db = client.db(name, username=user, password=password)
     org_summaries_col = db.collection("organizationSummaries")
     organizations_col = db.collection("organizations")
+
+    today_iso = date.today().isoformat()
 
     for org in organizations_col:
         logging.info(f"Working on organization {org['orgDetails']['en']['name']}...")
@@ -361,7 +363,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
             summary_data = {
                 "organization": org["_id"],
-                "date": date.today().isoformat(),
+                "date": today_iso,
                 "dmarc": {
                     "pass": dmarc_pass,
                     "fail": dmarc_fail,
@@ -416,7 +418,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "negative_tags": negative_tags,
             }
 
-            today_iso = date.today().isoformat()
             existing_today = org_summaries_col.find(
                 {"organization": org["_id"], "date": today_iso}
             )
