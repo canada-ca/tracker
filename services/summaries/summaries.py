@@ -194,8 +194,10 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
+    org_summaries_col = db.collection("organizationSummaries")
+    organizations_col = db.collection("organizations")
 
-    for org in db.collection("organizations"):
+    for org in organizations_col:
         logging.info(f"Working on organization {org['orgDetails']['en']['name']}...")
 
         try:
@@ -399,14 +401,26 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "negative_tags": negative_tags,
             }
 
-            current_summary = org.get("summaries", {})
-            if current_summary.get("date", "") != date.today().isoformat():
-                logging.info(f"Storing previous summary for org: {org['_key']}")
-                db.collection("organizationSummaries").insert(
-                    {"organization": org.get("_id"), **current_summary}
-                )
-            org.update({"summaries": summary_data})
-            db.collection("organizations").update(org, merge=False)
+            today_iso = date.today().isoformat()
+            existing_today = org_summaries_col.find(
+                {"organization": org["_id"], "date": today_iso}
+            )
+            if existing_today.empty():
+                inserted = org_summaries_col.insert(summary_data)
+                latest_summary_id = inserted["_id"]
+            else:
+                existing_doc = existing_today.next()
+                org_summaries_col.update({"_key": existing_doc["_key"], **summary_data})
+                latest_summary_id = existing_doc["_id"]
+
+            organizations_col.update(
+                {
+                    "_key": org["_key"],
+                    "latestSummaryId": latest_summary_id,
+                    "summaries": None,
+                },
+                keep_none=False,
+            )
         except Exception as e:
             logging.error(f"Error processing organization {org['_id']}: {e}")
             continue
