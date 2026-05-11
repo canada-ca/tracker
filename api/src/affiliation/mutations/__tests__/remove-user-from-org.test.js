@@ -20,18 +20,6 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const orgOneData = {
   verified: true,
-  summaries: {
-    web: {
-      pass: 50,
-      fail: 1000,
-      total: 1050,
-    },
-    mail: {
-      pass: 50,
-      fail: 1000,
-      total: 1050,
-    },
-  },
   orgDetails: {
     en: {
       slug: 'treasury-board-secretariat',
@@ -58,18 +46,6 @@ const orgOneData = {
 
 const orgTwoData = {
   verified: true,
-  summaries: {
-    web: {
-      pass: 50,
-      fail: 1000,
-      total: 1050,
-    },
-    mail: {
-      pass: 50,
-      fail: 1000,
-      total: 1050,
-    },
-  },
   orgDetails: {
     en: {
       slug: 'communications-security-establishment',
