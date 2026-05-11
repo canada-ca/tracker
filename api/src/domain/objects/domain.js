@@ -375,6 +375,15 @@ export const domainType = new GraphQLObjectType({
         return cvdEnrollment
       },
     },
+    highAvailability: {
+      type: GraphQLBoolean,
+      description: 'Value that determines if the service is scanned for uptime.',
+      resolve: async ({ highAvailability }, __, { auth: { checkSuperAdmin } }) => {
+        const isSuperAdmin = await checkSuperAdmin()
+        if (isSuperAdmin) return highAvailability
+        return false
+      },
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

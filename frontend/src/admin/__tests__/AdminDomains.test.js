@@ -492,7 +492,9 @@ describe('<AdminDomains />', () => {
               tags: [],
               archived: false,
               assetState: 'MONITOR_ONLY',
+              ignoreRua: undefined,
               cvdEnrollment: { status: 'NOT_ENROLLED' },
+              highAvailability: false,
             },
           },
           result: {

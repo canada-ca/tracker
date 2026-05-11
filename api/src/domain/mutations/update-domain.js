@@ -40,6 +40,10 @@ export const updateDomain = new mutationWithClientMutationId({
         'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
       type: CvdEnrollmentInputOptions,
     },
+    highAvailability: {
+      description: 'Value that determines if the service is scanned for uptime.',
+      type: GraphQLBoolean,
+    },
   }),
   outputFields: () => ({
     result: {
@@ -186,6 +190,47 @@ export const updateDomain = new mutationWithClientMutationId({
       cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
     }
 
+    if (!ac.can(permission).updateAny('domain').granted && typeof args.highAvailability !== 'undefined') {
+      console.warn(
+        `User: ${userKey} attempted to update a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with updating domain.`),
+      }
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collections)
+
+    // Update domain
+    const domainToInsert = {
+      archived: typeof archived !== 'undefined' ? archived : domain?.archived,
+      ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
+      cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
+      highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
+    }
+
+    try {
+      await trx.step(
+        async () =>
+          await query`
+          WITH domains
+          UPSERT { _key: ${domain._key} }
+            INSERT ${domainToInsert}
+            UPDATE ${domainToInsert}
+            IN domains
+      `,
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
+      )
+      await trx.abort()
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
     let claimCursor
     try {
       claimCursor = await query`
@@ -232,7 +277,7 @@ export const updateDomain = new mutationWithClientMutationId({
     if (typeof cvdEnrollment !== 'undefined' && cvdEnrollment?.status !== domain?.cvdEnrollment?.status) {
       updatedProperties.push({
         name: 'cvdEnrollment',
-        oldValue: JSON.stringify(domain.cvdEnrollment.status),
+        oldValue: JSON.stringify(domain.cvdEnrollment?.status),
         newValue: JSON.stringify(cvdEnrollment.status),
       })
     }

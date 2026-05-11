@@ -1,7 +1,7 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'docker:29'
     id: start_arango
-    entrypoint: /bin/sh
+    entrypoint: 'ash'
     args:
       [
         '-c',
@@ -12,21 +12,20 @@ steps:
     id: wait
     args: ['arangodb:8529']
 
-  - name: node:alpine
-    id: install-dependencies
+  - name: 'docker:29'
+    id: build-test-image
     dir: services/org-footprint
-    entrypoint: npm
-    args: ['ci', '--no-optional']
+    args: ['build', '--target=test', '-t', 'test-image', '.']
 
-  - name: node:alpine
-    id: run-eslint
-    dir: services/org-footprint
+  - name: 'test-image'
+    id: run-lint
+    dir: /app
     entrypoint: npm
-    args: ['run', lint]
+    args: ['run', 'lint']
 
-  - name: node:alpine
-    id: test
-    dir: services/org-footprint
+  - name: 'test-image'
+    id: run-tests
+    dir: /app
     entrypoint: npm
     args: ['test']
     env:
@@ -39,18 +38,19 @@ steps:
       - SERVICE_ACCOUNT_EMAIL=$_SERVICE_ACCOUNT_EMAIL
       - REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=$_REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
       - NOTIFICATION_PENDING_USERS=$_NOTIFICATION_PENDING_USERS
-  - name: 'gcr.io/cloud-builders/docker'
+
+  - name: 'docker:29'
     id: generate-image-name
-    entrypoint: 'bash'
+    entrypoint: 'ash'
     dir: services/org-footprint
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:'"$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'docker:29'
     id: build
-    entrypoint: 'bash'
+    entrypoint: 'ash'
     dir: services/org-footprint
     args:
       - '-c'
@@ -58,14 +58,14 @@ steps:
         image=$(cat /workspace/imagename)
         docker build -t $image .
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'docker:29'
     id: push-if-master
-    entrypoint: 'bash'
+    entrypoint: 'ash'
     dir: services/org-footprint
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "master" ]]
+        if [[ '$BRANCH_NAME' == 'master' ]]
         then
           image=$(cat /workspace/imagename)
           docker push $image

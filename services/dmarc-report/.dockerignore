@@ -1,6 +1,5 @@
 node_modules
 cloudbuild.yaml
 coverage
-**/*.test.js
 **/*/.env
 .git

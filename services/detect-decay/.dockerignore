@@ -1,5 +1,4 @@
 **/*.env
 Dockerfile
 .venv
-tests
 cloudbuild.yaml

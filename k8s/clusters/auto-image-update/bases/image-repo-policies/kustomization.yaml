@@ -28,3 +28,5 @@ resources:
   - import-easm-additional-findings-image-repo-policy.yaml
   - detect-decay-image-repo-policy.yaml
   - cvd-enrollment-image-repo-policy.yaml
+  - uptime-sync-image-repo-policy.yaml
+  - gatus-image-repo-policy.yaml

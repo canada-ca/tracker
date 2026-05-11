@@ -19,7 +19,8 @@ import { TourProvider } from './userOnboarding/contexts/TourContext'
 const I18nApp = () => {
   const { currentUser, login } = useUserVar()
   const location = useLocation()
-  const { from } = location.state || { from: { pathname: '/' } }
+  const rawFrom = location.state?.from
+  const from = rawFrom && typeof rawFrom === 'object' && rawFrom.pathname ? rawFrom : { pathname: '/' }
   const navigate = useNavigate()
   const {
     data: loginRequiredData,

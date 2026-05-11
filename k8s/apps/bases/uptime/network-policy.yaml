@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: uptime-netpol
+  namespace: uptime
+spec:
+  podSelector:
+    matchLabels:
+      app: tracker-uptime
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: istio-ingressgateway
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system

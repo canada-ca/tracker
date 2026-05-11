@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 import {
   Box,
   Button,
@@ -69,6 +69,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     editingDomainId: '',
     editingDomainUrl: '',
     cvdEnrollment: { status: 'NOT_ENROLLED' },
+    highAvailability: false,
   })
   const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
     name: 'domain-filters',
@@ -471,6 +472,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
         orgId={orgId}
         orgSlug={orgSlug}
         availableTags={availableTags}
+        permission={permission}
         {...modalProps}
       />
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">

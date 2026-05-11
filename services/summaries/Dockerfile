@@ -1,12 +1,14 @@
-FROM python:3.14.2-alpine
-
+# syntax=docker/dockerfile:1
+FROM python:3.14.2-alpine AS base
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN adduser -D summary
+#===============================================================================================
 
-WORKDIR /home/summaries
+FROM base AS python-builder
+
+WORKDIR /working/install
 
 RUN apk add --no-cache \
   python3 \
@@ -16,11 +18,35 @@ RUN apk add --no-cache \
   build-base \
   python3-dev
 
-COPY . .
-
-USER summary
-#
+COPY requirements.txt ./requirements.txt
 # Install dependencies.
-RUN pip3 install --no-cache-dir --pre -r requirements.txt
+RUN pip3 install --prefix=/working/install --no-cache-dir --pre -r requirements.txt
+
+#===============================================================================================
+
+FROM base AS production
+
+WORKDIR /home/summaries
+
+# Copy installed python modules
+COPY --from=python-builder /working/install/lib /usr/local/lib
+# Copy local source code
+COPY --exclude=tests . .
+
+RUN adduser -D summary
+USER summary
 
 CMD ["python3", "summaries.py"]
+
+#===============================================================================================
+
+FROM production AS test
+
+# Copy test files
+USER summary
+
+COPY . .
+
+#===============================================================================================
+
+FROM production AS final
