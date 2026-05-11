@@ -123,6 +123,17 @@ def process_msg(msg):
 
             domain = db.collection("domains").get({"_key": domain_key})
 
+            web_doc_cursor = db.aql.execute(
+                """
+                FOR webV, e IN 1 ANY @web_scan_id webToWebScans
+                    LIMIT 1
+                    RETURN webV._id
+                """,
+                bind_vars={"web_scan_id": f"webScan/{web_scan_key}"},
+            )
+            if not web_doc_cursor.empty():
+                domain.update({"latestWebScan": web_doc_cursor.next()})
+
             if domain.get("status", None) == None:
                 domain.update(
                     {
