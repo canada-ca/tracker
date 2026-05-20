@@ -90,26 +90,9 @@ export const updateDomain = new mutationWithClientMutationId({
       tags = null
     }
 
-    let archived
-    if (typeof args.archived !== 'undefined') {
-      archived = args.archived
-    } else {
-      archived = null
-    }
-
-    let assetState
-    if (typeof args.assetState !== 'undefined') {
-      assetState = cleanseInput(args.assetState)
-    } else {
-      assetState = null
-    }
-
-    let cvdEnrollment
-    if (typeof args.cvdEnrollment !== 'undefined') {
-      cvdEnrollment = args.cvdEnrollment
-    } else {
-      cvdEnrollment = null
-    }
+    const archived = typeof args.archived !== 'undefined' ? args.archived : null
+    const assetState = typeof args.assetState !== 'undefined' ? cleanseInput(args.assetState) : null
+    const cvdEnrollment = typeof args.cvdEnrollment !== 'undefined' ? args.cvdEnrollment : null
 
     // Check to see if domain exists
     const domain = await domainDataSource.byKey.load(domainId)
@@ -201,36 +184,6 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    // Update domain
-    const domainToInsert = {
-      archived: typeof archived !== 'undefined' ? archived : domain?.archived,
-      ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
-      cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
-      highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
-    }
-
-    try {
-      await trx.step(
-        async () =>
-          await query`
-          WITH domains
-          UPSERT { _key: ${domain._key} }
-            INSERT ${domainToInsert}
-            UPDATE ${domainToInsert}
-            IN domains
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
-    }
-
     let claimCursor
     try {
       claimCursor = await query`
@@ -253,6 +206,7 @@ export const updateDomain = new mutationWithClientMutationId({
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
       cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
+      highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
     }
 
     const claimToInsert = {
