@@ -46,6 +46,16 @@ spec:
                 secretKeyRef:
                   name: uptime
                   key: NOTIFICATION_API_URL
+            - name: SERVICE_ACCOUNT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: SERVICE_ACCOUNT_EMAIL
+            - name: NOTIFICATION_UPTIME_ALERT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: NOTIFICATION_UPTIME_ALERT_ID
           volumeMounts:
             - name: gatus-config
               mountPath: /config
@@ -66,13 +76,3 @@ spec:
             privileged: false
             runAsNonRoot: true
       restartPolicy: OnFailure
-
-body: |
-  {
-    "email_address": "",
-    "template_id": "",
-    "personalisation": {
-      "endpoint": "[ENDPOINT_NAME]",
-      "status": "[ALERT_TRIGGERED_OR_RESOLVED]",
-    }
-  }
