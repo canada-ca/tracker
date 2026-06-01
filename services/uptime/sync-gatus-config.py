@@ -39,7 +39,7 @@ def build_alerting():
             "body": f'{{\n  "email_address": "{SERVICE_ACCOUNT_EMAIL}",\n  "template_id": "{NOTIFICATION_UPTIME_ALERT_ID}",\n  "personalisation": {{\n    "endpoint": "[ENDPOINT_NAME]",\n    "url": "[ENDPOINT_URL]",\n    "status": "[ALERT_TRIGGERED_OR_RESOLVED]"\n  }}\n}}\n',
             "headers": {
                 "Content-Type": "application/json",
-                "Authorization": f"ApiKey-v1 {NOTIFICATION_API_KEY}",
+                "Authorization": NOTIFICATION_API_KEY,
             },
             "default-alert": {
                 "enabled": True,
