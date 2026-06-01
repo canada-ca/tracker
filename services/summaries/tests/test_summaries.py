@@ -207,7 +207,12 @@ class TestSummaries:
         )
 
         organization = arango_db.collection("organizations").get({"_key": "testorg"})
-        assert organization["summaries"] == {
+        summary = arango_db.collection("organizationSummaries").get(
+            {"_id": organization["latestSummaryId"]}
+        )
+        for k in ("_id", "_key", "_rev"):
+            summary.pop(k, None)
+        assert summary == {
             "organization": "organizations/testorg",
             "date": date.today().isoformat(),
             "dmarc": {"pass": 2, "fail": 1, "total": 3},

@@ -33,7 +33,12 @@ export async function ensureDatabase(options) {
     ensureOptions = options
   }
 
-  return await ensure(ensureOptions)
+  const ensured = await ensure(ensureOptions)
+
+  const db = new Database({ url: variables.url, databaseName: variables.name })
+  await db.login(variables.username || 'root', variables.password || variables.rootPassword)
+
+  return { ...ensured, db }
 }
 
 export function createUserContextGenerator({ query, db, transaction, collectionNames, i18n, secret, salt }) {

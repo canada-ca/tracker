@@ -10,7 +10,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a loadOrgBySlug dataloader', () => {
-  let query, drop, truncate, collections, i18n
+  let query, drop, truncate, collections, db, i18n
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -23,7 +23,7 @@ describe('given a loadOrgBySlug dataloader', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
+      ;({ query, drop, truncate, collections, db } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -36,21 +36,9 @@ describe('given a loadOrgBySlug dataloader', () => {
       }))
     })
     beforeEach(async () => {
-      await collections.organizations.save({
+      const org1 = await collections.organizations.save({
         verified: false,
         externalId: 'test',
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
         orgDetails: {
           en: {
             slug: 'communications-security-establishment',
@@ -74,6 +62,20 @@ describe('given a loadOrgBySlug dataloader', () => {
           },
         },
       })
+      const summary1 = await collections.organizationSummaries.save({
+        organization: org1._id,
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      })
+      await db.collection('organizations').update(org1._key, { latestSummaryId: summary1._id })
       await collections.organizations.save({
         verified: false,
         externalId: 'test',
@@ -139,7 +141,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   verified: org.verified,
                   externalId: org.externalId,
                   domainCount: COUNT(domains),
-                  summaries: org.summaries,
+                  summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
                   slugFR: org.orgDetails.fr.slug
                 },
@@ -170,7 +172,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   id: org._key,
                   verified: org.verified,
                   domainCount: COUNT(domains),
-                  summaries: org.summaries,
+                  summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
                   slugFR: org.orgDetails.fr.slug
                 },
@@ -222,7 +224,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   verified: org.verified,
                   externalId: org.externalId,
                   domainCount: COUNT(domains),
-                  summaries: org.summaries,
+                  summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
                   slugFR: org.orgDetails.fr.slug
                 },
@@ -253,7 +255,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   id: org._key,
                   verified: org.verified,
                   domainCount: COUNT(domains),
-                  summaries: org.summaries,
+                  summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
                   slugFR: org.orgDetails.fr.slug
                 },
