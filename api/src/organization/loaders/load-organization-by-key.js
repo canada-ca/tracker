@@ -21,8 +21,8 @@ export const loadOrgByKey = ({ query, language, userKey, i18n }) =>
               verified: org.verified,
               externalId: org.externalId,
               domainCount: COUNT(orgDomains),
-              summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null
-            },
+              summaries: org.summaries
+            }, 
             TRANSLATE(${language}, org.orgDetails)
           )
       `

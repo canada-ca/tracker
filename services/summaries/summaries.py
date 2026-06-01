@@ -166,12 +166,12 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     }
 
     # Update chart summaries in DB
-    today_iso = date.today().isoformat()
-    cursor = chartSummariesCol.find({"date": today_iso})
+    todayISO = date.today().isoformat()
+    cursor = chartSummariesCol.find({"date": todayISO})
     if cursor.empty():
         chartSummariesCol.insert(
             {
-                "date": today_iso,
+                "date": todayISO,
                 **chartSummaries,
                 "dmarc_phase": dmarc_phase_summary,
             }
@@ -179,7 +179,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     else:
         logging.info("Chart summary from today already present. Updating summary...")
         chartSummariesCol.update_match(
-            {"date": today_iso},
+            {"date": todayISO},
             {
                 **chartSummaries,
                 "dmarc_phase": dmarc_phase_summary,
@@ -194,30 +194,11 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
-    org_summaries_col = db.collection("organizationSummaries")
-    organizations_col = db.collection("organizations")
 
-    today_iso = date.today().isoformat()
-
-    for org in organizations_col:
+    for org in db.collection("organizations"):
         logging.info(f"Working on organization {org['orgDetails']['en']['name']}...")
 
         try:
-            # One-time migration: inline `summaries` -> organizationSummaries doc
-            if org.get("latestSummaryId") is None and org.get("summaries"):
-                inline = org["summaries"]
-                inserted = org_summaries_col.insert(
-                    {"organization": org["_id"], **inline}
-                )
-                organizations_col.update(
-                    {
-                        "_key": org["_key"],
-                        "latestSummaryId": inserted["_id"],
-                        "summaries": None,
-                    },
-                    keep_none=False,
-                )
-
             # tier 1
             https_fail = 0
             https_pass = 0
@@ -363,7 +344,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
             summary_data = {
                 "organization": org["_id"],
-                "date": today_iso,
+                "date": date.today().isoformat(),
                 "dmarc": {
                     "pass": dmarc_pass,
                     "fail": dmarc_fail,
@@ -418,25 +399,14 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "negative_tags": negative_tags,
             }
 
-            existing_today = org_summaries_col.find(
-                {"organization": org["_id"], "date": today_iso}
-            )
-            if existing_today.empty():
-                inserted = org_summaries_col.insert(summary_data)
-                latest_summary_id = inserted["_id"]
-            else:
-                existing_doc = existing_today.next()
-                org_summaries_col.update({"_key": existing_doc["_key"], **summary_data})
-                latest_summary_id = existing_doc["_id"]
-
-            organizations_col.update(
-                {
-                    "_key": org["_key"],
-                    "latestSummaryId": latest_summary_id,
-                    "summaries": None,
-                },
-                keep_none=False,
-            )
+            current_summary = org.get("summaries", {})
+            if current_summary.get("date", "") != date.today().isoformat():
+                logging.info(f"Storing previous summary for org: {org['_key']}")
+                db.collection("organizationSummaries").insert(
+                    {"organization": org.get("_id"), **current_summary}
+                )
+            org.update({"summaries": summary_data})
+            db.collection("organizations").update(org, merge=False)
         except Exception as e:
             logging.error(f"Error processing organization {org['_id']}: {e}")
             continue

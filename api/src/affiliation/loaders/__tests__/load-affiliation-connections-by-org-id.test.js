@@ -13,7 +13,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load affiliations by org id function', () => {
-  let query, drop, truncate, collections, db, user, org, userTwo, i18n
+  let query, drop, truncate, collections, user, org, userTwo, i18n
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -28,7 +28,7 @@ describe('given the load affiliations by org id function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, db } = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -403,6 +403,18 @@ describe('given the load affiliations by org id function', () => {
           })
           orgOne = await collections.organizations.save({
             verified: false,
+            summaries: {
+              web: {
+                pass: 50,
+                fail: 1000,
+                total: 1050,
+              },
+              mail: {
+                pass: 50,
+                fail: 1000,
+                total: 1050,
+              },
+            },
             orgDetails: {
               en: {
                 slug: 'slug-org-a',
@@ -426,12 +438,6 @@ describe('given the load affiliations by org id function', () => {
               },
             },
           })
-          const orgOneSummary = await collections.organizationSummaries.save({
-            organization: orgOne._id,
-            web: { pass: 50, fail: 1000, total: 1050 },
-            mail: { pass: 50, fail: 1000, total: 1050 },
-          })
-          await db.collection('organizations').update(orgOne._key, { latestSummaryId: orgOneSummary._id })
           affOne = await collections.affiliations.save({
             _key: '1',
             _from: orgOne._id,
