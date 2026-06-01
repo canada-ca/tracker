@@ -35,4 +35,4 @@ patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
   - api-production-env-patch.yaml
 components:
-#  - ../../bases/frontend/maintenance-override-component
+  - ../../bases/frontend/maintenance-override-component
