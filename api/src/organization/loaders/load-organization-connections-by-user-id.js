@@ -64,23 +64,23 @@ export const loadOrgConnectionsByUserId =
           documentField = aql`afterVar.verified`
           orgField = aql`org.verified`
         } else if (orderBy.field === 'summary-mail-pass') {
-          documentField = aql`DOCUMENT(afterVar.latestSummaryId).mail.pass`
-          orgField = aql`DOCUMENT(org.latestSummaryId).mail.pass`
+          documentField = aql`afterVar.summaries.mail.pass`
+          orgField = aql`org.summaries.mail.pass`
         } else if (orderBy.field === 'summary-mail-fail') {
-          documentField = aql`DOCUMENT(afterVar.latestSummaryId).mail.fail`
-          orgField = aql`DOCUMENT(org.latestSummaryId).mail.fail`
+          documentField = aql`afterVar.summaries.mail.fail`
+          orgField = aql`org.summaries.mail.fail`
         } else if (orderBy.field === 'summary-mail-total') {
-          documentField = aql`DOCUMENT(afterVar.latestSummaryId).mail.total`
-          orgField = aql`DOCUMENT(org.latestSummaryId).mail.total`
+          documentField = aql`afterVar.summaries.mail.total`
+          orgField = aql`org.summaries.mail.total`
         } else if (orderBy.field === 'summary-web-pass') {
-          documentField = aql`DOCUMENT(afterVar.latestSummaryId).web.pass`
-          orgField = aql`DOCUMENT(org.latestSummaryId).web.pass`
+          documentField = aql`afterVar.summaries.web.pass`
+          orgField = aql`org.summaries.web.pass`
         } else if (orderBy.field === 'summary-web-fail') {
-          documentField = aql`DOCUMENT(afterVar.latestSummaryId).web.fail`
-          orgField = aql`DOCUMENT(org.latestSummaryId).web.fail`
+          documentField = aql`afterVar.summaries.web.fail`
+          orgField = aql`org.summaries.web.fail`
         } else if (orderBy.field === 'summary-web-total') {
-          documentField = aql`DOCUMENT(afterVar.latestSummaryId).web.total`
-          orgField = aql`DOCUMENT(org.latestSummaryId).web.total`
+          documentField = aql`afterVar.summaries.web.total`
+          orgField = aql`org.summaries.web.total`
         } else if (orderBy.field === 'domain-count') {
           documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND afterVar._id claims RETURN e._to)`
           orgField = aql`COUNT(orgDomains)`
@@ -139,23 +139,23 @@ export const loadOrgConnectionsByUserId =
           documentField = aql`beforeVar.verified`
           orgField = aql`org.verified`
         } else if (orderBy.field === 'summary-mail-pass') {
-          documentField = aql`DOCUMENT(beforeVar.latestSummaryId).mail.pass`
-          orgField = aql`DOCUMENT(org.latestSummaryId).mail.pass`
+          documentField = aql`beforeVar.summaries.mail.pass`
+          orgField = aql`org.summaries.mail.pass`
         } else if (orderBy.field === 'summary-mail-fail') {
-          documentField = aql`DOCUMENT(beforeVar.latestSummaryId).mail.fail`
-          orgField = aql`DOCUMENT(org.latestSummaryId).mail.fail`
+          documentField = aql`beforeVar.summaries.mail.fail`
+          orgField = aql`org.summaries.mail.fail`
         } else if (orderBy.field === 'summary-mail-total') {
-          documentField = aql`DOCUMENT(beforeVar.latestSummaryId).mail.total`
-          orgField = aql`DOCUMENT(org.latestSummaryId).mail.total`
+          documentField = aql`beforeVar.summaries.mail.total`
+          orgField = aql`org.summaries.mail.total`
         } else if (orderBy.field === 'summary-web-pass') {
-          documentField = aql`DOCUMENT(beforeVar.latestSummaryId).web.pass`
-          orgField = aql`DOCUMENT(org.latestSummaryId).web.pass`
+          documentField = aql`beforeVar.summaries.web.pass`
+          orgField = aql`org.summaries.web.pass`
         } else if (orderBy.field === 'summary-web-fail') {
-          documentField = aql`DOCUMENT(beforeVar.latestSummaryId).web.fail`
-          orgField = aql`DOCUMENT(org.latestSummaryId).web.fail`
+          documentField = aql`beforeVar.summaries.web.fail`
+          orgField = aql`org.summaries.web.fail`
         } else if (orderBy.field === 'summary-web-total') {
-          documentField = aql`DOCUMENT(beforeVar.latestSummaryId).web.total`
-          orgField = aql`DOCUMENT(org.latestSummaryId).web.total`
+          documentField = aql`beforeVar.summaries.web.total`
+          orgField = aql`org.summaries.web.total`
         } else if (orderBy.field === 'domain-count') {
           documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND beforeVar._id claims RETURN e._to)`
           orgField = aql`COUNT(orgDomains)`
@@ -264,27 +264,27 @@ export const loadOrgConnectionsByUserId =
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).verified`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).verified`
       } else if (orderBy.field === 'summary-mail-pass') {
-        orgField = aql`DOCUMENT(org.latestSummaryId).mail.pass`
+        orgField = aql`org.summaries.mail.pass`
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).summaries.mail.pass`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).summaries.mail.pass`
       } else if (orderBy.field === 'summary-mail-fail') {
-        orgField = aql`DOCUMENT(org.latestSummaryId).mail.fail`
+        orgField = aql`org.summaries.mail.fail`
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).summaries.mail.fail`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).summaries.mail.fail`
       } else if (orderBy.field === 'summary-mail-total') {
-        orgField = aql`DOCUMENT(org.latestSummaryId).mail.total`
+        orgField = aql`org.summaries.mail.total`
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).summaries.mail.total`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).summaries.mail.total`
       } else if (orderBy.field === 'summary-web-pass') {
-        orgField = aql`DOCUMENT(org.latestSummaryId).web.pass`
+        orgField = aql`org.summaries.web.pass`
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).summaries.web.pass`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).summaries.web.pass`
       } else if (orderBy.field === 'summary-web-fail') {
-        orgField = aql`DOCUMENT(org.latestSummaryId).web.fail`
+        orgField = aql`org.summaries.web.fail`
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).summaries.web.fail`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).summaries.web.fail`
       } else if (orderBy.field === 'summary-web-total') {
-        orgField = aql`DOCUMENT(org.latestSummaryId).web.total`
+        orgField = aql`org.summaries.web.total`
         hasNextPageDocumentField = aql`LAST(retrievedOrgs).summaries.web.total`
         hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
@@ -327,17 +327,17 @@ export const loadOrgConnectionsByUserId =
       } else if (orderBy.field === 'verified') {
         sortByField = aql`org.verified ${orderBy.direction},`
       } else if (orderBy.field === 'summary-mail-pass') {
-        sortByField = aql`DOCUMENT(org.latestSummaryId).mail.pass ${orderBy.direction},`
+        sortByField = aql`org.summaries.mail.pass ${orderBy.direction},`
       } else if (orderBy.field === 'summary-mail-fail') {
-        sortByField = aql`DOCUMENT(org.latestSummaryId).mail.fail ${orderBy.direction},`
+        sortByField = aql`org.summaries.mail.fail ${orderBy.direction},`
       } else if (orderBy.field === 'summary-mail-total') {
-        sortByField = aql`DOCUMENT(org.latestSummaryId).mail.total ${orderBy.direction},`
+        sortByField = aql`org.summaries.mail.total ${orderBy.direction},`
       } else if (orderBy.field === 'summary-web-pass') {
-        sortByField = aql`DOCUMENT(org.latestSummaryId).web.pass ${orderBy.direction},`
+        sortByField = aql`org.summaries.web.pass ${orderBy.direction},`
       } else if (orderBy.field === 'summary-web-fail') {
-        sortByField = aql`DOCUMENT(org.latestSummaryId).web.fail ${orderBy.direction},`
+        sortByField = aql`org.summaries.web.fail ${orderBy.direction},`
       } else if (orderBy.field === 'summary-web-total') {
-        sortByField = aql`DOCUMENT(org.latestSummaryId).web.total ${orderBy.direction},`
+        sortByField = aql`org.summaries.web.total ${orderBy.direction},`
       } else if (orderBy.field === 'domain-count') {
         sortByField = aql`COUNT(orgDomains) ${orderBy.direction},`
       }
@@ -504,7 +504,7 @@ export const loadOrgConnectionsByUserId =
                   verified: org.verified,
                   externalId: org.externalId,
                   domainCount: COUNT(orgDomains),
-                  summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null
+                  summaries: org.summaries
                 },
                 TRANSLATE(${language}, org.orgDetails)
               )

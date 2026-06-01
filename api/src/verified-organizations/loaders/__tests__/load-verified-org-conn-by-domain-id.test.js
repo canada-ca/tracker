@@ -25,21 +25,20 @@ const i18n = setupI18n({
   },
 })
 
-const orgOneSummaryData = {
-  web: {
-    pass: 50,
-    fail: 1000,
-    total: 1050,
-  },
-  mail: {
-    pass: 50,
-    fail: 1000,
-    total: 1050,
-  },
-}
-
 const orgOneData = {
   verified: true,
+  summaries: {
+    web: {
+      pass: 50,
+      fail: 1000,
+      total: 1050,
+    },
+    mail: {
+      pass: 50,
+      fail: 1000,
+      total: 1050,
+    },
+  },
   orgDetails: {
     en: {
       slug: 'slug-org-one',
@@ -61,24 +60,23 @@ const orgOneData = {
       province: 'province one',
       city: 'city one',
     },
-  },
-}
-
-const orgTwoSummaryData = {
-  web: {
-    pass: 52,
-    fail: 1002,
-    total: 1054,
-  },
-  mail: {
-    pass: 52,
-    fail: 1002,
-    total: 1054,
   },
 }
 
 const orgTwoData = {
   verified: true,
+  summaries: {
+    web: {
+      pass: 52,
+      fail: 1002,
+      total: 1054,
+    },
+    mail: {
+      pass: 52,
+      fail: 1002,
+      total: 1054,
+    },
+  },
   orgDetails: {
     en: {
       slug: 'slug-org-two',
@@ -103,21 +101,20 @@ const orgTwoData = {
   },
 }
 
-const orgThreeSummaryData = {
-  web: {
-    pass: 51,
-    fail: 1001,
-    total: 1052,
-  },
-  mail: {
-    pass: 51,
-    fail: 1001,
-    total: 1052,
-  },
-}
-
 const orgThreeData = {
   verified: true,
+  summaries: {
+    web: {
+      pass: 51,
+      fail: 1001,
+      total: 1052,
+    },
+    mail: {
+      pass: 51,
+      fail: 1001,
+      total: 1052,
+    },
+  },
   orgDetails: {
     en: {
       slug: 'slug-org-three',
@@ -164,10 +161,10 @@ describe('given the load organizations connection function', () => {
         console.error = mockedError
         console.warn = mockedWarn
 
-        let query, drop, truncate, collections, db, org, orgTwo, domain, domainTwo, domainThree
+        let query, drop, truncate, collections, org, orgTwo, domain, domainTwo, domainThree
 
         beforeAll(async () => {
-          ;({ query, drop, truncate, collections, db } = await ensure({
+          ;({ query, drop, truncate, collections } = await ensure({
             variables: {
               dbname: dbNameFromFile(__filename),
               username: 'root',
@@ -181,17 +178,7 @@ describe('given the load organizations connection function', () => {
         })
         beforeEach(async () => {
           org = await collections.organizations.save(orgOneData)
-          const orgSummary = await collections.organizationSummaries.save({
-            organization: org._id,
-            ...orgOneSummaryData,
-          })
-          await db.collection("organizations").update(org._key, { latestSummaryId: orgSummary._id })
           orgTwo = await collections.organizations.save(orgTwoData)
-          const orgTwoSummary = await collections.organizationSummaries.save({
-            organization: orgTwo._id,
-            ...orgTwoSummaryData,
-          })
-          await db.collection("organizations").update(orgTwo._key, { latestSummaryId: orgTwoSummary._id })
 
           domain = await collections.domains.save(domainOneData)
           domainTwo = await collections.domains.save(domainTwoData)
@@ -277,10 +264,10 @@ describe('given the load organizations connection function', () => {
         console.error = mockedError
         console.warn = mockedWarn
 
-        let query, drop, truncate, collections, db, org, orgTwo, domain, domainTwo, domainThree
+        let query, drop, truncate, collections, org, orgTwo, domain, domainTwo, domainThree
 
         beforeEach(async () => {
-          ;({ query, drop, truncate, collections, db } = await ensure({
+          ;({ query, drop, truncate, collections } = await ensure({
             variables: {
               dbname: dbNameFromFile(__filename),
               username: 'root',
@@ -292,17 +279,7 @@ describe('given the load organizations connection function', () => {
             schema: dbschema,
           }))
           org = await collections.organizations.save(orgOneData)
-          const orgSummary = await collections.organizationSummaries.save({
-            organization: org._id,
-            ...orgOneSummaryData,
-          })
-          await db.collection("organizations").update(org._key, { latestSummaryId: orgSummary._id })
           orgTwo = await collections.organizations.save(orgTwoData)
-          const orgTwoSummary = await collections.organizationSummaries.save({
-            organization: orgTwo._id,
-            ...orgTwoSummaryData,
-          })
-          await db.collection("organizations").update(orgTwo._key, { latestSummaryId: orgTwoSummary._id })
 
           domain = await collections.domains.save(domainOneData)
           domainTwo = await collections.domains.save(domainTwoData)
@@ -388,10 +365,10 @@ describe('given the load organizations connection function', () => {
         console.error = mockedError
         console.warn = mockedWarn
 
-        let query, drop, truncate, collections, db, org, orgTwo, domain, domainTwo, domainThree
+        let query, drop, truncate, collections, org, orgTwo, domain, domainTwo, domainThree
 
         beforeEach(async () => {
-          ;({ query, drop, truncate, collections, db } = await ensure({
+          ;({ query, drop, truncate, collections } = await ensure({
             variables: {
               dbname: dbNameFromFile(__filename),
               username: 'root',
@@ -403,17 +380,7 @@ describe('given the load organizations connection function', () => {
             schema: dbschema,
           }))
           org = await collections.organizations.save(orgOneData)
-          const orgSummary = await collections.organizationSummaries.save({
-            organization: org._id,
-            ...orgOneSummaryData,
-          })
-          await db.collection("organizations").update(org._key, { latestSummaryId: orgSummary._id })
           orgTwo = await collections.organizations.save(orgTwoData)
-          const orgTwoSummary = await collections.organizationSummaries.save({
-            organization: orgTwo._id,
-            ...orgTwoSummaryData,
-          })
-          await db.collection("organizations").update(orgTwo._key, { latestSummaryId: orgTwoSummary._id })
 
           domain = await collections.domains.save(domainOneData)
           domainTwo = await collections.domains.save(domainTwoData)
@@ -498,10 +465,10 @@ describe('given the load organizations connection function', () => {
         console.error = mockedError
         console.warn = mockedWarn
 
-        let query, drop, truncate, collections, db, org, orgTwo, domain, domainTwo, domainThree
+        let query, drop, truncate, collections, org, orgTwo, domain, domainTwo, domainThree
 
         beforeEach(async () => {
-          ;({ query, drop, truncate, collections, db } = await ensure({
+          ;({ query, drop, truncate, collections } = await ensure({
             variables: {
               dbname: dbNameFromFile(__filename),
               username: 'root',
@@ -513,17 +480,7 @@ describe('given the load organizations connection function', () => {
             schema: dbschema,
           }))
           org = await collections.organizations.save(orgOneData)
-          const orgSummary = await collections.organizationSummaries.save({
-            organization: org._id,
-            ...orgOneSummaryData,
-          })
-          await db.collection("organizations").update(org._key, { latestSummaryId: orgSummary._id })
           orgTwo = await collections.organizations.save(orgTwoData)
-          const orgTwoSummary = await collections.organizationSummaries.save({
-            organization: orgTwo._id,
-            ...orgTwoSummaryData,
-          })
-          await db.collection("organizations").update(orgTwo._key, { latestSummaryId: orgTwoSummary._id })
 
           domain = await collections.domains.save(domainOneData)
           domainTwo = await collections.domains.save(domainTwoData)
@@ -608,10 +565,10 @@ describe('given the load organizations connection function', () => {
         console.error = mockedError
         console.warn = mockedWarn
 
-        let query, drop, truncate, collections, db, org, orgTwo, domain, domainTwo, domainThree, orgThree
+        let query, drop, truncate, collections, org, orgTwo, domain, domainTwo, domainThree, orgThree
 
         beforeEach(async () => {
-          ;({ query, drop, truncate, collections, db } = await ensure({
+          ;({ query, drop, truncate, collections } = await ensure({
             variables: {
               dbname: dbNameFromFile(__filename),
               username: 'root',
@@ -624,23 +581,8 @@ describe('given the load organizations connection function', () => {
           }))
 
           org = await collections.organizations.save(orgOneData)
-          const orgSummary = await collections.organizationSummaries.save({
-            organization: org._id,
-            ...orgOneSummaryData,
-          })
-          await db.collection("organizations").update(org._key, { latestSummaryId: orgSummary._id })
           orgTwo = await collections.organizations.save(orgTwoData)
-          const orgTwoSummary = await collections.organizationSummaries.save({
-            organization: orgTwo._id,
-            ...orgTwoSummaryData,
-          })
-          await db.collection("organizations").update(orgTwo._key, { latestSummaryId: orgTwoSummary._id })
           orgThree = await collections.organizations.save(orgThreeData)
-          const orgThreeSummary = await collections.organizationSummaries.save({
-            organization: orgThree._id,
-            ...orgThreeSummaryData,
-          })
-          await db.collection("organizations").update(orgThree._key, { latestSummaryId: orgThreeSummary._id })
 
           domain = await collections.domains.save(domainOneData)
           domainTwo = await collections.domains.save(domainTwoData)

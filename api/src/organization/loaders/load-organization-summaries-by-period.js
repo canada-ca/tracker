@@ -19,8 +19,9 @@ export const loadOrganizationSummariesByPeriod =
       return filteredArray
     }
 
+    const sortString = aql`SORT summary.date ${sortDirection}`
     let startDateFilter = aql``
-    if (cleansedStartDate !== null) {
+    if (typeof cleansedStartDate !== 'undefined') {
       startDateFilter = aql`FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${cleansedStartDate}, '%yyyy-%mm-%dd')`
     }
     let endDateFilter = aql``
@@ -35,11 +36,16 @@ export const loadOrganizationSummariesByPeriod =
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
-        FOR summary IN organizationSummaries
-          FILTER summary.organization == ${orgId}
-          ${startDateFilter}
-          ${endDateFilter}
-          SORT summary.date ${sortDirection}
+        LET latestSummary = (RETURN DOCUMENT(organizations, ${orgId}).summaries)
+        LET historicalSummaries = (
+          FOR summary IN organizationSummaries
+            FILTER summary.organization == ${orgId}
+            ${startDateFilter}
+            ${endDateFilter}
+            RETURN summary
+        )
+        FOR summary IN APPEND(latestSummary, historicalSummaries)
+          ${sortString}
           ${limitString}
           RETURN summary
       `

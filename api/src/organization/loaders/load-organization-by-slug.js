@@ -22,7 +22,7 @@ export const loadOrgBySlug = ({ query, language, userKey, i18n }) =>
               verified: org.verified,
               externalId: org.externalId,
               domainCount: COUNT(orgDomains),
-              summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
+              summaries: org.summaries,
               slugEN: org.orgDetails.en.slug,
               slugFR: org.orgDetails.fr.slug
             },
