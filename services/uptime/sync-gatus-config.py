@@ -57,9 +57,9 @@ def build_endpoint(doc):
     return {
         "name": domain,
         "url": f"https://{domain}",
-        "interval": "30s",
+        "interval": "5m",
         "conditions": [
-            "[STATUS] < 300",
+            "[STATUS] == any(200, 429)",  # prevents rate limiting from triggering alerts
             "[RESPONSE_TIME] < 10000",
         ],
         "alerts": [{"type": "custom"}],
