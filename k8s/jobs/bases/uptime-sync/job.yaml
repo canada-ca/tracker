@@ -1,36 +1,16 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  creationTimestamp: null
-  labels:
-    app: tracker-uptime
-  name: tracker-uptime
+  name: uptime-sync
   namespace: uptime
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tracker-uptime
-  strategy:
-    rollingUpdate:
-      maxSurge: 50%
-      maxUnavailable: 50%
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: tracker-uptime
+        job: uptime-sync
     spec:
-      securityContext:
-        fsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
-      volumes:
-        - name: gatus-config
-          emptyDir: {}
-      initContainers:
-        - name: sync-init
+      containers:
+        - name: sync-sidecar
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-f5c3686-1780497120 # {"$imagepolicy": "flux-system:uptime-sync"}
           command: ["python", "/app/sync-gatus-config.py"]
           env:
@@ -79,45 +59,13 @@ spec:
           volumeMounts:
             - name: gatus-config
               mountPath: /config
-          securityContext:
-            runAsGroup: 1000
-            runAsUser: 1000
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            runAsNonRoot: true
-      containers:
-        - name: gatus
-          image: ghcr.io/twin/gatus:v5.35.0
-          env:
-            - name: GATUS_CONFIG_PATH
-              value: /config/config.yaml
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-            - name: gatus-config
-              mountPath: /config
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
           resources:
             limits:
-              cpu: 500m
-              memory: 256Mi
-            requests:
               cpu: 100m
               memory: 128Mi
+            requests:
+              cpu: 25m
+              memory: 64Mi
           securityContext:
             runAsGroup: 1000
             runAsUser: 1000
@@ -126,6 +74,5 @@ spec:
               drop:
                 - ALL
             privileged: false
-            readOnlyRootFilesystem: true
             runAsNonRoot: true
-status: {}
+      restartPolicy: OnFailure
