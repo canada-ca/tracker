@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: authorizationpolicies.security.istio.io
 spec:
   group: security.istio.io
@@ -123,6 +123,11 @@ spec:
                                   type: string
                                 maxItems: 16
                                 type: array
+                              notTrustDomains:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
                               principals:
                                 description: Optional.
                                 items:
@@ -145,375 +150,10 @@ spec:
                                   type: string
                                 maxItems: 16
                                 type: array
-                            type: object
-                            x-kubernetes-validations:
-                            - message: Cannot set serviceAccounts with namespaces
-                                or principals
-                              rule: |-
-                                (has(self.serviceAccounts) || has(self.notServiceAccounts)) ? (!has(self.principals) &&
-                                !has(self.notPrincipals) && !has(self.namespaces) && !has(self.notNamespaces)) : true
-                        type: object
-                      maxItems: 512
-                      type: array
-                    to:
-                      description: Optional.
-                      items:
-                        properties:
-                          operation:
-                            description: Operation specifies the operation of a request.
-                            properties:
-                              hosts:
+                              trustDomains:
                                 description: Optional.
                                 items:
                                   type: string
-                                type: array
-                              methods:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notHosts:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notMethods:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notPaths:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notPorts:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              paths:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              ports:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                            type: object
-                        type: object
-                      type: array
-                    when:
-                      description: Optional.
-                      items:
-                        properties:
-                          key:
-                            description: The name of an Istio attribute.
-                            type: string
-                          notValues:
-                            description: Optional.
-                            items:
-                              type: string
-                            type: array
-                          values:
-                            description: Optional.
-                            items:
-                              type: string
-                            type: array
-                        required:
-                        - key
-                        type: object
-                      type: array
-                  type: object
-                maxItems: 512
-                type: array
-              selector:
-                description: Optional.
-                properties:
-                  matchLabels:
-                    additionalProperties:
-                      maxLength: 63
-                      type: string
-                      x-kubernetes-validations:
-                      - message: wildcard not allowed in label value match
-                        rule: '!self.contains("*")'
-                    description: One or more labels that indicate a specific set of
-                      pods/VMs on which a policy should be applied.
-                    maxProperties: 4096
-                    type: object
-                    x-kubernetes-validations:
-                    - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains("*"))
-                    - message: key must not be empty
-                      rule: self.all(key, key.size() != 0)
-                type: object
-              targetRef:
-                properties:
-                  group:
-                    description: group is the group of the target resource.
-                    maxLength: 253
-                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
-                    type: string
-                  kind:
-                    description: kind is kind of the target resource.
-                    maxLength: 63
-                    minLength: 1
-                    pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
-                    type: string
-                  name:
-                    description: name is the name of the target resource.
-                    maxLength: 253
-                    minLength: 1
-                    type: string
-                  namespace:
-                    description: namespace is the namespace of the referent.
-                    type: string
-                    x-kubernetes-validations:
-                    - message: cross namespace referencing is not currently supported
-                      rule: self.size() == 0
-                required:
-                - kind
-                - name
-                type: object
-              targetRefs:
-                description: Optional.
-                items:
-                  properties:
-                    group:
-                      description: group is the group of the target resource.
-                      maxLength: 253
-                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
-                      type: string
-                    kind:
-                      description: kind is kind of the target resource.
-                      maxLength: 63
-                      minLength: 1
-                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
-                      type: string
-                    name:
-                      description: name is the name of the target resource.
-                      maxLength: 253
-                      minLength: 1
-                      type: string
-                    namespace:
-                      description: namespace is the namespace of the referent.
-                      type: string
-                      x-kubernetes-validations:
-                      - message: cross namespace referencing is not currently supported
-                        rule: self.size() == 0
-                  required:
-                  - kind
-                  - name
-                  type: object
-                maxItems: 16
-                type: array
-            type: object
-            x-kubernetes-validations:
-            - message: only one of targetRefs or selector can be set
-              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
-                + (has(self.targetRefs) ? 1 : 0) <= 1'
-          status:
-            properties:
-              conditions:
-                description: Current service state of the resource.
-                items:
-                  properties:
-                    lastProbeTime:
-                      description: Last time we probed the condition.
-                      format: date-time
-                      type: string
-                    lastTransitionTime:
-                      description: Last time the condition transitioned from one status
-                        to another.
-                      format: date-time
-                      type: string
-                    message:
-                      description: Human-readable message indicating details about
-                        last transition.
-                      type: string
-                    observedGeneration:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      description: Resource Generation to which the Condition refers.
-                      x-kubernetes-int-or-string: true
-                    reason:
-                      description: Unique, one-word, CamelCase reason for the condition's
-                        last transition.
-                      type: string
-                    status:
-                      description: Status is the status of the condition.
-                      type: string
-                    type:
-                      description: Type is the type of the condition.
-                      type: string
-                  type: object
-                type: array
-              observedGeneration:
-                anyOf:
-                - type: integer
-                - type: string
-                x-kubernetes-int-or-string: true
-              validationMessages:
-                description: Includes any errors or warnings detected by Istio's analyzers.
-                items:
-                  properties:
-                    documentationUrl:
-                      description: A url pointing to the Istio documentation for this
-                        specific error type.
-                      type: string
-                    level:
-                      description: |-
-                        Represents how severe a message is.
-
-                        Valid Options: UNKNOWN, ERROR, WARNING, INFO
-                      enum:
-                      - UNKNOWN
-                      - ERROR
-                      - WARNING
-                      - INFO
-                      type: string
-                    type:
-                      properties:
-                        code:
-                          description: A 7 character code matching `^IST[0-9]{4}$`
-                            intended to uniquely identify the message type.
-                          type: string
-                        name:
-                          description: A human-readable name for the message type.
-                          type: string
-                      type: object
-                  type: object
-                type: array
-            type: object
-            x-kubernetes-preserve-unknown-fields: true
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - description: The operation to take.
-      jsonPath: .spec.action
-      name: Action
-      type: string
-    - description: 'CreationTimestamp is a timestamp representing the server time
-        when this object was created. It is not guaranteed to be set in happens-before
-        order across separate operations. Clients may not set this value. It is represented
-        in RFC3339 form and is in UTC. Populated by the system. Read-only. Null for
-        lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata'
-      jsonPath: .metadata.creationTimestamp
-      name: Age
-      type: date
-    name: v1beta1
-    schema:
-      openAPIV3Schema:
-        properties:
-          spec:
-            description: 'Configuration for access control on workloads. See more
-              details at: https://istio.io/docs/reference/config/security/authorization-policy.html'
-            oneOf:
-            - not:
-                anyOf:
-                - required:
-                  - provider
-            - required:
-              - provider
-            properties:
-              action:
-                description: |-
-                  Optional.
-
-                  Valid Options: ALLOW, DENY, AUDIT, CUSTOM
-                enum:
-                - ALLOW
-                - DENY
-                - AUDIT
-                - CUSTOM
-                type: string
-              provider:
-                description: Specifies detailed configuration of the CUSTOM action.
-                properties:
-                  name:
-                    description: Specifies the name of the extension provider.
-                    type: string
-                type: object
-              rules:
-                description: Optional.
-                items:
-                  properties:
-                    from:
-                      description: Optional.
-                      items:
-                        properties:
-                          source:
-                            description: Source specifies the source of a request.
-                            properties:
-                              ipBlocks:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              namespaces:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notIpBlocks:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notNamespaces:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notPrincipals:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notRemoteIpBlocks:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notRequestPrincipals:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              notServiceAccounts:
-                                description: Optional.
-                                items:
-                                  maxLength: 320
-                                  type: string
-                                maxItems: 16
-                                type: array
-                              principals:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              remoteIpBlocks:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              requestPrincipals:
-                                description: Optional.
-                                items:
-                                  type: string
-                                type: array
-                              serviceAccounts:
-                                description: Optional.
-                                items:
-                                  maxLength: 320
-                                  type: string
-                                maxItems: 16
                                 type: array
                             type: object
                             x-kubernetes-validations:
@@ -764,6 +404,386 @@ spec:
     storage: true
     subresources:
       status: {}
+  - additionalPrinterColumns:
+    - description: The operation to take.
+      jsonPath: .spec.action
+      name: Action
+      type: string
+    - description: 'CreationTimestamp is a timestamp representing the server time
+        when this object was created. It is not guaranteed to be set in happens-before
+        order across separate operations. Clients may not set this value. It is represented
+        in RFC3339 form and is in UTC. Populated by the system. Read-only. Null for
+        lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata'
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: 'Configuration for access control on workloads. See more
+              details at: https://istio.io/docs/reference/config/security/authorization-policy.html'
+            oneOf:
+            - not:
+                anyOf:
+                - required:
+                  - provider
+            - required:
+              - provider
+            properties:
+              action:
+                description: |-
+                  Optional.
+
+                  Valid Options: ALLOW, DENY, AUDIT, CUSTOM
+                enum:
+                - ALLOW
+                - DENY
+                - AUDIT
+                - CUSTOM
+                type: string
+              provider:
+                description: Specifies detailed configuration of the CUSTOM action.
+                properties:
+                  name:
+                    description: Specifies the name of the extension provider.
+                    type: string
+                type: object
+              rules:
+                description: Optional.
+                items:
+                  properties:
+                    from:
+                      description: Optional.
+                      items:
+                        properties:
+                          source:
+                            description: Source specifies the source of a request.
+                            properties:
+                              ipBlocks:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              namespaces:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notIpBlocks:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notNamespaces:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notPrincipals:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notRemoteIpBlocks:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notRequestPrincipals:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notServiceAccounts:
+                                description: Optional.
+                                items:
+                                  maxLength: 320
+                                  type: string
+                                maxItems: 16
+                                type: array
+                              notTrustDomains:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              principals:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              remoteIpBlocks:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              requestPrincipals:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              serviceAccounts:
+                                description: Optional.
+                                items:
+                                  maxLength: 320
+                                  type: string
+                                maxItems: 16
+                                type: array
+                              trustDomains:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                            type: object
+                            x-kubernetes-validations:
+                            - message: Cannot set serviceAccounts with namespaces
+                                or principals
+                              rule: |-
+                                (has(self.serviceAccounts) || has(self.notServiceAccounts)) ? (!has(self.principals) &&
+                                !has(self.notPrincipals) && !has(self.namespaces) && !has(self.notNamespaces)) : true
+                        type: object
+                      maxItems: 512
+                      type: array
+                    to:
+                      description: Optional.
+                      items:
+                        properties:
+                          operation:
+                            description: Operation specifies the operation of a request.
+                            properties:
+                              hosts:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              methods:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notHosts:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notMethods:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notPaths:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              notPorts:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              paths:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                              ports:
+                                description: Optional.
+                                items:
+                                  type: string
+                                type: array
+                            type: object
+                        type: object
+                      type: array
+                    when:
+                      description: Optional.
+                      items:
+                        properties:
+                          key:
+                            description: The name of an Istio attribute.
+                            type: string
+                          notValues:
+                            description: Optional.
+                            items:
+                              type: string
+                            type: array
+                          values:
+                            description: Optional.
+                            items:
+                              type: string
+                            type: array
+                        required:
+                        - key
+                        type: object
+                      type: array
+                  type: object
+                maxItems: 512
+                type: array
+              selector:
+                description: Optional.
+                properties:
+                  matchLabels:
+                    additionalProperties:
+                      maxLength: 63
+                      type: string
+                      x-kubernetes-validations:
+                      - message: wildcard not allowed in label value match
+                        rule: '!self.contains("*")'
+                    description: One or more labels that indicate a specific set of
+                      pods/VMs on which a policy should be applied.
+                    maxProperties: 4096
+                    type: object
+                    x-kubernetes-validations:
+                    - message: wildcard not allowed in label key match
+                      rule: self.all(key, !key.contains("*"))
+                    - message: key must not be empty
+                      rule: self.all(key, key.size() != 0)
+                type: object
+              targetRef:
+                properties:
+                  group:
+                    description: group is the group of the target resource.
+                    maxLength: 253
+                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                  kind:
+                    description: kind is kind of the target resource.
+                    maxLength: 63
+                    minLength: 1
+                    pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                    type: string
+                  name:
+                    description: name is the name of the target resource.
+                    maxLength: 253
+                    minLength: 1
+                    type: string
+                  namespace:
+                    description: namespace is the namespace of the referent.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: cross namespace referencing is not currently supported
+                      rule: self.size() == 0
+                required:
+                - kind
+                - name
+                type: object
+              targetRefs:
+                description: Optional.
+                items:
+                  properties:
+                    group:
+                      description: group is the group of the target resource.
+                      maxLength: 253
+                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    kind:
+                      description: kind is kind of the target resource.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                      type: string
+                    name:
+                      description: name is the name of the target resource.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                    namespace:
+                      description: namespace is the namespace of the referent.
+                      type: string
+                      x-kubernetes-validations:
+                      - message: cross namespace referencing is not currently supported
+                        rule: self.size() == 0
+                  required:
+                  - kind
+                  - name
+                  type: object
+                maxItems: 16
+                type: array
+            type: object
+            x-kubernetes-validations:
+            - message: only one of targetRefs or selector can be set
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
+          status:
+            properties:
+              conditions:
+                description: Current service state of the resource.
+                items:
+                  properties:
+                    lastProbeTime:
+                      description: Last time we probed the condition.
+                      format: date-time
+                      type: string
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: Human-readable message indicating details about
+                        last transition.
+                      type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
+                    reason:
+                      description: Unique, one-word, CamelCase reason for the condition's
+                        last transition.
+                      type: string
+                    status:
+                      description: Status is the status of the condition.
+                      type: string
+                    type:
+                      description: Type is the type of the condition.
+                      type: string
+                  type: object
+                type: array
+              observedGeneration:
+                anyOf:
+                - type: integer
+                - type: string
+                x-kubernetes-int-or-string: true
+              validationMessages:
+                description: Includes any errors or warnings detected by Istio's analyzers.
+                items:
+                  properties:
+                    documentationUrl:
+                      description: A url pointing to the Istio documentation for this
+                        specific error type.
+                      type: string
+                    level:
+                      description: |-
+                        Represents how severe a message is.
+
+                        Valid Options: UNKNOWN, ERROR, WARNING, INFO
+                      enum:
+                      - UNKNOWN
+                      - ERROR
+                      - WARNING
+                      - INFO
+                      type: string
+                    type:
+                      properties:
+                        code:
+                          description: A 7 character code matching `^IST[0-9]{4}$`
+                            intended to uniquely identify the message type.
+                          type: string
+                        name:
+                          description: A human-readable name for the message type.
+                          type: string
+                      type: object
+                  type: object
+                type: array
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
 
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -775,8 +795,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: destinationrules.networking.istio.io
 spec:
   group: networking.istio.io
@@ -1001,6 +1021,21 @@ spec:
                                 httpCookie:
                                   description: Hash based on HTTP cookie.
                                   properties:
+                                    attributes:
+                                      description: Additional attributes for the cookie.
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The name of the cookie attribute.
+                                            type: string
+                                          value:
+                                            description: The optional value of the
+                                              cookie attribute.
+                                            type: string
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
                                     name:
                                       description: Name of the cookie.
                                       type: string
@@ -1116,7 +1151,7 @@ spec:
                                   description: This parameter controls the speed of
                                     traffic increase over the warmup duration.
                                   format: double
-                                  minimum: 1
+                                  minimum: 0
                                   nullable: true
                                   type: number
                                 duration:
@@ -1364,6 +1399,23 @@ spec:
                                       httpCookie:
                                         description: Hash based on HTTP cookie.
                                         properties:
+                                          attributes:
+                                            description: Additional attributes for
+                                              the cookie.
+                                            items:
+                                              properties:
+                                                name:
+                                                  description: The name of the cookie
+                                                    attribute.
+                                                  type: string
+                                                value:
+                                                  description: The optional value
+                                                    of the cookie attribute.
+                                                  type: string
+                                              required:
+                                              - name
+                                              type: object
+                                            type: array
                                           name:
                                             description: Name of the cookie.
                                             type: string
@@ -1482,7 +1534,7 @@ spec:
                                         description: This parameter controls the speed
                                           of traffic increase over the warmup duration.
                                         format: double
-                                        minimum: 1
+                                        minimum: 0
                                         nullable: true
                                         type: number
                                       duration:
@@ -1904,6 +1956,21 @@ spec:
                           httpCookie:
                             description: Hash based on HTTP cookie.
                             properties:
+                              attributes:
+                                description: Additional attributes for the cookie.
+                                items:
+                                  properties:
+                                    name:
+                                      description: The name of the cookie attribute.
+                                      type: string
+                                    value:
+                                      description: The optional value of the cookie
+                                        attribute.
+                                      type: string
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
                               name:
                                 description: Name of the cookie.
                                 type: string
@@ -2016,7 +2083,7 @@ spec:
                             description: This parameter controls the speed of traffic
                               increase over the warmup duration.
                             format: double
-                            minimum: 1
+                            minimum: 0
                             nullable: true
                             type: number
                           duration:
@@ -2260,6 +2327,21 @@ spec:
                                 httpCookie:
                                   description: Hash based on HTTP cookie.
                                   properties:
+                                    attributes:
+                                      description: Additional attributes for the cookie.
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The name of the cookie attribute.
+                                            type: string
+                                          value:
+                                            description: The optional value of the
+                                              cookie attribute.
+                                            type: string
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
                                     name:
                                       description: Name of the cookie.
                                       type: string
@@ -2375,7 +2457,7 @@ spec:
                                   description: This parameter controls the speed of
                                     traffic increase over the warmup duration.
                                   format: double
-                                  minimum: 1
+                                  minimum: 0
                                   nullable: true
                                   type: number
                                 duration:
@@ -2940,6 +3022,21 @@ spec:
                                 httpCookie:
                                   description: Hash based on HTTP cookie.
                                   properties:
+                                    attributes:
+                                      description: Additional attributes for the cookie.
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The name of the cookie attribute.
+                                            type: string
+                                          value:
+                                            description: The optional value of the
+                                              cookie attribute.
+                                            type: string
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
                                     name:
                                       description: Name of the cookie.
                                       type: string
@@ -3055,7 +3152,7 @@ spec:
                                   description: This parameter controls the speed of
                                     traffic increase over the warmup duration.
                                   format: double
-                                  minimum: 1
+                                  minimum: 0
                                   nullable: true
                                   type: number
                                 duration:
@@ -3303,6 +3400,23 @@ spec:
                                       httpCookie:
                                         description: Hash based on HTTP cookie.
                                         properties:
+                                          attributes:
+                                            description: Additional attributes for
+                                              the cookie.
+                                            items:
+                                              properties:
+                                                name:
+                                                  description: The name of the cookie
+                                                    attribute.
+                                                  type: string
+                                                value:
+                                                  description: The optional value
+                                                    of the cookie attribute.
+                                                  type: string
+                                              required:
+                                              - name
+                                              type: object
+                                            type: array
                                           name:
                                             description: Name of the cookie.
                                             type: string
@@ -3421,7 +3535,7 @@ spec:
                                         description: This parameter controls the speed
                                           of traffic increase over the warmup duration.
                                         format: double
-                                        minimum: 1
+                                        minimum: 0
                                         nullable: true
                                         type: number
                                       duration:
@@ -3843,6 +3957,21 @@ spec:
                           httpCookie:
                             description: Hash based on HTTP cookie.
                             properties:
+                              attributes:
+                                description: Additional attributes for the cookie.
+                                items:
+                                  properties:
+                                    name:
+                                      description: The name of the cookie attribute.
+                                      type: string
+                                    value:
+                                      description: The optional value of the cookie
+                                        attribute.
+                                      type: string
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
                               name:
                                 description: Name of the cookie.
                                 type: string
@@ -3955,7 +4084,7 @@ spec:
                             description: This parameter controls the speed of traffic
                               increase over the warmup duration.
                             format: double
-                            minimum: 1
+                            minimum: 0
                             nullable: true
                             type: number
                           duration:
@@ -4199,6 +4328,21 @@ spec:
                                 httpCookie:
                                   description: Hash based on HTTP cookie.
                                   properties:
+                                    attributes:
+                                      description: Additional attributes for the cookie.
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The name of the cookie attribute.
+                                            type: string
+                                          value:
+                                            description: The optional value of the
+                                              cookie attribute.
+                                            type: string
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
                                     name:
                                       description: Name of the cookie.
                                       type: string
@@ -4314,7 +4458,7 @@ spec:
                                   description: This parameter controls the speed of
                                     traffic increase over the warmup duration.
                                   format: double
-                                  minimum: 1
+                                  minimum: 0
                                   nullable: true
                                   type: number
                                 duration:
@@ -4879,6 +5023,21 @@ spec:
                                 httpCookie:
                                   description: Hash based on HTTP cookie.
                                   properties:
+                                    attributes:
+                                      description: Additional attributes for the cookie.
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The name of the cookie attribute.
+                                            type: string
+                                          value:
+                                            description: The optional value of the
+                                              cookie attribute.
+                                            type: string
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
                                     name:
                                       description: Name of the cookie.
                                       type: string
@@ -4994,7 +5153,7 @@ spec:
                                   description: This parameter controls the speed of
                                     traffic increase over the warmup duration.
                                   format: double
-                                  minimum: 1
+                                  minimum: 0
                                   nullable: true
                                   type: number
                                 duration:
@@ -5242,6 +5401,23 @@ spec:
                                       httpCookie:
                                         description: Hash based on HTTP cookie.
                                         properties:
+                                          attributes:
+                                            description: Additional attributes for
+                                              the cookie.
+                                            items:
+                                              properties:
+                                                name:
+                                                  description: The name of the cookie
+                                                    attribute.
+                                                  type: string
+                                                value:
+                                                  description: The optional value
+                                                    of the cookie attribute.
+                                                  type: string
+                                              required:
+                                              - name
+                                              type: object
+                                            type: array
                                           name:
                                             description: Name of the cookie.
                                             type: string
@@ -5360,7 +5536,7 @@ spec:
                                         description: This parameter controls the speed
                                           of traffic increase over the warmup duration.
                                         format: double
-                                        minimum: 1
+                                        minimum: 0
                                         nullable: true
                                         type: number
                                       duration:
@@ -5782,6 +5958,21 @@ spec:
                           httpCookie:
                             description: Hash based on HTTP cookie.
                             properties:
+                              attributes:
+                                description: Additional attributes for the cookie.
+                                items:
+                                  properties:
+                                    name:
+                                      description: The name of the cookie attribute.
+                                      type: string
+                                    value:
+                                      description: The optional value of the cookie
+                                        attribute.
+                                      type: string
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
                               name:
                                 description: Name of the cookie.
                                 type: string
@@ -5894,7 +6085,7 @@ spec:
                             description: This parameter controls the speed of traffic
                               increase over the warmup duration.
                             format: double
-                            minimum: 1
+                            minimum: 0
                             nullable: true
                             type: number
                           duration:
@@ -6138,6 +6329,21 @@ spec:
                                 httpCookie:
                                   description: Hash based on HTTP cookie.
                                   properties:
+                                    attributes:
+                                      description: Additional attributes for the cookie.
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The name of the cookie attribute.
+                                            type: string
+                                          value:
+                                            description: The optional value of the
+                                              cookie attribute.
+                                            type: string
+                                        required:
+                                        - name
+                                        type: object
+                                      type: array
                                     name:
                                       description: Name of the cookie.
                                       type: string
@@ -6253,7 +6459,7 @@ spec:
                                   description: This parameter controls the speed of
                                     traffic increase over the warmup duration.
                                   format: double
-                                  minimum: 1
+                                  minimum: 0
                                   nullable: true
                                   type: number
                                 duration:
@@ -6620,8 +6826,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: envoyfilters.networking.istio.io
 spec:
   group: networking.istio.io
@@ -6677,12 +6883,16 @@ spec:
                             - routeConfiguration
                           - required:
                             - cluster
+                          - required:
+                            - waypoint
                       - required:
                         - listener
                       - required:
                         - routeConfiguration
                       - required:
                         - cluster
+                      - required:
+                        - waypoint
                       properties:
                         cluster:
                           description: Match on envoy cluster attributes.
@@ -6708,12 +6918,13 @@ spec:
                           description: |-
                             The specific config generation context to match on.
 
-                            Valid Options: ANY, SIDECAR_INBOUND, SIDECAR_OUTBOUND, GATEWAY
+                            Valid Options: ANY, SIDECAR_INBOUND, SIDECAR_OUTBOUND, GATEWAY, WAYPOINT
                           enum:
                           - ANY
                           - SIDECAR_INBOUND
                           - SIDECAR_OUTBOUND
                           - GATEWAY
+                          - WAYPOINT
                           type: string
                         listener:
                           description: Match on envoy listener attributes.
@@ -6843,7 +7054,46 @@ spec:
                                   type: object
                               type: object
                           type: object
+                        waypoint:
+                          properties:
+                            filter:
+                              description: The name of a specific filter to apply
+                                the patch to.
+                              properties:
+                                name:
+                                  description: The filter name to match on.
+                                  type: string
+                                subFilter:
+                                  description: The next level filter within this filter
+                                    to match on.
+                                  properties:
+                                    name:
+                                      description: The filter name to match on.
+                                      type: string
+                                  type: object
+                              type: object
+                            portNumber:
+                              description: The service port to match on.
+                              maximum: 4294967295
+                              minimum: 0
+                              type: integer
+                              x-kubernetes-validations:
+                              - message: port must be between 1-65535
+                                rule: 0 < self && self <= 65535
+                            route:
+                              description: Match a specific route.
+                              properties:
+                                name:
+                                  description: The Route objects generated by default
+                                    are named as default.
+                                  type: string
+                              type: object
+                          type: object
                       type: object
+                      x-kubernetes-validations:
+                      - message: only support waypointMatch when context is WAYPOINT
+                        rule: 'has(self.context) ? ((self.context == "WAYPOINT") ?
+                          has(self.waypoint) : !has(self.waypoint)) : !has(self.waypoint)'
                     patch:
                       description: The patch to apply along with the operation.
                       properties:
@@ -7029,8 +7279,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: gateways.networking.istio.io
 spec:
   group: networking.istio.io
@@ -7107,6 +7357,10 @@ spec:
                       description: Set of TLS related options that govern the server's
                         behavior.
                       properties:
+                        caCertCredentialName:
+                          description: For mutual TLS, the name of the secret or the
+                            configmap that holds CA certificates.
+                          type: string
                         caCertificates:
                           description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
                           type: string
@@ -7378,6 +7632,10 @@ spec:
                       description: Set of TLS related options that govern the server's
                         behavior.
                       properties:
+                        caCertCredentialName:
+                          description: For mutual TLS, the name of the secret or the
+                            configmap that holds CA certificates.
+                          type: string
                         caCertificates:
                           description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
                           type: string
@@ -7649,6 +7907,10 @@ spec:
                       description: Set of TLS related options that govern the server's
                         behavior.
                       properties:
+                        caCertCredentialName:
+                          description: For mutual TLS, the name of the secret or the
+                            configmap that holds CA certificates.
+                          type: string
                         caCertificates:
                           description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
                           type: string
@@ -7870,8 +8132,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: peerauthentications.security.istio.io
 spec:
   group: security.istio.io
@@ -8047,7 +8309,7 @@ spec:
             x-kubernetes-preserve-unknown-fields: true
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -8210,7 +8472,7 @@ spec:
             x-kubernetes-preserve-unknown-fields: true
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 
@@ -8224,8 +8486,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: proxyconfigs.networking.istio.io
 spec:
   group: networking.istio.io
@@ -8378,8 +8640,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: requestauthentications.security.istio.io
 spec:
   group: security.istio.io
@@ -8496,6 +8758,303 @@ spec:
                       description: This field specifies the header name to output
                         a successfully verified JWT payload to the backend.
                       type: string
+                    spaceDelimitedClaims:
+                      description: List of JWT claim names that should be treated
+                        as space-delimited strings.
+                      items:
+                        minLength: 1
+                        type: string
+                      maxItems: 64
+                      type: array
+                    timeout:
+                      description: The maximum amount of time that the resolver, determined
+                        by the PILOT_JWT_ENABLE_REMOTE_JWKS environment variable,
+                        will spend waiting for the JWKS to be fetched.
+                      type: string
+                      x-kubernetes-validations:
+                      - message: must be a valid duration greater than 1ms
+                        rule: duration(self) >= duration('1ms')
+                  type: object
+                  x-kubernetes-validations:
+                  - message: only one of jwks or jwksUri can be set
+                    rule: '(has(self.jwksUri) ? 1 : 0) + (has(self.jwks_uri) ? 1 :
+                      0) + (has(self.jwks) ? 1 : 0) <= 1'
+                maxItems: 4096
+                type: array
+              selector:
+                description: Optional.
+                properties:
+                  matchLabels:
+                    additionalProperties:
+                      maxLength: 63
+                      type: string
+                      x-kubernetes-validations:
+                      - message: wildcard not allowed in label value match
+                        rule: '!self.contains("*")'
+                    description: One or more labels that indicate a specific set of
+                      pods/VMs on which a policy should be applied.
+                    maxProperties: 4096
+                    type: object
+                    x-kubernetes-validations:
+                    - message: wildcard not allowed in label key match
+                      rule: self.all(key, !key.contains("*"))
+                    - message: key must not be empty
+                      rule: self.all(key, key.size() != 0)
+                type: object
+              targetRef:
+                properties:
+                  group:
+                    description: group is the group of the target resource.
+                    maxLength: 253
+                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                  kind:
+                    description: kind is kind of the target resource.
+                    maxLength: 63
+                    minLength: 1
+                    pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                    type: string
+                  name:
+                    description: name is the name of the target resource.
+                    maxLength: 253
+                    minLength: 1
+                    type: string
+                  namespace:
+                    description: namespace is the namespace of the referent.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: cross namespace referencing is not currently supported
+                      rule: self.size() == 0
+                required:
+                - kind
+                - name
+                type: object
+              targetRefs:
+                description: Optional.
+                items:
+                  properties:
+                    group:
+                      description: group is the group of the target resource.
+                      maxLength: 253
+                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    kind:
+                      description: kind is kind of the target resource.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                      type: string
+                    name:
+                      description: name is the name of the target resource.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                    namespace:
+                      description: namespace is the namespace of the referent.
+                      type: string
+                      x-kubernetes-validations:
+                      - message: cross namespace referencing is not currently supported
+                        rule: self.size() == 0
+                  required:
+                  - kind
+                  - name
+                  type: object
+                maxItems: 16
+                type: array
+            type: object
+            x-kubernetes-validations:
+            - message: only one of targetRefs or selector can be set
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
+                + (has(self.targetRefs) ? 1 : 0) <= 1'
+          status:
+            properties:
+              conditions:
+                description: Current service state of the resource.
+                items:
+                  properties:
+                    lastProbeTime:
+                      description: Last time we probed the condition.
+                      format: date-time
+                      type: string
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: Human-readable message indicating details about
+                        last transition.
+                      type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
+                    reason:
+                      description: Unique, one-word, CamelCase reason for the condition's
+                        last transition.
+                      type: string
+                    status:
+                      description: Status is the status of the condition.
+                      type: string
+                    type:
+                      description: Type is the type of the condition.
+                      type: string
+                  type: object
+                type: array
+              observedGeneration:
+                anyOf:
+                - type: integer
+                - type: string
+                x-kubernetes-int-or-string: true
+              validationMessages:
+                description: Includes any errors or warnings detected by Istio's analyzers.
+                items:
+                  properties:
+                    documentationUrl:
+                      description: A url pointing to the Istio documentation for this
+                        specific error type.
+                      type: string
+                    level:
+                      description: |-
+                        Represents how severe a message is.
+
+                        Valid Options: UNKNOWN, ERROR, WARNING, INFO
+                      enum:
+                      - UNKNOWN
+                      - ERROR
+                      - WARNING
+                      - INFO
+                      type: string
+                    type:
+                      properties:
+                        code:
+                          description: A 7 character code matching `^IST[0-9]{4}$`
+                            intended to uniquely identify the message type.
+                          type: string
+                        name:
+                          description: A human-readable name for the message type.
+                          type: string
+                      type: object
+                  type: object
+                type: array
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: 'Request authentication configuration for workloads. See
+              more details at: https://istio.io/docs/reference/config/security/request_authentication.html'
+            properties:
+              jwtRules:
+                description: Define the list of JWTs that can be validated at the
+                  selected workloads' proxy.
+                items:
+                  properties:
+                    audiences:
+                      description: The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3)
+                        that are allowed to access.
+                      items:
+                        minLength: 1
+                        type: string
+                      type: array
+                    forwardOriginalToken:
+                      description: If set to true, the original token will be kept
+                        for the upstream request.
+                      type: boolean
+                    fromCookies:
+                      description: List of cookie names from which JWT is expected.
+                      items:
+                        minLength: 1
+                        type: string
+                      type: array
+                    fromHeaders:
+                      description: List of header locations from which JWT is expected.
+                      items:
+                        properties:
+                          name:
+                            description: The HTTP header name.
+                            minLength: 1
+                            type: string
+                          prefix:
+                            description: The prefix that should be stripped before
+                              decoding the token.
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      type: array
+                    fromParams:
+                      description: List of query parameters from which JWT is expected.
+                      items:
+                        minLength: 1
+                        type: string
+                      type: array
+                    issuer:
+                      description: Identifies the issuer that issued the JWT.
+                      minLength: 1
+                      type: string
+                    jwks:
+                      description: JSON Web Key Set of public keys to validate signature
+                        of the JWT.
+                      type: string
+                    jwks_uri:
+                      description: URL of the provider's public key set to validate
+                        signature of the JWT.
+                      maxLength: 2048
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: url must have scheme http:// or https://
+                        rule: url(self).getScheme() in ["http", "https"]
+                    jwksUri:
+                      description: URL of the provider's public key set to validate
+                        signature of the JWT.
+                      maxLength: 2048
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: url must have scheme http:// or https://
+                        rule: url(self).getScheme() in ["http", "https"]
+                    outputClaimToHeaders:
+                      description: This field specifies a list of operations to copy
+                        the claim to HTTP headers on a successfully verified token.
+                      items:
+                        properties:
+                          claim:
+                            description: The name of the claim to be copied from.
+                            minLength: 1
+                            type: string
+                          header:
+                            description: The name of the header to be created.
+                            minLength: 1
+                            pattern: ^[-_A-Za-z0-9]+$
+                            type: string
+                        required:
+                        - header
+                        - claim
+                        type: object
+                      type: array
+                    outputPayloadToHeader:
+                      description: This field specifies the header name to output
+                        a successfully verified JWT payload to the backend.
+                      type: string
+                    spaceDelimitedClaims:
+                      description: List of JWT claim names that should be treated
+                        as space-delimited strings.
+                      items:
+                        minLength: 1
+                        type: string
+                      maxItems: 64
+                      type: array
                     timeout:
                       description: The maximum amount of time that the resolver, determined
                         by the PILOT_JWT_ENABLE_REMOTE_JWKS environment variable,
@@ -8676,287 +9235,6 @@ spec:
     storage: false
     subresources:
       status: {}
-  - name: v1beta1
-    schema:
-      openAPIV3Schema:
-        properties:
-          spec:
-            description: 'Request authentication configuration for workloads. See
-              more details at: https://istio.io/docs/reference/config/security/request_authentication.html'
-            properties:
-              jwtRules:
-                description: Define the list of JWTs that can be validated at the
-                  selected workloads' proxy.
-                items:
-                  properties:
-                    audiences:
-                      description: The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3)
-                        that are allowed to access.
-                      items:
-                        minLength: 1
-                        type: string
-                      type: array
-                    forwardOriginalToken:
-                      description: If set to true, the original token will be kept
-                        for the upstream request.
-                      type: boolean
-                    fromCookies:
-                      description: List of cookie names from which JWT is expected.
-                      items:
-                        minLength: 1
-                        type: string
-                      type: array
-                    fromHeaders:
-                      description: List of header locations from which JWT is expected.
-                      items:
-                        properties:
-                          name:
-                            description: The HTTP header name.
-                            minLength: 1
-                            type: string
-                          prefix:
-                            description: The prefix that should be stripped before
-                              decoding the token.
-                            type: string
-                        required:
-                        - name
-                        type: object
-                      type: array
-                    fromParams:
-                      description: List of query parameters from which JWT is expected.
-                      items:
-                        minLength: 1
-                        type: string
-                      type: array
-                    issuer:
-                      description: Identifies the issuer that issued the JWT.
-                      minLength: 1
-                      type: string
-                    jwks:
-                      description: JSON Web Key Set of public keys to validate signature
-                        of the JWT.
-                      type: string
-                    jwks_uri:
-                      description: URL of the provider's public key set to validate
-                        signature of the JWT.
-                      maxLength: 2048
-                      minLength: 1
-                      type: string
-                      x-kubernetes-validations:
-                      - message: url must have scheme http:// or https://
-                        rule: url(self).getScheme() in ["http", "https"]
-                    jwksUri:
-                      description: URL of the provider's public key set to validate
-                        signature of the JWT.
-                      maxLength: 2048
-                      minLength: 1
-                      type: string
-                      x-kubernetes-validations:
-                      - message: url must have scheme http:// or https://
-                        rule: url(self).getScheme() in ["http", "https"]
-                    outputClaimToHeaders:
-                      description: This field specifies a list of operations to copy
-                        the claim to HTTP headers on a successfully verified token.
-                      items:
-                        properties:
-                          claim:
-                            description: The name of the claim to be copied from.
-                            minLength: 1
-                            type: string
-                          header:
-                            description: The name of the header to be created.
-                            minLength: 1
-                            pattern: ^[-_A-Za-z0-9]+$
-                            type: string
-                        required:
-                        - header
-                        - claim
-                        type: object
-                      type: array
-                    outputPayloadToHeader:
-                      description: This field specifies the header name to output
-                        a successfully verified JWT payload to the backend.
-                      type: string
-                    timeout:
-                      description: The maximum amount of time that the resolver, determined
-                        by the PILOT_JWT_ENABLE_REMOTE_JWKS environment variable,
-                        will spend waiting for the JWKS to be fetched.
-                      type: string
-                      x-kubernetes-validations:
-                      - message: must be a valid duration greater than 1ms
-                        rule: duration(self) >= duration('1ms')
-                  type: object
-                  x-kubernetes-validations:
-                  - message: only one of jwks or jwksUri can be set
-                    rule: '(has(self.jwksUri) ? 1 : 0) + (has(self.jwks_uri) ? 1 :
-                      0) + (has(self.jwks) ? 1 : 0) <= 1'
-                maxItems: 4096
-                type: array
-              selector:
-                description: Optional.
-                properties:
-                  matchLabels:
-                    additionalProperties:
-                      maxLength: 63
-                      type: string
-                      x-kubernetes-validations:
-                      - message: wildcard not allowed in label value match
-                        rule: '!self.contains("*")'
-                    description: One or more labels that indicate a specific set of
-                      pods/VMs on which a policy should be applied.
-                    maxProperties: 4096
-                    type: object
-                    x-kubernetes-validations:
-                    - message: wildcard not allowed in label key match
-                      rule: self.all(key, !key.contains("*"))
-                    - message: key must not be empty
-                      rule: self.all(key, key.size() != 0)
-                type: object
-              targetRef:
-                properties:
-                  group:
-                    description: group is the group of the target resource.
-                    maxLength: 253
-                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
-                    type: string
-                  kind:
-                    description: kind is kind of the target resource.
-                    maxLength: 63
-                    minLength: 1
-                    pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
-                    type: string
-                  name:
-                    description: name is the name of the target resource.
-                    maxLength: 253
-                    minLength: 1
-                    type: string
-                  namespace:
-                    description: namespace is the namespace of the referent.
-                    type: string
-                    x-kubernetes-validations:
-                    - message: cross namespace referencing is not currently supported
-                      rule: self.size() == 0
-                required:
-                - kind
-                - name
-                type: object
-              targetRefs:
-                description: Optional.
-                items:
-                  properties:
-                    group:
-                      description: group is the group of the target resource.
-                      maxLength: 253
-                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
-                      type: string
-                    kind:
-                      description: kind is kind of the target resource.
-                      maxLength: 63
-                      minLength: 1
-                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
-                      type: string
-                    name:
-                      description: name is the name of the target resource.
-                      maxLength: 253
-                      minLength: 1
-                      type: string
-                    namespace:
-                      description: namespace is the namespace of the referent.
-                      type: string
-                      x-kubernetes-validations:
-                      - message: cross namespace referencing is not currently supported
-                        rule: self.size() == 0
-                  required:
-                  - kind
-                  - name
-                  type: object
-                maxItems: 16
-                type: array
-            type: object
-            x-kubernetes-validations:
-            - message: only one of targetRefs or selector can be set
-              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRef) ? 1 : 0)
-                + (has(self.targetRefs) ? 1 : 0) <= 1'
-          status:
-            properties:
-              conditions:
-                description: Current service state of the resource.
-                items:
-                  properties:
-                    lastProbeTime:
-                      description: Last time we probed the condition.
-                      format: date-time
-                      type: string
-                    lastTransitionTime:
-                      description: Last time the condition transitioned from one status
-                        to another.
-                      format: date-time
-                      type: string
-                    message:
-                      description: Human-readable message indicating details about
-                        last transition.
-                      type: string
-                    observedGeneration:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      description: Resource Generation to which the Condition refers.
-                      x-kubernetes-int-or-string: true
-                    reason:
-                      description: Unique, one-word, CamelCase reason for the condition's
-                        last transition.
-                      type: string
-                    status:
-                      description: Status is the status of the condition.
-                      type: string
-                    type:
-                      description: Type is the type of the condition.
-                      type: string
-                  type: object
-                type: array
-              observedGeneration:
-                anyOf:
-                - type: integer
-                - type: string
-                x-kubernetes-int-or-string: true
-              validationMessages:
-                description: Includes any errors or warnings detected by Istio's analyzers.
-                items:
-                  properties:
-                    documentationUrl:
-                      description: A url pointing to the Istio documentation for this
-                        specific error type.
-                      type: string
-                    level:
-                      description: |-
-                        Represents how severe a message is.
-
-                        Valid Options: UNKNOWN, ERROR, WARNING, INFO
-                      enum:
-                      - UNKNOWN
-                      - ERROR
-                      - WARNING
-                      - INFO
-                      type: string
-                    type:
-                      properties:
-                        code:
-                          description: A 7 character code matching `^IST[0-9]{4}$`
-                            intended to uniquely identify the message type.
-                          type: string
-                        name:
-                          description: A human-readable name for the message type.
-                          type: string
-                      type: object
-                  type: object
-                type: array
-            type: object
-            x-kubernetes-preserve-unknown-fields: true
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
 
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -8968,8 +9246,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: serviceentries.networking.istio.io
 spec:
   group: networking.istio.io
@@ -9155,12 +9433,13 @@ spec:
                 description: |-
                   Service resolution mode for the hosts.
 
-                  Valid Options: NONE, STATIC, DNS, DNS_ROUND_ROBIN
+                  Valid Options: NONE, STATIC, DNS, DNS_ROUND_ROBIN, DYNAMIC_DNS
                 enum:
                 - NONE
                 - STATIC
                 - DNS
                 - DNS_ROUND_ROBIN
+                - DYNAMIC_DNS
                 type: string
               subjectAltNames:
                 description: If specified, the proxy will verify that the server certificate's
@@ -9453,12 +9732,13 @@ spec:
                 description: |-
                   Service resolution mode for the hosts.
 
-                  Valid Options: NONE, STATIC, DNS, DNS_ROUND_ROBIN
+                  Valid Options: NONE, STATIC, DNS, DNS_ROUND_ROBIN, DYNAMIC_DNS
                 enum:
                 - NONE
                 - STATIC
                 - DNS
                 - DNS_ROUND_ROBIN
+                - DYNAMIC_DNS
                 type: string
               subjectAltNames:
                 description: If specified, the proxy will verify that the server certificate's
@@ -9751,12 +10031,13 @@ spec:
                 description: |-
                   Service resolution mode for the hosts.
 
-                  Valid Options: NONE, STATIC, DNS, DNS_ROUND_ROBIN
+                  Valid Options: NONE, STATIC, DNS, DNS_ROUND_ROBIN, DYNAMIC_DNS
                 enum:
                 - NONE
                 - STATIC
                 - DNS
                 - DNS_ROUND_ROBIN
+                - DYNAMIC_DNS
                 type: string
               subjectAltNames:
                 description: If specified, the proxy will verify that the server certificate's
@@ -9890,8 +10171,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: sidecars.networking.istio.io
 spec:
   group: networking.istio.io
@@ -10220,6 +10501,10 @@ spec:
                         termination on the sidecar for requests originating from outside
                         the mesh.
                       properties:
+                        caCertCredentialName:
+                          description: For mutual TLS, the name of the secret or the
+                            configmap that holds CA certificates.
+                          type: string
                         caCertificates:
                           description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
                           type: string
@@ -10794,6 +11079,10 @@ spec:
                         termination on the sidecar for requests originating from outside
                         the mesh.
                       properties:
+                        caCertCredentialName:
+                          description: For mutual TLS, the name of the secret or the
+                            configmap that holds CA certificates.
+                          type: string
                         caCertificates:
                           description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
                           type: string
@@ -11368,6 +11657,10 @@ spec:
                         termination on the sidecar for requests originating from outside
                         the mesh.
                       properties:
+                        caCertCredentialName:
+                          description: For mutual TLS, the name of the secret or the
+                            configmap that holds CA certificates.
+                          type: string
                         caCertificates:
                           description: REQUIRED if mode is `MUTUAL` or `OPTIONAL_MUTUAL`.
                           type: string
@@ -11638,8 +11931,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: telemetries.telemetry.istio.io
 spec:
   group: telemetry.istio.io
@@ -11919,12 +12212,16 @@ spec:
                               - environment
                             - required:
                               - header
+                            - required:
+                              - formatter
                         - required:
                           - literal
                         - required:
                           - environment
                         - required:
                           - header
+                        - required:
+                          - formatter
                         properties:
                           environment:
                             description: Environment adds the value of an environment
@@ -11940,6 +12237,18 @@ spec:
                                 type: string
                             required:
                             - name
+                            type: object
+                          formatter:
+                            description: Formatter adds the value of access logging
+                              substitution formatter.
+                            properties:
+                              value:
+                                description: The formatter tag value to use, same
+                                  formatter as HTTP access logging (e.g.
+                                minLength: 1
+                                type: string
+                            required:
+                            - value
                             type: object
                           header:
                             description: RequestHeader adds the value of an header
@@ -11970,6 +12279,12 @@ spec:
                         type: object
                       description: Optional.
                       type: object
+                    disableContextPropagation:
+                      description: Controls whether trace context headers (e.g., `traceparent`/`tracestate`
+                        for W3C, `X-B3-*` for Zipkin) are propagated in forwarded
+                        requests.
+                      nullable: true
+                      type: boolean
                     disableSpanReporting:
                       description: Controls span reporting.
                       nullable: true
@@ -12367,12 +12682,16 @@ spec:
                               - environment
                             - required:
                               - header
+                            - required:
+                              - formatter
                         - required:
                           - literal
                         - required:
                           - environment
                         - required:
                           - header
+                        - required:
+                          - formatter
                         properties:
                           environment:
                             description: Environment adds the value of an environment
@@ -12388,6 +12707,18 @@ spec:
                                 type: string
                             required:
                             - name
+                            type: object
+                          formatter:
+                            description: Formatter adds the value of access logging
+                              substitution formatter.
+                            properties:
+                              value:
+                                description: The formatter tag value to use, same
+                                  formatter as HTTP access logging (e.g.
+                                minLength: 1
+                                type: string
+                            required:
+                            - value
                             type: object
                           header:
                             description: RequestHeader adds the value of an header
@@ -12418,6 +12749,12 @@ spec:
                         type: object
                       description: Optional.
                       type: object
+                    disableContextPropagation:
+                      description: Controls whether trace context headers (e.g., `traceparent`/`tracestate`
+                        for W3C, `X-B3-*` for Zipkin) are propagated in forwarded
+                        requests.
+                      nullable: true
+                      type: boolean
                     disableSpanReporting:
                       description: Controls span reporting.
                       nullable: true
@@ -12562,8 +12899,371 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
+  name: trafficextensions.extensions.istio.io
+spec:
+  group: extensions.istio.io
+  names:
+    categories:
+    - istio-io
+    - extensions-istio-io
+    kind: TrafficExtension
+    listKind: TrafficExtensionList
+    plural: trafficextensions
+    singular: trafficextension
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: 'CreationTimestamp is a timestamp representing the server time
+        when this object was created. It is not guaranteed to be set in happens-before
+        order across separate operations. Clients may not set this value. It is represented
+        in RFC3339 form and is in UTC. Populated by the system. Read-only. Null for
+        lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata'
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: 'Extend the functionality provided by the Istio proxy through
+              WebAssembly or Lua filters. See more details at: https://istio.io/docs/reference/config/proxy_extensions/traffic_extension.html'
+            oneOf:
+            - not:
+                anyOf:
+                - required:
+                  - wasm
+                - required:
+                  - lua
+            - required:
+              - wasm
+            - required:
+              - lua
+            properties:
+              lua:
+                description: Lua filter configuration.
+                properties:
+                  inlineCode:
+                    description: The inline Lua code to be executed.
+                    maxLength: 65536
+                    minLength: 1
+                    type: string
+                required:
+                - inlineCode
+                type: object
+              match:
+                description: Specifies the criteria to determine which traffic is
+                  passed to TrafficExtension.
+                items:
+                  properties:
+                    mode:
+                      description: |-
+                        Criteria for selecting traffic by their direction.
+
+                        Valid Options: CLIENT, SERVER, CLIENT_AND_SERVER
+                      enum:
+                      - UNDEFINED
+                      - CLIENT
+                      - SERVER
+                      - CLIENT_AND_SERVER
+                      type: string
+                    ports:
+                      description: Criteria for selecting traffic by their destination
+                        port.
+                      items:
+                        properties:
+                          number:
+                            maximum: 65535
+                            minimum: 1
+                            type: integer
+                        required:
+                        - number
+                        type: object
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - number
+                      x-kubernetes-list-type: map
+                  type: object
+                type: array
+              phase:
+                description: |-
+                  Determines where in the filter chain this `TrafficExtension` is to be injected.
+
+                  Valid Options: AUTHN, AUTHZ, STATS
+                enum:
+                - UNSPECIFIED
+                - AUTHN
+                - AUTHZ
+                - STATS
+                type: string
+              priority:
+                description: Determines ordering of `TrafficExtensions` in the same
+                  `phase`.
+                format: int32
+                nullable: true
+                type: integer
+              selector:
+                description: Optional.
+                properties:
+                  matchLabels:
+                    additionalProperties:
+                      maxLength: 63
+                      type: string
+                      x-kubernetes-validations:
+                      - message: wildcard not allowed in label value match
+                        rule: '!self.contains("*")'
+                    description: One or more labels that indicate a specific set of
+                      pods/VMs on which a policy should be applied.
+                    maxProperties: 4096
+                    type: object
+                    x-kubernetes-validations:
+                    - message: wildcard not allowed in label key match
+                      rule: self.all(key, !key.contains("*"))
+                    - message: key must not be empty
+                      rule: self.all(key, key.size() != 0)
+                type: object
+              targetRefs:
+                description: Optional.
+                items:
+                  properties:
+                    group:
+                      description: group is the group of the target resource.
+                      maxLength: 253
+                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    kind:
+                      description: kind is kind of the target resource.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                      type: string
+                    name:
+                      description: name is the name of the target resource.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                    namespace:
+                      description: namespace is the namespace of the referent.
+                      type: string
+                      x-kubernetes-validations:
+                      - message: cross namespace referencing is not currently supported
+                        rule: self.size() == 0
+                  required:
+                  - kind
+                  - name
+                  type: object
+                maxItems: 16
+                type: array
+              wasm:
+                description: WebAssembly filter configuration.
+                properties:
+                  failStrategy:
+                    description: |-
+                      Specifies the failure behavior for the plugin due to fatal errors.
+
+                      Valid Options: FAIL_CLOSE, FAIL_OPEN, FAIL_RELOAD
+                    enum:
+                    - FAIL_CLOSE
+                    - FAIL_OPEN
+                    - FAIL_RELOAD
+                    type: string
+                  imagePullPolicy:
+                    description: |-
+                      The pull behaviour to be applied when fetching Wasm module by either OCI image or `http/https`.
+
+                      Valid Options: IfNotPresent, Always
+                    enum:
+                    - UNSPECIFIED_POLICY
+                    - IfNotPresent
+                    - Always
+                    type: string
+                  imagePullSecret:
+                    description: Credentials to use for OCI image pulling.
+                    maxLength: 253
+                    minLength: 1
+                    type: string
+                  pluginConfig:
+                    description: The configuration that will be passed on to the plugin.
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  pluginName:
+                    description: The plugin name to be used in the Envoy configuration
+                      (used to be called `rootID`).
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  sha256:
+                    description: SHA256 checksum that will be used to verify Wasm
+                      module or OCI container.
+                    pattern: (^$|^[a-f0-9]{64}$)
+                    type: string
+                  type:
+                    description: |-
+                      Specifies the type of Wasm Extension to be used.
+
+                      Valid Options: HTTP, NETWORK
+                    enum:
+                    - UNSPECIFIED_PLUGIN_TYPE
+                    - HTTP
+                    - NETWORK
+                    type: string
+                  url:
+                    description: URL of a Wasm module or OCI container.
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: url must have schema one of [http, https, file, oci]
+                      rule: |-
+                        isURL(self) ? (url(self).getScheme() in ["", "http", "https", "file", "oci"]) : (isURL("http://" + self) &&
+                        url("http://" + self).getScheme() in ["", "http", "https", "file", "oci"])
+                  verificationKey:
+                    type: string
+                  vmConfig:
+                    description: Configuration for a Wasm VM.
+                    properties:
+                      env:
+                        description: Specifies environment variables to be injected
+                          to this VM.
+                        items:
+                          properties:
+                            name:
+                              description: Name of the environment variable.
+                              maxLength: 256
+                              minLength: 1
+                              type: string
+                            value:
+                              description: Value for the environment variable.
+                              maxLength: 2048
+                              type: string
+                            valueFrom:
+                              description: |-
+                                Source for the environment variable's value.
+
+                                Valid Options: INLINE, HOST
+                              enum:
+                              - INLINE
+                              - HOST
+                              type: string
+                          required:
+                          - name
+                          type: object
+                          x-kubernetes-validations:
+                          - message: value may only be set when valueFrom is INLINE
+                            rule: '(has(self.valueFrom) ? self.valueFrom : "") !=
+                              "HOST" || !has(self.value)'
+                        maxItems: 256
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                    type: object
+                required:
+                - url
+                type: object
+            type: object
+            x-kubernetes-validations:
+            - message: only one of targetRefs or selector can be set
+              rule: '(has(self.selector) ? 1 : 0) + (has(self.targetRefs) ? 1 : 0)
+                <= 1'
+            - message: exactly one of wasm or lua must be set
+              rule: has(self.wasm) != has(self.lua)
+          status:
+            properties:
+              conditions:
+                description: Current service state of the resource.
+                items:
+                  properties:
+                    lastProbeTime:
+                      description: Last time we probed the condition.
+                      format: date-time
+                      type: string
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: Human-readable message indicating details about
+                        last transition.
+                      type: string
+                    observedGeneration:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: Resource Generation to which the Condition refers.
+                      x-kubernetes-int-or-string: true
+                    reason:
+                      description: Unique, one-word, CamelCase reason for the condition's
+                        last transition.
+                      type: string
+                    status:
+                      description: Status is the status of the condition.
+                      type: string
+                    type:
+                      description: Type is the type of the condition.
+                      type: string
+                  type: object
+                type: array
+              observedGeneration:
+                anyOf:
+                - type: integer
+                - type: string
+                x-kubernetes-int-or-string: true
+              validationMessages:
+                description: Includes any errors or warnings detected by Istio's analyzers.
+                items:
+                  properties:
+                    documentationUrl:
+                      description: A url pointing to the Istio documentation for this
+                        specific error type.
+                      type: string
+                    level:
+                      description: |-
+                        Represents how severe a message is.
+
+                        Valid Options: UNKNOWN, ERROR, WARNING, INFO
+                      enum:
+                      - UNKNOWN
+                      - ERROR
+                      - WARNING
+                      - INFO
+                      type: string
+                    type:
+                      properties:
+                        code:
+                          description: A 7 character code matching `^IST[0-9]{4}$`
+                            intended to uniquely identify the message type.
+                          type: string
+                        name:
+                          description: A human-readable name for the message type.
+                          type: string
+                      type: object
+                  type: object
+                type: array
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    helm.sh/resource-policy: keep
+  labels:
+    app.kubernetes.io/instance: istio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: istio
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: virtualservices.networking.istio.io
 spec:
   group: networking.istio.io
@@ -12733,7 +13433,7 @@ spec:
                           properties:
                             bytes:
                               description: response body as base64 encoded bytes.
-                              format: binary
+                              format: byte
                               type: string
                             string:
                               type: string
@@ -13785,7 +14485,7 @@ spec:
                           properties:
                             bytes:
                               description: response body as base64 encoded bytes.
-                              format: binary
+                              format: byte
                               type: string
                             string:
                               type: string
@@ -14837,7 +15537,7 @@ spec:
                           properties:
                             bytes:
                               description: response body as base64 encoded bytes.
-                              format: binary
+                              format: byte
                               type: string
                             string:
                               type: string
@@ -15746,8 +16446,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: wasmplugins.extensions.istio.io
 spec:
   group: extensions.istio.io
@@ -16109,8 +16809,8 @@ metadata:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: workloadentries.networking.istio.io
 spec:
   group: networking.istio.io
@@ -16611,12 +17311,14 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    helm.sh/resource-policy: keep
   labels:
     app.kubernetes.io/instance: istio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
   name: workloadgroups.networking.istio.io
 spec:
   group: networking.istio.io
@@ -17567,8 +18269,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -17587,8 +18289,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-reader
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: base-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: base-1.0.0
     release: istio
   name: istio-reader-service-account
   namespace: istio-system
@@ -17603,8 +18305,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod
   namespace: istio-system
@@ -17619,8 +18321,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-reader
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istio-reader-clusterrole-istio-system
 rules:
@@ -17648,6 +18350,7 @@ rules:
   - replicationcontrollers
   - namespaces
   - secrets
+  - configmaps
   verbs:
   - get
   - list
@@ -17734,8 +18437,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-clusterrole-istio-system
 rules:
@@ -17899,7 +18602,6 @@ rules:
   - gateway.networking.x-k8s.io
   resources:
   - xbackendtrafficpolicies/status
-  - xlistenersets/status
   verbs:
   - update
   - patch
@@ -17915,6 +18617,7 @@ rules:
   - tcproutes/status
   - tlsroutes/status
   - udproutes/status
+  - listenersets/status
   verbs:
   - update
   - patch
@@ -17928,7 +18631,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - inference.networking.x-k8s.io
+  - inference.networking.k8s.io
   resources:
   - inferencepools
   verbs:
@@ -17936,7 +18639,7 @@ rules:
   - watch
   - list
 - apiGroups:
-  - inference.networking.x-k8s.io
+  - inference.networking.k8s.io
   resources:
   - inferencepools/status
   verbs:
@@ -17979,8 +18682,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-gateway-controller-istio-system
 rules:
@@ -18055,8 +18758,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-reader
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istio-reader-clusterrole-istio-system
 roleRef:
@@ -18078,8 +18781,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-clusterrole-istio-system
 roleRef:
@@ -18101,8 +18804,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod-gateway-controller-istio-system
 roleRef:
@@ -18124,8 +18827,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     istio: istiod
     istio.io/rev: default
     release: istio
@@ -18186,8 +18889,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -18215,24 +18918,24 @@ data:
             {{- if or (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory`) }}
               requests:
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU`) -}}
-                cpu: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU` }}"
+                cpu: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU` | quote }}
                 {{ end }}
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory`) -}}
-                memory: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory` }}"
+                memory: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory` | quote }}
                 {{ end }}
             {{- end }}
             {{- if or (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit`) }}
               limits:
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit`) -}}
-                cpu: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit` }}"
+                cpu: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit` | quote }}
                 {{ end }}
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit`) -}}
-                memory: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit` }}"
+                memory: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit` | quote }}
                 {{ end }}
             {{- end }}
           {{- else }}
             {{- if .Values.global.proxy.resources }}
-              {{ toYaml .Values.global.proxy.resources | indent 6 }}
+              {{ toYaml (omitNil .Values.global.proxy.resources) | indent 6 }}
             {{- end }}
           {{- end }}
         {{- end }}
@@ -18387,6 +19090,10 @@ data:
               runAsUser: {{ if $tproxy }} 1337 {{ else }} {{ .ProxyUID | default "1337" }} {{ end }}
               runAsNonRoot: true
             {{- end }}
+            {{- if .Values.global.proxy.seccompProfile }}
+              seccompProfile:
+            {{- toYaml .Values.global.proxy.seccompProfile | nindent 8 }}
+            {{- end }}
           {{ end -}}
           {{ end -}}
           {{ if not $nativeSidecar }}
@@ -18479,6 +19186,7 @@ data:
               valueFrom:
                 resourceFieldRef:
                   resource: limits.cpu
+                  divisor: "1"
             - name: PROXY_CONFIG
               value: |
                      {{ protoToJSON .ProxyConfig }}
@@ -18501,10 +19209,12 @@ data:
               valueFrom:
                 resourceFieldRef:
                   resource: limits.memory
+                  divisor: "1"
             - name: GOMAXPROCS
               valueFrom:
                 resourceFieldRef:
                   resource: limits.cpu
+                  divisor: "1"
             {{- if .CompliancePolicy }}
             - name: COMPLIANCE_POLICY
               value: "{{ .CompliancePolicy }}"
@@ -18549,6 +19259,11 @@ data:
             - name: {{ $key }}
               value: "{{ $value }}"
             {{- end }}
+            {{- end }}
+            {{- $otelResAttrs := otelResourceAttributes .MeshConfig .ObjectMeta.Annotations .ObjectMeta.Labels .DeploymentMeta.Namespace .Spec.Containers }}
+            {{- if $otelResAttrs }}
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "{{ $otelResAttrs }}"
             {{- end }}
             {{- range $key, $value := .ProxyConfig.ProxyMetadata }}
             - name: {{ $key }}
@@ -18614,6 +19329,10 @@ data:
               runAsGroup: {{ .ProxyGID | default "1337" }}
               {{- end }}
               {{- end }}
+            {{- if .Values.global.proxy.seccompProfile }}
+              seccompProfile:
+            {{- toYaml .Values.global.proxy.seccompProfile | nindent 8 }}
+            {{- end }}
             resources:
           {{ template "resources" . }}
             volumeMounts:
@@ -18720,7 +19439,7 @@ data:
           {{- end }}
           - name: istio-ca-crl
             configMap:
-              name: istio-ca-crl
+              name: {{ .Values.pilot.crlConfigMapName | default "istio-ca-crl" }}
               optional: true
           {{- if .Values.global.mountMtlsCerts }}
           # Use the key and cert mounted to /etc/certs/ for the in-cluster mTLS communications.
@@ -18842,6 +19561,7 @@ data:
               valueFrom:
                 resourceFieldRef:
                   resource: limits.cpu
+                  divisor: "1"
             - name: PROXY_CONFIG
               value: |
                      {{ protoToJSON .ProxyConfig }}
@@ -18862,10 +19582,12 @@ data:
               valueFrom:
                 resourceFieldRef:
                   resource: limits.memory
+                  divisor: "1"
             - name: GOMAXPROCS
               valueFrom:
                 resourceFieldRef:
                   resource: limits.cpu
+                  divisor: "1"
             {{- if .CompliancePolicy }}
             - name: COMPLIANCE_POLICY
               value: "{{ .CompliancePolicy }}"
@@ -19098,24 +19820,24 @@ data:
             {{- if or (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory`) }}
               requests:
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU`) -}}
-                cpu: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU` }}"
+                cpu: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU` | quote }}
                 {{ end }}
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory`) -}}
-                memory: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory` }}"
+                memory: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory` | quote }}
                 {{ end }}
             {{- end }}
             {{- if or (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit`) }}
               limits:
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit`) -}}
-                cpu: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit` }}"
+                cpu: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit` | quote }}
                 {{ end }}
                 {{ if (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit`) -}}
-                memory: "{{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit` }}"
+                memory: {{ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit` | quote }}
                 {{ end }}
             {{- end }}
           {{- else }}
             {{- if .Values.global.proxy.resources }}
-              {{ toYaml .Values.global.proxy.resources | indent 6 }}
+              {{ toYaml (omitNil .Values.global.proxy.resources) | indent 6 }}
             {{- end }}
           {{- end }}
         {{- end }}
@@ -19424,11 +20146,12 @@ data:
               .InfrastructureLabels
               (strdict
                 "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
               ) | nindent 4 }}
           {{- if ge .KubeVersion 128 }}
           # Safe since 1.28: https://github.com/kubernetes/kubernetes/pull/117412
           ownerReferences:
-          - apiVersion: gateway.networking.k8s.io/v1beta1
+          - apiVersion: gateway.networking.k8s.io/v1
             kind: Gateway
             name: "{{.Name}}"
             uid: "{{.UID}}"
@@ -19446,10 +20169,11 @@ data:
               .InfrastructureLabels
               (strdict
                 "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                 "gateway.istio.io/managed" .ControllerLabel
               ) | nindent 4 }}
           ownerReferences:
-          - apiVersion: gateway.networking.k8s.io/v1beta1
+          - apiVersion: gateway.networking.k8s.io/v1
             kind: Gateway
             name: "{{.Name}}"
             uid: "{{.UID}}"
@@ -19479,6 +20203,7 @@ data:
                   .InfrastructureLabels
                   (strdict
                     "gateway.networking.k8s.io/gateway-name" .Name
+                    "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                     "gateway.istio.io/managed" .ControllerLabel
                   ) | nindent 8}}
             spec:
@@ -19498,7 +20223,6 @@ data:
               tolerations:
               {{- toYaml .Values.global.waypoint.tolerations | nindent 8 }}
               {{- end }}
-              terminationGracePeriodSeconds: 2
               serviceAccountName: {{.ServiceAccount | quote}}
               containers:
               - name: istio-proxy
@@ -19578,6 +20302,7 @@ data:
                   valueFrom:
                     resourceFieldRef:
                       resource: limits.cpu
+                      divisor: "1"
                 - name: PROXY_CONFIG
                   value: |
                          {{ protoToJSON .ProxyConfig }}
@@ -19591,16 +20316,22 @@ data:
                   valueFrom:
                     resourceFieldRef:
                       resource: limits.memory
+                      divisor: "1"
                 - name: GOMAXPROCS
                   valueFrom:
                     resourceFieldRef:
                       resource: limits.cpu
+                      divisor: "1"
                 - name: ISTIO_META_CLUSTER_ID
                   value: "{{ valueOrDefault .Values.global.multiCluster.clusterName `Kubernetes` }}"
                 {{- $network := valueOrDefault (index .InfrastructureLabels `topology.istio.io/network`) .Values.global.network }}
                 {{- if $network }}
                 - name: ISTIO_META_NETWORK
                   value: "{{ $network }}"
+                {{- if eq .ControllerLabel "istio.io-eastwest-controller" }}
+                - name: ISTIO_META_REQUESTED_NETWORK_VIEW
+                  value: "{{ $network }}"
+                {{- end }}
                 {{- end }}
                 - name: ISTIO_META_INTERCEPTION_MODE
                   value: REDIRECT
@@ -19621,7 +20352,7 @@ data:
                 {{- end }}
                 {{- if .Values.global.waypoint.resources }}
                 resources:
-                {{- toYaml .Values.global.waypoint.resources | nindent 10 }}
+                {{- toYaml (omitNil .Values.global.waypoint.resources) | nindent 10 }}
                 {{- end }}
                 startupProbe:
                   failureThreshold: 30
@@ -19736,11 +20467,12 @@ data:
               .InfrastructureLabels
               (strdict
                 "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
               ) | nindent 4 }}
           name: {{.DeploymentName | quote}}
           namespace: {{.Namespace | quote}}
           ownerReferences:
-          - apiVersion: gateway.networking.k8s.io/v1beta1
+          - apiVersion: gateway.networking.k8s.io/v1
             kind: Gateway
             name: "{{.Name}}"
             uid: "{{.UID}}"
@@ -19772,9 +20504,10 @@ data:
                   .InfrastructureLabels
                   (strdict
                   "gateway.networking.k8s.io/gateway-name" .Name
+                  "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                   ) | nindent 4 }}
           ownerReferences:
-            - apiVersion: gateway.networking.k8s.io/v1beta1
+            - apiVersion: gateway.networking.k8s.io/v1
               kind: Gateway
               name: {{.Name}}
               uid: "{{.UID}}"
@@ -19797,9 +20530,10 @@ data:
                   .InfrastructureLabels
                   (strdict
                   "gateway.networking.k8s.io/gateway-name" .Name
+                  "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                   ) | nindent 4 }}
           ownerReferences:
-            - apiVersion: gateway.networking.k8s.io/v1beta1
+            - apiVersion: gateway.networking.k8s.io/v1
               kind: Gateway
               name: {{.Name}}
               uid: "{{.UID}}"
@@ -19820,11 +20554,12 @@ data:
               .InfrastructureLabels
               (strdict
                 "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
               ) | nindent 4 }}
           {{- if ge .KubeVersion 128 }}
           # Safe since 1.28: https://github.com/kubernetes/kubernetes/pull/117412
           ownerReferences:
-          - apiVersion: gateway.networking.k8s.io/v1beta1
+          - apiVersion: gateway.networking.k8s.io/v1
             kind: Gateway
             name: "{{.Name}}"
             uid: "{{.UID}}"
@@ -19842,10 +20577,11 @@ data:
               .InfrastructureLabels
               (strdict
                 "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                 "gateway.istio.io/managed" "istio.io-gateway-controller"
               ) | nindent 4 }}
           ownerReferences:
-          - apiVersion: gateway.networking.k8s.io/v1beta1
+          - apiVersion: gateway.networking.k8s.io/v1
             kind: Gateway
             name: {{.Name}}
             uid: "{{.UID}}"
@@ -19874,6 +20610,7 @@ data:
                   .InfrastructureLabels
                   (strdict
                     "gateway.networking.k8s.io/gateway-name" .Name
+                    "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                     "gateway.istio.io/managed" "istio.io-gateway-controller"
                   ) | nindent 8 }}
             spec:
@@ -19899,7 +20636,7 @@ data:
               {{- end }}
                 {{- if .Values.global.proxy.resources }}
                 resources:
-                  {{- toYaml .Values.global.proxy.resources | nindent 10 }}
+                  {{- toYaml (omitNil .Values.global.proxy.resources) | nindent 10 }}
                 {{- end }}
                 {{with .Values.global.imagePullPolicy }}imagePullPolicy: "{{.}}"{{end}}
                 securityContext:
@@ -19976,6 +20713,7 @@ data:
                   valueFrom:
                     resourceFieldRef:
                       resource: limits.cpu
+                      divisor: "1"
                 - name: PROXY_CONFIG
                   value: |
                          {{ protoToJSON .ProxyConfig }}
@@ -19987,10 +20725,12 @@ data:
                   valueFrom:
                     resourceFieldRef:
                       resource: limits.memory
+                      divisor: "1"
                 - name: GOMAXPROCS
                   valueFrom:
                     resourceFieldRef:
                       resource: limits.cpu
+                      divisor: "1"
                 - name: ISTIO_META_CLUSTER_ID
                   value: "{{ valueOrDefault .Values.global.multiCluster.clusterName .ClusterID }}"
                 - name: ISTIO_META_NODE_NAME
@@ -20137,11 +20877,12 @@ data:
               .InfrastructureLabels
               (strdict
                 "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
               ) | nindent 4 }}
           name: {{.DeploymentName | quote}}
           namespace: {{.Namespace | quote}}
           ownerReferences:
-          - apiVersion: gateway.networking.k8s.io/v1beta1
+          - apiVersion: gateway.networking.k8s.io/v1
             kind: Gateway
             name: {{.Name}}
             uid: {{.UID}}
@@ -20173,9 +20914,10 @@ data:
                   .InfrastructureLabels
                   (strdict
                   "gateway.networking.k8s.io/gateway-name" .Name
+                  "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                   ) | nindent 4 }}
           ownerReferences:
-            - apiVersion: gateway.networking.k8s.io/v1beta1
+            - apiVersion: gateway.networking.k8s.io/v1
               kind: Gateway
               name: {{.Name}}
               uid: "{{.UID}}"
@@ -20198,9 +20940,333 @@ data:
                   .InfrastructureLabels
                   (strdict
                   "gateway.networking.k8s.io/gateway-name" .Name
+                  "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
                   ) | nindent 4 }}
           ownerReferences:
-            - apiVersion: gateway.networking.k8s.io/v1beta1
+            - apiVersion: gateway.networking.k8s.io/v1
+              kind: Gateway
+              name: {{.Name}}
+              uid: "{{.UID}}"
+        spec:
+          selector:
+            matchLabels:
+              gateway.networking.k8s.io/gateway-name: {{.Name|quote}}
+      agentgateway: |
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: {{.ServiceAccount | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+              .InfrastructureLabels
+              (strdict
+                "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
+              ) | nindent 4 }}
+          ownerReferences:
+          - apiVersion: gateway.networking.k8s.io/v1
+            kind: Gateway
+            name: "{{.Name}}"
+            uid: "{{.UID}}"
+        ---
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+              .InfrastructureLabels
+              (strdict
+                "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
+                "gateway.istio.io/managed" "istio.io-agentgateway-controller"
+              ) | nindent 4 }}
+          ownerReferences:
+          - apiVersion: gateway.networking.k8s.io/v1
+            kind: Gateway
+            name: {{.Name}}
+            uid: "{{.UID}}"
+        spec:
+          selector:
+            matchLabels:
+              "{{.GatewayNameLabel}}": {{.Name}}
+          template:
+            metadata:
+              annotations:
+                {{- toJsonMap
+                  (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version")
+                  (strdict "istio.io/rev" (.Revision | default "default"))
+                  (strdict
+                    "prometheus.io/path" "/stats/prometheus"
+                    "prometheus.io/port" "15020"
+                    "prometheus.io/scrape" "true"
+                  ) | nindent 8 }}
+              labels:
+                {{- toJsonMap
+                  (strdict
+                    "sidecar.istio.io/inject" "false"
+                    "service.istio.io/canonical-name" .DeploymentName
+                    "service.istio.io/canonical-revision" "latest"
+                   )
+                  .InfrastructureLabels
+                  (strdict
+                    "gateway.networking.k8s.io/gateway-name" .Name
+                    "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
+                    "gateway.istio.io/managed" "istio.io-agentgateway-controller"
+                  ) | nindent 8 }}
+            spec:
+              securityContext:
+              {{- if .Values.gateways.securityContext }}
+                {{- toYaml .Values.gateways.securityContext | nindent 8 }}
+              {{- else }}
+                sysctls:
+                - name: net.ipv4.ip_unprivileged_port_start # allows binding to 80 and 443 without root
+                  value: "0"
+              {{- if .Values.gateways.seccompProfile }}
+                seccompProfile:
+              {{- toYaml .Values.gateways.seccompProfile | nindent 10 }}
+              {{- end }}
+              {{- end }}
+              serviceAccountName: {{.ServiceAccount | quote}}
+              containers:
+              - name: agentgateway
+              {{- if contains "/" (annotation .ObjectMeta `gateway.istio.io/agentgatewayImage` .Values.global.agentgateway.image) }}
+                image: "{{ annotation .ObjectMeta `gateway.istio.io/agentgatewayImage` .Values.global.agentgateway.image }}"
+              {{- else }}
+                image: "{{ .AgentgatewayImage }}"
+              {{- end }}
+                {{- if .Values.global.proxy.resources }}
+                resources:
+                  {{- toYaml (omitNil .Values.global.proxy.resources) | nindent 10 }}
+                {{- end }}
+                {{with .Values.global.imagePullPolicy }}imagePullPolicy: "{{.}}"{{end}}
+                securityContext:
+                  capabilities:
+                    drop:
+                    - ALL
+                  allowPrivilegeEscalation: false
+                  privileged: false
+                  readOnlyRootFilesystem: true
+                  runAsUser: {{ .ProxyUID | default "10101" }}
+                  runAsGroup: {{ .ProxyGID | default "10101" }}
+                  runAsNonRoot: true
+                ports:
+                - containerPort: 15020
+                  name: metrics
+                  protocol: TCP
+                - containerPort: 15021
+                  name: status-port
+                  protocol: TCP
+                args:
+                - --config
+                - '{}'
+              {{- if .Values.global.proxy.lifecycle }}
+                lifecycle:
+                  {{- toYaml .Values.global.proxy.lifecycle | nindent 10 }}
+              {{- end }}
+                env:
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: INSTANCE_IP
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: status.podIP
+                - name: SERVICE_ACCOUNT
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: spec.serviceAccountName
+                - name: CPU_LIMIT
+                  valueFrom:
+                    resourceFieldRef:
+                      resource: limits.cpu
+                      divisor: "1"
+                - name: GATEWAY
+                  value: {{.Name|quote}}
+                - name: RUST_BACKTRACE
+                  value: "1"
+                - name: CLUSTER_ID
+                  value: "{{ valueOrDefault .Values.global.multiCluster.clusterName .ClusterID }}"
+                {{- with (valueOrDefault  (index .InfrastructureLabels "topology.istio.io/network") .Values.global.network) }}
+                - name: NETWORK
+                  value: {{.|quote}}
+                {{- end }}
+                {{- with (valueOrDefault .MeshConfig.TrustDomain .Values.global.trustDomain)  }}
+                - name: TRUST_DOMAIN
+                  value: "{{ . }}"
+                {{- end }}
+                {{- range $key, $value := .ProxyConfig.ProxyMetadata }}
+                - name: {{ $key }}
+                  value: "{{ $value }}"
+                {{- end }}
+                - name: XDS_ADDRESS
+                  value: {{ .ProxyConfig.DiscoveryAddress | quote }}
+                - name: CA_ADDRESS
+                {{- if .Values.global.caAddress }}
+                  value: {{ .Values.global.caAddress }}
+                {{- else }}
+                  value: istiod{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}.{{ .Values.global.istioNamespace }}.svc:15012
+                {{- end }}
+                startupProbe:
+                  failureThreshold: 30
+                  httpGet:
+                    path: /healthz/ready
+                    port: 15021
+                    scheme: HTTP
+                  initialDelaySeconds: 1
+                  periodSeconds: 1
+                  successThreshold: 1
+                  timeoutSeconds: 1
+                readinessProbe:
+                  failureThreshold: 4
+                  httpGet:
+                    path: /healthz/ready
+                    port: 15021
+                    scheme: HTTP
+                  initialDelaySeconds: 0
+                  periodSeconds: 15
+                  successThreshold: 1
+                  timeoutSeconds: 1
+                volumeMounts:
+                - mountPath: /var/run/secrets/xds
+                  name: istiod-ca-cert
+                - mountPath: /var/run/secrets/xds-tokens
+                  name: xds-token
+                - mountPath: /tmp
+                  name: tmp
+                - mountPath: /var/run/secrets/istio
+                  name: istiod-ca-cert
+                - mountPath: /var/run/secrets/tokens
+                  name: istio-token
+              volumes:
+              - emptyDir: {}
+                name: tmp
+              - name: xds-token
+                projected:
+                  sources:
+                  - serviceAccountToken:
+                      path: xds-token
+                      expirationSeconds: 43200
+                      audience: {{ .Values.global.sds.token.aud }}
+              - name: istio-token
+                projected:
+                  sources:
+                  - serviceAccountToken:
+                      path: istio-token
+                      expirationSeconds: 43200
+                      audience: {{ .Values.global.sds.token.aud }}
+              {{- if eq .Values.global.pilotCertProvider "istiod" }}
+              - name: istiod-ca-cert
+              {{- if eq ((.Values.pilot).env).ENABLE_CLUSTER_TRUST_BUNDLE_API true }}
+                projected:
+                  sources:
+                  - clusterTrustBundle:
+                      name: istio.io:istiod-ca:{{ .Values.global.trustBundleName | default "root-cert" }}
+                      path: root-cert.pem
+              {{- else }}
+                configMap:
+                  name: {{ .Values.global.trustBundleName | default "istio-ca-root-cert" }}
+              {{- end }}
+              {{- end }}
+              {{- if .Values.global.imagePullSecrets }}
+              imagePullSecrets:
+                {{- range .Values.global.imagePullSecrets }}
+                - name: {{ . }}
+                {{- end }}
+              {{- end }}
+        ---
+        apiVersion: v1
+        kind: Service
+        metadata:
+          annotations:
+            {{ toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+              .InfrastructureLabels
+              (strdict
+                "gateway.networking.k8s.io/gateway-name" .Name
+                "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
+              ) | nindent 4 }}
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          ownerReferences:
+          - apiVersion: gateway.networking.k8s.io/v1
+            kind: Gateway
+            name: {{.Name}}
+            uid: {{.UID}}
+        spec:
+          ipFamilyPolicy: PreferDualStack
+          ports:
+          {{- range $key, $val := .Ports }}
+          - name: {{ $val.Name | quote }}
+            port: {{ $val.Port }}
+            protocol: TCP
+            appProtocol: {{ $val.AppProtocol }}
+          {{- end }}
+          selector:
+            "{{.GatewayNameLabel}}": {{.Name}}
+          {{- if and (.Spec.Addresses) (eq .ServiceType "LoadBalancer") }}
+          loadBalancerIP: {{ (index .Spec.Addresses 0).Value | quote}}
+          {{- end }}
+          type: {{ .ServiceType | quote }}
+        ---
+        apiVersion: autoscaling/v2
+        kind: HorizontalPodAutoscaler
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+                  .InfrastructureLabels
+                  (strdict
+                  "gateway.networking.k8s.io/gateway-name" .Name
+                  "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
+                  ) | nindent 4 }}
+          ownerReferences:
+            - apiVersion: gateway.networking.k8s.io/v1
+              kind: Gateway
+              name: {{.Name}}
+              uid: "{{.UID}}"
+        spec:
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name:  {{.DeploymentName | quote}}
+          maxReplicas: 1
+        ---
+        apiVersion: policy/v1
+        kind: PodDisruptionBudget
+        metadata:
+          name: {{.DeploymentName | quote}}
+          namespace: {{.Namespace | quote}}
+          annotations:
+            {{- toJsonMap (omit .InfrastructureAnnotations "kubectl.kubernetes.io/last-applied-configuration" "gateway.istio.io/name-override" "gateway.istio.io/service-account" "gateway.istio.io/controller-version") | nindent 4 }}
+          labels:
+            {{- toJsonMap
+                  .InfrastructureLabels
+                  (strdict
+                  "gateway.networking.k8s.io/gateway-name" .Name
+                  "gateway.networking.k8s.io/gateway-class-name" .GatewayClass
+                  ) | nindent 4 }}
+          ownerReferences:
+            - apiVersion: gateway.networking.k8s.io/v1
               kind: Gateway
               name: {{.Name}}
               uid: "{{.UID}}"
@@ -20248,6 +21314,9 @@ data:
         },
         "nativeNftables": false,
         "network": "",
+        "networkPolicy": {
+          "enabled": false
+        },
         "omitSidecarInjectorConfigMap": false,
         "operatorManageWebhooks": false,
         "pilotCertProvider": "istiod",
@@ -20279,6 +21348,7 @@ data:
               "memory": "128Mi"
             }
           },
+          "seccompProfile": {},
           "startupProbe": {
             "enabled": true,
             "failureThreshold": 600
@@ -20291,6 +21361,7 @@ data:
           "image": "proxyv2"
         },
         "remotePilotAddress": "",
+        "resourceScope": "all",
         "sds": {
           "token": {
             "aud": "istio-ca"
@@ -20299,7 +21370,7 @@ data:
         "sts": {
           "servicePort": 0
         },
-        "tag": "1.27.3-distroless",
+        "tag": "1.30.0-distroless",
         "variant": "",
         "waypoint": {
           "affinity": {},
@@ -20344,8 +21415,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -20425,6 +21496,9 @@ data:
         },
         "nativeNftables": false,
         "network": "",
+        "networkPolicy": {
+          "enabled": false
+        },
         "omitSidecarInjectorConfigMap": false,
         "operatorManageWebhooks": false,
         "pilotCertProvider": "istiod",
@@ -20456,6 +21530,7 @@ data:
               "memory": "128Mi"
             }
           },
+          "seccompProfile": {},
           "startupProbe": {
             "enabled": true,
             "failureThreshold": 600
@@ -20468,6 +21543,7 @@ data:
           "image": "proxyv2"
         },
         "remotePilotAddress": "",
+        "resourceScope": "all",
         "sds": {
           "token": {
             "aud": "istio-ca"
@@ -20476,7 +21552,7 @@ data:
         "sts": {
           "servicePort": 0
         },
-        "tag": "1.27.3-distroless",
+        "tag": "1.30.0-distroless",
         "variant": "",
         "waypoint": {
           "affinity": {},
@@ -20600,7 +21676,7 @@ data:
         "configValidation": true,
         "hub": "gcr.io/istio-release",
         "istioNamespace": "istio-system",
-        "tag": "1.27.3-distroless"
+        "tag": "1.30.0-distroless"
       },
       "meshConfig": {
         "accessLogEncoding": "JSON",
@@ -20633,8 +21709,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -20652,8 +21728,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -20811,8 +21887,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/dataplane-mode: none
@@ -20844,9 +21920,9 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: istio-ingressgateway
         app.kubernetes.io/part-of: istio
-        app.kubernetes.io/version: 1.27.3
+        app.kubernetes.io/version: 1.0.0
         chart: gateways
-        helm.sh/chart: istio-ingress-1.27.3
+        helm.sh/chart: istio-ingress-1.0.0
         heritage: Tiller
         install.operator.istio.io/owning-resource: unknown
         istio: ingressgateway
@@ -20883,6 +21959,8 @@ spec:
         - --proxyComponentLogLevel=misc:error
         - --log_output_level=default:info
         env:
+        - name: COMPLIANCE_POLICY
+          value: pqc
         - name: PILOT_CERT_PROVIDER
           value: istiod
         - name: CA_ADDR
@@ -20915,6 +21993,7 @@ spec:
         - name: ISTIO_CPU_LIMIT
           valueFrom:
             resourceFieldRef:
+              divisor: "1"
               resource: limits.cpu
         - name: SERVICE_ACCOUNT
           valueFrom:
@@ -20936,7 +22015,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: gcr.io/istio-release/proxyv2:1.27.3-distroless
+        image: gcr.io/istio-release/proxyv2:1.30.0-distroless
         name: istio-proxy
         ports:
         - containerPort: 8080
@@ -21054,8 +22133,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: pilot
     istio.io/rev: default
@@ -21083,8 +22162,8 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: istiod
         app.kubernetes.io/part-of: istio
-        app.kubernetes.io/version: 1.27.3
-        helm.sh/chart: istiod-1.27.3
+        app.kubernetes.io/version: 1.0.0
+        helm.sh/chart: istiod-1.0.0
         install.operator.istio.io/owning-resource: unknown
         istio: pilot
         istio.io/dataplane-mode: none
@@ -21116,6 +22195,8 @@ spec:
         env:
         - name: ENABLE_NATIVE_SIDECARS
           value: "true"
+        - name: COMPLIANCE_POLICY
+          value: pqc
         - name: REVISION
           value: default
         - name: PILOT_CERT_PROVIDER
@@ -21145,11 +22226,6 @@ spec:
           value: "false"
         - name: CLUSTER_ID
           value: Kubernetes
-        - name: GOMEMLIMIT
-          valueFrom:
-            resourceFieldRef:
-              divisor: "1"
-              resource: limits.memory
         - name: GOMAXPROCS
           valueFrom:
             resourceFieldRef:
@@ -21157,7 +22233,7 @@ spec:
               resource: limits.cpu
         - name: PLATFORM
           value: ""
-        image: gcr.io/istio-release/pilot:1.27.3-distroless
+        image: gcr.io/istio-release/pilot:1.30.0-distroless
         name: discovery
         ports:
         - containerPort: 8080
@@ -21245,57 +22321,6 @@ spec:
         name: istio-csr-ca-configmap
 
 ---
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app: istio-ingressgateway
-    app.kubernetes.io/instance: istio
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: istio-ingressgateway
-    app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
-    install.operator.istio.io/owning-resource: unknown
-    istio: ingressgateway
-    istio.io/rev: default
-    operator.istio.io/component: IngressGateways
-    release: istio
-  name: istio-ingressgateway
-  namespace: istio-system
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: istio-ingressgateway
-      istio: ingressgateway
-
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app: istiod
-    app.kubernetes.io/instance: istio
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: istiod
-    app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
-    install.operator.istio.io/owning-resource: unknown
-    istio: pilot
-    istio.io/rev: default
-    operator.istio.io/component: Pilot
-    release: istio
-  name: istiod
-  namespace: istio-system
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: istiod
-
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -21304,8 +22329,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: IngressGateways
@@ -21332,8 +22357,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod
   namespace: istio-system
@@ -21380,8 +22405,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: IngressGateways
@@ -21406,8 +22431,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     release: istio
   name: istiod
   namespace: istio-system
@@ -21430,8 +22455,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -21464,8 +22489,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio.io/rev: default
     operator.istio.io/component: Pilot
@@ -21498,8 +22523,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istio-ingressgateway
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istio-ingress-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istio-ingress-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: ingressgateway
     istio.io/rev: default
@@ -21531,8 +22556,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: istiod
     app.kubernetes.io/part-of: istio
-    app.kubernetes.io/version: 1.27.3
-    helm.sh/chart: istiod-1.27.3
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: istiod-1.0.0
     install.operator.istio.io/owning-resource: unknown
     istio: pilot
     istio.io/rev: default
