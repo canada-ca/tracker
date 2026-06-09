@@ -1,16 +1,15 @@
 import React from 'react'
 import { IconButton, Text } from '@chakra-ui/react'
 import { ListOf } from '../components/ListOf'
-import { Trans } from "@lingui/react/macro"
+import { Trans } from '@lingui/react/macro'
 import { EditIcon, MinusIcon } from '@chakra-ui/icons'
 import { AdminDomainCard } from './AdminDomainCard'
-import { array, bool, func, object, string } from 'prop-types'
+import { array, bool, func, string } from 'prop-types'
 
 export function AdminDomainList({
   nodes,
   verified,
   permission,
-  i18n,
   setSelectedRemoveProps,
   removeOnOpen,
   setModalProps,
@@ -25,7 +24,20 @@ export function AdminDomainList({
         </Text>
       )}
     >
-      {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState, cvdEnrollment, highAvailability }, index) => (
+      {(
+        {
+          id: domainId,
+          domain,
+          claimTags,
+          archived,
+          rcode,
+          organizations,
+          assetState,
+          cvdEnrollment,
+          highAvailability,
+        },
+        index,
+      ) => (
         <React.Fragment key={`admindomain-${index}`}>
           <AdminDomainCard
             url={domain}
@@ -35,7 +47,6 @@ export function AdminDomainList({
             rcode={rcode}
             cvdEnrollment={cvdEnrollment}
             highAvailability={highAvailability}
-            locale={i18n.locale}
             flexGrow={1}
             fontSize={{ base: '75%', sm: '100%' }}
           >
@@ -86,7 +97,6 @@ AdminDomainList.propTypes = {
   nodes: array.isRequired,
   verified: bool,
   permission: string,
-  i18n: object.isRequired,
   setSelectedRemoveProps: func.isRequired,
   removeOnOpen: func.isRequired,
   setModalProps: func.isRequired,

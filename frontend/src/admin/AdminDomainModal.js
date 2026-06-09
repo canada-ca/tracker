@@ -1,7 +1,5 @@
 import React, { useRef } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { useLingui } from '@lingui/react'
+import { Trans, useLingui } from '@lingui/react/macro'
 import {
   Badge,
   Box,
@@ -60,13 +58,13 @@ export function AdminDomainModal({
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -78,8 +76,8 @@ export function AdminDomainModal({
       if (createDomain.result.__typename === 'Domain') {
         onClose()
         toast({
-          title: i18n._(t`Domain added`),
-          description: i18n._(t`${createDomain.result.domain} was added to ${orgSlug}`),
+          title: t`Domain added`,
+          description: t`${createDomain.result.domain} was added to ${orgSlug}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -87,7 +85,7 @@ export function AdminDomainModal({
         })
       } else if (createDomain.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to create new domain.`),
+          title: t`Unable to create new domain.`,
           description: createDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -96,8 +94,8 @@ export function AdminDomainModal({
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect createDomain.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect createDomain.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -112,7 +110,7 @@ export function AdminDomainModal({
     refetchQueries: ['FindAuditLogs'],
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -124,8 +122,8 @@ export function AdminDomainModal({
       if (updateDomain.result.__typename === 'Domain') {
         onClose()
         toast({
-          title: i18n._(t`Domain updated`),
-          description: i18n._(t`${editingDomainUrl} from ${orgSlug} successfully updated.`),
+          title: t`Domain updated`,
+          description: t`${editingDomainUrl} from ${orgSlug} successfully updated.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -133,7 +131,7 @@ export function AdminDomainModal({
         })
       } else if (updateDomain.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to update domain.`),
+          title: t`Unable to update domain.`,
           description: updateDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -142,8 +140,8 @@ export function AdminDomainModal({
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect updateDomain.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect updateDomain.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -367,6 +365,8 @@ export function AdminDomainModal({
 }
 
 const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgCount }) => {
+  const { t } = useLingui()
+
   return (
     <Box>
       <Flex align="center">
@@ -400,6 +400,8 @@ const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgC
 })
 
 const HighAvailabilitySwitch = withSuperAdmin(({ defaultChecked, handleChange }) => {
+  const { t } = useLingui()
+
   return (
     <Box>
       <Flex align="center">
