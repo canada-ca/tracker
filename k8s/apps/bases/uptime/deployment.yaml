@@ -31,7 +31,7 @@ spec:
           emptyDir: {}
       initContainers:
         - name: sync-init
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-f5c3686-1780497120 # {"$imagepolicy": "flux-system:uptime-sync"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-09496c5-1781030845 # {"$imagepolicy": "flux-system:uptime-sync"}
           command: ["python", "/app/sync-gatus-config.py"]
           env:
             - name: ARANGO_URL
