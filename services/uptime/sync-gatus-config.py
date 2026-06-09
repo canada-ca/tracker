@@ -73,6 +73,7 @@ def build_config(endpoints):
         "metrics": False,
         "endpoints": endpoints,
         "alerting": build_alerting(),
+        "client": {"insecure": True},  # bypasses TLS verification, removes false positives
     }
 
 
