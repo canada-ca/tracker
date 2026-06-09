@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Trans, useLingui } from "@lingui/react/macro"
+import { Trans, useLingui } from '@lingui/react/macro'
 import {
   Badge,
   Box,
@@ -365,6 +365,8 @@ export function AdminDomainModal({
 }
 
 const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgCount }) => {
+  const { t } = useLingui()
+
   return (
     <Box>
       <Flex align="center">
@@ -398,6 +400,8 @@ const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgC
 })
 
 const HighAvailabilitySwitch = withSuperAdmin(({ defaultChecked, handleChange }) => {
+  const { t } = useLingui()
+
   return (
     <Box>
       <Flex align="center">
