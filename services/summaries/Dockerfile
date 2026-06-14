@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM python:3.14.2-alpine AS base
+FROM python:3.15.0b2-alpine AS base
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DEBIAN_FRONTEND noninteractive
