@@ -531,8 +531,6 @@ export const UPDATE_ORGANIZATION = gql`
     $cityEN: String
     $cityFR: String
     $externalId: String
-    $psd: Boolean
-    $pgs: Boolean
   ) {
     updateOrganization(
       input: {
@@ -552,8 +550,6 @@ export const UPDATE_ORGANIZATION = gql`
         cityEN: $cityEN
         cityFR: $cityFR
         externalId: $externalId
-        psd: $psd
-        pgs: $pgs
       }
     ) {
       result {
@@ -568,10 +564,6 @@ export const UPDATE_ORGANIZATION = gql`
           province
           city
           externalId
-          policies {
-            psd
-            pgs
-          }
         }
         ... on OrganizationError {
           code

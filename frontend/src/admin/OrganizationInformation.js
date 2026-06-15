@@ -4,7 +4,6 @@ import {
   Button,
   Collapse,
   Flex,
-  FormLabel,
   Grid,
   Heading,
   IconButton,
@@ -16,7 +15,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Switch,
   Text,
   useDisclosure,
   useToast,
@@ -243,26 +241,19 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
               cityEN: '',
               cityFR: '',
               externalId: '',
-              psd: org.policies?.psd ?? false,
-              pgs: org.policies?.pgs ?? false,
             }}
             validationSchema={updateOrgValidationSchema}
             onSubmit={async (values, formikHelpers) => {
               // Update the organization (only include fields that have values)
               const propertiesWithValues = {}
 
-              const { psd, pgs, ...stringValues } = values
-
               // Extract only the entries that have truthy values
-              Object.entries(stringValues).forEach((entry) => {
+              Object.entries(values).forEach((entry) => {
                 const [key, value] = entry
                 if (value) {
                   propertiesWithValues[key] = value
                 }
               })
-
-              if (psd !== (org.policies?.psd ?? false)) propertiesWithValues.psd = psd
-              if (pgs !== (org.policies?.pgs ?? false)) propertiesWithValues.pgs = pgs
 
               // Handle case where user does not supply any fields to update
               if (Object.keys(propertiesWithValues).length === 0) {
@@ -292,7 +283,7 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
               }
             }}
           >
-            {({ handleSubmit, handleReset, values, setFieldValue }) => (
+            {({ handleSubmit, handleReset }) => (
               <form onSubmit={handleSubmit}>
                 <Grid
                   gridTemplateColumns="repeat(4, 1fr)"
@@ -330,7 +321,6 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
                     <FormField name="cityFR" label={t`City (FR)`} />
                   </Box>
                   <ExternalIdField />
-                  <PoliciesFields values={values} setFieldValue={setFieldValue} />
                   <Button
                     variant="danger"
                     type="reset"
@@ -401,20 +391,6 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
             <Trans>External ID:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org?.externalId || t`None`}
-            </Box>
-          </Text>
-
-          <Text fontWeight="bold">
-            <Trans>PSD applies:</Trans>{' '}
-            <Box as="span" fontWeight="normal">
-              {org.policies?.psd ? t`Yes` : t`No`}
-            </Box>
-          </Text>
-
-          <Text fontWeight="bold">
-            <Trans>PGS applies:</Trans>{' '}
-            <Box as="span" fontWeight="normal">
-              {org.policies?.pgs ? t`Yes` : t`No`}
             </Box>
           </Text>
         </Grid>
@@ -497,37 +473,6 @@ const ExternalIdField = withSuperAdmin(() => {
     <Box gridColumn={{ base: 'span 4', md: 'span 2' }} mb="0.5rem">
       <FormField name="externalId" label={t`External ID`} />
     </Box>
-  )
-})
-
-const PoliciesFields = withSuperAdmin(({ values, setFieldValue }) => {
-  return (
-    <>
-      <Flex gridColumn="span 4" align="center" p="1">
-        <Switch
-          id="psd"
-          name="psd"
-          isChecked={values.psd}
-          onChange={(e) => setFieldValue('psd', e.target.checked)}
-          mr="2"
-        />
-        <FormLabel htmlFor="psd" mb="0">
-          <Trans>Policy on Service and Digital (PSD)</Trans>
-        </FormLabel>
-      </Flex>
-      <Flex gridColumn="span 4" align="center" p="1">
-        <Switch
-          id="pgs"
-          name="pgs"
-          isChecked={values.pgs}
-          onChange={(e) => setFieldValue('pgs', e.target.checked)}
-          mr="2"
-        />
-        <FormLabel htmlFor="pgs" mb="0">
-          <Trans>Policy on Government Security (PGS)</Trans>
-        </FormLabel>
-      </Flex>
-    </>
   )
 })
 

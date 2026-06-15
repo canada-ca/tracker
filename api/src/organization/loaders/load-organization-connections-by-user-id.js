@@ -16,8 +16,6 @@ export const loadOrgConnectionsByUserId =
     includeSuperAdminOrg,
     isVerified,
     isAffiliated,
-    hasPsd,
-    hasPgs,
   }) => {
     const userDBId = `users/${userKey}`
 
@@ -362,16 +360,6 @@ export const loadOrgConnectionsByUserId =
       isVerifiedQuery = aql`FILTER org.verified == true`
     }
 
-    let hasPsdQuery = aql``
-    if (hasPsd) {
-      hasPsdQuery = aql`FILTER org.policies.psd == true`
-    }
-
-    let hasPgsQuery = aql``
-    if (hasPgs) {
-      hasPgsQuery = aql`FILTER org.policies.pgs == true`
-    }
-
     let isAdminFilter = aql``
     if (isAdmin) {
       isAdminFilter = aql`FILTER e.permission IN ["admin", "owner", "super_admin"]`
@@ -384,8 +372,6 @@ export const loadOrgConnectionsByUserId =
         LET orgKeys = (
           FOR org IN organizations
           ${isVerifiedQuery}
-          ${hasPsdQuery}
-          ${hasPgsQuery}
           ${includeSuperAdminOrgQuery}
           RETURN org._key
         )
@@ -401,8 +387,6 @@ export const loadOrgConnectionsByUserId =
         LET orgKeys = (
           FOR org IN organizations
             ${isVerifiedQuery}
-            ${hasPsdQuery}
-            ${hasPgsQuery}
             ${includeSuperAdminOrgQuery}
             FILTER org._key IN userAffiliations[*]._key
             RETURN org._key
@@ -420,8 +404,6 @@ export const loadOrgConnectionsByUserId =
         LET orgKeys = (
           FOR org IN organizations
             ${isVerifiedQuery}
-            ${hasPsdQuery}
-            ${hasPgsQuery}
             ${includeSuperAdminOrgQuery}
             FILTER org._key IN userAffiliations[*]._key ${isAdmin ? aql`` : aql`|| org.verified == true`}
             RETURN org._key
@@ -440,8 +422,6 @@ export const loadOrgConnectionsByUserId =
         LET orgKeys = (
           FOR org IN organizations
             ${isVerifiedQuery}
-            ${hasPsdQuery}
-            ${hasPgsQuery}
             ${includeSuperAdminOrgQuery}
             FILTER org._key IN userAffiliations[*]._key ${
               isAdmin ? aql`` : aql`|| (org.verified == true && hasVerifiedOrgAffiliation == true)`
@@ -524,7 +504,6 @@ export const loadOrgConnectionsByUserId =
                   verified: org.verified,
                   externalId: org.externalId,
                   domainCount: COUNT(orgDomains),
-                  policies: org.policies,
                   summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null
                 },
                 TRANSLATE(${language}, org.orgDetails)

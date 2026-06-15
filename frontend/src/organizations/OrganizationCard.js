@@ -5,15 +5,12 @@ import { Link as RouteLink } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from "@lingui/react/macro"
 
-import PolicyBadges from '../components/PolicyBadges'
-
 export function OrganizationCard({
   name,
   acronym,
   slug,
   domainCount,
   verified,
-  policies,
   summaries,
   disableLink = false,
   ...rest
@@ -77,7 +74,6 @@ export function OrganizationCard({
             ({acronym})
           </Text>
           {verified && <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />}
-          <PolicyBadges policies={policies} />
         </Stack>
       </Box>
       <Box
@@ -118,7 +114,6 @@ OrganizationCard.propTypes = {
   slug: string.isRequired,
   domainCount: number.isRequired,
   verified: bool,
-  policies: object,
   summaries: object,
   domains: object,
   disableLink: bool,
