@@ -39,6 +39,10 @@ describe('given a loadOrgBySlug dataloader', () => {
       const org1 = await collections.organizations.save({
         verified: false,
         externalId: 'test',
+        policies: {
+          psd: false,
+          pgs: false,
+        },
         orgDetails: {
           en: {
             slug: 'communications-security-establishment',
@@ -79,6 +83,10 @@ describe('given a loadOrgBySlug dataloader', () => {
       await collections.organizations.save({
         verified: false,
         externalId: 'test',
+        policies: {
+          psd: false,
+          pgs: false,
+        },
         orgDetails: {
           en: {
             slug: 'treasury-board-secretariat',
@@ -140,6 +148,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   id: org._key,
                   verified: org.verified,
                   externalId: org.externalId,
+                  policies: org.policies,
                   domainCount: COUNT(domains),
                   summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
@@ -171,6 +180,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   _type: "organization",
                   id: org._key,
                   verified: org.verified,
+                  policies: org.policies,
                   domainCount: COUNT(domains),
                   summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
@@ -223,6 +233,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   id: org._key,
                   verified: org.verified,
                   externalId: org.externalId,
+                  policies: org.policies,
                   domainCount: COUNT(domains),
                   summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
@@ -254,6 +265,7 @@ describe('given a loadOrgBySlug dataloader', () => {
                   _type: "organization",
                   id: org._key,
                   verified: org.verified,
+                  policies: org.policies,
                   domainCount: COUNT(domains),
                   summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null,
                   slugEN: org.orgDetails.en.slug,
