@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react'
-import { t } from '@lingui/core/macro'
-import { Trans } from '@lingui/react/macro'
+import { t } from "@lingui/core/macro"
+import { Trans } from "@lingui/react/macro"
 import { ListOf } from '../components/ListOf'
 import {
-  Badge,
   Box,
   Divider,
   Flex,
@@ -15,7 +14,6 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react'
-import { bool, func } from 'prop-types'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -34,7 +32,6 @@ import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useQuery } from '@apollo/client'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -47,8 +44,6 @@ export default function Organizations() {
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
-  const [hasPsd, setHasPsd] = useState(false)
-  const [hasPgs, setHasPgs] = useState(false)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -86,8 +81,6 @@ export default function Organizations() {
       includeSuperAdminOrg: false,
       isVerified,
       isAffiliated,
-      hasPsd,
-      hasPgs,
     },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
@@ -121,7 +114,7 @@ export default function Organizations() {
         )}
         mb="4"
       >
-        {({ id, name, slug, acronym, domainCount, verified, policies, summaries, userHasPermission }, index) => (
+        {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
           <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
               <ListItem mb="3" mr={userHasPermission ? '3rem' : '2'} w="100%" className="organization-card">
@@ -131,7 +124,6 @@ export default function Organizations() {
                   acronym={acronym}
                   domainCount={domainCount}
                   verified={verified}
-                  policies={policies}
                   summaries={summaries}
                 />
               </ListItem>
@@ -172,7 +164,7 @@ export default function Organizations() {
   } else if (unclaimedError) {
     unclaimedCard = <ErrorFallbackMessage error={unclaimedError} />
   } else if (unclaimedData?.findOrganizationBySlug) {
-    const { name, slug, acronym, domainCount, verified, policies, summaries } = unclaimedData?.findOrganizationBySlug
+    const { name, slug, acronym, domainCount, verified, summaries } = unclaimedData?.findOrganizationBySlug
     unclaimedCard = (
       <Box mr="3rem" mb="3">
         <OrganizationCard
@@ -182,7 +174,6 @@ export default function Organizations() {
           acronym={acronym}
           domainCount={domainCount}
           verified={verified}
-          policies={policies}
           summaries={summaries}
           w="100%"
         />
@@ -262,13 +253,6 @@ export default function Organizations() {
             setIsAffiliated={setIsAffiliated}
             resetToFirstPage={resetToFirstPage}
           />
-          <PolicyFilters
-            hasPsd={hasPsd}
-            setHasPsd={setHasPsd}
-            hasPgs={hasPgs}
-            setHasPgs={setHasPgs}
-            resetToFirstPage={resetToFirstPage}
-          />
         </Flex>
         {orgList}
         <RelayPaginationControls
@@ -287,52 +271,4 @@ export default function Organizations() {
       </ErrorBoundary>
     </Box>
   )
-}
-
-const PolicyFilters = withSuperAdmin(({ hasPsd, setHasPsd, hasPgs, setHasPgs, resetToFirstPage }) => (
-  <>
-    <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />
-    <Tooltip label={t`Filter list to organizations the Policy on Service and Digital applies to.`}>
-      <Flex align="center" mr="2" className="filter-psd">
-        <Switch
-          isFocusable={true}
-          aria-label="Show only organizations the Policy on Service and Digital applies to"
-          mx="2"
-          isChecked={hasPsd}
-          onChange={(e) => {
-            setHasPsd(e.target.checked)
-            resetToFirstPage()
-          }}
-        />
-        <Badge colorScheme="blue" variant="solid">
-          <Trans>PSD</Trans>
-        </Badge>
-      </Flex>
-    </Tooltip>
-    <Tooltip label={t`Filter list to organizations the Policy on Government Security applies to.`}>
-      <Flex align="center" mr="2" className="filter-pgs">
-        <Switch
-          isFocusable={true}
-          aria-label="Show only organizations the Policy on Government Security applies to"
-          mx="2"
-          isChecked={hasPgs}
-          onChange={(e) => {
-            setHasPgs(e.target.checked)
-            resetToFirstPage()
-          }}
-        />
-        <Badge colorScheme="purple" variant="solid">
-          <Trans>PGS</Trans>
-        </Badge>
-      </Flex>
-    </Tooltip>
-  </>
-))
-
-PolicyFilters.propTypes = {
-  hasPsd: bool,
-  setHasPsd: func,
-  hasPgs: bool,
-  setHasPgs: func,
-  resetToFirstPage: func,
 }

@@ -359,7 +359,7 @@ export const loadVerifiedOrgConnectionsByDomainId =
         LET verifiedOrgs = FLATTEN(
           FOR v, e IN INBOUND ${domainId} claims FILTER v.verified == true RETURN v._key
         )
-
+      
         ${afterVar}
         ${beforeVar}
 
@@ -367,13 +367,13 @@ export const loadVerifiedOrgConnectionsByDomainId =
           FOR org IN organizations
             FILTER org._key IN verifiedOrgs
             LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-            ${afterTemplate}
+            ${afterTemplate} 
             ${beforeTemplate}
             SORT
             ${sortByField}
             ${limitTemplate}
             RETURN MERGE(
-              {
+              { 
                 _id: org._id,
                 _key: org._key,
                 id: org._key,
@@ -381,7 +381,6 @@ export const loadVerifiedOrgConnectionsByDomainId =
                 _type: "verifiedOrganization",
                 verified: org.verified,
                 domainCount: COUNT(orgDomains),
-                policies: org.policies,
                 summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null
               },
               TRANSLATE(${language}, org.orgDetails)
@@ -396,7 +395,7 @@ export const loadVerifiedOrgConnectionsByDomainId =
             SORT ${sortByField} TO_NUMBER(org._key) ${sortString} LIMIT 1
             RETURN org
         ) > 0 ? true : false)
-
+        
         LET hasPreviousPage = (LENGTH(
           FOR org IN organizations
             FILTER org._key IN verifiedOrgs
@@ -405,15 +404,15 @@ export const loadVerifiedOrgConnectionsByDomainId =
             SORT ${sortByField} TO_NUMBER(org._key) ${sortString} LIMIT 1
             RETURN org
         ) > 0 ? true : false)
-
-        RETURN {
+        
+        RETURN { 
           "verifiedOrgs": verifiedOrgs,
           "organizations": retrievedOrgs,
           "totalCount": LENGTH(verifiedOrgs),
-          "hasNextPage": hasNextPage,
-          "hasPreviousPage": hasPreviousPage,
-          "startKey": FIRST(retrievedOrgs)._key,
-          "endKey": LAST(retrievedOrgs)._key
+          "hasNextPage": hasNextPage, 
+          "hasPreviousPage": hasPreviousPage, 
+          "startKey": FIRST(retrievedOrgs)._key, 
+          "endKey": LAST(retrievedOrgs)._key 
         }
       `
     } catch (err) {

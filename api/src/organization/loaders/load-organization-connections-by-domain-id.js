@@ -468,7 +468,6 @@ export const loadOrgConnectionsByDomainId =
                 verified: org.verified,
                 externalId: org.externalId,
                 domainCount: COUNT(orgDomains),
-                policies: org.policies,
                 summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null
               },
               TRANSLATE(${language}, org.orgDetails)

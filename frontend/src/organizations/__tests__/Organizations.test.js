@@ -64,8 +64,6 @@ describe('<Organisations />', () => {
               includeSuperAdminOrg: false,
               isVerified: true,
               isAffiliated: false,
-              hasPsd: false,
-              hasPgs: false,
             },
           },
           result: {
@@ -83,10 +81,6 @@ describe('<Organisations />', () => {
                       verified: true,
                       summaries,
                       userHasPermission: false,
-                      policies: {
-                        psd: true,
-                        pgs: true,
-                      },
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -102,10 +96,6 @@ describe('<Organisations />', () => {
                       verified: true,
                       summaries,
                       userHasPermission: false,
-                      policies: {
-                        psd: true,
-                        pgs: true,
-                      },
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -166,8 +156,6 @@ describe('<Organisations />', () => {
               includeSuperAdminOrg: false,
               isVerified: true,
               isAffiliated: false,
-              hasPsd: false,
-              hasPgs: false,
             },
           },
           result: {
@@ -185,10 +173,6 @@ describe('<Organisations />', () => {
                       verified: true,
                       summaries,
                       userHasPermission: false,
-                      policies: {
-                        psd: true,
-                        pgs: true,
-                      },
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -375,8 +359,6 @@ describe('<Organisations />', () => {
                 includeSuperAdminOrg: false,
                 isVerified: true,
                 isAffiliated: true,
-                hasPsd: false,
-                hasPgs: false,
               },
             },
             result: {
@@ -394,10 +376,6 @@ describe('<Organisations />', () => {
                         verified: true,
                         userHasPermission: false,
                         summaries,
-                        policies: {
-                          psd: true,
-                          pgs: true,
-                        },
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -463,8 +441,6 @@ describe('<Organisations />', () => {
                 includeSuperAdminOrg: false,
                 isVerified: true,
                 isAffiliated: false,
-                hasPsd: false,
-                hasPgs: false,
               },
             },
             result: {
@@ -482,10 +458,6 @@ describe('<Organisations />', () => {
                         verified: true,
                         userHasPermission: true,
                         summaries,
-                        policies: {
-                          psd: true,
-                          pgs: true,
-                        },
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -516,8 +488,6 @@ describe('<Organisations />', () => {
                 includeSuperAdminOrg: false,
                 isVerified: true,
                 isAffiliated: false,
-                hasPsd: false,
-                hasPgs: false,
               },
             },
             result: {
@@ -535,10 +505,6 @@ describe('<Organisations />', () => {
                         verified: true,
                         userHasPermission: true,
                         summaries,
-                        policies: {
-                          psd: true,
-                          pgs: true,
-                        },
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -629,8 +595,6 @@ describe('<Organisations />', () => {
             includeSuperAdminOrg: false,
             isVerified: true,
             isAffiliated: false,
-            hasPsd: false,
-            hasPgs: false,
           },
           data: {
             findMyOrganizations: {
@@ -646,10 +610,6 @@ describe('<Organisations />', () => {
                     verified: true,
                     userHasPermission: false,
                     summaries,
-                    policies: {
-                      psd: true,
-                      pgs: true,
-                    },
                     __typename: 'Organizations',
                   },
                   __typename: 'OrganizationsEdge',
@@ -680,8 +640,6 @@ describe('<Organisations />', () => {
                 includeSuperAdminOrg: false,
                 isVerified: true,
                 isAffiliated: false,
-                hasPsd: false,
-                hasPgs: false,
               },
             },
             result: {
@@ -699,10 +657,6 @@ describe('<Organisations />', () => {
                         verified: true,
                         userHasPermission: false,
                         summaries,
-                        policies: {
-                          psd: true,
-                          pgs: true,
-                        },
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -733,8 +687,6 @@ describe('<Organisations />', () => {
                 includeSuperAdminOrg: false,
                 isVerified: true,
                 isAffiliated: false,
-                hasPsd: false,
-                hasPgs: false,
               },
             },
             result: {
@@ -752,10 +704,6 @@ describe('<Organisations />', () => {
                         verified: true,
                         userHasPermission: false,
                         summaries,
-                        policies: {
-                          psd: true,
-                          pgs: true,
-                        },
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -786,8 +734,6 @@ describe('<Organisations />', () => {
                 includeSuperAdminOrg: false,
                 isVerified: true,
                 isAffiliated: false,
-                hasPsd: false,
-                hasPgs: false,
               },
             },
             result: {
@@ -805,10 +751,6 @@ describe('<Organisations />', () => {
                         verified: true,
                         userHasPermission: false,
                         summaries,
-                        policies: {
-                          psd: true,
-                          pgs: true,
-                        },
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',

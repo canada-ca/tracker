@@ -2,7 +2,6 @@ import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
-import { organizationPoliciesType } from './organization-policies'
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
 import { Acronym, Slug } from '../../scalars'
@@ -109,11 +108,6 @@ export const organizationType = new GraphQLObjectType({
 
         return orgTags
       },
-    },
-    policies: {
-      type: organizationPoliciesType,
-      description: 'Policies that apply to this organization.',
-      resolve: ({ policies }) => policies,
     },
     summaries: {
       type: organizationSummaryType,
