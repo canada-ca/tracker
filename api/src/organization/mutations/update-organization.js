@@ -78,6 +78,14 @@ export const updateOrganization = new mutationWithClientMutationId({
       type: GraphQLString,
       description: 'String ID used to identify the organization in an external system.',
     },
+    psd: {
+      type: GraphQLBoolean,
+      description: 'Whether the Policy on Service and Digital applies to this organization.',
+    },
+    pgs: {
+      type: GraphQLBoolean,
+      description: 'Whether the Policy on Government Security applies to this organization.',
+    },
   }),
   outputFields: () => ({
     result: {
@@ -202,6 +210,12 @@ export const updateOrganization = new mutationWithClientMutationId({
 
     if (ac.can(permission).updateAny('organization').granted) {
       updatedOrgDetails.externalId = externalId || compareOrg?.externalId
+
+      const currentPolicies = compareOrg?.policies || {}
+      updatedOrgDetails.policies = {
+        psd: args.psd ?? currentPolicies.psd ?? false,
+        pgs: args.pgs ?? currentPolicies.pgs ?? false,
+      }
     }
 
     await organizationDS.update({ orgKey, updatedOrgDetails })

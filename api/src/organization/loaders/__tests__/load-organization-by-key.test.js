@@ -39,6 +39,10 @@ describe('given a loadOrgByKey dataloader', () => {
       const org1 = await collections.organizations.save({
         verified: false,
         externalId: 'test',
+        policies: {
+          psd: false,
+          pgs: false,
+        },
         orgDetails: {
           en: {
             slug: 'communications-security-establishment',
@@ -72,6 +76,10 @@ describe('given a loadOrgByKey dataloader', () => {
       const org2 = await collections.organizations.save({
         verified: false,
         externalId: 'test',
+        policies: {
+          psd: false,
+          pgs: false,
+        },
         orgDetails: {
           en: {
             slug: 'treasury-board-secretariat',
@@ -130,7 +138,7 @@ describe('given a loadOrgByKey dataloader', () => {
             FOR org IN organizations
               FILTER org.orgDetails.en.slug == "communications-security-establishment"
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, externalId: org.externalId, domainCount: COUNT(domains), summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null }, TRANSLATE("en", org.orgDetails))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, externalId: org.externalId, policies: org.policies, domainCount: COUNT(domains), summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null }, TRANSLATE("en", org.orgDetails))
           `
           const expectedOrg = await expectedCursor.next()
 
@@ -184,7 +192,7 @@ describe('given a loadOrgByKey dataloader', () => {
             FOR org IN organizations
               FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, externalId: org.externalId, domainCount: COUNT(domains), summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null }, TRANSLATE("fr", org.orgDetails))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, externalId: org.externalId, policies: org.policies, domainCount: COUNT(domains), summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null }, TRANSLATE("fr", org.orgDetails))
           `
           const expectedOrg = await expectedCursor.next()
 

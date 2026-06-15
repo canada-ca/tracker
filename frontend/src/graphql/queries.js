@@ -11,6 +11,8 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $includeSuperAdminOrg: Boolean
     $isVerified: Boolean
     $isAffiliated: Boolean
+    $hasPsd: Boolean
+    $hasPgs: Boolean
   ) {
     findMyOrganizations(
       after: $after
@@ -20,6 +22,8 @@ export const PAGINATED_ORGANIZATIONS = gql`
       includeSuperAdminOrg: $includeSuperAdminOrg
       isVerified: $isVerified
       isAffiliated: $isAffiliated
+      hasPsd: $hasPsd
+      hasPgs: $hasPgs
     ) {
       edges {
         cursor
@@ -31,6 +35,10 @@ export const PAGINATED_ORGANIZATIONS = gql`
           domainCount
           verified
           userHasPermission
+          policies {
+            psd
+            pgs
+          }
           summaries {
             dmarc {
               total
@@ -72,6 +80,10 @@ export const FIND_ORGANIZATION_BY_SLUG = gql`
       domainCount
       verified
       userHasPermission
+      policies {
+        psd
+        pgs
+      }
       summaries {
         dmarc {
           total
@@ -664,6 +676,10 @@ export const ORG_DETAILS_PAGE = gql`
       acronym
       verified
       userHasPermission
+      policies {
+        psd
+        pgs
+      }
       summaries {
         https {
           ...RequiredSummaryFields
@@ -1142,6 +1158,10 @@ export const ORGANIZATION_INFORMATION = gql`
       city
       verified
       externalId
+      policies {
+        psd
+        pgs
+      }
     }
   }
 `

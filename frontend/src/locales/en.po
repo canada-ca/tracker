@@ -289,7 +289,7 @@ msgstr "404 - Page Not Found"
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
-#: src/admin/AdminDomains.js:511
+#: src/admin/AdminDomains.js:512
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 
@@ -354,19 +354,19 @@ msgstr "Account Settings"
 
 #: src/createOrganization/CreateOrganizationPage.js:118
 #: src/createOrganization/CreateOrganizationPage.js:119
-#: src/organizations/Organizations.js:94
+#: src/organizations/Organizations.js:101
 msgid "Acronym"
 msgstr "Acronym"
 
-#: src/admin/OrganizationInformation.js:462
+#: src/admin/OrganizationInformation.js:486
 msgid "Acronym (EN)"
 msgstr "Acronym (EN)"
 
-#: src/admin/OrganizationInformation.js:465
+#: src/admin/OrganizationInformation.js:489
 msgid "Acronym (FR)"
 msgstr "Acronym (FR)"
 
-#: src/admin/OrganizationInformation.js:364
+#: src/admin/OrganizationInformation.js:374
 msgid "Acronym:"
 msgstr "Acronym:"
 
@@ -496,27 +496,27 @@ msgstr "All Time"
 msgid "Already have an account? <0>Log in</0>"
 msgstr "Already have an account? <0>Log in</0>"
 
-#: src/admin/AdminDomains.js:560
+#: src/admin/AdminDomains.js:561
 #: src/organizationDetails/OrganizationDomains.js:267
 msgid "An asset confirmed to belong to the organization."
 msgstr "An asset confirmed to belong to the organization."
 
-#: src/admin/AdminDomains.js:563
+#: src/admin/AdminDomains.js:564
 #: src/organizationDetails/OrganizationDomains.js:270
 msgid "An asset that is owned by a third party and supports the operation of organization-owned assets."
 msgstr "An asset that is owned by a third party and supports the operation of organization-owned assets."
 
-#: src/admin/AdminDomains.js:567
+#: src/admin/AdminDomains.js:568
 #: src/organizationDetails/OrganizationDomains.js:274
 msgid "An asset that is relevant to the organization but is not a direct part of the attack surface."
 msgstr "An asset that is relevant to the organization but is not a direct part of the attack surface."
 
-#: src/admin/AdminDomains.js:571
+#: src/admin/AdminDomains.js:572
 #: src/organizationDetails/OrganizationDomains.js:278
 msgid "An asset that is suspected to belong to the organization but has not been confirmed."
 msgstr "An asset that is suspected to belong to the organization but has not been confirmed."
 
-#: src/admin/AdminDomains.js:575
+#: src/admin/AdminDomains.js:576
 #: src/organizationDetails/OrganizationDomains.js:282
 msgid "An asset that requires further investigation to determine its relationship to the organization."
 msgstr "An asset that requires further investigation to determine its relationship to the organization."
@@ -569,7 +569,7 @@ msgstr "An error occurred when you attempted to sign out"
 msgid "An error occurred while favouriting a domain."
 msgstr "An error occurred while favouriting a domain."
 
-#: src/admin/OrganizationInformation.js:63
+#: src/admin/OrganizationInformation.js:65
 msgid "An error occurred while removing this organization."
 msgstr "An error occurred while removing this organization."
 
@@ -585,7 +585,7 @@ msgstr "An error occurred while requesting subdomain discovery."
 msgid "An error occurred while unfavouriting a domain."
 msgstr "An error occurred while unfavouriting a domain."
 
-#: src/admin/OrganizationInformation.js:119
+#: src/admin/OrganizationInformation.js:121
 msgid "An error occurred while updating this organization."
 msgstr "An error occurred while updating this organization."
 
@@ -687,7 +687,7 @@ msgstr "Apply Tags"
 #: src/admin/AdminDomainCard.js:9
 #: src/admin/AdminDomainModal.js:320
 #: src/admin/AdminDomains.js:285
-#: src/admin/AdminDomains.js:560
+#: src/admin/AdminDomains.js:561
 #: src/domains/DomainCard.js:113
 #: src/domains/FilterList.js:22
 #: src/organizationDetails/OrganizationDomains.js:127
@@ -728,7 +728,7 @@ msgid "Are you sure you want to ignore this CVE?"
 msgstr "Are you sure you want to ignore this CVE?"
 
 #. placeholder {0}: org.name
-#: src/admin/OrganizationInformation.js:433
+#: src/admin/OrganizationInformation.js:457
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 
@@ -765,7 +765,7 @@ msgstr "Assess current state;"
 msgid "Asset State"
 msgstr "Asset State"
 
-#: src/admin/AdminDomains.js:554
+#: src/admin/AdminDomains.js:555
 msgid "Asset States"
 msgstr "Asset States"
 
@@ -810,7 +810,7 @@ msgstr "Below are steps on how government organizations can leverage the Tracker
 msgid "BETA"
 msgstr "BETA"
 
-#: src/admin/OrganizationInformation.js:296
+#: src/admin/OrganizationInformation.js:305
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Blank fields will not be included when updating the organization."
 
@@ -865,7 +865,7 @@ msgstr "Cancel"
 #: src/admin/AdminDomainCard.js:12
 #: src/admin/AdminDomainModal.js:329
 #: src/admin/AdminDomains.js:294
-#: src/admin/AdminDomains.js:570
+#: src/admin/AdminDomains.js:571
 #: src/domains/DomainCard.js:116
 #: src/domains/FilterList.js:25
 #: src/organizationDetails/OrganizationDomains.js:130
@@ -993,19 +993,19 @@ msgstr "Ciphers Status"
 #~ msgid "City"
 #~ msgstr "City"
 
-#: src/admin/OrganizationInformation.js:318
+#: src/admin/OrganizationInformation.js:327
 msgid "City (EN)"
 msgstr "City (EN)"
 
-#: src/admin/OrganizationInformation.js:321
+#: src/admin/OrganizationInformation.js:330
 msgid "City (FR)"
 msgstr "City (FR)"
 
-#: src/admin/OrganizationInformation.js:371
+#: src/admin/OrganizationInformation.js:381
 msgid "City:"
 msgstr "City:"
 
-#: src/admin/OrganizationInformation.js:331
+#: src/admin/OrganizationInformation.js:341
 #: src/admin/TagForm.js:226
 msgid "Clear"
 msgstr "Clear"
@@ -1030,7 +1030,7 @@ msgstr "Click here."
 msgid "Click to view detailed scan results and guidance."
 msgstr "Click to view detailed scan results and guidance."
 
-#: src/admin/OrganizationInformation.js:340
+#: src/admin/OrganizationInformation.js:350
 #: src/admin/TagForm.js:244
 #: src/app/FloatingMenu.js:268
 msgid "Close"
@@ -1082,9 +1082,9 @@ msgid "Configuration requirements for web sites and services completely met"
 msgstr "Configuration requirements for web sites and services completely met"
 
 #: src/admin/AdminDomainModal.js:358
-#: src/admin/AdminDomains.js:546
-#: src/admin/OrganizationInformation.js:348
-#: src/admin/OrganizationInformation.js:446
+#: src/admin/AdminDomains.js:547
+#: src/admin/OrganizationInformation.js:358
+#: src/admin/OrganizationInformation.js:470
 #: src/admin/SuperAdminUserList.js:428
 #: src/admin/TagForm.js:247
 #: src/admin/UserListModal.js:278
@@ -1109,7 +1109,7 @@ msgstr "Confirm New Password:"
 msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
-#: src/admin/AdminDomains.js:506
+#: src/admin/AdminDomains.js:507
 msgid "Confirm removal of domain:"
 msgstr "Confirm removal of domain:"
 
@@ -1171,15 +1171,15 @@ msgstr "Correct misconfigurations and update records as required; and"
 #~ msgid "Country"
 #~ msgstr "Country"
 
-#: src/admin/OrganizationInformation.js:306
+#: src/admin/OrganizationInformation.js:315
 msgid "Country (EN)"
 msgstr "Country (EN)"
 
-#: src/admin/OrganizationInformation.js:309
+#: src/admin/OrganizationInformation.js:318
 msgid "Country (FR)"
 msgstr "Country (FR)"
 
-#: src/admin/OrganizationInformation.js:384
+#: src/admin/OrganizationInformation.js:394
 msgid "Country:"
 msgstr "Country:"
 
@@ -1345,7 +1345,7 @@ msgstr "Denied"
 #: src/admin/AdminDomainCard.js:10
 #: src/admin/AdminDomainModal.js:323
 #: src/admin/AdminDomains.js:288
-#: src/admin/AdminDomains.js:562
+#: src/admin/AdminDomains.js:563
 #: src/domains/DomainCard.js:114
 #: src/domains/FilterList.js:23
 #: src/organizationDetails/OrganizationDomains.js:128
@@ -1428,7 +1428,7 @@ msgstr "Display name cannot be empty"
 msgid "Display Name:"
 msgstr "Display Name:"
 
-#: src/organizations/Organizations.js:194
+#: src/organizations/Organizations.js:203
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 
@@ -1497,7 +1497,7 @@ msgstr "DKIM Summary"
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/organizations/Organizations.js:202
+#: src/organizations/Organizations.js:211
 msgid "DMARC Configuration"
 msgstr "DMARC Configuration"
 
@@ -1505,7 +1505,7 @@ msgstr "DMARC Configuration"
 msgid "DMARC Configuration Summary"
 msgstr "DMARC Configuration Summary"
 
-#: src/organizations/OrganizationCard.js:102
+#: src/organizations/OrganizationCard.js:106
 msgid "DMARC Configured"
 msgstr "DMARC Configured"
 
@@ -1536,8 +1536,8 @@ msgstr "DMARC Phase"
 #~ msgid "DMARC phase summary"
 #~ msgstr "DMARC phase summary"
 
-#: src/organizationDetails/OrganizationDetails.js:143
-#: src/organizationDetails/OrganizationDetails.js:184
+#: src/organizationDetails/OrganizationDetails.js:145
+#: src/organizationDetails/OrganizationDetails.js:186
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -1675,7 +1675,7 @@ msgstr "Domain:"
 #: src/app/FloatingMenu.js:117
 #: src/domains/DomainsPage.js:218
 #: src/domains/DomainsPage.js:286
-#: src/organizationDetails/OrganizationDetails.js:146
+#: src/organizationDetails/OrganizationDetails.js:148
 #: src/organizationDetails/OrganizationDomains.js:143
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -1753,7 +1753,7 @@ msgstr "Edit Email"
 msgid "Edit Email Update Preferences"
 msgstr "Edit Email Update Preferences"
 
-#: src/admin/OrganizationInformation.js:219
+#: src/admin/OrganizationInformation.js:221
 msgid "Edit Organization"
 msgstr "Edit Organization"
 
@@ -1890,7 +1890,7 @@ msgstr "Enrolled"
 
 #. placeholder {0}: editUserRole.userName
 #. placeholder {0}: org.name
-#: src/admin/OrganizationInformation.js:439
+#: src/admin/OrganizationInformation.js:463
 #: src/admin/SuperAdminUserList.js:414
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
@@ -1984,12 +1984,12 @@ msgstr "Export SPIN Top 25"
 msgid "Export to CSV"
 msgstr "Export to CSV"
 
-#: src/admin/OrganizationInformation.js:474
+#: src/admin/OrganizationInformation.js:498
 #: src/createOrganization/CreateOrganizationPage.js:121
 msgid "External ID"
 msgstr "External ID"
 
-#: src/admin/OrganizationInformation.js:391
+#: src/admin/OrganizationInformation.js:401
 msgid "External ID:"
 msgstr "External ID:"
 
@@ -2055,7 +2055,15 @@ msgstr "File name:"
 msgid "Filter list to affiliated resources only."
 msgstr "Filter list to affiliated resources only."
 
-#: src/organizations/Organizations.js:235
+#: src/organizations/Organizations.js:312
+msgid "Filter list to organizations the Policy on Government Security applies to."
+msgstr "Filter list to organizations the Policy on Government Security applies to."
+
+#: src/organizations/Organizations.js:295
+msgid "Filter list to organizations the Policy on Service and Digital applies to."
+msgstr "Filter list to organizations the Policy on Service and Digital applies to."
+
+#: src/organizations/Organizations.js:244
 msgid "Filter list to verified organizations only."
 msgstr "Filter list to verified organizations only."
 
@@ -2091,7 +2099,7 @@ msgstr "Filtered"
 #: src/dmarc/DmarcByDomainPage.js:271
 #: src/domains/DomainsPage.js:349
 #: src/organizationDetails/OrganizationDomains.js:309
-#: src/organizations/Organizations.js:233
+#: src/organizations/Organizations.js:242
 msgid "Filters:"
 msgstr "Filters:"
 
@@ -2212,7 +2220,7 @@ msgstr "Fully Aligned by IP Address"
 msgid "Fully Aligned Table"
 msgstr "Fully Aligned Table"
 
-#: src/organizations/Organizations.js:206
+#: src/organizations/Organizations.js:215
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Further details for each organization can be found by clicking on its row."
 
@@ -2459,8 +2467,8 @@ msgstr "HTTPS (443) Chain"
 msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
-#: src/organizations/OrganizationCard.js:94
-#: src/organizations/Organizations.js:198
+#: src/organizations/OrganizationCard.js:98
+#: src/organizations/Organizations.js:207
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
 
@@ -2680,7 +2688,7 @@ msgstr "Incorrect inviteUserToOrg.result typename."
 msgid "Incorrect removeDomain.result typename."
 msgstr "Incorrect removeDomain.result typename."
 
-#: src/admin/OrganizationInformation.js:86
+#: src/admin/OrganizationInformation.js:88
 msgid "Incorrect removeOrganization.result typename."
 msgstr "Incorrect removeOrganization.result typename."
 
@@ -2727,8 +2735,8 @@ msgstr "Incorrect signIn.result typename."
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
-#: src/admin/OrganizationInformation.js:85
-#: src/admin/OrganizationInformation.js:148
+#: src/admin/OrganizationInformation.js:87
+#: src/admin/OrganizationInformation.js:150
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
@@ -2750,7 +2758,7 @@ msgstr "Incorrect updateDomain.result typename."
 msgid "Incorrect updateDomainsByDomainIds.result typename."
 msgstr "Incorrect updateDomainsByDomainIds.result typename."
 
-#: src/admin/OrganizationInformation.js:149
+#: src/admin/OrganizationInformation.js:151
 msgid "Incorrect updateOrganization.result typename."
 msgstr "Incorrect updateOrganization.result typename."
 
@@ -3145,7 +3153,7 @@ msgstr "Monitor DMARC reports;"
 #: src/admin/AdminDomainCard.js:11
 #: src/admin/AdminDomainModal.js:326
 #: src/admin/AdminDomains.js:291
-#: src/admin/AdminDomains.js:566
+#: src/admin/AdminDomains.js:567
 #: src/domains/DomainCard.js:115
 #: src/domains/FilterList.js:24
 #: src/organizationDetails/OrganizationDomains.js:129
@@ -3207,15 +3215,15 @@ msgstr "myTracker"
 #: src/createOrganization/CreateOrganizationPage.js:115
 #: src/createOrganization/CreateOrganizationPage.js:116
 #: src/organizationDetails/OrganizationAffiliations.js:58
-#: src/organizations/Organizations.js:93
+#: src/organizations/Organizations.js:100
 msgid "Name"
 msgstr "Name"
 
-#: src/admin/OrganizationInformation.js:300
+#: src/admin/OrganizationInformation.js:309
 msgid "Name (EN)"
 msgstr "Name (EN)"
 
-#: src/admin/OrganizationInformation.js:303
+#: src/admin/OrganizationInformation.js:312
 msgid "Name (FR)"
 msgstr "Name (FR)"
 
@@ -3310,6 +3318,8 @@ msgstr "Next"
 msgid "Next Steps:"
 msgstr "Next Steps:"
 
+#: src/admin/OrganizationInformation.js:410
+#: src/admin/OrganizationInformation.js:417
 #: src/guidance/WebConnectionResults.js:142
 #: src/guidance/WebConnectionResults.js:182
 #: src/guidance/WebConnectionResults.js:208
@@ -3449,7 +3459,7 @@ msgstr "No MX records found. Is the domain parked?"
 msgid "No negative findings to show. "
 msgstr "No negative findings to show. "
 
-#: src/organizations/Organizations.js:112
+#: src/organizations/Organizations.js:119
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -3494,7 +3504,7 @@ msgstr "No users"
 msgid "No Users"
 msgstr "No Users"
 
-#: src/admin/OrganizationInformation.js:262
+#: src/admin/OrganizationInformation.js:271
 #: src/admin/TagForm.js:159
 msgid "No values were supplied when attempting to update organization details."
 msgstr "No values were supplied when attempting to update organization details."
@@ -3506,7 +3516,7 @@ msgstr "Non-compliant"
 #: src/admin/CvdEnrollmentForm.js:189
 #: src/admin/CvdEnrollmentForm.js:217
 #: src/admin/CvdEnrollmentForm.js:245
-#: src/admin/OrganizationInformation.js:393
+#: src/admin/OrganizationInformation.js:403
 #: src/guidance/EmailGuidance.js:274
 #: src/guidance/IgnoredCves.js:23
 #: src/guidance/IgnoredCves.js:67
@@ -3627,11 +3637,11 @@ msgstr "Organization"
 msgid "Organization created"
 msgstr "Organization created"
 
-#: src/organizationDetails/OrganizationDetails.js:73
+#: src/organizationDetails/OrganizationDetails.js:74
 msgid "Organization Details"
 msgstr "Organization Details"
 
-#: src/admin/OrganizationInformation.js:163
+#: src/admin/OrganizationInformation.js:165
 msgid "Organization Information"
 msgstr "Organization Information"
 
@@ -3644,16 +3654,16 @@ msgstr "Organization is invested in the outside domain"
 #~ msgid "Organization left successfully"
 #~ msgstr "Organization left successfully"
 
-#: src/admin/OrganizationInformation.js:442
-#: src/organizations/Organizations.js:193
+#: src/admin/OrganizationInformation.js:466
+#: src/organizations/Organizations.js:202
 msgid "Organization Name"
 msgstr "Organization Name"
 
-#: src/admin/OrganizationInformation.js:180
+#: src/admin/OrganizationInformation.js:182
 msgid "Organization name does not match."
 msgstr "Organization name does not match."
 
-#: src/admin/OrganizationInformation.js:261
+#: src/admin/OrganizationInformation.js:270
 msgid "Organization not updated"
 msgstr "Organization not updated"
 
@@ -3682,8 +3692,8 @@ msgstr "Organization(s):"
 #: src/app/App.js:293
 #: src/app/FloatingMenu.js:104
 #: src/guidance/GuidancePage.js:210
-#: src/organizations/Organizations.js:103
-#: src/organizations/Organizations.js:188
+#: src/organizations/Organizations.js:110
+#: src/organizations/Organizations.js:197
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -3810,6 +3820,15 @@ msgstr "Percentages"
 #~ msgid "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
 #~ msgstr "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
 
+#: src/components/PolicyBadges.js:17
+#: src/organizations/Organizations.js:325
+msgid "PGS"
+msgstr "PGS"
+
+#: src/admin/OrganizationInformation.js:415
+msgid "PGS applies:"
+msgstr "PGS applies:"
+
 #: src/guidance/WebTLSResults.js:30
 msgid "phase out"
 msgstr "phase out"
@@ -3880,6 +3899,14 @@ msgstr "Pointer to a DKIM public key record in DNS."
 #: src/guidance/GuidanceTagDetails.js:39
 msgid "Policy guidance:"
 msgstr "Policy guidance:"
+
+#: src/admin/OrganizationInformation.js:527
+msgid "Policy on Government Security (PGS)"
+msgstr "Policy on Government Security (PGS)"
+
+#: src/admin/OrganizationInformation.js:515
+msgid "Policy on Service and Digital (PSD)"
+msgstr "Policy on Service and Digital (PSD)"
 
 #: src/guidance/AdditionalFindings.js:378
 msgid "Ports"
@@ -3989,17 +4016,26 @@ msgstr "Protocols Status"
 #~ msgid "Province"
 #~ msgstr "Province"
 
-#: src/admin/OrganizationInformation.js:312
+#: src/admin/OrganizationInformation.js:321
 msgid "Province (EN)"
 msgstr "Province (EN)"
 
-#: src/admin/OrganizationInformation.js:315
+#: src/admin/OrganizationInformation.js:324
 msgid "Province (FR)"
 msgstr "Province (FR)"
 
-#: src/admin/OrganizationInformation.js:377
+#: src/admin/OrganizationInformation.js:387
 msgid "Province:"
 msgstr "Province:"
+
+#: src/components/PolicyBadges.js:12
+#: src/organizations/Organizations.js:308
+msgid "PSD"
+msgstr "PSD"
+
+#: src/admin/OrganizationInformation.js:408
+msgid "PSD applies:"
+msgstr "PSD applies:"
 
 #: src/summaries/HistoricalSummariesGraph.js:203
 msgid "Range:"
@@ -4021,7 +4057,7 @@ msgstr "Read guidance"
 msgid "Read Guidance"
 msgstr "Read Guidance"
 
-#: src/admin/AdminDomains.js:520
+#: src/admin/AdminDomains.js:521
 #: src/admin/AuditLogTable.js:134
 msgid "Reason"
 msgstr "Reason"
@@ -4070,12 +4106,12 @@ msgstr "Remember me"
 msgid "Remove"
 msgstr "Remove"
 
-#: src/admin/AdminDomains.js:500
+#: src/admin/AdminDomains.js:501
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
-#: src/admin/OrganizationInformation.js:209
-#: src/admin/OrganizationInformation.js:428
+#: src/admin/OrganizationInformation.js:211
+#: src/admin/OrganizationInformation.js:452
 msgid "Remove Organization"
 msgstr "Remove Organization"
 
@@ -4083,7 +4119,7 @@ msgstr "Remove Organization"
 msgid "Remove User"
 msgstr "Remove User"
 
-#: src/admin/OrganizationInformation.js:99
+#: src/admin/OrganizationInformation.js:101
 msgid "Removed Organization"
 msgstr "Removed Organization"
 
@@ -4101,8 +4137,8 @@ msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Request an invite if you are unaffiliated with your organization."
 
 #: src/guidance/GuidancePage.js:168
-#: src/organizationDetails/OrganizationDetails.js:120
-#: src/organizations/Organizations.js:134
+#: src/organizationDetails/OrganizationDetails.js:122
+#: src/organizations/Organizations.js:142
 #: src/organizations/RequestOrgInviteModal.js:63
 msgid "Request Invite"
 msgstr "Request Invite"
@@ -4139,7 +4175,7 @@ msgstr "Requirements: <0>Web Sites and Services Management Configuration Require
 #: src/admin/AdminDomainCard.js:13
 #: src/admin/AdminDomainModal.js:332
 #: src/admin/AdminDomains.js:297
-#: src/admin/AdminDomains.js:574
+#: src/admin/AdminDomains.js:575
 #: src/domains/DomainCard.js:117
 #: src/domains/FilterList.js:26
 #: src/organizationDetails/OrganizationDomains.js:131
@@ -4312,7 +4348,7 @@ msgstr "Search for a user by email"
 #~ msgid "Search for an activity"
 #~ msgstr "Search for an activity"
 
-#: src/organizations/Organizations.js:224
+#: src/organizations/Organizations.js:233
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -4354,7 +4390,7 @@ msgstr "See headers"
 #~ msgid "Select a reason for adding this outside domain"
 #~ msgstr "Select a reason for adding this outside domain"
 
-#: src/admin/AdminDomains.js:531
+#: src/admin/AdminDomains.js:532
 msgid "Select a reason for removing this domain"
 msgstr "Select a reason for removing this domain"
 
@@ -4438,12 +4474,12 @@ msgstr "Serial:"
 msgid "Service Level Agreement"
 msgstr "Service Level Agreement"
 
-#: src/organizations/Organizations.js:95
-#: src/organizations/Organizations.js:196
+#: src/organizations/Organizations.js:102
+#: src/organizations/Organizations.js:205
 msgid "Services"
 msgstr "Services"
 
-#: src/organizations/OrganizationCard.js:88
+#: src/organizations/OrganizationCard.js:92
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
@@ -4474,7 +4510,7 @@ msgstr "Show Update List"
 #~ msgstr "Showing data for period:"
 
 #: src/dmarc/DmarcByDomainPage.js:231
-#: src/dmarc/DmarcReportPage.js:672
+#: src/dmarc/DmarcReportPage.js:671
 msgid "Showing data for period: "
 msgstr "Showing data for period: "
 
@@ -4610,15 +4646,15 @@ msgstr "Shows if the server was found to be vulnerable to the ROBOT vulnerabilit
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Shows the duration of time, in seconds, that the HSTS header is valid."
 
-#: src/organizations/Organizations.js:196
+#: src/organizations/Organizations.js:205
 msgid "Shows the number of domains that the organization is in control of."
 msgstr "Shows the number of domains that the organization is in control of."
 
-#: src/organizations/Organizations.js:203
+#: src/organizations/Organizations.js:212
 msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
 msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
-#: src/organizations/Organizations.js:199
+#: src/organizations/Organizations.js:208
 msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 
@@ -4704,7 +4740,7 @@ msgstr "Skip"
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/admin/OrganizationInformation.js:358
+#: src/admin/OrganizationInformation.js:368
 msgid "Slug:"
 msgstr "Slug:"
 
@@ -4906,7 +4942,7 @@ msgstr "Successfully removed user {0}."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 
-#: src/organizationDetails/OrganizationDetails.js:140
+#: src/organizationDetails/OrganizationDetails.js:142
 msgid "Summaries"
 msgstr "Summaries"
 
@@ -5085,7 +5121,7 @@ msgstr "Terms of Use"
 msgid "TEST"
 msgstr "TEST"
 
-#: src/admin/AdminDomains.js:555
+#: src/admin/AdminDomains.js:556
 msgid "The \"Asset State\" describes how the domain relates to your organization. These states are used by Tracker to give you a more accurate summary of your attack surface."
 msgstr "The \"Asset State\" describes how the domain relates to your organization. These states are used by Tracker to give you a more accurate summary of your attack surface."
 
@@ -5253,12 +5289,12 @@ msgstr "This could be due to improper configuration, or could be the result of a
 #~ msgid "this domain"
 #~ msgstr "this domain"
 
-#: src/admin/AdminDomains.js:537
+#: src/admin/AdminDomains.js:538
 #: src/admin/AuditLogTable.js:149
 msgid "This domain does not belong to this organization"
 msgstr "This domain does not belong to this organization"
 
-#: src/admin/AdminDomains.js:534
+#: src/admin/AdminDomains.js:535
 #: src/admin/AuditLogTable.js:147
 msgid "This domain no longer exists"
 msgstr "This domain no longer exists"
@@ -5568,7 +5604,7 @@ msgstr "Unable to invite user."
 msgid "Unable to remove domain."
 msgstr "Unable to remove domain."
 
-#: src/admin/OrganizationInformation.js:76
+#: src/admin/OrganizationInformation.js:78
 msgid "Unable to remove this organization."
 msgstr "Unable to remove this organization."
 
@@ -5633,7 +5669,7 @@ msgstr "Unable to update password"
 msgid "Unable to update tag."
 msgstr "Unable to update tag."
 
-#: src/admin/OrganizationInformation.js:139
+#: src/admin/OrganizationInformation.js:141
 msgid "Unable to update this organization."
 msgstr "Unable to update this organization."
 
@@ -5685,7 +5721,7 @@ msgstr "Unable to update your phone number, please try again."
 msgid "Unable to verify your phone number, please try again."
 msgstr "Unable to verify your phone number, please try again."
 
-#: src/organizations/Organizations.js:161
+#: src/organizations/Organizations.js:169
 msgid "Unclaimed"
 msgstr "Unclaimed"
 
@@ -5714,7 +5750,7 @@ msgstr "Unscanned"
 msgid "Update"
 msgstr "Update"
 
-#: src/admin/OrganizationInformation.js:130
+#: src/admin/OrganizationInformation.js:132
 msgid "Updated Organization"
 msgstr "Updated Organization"
 
@@ -5826,7 +5862,7 @@ msgstr "User: "
 
 #: src/admin/AdminPage.js:239
 #: src/admin/AdminPanel.js:26
-#: src/organizationDetails/OrganizationDetails.js:150
+#: src/organizationDetails/OrganizationDetails.js:152
 msgid "Users"
 msgstr "Users"
 
@@ -5850,7 +5886,7 @@ msgstr "Verification code must only contains numbers"
 #: src/admin/SuperAdminUserList.js:147
 #: src/admin/SuperAdminUserList.js:308
 #: src/createOrganization/CreateOrganizationPage.js:148
-#: src/organizations/Organizations.js:96
+#: src/organizations/Organizations.js:103
 msgid "Verified"
 msgstr "Verified"
 
@@ -6143,6 +6179,8 @@ msgstr "Would you like to request an invite to {orgName}?"
 msgid "Year to Date"
 msgstr "Year to Date"
 
+#: src/admin/OrganizationInformation.js:410
+#: src/admin/OrganizationInformation.js:417
 #: src/guidance/WebConnectionResults.js:142
 #: src/guidance/WebConnectionResults.js:182
 #: src/guidance/WebConnectionResults.js:208
@@ -6226,7 +6264,7 @@ msgstr "You have successfully been signed out."
 #~ msgstr "You have successfully left {orgSlug}"
 
 #. placeholder {0}: data.removeOrganization.result.organization.name
-#: src/admin/OrganizationInformation.js:100
+#: src/admin/OrganizationInformation.js:102
 msgid "You have successfully removed {0}."
 msgstr "You have successfully removed {0}."
 
@@ -6243,7 +6281,7 @@ msgid "You have successfully requested subdomain discovery."
 msgstr "You have successfully requested subdomain discovery."
 
 #. placeholder {0}: updateOrganization.result.name
-#: src/admin/OrganizationInformation.js:131
+#: src/admin/OrganizationInformation.js:133
 msgid "You have successfully updated {0}."
 msgstr "You have successfully updated {0}."
 
