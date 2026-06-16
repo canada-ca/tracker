@@ -1,5 +1,7 @@
 const { getNXDomains } = require('./database')
 const logger = require('./logger')
+const { logActivity } = require('./log-activity')
+const { SERVICE_ACCOUNT_EMAIL } = process.env
 
 const removeNXDomainService = async ({ query }) => {
   const cleanupDomains = await getNXDomains({ query })
@@ -7,6 +9,7 @@ const removeNXDomainService = async ({ query }) => {
   for (const domainDoc of cleanupDomains) {
     const domainId = domainDoc._id
     const domain = domainDoc.domain
+    let claimedOrgs = []
     // remove favourites
     try {
       await (
@@ -42,7 +45,7 @@ const removeNXDomainService = async ({ query }) => {
           WITH dmarcSummaries, domainsToDmarcSummaries, domains
           FOR v, e IN 1..1 ANY ${domainId} domainsToDmarcSummaries
             REMOVE e IN domainsToDmarcSummaries
-            REMOVE v IN dmarcSummaries`
+             REMOVE v IN dmarcSummaries`
       ).all()
     } catch (err) {
       logger.error({ err, domain }, `Error while removing DMARC summaries for domain`)
@@ -64,7 +67,7 @@ const removeNXDomainService = async ({ query }) => {
           REMOVE webV IN web
           REMOVE domainsWebEdge IN domainsWeb
           OPTIONS { waitForSync: true }
-      `
+       `
       ).all()
     } catch (err) {
       logger.error({ err, domain }, `Error while removing web scans for domain`)
@@ -79,10 +82,29 @@ const removeNXDomainService = async ({ query }) => {
           FOR v, e IN 1..1 ANY ${domainId} domainsDNS
             REMOVE e IN domainsDNS
             REMOVE v IN dns
-      `
+       `
       ).all()
     } catch (err) {
       logger.error({ err, domain }, `Error while removing dns scans for domain`)
+      continue
+    }
+
+    // get claimed orgs for activity logging
+    try {
+      claimedOrgs = await (
+        await query`
+          WITH claims, organizations, domains
+          FOR org, e IN 1..1 ANY ${domainId} claims
+            FILTER IS_SAME_COLLECTION('organizations', org)
+            RETURN DISTINCT {
+              id: org._key,
+              name: org.name,
+              orgDetails: org.orgDetails
+            }
+        `
+      ).all()
+    } catch (err) {
+      logger.error({ err, domain }, `Error while finding organizations for claimed domain`)
       continue
     }
 
@@ -106,13 +128,36 @@ const removeNXDomainService = async ({ query }) => {
         await query`
         WITH domains
         REMOVE ${domainDoc._key} IN domains
-      `
+       `
       ).all()
     } catch (err) {
       logger.error({ err, domain }, `Error while removing domain`)
       continue
     }
     logger.info({ domain }, 'Domain and related data successfully removed')
+
+    // log activity
+    for (const org of claimedOrgs) {
+      const orgName = org.name || org.orgDetails?.en?.name || org.orgDetails?.fr?.name || ''
+      await logActivity({
+        query,
+        initiatedBy: {
+          id: 'tracker',
+          userName: SERVICE_ACCOUNT_EMAIL,
+          role: 'service',
+        },
+        action: 'remove',
+        target: {
+          resource: domain,
+          organization: {
+            id: org.id,
+            name: orgName,
+          },
+          resourceType: 'domain', // user, org, domain
+        },
+        reason: 'nonexistent',
+      })
+    }
   }
 }
 
