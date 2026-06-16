@@ -22,28 +22,50 @@ ARANGO_URL = os.getenv("ARANGO_URL")
 ARANGO_DATABASE = os.getenv("ARANGO_DATABASE")
 ARANGO_USERNAME = os.getenv("ARANGO_USERNAME")
 ARANGO_PASSWORD = os.getenv("ARANGO_PASSWORD")
+
+NOTIFICATION_API_KEY = os.getenv("NOTIFICATION_API_KEY")
+NOTIFICATION_API_URL = os.getenv("NOTIFICATION_API_URL")
+SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")
+NOTIFICATION_UPTIME_ALERT_ID = os.getenv("NOTIFICATION_UPTIME_ALERT_ID")
+
 GATUS_CONFIG_PATH = os.getenv("GATUS_CONFIG_PATH", "/config/config.yaml")
 
 
-def build_endpoint(doc):
-    domain = doc.get("domain")
+def build_alerting():
+    return {
+        "custom": {
+            "method": "POST",
+            "url": f"{NOTIFICATION_API_URL}/v2/notifications/email",
+            "body": f'{{\n  "email_address": "{SERVICE_ACCOUNT_EMAIL}",\n  "template_id": "{NOTIFICATION_UPTIME_ALERT_ID}",\n  "personalisation": {{\n    "endpoint": "[ENDPOINT_NAME]",\n    "url": "[ENDPOINT_URL]",\n    "status": "[ALERT_TRIGGERED_OR_RESOLVED]"\n  }}\n}}\n',
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": NOTIFICATION_API_KEY,
+            },
+            "default-alert": {
+                "enabled": True,
+                "failure-threshold": 3,
+                "success-threshold": 2,
+                "send-on-resolved": True,
+            },
+        }
+    }
 
+
+def build_endpoint(domain):
     return {
         "name": domain,
         "url": f"https://{domain}",
-        "interval": "30s",
+        "interval": "5m",
         "conditions": [
-            "[STATUS] < 300",
+            "[STATUS] == any(200, 429)",  # prevents rate limiting from triggering alerts
             "[RESPONSE_TIME] < 10000",
         ],
-        "alerts": [
-            {
-                "type": "custom",
-                "description": "Service is down or degraded",
-                "failure-threshold": 3,
-                "success-threshold": 2,
-            }
-        ],
+        "alerts": [{"type": "custom"}],
+        "client": {
+            "insecure": True,  # bypasses TLS verification, removes false positives
+            "ignore-redirect": False,
+            "timeout": "10s",
+        },
     }
 
 
@@ -53,8 +75,8 @@ def build_config(endpoints):
         "storage": {"type": "memory"},
         "metrics": False,
         "endpoints": endpoints,
+        "alerting": build_alerting(),
     }
-
 
 
 def main():
@@ -81,7 +103,7 @@ def main():
 
     log.info(f"Query returned {len(docs)} document(s)")
 
-    endpoints = [build_endpoint(doc) for doc in docs]
+    endpoints = [build_endpoint(doc.get("domain")) for doc in docs]
     config = build_config(endpoints)
 
     config_dir = os.path.dirname(GATUS_CONFIG_PATH)

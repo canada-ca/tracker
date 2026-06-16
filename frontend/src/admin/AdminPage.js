@@ -1,11 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { Button, Flex, Stack, Text, useToast, Select } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { Trans, useLingui } from '@lingui/react/macro'
 import { useQuery } from '@apollo/client'
 import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
-import { useLingui } from '@lingui/react'
 
 import { AdminPanel } from './AdminPanel'
 import { OrganizationInformation } from './OrganizationInformation'
@@ -31,7 +29,7 @@ export default function AdminPage() {
   const { activeMenu } = useParams()
   const toast = useToast()
   const navigate = useNavigate()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -88,10 +86,10 @@ export default function AdminPage() {
   if (loading) {
     dropdown = (
       <Dropdown
-        label={i18n._(t`Organization: `)}
+        label={t`Organization: `}
         labelDirection="row"
         options={[]}
-        placeholder={i18n._(t`Select an organization`)}
+        placeholder={t`Select an organization`}
         onSearch={(val) => setSearchTerm(val)}
         searchValue={searchTerm}
       />
@@ -105,10 +103,10 @@ export default function AdminPage() {
     dropdown = (
       <Dropdown
         className="dropdown"
-        label={i18n._(t`Organization: `)}
+        label={t`Organization: `}
         labelDirection="row"
         options={options}
-        placeholder={i18n._(t`Select an organization`)}
+        placeholder={t`Select an organization`}
         onSearch={(val) => setSearchTerm(val)}
         searchValue={searchTerm}
         onChange={(opt) => {
@@ -235,10 +233,18 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
           defaultValue={activeMenu}
           onChange={(e) => changeActiveMenu(e.target.value)}
         >
-          <option value="organizations">{t`Organizations`}</option>
-          <option value="users">{t`Users`}</option>
-          <option value="audit-logs">{t`Audit Logs`}</option>
-          <option value="domain-tags">{t`Domain Tags`}</option>
+          <option value="organizations">
+            <Trans>Organizations</Trans>
+          </option>
+          <option value="users">
+            <Trans>Users</Trans>
+          </option>
+          <option value="audit-logs">
+            <Trans>Audit Logs</Trans>
+          </option>
+          <option value="domain-tags">
+            <Trans>Domain Tags</Trans>
+          </option>
         </Select>
       </Flex>
     </label>

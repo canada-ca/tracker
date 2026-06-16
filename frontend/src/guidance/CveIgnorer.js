@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { IGNORE_CVE, UNIGNORE_CVE } from '../graphql/mutations'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { Trans, useLingui } from "@lingui/react/macro"
 import { Box, Button, Text, useToast } from '@chakra-ui/react'
-import { useLingui } from '@lingui/react'
 import withSuperAdmin from '../app/withSuperAdmin'
 import PropTypes from 'prop-types'
 
 function CveIgnorer({ cve, isCveIgnored, domainId }) {
-  const { i18n } = useLingui()
+  const { t } = useLingui()
   const toast = useToast()
   const [showConfirm, setShowConfirm] = useState(false)
 
@@ -17,7 +15,7 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
     refetchQueries: ['GuidanceAdditionalFindings'],
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -28,12 +26,10 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
     onCompleted({ ignoreCve }) {
       if (ignoreCve.result.__typename === 'Domain') {
         toast({
-          title: i18n._(t`CVE ignored`),
-          description: i18n._(
-            t`Successfully ignored CVE for domain ${ignoreCve.result.domain}. New ignored CVEs: "${
+          title: t`CVE ignored`,
+          description: t`Successfully ignored CVE for domain ${ignoreCve.result.domain}. New ignored CVEs: "${
               ignoreCve.result.ignoredCves && JSON.stringify(ignoreCve.result.ignoredCves)
             }".`,
-          ),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -41,7 +37,7 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
         })
       } else if (ignoreCve.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to ignore CVE.`),
+          title: t`Unable to ignore CVE.`,
           description: ignoreCve.result.description,
           status: 'error',
           duration: 9000,
@@ -50,8 +46,8 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect ignoreCve.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect ignoreCve.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -66,7 +62,7 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
     refetchQueries: ['GuidanceAdditionalFindings'],
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -77,12 +73,10 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
     onCompleted({ unignoreCve }) {
       if (unignoreCve.result.__typename === 'Domain') {
         toast({
-          title: i18n._(t`Stopped ignoring CVE`),
-          description: i18n._(
-            t`Successfully stopped ignoring CVE for domain "${unignoreCve.result.domain}". New ignored CVEs: "${
+          title: t`Stopped ignoring CVE`,
+          description: t`Successfully stopped ignoring CVE for domain "${unignoreCve.result.domain}". New ignored CVEs: "${
               unignoreCve.result.ignoredCves && JSON.stringify(unignoreCve.result.ignoredCves)
             }".`,
-          ),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -90,7 +84,7 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
         })
       } else if (unignoreCve.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to stop ignoring CVE.`),
+          title: t`Unable to stop ignoring CVE.`,
           description: unignoreCve.result.description,
           status: 'error',
           duration: 9000,
@@ -99,8 +93,8 @@ function CveIgnorer({ cve, isCveIgnored, domainId }) {
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect unignoreCve.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect unignoreCve.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,

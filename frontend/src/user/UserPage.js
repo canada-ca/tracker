@@ -18,9 +18,7 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { useNavigate } from 'react-router-dom'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { useLingui } from '@lingui/react'
+import { Trans, useLingui } from "@lingui/react/macro"
 import { Formik } from 'formik'
 import { string } from 'prop-types'
 
@@ -43,13 +41,13 @@ import { EditableEmailUpdateOptions } from './EditableEmailUpdateOptions'
 export default function UserPage() {
   const toast = useToast()
   const navigate = useNavigate()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
   const { logout } = useUserVar()
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_SELF, {
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -60,8 +58,8 @@ export default function UserPage() {
     onCompleted({ closeAccount }) {
       if (closeAccount.result.__typename === 'CloseAccountResult') {
         toast({
-          title: i18n._(t`Account Closed Successfully`),
-          description: i18n._(t`Tracker account has been successfully closed.`),
+          title: t`Account Closed Successfully`,
+          description: t`Tracker account has been successfully closed.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -71,7 +69,7 @@ export default function UserPage() {
         navigate('/')
       } else if (closeAccount.result.__typename === 'CloseAccountError') {
         toast({
-          title: i18n._(t`Unable to close the account.`),
+          title: t`Unable to close the account.`,
           description: closeAccount.result.description,
           status: 'error',
           duration: 9000,
@@ -80,8 +78,8 @@ export default function UserPage() {
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect closeAccount.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect closeAccount.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,

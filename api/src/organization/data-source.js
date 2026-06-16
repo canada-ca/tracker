@@ -46,7 +46,8 @@ export class OrganizationDataSource {
               id: NEW._key,
               verified: NEW.verified,
               domainCount: 0,
-              summaries: NEW.summaries
+              policies: NEW.policies,
+              summaries: null
             },
             TRANSLATE(${language}, NEW.orgDetails)
           )

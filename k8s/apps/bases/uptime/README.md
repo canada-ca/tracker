@@ -1,6 +1,6 @@
 # Gatus Uptime Dashboard
 
-Gatus pod serving a live uptime dashboard at `/uptime`. Monitors domains with `highAvailability == true` in ArangoDB. No Prometheus, no history — live status only.
+Gatus pod serving a live uptime dashboard at `https://uptime.tracker.canada.ca/`. Monitors domains with `highAvailability == true` in ArangoDB. No Prometheus, no history — live status only.
 
 ## Before deploying
 
@@ -18,20 +18,22 @@ kubectl create secret generic uptime \
 ## Smoke test
 
 1. Check init container completed successfully:
+
    ```sh
    kubectl logs -n uptime deploy/tracker-uptime -c sync-init
    # Expect: "Query returned N document(s)" and "Config written successfully"
    ```
 
 2. Check Gatus started and loaded config:
+
    ```sh
    kubectl logs -n uptime deploy/tracker-uptime -c gatus
    # Expect: "Reloading configuration" or "Listening on :8080"
    ```
 
-3. Open `/uptime` in the browser — Gatus dashboard should load and show services.
+3. Open `https://uptime.tracker.canada.ca/` in the browser — Gatus dashboard should load and show services.
 
-4. Verify asset URLs on the `/uptime` page include `/uptime` in their path (no broken relative links). Check browser DevTools network tab for 404s.
+4. Verify asset URLs on the dashboard page resolve correctly from `/` on `uptime.tracker.canada.ca` (no broken relative links). Check browser DevTools network tab for 404s.
 
 5. Trigger a manual sync and watch for reload:
    ```sh
@@ -42,11 +44,11 @@ kubectl create secret generic uptime \
 
 ## Architecture
 
-| Container | Image | Role |
-|---|---|---|
-| `sync-init` | `uptime-sync` | Runs once before Gatus starts; writes initial `/config/config.yaml` |
-| `gatus` | `ghcr.io/twin/gatus:v5.12.0` | Serves dashboard on port 8080; reloads config on SIGHUP |
-| `sync-sidecar` | `uptime-sync` | Re-runs sync every `SYNC_INTERVAL_SECONDS` (default: 300s); sends SIGHUP to Gatus |
+| Container      | Image                        | Role                                                                              |
+| -------------- | ---------------------------- | --------------------------------------------------------------------------------- |
+| `sync-init`    | `uptime-sync`                | Runs once before Gatus starts; writes initial `/config/config.yaml`               |
+| `gatus`        | `ghcr.io/twin/gatus:v5.12.0` | Serves dashboard on port 8080; reloads config on SIGHUP                           |
+| `sync-sidecar` | `uptime-sync`                | Re-runs sync every `SYNC_INTERVAL_SECONDS` (default: 300s); sends SIGHUP to Gatus |
 
 Gatus watches `GATUS_CONFIG_PATH` for file changes and reloads automatically — no SIGHUP required.
 
@@ -62,4 +64,4 @@ The following are explicitly out of scope for this MVP and would require deliber
 - **Horizontal pod autoscaling / multiple replicas** — Gatus uses in-memory state; multiple replicas would show inconsistent dashboards without shared storage
 - **Automated Gatus image updates** — a Flux `ImageRepository` + `ImagePolicy` for `ghcr.io/twin/gatus` exists in `k8s/clusters/auto-image-update/bases/image-repo-policies/gatus-image-repo-policy.yaml` (semver `>=5.0.0`, polls hourly). Auto-commit is disabled: the `{"$imagepolicy": "flux-system:gatus"}` marker was intentionally removed from `deployment.yaml`. To re-enable, add the marker back as a comment on the `image:` line — Flux will then auto-commit tag bumps. Review the semver range before enabling; consider tightening to `>=5.35.0, <5.36.0` (patch-only) to limit blast radius.
 - **External Gatus history database** — replace memory storage with a persistent backend to retain check history across pod restarts
-- **Authentication** — the Gatus dashboard is currently unauthenticated. Tracker issues a `refresh_token` `HttpOnly` cookie (HS256, signed with `REFRESH_KEY`) on login via `authenticate.js`. An nginx auth proxy sidecar could intercept requests to `/uptime`, call the `refreshTokens` GraphQL mutation using that cookie, and only proxy to Gatus on a valid response. Istio `RequestAuthentication` is not viable as it requires RS256/asymmetric JWKS and Tracker uses a symmetric secret.
+- **Authentication** — the Gatus dashboard is currently unauthenticated. Tracker issues a `refresh_token` `HttpOnly` cookie (HS256, signed with `REFRESH_KEY`) on login via `authenticate.js`. An nginx auth proxy sidecar could intercept requests to `uptime.tracker.canada.ca`, call the `refreshTokens` GraphQL mutation using that cookie, and only proxy to Gatus on a valid response. Istio `RequestAuthentication` is not viable as it requires RS256/asymmetric JWKS and Tracker uses a symmetric secret.

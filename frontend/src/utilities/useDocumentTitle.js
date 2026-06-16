@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
-import { t } from "@lingui/core/macro"
-import { useLingui } from '@lingui/react'
+import { useLingui } from '@lingui/react/macro'
 
 export const useDocumentTitle = (title, setTitle = true) => {
-  const { i18n } = useLingui()
+  const { t } = useLingui()
   useEffect(() => {
-    if (setTitle) document.title = i18n._(t`${title} - Tracker`) || 'Tracker'
+    if (setTitle) document.title = t`${title} - Tracker` || 'Tracker'
   })
 }

@@ -15,9 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { LinkIcon, SearchIcon } from '@chakra-ui/icons'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { useLingui } from '@lingui/react'
+import { Trans, useLingui } from "@lingui/react/macro"
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link as RouteLink } from 'react-router-dom'
 import withSuperAdmin from '../app/withSuperAdmin'
@@ -36,7 +34,7 @@ import { useUserVar } from '../utilities/userState'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DmarcByDomainPage() {
-  const { i18n } = useLingui()
+  const { t, i18n } = useLingui()
   const currentDate = new Date()
   const { isLoggedIn, hasAffiliation } = useUserVar()
 
@@ -109,7 +107,7 @@ export default function DmarcByDomainPage() {
 
   const [domain, totalMessages, fullPassPercentage, passSpfOnlyPercentage, passDkimOnlyPercentage, failPercentage] = [
     {
-      Header: i18n._(t`Domain`),
+      Header: t`Domain`,
       accessor: 'domain',
       // eslint-disable-next-line react/prop-types
       Cell: function CellValueWithLink({ value }) {
@@ -127,35 +125,35 @@ export default function DmarcByDomainPage() {
       sortDescFirst: true,
     },
     {
-      Header: i18n._(t`Total Messages`),
+      Header: t`Total Messages`,
       accessor: 'totalMessages',
       Cell: ({ value }) => value.toLocaleString(i18n.locale),
       style: { textAlign: 'right' },
       sortDescFirst: true,
     },
     {
-      Header: i18n._(t`Full Pass %`),
+      Header: t`Full Pass %`,
       accessor: 'fullPassPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
       sortDescFirst: true,
     },
     {
-      Header: i18n._(t`Fail DKIM %`),
+      Header: t`Fail DKIM %`,
       accessor: 'passSpfOnlyPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
       sortDescFirst: true,
     },
     {
-      Header: i18n._(t`Fail SPF %`),
+      Header: t`Fail SPF %`,
       accessor: 'passDkimOnlyPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
       sortDescFirst: true,
     },
     {
-      Header: i18n._(t`Full Fail %`),
+      Header: t`Full Fail %`,
       accessor: 'failPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
@@ -166,7 +164,7 @@ export default function DmarcByDomainPage() {
   const percentageColumns = useMemo(
     () => [
       {
-        Header: i18n._(t`DMARC Summaries`),
+        Header: t`DMARC Summaries`,
         hidden: true,
         columns: [
           domain,

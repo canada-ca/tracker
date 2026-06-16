@@ -1,7 +1,5 @@
 import React from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { useLingui } from '@lingui/react'
+import { Trans, useLingui } from "@lingui/react/macro"
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
@@ -19,15 +17,15 @@ export default function TwoFactorAuthenticatePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const toast = useToast()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
   const { sendMethod, authenticateToken } = useParams()
   const { from } = location.state || { from: { pathname: '/' } }
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
     onError() {
       toast({
-        title: i18n._(t`An error occurred.`),
-        description: i18n._(t`Unable to sign in to your account, please try again.`),
+        title: t`An error occurred.`,
+        description: t`Unable to sign in to your account, please try again.`,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -52,8 +50,8 @@ export default function TwoFactorAuthenticatePage() {
         navigate(from, { replace: true })
         // Display a welcome message
         toast({
-          title: i18n._(t`Sign In.`),
-          description: i18n._(t`Welcome, you are successfully signed in!`),
+          title: t`Sign In.`,
+          description: t`Welcome, you are successfully signed in!`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -63,7 +61,7 @@ export default function TwoFactorAuthenticatePage() {
       // Non server error occurs
       else if (authenticate.result.__typename === 'AuthenticateError') {
         toast({
-          title: i18n._(t`Unable to sign in to your account, please try again.`),
+          title: t`Unable to sign in to your account, please try again.`,
           description: authenticate.result.description,
           status: 'error',
           duration: 9000,
