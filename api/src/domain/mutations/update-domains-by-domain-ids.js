@@ -82,10 +82,27 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
     for (const id of args.domainIds) {
       const { id: domainId } = fromGlobalId(cleanseInput(id))
       // check for valid domain/claim
-      const checkClaim = await domainDS.loadClaimForOrgByDomainKey({
+      let checkClaim = await domainDS.loadClaimForOrgByDomainKey({
         orgId: org._id,
         domainKey: domainId,
       })
+
+      if (typeof checkClaim === 'undefined') {
+        const domain = await domainDS.byKey.load(domainId)
+        if (typeof domain !== 'undefined') {
+          const orgHasClaim = await domainDS.organizationHasClaim({
+            orgId: org._id,
+            domainId: domain._id,
+            domainKey: domainId,
+          })
+          if (orgHasClaim) {
+            const claim = await domainDS.loadClaimByOrgAndDomain({ orgId: org._id, domainId: domain._id })
+            if (typeof claim !== 'undefined') {
+              checkClaim = { claim, domain: domain.domain }
+            }
+          }
+        }
+      }
 
       if (typeof checkClaim === 'undefined') {
         console.warn(

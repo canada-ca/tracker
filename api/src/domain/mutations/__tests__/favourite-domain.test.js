@@ -12,7 +12,7 @@ import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('favourite a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user, domain1
