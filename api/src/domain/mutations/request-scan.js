@@ -3,7 +3,6 @@ import { GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 
 import { Domain } from '../../scalars'
-import { logActivity } from '../../audit-logs'
 import { headers } from 'nats'
 
 export const requestScan = new mutationWithClientMutationId({
@@ -33,7 +32,7 @@ export const requestScan = new mutationWithClientMutationId({
       request: { ip },
       publish,
       auth: { checkDomainPermission, userRequired, verifiedRequired },
-      dataSources: { webScan, domain: domainDS },
+      dataSources: { webScan, domain: domainDS, auditLogs },
       validators: { cleanseInput },
     },
   ) => {
@@ -146,10 +145,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     // Logs scan request activity for each org claiming domain
     for (const orgClaimingDomain of orgsClaimingDomain) {
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,

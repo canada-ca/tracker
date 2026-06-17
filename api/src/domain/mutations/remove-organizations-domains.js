@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { bulkModifyDomainsUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { Domain } from '../../scalars'
 
 export const removeOrganizationsDomains = new mutationWithClientMutationId({
@@ -45,7 +44,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      dataSources: { domain: domainDS, organization: orgDS },
+      dataSources: { domain: domainDS, organization: orgDS, auditLogs },
     },
   ) => {
     // Get User
@@ -154,10 +153,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           )
 
           if (audit) {
-            await logActivity({
-              transaction,
-              collections,
-              query,
+            await auditLogs.logActivity({
               initiatedBy: {
                 id: user._key,
                 userName: user.userName,
@@ -392,10 +388,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
 
         if (audit) {
           console.info(`User: ${userKey} successfully removed domain: ${domain} from org: ${org.slug}.`)
-          await logActivity({
-            transaction,
-            collections,
-            query,
+          await auditLogs.logActivity({
             initiatedBy: {
               id: user._key,
               userName: user.userName,
@@ -421,10 +414,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
     if (!audit) {
       console.info(`User: ${userKey} successfully removed ${domainCount} domain(s) from org: ${org.slug}.`)
       if (archiveDomains) {
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -449,10 +439,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           },
         })
       } else {
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,

@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { bulkModifyDomainsUnion } from '../unions'
 import { Domain } from '../../scalars'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
 
 export const addOrganizationsDomains = new mutationWithClientMutationId({
@@ -54,7 +53,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       userKey,
       request: { ip },
       auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
-      dataSources: { domain: domainDS, organization: orgDS },
+      dataSources: { domain: domainDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
   ) => {
@@ -279,10 +278,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
       if (audit) {
         console.info(`User: ${userKey} successfully added domain: ${insertDomain.domain} to org: ${org.slug}.`)
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -306,10 +302,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     if (!audit) {
       console.info(`User: ${userKey} successfully added ${domainCount} domain(s) to org: ${org.slug}.`)
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,

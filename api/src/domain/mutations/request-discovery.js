@@ -3,7 +3,6 @@ import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 
 import { Domain } from '../../scalars'
-import { logActivity } from '../../audit-logs'
 
 export const requestDiscovery = new mutationWithClientMutationId({
   name: 'RequestDiscovery',
@@ -28,15 +27,12 @@ export const requestDiscovery = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
-      query,
-      collections,
-      transaction,
       i18n,
       userKey,
       publish,
       request: { ip },
       auth: { checkDomainPermission, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      dataSources: { domain: domainDS, organization: orgDS },
+      dataSources: { domain: domainDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
   ) => {
@@ -107,10 +103,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
       },
     })
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogs.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
