@@ -11,7 +11,6 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
 import { DomainDataSource } from '../../data-source'
-import { loadDomainByKey } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -130,12 +129,6 @@ describe('favourite a domain', () => {
                   i18n,
                   transaction,
                   collections: collectionNames,
-                }),
-              },
-              loaders: {
-                loadDomainByKey: loadDomainByKey({
-                  query,
-                  userKey: user._key,
                 }),
               },
               validators: { cleanseInput },

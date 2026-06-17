@@ -13,8 +13,6 @@ import { checkPermission, userRequired, saltedHash, verifiedRequired, tfaRequire
 import { DomainDataSource } from '../../data-source'
 import { OrganizationDataSource } from '../../../organization/data-source'
 import { AuditLogsDataSource } from '../../../audit-logs/data-source'
-import { loadDomainByDomain } from '../../loaders'
-import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -32,16 +30,10 @@ const withDataSources = (contextValue) => {
 
   const domainDataSource =
     contextValue?.dataSources?.domain || new DomainDataSource({ query, userKey, i18n, transaction, collections })
-  if (contextValue?.loaders?.loadDomainByDomain) {
-    domainDataSource.byDomain = contextValue.loaders.loadDomainByDomain
-  }
 
   const organizationDataSource =
     contextValue?.dataSources?.organization ||
     new OrganizationDataSource({ query, userKey, i18n, language, cleanseInput, transaction, collections })
-  if (contextValue?.loaders?.loadOrgByKey) {
-    organizationDataSource.byKey = contextValue.loaders.loadOrgByKey
-  }
 
   const auditLogs =
     contextValue?.dataSources?.auditLogs || new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections })
@@ -204,10 +196,6 @@ describe('given the addOrganizationsDomains mutation', () => {
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
             },
-            loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
-              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-            },
             validators: { cleanseInput },
           },
         })
@@ -272,10 +260,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
               validators: { cleanseInput },
             },
@@ -418,10 +402,6 @@ describe('given the addOrganizationsDomains mutation', () => {
               }),
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
-            },
-            loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
-              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
             },
             validators: { cleanseInput },
           },
