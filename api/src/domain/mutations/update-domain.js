@@ -56,7 +56,6 @@ export const updateDomain = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
@@ -137,22 +136,18 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org has a claim to this domain
-    let countCursor
+    let orgHasClaim
     try {
-      countCursor = await query`
-        WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims
-          FILTER e._from == ${org._id}
-          RETURN e
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
-      )
+      orgHasClaim = await domainDataSource.organizationHasClaim({
+        orgId: org._id,
+        domainId: domain._id,
+        domainKey: domainId,
+      })
+    } catch {
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
-    if (countCursor.count < 1) {
+    if (!orgHasClaim) {
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
       )
@@ -184,23 +179,10 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    let claimCursor
-    try {
-      claimCursor = await query`
-        WITH claims
-        FOR claim IN claims
-          FILTER claim._from == ${org._id} && claim._to == ${domain._id}
-          RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
-      `
-    } catch (err) {
-      console.error(`Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
-    }
-    let claim
-    try {
-      claim = await claimCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
-    }
+    const claim = await domainDataSource.loadClaimByOrgAndDomain({
+      orgId: org._id,
+      domainId: domain._id,
+    })
 
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
@@ -215,7 +197,13 @@ export const updateDomain = new mutationWithClientMutationId({
       assetState: assetState || claim?.assetState,
     }
 
-    const returnDomain = await domainDataSource.update({ domain, org, domainToInsert, claimToInsert })
+    let returnDomain
+    try {
+      const domainForUpdate = typeof domain?._key === 'undefined' ? { ...domain, _key: domainId } : domain
+      returnDomain = await domainDataSource.update({ domain: domainForUpdate, org, domainToInsert, claimToInsert })
+    } catch {
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
 

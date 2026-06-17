@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro'
+import { aql } from 'arangojs'
 
 import {
   loadDomainByDomain,
@@ -186,6 +187,256 @@ export class DomainDataSource {
     }
 
     return dmarcCountCursor.count === 1
+  }
+
+  async organizationAlreadyClaimsDomainName({ orgId, domainName }) {
+    let checkDomainCursor
+    try {
+      checkDomainCursor = await this._query`
+        WITH claims, domains, organizations
+        LET domainIds = (FOR domain IN domains FILTER domain.domain == ${domainName} RETURN { id: domain._id })
+        FOR domainId IN domainIds
+          LET domainEdges = (FOR v, e IN 1..1 ANY domainId.id claims RETURN { _from: e._from })
+            FOR domainEdge IN domainEdges
+              LET org = DOCUMENT(domainEdge._from)
+              FILTER org._id == ${orgId}
+              RETURN true
+      `
+    } catch (err) {
+      console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
+      throw new Error(this._i18n._(t`Unable to create domain. Please try again.`))
+    }
+
+    let checkOrgDomain
+    try {
+      checkOrgDomain = await checkDomainCursor.next()
+    } catch (err) {
+      console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
+      throw new Error(this._i18n._(t`Unable to create domain. Please try again.`))
+    }
+
+    return typeof checkOrgDomain !== 'undefined'
+  }
+
+  async organizationHasClaim({ orgId, domainId, domainKey }) {
+    let countCursor
+    try {
+      countCursor = await this._query`
+        WITH claims, domains, organizations
+        FOR v, e IN 1..1 ANY ${domainId} claims
+          FILTER e._from == ${orgId}
+          RETURN e
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred while user: ${this._userKey} attempted to update domain: ${domainKey}, error: ${err}`,
+      )
+      throw new Error(this._i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    return countCursor.count > 0
+  }
+
+  async loadClaimByOrgAndDomain({ orgId, domainId }) {
+    let claimCursor
+    try {
+      claimCursor = await this._query`
+        WITH claims
+        FOR claim IN claims
+          FILTER claim._from == ${orgId} && claim._to == ${domainId}
+          RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
+      `
+    } catch (err) {
+      console.error(`Database error occurred when user: ${this._userKey} running loadDomainByKey: ${err}`)
+      return undefined
+    }
+
+    if (typeof claimCursor?.next !== 'function') {
+      return undefined
+    }
+
+    try {
+      return await claimCursor.next()
+    } catch (err) {
+      console.error(`Cursor error occurred when user: ${this._userKey} running loadDomainByKey: ${err}`)
+      return undefined
+    }
+  }
+
+  async loadClaimForOrgByDomainKey({ orgId, domainKey }) {
+    let checkClaimCursor
+    try {
+      checkClaimCursor = await this._query`
+        WITH claims, domains, organizations
+        FOR v, e IN 1..1 ANY ${orgId} claims
+          FILTER v._key == ${domainKey}
+          RETURN { claim: e, domain: v.domain }
+      `
+    } catch (err) {
+      console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
+      return undefined
+    }
+
+    try {
+      return await checkClaimCursor.next()
+    } catch (err) {
+      console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
+      return undefined
+    }
+  }
+
+  async loadClaimsForOrgByFilters({ orgId, filters, search }) {
+    let domainFilters = aql``
+    if (typeof filters !== 'undefined') {
+      filters.forEach(({ filterCategory, comparison, filterValue }) => {
+        if (comparison === '==') {
+          comparison = aql`==`
+        } else {
+          comparison = aql`!=`
+        }
+        if (filterCategory === 'dmarc-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.dmarc ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'dkim-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.dkim ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'https-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.https ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'spf-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.spf ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'ciphers-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.ciphers ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'curves-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.curves ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'hsts-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.hsts ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'policy-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.policy ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'protocols-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.protocols ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'certificates-status') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER v.status.certificates ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'tags') {
+          if (filterValue === 'archived') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.archived ${comparison} true
+              `
+          } else if (filterValue === 'nxdomain') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.rcode ${comparison} "NXDOMAIN"
+              `
+          } else if (filterValue === 'blocked') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.blocked ${comparison} true
+              `
+          } else if (filterValue === 'wildcard-sibling') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.wildcardSibling ${comparison} true
+              `
+          } else if (filterValue === 'wildcard-entry') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.wildcardEntry ${comparison} true
+              `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.webScanPending ${comparison} true
+              `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.hasEntrustCertificate ${comparison} true
+              `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.cveDetected ${comparison} true
+              `
+          } else {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER POSITION( e.tags, ${filterValue}) ${comparison} true
+              `
+          }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER e.assetState ${comparison} ${filterValue}
+            `
+        } else if (filterCategory === 'guidance-tag') {
+          domainFilters = aql`
+              ${domainFilters}
+              FILTER POSITION(negativeTags, ${filterValue}) ${comparison} true
+            `
+        }
+      })
+    }
+
+    let searchString = aql``
+    if (typeof search !== 'undefined' && search !== '') {
+      searchString = aql`FILTER LOWER(v.domain) LIKE LOWER(${search})`
+    }
+
+    let checkClaimsCursor
+    try {
+      checkClaimsCursor = await this._query`
+        WITH claims, domains, organizations
+        FOR v, e IN 1..1 ANY ${orgId} claims
+          ${domainFilters}
+          ${searchString}
+          RETURN { claim: e, domain: v.domain }
+      `
+    } catch (err) {
+      console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
+      throw new Error(this._i18n._(t`Unable to update domains. Please try again.`))
+    }
+
+    let checkClaims
+    try {
+      checkClaims = await checkClaimsCursor.all()
+    } catch (err) {
+      console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
+      throw new Error(this._i18n._(t`Unable to update domains. Please try again.`))
+    }
+
+    if (typeof checkClaims === 'undefined') {
+      throw new Error(this._i18n._(t`Unable to update domains. Please try again.`))
+    }
+
+    return checkClaims
   }
 
   async unfavourite({ domain, user }) {

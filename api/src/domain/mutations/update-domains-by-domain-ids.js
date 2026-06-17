@@ -32,7 +32,6 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
@@ -80,30 +79,13 @@ export const updateDomainsByDomainIds = new mutationWithClientMutationId({
     }
 
     let domainCount = 0
-    const orgKeyString = `organizations/${orgId}`
     for (const id of args.domainIds) {
       const { id: domainId } = fromGlobalId(cleanseInput(id))
       // check for valid domain/claim
-      let checkClaimCursor
-      try {
-        checkClaimCursor = await query`
-          WITH claims, domains, organizations
-          FOR v, e IN 1..1 ANY ${orgKeyString} claims
-            FILTER v._key == ${domainId}
-            RETURN { claim: e, domain: v.domain }
-        `
-      } catch (err) {
-        console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
-        continue
-      }
-
-      let checkClaim
-      try {
-        checkClaim = await checkClaimCursor.next()
-      } catch (err) {
-        console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
-        continue
-      }
+      const checkClaim = await domainDS.loadClaimForOrgByDomainKey({
+        orgId: org._id,
+        domainKey: domainId,
+      })
 
       if (typeof checkClaim === 'undefined') {
         console.warn(

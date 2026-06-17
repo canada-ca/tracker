@@ -55,7 +55,6 @@ export const createDomain = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      query,
       userKey,
       publish,
       auth: { checkPermission, saltedHash, userRequired, tfaRequired, verifiedRequired },
@@ -177,33 +176,12 @@ export const createDomain = new mutationWithClientMutationId({
       highAvailability,
     }
 
-    // Check to see if domain already belongs to same org
-    let checkDomainCursor
-    try {
-      checkDomainCursor = await query`
-        WITH claims, domains, organizations
-        LET domainIds = (FOR domain IN domains FILTER domain.domain == ${insertDomain.domain} RETURN { id: domain._id })
-        FOR domainId IN domainIds
-          LET domainEdges = (FOR v, e IN 1..1 ANY domainId.id claims RETURN { _from: e._from })
-            FOR domainEdge IN domainEdges
-              LET org = DOCUMENT(domainEdge._from)
-              FILTER org._key == ${org._key}
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${request.language}, org.orgDetails))
-      `
-    } catch (err) {
-      console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
-      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-    }
+    const orgAlreadyClaimsDomain = await domainDS.organizationAlreadyClaimsDomainName({
+      orgId: org._id,
+      domainName: insertDomain.domain,
+    })
 
-    let checkOrgDomain
-    try {
-      checkOrgDomain = await checkDomainCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
-      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-    }
-
-    if (typeof checkOrgDomain !== 'undefined') {
+    if (orgAlreadyClaimsDomain) {
       console.warn(
         `User: ${userKey} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`,
       )
