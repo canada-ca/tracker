@@ -331,7 +331,7 @@ export const domainType = new GraphQLObjectType({
         },
       },
       resolve: async ({ claimTags }, args, { dataSources: { tags } }) => {
-        const loadedTags = await tags.byTagId(claimTags)
+        const loadedTags = await tags.byTagId.loadMany(claimTags)
         return loadedTags.filter((tag) => {
           return args.isVisible ? tag.visible : true
         })
