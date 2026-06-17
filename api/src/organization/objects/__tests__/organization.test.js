@@ -244,9 +244,7 @@ describe('given the organization object', () => {
             {
               dataSources: {
                 auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
-              },
-              loaders: {
-                loadDomainConnectionsByOrgId: jest.fn().mockReturnValue(expectedResult),
+                domain: { connectionsByOrgId: jest.fn().mockReturnValue(expectedResult) },
               },
             },
           ),
