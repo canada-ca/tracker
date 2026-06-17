@@ -62,7 +62,7 @@ export const unignoreCve = new mutationWithClientMutationId({
       }
     }
 
-    const oldIgnoredCves = domain.ignoredCves
+    const oldIgnoredCves = domain.ignoredCves || []
 
     if (!oldIgnoredCves.includes(ignoredCve)) {
       console.warn(

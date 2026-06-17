@@ -7,6 +7,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
+import { DomainDataSource } from '../../data-source'
 import { loadDomainByKey } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
@@ -99,6 +100,14 @@ describe('favourite a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+              },
+              dataSources: {
+                domain: new DomainDataSource({
+                  query,
+                  userKey: user._key,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({

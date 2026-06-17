@@ -1,7 +1,7 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as rawGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { createQuerySchema } from '../../../query'
@@ -10,6 +10,9 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
+import { logActivity } from '../../../audit-logs'
+import { DomainDataSource } from '../../data-source'
+import { OrganizationDataSource } from '../../../organization/data-source'
 import { loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -17,6 +20,51 @@ import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const withDataSources = (contextValue) => {
+  const query = contextValue?.query
+  const transaction = contextValue?.transaction
+  const collections = contextValue?.collections
+  const userKey = contextValue?.userKey
+  const i18n = contextValue?.i18n
+  const language = contextValue?.request?.language
+  const cleanseInput = contextValue?.validators?.cleanseInput
+
+  const domainDataSource =
+    contextValue?.dataSources?.domain ||
+    new DomainDataSource({ query, userKey, i18n, transaction, collections })
+  if (contextValue?.loaders?.loadDomainByKey) {
+    domainDataSource.byKey = contextValue.loaders.loadDomainByKey
+  }
+
+  const organizationDataSource =
+    contextValue?.dataSources?.organization ||
+    new OrganizationDataSource({ query, userKey, i18n, language, cleanseInput, transaction, collections })
+  if (contextValue?.loaders?.loadOrgByKey) {
+    organizationDataSource.byKey = contextValue.loaders.loadOrgByKey
+  }
+
+  const auditLogs = contextValue?.dataSources?.auditLogs || {
+    logActivity: (payload) => logActivity({ query, transaction, collections, ...payload }),
+  }
+
+  return {
+    ...contextValue,
+    dataSources: {
+      ...contextValue?.dataSources,
+      domain: domainDataSource,
+      organization: organizationDataSource,
+      auditLogs,
+    },
+  }
+}
+
+const graphql = ({ contextValue, ...args }) => {
+  return rawGraphql({
+    ...args,
+    contextValue: withDataSources(contextValue),
+  })
+}
 
 describe('removing a domain', () => {
   let schema, i18n, query, drop, truncate, collections, transaction, user

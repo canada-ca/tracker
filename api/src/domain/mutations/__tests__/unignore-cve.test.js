@@ -237,7 +237,7 @@ describe('unignore mutation', () => {
     })
 
     it('throws an error when the transaction step fails', async () => {
-      superAdminContext.transaction = jest.fn().mockReturnValue({
+      superAdminContext.dataSources.domain._transaction = jest.fn().mockReturnValue({
         step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
         abort: jest.fn(),
       })
@@ -269,7 +269,7 @@ describe('unignore mutation', () => {
     })
 
     it('throws an error when the transaction commit fails', async () => {
-      superAdminContext.transaction = jest.fn().mockReturnValue({
+      superAdminContext.dataSources.domain._transaction = jest.fn().mockReturnValue({
         step: jest.fn().mockReturnValue(),
         commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
         abort: jest.fn(),

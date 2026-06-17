@@ -10,6 +10,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
+import { DomainDataSource } from '../../data-source'
 import { loadDomainByKey } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
@@ -121,6 +122,15 @@ describe('favourite a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+              },
+              dataSources: {
+                domain: new DomainDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({

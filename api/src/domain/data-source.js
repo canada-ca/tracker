@@ -123,6 +123,71 @@ export class DomainDataSource {
     }
   }
 
+  async isFavouritedByUser({ domainId, userId }) {
+    let checkDomainCursor
+    try {
+      checkDomainCursor = await this._query`
+        WITH domains
+        FOR v, e IN 1..1 ANY ${domainId} favourites
+          FILTER e._from == ${userId}
+          RETURN e
+      `
+    } catch (err) {
+      console.error(`Database error occurred while running check to see if domain already favourited: ${err}`)
+      throw new Error(this._i18n._(t`Unable to favourite domain. Please try again.`))
+    }
+
+    let checkUserDomain
+    try {
+      checkUserDomain = await checkDomainCursor.next()
+    } catch (err) {
+      console.error(`Cursor error occurred while running check to see if domain already favourited: ${err}`)
+      throw new Error(this._i18n._(t`Unable to favourite domain. Please try again.`))
+    }
+
+    return typeof checkUserDomain !== 'undefined'
+  }
+
+  async organizationsClaimingDomain({ domainId, domainName }) {
+    let countCursor
+    try {
+      countCursor = await this._query`
+        WITH claims, domains, organizations
+        FOR v, e IN 1..1 ANY ${domainId} claims
+          RETURN v
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred for user: ${this._userKey}, when counting domain claims for domain: ${domainName || domainId}, error: ${err}`,
+      )
+      throw new Error(this._i18n._(t`Unable to remove domain. Please try again.`))
+    }
+
+    return {
+      organizations: await countCursor.all(),
+      count: countCursor.count,
+    }
+  }
+
+  async hasOwnershipClaim({ orgId, domainId, domainName }) {
+    let dmarcCountCursor
+    try {
+      dmarcCountCursor = await this._query`
+        WITH domains, organizations, ownership
+          FOR v IN 1..1 OUTBOUND ${orgId} ownership
+            FILTER v._id == ${domainId}
+            RETURN true
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred for user: ${this._userKey}, when counting ownership claims for domain: ${domainName}, error: ${err}`,
+      )
+      throw new Error(this._i18n._(t`Unable to remove domain. Please try again.`))
+    }
+
+    return dmarcCountCursor.count === 1
+  }
+
   async unfavourite({ domain, user }) {
     const trx = await this._transaction(this._collections)
 

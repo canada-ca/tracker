@@ -24,7 +24,6 @@ export const favouriteDomain = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
       userKey,
       auth: { userRequired, verifiedRequired },
       dataSources: { domain: domainDataSource },
@@ -50,29 +49,12 @@ export const favouriteDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Check to see if domain already favourited by user
-    let checkDomainCursor
-    try {
-      checkDomainCursor = await query`
-        WITH domains
-        FOR v, e IN 1..1 ANY ${domain._id} favourites
-            FILTER e._from == ${user._id}
-            RETURN e
-      `
-    } catch (err) {
-      console.error(`Database error occurred while running check to see if domain already favourited: ${err}`)
-      throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
-    }
+    const alreadyFavourited = await domainDataSource.isFavouritedByUser({
+      domainId: domain._id,
+      userId: user._id,
+    })
 
-    let checkUserDomain
-    try {
-      checkUserDomain = await checkDomainCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred while running check to see if domain already favourited: ${err}`)
-      throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
-    }
-
-    if (typeof checkUserDomain !== 'undefined') {
+    if (alreadyFavourited) {
       console.warn(`User: ${userKey} attempted to favourite a domain, however user already has that domain favourited.`)
       return {
         _type: 'error',

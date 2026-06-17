@@ -34,13 +34,11 @@ export const removeDomain = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      dataSources: { domain: domainDataSource, auditLogs },
-      loaders: { loadOrgByKey },
+      dataSources: { domain: domainDataSource, organization: organizationDS, auditLogs },
     },
   ) => {
     // Get User
@@ -67,7 +65,7 @@ export const removeDomain = new mutationWithClientMutationId({
     }
 
     // Get Org from db
-    const org = await loadOrgByKey.load(orgId)
+    const org = await organizationDS.byKey.load(orgId)
 
     // Check to see if org exists
     if (typeof org === 'undefined') {
@@ -108,23 +106,18 @@ export const removeDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Check to see if more than one organization has a claim to this domain
-    let countCursor
+    let orgsClaimingDomain
+    let orgsClaimingDomainCount
     try {
-      countCursor = await query`
-        WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims
-          RETURN v
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred for user: ${userKey}, when counting domain claims for domain: ${domain.domain}, error: ${err}`,
-      )
+      const claims = await domainDataSource.organizationsClaimingDomain({
+        domainId: domain._id,
+        domainName: domain.domain,
+      })
+      orgsClaimingDomain = claims.organizations
+      orgsClaimingDomainCount = claims.count
+    } catch {
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
-
-    // check if org has claim to domain
-    const orgsClaimingDomain = await countCursor.all()
     const orgHasDomainClaim = orgsClaimingDomain.some((orgVertex) => {
       return orgVertex._id === org._id
     })
@@ -136,31 +129,30 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Domain is not part of organization.`))
     }
 
-    // check to see if org removing domain has ownership
-    let dmarcCountCursor
+    let hasOwnership
     try {
-      dmarcCountCursor = await query`
-        WITH domains, organizations, ownership
-          FOR v IN 1..1 OUTBOUND ${org._id} ownership
-            FILTER v._id == ${domain._id}
-            RETURN true
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred for user: ${userKey}, when counting ownership claims for domain: ${domain.domain}, error: ${err}`,
-      )
+      hasOwnership = await domainDataSource.hasOwnershipClaim({
+        orgId: org._id,
+        domainId: domain._id,
+        domainName: domain.domain,
+      })
+    } catch {
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    await domainDataSource.remove({
-      domain,
-      org,
-      orgsClaimingDomain: orgsClaimingDomain.length,
-      hasOwnership: dmarcCountCursor.count === 1,
-    })
+    try {
+      await domainDataSource.remove({
+        domain,
+        org,
+        orgsClaimingDomain: orgsClaimingDomainCount,
+        hasOwnership,
+      })
+    } catch {
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+    }
 
     console.info(`User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`)
-    await auditLogs.logActivity({
+    const activityPayload = {
       initiatedBy: {
         id: user._key,
         userName: user.userName,
@@ -177,7 +169,9 @@ export const removeDomain = new mutationWithClientMutationId({
         resourceType: 'domain',
       },
       reason: args.reason,
-    })
+    }
+
+    await auditLogs.logActivity(activityPayload)
 
     return {
       _type: 'result',
