@@ -71,27 +71,28 @@ def ignore_domain(domain):
     )
 
 
-def get_domain_negative_findings(db, domain_id):
+def get_domain_negative_findings(db, domain):
     cursor = db.aql.execute(
         """
             LET emailTags = (
-                FOR dnsScan, dnsE IN 1 OUTBOUND @domain_id domainsDNS
-                    SORT dnsScan.timestamp DESC
-                    LIMIT 1
-                    RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
+                LET dnsScan = DOCUMENT(@latest_dns_scan)
+                FILTER dnsScan != null
+                RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
             )[0]
             LET webTags = (
-                FOR web, webE IN 1 OUTBOUND @domain_id domainsWeb
-                    SORT web.timestamp DESC
-                    LIMIT 1
-                    FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
-                        RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
+                LET web = DOCUMENT(@latest_web_scan)
+                FILTER web != null
+                FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
+                    RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
             )
             FOR tag IN FLATTEN([emailTags, webTags], 2)
                 FILTER tag != null
                 RETURN tag
         """,
-        bind_vars={"domain_id": domain_id},
+        bind_vars={
+            "latest_dns_scan": domain.get("latestDnsScan"),
+            "latest_web_scan": domain.get("latestWebScan"),
+        },
     )
     if cursor.empty():
         return []
@@ -362,7 +363,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
                         # Negative tags
                         domain_negative_tags = get_domain_negative_findings(
-                            db, domain["_id"]
+                            db, domain
                         )
                         for tag in domain_negative_tags:
                             if tag in negative_tags:
