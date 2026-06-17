@@ -3,7 +3,7 @@ import { aql } from 'arangojs'
 
 export const loadChartSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ startDate, endDate, sortDirection = 'ASC', limit }) => {
+  async ({ startDate, endDate, sortDirection = 'ASC', limit, scope = 'verified' }) => {
     const cleansedStartDate = startDate ? cleanseInput(startDate) : null
     const cleansedEndDate = endDate ? cleanseInput(endDate) : new Date().toISOString()
 
@@ -33,10 +33,16 @@ export const loadChartSummariesByPeriod =
       limitString = aql`LIMIT ${limit}`
     }
 
+    let scopeFilter = aql`FILTER summary.scope == ${scope}`
+    if (scope === 'verified') {
+      scopeFilter = aql`FILTER summary.scope == ${scope} OR summary.scope == null`
+    }
+
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
         FOR summary IN chartSummaries
+          ${scopeFilter}
           ${startDateFilter}
           ${endDateFilter}
           ${sortString}

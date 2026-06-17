@@ -1,7 +1,7 @@
 import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql'
 
 import { chartSummaryType } from '../objects'
-import { OrderDirection } from '../../enums'
+import { ChartSummaryScopeEnums, OrderDirection } from '../../enums'
 
 export const findChartSummaries = {
   type: new GraphQLList(chartSummaryType),
@@ -22,6 +22,10 @@ export const findChartSummaries = {
     limit: {
       type: GraphQLInt,
       description: 'The maximum amount of summaries to be returned.',
+    },
+    scope: {
+      type: ChartSummaryScopeEnums,
+      description: 'The set of organizations the returned summaries should cover. Defaults to verified.',
     },
   },
   resolve: async (

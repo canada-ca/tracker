@@ -61,6 +61,7 @@ class TestSummaries:
             {
                 "_key": "testorg",
                 "verified": True,
+                "policies": {"psd": True, "pgs": False},
                 "summaries": {
                     "organization": "organizations/testorg",
                     "dmarc": {"pass": 0, "fail": 0, "total": 0},
@@ -170,34 +171,84 @@ class TestSummaries:
             host=DB_URL, name=db_name, user=DB_USER, password=DB_PASS
         )
 
-        summary = arango_db.collection("chartSummaries").all().next()
-        assert summary["https"] == {
-            "scan_types": ["https"],
-            "pass": 2,
-            "fail": 1,
-            "total": 3,
+        chart_summaries = arango_db.collection("chartSummaries")
+
+        def get_scope(scope):
+            summary = chart_summaries.find({"scope": scope}).next()
+            for k in ("_id", "_key", "_rev"):
+                summary.pop(k, None)
+            return summary
+
+        populated = {
+            "date": date.today().isoformat(),
+            "https": {"scan_types": ["https"], "pass": 2, "fail": 1, "total": 3},
+            "dmarc": {"scan_types": ["dmarc"], "pass": 2, "fail": 1, "total": 3},
+            "web_connections": {
+                "scan_types": ["https", "hsts"],
+                "pass": 2,
+                "fail": 1,
+                "total": 3,
+            },
+            "ssl": {"scan_types": ["ssl"], "pass": 2, "fail": 1, "total": 3},
+            "spf": {"scan_types": ["spf"], "pass": 2, "fail": 1, "total": 3},
+            "dkim": {"scan_types": ["dkim"], "pass": 1, "fail": 2, "total": 3},
+            "mail": {
+                "scan_types": ["dmarc", "spf", "dkim"],
+                "pass": 1,
+                "fail": 2,
+                "total": 3,
+            },
+            "web": {
+                "scan_types": ["https", "hsts", "ssl"],
+                "pass": 2,
+                "fail": 1,
+                "total": 3,
+            },
+            "dmarc_phase": {
+                "assess": 0,
+                "deploy": 0,
+                "enforce": 0,
+                "maintain": 2,
+                "total": 2,
+            },
         }
 
-        assert summary["web"] == {
-            "scan_types": ["https", "hsts", "ssl"],
-            "pass": 2,
-            "fail": 1,
-            "total": 3,
-        }
+        for scope in ("all", "verified", "psd"):
+            assert get_scope(scope) == {**populated, "scope": scope}
 
-        assert summary["mail"] == {
-            "scan_types": ["dmarc", "spf", "dkim"],
-            "pass": 1,
-            "fail": 2,
-            "total": 3,
-        }
-
-        assert summary["dmarc_phase"] == {
-            "assess": 0,
-            "deploy": 0,
-            "enforce": 0,
-            "maintain": 2,
-            "total": 2,
+        assert get_scope("pgs") == {
+            "date": date.today().isoformat(),
+            "scope": "pgs",
+            "https": {"scan_types": ["https"], "pass": 0, "fail": 0, "total": 0},
+            "dmarc": {"scan_types": ["dmarc"], "pass": 0, "fail": 0, "total": 0},
+            "web_connections": {
+                "scan_types": ["https", "hsts"],
+                "pass": 0,
+                "fail": 0,
+                "total": 0,
+            },
+            "ssl": {"scan_types": ["ssl"], "pass": 0, "fail": 0, "total": 0},
+            "spf": {"scan_types": ["spf"], "pass": 0, "fail": 0, "total": 0},
+            "dkim": {"scan_types": ["dkim"], "pass": 0, "fail": 0, "total": 0},
+            "mail": {
+                "scan_types": ["dmarc", "spf", "dkim"],
+                "pass": 0,
+                "fail": 0,
+                "total": 0,
+            },
+            "web": {
+                "scan_types": ["https", "hsts", "ssl"],
+                "pass": 0,
+                "fail": 0,
+                "total": 0,
+            },
+            "dmarc_phase": {
+                "assess": 0,
+                "deploy": 0,
+                "enforce": 0,
+                "maintain": 0,
+                "total": 0,
+            },
         }
 
     def test_update_org_summaries(self, arango_db):
