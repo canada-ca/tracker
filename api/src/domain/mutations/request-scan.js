@@ -25,8 +25,6 @@ export const requestScan = new mutationWithClientMutationId({
     args,
     {
       query,
-      collections,
-      transaction,
       i18n,
       userKey,
       request: { ip },
