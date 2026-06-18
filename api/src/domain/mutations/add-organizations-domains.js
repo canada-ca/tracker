@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { bulkModifyDomainsUnion } from '../unions'
 import { Domain } from '../../scalars'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
 
 export const addOrganizationsDomains = new mutationWithClientMutationId({
@@ -54,7 +53,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       userKey,
       request: { ip },
       auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadDomainByDomain, loadOrgByKey },
+      dataSources: { domain: domainDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
   ) => {
@@ -98,7 +97,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(`User: ${userKey} attempted to add domains to an organization: ${orgId} that does not exist.`)
@@ -192,7 +191,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       }
 
       // Check to see if domain already exists in db
-      const checkDomain = await loadDomainByDomain.load(insertDomain.domain)
+      const checkDomain = await domainDS.byDomain.load(insertDomain.domain)
 
       // Setup Transaction
       const trx = await transaction(collections)
@@ -279,10 +278,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
       if (audit) {
         console.info(`User: ${userKey} successfully added domain: ${insertDomain.domain} to org: ${org.slug}.`)
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -306,10 +302,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     if (!audit) {
       console.info(`User: ${userKey} successfully added ${domainCount} domain(s) to org: ${org.slug}.`)
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,

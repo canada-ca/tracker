@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeDomainUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { DomainRemovalReasonEnum } from '../../enums'
 import ac from '../../access-control'
 
@@ -35,14 +34,11 @@ export const removeDomain = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByKey, loadOrgByKey },
+      dataSources: { domain: domainDataSource, organization: organizationDS, auditLogs },
     },
   ) => {
     // Get User
@@ -56,7 +52,7 @@ export const removeDomain = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get domain from db
-    const domain = await loadDomainByKey.load(domainId)
+    const domain = await domainDataSource.byKey.load(domainId)
 
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
@@ -69,7 +65,7 @@ export const removeDomain = new mutationWithClientMutationId({
     }
 
     // Get Org from db
-    const org = await loadOrgByKey.load(orgId)
+    const org = await organizationDS.byKey.load(orgId)
 
     // Check to see if org exists
     if (typeof org === 'undefined') {
@@ -110,23 +106,18 @@ export const removeDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Check to see if more than one organization has a claim to this domain
-    let countCursor
+    let orgsClaimingDomain
+    let orgsClaimingDomainCount
     try {
-      countCursor = await query`
-        WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims
-          RETURN v
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred for user: ${userKey}, when counting domain claims for domain: ${domain.domain}, error: ${err}`,
-      )
+      const claims = await domainDataSource.organizationsClaimingDomain({
+        domainId: domain._id,
+        domainName: domain.domain,
+      })
+      orgsClaimingDomain = claims.organizations
+      orgsClaimingDomainCount = claims.count
+    } catch {
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
-
-    // check if org has claim to domain
-    const orgsClaimingDomain = await countCursor.all()
     const orgHasDomainClaim = orgsClaimingDomain.some((orgVertex) => {
       return orgVertex._id === org._id
     })
@@ -138,218 +129,30 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Domain is not part of organization.`))
     }
 
-    // check to see if org removing domain has ownership
-    let dmarcCountCursor
+    let hasOwnership
     try {
-      dmarcCountCursor = await query`
-        WITH domains, organizations, ownership
-          FOR v IN 1..1 OUTBOUND ${org._id} ownership
-            FILTER v._id == ${domain._id}
-            RETURN true
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred for user: ${userKey}, when counting ownership claims for domain: ${domain.domain}, error: ${err}`,
-      )
+      hasOwnership = await domainDataSource.hasOwnershipClaim({
+        orgId: org._id,
+        domainId: domain._id,
+        domainName: domain.domain,
+      })
+    } catch {
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    if (dmarcCountCursor.count === 1) {
-      try {
-        await trx.step(
-          () => query`
-            WITH ownership, organizations, domains, dmarcSummaries, domainsToDmarcSummaries
-            LET dmarcSummaryEdges = (
-              FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToDmarcSummaries
-                RETURN { edgeKey: e._key, dmarcSummaryId: e._to }
-            )
-            LET removeDmarcSummaryEdges = (
-              FOR dmarcSummaryEdge IN dmarcSummaryEdges
-                REMOVE dmarcSummaryEdge.edgeKey IN domainsToDmarcSummaries
-                OPTIONS { waitForSync: true }
-            )
-            LET removeDmarcSummary = (
-              FOR dmarcSummaryEdge IN dmarcSummaryEdges
-                LET key = PARSE_IDENTIFIER(dmarcSummaryEdge.dmarcSummaryId).key
-                REMOVE key IN dmarcSummaries
-                OPTIONS { waitForSync: true }
-            )
-            RETURN true
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Trx step error occurred when removing dmarc summary data for user: ${userKey} while attempting to remove domain: ${domain.domain}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        await trx.step(
-          () => query`
-            WITH ownership, organizations, domains
-            LET domainEdges = (
-              FOR v, e IN 1..1 INBOUND ${domain._id} ownership
-                REMOVE e._key IN ownership
-                OPTIONS { waitForSync: true }
-            )
-            RETURN true
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Trx step error occurred when removing ownership data for user: ${userKey} while attempting to remove domain: ${domain.domain}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-    }
-
-    if (countCursor.count <= 1) {
-      // Remove scan data
-
-      try {
-        // Remove web data
-        await trx.step(async () => {
-          await query`
-            WITH web, webScan, domains
-            FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
-              LET removeWebScansQuery = (
-                  FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
-                    REMOVE webScanV IN webScan
-                    REMOVE webToWebScansV IN webToWebScans
-                    OPTIONS { waitForSync: true }
-              )
-              REMOVE webV IN web
-              REMOVE domainsWebEdge IN domainsWeb
-              OPTIONS { waitForSync: true }
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        // Remove DNS data
-        await trx.step(async () => {
-          await query`
-            WITH dns, domains
-            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
-              REMOVE dnsV IN dns
-              REMOVE domainsDNSEdge IN domainsDNS
-              OPTIONS { waitForSync: true }
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      // remove favourites
-      try {
-        await trx.step(async () => {
-          await query`
-            WITH favourites, domains
-            FOR fav IN favourites
-              FILTER fav._to == ${domain._id}
-              REMOVE fav IN favourites
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      // remove DKIM selectors
-      try {
-        await trx.step(async () => {
-          await query`
-            FOR e IN domainsToSelectors
-              FILTER e._from == ${domain._id}
-              REMOVE e IN domainsToSelectors
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        // Remove domain
-        await trx.step(async () => {
-          await query`
-            FOR claim IN claims
-              FILTER claim._to == ${domain._id}
-              REMOVE claim IN claims
-            REMOVE ${domain} IN domains
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove domain ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-    } else {
-      try {
-        await trx.step(async () => {
-          await query`
-            WITH claims, domains, organizations
-            LET domainEdges = (FOR v, e IN 1..1 INBOUND ${domain._id} claims RETURN { _key: e._key, _from: e._from, _to: e._to })
-            LET edgeKeys = (
-              FOR domainEdge IN domainEdges
-                FILTER domainEdge._to ==  ${domain._id}
-                FILTER domainEdge._from == ${org._id}
-                RETURN domainEdge._key
-            )
-            FOR edgeKey IN edgeKeys
-              REMOVE edgeKey IN claims
-              OPTIONS { waitForSync: true }
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove claim for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-    }
-
-    // Commit transaction
     try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Trx commit error occurred while user: ${userKey} attempted to remove ${domain.domain} in org: ${org.slug}, error: ${err}`,
-      )
-      await trx.abort()
+      await domainDataSource.remove({
+        domain,
+        org,
+        orgsClaimingDomain: orgsClaimingDomainCount,
+        hasOwnership,
+      })
+    } catch {
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     console.info(`User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    const activityPayload = {
       initiatedBy: {
         id: user._key,
         userName: user.userName,
@@ -362,11 +165,13 @@ export const removeDomain = new mutationWithClientMutationId({
         organization: {
           id: org._key,
           name: org.name,
-        }, // name of resource being acted upon
-        resourceType: 'domain', // user, org, domain
+        },
+        resourceType: 'domain',
       },
       reason: args.reason,
-    })
+    }
+
+    await auditLogs.logActivity(activityPayload)
 
     return {
       _type: 'result',

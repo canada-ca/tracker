@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { AssetStateEnums } from '../../enums'
 import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 import ac from '../../access-control'
@@ -57,14 +56,11 @@ export const updateDomain = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByKey, loadOrgByKey, loadTagByTagId },
+      dataSources: { domain: domainDataSource, auditLogs, tags: tagsDS, organization: orgDS },
     },
   ) => {
     // Get User
@@ -78,7 +74,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     let tags
     if (typeof args.tags !== 'undefined') {
-      tags = await loadTagByTagId.loadMany(
+      tags = await tagsDS.byTagId.loadMany(
         args.tags.map((tag) => {
           return cleanseInput(tag)
         }),
@@ -93,29 +89,12 @@ export const updateDomain = new mutationWithClientMutationId({
       tags = null
     }
 
-    let archived
-    if (typeof args.archived !== 'undefined') {
-      archived = args.archived
-    } else {
-      archived = null
-    }
-
-    let assetState
-    if (typeof args.assetState !== 'undefined') {
-      assetState = cleanseInput(args.assetState)
-    } else {
-      assetState = null
-    }
-
-    let cvdEnrollment
-    if (typeof args.cvdEnrollment !== 'undefined') {
-      cvdEnrollment = args.cvdEnrollment
-    } else {
-      cvdEnrollment = null
-    }
+    const archived = typeof args.archived !== 'undefined' ? args.archived : null
+    const assetState = typeof args.assetState !== 'undefined' ? cleanseInput(args.assetState) : null
+    const cvdEnrollment = typeof args.cvdEnrollment !== 'undefined' ? args.cvdEnrollment : null
 
     // Check to see if domain exists
-    const domain = await loadDomainByKey.load(domainId)
+    const domain = await domainDataSource.byKey.load(domainId)
 
     if (typeof domain === 'undefined') {
       console.warn(
@@ -129,7 +108,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -157,22 +136,18 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org has a claim to this domain
-    let countCursor
+    let orgHasClaim
     try {
-      countCursor = await query`
-        WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims
-          FILTER e._from == ${org._id}
-          RETURN e
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
-      )
+      orgHasClaim = await domainDataSource.organizationHasClaim({
+        orgId: org._id,
+        domainId: domain._id,
+        domainKey: domainId,
+      })
+    } catch {
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
-    if (countCursor.count < 1) {
+    if (!orgHasClaim) {
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
       )
@@ -204,52 +179,16 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
+    const claim = await domainDataSource.loadClaimByOrgAndDomain({
+      orgId: org._id,
+      domainId: domain._id,
+    })
 
-    // Update domain
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
       cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
       highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
-    }
-
-    try {
-      await trx.step(
-        async () =>
-          await query`
-          WITH domains
-          UPSERT { _key: ${domain._key} }
-            INSERT ${domainToInsert}
-            UPDATE ${domainToInsert}
-            IN domains
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
-    }
-
-    let claimCursor
-    try {
-      claimCursor = await query`
-        WITH claims
-        FOR claim IN claims
-          FILTER claim._from == ${org._id} && claim._to == ${domain._id}
-          RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
-      `
-    } catch (err) {
-      console.error(`Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
-    }
-    let claim
-    try {
-      claim = await claimCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
     }
 
     const claimToInsert = {
@@ -258,39 +197,13 @@ export const updateDomain = new mutationWithClientMutationId({
       assetState: assetState || claim?.assetState,
     }
 
+    let returnDomain
     try {
-      await trx.step(
-        async () =>
-          await query`
-          WITH claims
-          UPSERT { _from: ${org._id}, _to: ${domain._id} }
-            INSERT ${claimToInsert}
-            UPDATE ${claimToInsert}
-            IN claims
-      `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
-    }
-
-    // Commit transaction
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction commit error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
-      )
-      await trx.abort()
+      const domainForUpdate = typeof domain?._key === 'undefined' ? { ...domain, _key: domainId } : domain
+      returnDomain = await domainDataSource.update({ domain: domainForUpdate, org, domainToInsert, claimToInsert })
+    } catch {
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
-
-    // Clear dataloader and load updated domain
-    await loadDomainByKey.clear(domain._key)
-    const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
 
@@ -320,10 +233,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     if (updatedProperties.length > 0) {
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
@@ -336,18 +246,15 @@ export const updateDomain = new mutationWithClientMutationId({
           organization: {
             id: org._key,
             name: org.name,
-          }, // name of resource being acted upon
-          resourceType: 'domain', // user, org, domain
+          },
+          resourceType: 'domain',
           updatedProperties,
         },
       })
     }
 
     if (typeof archived !== 'undefined') {
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
@@ -357,7 +264,7 @@ export const updateDomain = new mutationWithClientMutationId({
         action: 'update',
         target: {
           resource: domain.domain,
-          resourceType: 'domain', // user, org, domain
+          resourceType: 'domain',
           updatedProperties: [{ name: 'archived', oldValue: domain.archived, newValue: archived }],
         },
       })
