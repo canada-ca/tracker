@@ -5,7 +5,6 @@ import { t } from '@lingui/macro'
 
 import { RoleEnums } from '../../enums'
 import { updateUserRoleUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ac from '../../access-control'
 
 export const updateUserRole = new mutationWithClientMutationId({
@@ -38,10 +37,8 @@ given organization.`,
     args,
     {
       i18n,
-      query,
-      transaction,
       userKey,
-      dataSources: { affiliation: affiliationDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
@@ -192,10 +189,7 @@ given organization.`,
     await sendRoleChangeEmail({ user: requestedUser, newRole: role, oldRole: affiliation.permission, orgNames })
 
     console.info(`User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

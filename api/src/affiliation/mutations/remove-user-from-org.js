@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeUserFromOrgUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ac from '../../access-control'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
@@ -31,10 +30,8 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      transaction,
       userKey,
-      dataSources: { affiliation: affiliationDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByKey },
@@ -148,10 +145,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     }
 
     console.info(`User: ${userKey} successfully removed user: ${requestedUser._key} from org: ${requestedOrg._key}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

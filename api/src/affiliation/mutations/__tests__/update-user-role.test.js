@@ -19,21 +19,25 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const withAffiliationDataSource = (contextValue = {}) => {
-  if (contextValue.dataSources?.affiliation) return contextValue
+  const dataSources = contextValue.dataSources || {}
+  if (dataSources.affiliation && dataSources.auditLogs) return contextValue
 
   return {
     ...contextValue,
     dataSources: {
-      ...(contextValue.dataSources || {}),
-      affiliation: new AffiliationDataSource({
-        query: contextValue.query,
-        transaction: contextValue.transaction,
-        collections: contextValue.collections,
-        userKey: contextValue.userKey,
-        i18n: contextValue.i18n,
-        language: contextValue.request?.language,
-        cleanseInput: contextValue.validators?.cleanseInput,
-      }),
+      ...dataSources,
+      affiliation:
+        dataSources.affiliation ||
+        new AffiliationDataSource({
+          query: contextValue.query,
+          transaction: contextValue.transaction,
+          collections: contextValue.collections,
+          userKey: contextValue.userKey,
+          i18n: contextValue.i18n,
+          language: contextValue.request?.language,
+          cleanseInput: contextValue.validators?.cleanseInput,
+        }),
+      auditLogs: dataSources.auditLogs || { logActivity: jest.fn().mockResolvedValue(undefined) },
     },
   }
 }

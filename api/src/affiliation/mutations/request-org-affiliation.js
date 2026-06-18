@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 const { SERVICE_ACCOUNT_EMAIL } = process.env
 
@@ -28,10 +27,9 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
       request,
       userKey,
-      dataSources: { affiliation: affiliationDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByKey, loadOrganizationNamesById },
@@ -162,10 +160,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     }
 
     console.info(`User: ${userKey} successfully requested invite to the org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

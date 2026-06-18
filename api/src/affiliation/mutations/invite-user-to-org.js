@@ -4,7 +4,6 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { InvitationRoleEnums } from '../../enums'
 import ac from '../../access-control'
 
@@ -39,10 +38,9 @@ able to sign-up and be assigned to that organization in one mutation.`,
     args,
     {
       i18n,
-      query,
       request,
       userKey,
-      dataSources: { affiliation: affiliationDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { checkPermission, tokenize, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
@@ -142,10 +140,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       })
 
       console.info(`User: ${userKey} successfully invited user: ${userName} to the service, and org: ${org.slug}.`)
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogsDataSource.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
@@ -225,10 +220,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     })
 
     console.info(`User: ${userKey} successfully invited user: ${requestedUser._key} to the org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
