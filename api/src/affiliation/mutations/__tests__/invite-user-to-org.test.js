@@ -1649,7 +1649,7 @@ describe('invite user to org', () => {
               query,
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
-                step: jest.fn().mockRejectedValue('trx step err'),
+                step: jest.fn().mockRejectedValue(new Error('trx step err')),
                 abort: jest.fn(),
               }),
               userKey: 123,
@@ -1686,7 +1686,7 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: trx step err`,
+            `Transaction step error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: Error: trx step err`,
           ])
         })
       })
@@ -1727,7 +1727,7 @@ describe('invite user to org', () => {
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest.fn().mockRejectedValue('trx commit err'),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit err')),
                 abort: jest.fn(),
               }),
               userKey: 123,
@@ -1767,7 +1767,7 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: trx commit err`,
+            `Transaction commit error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: Error: trx commit err`,
           ])
         })
       })

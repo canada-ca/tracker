@@ -1391,7 +1391,7 @@ describe('update a users role', () => {
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue('trx step error'),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   abort: jest.fn(),
                 }),
                 userKey: 123,
@@ -1426,7 +1426,7 @@ describe('update a users role', () => {
             const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
             expect(consoleOutput).toEqual([
-              `Transaction step error occurred when user: 123 attempted to update a user's: 456 role, error: trx step error`,
+              `Transaction step error occurred when user: 123 attempted to update a user's: 456 role, error: Error: trx step error`,
             ])
             expect(response.errors).toEqual(error)
           })
@@ -1466,7 +1466,7 @@ describe('update a users role', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest.fn().mockRejectedValue('trx commit error'),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                   abort: jest.fn(),
                 }),
                 userKey: 123,
@@ -1501,7 +1501,7 @@ describe('update a users role', () => {
             const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred when user: 123 attempted to update a user's: 456 role, error: trx commit error`,
+              `Transaction commit error occurred when user: 123 attempted to update a user's: 456 role, error: Error: trx commit error`,
             ])
             expect(response.errors).toEqual(error)
           })

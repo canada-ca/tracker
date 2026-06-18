@@ -864,7 +864,10 @@ describe('given the transferOrgOwnership mutation', () => {
               rootValue: null,
               contextValue: {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ _key: 'affiliation-1' }),
+                }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -932,7 +935,10 @@ describe('given the transferOrgOwnership mutation', () => {
               rootValue: null,
               contextValue: {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ _key: 'affiliation-1' }),
+                }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1002,7 +1008,10 @@ describe('given the transferOrgOwnership mutation', () => {
             rootValue: null,
             contextValue: {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest.fn().mockReturnValue({
+                count: 1,
+                next: jest.fn().mockReturnValue({ _key: 'affiliation-1' }),
+              }),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
@@ -1441,7 +1450,10 @@ describe('given the transferOrgOwnership mutation', () => {
               rootValue: null,
               contextValue: {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ _key: 'affiliation-1' }),
+                }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1511,7 +1523,10 @@ describe('given the transferOrgOwnership mutation', () => {
               rootValue: null,
               contextValue: {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ _key: 'affiliation-1' }),
+                }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1583,7 +1598,10 @@ describe('given the transferOrgOwnership mutation', () => {
             rootValue: null,
             contextValue: {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest.fn().mockReturnValue({
+                count: 1,
+                next: jest.fn().mockReturnValue({ _key: 'affiliation-1' }),
+              }),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
