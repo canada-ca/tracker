@@ -1,7 +1,7 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
@@ -13,10 +13,33 @@ import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '..
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadAffiliationByKey } from '../../loaders'
+import { AffiliationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const withAffiliationDataSource = (contextValue = {}) => {
+  if (contextValue.dataSources?.affiliation) return contextValue
+
+  return {
+    ...contextValue,
+    dataSources: {
+      ...(contextValue.dataSources || {}),
+      affiliation: new AffiliationDataSource({
+        query: contextValue.query,
+        transaction: contextValue.transaction,
+        collections: contextValue.collections,
+        userKey: contextValue.userKey,
+        i18n: contextValue.i18n,
+        language: contextValue.request?.language,
+        cleanseInput: contextValue.validators?.cleanseInput,
+      }),
+    },
+  }
+}
+
+const graphql = (args) => executeGraphql({ ...args, contextValue: withAffiliationDataSource(args.contextValue) })
 
 const orgOneData = {
   verified: true,

@@ -24,9 +24,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
+      dataSources: { affiliation: affiliationDataSource },
       auth: { userRequired, verifiedRequired },
       loaders: { loadOrgByKey },
       validators: { cleanseInput },
@@ -49,33 +47,18 @@ export const leaveOrganization = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
     try {
-      await trx.step(
-        () =>
-          query`
-              WITH affiliations, organizations, users
-              FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-                FILTER e._to == ${user._id}
-                REMOVE { _key: e._key } IN affiliations
-                OPTIONS { waitForSync: true }
-            `,
-      )
+      await affiliationDataSource.removeAffiliation({ orgId: org._id, userId: user._id })
     } catch (err) {
-      console.error(
-        `Trx step error occurred when removing user: ${user._key} affiliation with org: ${org._key}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable leave organization. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`)
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'trx-step') {
+        console.error(
+          `Trx step error occurred when removing user: ${user._key} affiliation with org: ${org._key}: ${err}`,
+        )
+      } else if (err.affiliationDataSourceOp === 'trx-commit') {
+        console.error(
+          `Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable leave organization. Please try again.`))
     }
 
