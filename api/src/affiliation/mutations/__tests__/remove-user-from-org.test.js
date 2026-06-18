@@ -12,7 +12,6 @@ import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadAffiliationByKey } from '../../loaders'
 import { AffiliationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -40,6 +39,19 @@ const withAffiliationDataSource = (contextValue = {}) => {
 }
 
 const graphql = (args) => executeGraphql({ ...args, contextValue: withAffiliationDataSource(args.contextValue) })
+
+const loadAffiliationWithDataSource = async ({ query, transaction, collections, userKey, i18n, affiliationKey }) => {
+  const affiliationDataSource = new AffiliationDataSource({
+    query,
+    transaction,
+    collections,
+    userKey,
+    i18n,
+    cleanseInput,
+  })
+
+  return affiliationDataSource.byKey.load(affiliationKey)
+}
 
 const orgOneData = {
   verified: true,
@@ -248,13 +260,14 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           })
 
-          const loader = loadAffiliationByKey({
+          const data = await loadAffiliationWithDataSource({
             query,
+            transaction,
+            collections,
             userKey: admin._key,
             i18n,
+            affiliationKey: affiliation._key,
           })
-
-          const data = await loader.load(affiliation._key)
 
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
@@ -543,13 +556,14 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           })
 
-          const loader = loadAffiliationByKey({
+          const data = await loadAffiliationWithDataSource({
             query,
+            transaction,
+            collections,
             userKey: admin._key,
             i18n,
+            affiliationKey: affiliation._key,
           })
-
-          const data = await loader.load(affiliation._key)
 
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
@@ -856,13 +870,14 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           })
 
-          const loader = loadAffiliationByKey({
+          const data = await loadAffiliationWithDataSource({
             query,
+            transaction,
+            collections,
             userKey: admin._key,
             i18n,
+            affiliationKey: affiliation._key,
           })
-
-          const data = await loader.load(affiliation._key)
 
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,

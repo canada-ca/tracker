@@ -10,7 +10,6 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
-import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug, loadOrgByKey } from '../../loaders'
@@ -174,13 +173,6 @@ describe('given findOrganizationBySlugQuery', () => {
                   auth: { loginRequiredBool: true },
                   i18n,
                 }),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequiredBool: true },
-                  i18n,
-                }),
               },
             },
           })
@@ -282,12 +274,6 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequiredBool: true },
-                  i18n,
-                }),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
                   i18n,
                 }),
               },
