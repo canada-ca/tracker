@@ -356,8 +356,7 @@ export const organizationType = new GraphQLObjectType({
         {
           i18n,
           auth: { loginRequiredBool },
-          dataSources: { auth: authDS },
-          loaders: { loadAffiliationConnectionsByOrgId },
+          dataSources: { auth: authDS, affiliation },
         },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
@@ -365,7 +364,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 
-        const affiliations = await loadAffiliationConnectionsByOrgId({
+        const affiliations = await affiliation.connectionsByOrgId({
           orgId: _id,
           ...args,
         })
