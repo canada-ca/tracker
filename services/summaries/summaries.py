@@ -107,6 +107,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     db = client.db(name, username=user, password=password)
     chartSummariesCol = db.collection("chartSummaries")
 
+    # TODO: remove this once all summaries have been migrated to the new format
     db.aql.execute(
         """
             FOR summary IN chartSummaries
