@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import { loadUserByKey } from './user/loaders'
+import { UserDataSource } from './user'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
 import { SummariesDataSource } from './summaries'
@@ -174,6 +175,15 @@ export async function createContext({
         collections,
       }),
       affiliation: new AffiliationDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
+        transaction,
+        collections,
+      }),
+      user: new UserDataSource({
         query,
         userKey,
         i18n,

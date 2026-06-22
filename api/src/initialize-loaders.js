@@ -11,7 +11,6 @@ import {
   loadAllVerifiedRuaDomains,
 } from './dmarc-summaries/loaders'
 import { loadOrgByKey, loadOrganizationNamesById } from './organization/loaders'
-import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
 import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
@@ -77,20 +76,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
     loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
     loadOrgByKey: loadOrgByKey({ query, language, userKey, i18n }),
     loadOrganizationNamesById: loadOrganizationNamesById({ query, userKey, i18n }),
-    loadMyTrackerByUserId: loadMyTrackerByUserId({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
-    loadUserConnectionsByUserId: loadUserConnectionsByUserId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadUserByKey: loadUserByKey({ query, userKey, i18n }),
     loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
     loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
     loadVerifiedDomainConnections: loadVerifiedDomainConnections({
