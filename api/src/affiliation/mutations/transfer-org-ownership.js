@@ -29,9 +29,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
+      dataSources: { affiliation: affiliationDataSource },
       auth: { checkOrgOwner, userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByKey },
       validators: { cleanseInput },
@@ -91,14 +89,12 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     }
 
     // query db for requested user affiliation to org
-    let affiliationCursor
+    let requestedUserAffiliation
     try {
-      affiliationCursor = await query`
-				WITH affiliations, organizations, users
-				FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-					FILTER e._to == ${requestedUser._id}
-					RETURN e
-			`
+      requestedUserAffiliation = await affiliationDataSource.affiliationByOrgAndUser({
+        orgId: org._id,
+        userId: requestedUser._id,
+      })
     } catch (err) {
       console.error(
         `Database error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
@@ -107,7 +103,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     }
 
     // check to see if requested user belongs to org
-    if (affiliationCursor.count < 1) {
+    if (typeof requestedUserAffiliation === 'undefined') {
       console.warn(
         `User: ${requestingUser._key} attempted to transfer org: ${org.slug} ownership to user: ${requestedUser._key} but they are not affiliated with the org.`,
       )
@@ -120,63 +116,22 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
-    // remove current org owners role
     try {
-      await trx.step(
-        () =>
-          query`
-						WITH affiliations, organizations, users
-						FOR aff IN affiliations
-							FILTER aff._from == ${org._id}
-							FILTER aff._to == ${requestingUser._id}
-							UPDATE { _key: aff._key } WITH {
-								permission: "admin",
-							} IN affiliations
-							RETURN aff
-					`,
-      )
+      await affiliationDataSource.transferOrgOwnership({
+        orgId: org._id,
+        fromUserId: requestingUser._id,
+        toUserId: requestedUser._id,
+      })
     } catch (err) {
-      console.error(
-        `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
-    }
-
-    // set new org owner
-    try {
-      await trx.step(
-        () =>
-          query`
-						WITH affiliations, organizations, users
-						FOR aff IN affiliations
-							FILTER aff._from == ${org._id}
-							FILTER aff._to == ${requestedUser._id}
-							UPDATE { _key: aff._key } WITH {
-								permission: "owner",
-							} IN affiliations
-							RETURN aff
-					`,
-      )
-    } catch (err) {
-      console.error(
-        `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
-    }
-
-    // commit changes to the db
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Trx commit error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
-      )
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'trx-step') {
+        console.error(
+          `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
+        )
+      } else if (err.affiliationDataSourceOp === 'trx-commit') {
+        console.error(
+          `Trx commit error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
