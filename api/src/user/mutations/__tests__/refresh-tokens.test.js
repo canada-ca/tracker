@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
@@ -11,6 +11,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import { tokenize } from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -1406,3 +1407,4 @@ describe('refresh users tokens', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

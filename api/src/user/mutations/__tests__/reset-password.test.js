@@ -1,7 +1,7 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
@@ -13,6 +13,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -1471,7 +1472,7 @@ describe('reset users password', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de réinitialiser le mot de passe. Veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to reset password. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1542,7 +1543,7 @@ describe('reset users password', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de réinitialiser le mot de passe. Veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to reset password. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1554,3 +1555,4 @@ describe('reset users password', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

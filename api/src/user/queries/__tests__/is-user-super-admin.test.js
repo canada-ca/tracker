@@ -1,12 +1,13 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { graphql as executeGraphql, GraphQLError, GraphQLSchema } from 'graphql'
 
 import { checkPermission, userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
@@ -253,6 +254,7 @@ describe('given the isUserSuperAdmin query', () => {
               i18n,
               userKey: 123,
               query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+              language: 'fr',
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -324,3 +326,4 @@ describe('given the isUserSuperAdmin query', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

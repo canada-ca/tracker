@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -9,6 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userRequired } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -1000,3 +1001,4 @@ describe('testing the removePhoneNumber mutation', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

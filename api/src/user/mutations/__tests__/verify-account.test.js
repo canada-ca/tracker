@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -10,6 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey, loadUserByUserName } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -516,3 +517,4 @@ describe('user send password reset email', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

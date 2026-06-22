@@ -1,7 +1,7 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { graphql as executeGraphql, GraphQLError, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { checkPermission, userRequired } from '../../../auth'
@@ -10,6 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
 import { loadOrgByKey } from '../../../organization/loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
@@ -414,6 +415,7 @@ describe('given the isUserAdmin query', () => {
               i18n,
               userKey: 123,
               query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+              language: 'fr',
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -486,9 +488,7 @@ describe('given the isUserAdmin query', () => {
             },
           })
 
-          const error = [
-            new GraphQLError(`Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer.`),
-          ]
+          const error = [new GraphQLError(`Unable to verify if user is an admin, please try again.`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -499,3 +499,4 @@ describe('given the isUserAdmin query', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

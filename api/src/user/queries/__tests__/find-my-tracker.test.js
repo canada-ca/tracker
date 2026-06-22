@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -10,6 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey, loadMyTrackerByUserId } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import { DomainDataSource } from '../../../domain/data-source'
 import dbschema from '../../../../database.json'
 
@@ -411,3 +412,4 @@ describe('given findMyTracker query', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })
