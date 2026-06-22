@@ -17,7 +17,16 @@ export const closeAccountSelf = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, collections, transaction, request: { ip }, auth: { userRequired }, validators: { cleanseInput } },
+    {
+      i18n,
+      query,
+      collections,
+      transaction,
+      request: { ip },
+      auth: { userRequired },
+      dataSources: { user: userDataSource },
+      validators: { cleanseInput },
+    },
   ) => {
     let submittedUserId
     if (args?.userId) {
@@ -29,49 +38,7 @@ export const closeAccountSelf = new mutationWithClientMutationId({
     const userId = user._id
     const targetUserName = user.userName
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () => query`
-          WITH affiliations, organizations, users
-          FOR v, e IN 1..1 INBOUND ${userId} affiliations
-            REMOVE { _key: e._key } IN affiliations
-            OPTIONS { waitForSync: true }
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Trx step error occurred when removing users remaining affiliations when user: ${user._key} attempted to close account: ${userId}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to close account. Please try again.`))
-    }
-
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          REMOVE PARSE_IDENTIFIER(${userId}).key
-          IN users OPTIONS { waitForSync: true }
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Trx step error occurred when removing user: ${user._key} attempted to close account: ${userId}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to close account. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when user: ${user._key} attempted to close account: ${userId}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to close account. Please try again.`))
-    }
+    await userDataSource.closeAccount({ userId })
 
     console.info(`User: ${user._key} successfully closed user: ${userId} account.`)
     await logActivity({
@@ -123,7 +90,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
       transaction,
       request: { ip },
       auth: { checkSuperAdmin, userRequired },
-      loaders: { loadUserByKey },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -149,7 +116,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
       }
     }
 
-    const checkUser = await loadUserByKey.load(submittedUserId)
+    const checkUser = await userDataSource.byKey.load(submittedUserId)
     if (typeof checkUser === 'undefined') {
       console.warn(
         `User: ${user._key} attempted to close user: ${submittedUserId} account, but requested user is undefined.`,
@@ -163,49 +130,7 @@ export const closeAccountOther = new mutationWithClientMutationId({
     userId = checkUser._id
     targetUserName = checkUser.userName
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () => query`
-          WITH affiliations, organizations, users
-          FOR v, e IN 1..1 INBOUND ${userId} affiliations
-            REMOVE { _key: e._key } IN affiliations
-            OPTIONS { waitForSync: true }
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Trx step error occurred when removing users remaining affiliations when user: ${user._key} attempted to close account: ${userId}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to close account. Please try again.`))
-    }
-
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          REMOVE PARSE_IDENTIFIER(${userId}).key
-          IN users OPTIONS { waitForSync: true }
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Trx step error occurred when removing user: ${user._key} attempted to close account: ${userId}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to close account. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when user: ${user._key} attempted to close account: ${userId}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to close account. Please try again.`))
-    }
+    await userDataSource.closeAccount({ userId })
 
     console.info(`User: ${user._key} successfully closed user: ${userId} account.`)
     await logActivity({
