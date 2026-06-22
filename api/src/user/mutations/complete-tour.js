@@ -23,7 +23,7 @@ export const completeTour = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, auth: { userRequired }, loaders: { loadUserByKey }, validators: { cleanseInput } },
+    { i18n, auth: { userRequired }, dataSources: { user: userDataSource }, validators: { cleanseInput } },
   ) => {
     // Cleanse Input
     const tourId = cleanseInput(args.tourId)
@@ -41,31 +41,10 @@ export const completeTour = new mutationWithClientMutationId({
     }
 
     // Complete tour
-    try {
-      const completeTourCursor = await query`
-        LET userCompleteTours = FIRST(
-          FOR user IN users
-            FILTER user._key == ${user._key}
-            LIMIT 1
-            RETURN user.completedTours
-        )
-        UPDATE { _key: ${user._key} }
-        WITH {
-          completedTours: APPEND(
-            userCompleteTours[* FILTER CURRENT.tourId != ${tourId}],
-            { tourId: ${tourId}, completedAt: DATE_ISO8601(DATE_NOW()) }
-          )
-        }
-        IN users
-      `
-      await completeTourCursor.next()
-    } catch (err) {
-      console.error(`Database error occurred when user: ${user._key} attempted to complete tour: ${tourId}: ${err}`)
-      throw new Error(i18n._(t`Unable to confirm completion of the tour. Please try again.`))
-    }
+    await userDataSource.completeTour({ userKey: user._key, tourId })
 
-    await loadUserByKey.clear(user._key)
-    const returnUser = await loadUserByKey.load(user._key)
+    await userDataSource.byKey.clear(user._key)
+    const returnUser = await userDataSource.byKey.load(user._key)
 
     console.info(`User: ${user._key} has confirmed completion of tour: ${tourId}`)
     return {

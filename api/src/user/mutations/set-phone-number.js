@@ -29,11 +29,8 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       auth: { userRequired },
-      loaders: { loadUserByKey },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
       notify: { sendAuthTextMsg },
     },
@@ -67,47 +64,11 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       tfaSendMethod = 'email'
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    // Insert TFA code into DB
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          UPSERT { _key: ${user._key} }
-            INSERT {
-              tfaCode: ${tfaCode},
-              phoneDetails: ${phoneDetails},
-              phoneValidated: false,
-              tfaSendMethod: ${tfaSendMethod}
-            }
-            UPDATE {
-              tfaCode: ${tfaCode},
-              phoneDetails: ${phoneDetails},
-              phoneValidated: false,
-              tfaSendMethod: ${tfaSendMethod}
-            }
-            IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred for user: ${user._key} when upserting phone number information: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to set phone number, please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred for user: ${user._key} when upserting phone number information: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to set phone number, please try again.`))
-    }
+    await userDataSource.setPhoneNumber({ userKey: user._key, tfaCode, phoneDetails, tfaSendMethod })
 
     // Get newly updated user
-    await loadUserByKey.clear(user._key)
-    user = await loadUserByKey.load(user._key)
+    await userDataSource.byKey.clear(user._key)
+    user = await userDataSource.byKey.load(user._key)
 
     await sendAuthTextMsg({ user })
 
