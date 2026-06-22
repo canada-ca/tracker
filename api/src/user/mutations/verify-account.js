@@ -25,11 +25,8 @@ export const verifyAccount = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       auth: { verifyToken },
-      loaders: { loadUserByKey, loadUserByUserName },
+      dataSources: { user: userDataSource },
       notify: { sendUpdatedUserNameEmail },
       validators: { cleanseInput },
     },
@@ -67,7 +64,7 @@ export const verifyAccount = new mutationWithClientMutationId({
     // Auth shouldn't be needed with this
     // Check if user exists
     const { userKey, userName: newUserName } = tokenParameters
-    const user = await loadUserByKey.load(userKey)
+    const user = await userDataSource.byKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(`User: ${userKey} attempted to verify account, however no account is associated with this id.`)
@@ -79,7 +76,7 @@ export const verifyAccount = new mutationWithClientMutationId({
     }
 
     // Ensure newUserName is still not already in use
-    const checkUser = await loadUserByUserName.load(newUserName)
+    const checkUser = await userDataSource.byUserName.load(newUserName)
     if (typeof checkUser !== 'undefined') {
       console.warn(`User: ${userKey} attempted to update their username, but the username is already in use.`)
       return {
@@ -102,39 +99,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to send updated username email. Please try again.`))
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    // Verify users account
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          UPSERT { _key: ${user._key} }
-            INSERT {
-              emailValidated: true,
-              userName: ${newUserName},
-            }
-            UPDATE {
-              emailValidated: true,
-              userName: ${newUserName},
-            }
-            IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when upserting email validation for user: ${user._key}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when upserting email validation for user: ${user._key}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
-    }
+    await userDataSource.verifyAccount({ userKey: user._key, newUserName })
 
     console.info(`User: ${user._key} successfully email validated their account.`)
 

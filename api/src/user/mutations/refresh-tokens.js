@@ -23,14 +23,11 @@ export const refreshTokens = new mutationWithClientMutationId({
       i18n,
       response,
       request,
-      query,
-      collections,
-      transaction,
       uuidv4,
       jwt,
       moment,
       auth: { tokenize },
-      loaders: { loadUserByKey },
+      dataSources: { user: userDataSource },
     },
   ) => {
     // check uuid matches
@@ -62,7 +59,7 @@ export const refreshTokens = new mutationWithClientMutationId({
 
     const { userKey, uuid } = decodedRefreshToken.parameters
 
-    const user = await loadUserByKey.load(userKey)
+    const user = await userDataSource.byKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(`User: ${userKey} attempted to refresh tokens with an invalid user id.`)
@@ -104,32 +101,7 @@ export const refreshTokens = new mutationWithClientMutationId({
       expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          UPSERT { _key: ${user._key} }
-            INSERT { refreshInfo: ${refreshInfo} }
-            UPDATE { refreshInfo: ${refreshInfo} }
-            IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when attempting to refresh tokens for user: ${userKey}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred while user: ${userKey} attempted to refresh tokens: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
-    }
+    await userDataSource.updateRefreshInfo({ userKey: user._key, refreshInfo })
 
     const newAuthToken = tokenize({
       expiresIn: AUTH_TOKEN_EXPIRY,
