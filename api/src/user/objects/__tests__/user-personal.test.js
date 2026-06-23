@@ -218,8 +218,10 @@ describe('given the user object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadAffiliationConnectionsByUserId: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                affiliation: {
+                  connectionsByUserId: jest.fn().mockReturnValue(expectedResult),
+                },
               },
             },
           ),

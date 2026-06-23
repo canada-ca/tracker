@@ -1,9 +1,4 @@
 import {
-  loadAffiliationByKey,
-  loadAffiliationConnectionsByUserId,
-  loadAffiliationConnectionsByOrgId,
-} from './affiliation/loaders'
-import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
   loadDmarcSummaryConnectionsByUserId,
@@ -96,20 +91,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
     }),
     loadUserByKey: loadUserByKey({ query, userKey, i18n }),
-    loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),
-    loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
-      query,
-      language,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
     loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
     loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
     loadVerifiedDomainConnections: loadVerifiedDomainConnections({

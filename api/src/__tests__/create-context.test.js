@@ -33,5 +33,25 @@ describe('given the create context function', () => {
 
       expect(context.userKey).toEqual('1234')
     })
+
+    it('returns object with affiliation data source', async () => {
+      const context = await createContext({
+        query: jest.fn(),
+        transaction: jest.fn(),
+        collections: [],
+        req: {
+          language: 'en',
+          headers: {
+            authorization: tokenize({parameters: {userKey: '1234'}}),
+          },
+        },
+        res: {},
+      })
+
+      expect(context.dataSources.affiliation).toBeDefined()
+      expect(context.dataSources.affiliation.byKey).toBeDefined()
+      expect(context.dataSources.affiliation.connectionsByUserId).toBeDefined()
+      expect(context.dataSources.affiliation.connectionsByOrgId).toBeDefined()
+    })
   })
 })
