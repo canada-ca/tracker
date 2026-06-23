@@ -13,22 +13,24 @@ export const withDataSources = (contextValue = {}) => {
     abort: async () => undefined,
   })
 
-  const baseUserDataSource = contextValue.query
-    ? new UserDataSource({
-        query: contextValue.query,
-        userKey: contextValue.userKey,
-        i18n: contextValue.i18n || fallbackI18n,
-        language: contextValue.language || 'en',
-        cleanseInput: contextValue.validators?.cleanseInput || ((value) => value),
-        transaction: contextValue.transaction || fallbackTransaction,
-        collections: contextValue.collections || {},
-      })
-    : {}
+  const fallbackQuery = async () => ({
+    count: 0,
+    next: async () => undefined,
+    all: async () => [],
+  })
+
+  const baseUserDataSource = new UserDataSource({
+    query: contextValue.query || fallbackQuery,
+    userKey: contextValue.userKey,
+    i18n: contextValue.i18n || fallbackI18n,
+    language: contextValue.language || 'en',
+    cleanseInput: contextValue.validators?.cleanseInput || ((value) => value),
+    transaction: contextValue.transaction || fallbackTransaction,
+    collections: contextValue.collections || {},
+  })
 
   const userDataSource = contextValue.dataSources?.user
-    ? contextValue.query
-      ? Object.assign(baseUserDataSource, contextValue.dataSources.user)
-      : contextValue.dataSources.user
+    ? Object.assign(baseUserDataSource, contextValue.dataSources.user)
     : baseUserDataSource
 
   if (contextValue.i18n) userDataSource._i18n = contextValue.i18n

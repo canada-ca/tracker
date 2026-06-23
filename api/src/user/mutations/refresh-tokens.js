@@ -101,7 +101,7 @@ export const refreshTokens = new mutationWithClientMutationId({
       expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
     }
 
-    await userDataSource.updateRefreshInfo({ userKey: user._key, refreshInfo })
+    await userDataSource.updateRefreshInfo({ userKey, refreshInfo })
 
     const newAuthToken = tokenize({
       expiresIn: AUTH_TOKEN_EXPIRY,
@@ -113,7 +113,7 @@ export const refreshTokens = new mutationWithClientMutationId({
 
     const newRefreshToken = tokenize({
       expiresIn: REFRESH_TOKEN_EXPIRY,
-      parameters: { userKey: user._key, uuid: newRefreshId },
+      parameters: { userKey, uuid: newRefreshId },
       secret: String(REFRESH_KEY),
     })
 

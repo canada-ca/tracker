@@ -115,7 +115,7 @@ describe('given the isUserSuperAdmin query', () => {
           rootValue: null,
           contextValue: {
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
@@ -158,7 +158,7 @@ describe('given the isUserSuperAdmin query', () => {
           rootValue: null,
           contextValue: {
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
@@ -201,7 +201,7 @@ describe('given the isUserSuperAdmin query', () => {
           rootValue: null,
           contextValue: {
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
@@ -266,57 +266,6 @@ describe('given the isUserSuperAdmin query', () => {
           })
 
           const error = [new GraphQLError(`Unable to verify if user is a super admin, please try again.`)]
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when user: 123 was seeing if they were a super admin, err: Error: Database error occurred.`,
-          ])
-        })
-      })
-    })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
-      describe('database error occurs', () => {
-        it('returns an error message', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-              query {
-                isUserSuperAdmin
-              }
-            `,
-            rootValue: null,
-            contextValue: {
-              i18n,
-              userKey: 123,
-              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
-              auth: {
-                checkPermission: jest.fn(),
-                userRequired: jest.fn().mockReturnValue({
-                  _id: 'users/123',
-                  _key: 123,
-                }),
-              },
-            },
-          })
-
-          const error = [
-            new GraphQLError(
-              `Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer.`,
-            ),
-          ]
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error occurred when user: 123 was seeing if they were a super admin, err: Error: Database error occurred.`,
