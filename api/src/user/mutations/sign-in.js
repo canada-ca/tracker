@@ -41,7 +41,6 @@ export const signIn = new mutationWithClientMutationId({
       i18n,
       uuidv4,
       response,
-      jwt,
       auth: { tokenize, bcrypt },
       dataSources: { user: userDataSource },
       validators: { cleanseInput },
@@ -74,126 +73,126 @@ export const signIn = new mutationWithClientMutationId({
         code: 401,
         description: i18n._(t`Too many failed login attempts, please reset your password, and try again.`),
       }
-    } else {
-      const trx = await userDataSource.createTransaction()
+    }
 
-      // Check to see if passwords match
-      if (bcrypt.compareSync(password, user.password)) {
-        await userDataSource.signInResetFailedLoginAttempts({ userKey: user._key, trx })
+    const trx = await userDataSource.createTransaction()
 
-        const refreshId = uuidv4()
-        const refreshInfo = {
-          refreshId,
-          expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
-          rememberMe,
-        }
+    // Check to see if passwords match
+    if (bcrypt.compareSync(password, user.password)) {
+      await userDataSource.signInResetFailedLoginAttempts({ userKey: user._key, trx })
 
-        if (user.tfaSendMethod !== 'none') {
-          // Generate TFA code
-          const tfaCode = Math.floor(100000 + Math.random() * 900000)
+      const refreshId = uuidv4()
+      const refreshInfo = {
+        refreshId,
+        expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
+        rememberMe,
+      }
 
-          await userDataSource.signInSetTfaCodeAndRefreshInfo({ userKey: user._key, tfaCode, refreshInfo, trx })
-          await userDataSource.commitSignInTransaction({ trx, userKey: user._key, type: 'tfa' })
+      if (user.tfaSendMethod !== 'none') {
+        // Generate TFA code
+        const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
-          // Get newly updated user
-          await userDataSource.byUserName.clear(userName)
-          user = await userDataSource.byUserName.load(userName)
+        await userDataSource.signInSetTfaCodeAndRefreshInfo({ userKey: user._key, tfaCode, refreshInfo, trx })
+        await userDataSource.commitSignInTransaction({ trx, userKey: user._key, type: 'tfa' })
 
-          // Check if user's last successful login was over 30 days ago
-          let lastLogin
-          if (user.lastLogin) {
-            lastLogin = new Date(user.lastLogin)
-          } else {
-            lastLogin = new Date()
-          }
-          const currentDate = new Date()
-          const timeDifference = currentDate - lastLogin
-          const daysDifference = timeDifference / (1000 * 3600 * 24)
+        // Get newly updated user
+        await userDataSource.byUserName.clear(userName)
+        user = await userDataSource.byUserName.load(userName)
 
-          // Check to see if user has phone validated
-          let sendMethod
-          if (user.tfaSendMethod === 'email' || daysDifference >= 30) {
-            await sendAuthEmail({ user })
-            sendMethod = 'email'
-          } else {
-            await sendAuthTextMsg({ user })
-            sendMethod = 'text'
-          }
-
-          console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
-
-          const authenticateToken = tokenize({
-            expiresIn: AUTH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key },
-            secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
-          })
-
-          return {
-            _type: 'tfa',
-            sendMethod,
-            authenticateToken,
-          }
+        // Check if user's last successful login was over 30 days ago
+        let lastLogin
+        if (user.lastLogin) {
+          lastLogin = new Date(user.lastLogin)
         } else {
-          const loginDate = new Date().toISOString()
-          await userDataSource.signInSetRefreshInfoAndLastLogin({ userKey: user._key, refreshInfo, loginDate, trx })
-          await userDataSource.commitSignInTransaction({ trx, userKey: user._key, type: 'regular' })
-
-          const token = tokenize({
-            expiresIn: AUTH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key },
-            secret: String(AUTHENTICATED_KEY),
-          })
-
-          const refreshToken = tokenize({
-            expiresIn: REFRESH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key, uuid: refreshId },
-            secret: String(REFRESH_KEY),
-          })
-
-          // if the user does not want to stay logged in, create http session cookie
-          let cookieData = {
-            httpOnly: true,
-            secure: true,
-            sameSite: true,
-            expires: 0,
-          }
-
-          // if user wants to stay logged in create normal http cookie
-          if (rememberMe) {
-            cookieData = {
-              maxAge: ms(String(REFRESH_TOKEN_EXPIRY)),
-              httpOnly: true,
-              secure: true,
-              sameSite: true,
-            }
-          }
-
-          response.cookie('refresh_token', refreshToken, cookieData)
-
-          console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
-
-          return {
-            _type: 'regular',
-            token,
-            user,
-          }
+          lastLogin = new Date()
         }
-      } else {
-        // increment failed login attempts
-        user.failedLoginAttempts += 1
+        const currentDate = new Date()
+        const timeDifference = currentDate - lastLogin
+        const daysDifference = timeDifference / (1000 * 3600 * 24)
 
-        await userDataSource.signInIncrementFailedLoginAttempts({
-          userKey: user._key,
-          failedLoginAttempts: user.failedLoginAttempts,
+        // Check to see if user has phone validated
+        let sendMethod
+        if (user.tfaSendMethod === 'email' || daysDifference >= 30) {
+          await sendAuthEmail({ user })
+          sendMethod = 'email'
+        } else {
+          await sendAuthTextMsg({ user })
+          sendMethod = 'text'
+        }
+
+        console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
+
+        const authenticateToken = tokenize({
+          expiresIn: AUTH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
         })
 
-        console.warn(`User attempted to authenticate: ${user._key} with invalid credentials.`)
         return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(t`Incorrect username or password. Please try again.`),
+          _type: 'tfa',
+          sendMethod,
+          authenticateToken,
         }
       }
+
+      const loginDate = new Date().toISOString()
+      await userDataSource.signInSetRefreshInfoAndLastLogin({ userKey: user._key, refreshInfo, loginDate, trx })
+      await userDataSource.commitSignInTransaction({ trx, userKey: user._key, type: 'regular' })
+
+      const token = tokenize({
+        expiresIn: AUTH_TOKEN_EXPIRY,
+        parameters: { userKey: user._key },
+        secret: String(AUTHENTICATED_KEY),
+      })
+
+      const refreshToken = tokenize({
+        expiresIn: REFRESH_TOKEN_EXPIRY,
+        parameters: { userKey: user._key, uuid: refreshId },
+        secret: String(REFRESH_KEY),
+      })
+
+      // if the user does not want to stay logged in, create http session cookie
+      let cookieData = {
+        httpOnly: true,
+        secure: true,
+        sameSite: true,
+        expires: 0,
+      }
+
+      // if user wants to stay logged in create normal http cookie
+      if (rememberMe) {
+        cookieData = {
+          maxAge: ms(String(REFRESH_TOKEN_EXPIRY)),
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        }
+      }
+
+      response.cookie('refresh_token', refreshToken, cookieData)
+
+      console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
+
+      return {
+        _type: 'regular',
+        token,
+        user,
+      }
+    }
+
+    // increment failed login attempts
+    user.failedLoginAttempts += 1
+
+    await userDataSource.signInIncrementFailedLoginAttempts({
+      userKey: user._key,
+      failedLoginAttempts: user.failedLoginAttempts,
+    })
+
+    console.warn(`User attempted to authenticate: ${user._key} with invalid credentials.`)
+    return {
+      _type: 'error',
+      code: 400,
+      description: i18n._(t`Incorrect username or password. Please try again.`),
     }
   },
 })

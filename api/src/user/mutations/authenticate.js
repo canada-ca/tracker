@@ -138,10 +138,10 @@ export const authenticate = new mutationWithClientMutationId({
         token,
         user,
       }
-    } else {
-      console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
-      await userDataSource.clearTfaCode({ userKey: user._key })
-      throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
     }
+
+    console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
+    await userDataSource.clearTfaCode({ userKey: user._key })
+    throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
   },
 })

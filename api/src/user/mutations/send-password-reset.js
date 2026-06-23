@@ -51,11 +51,14 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
       await sendPasswordResetEmail({ user, resetUrl })
 
       console.info(`User: ${user._key} successfully sent a password reset email.`)
-    } else {
-      console.warn(
-        `A user attempted to send a password reset email for ${userName} but no account is affiliated with this user name.`,
-      )
+      return {
+        status: i18n._(t`If an account with this username is found, a password reset link will be found in your inbox.`),
+      }
     }
+
+    console.warn(
+      `A user attempted to send a password reset email for ${userName} but no account is affiliated with this user name.`,
+    )
 
     return {
       status: i18n._(t`If an account with this username is found, a password reset link will be found in your inbox.`),
