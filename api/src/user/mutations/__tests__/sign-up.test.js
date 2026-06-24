@@ -1,7 +1,7 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { graphql as executeGraphql, GraphQLError, GraphQLSchema } from 'graphql'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -13,6 +13,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -2287,7 +2288,12 @@ describe('testing user sign up', () => {
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
+                  step: jest
+                    .fn()
+                    .mockResolvedValueOnce({
+                      next: jest.fn().mockResolvedValue({ _id: 'users/123', _key: '123' }),
+                    })
+                    .mockRejectedValue('Transaction Step Error'),
                   abort: jest.fn(),
                 }),
                 uuidv4,
@@ -2992,7 +2998,7 @@ describe('testing user sign up', () => {
               },
             })
 
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -3090,7 +3096,7 @@ describe('testing user sign up', () => {
               },
             })
 
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -3143,7 +3149,12 @@ describe('testing user sign up', () => {
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
+                  step: jest
+                    .fn()
+                    .mockResolvedValueOnce({
+                      next: jest.fn().mockResolvedValue({ _id: 'users/123', _key: '123' }),
+                    })
+                    .mockRejectedValue('Transaction Step Error'),
                   abort: jest.fn(),
                 }),
                 uuidv4,
@@ -3197,7 +3208,7 @@ describe('testing user sign up', () => {
               },
             })
 
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -3294,7 +3305,7 @@ describe('testing user sign up', () => {
               },
             })
 
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -3307,3 +3318,4 @@ describe('testing user sign up', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

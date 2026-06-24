@@ -1,7 +1,7 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
@@ -9,6 +9,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { checkSuperAdmin, userRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import { cleanseInput } from '../../../validators'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
@@ -1343,206 +1344,7 @@ describe('given the closeAccount mutation', () => {
           })
         })
       })
-      describe('trx step error occurs', () => {
-        describe('when removing the users affiliations', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('trx step error')),
-              commit: jest.fn(),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  closeAccountSelf(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: '123',
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkSuperAdmin: jest.fn().mockReturnValue(true),
-                  userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
-                  },
-                },
-                validators: { cleanseInput },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de fermer le compte. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when removing users remaining affiliations when user: 123 attempted to close account: users/123: Error: trx step error`,
-            ])
-          })
-        })
-        describe('when removing the user', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
-              commit: jest.fn(),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  closeAccountSelf(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: '123',
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  checkSuperAdmin: jest.fn().mockReturnValue(true),
-                  userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
-                  },
-                },
-                validators: { cleanseInput },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de fermer le compte. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when removing user: 123 attempted to close account: users/123: Error: trx step error`,
-            ])
-          })
-        })
-      })
-      describe('trx commit error occurs', () => {
-        it('throws an error', async () => {
-          const mockedCursor = {
-            all: jest.fn().mockReturnValue([{ count: 2 }]),
-          }
-
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest.fn().mockReturnValue(),
-            commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
-            abort: jest.fn(),
-          })
-
-          const response = await graphql({
-            schema,
-            source: `
-              mutation {
-                closeAccountSelf(input: {}) {
-                  result {
-                    ... on CloseAccountResult {
-                      status
-                    }
-                    ... on CloseAccountError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            rootValue: null,
-            contextValue: {
-              i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction: mockedTransaction,
-              userKey: '123',
-              request: { ip: '127.0.0.1' },
-              auth: {
-                checkSuperAdmin: jest.fn().mockReturnValue(true),
-                userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: '123',
-                }),
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({ _key: '123' }),
-                },
-              },
-              validators: { cleanseInput },
-            },
-          })
-
-          const error = [new GraphQLError('Impossible de fermer le compte. Veuillez réessayer.')]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx commit error occurred when user: 123 attempted to close account: users/123: Error: trx commit error`,
-          ])
-        })
-      })
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

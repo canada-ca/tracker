@@ -39,14 +39,10 @@ export const signIn = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       uuidv4,
       response,
-      jwt,
       auth: { tokenize, bcrypt },
-      loaders: { loadUserByUserName },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
       notify: { sendAuthEmail, sendAuthTextMsg },
     },
@@ -57,7 +53,7 @@ export const signIn = new mutationWithClientMutationId({
     const rememberMe = args.rememberMe
 
     // Gather user who just signed in
-    let user = await loadUserByUserName.load(userName)
+    let user = await userDataSource.byUserName.load(userName)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -77,214 +73,126 @@ export const signIn = new mutationWithClientMutationId({
         code: 401,
         description: i18n._(t`Too many failed login attempts, please reset your password, and try again.`),
       }
-    } else {
-      // Setup Transaction
-      const trx = await transaction(collections)
+    }
 
-      // Check to see if passwords match
-      if (bcrypt.compareSync(password, user.password)) {
-        // Reset Failed Login attempts
-        try {
-          await trx.step(
-            () => query`
-              WITH users
-              FOR u IN users
-                UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
-            `,
-          )
-        } catch (err) {
-          console.error(`Trx step error occurred when resetting failed login attempts for user: ${user._key}: ${err}`)
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
-        }
+    const trx = await userDataSource.createTransaction()
 
-        const refreshId = uuidv4()
-        const refreshInfo = {
-          refreshId,
-          expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
-          rememberMe,
-        }
+    // Check to see if passwords match
+    if (bcrypt.compareSync(password, user.password)) {
+      await userDataSource.signInResetFailedLoginAttempts({ userKey: user._key, trx })
 
-        if (user.tfaSendMethod !== 'none') {
-          // Generate TFA code
-          const tfaCode = Math.floor(100000 + Math.random() * 900000)
+      const refreshId = uuidv4()
+      const refreshInfo = {
+        refreshId,
+        expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
+        rememberMe,
+      }
 
-          // Insert TFA code into DB
-          try {
-            await trx.step(
-              () => query`
-                WITH users
-                UPSERT { _key: ${user._key} }
-                  INSERT {
-                    tfaCode: ${tfaCode},
-                    refreshInfo: ${refreshInfo}
-                  }
-                  UPDATE {
-                    tfaCode: ${tfaCode},
-                    refreshInfo: ${refreshInfo}
-                  }
-                  IN users
-                `,
-            )
-          } catch (err) {
-            console.error(`Trx step error occurred when inserting TFA code for user: ${user._key}: ${err}`)
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
+      if (user.tfaSendMethod !== 'none') {
+        // Generate TFA code
+        const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
-          try {
-            await trx.commit()
-          } catch (err) {
-            console.error(`Trx commit error occurred while user: ${user._key} attempted to tfa sign in: ${err}`)
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
+        await userDataSource.signInSetTfaCodeAndRefreshInfo({ userKey: user._key, tfaCode, refreshInfo, trx })
+        await userDataSource.commitSignInTransaction({ trx, userKey: user._key, type: 'tfa' })
 
-          // Get newly updated user
-          await loadUserByUserName.clear(userName)
-          user = await loadUserByUserName.load(userName)
+        // Get newly updated user
+        await userDataSource.byUserName.clear(userName)
+        user = await userDataSource.byUserName.load(userName)
 
-          // Check if user's last successful login was over 30 days ago
-          let lastLogin
-          if (user.lastLogin) {
-            lastLogin = new Date(user.lastLogin)
-          } else {
-            lastLogin = new Date()
-          }
-          const currentDate = new Date()
-          const timeDifference = currentDate - lastLogin
-          const daysDifference = timeDifference / (1000 * 3600 * 24)
-
-          // Check to see if user has phone validated
-          let sendMethod
-          if (user.tfaSendMethod === 'email' || daysDifference >= 30) {
-            await sendAuthEmail({ user })
-            sendMethod = 'email'
-          } else {
-            await sendAuthTextMsg({ user })
-            sendMethod = 'text'
-          }
-
-          console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
-
-          const authenticateToken = tokenize({
-            expiresIn: AUTH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key },
-            secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
-          })
-
-          return {
-            _type: 'tfa',
-            sendMethod,
-            authenticateToken,
-          }
+        // Check if user's last successful login was over 30 days ago
+        let lastLogin
+        if (user.lastLogin) {
+          lastLogin = new Date(user.lastLogin)
         } else {
-          const loginDate = new Date().toISOString()
-          try {
-            await trx.step(
-              () => query`
-                WITH users
-                UPSERT { _key: ${user._key} }
-                  INSERT { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
-                  UPDATE { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
-                  IN users
-              `,
-            )
-          } catch (err) {
-            console.error(
-              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
-            )
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
-
-          try {
-            await trx.commit()
-          } catch (err) {
-            console.error(`Trx commit error occurred while user: ${user._key} attempted a regular sign in: ${err}`)
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
-
-          const token = tokenize({
-            expiresIn: AUTH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key },
-            secret: String(AUTHENTICATED_KEY),
-          })
-
-          const refreshToken = tokenize({
-            expiresIn: REFRESH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key, uuid: refreshId },
-            secret: String(REFRESH_KEY),
-          })
-
-          // if the user does not want to stay logged in, create http session cookie
-          let cookieData = {
-            httpOnly: true,
-            secure: true,
-            sameSite: true,
-            expires: 0,
-          }
-
-          // if user wants to stay logged in create normal http cookie
-          if (rememberMe) {
-            const tokenMaxAgeSeconds = jwt.decode(refreshToken).exp - jwt.decode(refreshToken).iat
-            cookieData = {
-              maxAge: tokenMaxAgeSeconds * 1000,
-              httpOnly: true,
-              secure: true,
-              sameSite: true,
-            }
-          }
-
-          response.cookie('refresh_token', refreshToken, cookieData)
-
-          console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
-
-          return {
-            _type: 'regular',
-            token,
-            user,
-          }
+          lastLogin = new Date()
         }
-      } else {
-        // increment failed login attempts
-        user.failedLoginAttempts += 1
+        const currentDate = new Date()
+        const timeDifference = currentDate - lastLogin
+        const daysDifference = timeDifference / (1000 * 3600 * 24)
 
-        try {
-          // Increase users failed login attempts
-          await trx.step(
-            () => query`
-              WITH users
-              FOR u IN users
-                UPDATE ${user._key} WITH {
-                  failedLoginAttempts: ${user.failedLoginAttempts}
-                } IN users
-            `,
-          )
-        } catch (err) {
-          console.error(
-            `Trx step error occurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
-          )
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
+        // Check to see if user has phone validated
+        let sendMethod
+        if (user.tfaSendMethod === 'email' || daysDifference >= 30) {
+          await sendAuthEmail({ user })
+          sendMethod = 'email'
+        } else {
+          await sendAuthTextMsg({ user })
+          sendMethod = 'text'
         }
 
-        try {
-          await trx.commit()
-        } catch (err) {
-          console.error(`Trx commit error occurred while user: ${user._key} failed to sign in: ${err}`)
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
-        }
+        console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
 
-        console.warn(`User attempted to authenticate: ${user._key} with invalid credentials.`)
+        const authenticateToken = tokenize({
+          expiresIn: AUTH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
+        })
+
         return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(t`Incorrect username or password. Please try again.`),
+          _type: 'tfa',
+          sendMethod,
+          authenticateToken,
         }
       }
+
+      const loginDate = new Date().toISOString()
+      await userDataSource.signInSetRefreshInfoAndLastLogin({ userKey: user._key, refreshInfo, loginDate, trx })
+      await userDataSource.commitSignInTransaction({ trx, userKey: user._key, type: 'regular' })
+
+      const token = tokenize({
+        expiresIn: AUTH_TOKEN_EXPIRY,
+        parameters: { userKey: user._key },
+        secret: String(AUTHENTICATED_KEY),
+      })
+
+      const refreshToken = tokenize({
+        expiresIn: REFRESH_TOKEN_EXPIRY,
+        parameters: { userKey: user._key, uuid: refreshId },
+        secret: String(REFRESH_KEY),
+      })
+
+      // if the user does not want to stay logged in, create http session cookie
+      let cookieData = {
+        httpOnly: true,
+        secure: true,
+        sameSite: true,
+        expires: 0,
+      }
+
+      // if user wants to stay logged in create normal http cookie
+      if (rememberMe) {
+        cookieData = {
+          maxAge: ms(String(REFRESH_TOKEN_EXPIRY)),
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        }
+      }
+
+      response.cookie('refresh_token', refreshToken, cookieData)
+
+      console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
+
+      return {
+        _type: 'regular',
+        token,
+        user,
+      }
+    }
+
+    // increment failed login attempts
+    user.failedLoginAttempts += 1
+
+    await userDataSource.signInIncrementFailedLoginAttempts({
+      userKey: user._key,
+      failedLoginAttempts: user.failedLoginAttempts,
+    })
+
+    console.warn(`User attempted to authenticate: ${user._key} with invalid credentials.`)
+    return {
+      _type: 'error',
+      code: 400,
+      description: i18n._(t`Incorrect username or password. Please try again.`),
     }
   },
 })

@@ -37,13 +37,10 @@ export const authenticate = new mutationWithClientMutationId({
     {
       i18n,
       response,
-      query,
-      collections,
-      transaction,
       uuidv4,
       jwt,
       auth: { tokenize, verifyToken },
-      loaders: { loadUserByKey },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -68,7 +65,7 @@ export const authenticate = new mutationWithClientMutationId({
     }
 
     // Gather sign in user
-    const user = await loadUserByKey.load(tokenParameters.userKey)
+    const user = await userDataSource.byKey.load(tokenParameters.userKey)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -91,68 +88,14 @@ export const authenticate = new mutationWithClientMutationId({
         expiresAt: new Date(new Date().getTime() + ms(REFRESH_TOKEN_EXPIRY)),
       }
 
-      // Setup Transaction
-      const trx = await transaction(collections)
-
-      // Reset tfa code attempts, and set refresh code
-      try {
-        await trx.step(
-          () => query`
-            WITH users
-            UPSERT { _key: ${user._key} }
-              INSERT {
-                tfaCode: null,
-                refreshInfo: ${refreshInfo},
-                lastLogin: ${loginDate}
-              }
-              UPDATE {
-                tfaCode: null,
-                refreshInfo: ${refreshInfo},
-                lastLogin: ${loginDate}
-              }
-              IN users
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Trx step error occurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
-      }
-
-      // verify user email
+      await userDataSource.authenticateSuccess({
+        userKey: user._key,
+        refreshInfo,
+        loginDate,
+        verifyEmail: sendMethod === 'email' && !user.emailValidated,
+      })
       if (sendMethod === 'email' && !user.emailValidated) {
-        try {
-          await trx.step(
-            () => query`
-              WITH users
-              UPSERT { _key: ${user._key} }
-                INSERT {
-                  emailValidated: true,
-                }
-                UPDATE {
-                  emailValidated: true,
-                }
-                IN users
-            `,
-          )
-          user.emailValidated = true
-        } catch (err) {
-          console.error(
-            `Trx step error occurred when setting email validated to true for user: ${user._key} during authentication: ${err}`,
-          )
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
-        }
-      }
-
-      try {
-        await trx.commit()
-      } catch (err) {
-        console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+        user.emailValidated = true
       }
 
       const token = tokenize({
@@ -195,40 +138,10 @@ export const authenticate = new mutationWithClientMutationId({
         token,
         user,
       }
-    } else {
-      console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
-      // reset tfa code
-      const trx = await transaction(collections)
-      try {
-        await trx.step(
-          () => query`
-            WITH users
-            UPSERT { _key: ${user._key} }
-              INSERT {
-                tfaCode: null,
-              }
-              UPDATE {
-                tfaCode: null,
-              }
-              IN users
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Trx step error occurred when clearing tfa code on attempt timeout for user: ${user._key} during authentication: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
-      }
-
-      try {
-        await trx.commit()
-      } catch (err) {
-        console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
-        await trx.abort()
-        throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
-      }
-      throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
     }
+
+    console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
+    await userDataSource.clearTfaCode({ userKey: user._key })
+    throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
   },
 })

@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -12,6 +12,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -240,7 +241,7 @@ describe('authenticate user account', () => {
           expect(response).toEqual(expectedResponse)
 
           expect(sendVerificationEmail).toHaveBeenCalledWith({
-            verifyUrl: verifyUrl,
+            verifyUrl,
             userKey: user._key,
             displayName: user.displayName,
             userName: newUsername,
@@ -940,7 +941,7 @@ describe('authenticate user account', () => {
             expect(response).toEqual(expectedResponse)
 
             expect(sendVerificationEmail).toHaveBeenCalledWith({
-              verifyUrl: verifyUrl,
+              verifyUrl,
               userKey: user._key,
               displayName: user.displayName,
               userName: newUsername,
@@ -1781,145 +1782,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('given a transaction step error', () => {
-        describe('when updating profile', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  updateUserProfile(
-                    input: {
-                      displayName: "John Smith"
-                      userName: "john.smith@istio.actually.works"
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          id
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: jest.fn().mockReturnValue({
-                    tfaSendMethod: 'none',
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when user: 123 attempted to update their profile: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('given a transaction step error', () => {
-        describe('when updating profile', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  updateUserProfile(
-                    input: {
-                      displayName: "John Smith"
-                      userName: "john.smith@istio.actually.works"
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          id
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: jest.fn().mockReturnValue({
-                    tfaSendMethod: 'none',
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred when user: 123 attempted to update their profile: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

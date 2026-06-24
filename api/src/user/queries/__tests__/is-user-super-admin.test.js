@@ -1,12 +1,13 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { graphql as executeGraphql, GraphQLError, GraphQLSchema } from 'graphql'
 
 import { checkPermission, userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
@@ -114,7 +115,7 @@ describe('given the isUserSuperAdmin query', () => {
           rootValue: null,
           contextValue: {
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
@@ -157,7 +158,7 @@ describe('given the isUserSuperAdmin query', () => {
           rootValue: null,
           contextValue: {
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
@@ -200,7 +201,7 @@ describe('given the isUserSuperAdmin query', () => {
           rootValue: null,
           contextValue: {
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
@@ -253,6 +254,7 @@ describe('given the isUserSuperAdmin query', () => {
               i18n,
               userKey: 123,
               query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+              language: 'fr',
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -271,56 +273,6 @@ describe('given the isUserSuperAdmin query', () => {
         })
       })
     })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
-      describe('database error occurs', () => {
-        it('returns an error message', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-              query {
-                isUserSuperAdmin
-              }
-            `,
-            rootValue: null,
-            contextValue: {
-              i18n,
-              userKey: 123,
-              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
-              auth: {
-                checkPermission: jest.fn(),
-                userRequired: jest.fn().mockReturnValue({
-                  _id: 'users/123',
-                  _key: 123,
-                }),
-              },
-            },
-          })
-
-          const error = [
-            new GraphQLError(
-              `Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer.`,
-            ),
-          ]
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when user: 123 was seeing if they were a super admin, err: Error: Database error occurred.`,
-          ])
-        })
-      })
-    })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

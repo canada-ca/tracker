@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLID } from 'graphql'
 import { fromGlobalId } from 'graphql-relay'
 
@@ -15,11 +14,8 @@ export const isUserAdmin = {
     _,
     args,
     {
-      i18n,
-      query,
-      userKey,
       auth: { checkPermission, userRequired },
-      loaders: { loadOrgByKey },
+      dataSources: { user: userDataSource, organization: organizationDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -28,27 +24,13 @@ export const isUserAdmin = {
 
     // check if for a specific org
     if (orgKey) {
-      const org = await loadOrgByKey.load(orgKey)
+      const org = await organizationDataSource.byKey.load(orgKey)
       const permission = await checkPermission({ orgId: org._id })
 
       return ['admin', 'owner', 'super_admin'].includes(permission)
     }
 
     // check to see if user is an admin or higher for at least one org
-    let userAdmin
-    try {
-      userAdmin = await query`
-        WITH users, affiliations
-        FOR v, e IN 1..1 INBOUND ${user._id} affiliations
-        FILTER e.permission IN ["admin", "owner", "super_admin"]
-        LIMIT 1
-        RETURN e.permission
-      `
-    } catch (err) {
-      console.error(`Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`)
-      throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
-    }
-
-    return userAdmin.count > 0
+    return userDataSource.isAdminForAnyOrg({ userId: user._id })
   },
 }

@@ -31,7 +31,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, collections, transaction, auth: { bcrypt, userRequired }, validators: { cleanseInput } },
+    { i18n, auth: { bcrypt, userRequired }, dataSources: { user: userDataSource }, validators: { cleanseInput } },
   ) => {
     // Cleanse Input
     const currentPassword = cleanseInput(args.currentPassword)
@@ -78,30 +78,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
     // Update password in DB
     const hashedPassword = bcrypt.hashSync(updatedPassword, 10)
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          FOR user IN users
-            UPDATE ${user._key} WITH { password: ${hashedPassword} } IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when user: ${user._key} attempted to update their password: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update password. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when user: ${user._key} attempted to update their password: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update password. Please try again.`))
-    }
+    await userDataSource.updatePassword({ userKey: user._key, hashedPassword })
 
     console.info(`User: ${user._key} successfully updated their password.`)
     return {

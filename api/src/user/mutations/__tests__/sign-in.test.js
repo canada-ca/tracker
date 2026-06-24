@@ -1,7 +1,7 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
@@ -12,6 +12,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 import { tokenize } from '../../../auth'
@@ -2358,7 +2359,7 @@ describe('authenticate user account', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2430,7 +2431,7 @@ describe('authenticate user account', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2503,7 +2504,7 @@ describe('authenticate user account', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2575,7 +2576,7 @@ describe('authenticate user account', () => {
                 },
               },
             })
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2650,7 +2651,7 @@ describe('authenticate user account', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2723,7 +2724,7 @@ describe('authenticate user account', () => {
               },
             })
 
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2795,7 +2796,7 @@ describe('authenticate user account', () => {
                 },
               },
             })
-            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2807,3 +2808,4 @@ describe('authenticate user account', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

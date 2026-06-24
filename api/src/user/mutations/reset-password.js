@@ -34,11 +34,8 @@ export const resetPassword = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       auth: { verifyToken, bcrypt },
-      loaders: { loadUserByKey },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -63,7 +60,7 @@ export const resetPassword = new mutationWithClientMutationId({
     }
 
     // Check if user exists
-    const user = await loadUserByKey.load(tokenParameters.userKey)
+    const user = await userDataSource.byKey.load(tokenParameters.userKey)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -104,34 +101,7 @@ export const resetPassword = new mutationWithClientMutationId({
     // Update users password in db
     const hashedPassword = bcrypt.hashSync(password, 10)
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          FOR user IN users
-            UPDATE ${user._key}
-            WITH {
-              password: ${hashedPassword},
-              failedLoginAttempts: 0
-            } IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when user: ${user._key} attempted to reset their password: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to reset password. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to reset password. Please try again.`))
-    }
+    await userDataSource.resetPassword({ userKey: user._key, hashedPassword })
 
     console.info(`User: ${user._key} successfully reset their password.`)
 

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import { loadUserByKey } from './user/loaders'
+import { UserDataSource } from './user'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
 import { SummariesDataSource } from './summaries'
@@ -16,6 +17,7 @@ import { GuidanceTagDataSource } from './guidance-tag'
 import { OrganizationDataSource } from './organization'
 import { TagsDataSource } from './tags'
 import { DomainDataSource } from './domain'
+import { AffiliationDataSource } from './affiliation'
 import {
   AuthDataSource,
   checkDomainOwnership,
@@ -169,6 +171,24 @@ export async function createContext({
         language: request.language,
         cleanseInput,
         loginRequiredBool,
+        transaction,
+        collections,
+      }),
+      affiliation: new AffiliationDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
+        transaction,
+        collections,
+      }),
+      user: new UserDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
         transaction,
         collections,
       }),

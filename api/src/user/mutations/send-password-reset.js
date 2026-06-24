@@ -31,14 +31,14 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
       request,
       auth: { tokenize },
       validators: { cleanseInput },
-      loaders: { loadUserByUserName },
+      dataSources: { user: userDataSource },
       notify: { sendPasswordResetEmail },
     },
   ) => {
     // Cleanse Input
     const userName = cleanseInput(args.userName).toLowerCase()
 
-    const user = await loadUserByUserName.load(userName)
+    const user = await userDataSource.byUserName.load(userName)
 
     if (typeof user !== 'undefined') {
       const token = tokenize({
@@ -51,11 +51,14 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
       await sendPasswordResetEmail({ user, resetUrl })
 
       console.info(`User: ${user._key} successfully sent a password reset email.`)
-    } else {
-      console.warn(
-        `A user attempted to send a password reset email for ${userName} but no account is affiliated with this user name.`,
-      )
+      return {
+        status: i18n._(t`If an account with this username is found, a password reset link will be found in your inbox.`),
+      }
     }
+
+    console.warn(
+      `A user attempted to send a password reset email for ${userName} but no account is affiliated with this user name.`,
+    )
 
     return {
       status: i18n._(t`If an account with this username is found, a password reset link will be found in your inbox.`),

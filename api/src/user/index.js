@@ -1,4 +1,5 @@
 export * from './loaders'
+export * from './data-source'
 export * from './mutations'
 export * from './objects'
 export * from './queries'

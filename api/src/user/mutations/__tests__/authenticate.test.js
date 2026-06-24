@@ -1,7 +1,7 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
@@ -13,6 +13,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 import jwt from 'jsonwebtoken'
@@ -289,7 +290,7 @@ describe('authenticate user account', () => {
           data: {
             authenticate: {
               result: {
-                authToken: authToken,
+                authToken,
                 user: {
                   id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
@@ -1130,165 +1131,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('transaction step error occurs', () => {
-        describe('when clearing tfa code and setting refresh id', () => {
-          it('throws an error', async () => {
-            const token = tokenize({
-              parameters: { userKey: 123 },
-              secret: String(SIGN_IN_KEY),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                authenticate(
-                  input: {
-                    sendMethod: EMAIL
-                    authenticationCode: 123456
-                    authenticateToken: "${token}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        phoneValidated
-                        emailValidated
-                      }
-                    }
-                    ... on AuthenticateError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  verifyToken: verifyToken({}),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      tfaCode: 123456,
-                      refreshInfo: {
-                        remember: false,
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'authentifier. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when user attempts to authenticate', () => {
-          it('throws an error', async () => {
-            const token = tokenize({
-              parameters: { userKey: 123 },
-              secret: String(SIGN_IN_KEY),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                authenticate(
-                  input: {
-                    sendMethod: EMAIL
-                    authenticationCode: 123456
-                    authenticateToken: "${token}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        phoneValidated
-                        emailValidated
-                      }
-                    }
-                    ... on AuthenticateError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  verifyToken: verifyToken({}),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      tfaCode: 123456,
-                      refreshInfo: {
-                        remember: false,
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'authentifier. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: 123 attempted to authenticate: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

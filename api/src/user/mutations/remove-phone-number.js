@@ -14,7 +14,7 @@ export const removePhoneNumber = new mutationWithClientMutationId({
       resolve: (payload) => payload,
     },
   }),
-  mutateAndGetPayload: async (_args, { i18n, collections, query, transaction, auth: { userRequired } }) => {
+  mutateAndGetPayload: async (_args, { i18n, auth: { userRequired }, dataSources: { user: userDataSource } }) => {
     // Get requesting user
     const user = await userRequired()
 
@@ -24,40 +24,7 @@ export const removePhoneNumber = new mutationWithClientMutationId({
       tfaSendMethod = 'email'
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    try {
-      await trx.step(
-        () => query`
-        WITH users
-        UPSERT { _key: ${user._key} }
-          INSERT {
-            phoneDetails: null,
-            phoneValidated: false,
-            tfaSendMethod: ${tfaSendMethod}
-          }
-          UPDATE {
-            phoneDetails: null,
-            phoneValidated: false,
-            tfaSendMethod: ${tfaSendMethod}
-          }
-          IN users
-      `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred well removing phone number for user: ${user._key}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to remove phone number. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred well removing phone number for user: ${user._key}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to remove phone number. Please try again.`))
-    }
+    await userDataSource.removePhoneNumber({ userKey: user._key, tfaSendMethod })
 
     console.info(`User: ${user._key} successfully removed their phone number.`)
     return {

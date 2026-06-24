@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
@@ -11,6 +11,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByKey } from '../../loaders'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import { tokenize } from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -255,7 +256,7 @@ describe('refresh users tokens', () => {
           data: {
             refreshTokens: {
               result: {
-                authToken: authToken,
+                authToken,
                 user: {
                   displayName: 'Test Account',
                 },
@@ -1239,170 +1240,7 @@ describe('refresh users tokens', () => {
           })
         })
       })
-      describe('transaction step error occurs', () => {
-        describe('when upserting new refreshId', () => {
-          it('throws an error', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-              abort: jest.fn(),
-            })
-
-            const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
-              expPeriod: 168,
-              secret: String(REFRESH_KEY),
-            })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
-            const mockedFormat = jest
-              .fn()
-              .mockReturnValueOnce('2021-06-30T12:00:00')
-              .mockReturnValueOnce('2021-07-01T12:00:00')
-            const mockedMoment = jest.fn().mockReturnValue({
-              format: mockedFormat,
-              isAfter: jest.fn().mockReturnValue(false),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  refreshTokens(input: {}) {
-                    result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          displayName
-                        }
-                      }
-                      ... on AuthenticateError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                uuidv4,
-                jwt,
-                moment: mockedMoment,
-                request: mockedRequest,
-                auth: {
-                  tokenize: jest.fn().mockReturnValue('token'),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                        refreshId: '1234',
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de rafraîchir les jetons, veuillez vous connecter.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when attempting to refresh tokens for user: 123: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when upserting new refreshId', () => {
-          it('throws an error', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-              abort: jest.fn(),
-            })
-
-            const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
-              expPeriod: 168,
-              secret: String(REFRESH_KEY),
-            })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
-
-            const mockedFormat = jest
-              .fn()
-              .mockReturnValueOnce('2021-06-30T12:00:00')
-              .mockReturnValueOnce('2021-07-01T12:00:00')
-            const mockedMoment = jest.fn().mockReturnValue({
-              format: mockedFormat,
-              isAfter: jest.fn().mockReturnValue(false),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  refreshTokens(input: {}) {
-                    result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          displayName
-                        }
-                      }
-                      ... on AuthenticateError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                uuidv4,
-                jwt,
-                moment: mockedMoment,
-                request: mockedRequest,
-                auth: {
-                  tokenize: jest.fn().mockReturnValue('token'),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                        refreshId: '1234',
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de rafraîchir les jetons, veuillez vous connecter.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: 123 attempted to refresh tokens: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })

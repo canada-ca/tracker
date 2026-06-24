@@ -48,13 +48,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
       request,
       auth: { tokenize, userRequired },
-      loaders: { loadUserByKey, loadUserByUserName },
+      dataSources: { user: userDataSource },
       notify: { sendVerificationEmail },
       validators: { cleanseInput },
     },
@@ -71,7 +68,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     // Check to see if username is already in use
     if (userName !== '') {
-      const checkUser = await loadUserByUserName.load(userName)
+      const checkUser = await userDataSource.byUserName.load(userName)
       if (typeof checkUser !== 'undefined') {
         console.warn(`User: ${userKey} attempted to update their username, but the username is already in use.`)
         return {
@@ -84,22 +81,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     // Check to see if admin user is disabling TFA
     if (subTfaSendMethod === 'none') {
-      // check to see if user is an admin or higher for at least one org
-      let userAdmin
-      try {
-        userAdmin = await query`
-        WITH users, affiliations
-        FOR v, e IN 1..1 INBOUND ${user._id} affiliations
-        FILTER e.permission IN ["admin", "owner", "super_admin"]
-        LIMIT 1
-        RETURN e.permission
-      `
-      } catch (err) {
-        console.error(`Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`)
-        throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
-      }
-
-      if (userAdmin.count > 0) {
+      const userAdmin = await userDataSource.isAdminForAnyOrg({ userId: user._id })
+      if (userAdmin) {
         console.error(
           `User: ${userKey} attempted to remove MFA, however they are an admin of at least one organization.`,
         )
@@ -135,35 +118,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
       emailUpdateOptions: typeof emailUpdateOptions !== 'undefined' ? emailUpdateOptions : user?.emailUpdateOptions,
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
+    await userDataSource.updateProfile({ userKey: user._key, updatedUser })
 
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          UPSERT { _key: ${user._key} }
-            INSERT ${updatedUser}
-            UPDATE ${updatedUser}
-            IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when user: ${userKey} attempted to update their profile: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when user: ${userKey} attempted to update their profile: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
-    }
-
-    await loadUserByKey.clear(user._key)
-    const returnUser = await loadUserByKey.load(userKey)
+    await userDataSource.byKey.clear(user._key)
+    const returnUser = await userDataSource.byKey.load(userKey)
 
     if (changedUserName) {
       const token = tokenize({

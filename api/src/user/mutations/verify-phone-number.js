@@ -23,7 +23,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, userKey, query, collections, transaction, auth: { userRequired }, loaders: { loadUserByKey } },
+    { i18n, userKey, auth: { userRequired }, dataSources: { user: userDataSource } },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
@@ -52,36 +52,10 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
+    await userDataSource.verifyPhoneNumber({ userKey: user._key })
 
-    // Update phoneValidated to be true
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          UPSERT { _key: ${user._key} }
-            INSERT { phoneValidated: true }
-            UPDATE { phoneValidated: true }
-            IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when upserting the tfaValidate field for ${user._key}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to two factor authenticate. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when upserting the tfaValidate field for ${user._key}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to two factor authenticate. Please try again.`))
-    }
-
-    await loadUserByKey.clear(userKey)
-    const updatedUser = await loadUserByKey.load(userKey)
+    await userDataSource.byKey.clear(userKey)
+    const updatedUser = await userDataSource.byKey.load(userKey)
 
     console.info(`User: ${user._key} successfully two factor authenticated their account.`)
 

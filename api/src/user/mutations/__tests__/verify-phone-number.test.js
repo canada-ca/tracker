@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -9,6 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
 import { userRequired } from '../../../auth'
+import { withDataSources } from '../../test-helpers/with-data-sources'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -473,6 +474,7 @@ describe('user send password reset email', () => {
                 userKey: 123,
                 query,
                 collections: collectionNames,
+                language: 'fr',
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                   abort: jest.fn(),
@@ -529,6 +531,7 @@ describe('user send password reset email', () => {
                 userKey: 123,
                 query,
                 collections: collectionNames,
+                language: 'fr',
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
@@ -739,7 +742,7 @@ describe('user send password reset email', () => {
               },
             })
 
-            const error = [new GraphQLError("Impossible de s'authentifier par deux facteurs. Veuillez réessayer.")]
+            const error = [new GraphQLError('Unable to two factor authenticate. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -796,7 +799,7 @@ describe('user send password reset email', () => {
               },
             })
 
-            const error = [new GraphQLError("Impossible de s'authentifier par deux facteurs. Veuillez réessayer.")]
+            const error = [new GraphQLError('Unable to two factor authenticate. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -808,3 +811,4 @@ describe('user send password reset email', () => {
     })
   })
 })
+const graphql = (args) => executeGraphql({ ...args, contextValue: withDataSources(args.contextValue) })
