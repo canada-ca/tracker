@@ -1,586 +1,650 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Trans, useLingui } from '@lingui/react/macro'
+import React, { useCallback, useEffect, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  Stack,
-  Text,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
-import { AddIcon, EditIcon, HamburgerIcon, PlusSquareIcon } from '@chakra-ui/icons'
-import { useMutation } from '@apollo/client'
-import { array, bool, number, string } from 'prop-types'
+	Box,
+	Button,
+	Divider,
+	Flex,
+	FormControl,
+	FormLabel,
+	Input,
+	InputGroup,
+	InputLeftElement,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
+	Select,
+	Stack,
+	Text,
+	useDisclosure,
+	useToast,
+} from "@chakra-ui/react";
+import {
+	AddIcon,
+	EditIcon,
+	HamburgerIcon,
+	PlusSquareIcon,
+} from "@chakra-ui/icons";
+import { useMutation } from "@apollo/client";
+import { array, bool, number, string } from "prop-types";
 
-import { AdminDomainModal } from './AdminDomainModal'
+import { AdminDomainModal } from "./AdminDomainModal";
 
-import { LoadingMessage } from '../components/LoadingMessage'
-import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { createValidationSchema, getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
-import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
-import { REMOVE_DOMAIN } from '../graphql/mutations'
-import { Formik } from 'formik'
-import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
-import { FilterList } from '../domains/FilterList'
-import { domainSearchTip } from '../domains/DomainsPage'
-import useSearchParam from '../utilities/useSearchParam'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
-import { DomainUpdateList } from './DomainUpdateList'
-import { AdminDomainList } from './AdminDomainList'
+import { LoadingMessage } from "../components/LoadingMessage";
+import { ErrorFallbackMessage } from "../components/ErrorFallbackMessage";
+import { RelayPaginationControls } from "../components/RelayPaginationControls";
+import { useDebouncedFunction } from "../utilities/useDebouncedFunction";
+import {
+	createValidationSchema,
+	getRequirement,
+	schemaToValidation,
+} from "../utilities/fieldRequirements";
+import { usePaginatedCollection } from "../utilities/usePaginatedCollection";
+import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from "../graphql/queries";
+import { REMOVE_DOMAIN } from "../graphql/mutations";
+import { Formik } from "formik";
+import { InfoBox, InfoButton, InfoPanel } from "../components/InfoPanel";
+import { FilterList } from "../domains/FilterList";
+import { domainSearchTip } from "../domains/DomainsPage";
+import useSearchParam from "../utilities/useSearchParam";
+import { DomainUpdateList } from "./DomainUpdateList";
+import { AdminDomainList } from "./AdminDomainList";
 
-export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
-  const [showUpdateList, setShowUpdateList] = useState(false)
-  const toast = useToast()
-  const { t } = useLingui()
+export function AdminDomains({
+	orgSlug,
+	orgId,
+	verified,
+	permission,
+	availableTags,
+}) {
+	const [showUpdateList, setShowUpdateList] = useState(false);
+	const toast = useToast();
+	const { t } = useLingui();
 
-  const [newDomainUrl, setNewDomainUrl] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(50)
-  const [selectedRemoveProps, setSelectedRemoveProps] = useState({
-    domain: '',
-    domainId: '',
-    rcode: '',
-  })
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [modalProps, setModalProps] = useState({
-    archived: false,
-    mutation: '',
-    tagInputList: [],
-    assetState: '',
-    editingDomainId: '',
-    editingDomainUrl: '',
-    cvdEnrollment: { status: 'NOT_ENROLLED' },
-    highAvailability: false,
-  })
-  const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
-    name: 'domain-filters',
-    defaultValue: [],
-  })
+	const [newDomainUrl, setNewDomainUrl] = useState("");
+	const [domainsPerPage, setDomainsPerPage] = useState(50);
+	const [selectedRemoveProps, setSelectedRemoveProps] = useState({
+		domain: "",
+		domainId: "",
+		rcode: "",
+	});
+	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+	const [modalProps, setModalProps] = useState({
+		archived: false,
+		mutation: "",
+		tagInputList: [],
+		assetState: "",
+		editingDomainId: "",
+		editingDomainUrl: "",
+		cvdEnrollment: { status: "NOT_ENROLLED" },
+		highAvailability: false,
+	});
+	const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
+		name: "domain-filters",
+		defaultValue: [],
+	});
 
-  const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
-  const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()
-  const { isOpen: infoIsOpen, onToggle } = useDisclosure()
+	const {
+		isOpen: updateIsOpen,
+		onOpen: updateOnOpen,
+		onClose: updateOnClose,
+	} = useDisclosure();
+	const {
+		isOpen: removeIsOpen,
+		onOpen: removeOnOpen,
+		onClose: removeOnClose,
+	} = useDisclosure();
+	const { isOpen: infoIsOpen, onToggle } = useDisclosure();
 
-  const validationSchema = schemaToValidation({
-    filterCategory: getRequirement('field'),
-    comparison: getRequirement('field'),
-    filterValue: getRequirement('field'),
-  })
+	const validationSchema = schemaToValidation({
+		filterCategory: getRequirement("field"),
+		comparison: getRequirement("field"),
+		filterValue: getRequirement("field"),
+	});
 
-  const fetchVariables = {
-    orgSlug,
-    search: debouncedSearchTerm,
-    orderBy: { field: 'DOMAIN', direction: 'ASC' },
-    filters,
-  }
+	const fetchVariables = {
+		orgSlug,
+		search: debouncedSearchTerm,
+		orderBy: { field: "DOMAIN", direction: "ASC" },
+		filters,
+	};
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-    totalCount,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: domainsPerPage,
-    variables: fetchVariables,
-    relayRoot: 'findOrganizationBySlug.domains',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+	const {
+		loading,
+		isLoadingMore,
+		error,
+		nodes,
+		next,
+		previous,
+		resetToFirstPage,
+		hasNextPage,
+		hasPreviousPage,
+		totalCount,
+	} = usePaginatedCollection({
+		fetchForward: FORWARD,
+		recordsPerPage: domainsPerPage,
+		variables: fetchVariables,
+		relayRoot: "findOrganizationBySlug.domains",
+		fetchPolicy: "cache-and-network",
+		nextFetchPolicy: "cache-first",
+	});
 
-  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
-    setDebouncedSearchTerm(newDomainUrl)
-  }, [newDomainUrl])
+	const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+		setDebouncedSearchTerm(newDomainUrl);
+	}, [newDomainUrl]);
 
-  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
+	useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500);
 
-  useEffect(() => {
-    resetToFirstPage()
-  }, [orgSlug])
+	useEffect(() => {
+		resetToFirstPage();
+	}, [orgSlug]);
 
-  const [removeDomain] = useMutation(REMOVE_DOMAIN, {
-    refetchQueries: ['FindAuditLogs'],
-    update(cache, { data: { removeDomain } }) {
-      if (removeDomain.result.__typename === 'DomainResult') {
-        cache.evict({ id: cache.identify(removeDomain.result.domain) })
-      }
-    },
-    onError(error) {
-      toast({
-        title: t`An error occurred.`,
-        description: error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted({ removeDomain }) {
-      if (removeDomain.result.__typename === 'DomainResult') {
-        removeOnClose()
-        toast({
-          title: t`Domain removed`,
-          description: t`Domain removed from ${orgSlug}`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      } else if (removeDomain.result.__typename === 'DomainError') {
-        toast({
-          title: t`Unable to remove domain.`,
-          description: removeDomain.result.description,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      } else {
-        toast({
-          title: t`Incorrect send method received.`,
-          description: t`Incorrect removeDomain.result typename.`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        console.log('Incorrect removeDomain.result typename.')
-      }
-    },
-  })
+	const [removeDomain] = useMutation(REMOVE_DOMAIN, {
+		refetchQueries: ["FindAuditLogs"],
+		update(cache, { data: { removeDomain } }) {
+			if (removeDomain.result.__typename === "DomainResult") {
+				cache.evict({ id: cache.identify(removeDomain.result.domain) });
+			}
+		},
+		onError(error) {
+			toast({
+				title: t`An error occurred.`,
+				description: error.message,
+				status: "error",
+				duration: 9000,
+				isClosable: true,
+				position: "top-left",
+			});
+		},
+		onCompleted({ removeDomain }) {
+			if (removeDomain.result.__typename === "DomainResult") {
+				removeOnClose();
+				toast({
+					title: t`Domain removed`,
+					description: t`Domain removed from ${orgSlug}`,
+					status: "success",
+					duration: 9000,
+					isClosable: true,
+					position: "top-left",
+				});
+			} else if (removeDomain.result.__typename === "DomainError") {
+				toast({
+					title: t`Unable to remove domain.`,
+					description: removeDomain.result.description,
+					status: "error",
+					duration: 9000,
+					isClosable: true,
+					position: "top-left",
+				});
+			} else {
+				toast({
+					title: t`Incorrect send method received.`,
+					description: t`Incorrect removeDomain.result typename.`,
+					status: "error",
+					duration: 9000,
+					isClosable: true,
+					position: "top-left",
+				});
+				console.log("Incorrect removeDomain.result typename.");
+			}
+		},
+	});
 
-  if (error) return <ErrorFallbackMessage error={error} />
+	if (error) return <ErrorFallbackMessage error={error} />;
 
-  const filterTagOptions = [
-    ...availableTags?.map(({ tagId, label }) => ({
-      value: tagId,
-      text: label.toUpperCase(),
-    })),
-    { value: `NXDOMAIN`, text: `NXDOMAIN` },
-    { value: `BLOCKED`, text: t`Blocked` },
-    { value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
-    { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
-    { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `ARCHIVED`, text: t`Archived` },
-    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
-    { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
-    { value: 'CVD_PENDING', text: t`CVD Pending` },
-    { value: 'CVD_DENY', text: t`CVD Denied` },
-  ]
+	const filterTagOptions = [
+		...availableTags?.map(({ tagId, label }) => ({
+			value: tagId,
+			text: label.toUpperCase(),
+		})),
+		{ value: `NXDOMAIN`, text: `NXDOMAIN` },
+		{ value: `BLOCKED`, text: t`Blocked` },
+		{ value: `WILDCARD_SIBLING`, text: t`Wildcard Sibling` },
+		{ value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
+		{ value: `SCAN_PENDING`, text: t`Scan Pending` },
+		{ value: `ARCHIVED`, text: t`Archived` },
+		{ value: `CVE_DETECTED`, text: t`SPIN Top 25` },
+		{ value: "CVD_ENROLLED", text: t`CVD Enrolled` },
+		{ value: "CVD_PENDING", text: t`CVD Pending` },
+		{ value: "CVD_DENY", text: t`CVD Denied` },
+	];
 
-  const adminDomainList = loading ? (
-    <LoadingMessage minH="50px">
-      <Trans>Domain List</Trans>
-    </LoadingMessage>
-  ) : (
-    <>
-      <Formik
-        validationSchema={validationSchema}
-        initialValues={{
-          filterCategory: '',
-          comparison: '',
-          filterValue: '',
-        }}
-        onSubmit={(values, { resetForm }) => {
-          setFilters([
-            ...new Map(
-              [...filters, values].map((item) => {
-                if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
-                else return [item['filterValue'], item]
-              }),
-            ).values(),
-          ])
-          resetToFirstPage()
-          resetForm()
-        }}
-      >
-        {({ handleChange, handleSubmit, errors, values }) => {
-          return (
-            <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
-              <Flex align="center">
-                <Text fontWeight="bold" mr="2">
-                  <Trans>Filters:</Trans>
-                </Text>
-                <Box maxW="25%" mx="1">
-                  <Select
-                    aria-label="filterCategory"
-                    name="filterCategory"
-                    borderColor="black"
-                    onChange={(e) => {
-                      if (values.filterCategory !== e.target.value) values.filterValue = ''
-                      handleChange(e)
-                    }}
-                  >
-                    <option hidden value="">
-                      <Trans>Value</Trans>
-                    </option>
-                    <option value="TAGS">
-                      <Trans>Tag</Trans>
-                    </option>
-                    <option value="ASSET_STATE">
-                      <Trans>Asset State</Trans>
-                    </option>
-                  </Select>
-                  <Text color="red.500" mt={0}>
-                    {errors.comparison}
-                  </Text>
-                </Box>
-                <Box maxW="25%" mx="1">
-                  <Select name="comparison" borderColor="black" onChange={handleChange}>
-                    <option hidden value="">
-                      <Trans>Comparison</Trans>
-                    </option>
-                    <option value="EQUAL">
-                      <Trans>EQUALS</Trans>
-                    </option>
-                    <option value="NOT_EQUAL">
-                      <Trans>DOES NOT EQUAL</Trans>
-                    </option>
-                  </Select>
-                  <Text color="red.500" mt={0}>
-                    {errors.comparison}
-                  </Text>
-                </Box>
-                <Box maxW="25%" mx="1">
-                  <Select name="filterValue" borderColor="black" onChange={handleChange}>
-                    <option hidden value="">
-                      <Trans>Status/Tag/State</Trans>
-                    </option>
-                    {values.filterCategory === 'TAGS' ? (
-                      filterTagOptions.map(({ value, text }, idx) => {
-                        return (
-                          <option key={idx} value={value}>
-                            {text}
-                          </option>
-                        )
-                      })
-                    ) : (
-                      <>
-                        <option value="APPROVED">
-                          <Trans>Approved</Trans>
-                        </option>
-                        <option value="DEPENDENCY">
-                          <Trans>Dependency</Trans>
-                        </option>
-                        <option value="MONITOR_ONLY">
-                          <Trans>Monitor Only</Trans>
-                        </option>
-                        <option value="CANDIDATE">
-                          <Trans>Candidate</Trans>
-                        </option>
-                        <option value="REQUIRES_INVESTIGATION">
-                          <Trans>Requires Investigation</Trans>
-                        </option>
-                      </>
-                    )}
-                  </Select>
-                  <Text color="red.500" mt={0}>
-                    {errors.filterValue}
-                  </Text>
-                </Box>
-                <Button ml="auto" variant="primary" type="submit">
-                  <Trans>Apply</Trans>
-                </Button>
-              </Flex>
-            </form>
-          )
-        }}
-      </Formik>
-      <ABTestWrapper>
-        <ABTestVariant name="A">
-          <AdminDomainList
-            nodes={nodes}
-            verified={verified}
-            permission={permission}
-            orgId={orgId}
-            orgSlug={orgSlug}
-            setSelectedRemoveProps={setSelectedRemoveProps}
-            removeOnOpen={removeOnOpen}
-            setModalProps={setModalProps}
-            updateOnOpen={updateOnOpen}
-          />
-        </ABTestVariant>
-        <ABTestVariant name="B">
-          <Button
-            leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
-            mt={4}
-            mb={2}
-            variant="primary"
-            onClick={() => setShowUpdateList((prev) => !prev)}
-          >
-            {showUpdateList ? <Trans>Show Domain List</Trans> : <Trans>Show Update List</Trans>}
-          </Button>
-          {showUpdateList ? (
-            <DomainUpdateList
-              availableTags={availableTags}
-              orgId={orgId}
-              domains={nodes.map(({ id, domain, claimTags }) => {
-                return { id, domain, tags: claimTags.map(({ label }) => label) }
-              })}
-              filters={filters}
-              search={debouncedSearchTerm}
-              domainCount={totalCount}
-              resetToFirstPage={resetToFirstPage}
-            />
-          ) : (
-            <AdminDomainList
-              nodes={nodes}
-              verified={verified}
-              permission={permission}
-              setSelectedRemoveProps={setSelectedRemoveProps}
-              removeOnOpen={removeOnOpen}
-              setModalProps={setModalProps}
-              updateOnOpen={updateOnOpen}
-            />
-          )}
-        </ABTestVariant>
-      </ABTestWrapper>
-      <RelayPaginationControls
-        onlyPagination={false}
-        selectedDisplayLimit={domainsPerPage}
-        setSelectedDisplayLimit={setDomainsPerPage}
-        displayLimitOptions={[5, 10, 20, 50, 100]}
-        resetToFirstPage={resetToFirstPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isLoadingMore={isLoadingMore}
-        totalRecords={totalCount}
-      />
-    </>
-  )
+	const adminDomainList = loading ? (
+		<LoadingMessage minH="50px">
+			<Trans>Domain List</Trans>
+		</LoadingMessage>
+	) : (
+		<>
+			<Formik
+				validationSchema={validationSchema}
+				initialValues={{
+					filterCategory: "",
+					comparison: "",
+					filterValue: "",
+				}}
+				onSubmit={(values, { resetForm }) => {
+					setFilters([
+						...new Map(
+							[...filters, values].map((item) => {
+								if (item["filterCategory"] !== "TAGS")
+									return [item["filterCategory"], item];
+								else return [item["filterValue"], item];
+							}),
+						).values(),
+					]);
+					resetToFirstPage();
+					resetForm();
+				}}
+			>
+				{({ handleChange, handleSubmit, errors, values }) => {
+					return (
+						<form
+							onSubmit={handleSubmit}
+							role="form"
+							aria-label="form"
+							name="form"
+						>
+							<Flex align="center">
+								<Text fontWeight="bold" mr="2">
+									<Trans>Filters:</Trans>
+								</Text>
+								<Box maxW="25%" mx="1">
+									<Select
+										aria-label="filterCategory"
+										name="filterCategory"
+										borderColor="black"
+										onChange={(e) => {
+											if (values.filterCategory !== e.target.value)
+												values.filterValue = "";
+											handleChange(e);
+										}}
+									>
+										<option hidden value="">
+											<Trans>Value</Trans>
+										</option>
+										<option value="TAGS">
+											<Trans>Tag</Trans>
+										</option>
+										<option value="ASSET_STATE">
+											<Trans>Asset State</Trans>
+										</option>
+									</Select>
+									<Text color="red.500" mt={0}>
+										{errors.comparison}
+									</Text>
+								</Box>
+								<Box maxW="25%" mx="1">
+									<Select
+										name="comparison"
+										borderColor="black"
+										onChange={handleChange}
+									>
+										<option hidden value="">
+											<Trans>Comparison</Trans>
+										</option>
+										<option value="EQUAL">
+											<Trans>EQUALS</Trans>
+										</option>
+										<option value="NOT_EQUAL">
+											<Trans>DOES NOT EQUAL</Trans>
+										</option>
+									</Select>
+									<Text color="red.500" mt={0}>
+										{errors.comparison}
+									</Text>
+								</Box>
+								<Box maxW="25%" mx="1">
+									<Select
+										name="filterValue"
+										borderColor="black"
+										onChange={handleChange}
+									>
+										<option hidden value="">
+											<Trans>Status/Tag/State</Trans>
+										</option>
+										{values.filterCategory === "TAGS" ? (
+											filterTagOptions.map(({ value, text }, idx) => {
+												return (
+													<option key={idx} value={value}>
+														{text}
+													</option>
+												);
+											})
+										) : (
+											<>
+												<option value="APPROVED">
+													<Trans>Approved</Trans>
+												</option>
+												<option value="DEPENDENCY">
+													<Trans>Dependency</Trans>
+												</option>
+												<option value="MONITOR_ONLY">
+													<Trans>Monitor Only</Trans>
+												</option>
+												<option value="CANDIDATE">
+													<Trans>Candidate</Trans>
+												</option>
+												<option value="REQUIRES_INVESTIGATION">
+													<Trans>Requires Investigation</Trans>
+												</option>
+											</>
+										)}
+									</Select>
+									<Text color="red.500" mt={0}>
+										{errors.filterValue}
+									</Text>
+								</Box>
+								<Button ml="auto" variant="primary" type="submit">
+									<Trans>Apply</Trans>
+								</Button>
+							</Flex>
+						</form>
+					);
+				}}
+			</Formik>
+			<Button
+				leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
+				mt={4}
+				mb={2}
+				variant="primary"
+				onClick={() => setShowUpdateList((prev) => !prev)}
+			>
+				{showUpdateList ? (
+					<Trans>Show Domain List</Trans>
+				) : (
+					<Trans>Show Update List</Trans>
+				)}
+			</Button>
+			{showUpdateList ? (
+				<DomainUpdateList
+					availableTags={availableTags}
+					orgId={orgId}
+					domains={nodes.map(({ id, domain, claimTags }) => {
+						return { id, domain, tags: claimTags.map(({ label }) => label) };
+					})}
+					filters={filters}
+					search={debouncedSearchTerm}
+					domainCount={totalCount}
+					resetToFirstPage={resetToFirstPage}
+				/>
+			) : (
+				<AdminDomainList
+					nodes={nodes}
+					verified={verified}
+					permission={permission}
+					setSelectedRemoveProps={setSelectedRemoveProps}
+					removeOnOpen={removeOnOpen}
+					setModalProps={setModalProps}
+					updateOnOpen={updateOnOpen}
+				/>
+			)}
+			<RelayPaginationControls
+				onlyPagination={false}
+				selectedDisplayLimit={domainsPerPage}
+				setSelectedDisplayLimit={setDomainsPerPage}
+				displayLimitOptions={[5, 10, 20, 50, 100]}
+				resetToFirstPage={resetToFirstPage}
+				hasNextPage={hasNextPage}
+				hasPreviousPage={hasPreviousPage}
+				next={next}
+				previous={previous}
+				isLoadingMore={isLoadingMore}
+				totalRecords={totalCount}
+			/>
+		</>
+	);
 
-  return (
-    <Box mb="6" w="100%">
-      <Box bg="gray.100" p="2" mb="2" borderColor="gray.300" borderWidth="1px">
-        <form
-          id="form"
-          onSubmit={async (e) => {
-            e.preventDefault() // prevents page from refreshing
-            setModalProps({
-              archived: false,
-              mutation: 'create',
-              tagInputList: [],
-              editingDomainId: '',
-              editingDomainUrl: newDomainUrl,
-              orgCount: 0,
-            })
-            updateOnOpen()
-          }}
-        >
-          <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
-            <Text
-              as="label"
-              htmlFor="Search-for-domain-field"
-              fontSize="md"
-              fontWeight="bold"
-              textAlign="center"
-              mr={2}
-            >
-              <Trans>Search: </Trans>
-            </Text>
-            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
-              <InputLeftElement aria-hidden="true">
-                <PlusSquareIcon color="gray.300" />
-              </InputLeftElement>
-              <Input
-                borderColor="black"
-                id="Search-for-domain-field"
-                type="text"
-                placeholder={t`Domain URL`}
-                aria-label={t`Search by Domain URL`}
-                onChange={(e) => {
-                  setNewDomainUrl(e.target.value)
-                  resetToFirstPage()
-                }}
-              />
-            </InputGroup>
-            <InfoButton bg="gray.50" onToggle={onToggle} />
-            <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit" ml="auto">
-              <AddIcon mr={2} aria-hidden="true" />
-              <Trans>Add Domain</Trans>
-            </Button>
-          </Flex>
-        </form>
-        <Box mt="1" backgroundColor="gray.200" padding={1} borderRadius="sm" fontSize="sm">
-          {domainSearchTip}
-        </Box>
-        <Divider borderBottomWidth="1px" borderBottomColor="black" />
-        <RelayPaginationControls
-          onlyPagination={false}
-          selectedDisplayLimit={domainsPerPage}
-          setSelectedDisplayLimit={setDomainsPerPage}
-          displayLimitOptions={[5, 10, 20, 50, 100]}
-          resetToFirstPage={resetToFirstPage}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          next={next}
-          previous={previous}
-          isLoadingMore={isLoadingMore}
-          totalRecords={totalCount}
-        />
-      </Box>
-      <Flex align="center" mb="2">
-        <FilterList
-          filters={filters}
-          setFilters={setFilters}
-          resetToFirstPage={resetToFirstPage}
-          filterTagOptions={filterTagOptions}
-        />
-      </Flex>
-      {adminDomainList}
+	return (
+		<Box mb="6" w="100%">
+			<Box bg="gray.100" p="2" mb="2" borderColor="gray.300" borderWidth="1px">
+				<form
+					id="form"
+					onSubmit={async (e) => {
+						e.preventDefault(); // prevents page from refreshing
+						setModalProps({
+							archived: false,
+							mutation: "create",
+							tagInputList: [],
+							editingDomainId: "",
+							editingDomainUrl: newDomainUrl,
+							orgCount: 0,
+						});
+						updateOnOpen();
+					}}
+				>
+					<Flex flexDirection={{ base: "column", md: "row" }} align="center">
+						<Text
+							as="label"
+							htmlFor="Search-for-domain-field"
+							fontSize="md"
+							fontWeight="bold"
+							textAlign="center"
+							mr={2}
+						>
+							<Trans>Search: </Trans>
+						</Text>
+						<InputGroup
+							width={{ base: "100%", md: "75%" }}
+							mb={{ base: "8px", md: "0" }}
+							mr={{ base: "0", md: "4" }}
+						>
+							<InputLeftElement aria-hidden="true">
+								<PlusSquareIcon color="gray.300" />
+							</InputLeftElement>
+							<Input
+								borderColor="black"
+								id="Search-for-domain-field"
+								type="text"
+								placeholder={t`Domain URL`}
+								aria-label={t`Search by Domain URL`}
+								onChange={(e) => {
+									setNewDomainUrl(e.target.value);
+									resetToFirstPage();
+								}}
+							/>
+						</InputGroup>
+						<InfoButton bg="gray.50" onToggle={onToggle} />
+						<Button
+							id="addDomainBtn"
+							width={{ base: "100%", md: "25%" }}
+							variant="primary"
+							type="submit"
+							ml="auto"
+						>
+							<AddIcon mr={2} aria-hidden="true" />
+							<Trans>Add Domain</Trans>
+						</Button>
+					</Flex>
+				</form>
+				<Box
+					mt="1"
+					backgroundColor="gray.200"
+					padding={1}
+					borderRadius="sm"
+					fontSize="sm"
+				>
+					{domainSearchTip}
+				</Box>
+				<Divider borderBottomWidth="1px" borderBottomColor="black" />
+				<RelayPaginationControls
+					onlyPagination={false}
+					selectedDisplayLimit={domainsPerPage}
+					setSelectedDisplayLimit={setDomainsPerPage}
+					displayLimitOptions={[5, 10, 20, 50, 100]}
+					resetToFirstPage={resetToFirstPage}
+					hasNextPage={hasNextPage}
+					hasPreviousPage={hasPreviousPage}
+					next={next}
+					previous={previous}
+					isLoadingMore={isLoadingMore}
+					totalRecords={totalCount}
+				/>
+			</Box>
+			<Flex align="center" mb="2">
+				<FilterList
+					filters={filters}
+					setFilters={setFilters}
+					resetToFirstPage={resetToFirstPage}
+					filterTagOptions={filterTagOptions}
+				/>
+			</Flex>
+			{adminDomainList}
 
-      <AdminDomainModal
-        isOpen={updateIsOpen}
-        onClose={
-          modalProps.mutation === 'create'
-            ? () => {
-                updateOnClose()
-                resetToFirstPage()
-              }
-            : updateOnClose
-        }
-        validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
-        orgId={orgId}
-        orgSlug={orgSlug}
-        availableTags={availableTags}
-        permission={permission}
-        {...modalProps}
-      />
-      <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
-        <ModalOverlay />
-        <ModalContent pb={4}>
-          <Formik
-            initialValues={{
-              reason: selectedRemoveProps.rcode === 'NXDOMAIN' ? 'NONEXISTENT' : '',
-            }}
-            initialTouched={{
-              reason: true,
-            }}
-            onSubmit={async (values) => {
-              removeDomain({
-                variables: {
-                  domainId: selectedRemoveProps.domainId,
-                  orgId: orgId,
-                  reason: values.reason,
-                },
-              })
-            }}
-          >
-            {({ values, handleSubmit, isSubmitting, handleChange }) => (
-              <form id="form" onSubmit={handleSubmit}>
-                <ModalHeader>
-                  <Trans>Remove Domain</Trans>
-                </ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Stack spacing={4} p={25}>
-                    <Text>
-                      <Trans>Confirm removal of domain:</Trans>
-                    </Text>
-                    <Text fontWeight="bold">{selectedRemoveProps.domain}</Text>
+			<AdminDomainModal
+				isOpen={updateIsOpen}
+				onClose={
+					modalProps.mutation === "create"
+						? () => {
+								updateOnClose();
+								resetToFirstPage();
+							}
+						: updateOnClose
+				}
+				validationSchema={createValidationSchema(["domainUrl", "selectors"])}
+				orgId={orgId}
+				orgSlug={orgSlug}
+				availableTags={availableTags}
+				permission={permission}
+				{...modalProps}
+			/>
+			<Modal
+				isOpen={removeIsOpen}
+				onClose={removeOnClose}
+				motionPreset="slideInBottom"
+			>
+				<ModalOverlay />
+				<ModalContent pb={4}>
+					<Formik
+						initialValues={{
+							reason:
+								selectedRemoveProps.rcode === "NXDOMAIN" ? "NONEXISTENT" : "",
+						}}
+						initialTouched={{
+							reason: true,
+						}}
+						onSubmit={async (values) => {
+							removeDomain({
+								variables: {
+									domainId: selectedRemoveProps.domainId,
+									orgId: orgId,
+									reason: values.reason,
+								},
+							});
+						}}
+					>
+						{({ values, handleSubmit, isSubmitting, handleChange }) => (
+							<form id="form" onSubmit={handleSubmit}>
+								<ModalHeader>
+									<Trans>Remove Domain</Trans>
+								</ModalHeader>
+								<ModalCloseButton />
+								<ModalBody>
+									<Stack spacing={4} p={25}>
+										<Text>
+											<Trans>Confirm removal of domain:</Trans>
+										</Text>
+										<Text fontWeight="bold">{selectedRemoveProps.domain}</Text>
 
-                    <Text>
-                      <Trans>
-                        A domain may only be removed for one of the reasons below. For a domain to no longer exist, it
-                        must be removed from the DNS. If you need to remove this domain for a different reason, please
-                        contact TBS Cyber Security.
-                      </Trans>
-                    </Text>
+										<Text>
+											<Trans>
+												A domain may only be removed for one of the reasons
+												below. For a domain to no longer exist, it must be
+												removed from the DNS. If you need to remove this domain
+												for a different reason, please contact TBS Cyber
+												Security.
+											</Trans>
+										</Text>
 
-                    <FormControl>
-                      <FormLabel htmlFor="reason" fontWeight="bold">
-                        <Trans>Reason</Trans>
-                      </FormLabel>
-                      <Select
-                        isRequired
-                        defaultValue={values.reason}
-                        borderColor="black"
-                        name="reason"
-                        id="reason"
-                        onChange={handleChange}
-                      >
-                        <option hidden value="">
-                          <Trans>Select a reason for removing this domain</Trans>
-                        </option>
-                        <option value="NONEXISTENT">
-                          <Trans>This domain no longer exists</Trans>
-                        </option>
-                        <option value="WRONG_ORG">
-                          <Trans>This domain does not belong to this organization</Trans>
-                        </option>
-                      </Select>
-                    </FormControl>
-                  </Stack>
-                </ModalBody>
+										<FormControl>
+											<FormLabel htmlFor="reason" fontWeight="bold">
+												<Trans>Reason</Trans>
+											</FormLabel>
+											<Select
+												isRequired
+												defaultValue={values.reason}
+												borderColor="black"
+												name="reason"
+												id="reason"
+												onChange={handleChange}
+											>
+												<option hidden value="">
+													<Trans>
+														Select a reason for removing this domain
+													</Trans>
+												</option>
+												<option value="NONEXISTENT">
+													<Trans>This domain no longer exists</Trans>
+												</option>
+												<option value="WRONG_ORG">
+													<Trans>
+														This domain does not belong to this organization
+													</Trans>
+												</option>
+											</Select>
+										</FormControl>
+									</Stack>
+								</ModalBody>
 
-                <ModalFooter>
-                  <Button variant="primary" mr={4} isLoading={isSubmitting} type="submit">
-                    <Trans>Confirm</Trans>
-                  </Button>
-                </ModalFooter>
-              </form>
-            )}
-          </Formik>
-        </ModalContent>
-      </Modal>
-      <InfoPanel title={t`Asset States`} isOpen={infoIsOpen} onToggle={onToggle}>
-        <Trans>
-          The "Asset State" describes how the domain relates to your organization. These states are used by Tracker to
-          give you a more accurate summary of your attack surface.
-        </Trans>
-        <Divider borderColor="gray.500" mb={4} />
-        <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
-        <InfoBox
-          title={t`Dependency`}
-          info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
-        />
-        <InfoBox
-          title={t`Monitor Only`}
-          info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
-        />
-        <InfoBox
-          title={t`Candidate`}
-          info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
-        />
-        <InfoBox
-          title={t`Requires Investigation`}
-          info={t`An asset that requires further investigation to determine its relationship to the organization.`}
-        />
-      </InfoPanel>
-    </Box>
-  )
+								<ModalFooter>
+									<Button
+										variant="primary"
+										mr={4}
+										isLoading={isSubmitting}
+										type="submit"
+									>
+										<Trans>Confirm</Trans>
+									</Button>
+								</ModalFooter>
+							</form>
+						)}
+					</Formik>
+				</ModalContent>
+			</Modal>
+			<InfoPanel
+				title={t`Asset States`}
+				isOpen={infoIsOpen}
+				onToggle={onToggle}
+			>
+				<Trans>
+					The "Asset State" describes how the domain relates to your
+					organization. These states are used by Tracker to give you a more
+					accurate summary of your attack surface.
+				</Trans>
+				<Divider borderColor="gray.500" mb={4} />
+				<InfoBox
+					title={t`Approved`}
+					info={t`An asset confirmed to belong to the organization.`}
+				/>
+				<InfoBox
+					title={t`Dependency`}
+					info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
+				/>
+				<InfoBox
+					title={t`Monitor Only`}
+					info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
+				/>
+				<InfoBox
+					title={t`Candidate`}
+					info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
+				/>
+				<InfoBox
+					title={t`Requires Investigation`}
+					info={t`An asset that requires further investigation to determine its relationship to the organization.`}
+				/>
+			</InfoPanel>
+		</Box>
+	);
 }
 
 AdminDomains.propTypes = {
-  orgSlug: string.isRequired,
-  orgId: string.isRequired,
-  verified: bool,
-  availableTags: array,
-  domainsPerPage: number,
-  permission: string,
-}
+	orgSlug: string.isRequired,
+	orgId: string.isRequired,
+	verified: bool,
+	availableTags: array,
+	domainsPerPage: number,
+	permission: string,
+};
