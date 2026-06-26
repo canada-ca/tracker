@@ -1,0 +1,202 @@
+{
+  "domain": "cyber.gc.ca",
+  "base_domain": "cyber.gc.ca",
+  "zone_apex": "cyber.gc.ca",
+  "record_exists": true,
+  "rcode": "NOERROR",
+  "resolve_chain": [
+    [
+      "cyber.gc.ca. 7161 IN A 20.151.96.73"
+    ]
+  ],
+  "resolve_ips": [
+    "20.151.96.73"
+  ],
+  "cname_record": null,
+  "mx_records": {
+    "hosts": [
+      {
+        "preference": 10,
+        "hostname": "cyber-gc-ca.mail.protection.outlook.com",
+        "addresses": [
+          "52.101.190.1",
+          "52.101.192.0",
+          "52.101.192.1",
+          "52.101.190.0"
+        ]
+      }
+    ],
+    "warnings": []
+  },
+  "ns_records": {
+    "hostnames": [
+      "ns1.d-zone.ca",
+      "ns2.d-zone.ca",
+      "ns40.ent.global.gc.ca",
+      "ns41.ent.global.gc.ca",
+      "ns11.ent.global.gc.ca",
+      "ns10.ent.global.gc.ca"
+    ],
+    "warnings": []
+  },
+  "dkim": {},
+  "spf": {
+    "record": "v=spf1 ip4:40.80.253.57 a:smtp.ops.cyber.gc.ca a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
+    "valid": true,
+    "dns_void_lookups": 0,
+    "warnings": [],
+    "parsed": {
+      "pass": [
+        {
+          "value": "40.80.253.57",
+          "mechanism": "ip4"
+        },
+        {
+          "value": "52.139.3.76",
+          "mechanism": "a"
+        },
+        {
+          "value": "205.193.218.114",
+          "mechanism": "a"
+        },
+        {
+          "value": "205.193.218.115",
+          "mechanism": "a"
+        }
+      ],
+      "neutral": [],
+      "softfail": [],
+      "fail": [],
+      "include": [
+        {
+          "domain": "spf.protection.outlook.com",
+          "record": "v=spf1 ip4:40.92.0.0/15 ip4:40.107.0.0/16 ip4:52.100.0.0/15 ip4:52.102.0.0/16 ip4:52.103.0.0/17 ip4:104.47.0.0/17 ip6:2a01:111:f400::/48 ip6:2a01:111:f403::/49 ip6:2a01:111:f403:8000::/51 ip6:2a01:111:f403:c000::/51 ip6:2a01:111:f403:f000::/52 -all",
+          "dns_void_lookups": 0,
+          "parsed": {
+            "pass": [
+              {
+                "value": "40.92.0.0/15",
+                "mechanism": "ip4"
+              },
+              {
+                "value": "40.107.0.0/16",
+                "mechanism": "ip4"
+              },
+              {
+                "value": "52.100.0.0/15",
+                "mechanism": "ip4"
+              },
+              {
+                "value": "52.102.0.0/16",
+                "mechanism": "ip4"
+              },
+              {
+                "value": "52.103.0.0/17",
+                "mechanism": "ip4"
+              },
+              {
+                "value": "104.47.0.0/17",
+                "mechanism": "ip4"
+              },
+              {
+                "value": "2a01:111:f400::/48",
+                "mechanism": "ip6"
+              },
+              {
+                "value": "2a01:111:f403::/49",
+                "mechanism": "ip6"
+              },
+              {
+                "value": "2a01:111:f403:8000::/51",
+                "mechanism": "ip6"
+              },
+              {
+                "value": "2a01:111:f403:c000::/51",
+                "mechanism": "ip6"
+              },
+              {
+                "value": "2a01:111:f403:f000::/52",
+                "mechanism": "ip6"
+              }
+            ],
+            "neutral": [],
+            "softfail": [],
+            "fail": [],
+            "include": [],
+            "redirect": null,
+            "exp": null,
+            "duplicate_include": []
+          },
+          "warnings": [],
+          "spf_default": "fail",
+          "lookups": 0
+        }
+      ],
+      "redirect": null,
+      "exp": null,
+      "duplicate_include": []
+    },
+    "spf_default": "fail",
+    "lookups": 3
+  },
+  "dmarc": {
+    "record": "v=DMARC1; p=reject; pct=100; rua=mailto:dmarc@cyber.gc.ca",
+    "valid": true,
+    "location": "cyber.gc.ca",
+    "warnings": [],
+    "tags": {
+      "v": {
+        "value": "DMARC1",
+        "explicit": true
+      },
+      "p": {
+        "value": "reject",
+        "explicit": true
+      },
+      "pct": {
+        "value": 100,
+        "explicit": true
+      },
+      "rua": {
+        "value": [
+          {
+            "scheme": "mailto",
+            "address": "dmarc@cyber.gc.ca",
+            "size_limit": null,
+            "accepting": true
+          }
+        ],
+        "explicit": true
+      },
+      "adkim": {
+        "value": "r",
+        "explicit": false
+      },
+      "aspf": {
+        "value": "r",
+        "explicit": false
+      },
+      "fo": {
+        "value": "0",
+        "explicit": false
+      },
+      "rf": {
+        "value": "afrf",
+        "explicit": false
+      },
+      "ri": {
+        "value": 86400,
+        "explicit": false
+      },
+      "sp": {
+        "value": "reject",
+        "explicit": false
+      }
+    },
+    "effective_policy_source": "p",
+    "effective_policy": "reject"
+  },
+  "wildcard_sibling": false,
+  "wildcard_entry": false,
+  "zone_dnssec_enabled": null
+}
