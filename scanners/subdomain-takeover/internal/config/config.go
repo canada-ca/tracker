@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"os"
@@ -18,7 +18,7 @@ type Config struct {
 	Logger      zerolog.Logger
 }
 
-func initConfig() *Config {
+func InitConfig() *Config {
 	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		panic(err)
