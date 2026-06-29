@@ -5,6 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
+	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog"
 )
@@ -14,6 +16,7 @@ type RunnerDeps struct {
 	WorkerCount int
 	Iter        jetstream.MessagesContext
 	Worker      Worker
+	NC          *nats.Conn
 }
 
 func Run(ctx context.Context, deps RunnerDeps) {
@@ -29,10 +32,10 @@ func Run(ctx context.Context, deps RunnerDeps) {
 
 Loop:
 	for {
-		// if nc.IsClosed() {
-		// 	logger.Error().Msg("Connection to NATS is closed.")
-		// 	break Loop
-		// }
+		if err := messaging.CheckConnection(deps.NC); err != nil {
+			logger.Error().Err(err).Msg("NATS connection unhealthy")
+			break Loop
+		}
 
 		select {
 		case <-ctx.Done():
