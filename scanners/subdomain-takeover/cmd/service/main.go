@@ -72,6 +72,7 @@ func main() {
 		WorkerCount: cfg.WorkerCount,
 		Iter:        iter,
 		Worker:      *worker,
+		NC:          nc,
 	}
 
 	app.Run(ctx, deps)
