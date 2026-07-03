@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 	"github.com/nats-io/nats.go/jetstream"
@@ -28,6 +29,8 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 		log.Err(err).Msg("Decoding error")
 	}
 	log.Info().Msg(scan.Domain)
+
+	detect.GetEvidence(scan)
 
 	// var finding model.Finding
 	// err := w.pub.Publish(ctx, finding)
