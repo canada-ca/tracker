@@ -16,6 +16,7 @@ import { GuidanceTagDataSource } from './guidance-tag'
 import { OrganizationDataSource } from './organization'
 import { TagsDataSource } from './tags'
 import { DomainDataSource } from './domain'
+import { AffiliationDataSource } from './affiliation'
 import {
   AuthDataSource,
   checkDomainOwnership,
@@ -169,6 +170,15 @@ export async function createContext({
         language: request.language,
         cleanseInput,
         loginRequiredBool,
+        transaction,
+        collections,
+      }),
+      affiliation: new AffiliationDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
         transaction,
         collections,
       }),

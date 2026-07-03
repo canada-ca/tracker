@@ -1,7 +1,7 @@
 import { setupI18n } from '@lingui/core'
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
@@ -12,11 +12,50 @@ import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadAffiliationByKey } from '../../loaders'
+import { AffiliationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const withAffiliationDataSource = (contextValue = {}) => {
+  const dataSources = contextValue.dataSources || {}
+  if (dataSources.affiliation && dataSources.auditLogs) return contextValue
+
+  return {
+    ...contextValue,
+    dataSources: {
+      ...dataSources,
+      affiliation:
+        dataSources.affiliation ||
+        new AffiliationDataSource({
+          query: contextValue.query,
+          transaction: contextValue.transaction,
+          collections: contextValue.collections,
+          userKey: contextValue.userKey,
+          i18n: contextValue.i18n,
+          language: contextValue.request?.language,
+          cleanseInput: contextValue.validators?.cleanseInput,
+        }),
+      auditLogs: dataSources.auditLogs || { logActivity: jest.fn().mockResolvedValue(undefined) },
+    },
+  }
+}
+
+const graphql = (args) => executeGraphql({ ...args, contextValue: withAffiliationDataSource(args.contextValue) })
+
+const loadAffiliationWithDataSource = async ({ query, transaction, collections, userKey, i18n, affiliationKey }) => {
+  const affiliationDataSource = new AffiliationDataSource({
+    query,
+    transaction,
+    collections,
+    userKey,
+    i18n,
+    cleanseInput,
+  })
+
+  return affiliationDataSource.byKey.load(affiliationKey)
+}
 
 const orgOneData = {
   verified: true,
@@ -225,13 +264,14 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           })
 
-          const loader = loadAffiliationByKey({
+          const data = await loadAffiliationWithDataSource({
             query,
+            transaction,
+            collections,
             userKey: admin._key,
             i18n,
+            affiliationKey: affiliation._key,
           })
-
-          const data = await loader.load(affiliation._key)
 
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
@@ -520,13 +560,14 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           })
 
-          const loader = loadAffiliationByKey({
+          const data = await loadAffiliationWithDataSource({
             query,
+            transaction,
+            collections,
             userKey: admin._key,
             i18n,
+            affiliationKey: affiliation._key,
           })
-
-          const data = await loader.load(affiliation._key)
 
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
@@ -833,13 +874,14 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           })
 
-          const loader = loadAffiliationByKey({
+          const data = await loadAffiliationWithDataSource({
             query,
+            transaction,
+            collections,
             userKey: admin._key,
             i18n,
+            affiliationKey: affiliation._key,
           })
-
-          const data = await loader.load(affiliation._key)
 
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
