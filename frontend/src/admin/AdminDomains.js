@@ -42,7 +42,6 @@ import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { DomainUpdateList } from './DomainUpdateList'
 import { AdminDomainList } from './AdminDomainList'
 
@@ -309,55 +308,38 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
           )
         }}
       </Formik>
-      <ABTestWrapper>
-        <ABTestVariant name="A">
-          <AdminDomainList
-            nodes={nodes}
-            verified={verified}
-            permission={permission}
-            orgId={orgId}
-            orgSlug={orgSlug}
-            setSelectedRemoveProps={setSelectedRemoveProps}
-            removeOnOpen={removeOnOpen}
-            setModalProps={setModalProps}
-            updateOnOpen={updateOnOpen}
-          />
-        </ABTestVariant>
-        <ABTestVariant name="B">
-          <Button
-            leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
-            mt={4}
-            mb={2}
-            variant="primary"
-            onClick={() => setShowUpdateList((prev) => !prev)}
-          >
-            {showUpdateList ? <Trans>Show Domain List</Trans> : <Trans>Show Update List</Trans>}
-          </Button>
-          {showUpdateList ? (
-            <DomainUpdateList
-              availableTags={availableTags}
-              orgId={orgId}
-              domains={nodes.map(({ id, domain, claimTags }) => {
-                return { id, domain, tags: claimTags.map(({ label }) => label) }
-              })}
-              filters={filters}
-              search={debouncedSearchTerm}
-              domainCount={totalCount}
-              resetToFirstPage={resetToFirstPage}
-            />
-          ) : (
-            <AdminDomainList
-              nodes={nodes}
-              verified={verified}
-              permission={permission}
-              setSelectedRemoveProps={setSelectedRemoveProps}
-              removeOnOpen={removeOnOpen}
-              setModalProps={setModalProps}
-              updateOnOpen={updateOnOpen}
-            />
-          )}
-        </ABTestVariant>
-      </ABTestWrapper>
+      <Button
+        leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
+        mt={4}
+        mb={2}
+        variant="primary"
+        onClick={() => setShowUpdateList((prev) => !prev)}
+      >
+        {showUpdateList ? <Trans>Show Domain List</Trans> : <Trans>Show Update List</Trans>}
+      </Button>
+      {showUpdateList ? (
+        <DomainUpdateList
+          availableTags={availableTags}
+          orgId={orgId}
+          domains={nodes.map(({ id, domain, claimTags }) => {
+            return { id, domain, tags: claimTags.map(({ label }) => label) }
+          })}
+          filters={filters}
+          search={debouncedSearchTerm}
+          domainCount={totalCount}
+          resetToFirstPage={resetToFirstPage}
+        />
+      ) : (
+        <AdminDomainList
+          nodes={nodes}
+          verified={verified}
+          permission={permission}
+          setSelectedRemoveProps={setSelectedRemoveProps}
+          removeOnOpen={removeOnOpen}
+          setModalProps={setModalProps}
+          updateOnOpen={updateOnOpen}
+        />
+      )}
       <RelayPaginationControls
         onlyPagination={false}
         selectedDisplayLimit={domainsPerPage}

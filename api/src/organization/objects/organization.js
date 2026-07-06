@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
+import { organizationPoliciesType } from './organization-policies'
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
 import { Acronym, Slug } from '../../scalars'
@@ -92,14 +93,14 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _key },
         args,
-        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, dataSources: { tags } },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
         }
 
-        const orgTags = await loadTagsByOrg({
+        const orgTags = await tags.byOrg({
           orgId: _key,
           ...args,
         })
@@ -108,6 +109,11 @@ export const organizationType = new GraphQLObjectType({
 
         return orgTags
       },
+    },
+    policies: {
+      type: organizationPoliciesType,
+      description: 'Policies that apply to this organization.',
+      resolve: ({ policies }) => policies,
     },
     summaries: {
       type: organizationSummaryType,
@@ -315,10 +321,10 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        { dataSources: { auth: authDS }, loaders: { loadDomainConnectionsByOrgId } },
+        { dataSources: { auth: authDS, domain: domainDataSource } },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
-        const connections = await loadDomainConnectionsByOrgId({
+        const connections = await domainDataSource.connectionsByOrgId({
           orgId: _id,
           permission,
           ...args,
@@ -350,8 +356,7 @@ export const organizationType = new GraphQLObjectType({
         {
           i18n,
           auth: { loginRequiredBool },
-          dataSources: { auth: authDS },
-          loaders: { loadAffiliationConnectionsByOrgId },
+          dataSources: { auth: authDS, affiliation },
         },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
@@ -359,7 +364,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 
-        const affiliations = await loadAffiliationConnectionsByOrgId({
+        const affiliations = await affiliation.connectionsByOrgId({
           orgId: _id,
           ...args,
         })

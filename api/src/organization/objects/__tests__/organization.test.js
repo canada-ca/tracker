@@ -244,9 +244,7 @@ describe('given the organization object', () => {
             {
               dataSources: {
                 auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
-              },
-              loaders: {
-                loadDomainConnectionsByOrgId: jest.fn().mockReturnValue(expectedResult),
+                domain: { connectionsByOrgId: jest.fn().mockReturnValue(expectedResult) },
               },
             },
           ),
@@ -294,9 +292,7 @@ describe('given the organization object', () => {
                 auth: { loginRequiredBool: true },
                 dataSources: {
                   auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('admin') } },
-                },
-                loaders: {
-                  loadAffiliationConnectionsByOrgId: jest.fn().mockReturnValue(expectedResults),
+                  affiliation: { connectionsByOrgId: jest.fn().mockReturnValue(expectedResults) },
                 },
               },
             ),
@@ -331,8 +327,8 @@ describe('given the organization object', () => {
                   auth: { loginRequiredBool: true },
                   dataSources: {
                     auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
+                    affiliation: { connectionsByOrgId: jest.fn() },
                   },
-                  loaders: { loadAffiliationConnectionsByOrgId: jest.fn() },
                 },
               )
             } catch (err) {
@@ -369,8 +365,8 @@ describe('given the organization object', () => {
                   auth: { loginRequiredBool: true },
                   dataSources: {
                     auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
+                    affiliation: { connectionsByOrgId: jest.fn() },
                   },
-                  loaders: { loadAffiliationConnectionsByOrgId: jest.fn() },
                 },
               )
             } catch (err) {

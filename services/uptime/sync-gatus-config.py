@@ -58,13 +58,13 @@ def build_endpoint(domain):
         "interval": "5m",
         "conditions": [
             "[STATUS] == any(200, 429)",  # prevents rate limiting from triggering alerts
-            "[RESPONSE_TIME] < 10000",
+            "[RESPONSE_TIME] < 30000",
         ],
         "alerts": [{"type": "custom"}],
         "client": {
             "insecure": True,  # bypasses TLS verification, removes false positives
             "ignore-redirect": False,
-            "timeout": "10s",
+            "timeout": "30s",
         },
     }
 

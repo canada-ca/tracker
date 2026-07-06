@@ -65,6 +65,11 @@ const databaseOptions = ({ rootPass }) => [
     name: 'domainsDNS',
     options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
   },
+  {
+    type: 'documentcollection',
+    name: 'auditLogs',
+    options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
+  },
 ]
 
 module.exports = {

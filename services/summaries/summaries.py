@@ -26,22 +26,34 @@ CHARTS = {
     "web": ["https", "hsts", "ssl"],
 }
 
+SCOPES = ["all", "verified", "psd", "pgs"]
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def domain_has_verified_claim(domain, db):
+def domain_scopes(domain, db):
     cursor = db.aql.execute(
         """
-            FOR v, e IN 1..1 INBOUND @domain_id claims
-                FILTER v.verified == true
-                FILTER e.assetState == "approved"
-                RETURN v
+            FOR org, claim IN 1..1 INBOUND @domain_id claims
+                FILTER claim.assetState == "approved"
+                RETURN { verified: org.verified, policies: org.policies }
             """,
         bind_vars={"domain_id": domain["_id"]},
     )
-    if cursor.empty():
-        return False
-    return True
+    orgs = [org for org in cursor]
+    if len(orgs) == 0:
+        return set()
+
+    scopes = {"all"}
+    for org in orgs:
+        if org.get("verified") is True:
+            scopes.add("verified")
+        policies = org.get("policies") or {}
+        if policies.get("psd") is True:
+            scopes.add("psd")
+        if policies.get("pgs") is True:
+            scopes.add("pgs")
+    return scopes
 
 
 def ignore_domain(domain):
@@ -59,27 +71,28 @@ def ignore_domain(domain):
     )
 
 
-def get_domain_negative_findings(db, domain_id):
+def get_domain_negative_findings(db, domain):
     cursor = db.aql.execute(
         """
             LET emailTags = (
-                FOR dnsScan, dnsE IN 1 OUTBOUND @domain_id domainsDNS
-                    SORT dnsScan.timestamp DESC
-                    LIMIT 1
-                    RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
+                LET dnsScan = DOCUMENT(@latest_dns_scan)
+                FILTER dnsScan != null
+                RETURN FLATTEN([dnsScan.dmarc.negativeTags, dnsScan.dkim.negativeTags, dnsScan.spf.negativeTags])
             )[0]
             LET webTags = (
-                FOR web, webE IN 1 OUTBOUND @domain_id domainsWeb
-                    SORT web.timestamp DESC
-                    LIMIT 1
-                    FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
-                        RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
+                LET web = DOCUMENT(@latest_web_scan)
+                FILTER web != null
+                FOR webScan, webScanE IN 1 OUTBOUND web webToWebScans
+                    RETURN FLATTEN([webScan.results.tlsResult.negativeTags, webScan.results.connectionResults.negativeTags])
             )
             FOR tag IN FLATTEN([emailTags, webTags], 2)
                 FILTER tag != null
                 RETURN tag
         """,
-        bind_vars={"domain_id": domain_id},
+        bind_vars={
+            "latest_dns_scan": domain.get("latestDnsScan"),
+            "latest_web_scan": domain.get("latestWebScan"),
+        },
     )
     if cursor.empty():
         return []
@@ -94,97 +107,105 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     db = client.db(name, username=user, password=password)
     chartSummariesCol = db.collection("chartSummaries")
 
-    # Gather summaries from domain statuses
+    # TODO: remove this once all summaries have been migrated to the new format
+    db.aql.execute(
+        """
+            FOR summary IN chartSummaries
+                FILTER summary.scope == null
+                UPDATE summary WITH { scope: "verified" } IN chartSummaries
+        """
+    )
+
+    # Gather summaries from domain statuses, one accumulator per scope.
     chartSummaries = {}
-    for chart_type, scan_types in CHARTS.items():
-        chartSummaries[chart_type] = {
-            "scan_types": scan_types,
-            "pass": 0,
-            "fail": 0,
-            "total": 0,
+    dmarc_phases = {}
+    for scope in SCOPES:
+        chartSummaries[scope] = {
+            chart_type: {
+                "scan_types": scan_types,
+                "pass": 0,
+                "fail": 0,
+                "total": 0,
+            }
+            for chart_type, scan_types in CHARTS.items()
+        }
+        # DMARC phases: assess, deploy, enforce, maintain
+        dmarc_phases[scope] = {
+            "assess": 0,
+            "deploy": 0,
+            "enforce": 0,
+            "maintain": 0,
         }
 
-    # DMARC phases:
-    # 1. Assess
-    assess_count = 0
-    # 2. Deploy
-    deploy_count = 0
-    # 3. Enforce
-    enforce_count = 0
-    # 4. Maintain
-    maintain_count = 0
-
     for domain in db.collection("domains"):
-        if (
-            ignore_domain(domain) is False
-            and domain_has_verified_claim(domain, db) is True
-        ):
-            # Update chart summaries
-            for chart_type in chartSummaries:
-                chart = chartSummaries[chart_type]
-                category_status = []
-                for scan_type in chart["scan_types"]:
-                    category_status.append(domain.get("status", {}).get(scan_type))
-                if "fail" in category_status:
-                    chart["fail"] += 1
-                    chart["total"] += 1
-                elif (
-                    chart_type == "mail"
-                    and domain.get("status", {}).get("dkim") == "info"
-                    and "pass" in category_status
-                ) or "info" not in category_status:
-                    chart["pass"] += 1
-                    chart["total"] += 1
+        if ignore_domain(domain) is True:
+            continue
 
-            # Update DMARC phase summaries
-            phase = domain.get("phase")
-            if phase is None or domain.get("status", {}).get("dmarc") == "info":
-                logging.info(
-                    f"No DMARC scan data available for domain \"{domain['domain']}\"."
-                )
+        scopes = domain_scopes(domain, db)
+        if len(scopes) == 0:
+            continue
+
+        # Update chart summaries
+        for chart_type, scan_types in CHARTS.items():
+            category_status = []
+            for scan_type in scan_types:
+                category_status.append(domain.get("status", {}).get(scan_type))
+            if "fail" in category_status:
+                result = "fail"
+            elif (
+                chart_type == "mail"
+                and domain.get("status", {}).get("dkim") == "info"
+                and "pass" in category_status
+            ) or "info" not in category_status:
+                result = "pass"
+            else:
                 continue
+            for scope in scopes:
+                chart = chartSummaries[scope][chart_type]
+                chart[result] += 1
+                chart["total"] += 1
 
-            if phase == "assess":
-                assess_count = assess_count + 1
-            elif phase == "deploy":
-                deploy_count = deploy_count + 1
-            elif phase == "enforce":
-                enforce_count = enforce_count + 1
-            elif phase == "maintain":
-                maintain_count = maintain_count + 1
+        # Update DMARC phase summaries
+        phase = domain.get("phase")
+        if phase is None or domain.get("status", {}).get("dmarc") == "info":
+            logging.info(
+                f"No DMARC scan data available for domain \"{domain['domain']}\"."
+            )
+            continue
 
-    # Update DMARC phase summaries in DB
-    dmarc_phase_summary = {
-        "assess": assess_count,
-        "deploy": deploy_count,
-        "enforce": enforce_count,
-        "maintain": maintain_count,
-        "total": assess_count
-        + deploy_count
-        + enforce_count
-        + maintain_count,
-    }
+        if phase in ("assess", "deploy", "enforce", "maintain"):
+            for scope in scopes:
+                dmarc_phases[scope][phase] += 1
 
-    # Update chart summaries in DB
+    # Write one document per date, scope
     today_iso = date.today().isoformat()
-    cursor = chartSummariesCol.find({"date": today_iso})
-    if cursor.empty():
-        chartSummariesCol.insert(
-            {
-                "date": today_iso,
-                **chartSummaries,
-                "dmarc_phase": dmarc_phase_summary,
-            }
-        )
-    else:
-        logging.info("Chart summary from today already present. Updating summary...")
-        chartSummariesCol.update_match(
-            {"date": today_iso},
-            {
-                **chartSummaries,
-                "dmarc_phase": dmarc_phase_summary,
-            },
-        )
+    for scope in SCOPES:
+        dmarc_phase_summary = {
+            **dmarc_phases[scope],
+            "total": sum(dmarc_phases[scope].values()),
+        }
+
+        cursor = chartSummariesCol.find({"date": today_iso, "scope": scope})
+        if cursor.empty():
+            chartSummariesCol.insert(
+                {
+                    "date": today_iso,
+                    "scope": scope,
+                    **chartSummaries[scope],
+                    "dmarc_phase": dmarc_phase_summary,
+                }
+            )
+        else:
+            logging.info(
+                f'Chart summary for scope "{scope}" from today already present. Updating summary...'
+            )
+            chartSummariesCol.update_match(
+                {"date": today_iso, "scope": scope},
+                {
+                    **chartSummaries[scope],
+                    "dmarc_phase": dmarc_phase_summary,
+                },
+            )
     logging.info(f"Chart summary update completed.")
 
 
@@ -343,7 +364,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
                         # Negative tags
                         domain_negative_tags = get_domain_negative_findings(
-                            db, domain["_id"]
+                            db, domain
                         )
                         for tag in domain_negative_tags:
                             if tag in negative_tags:

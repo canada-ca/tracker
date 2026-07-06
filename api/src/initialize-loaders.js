@@ -1,9 +1,4 @@
 import {
-  loadAffiliationByKey,
-  loadAffiliationConnectionsByUserId,
-  loadAffiliationConnectionsByOrgId,
-} from './affiliation/loaders'
-import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
   loadDmarcSummaryConnectionsByUserId,
@@ -15,13 +10,6 @@ import {
   loadDmarcYearlySumEdge,
   loadAllVerifiedRuaDomains,
 } from './dmarc-summaries/loaders'
-import {
-  loadDomainByKey,
-  loadDomainByDomain,
-  loadDomainConnectionsByOrgId,
-  loadDomainConnectionsByUserId,
-  loadDkimSelectorsByDomainId,
-} from './domain/loaders'
 import { loadOrgByKey, loadOrganizationNamesById } from './organization/loaders'
 import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
 import {
@@ -36,22 +24,9 @@ import {
   loadVerifiedOrgConnectionsByDomainId,
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
-import { loadTagByTagId, loadTagsByOrg } from './tags'
 
 export function initializeLoaders({ query, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
-    loadTagByTagId: loadTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadTagsByOrg: loadTagsByOrg({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
     loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
       query,
       userKey,
@@ -100,30 +75,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
     }),
     loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
-    loadDomainByDomain: loadDomainByDomain({ query, userKey, i18n }),
-    loadDomainByKey: loadDomainByKey({ query, userKey, i18n }),
-    loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
-      query,
-      userKey,
-      language,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
     loadOrgByKey: loadOrgByKey({ query, language, userKey, i18n }),
     loadOrganizationNamesById: loadOrganizationNamesById({ query, userKey, i18n }),
     loadMyTrackerByUserId: loadMyTrackerByUserId({
@@ -140,20 +91,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
     }),
     loadUserByKey: loadUserByKey({ query, userKey, i18n }),
-    loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),
-    loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
-      query,
-      language,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
     loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
     loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
     loadVerifiedDomainConnections: loadVerifiedDomainConnections({

@@ -36,7 +36,7 @@ export const findMyDomains = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired, loginRequiredBool, verifiedRequired },
-      loaders: { loadDomainConnectionsByUserId },
+      dataSources: { domain: domainDataSource },
     },
   ) => {
     if (loginRequiredBool) {
@@ -46,7 +46,7 @@ export const findMyDomains = {
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    const domainConnections = await loadDomainConnectionsByUserId({
+    const domainConnections = await domainDataSource.connectionsByUserId({
       isSuperAdmin,
       ...args,
     })

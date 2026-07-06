@@ -1,6 +1,7 @@
 export * from './affiliation-org-order-field'
 export * from './affiliation-user-order-field'
 export * from './asset-state'
+export * from './chart-summary-scope'
 export * from './user-order-field'
 export * from './dkim-order-field'
 export * from './dkim-result-order-field'
