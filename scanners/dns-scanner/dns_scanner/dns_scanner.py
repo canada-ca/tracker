@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 DNSSEC_NAMESERVER_IP = os.getenv("DNSSEC_NAMESERVER_IP")
-DNSSEC_NAMESERVER_HOSTNAME= os.getenv("DNSSEC_NAMESERVER_HOSTNAME")
+DNSSEC_NAMESERVER_HOSTNAME = os.getenv("DNSSEC_NAMESERVER_HOSTNAME")
 
 
 @dataclass
@@ -27,6 +27,7 @@ class DNSScanResult:
     zone_apex: str = None
     record_exists: bool = None
     rcode: str = None
+    query_res: dict = None
     resolve_chain: list[list[str]] = None
     resolve_ips: [str] = None
     cname_record: str = None
@@ -50,9 +51,9 @@ def find_zone_apex(domain, resolver=None):
         while name != dns.name.root:
             logger.debug(f"Checking for SOA at {name}")
             try:
-                answers = resolver.resolve(name, 'SOA')
+                answers = resolver.resolve(name, "SOA")
                 logger.debug(f"Found SOA for {domain} at {name}: {answers[0]}")
-                zone_apex = str(name).rstrip('.')
+                zone_apex = str(name).rstrip(".")
                 return zone_apex
             except NoAnswer:
                 # Go up one level
@@ -105,7 +106,13 @@ def minimal_dnssec_check(domain, nameserver_ip, nameserver_hostname, _ttl_marker
     """
     try:
         q = dns.message.make_query(domain, dns.rdatatype.DNSKEY, want_dnssec=True)
-        resp = dns.query.tls(q, where=nameserver_ip, timeout=TIMEOUT, server_hostname=nameserver_hostname, verify=True)
+        resp = dns.query.tls(
+            q,
+            where=nameserver_ip,
+            timeout=TIMEOUT,
+            server_hostname=nameserver_hostname,
+            verify=True,
+        )
         if resp.rcode() != dns.rcode.NOERROR:
             return None
     except Timeout:
@@ -114,7 +121,9 @@ def minimal_dnssec_check(domain, nameserver_ip, nameserver_hostname, _ttl_marker
         )
         return None
     except Exception as e:
-        logger.error(f"Error while running minimal DNSSEC check for domain '{domain}': {e}")
+        logger.error(
+            f"Error while running minimal DNSSEC check for domain '{domain}': {e}"
+        )
         return None
     # Check if AD (Authenticated Data) flag is set, showing that the data is DNSSEC validated
     return bool(resp.flags & dns.flags.AD)
@@ -201,8 +210,15 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     dns_answer_return_types = []
-    for query_type in [dns.rdatatype.A, dns.rdatatype.SOA, dns.rdatatype.NS]:
+    query_res = {}
+    for query_type in [
+        dns.rdatatype.A,
+        dns.rdatatype.SOA,
+        dns.rdatatype.NS,
+        dns.rdatatype.CNAME,
+    ]:
         rtype = get_dns_return_type(domain, query_type)
+        query_res[dns.rdatatype.to_text(query_type)] = rtype
         if rtype == "NOERROR":
             dns_answer_return_types.append(rtype)
             break
@@ -221,6 +237,7 @@ def scan_domain(domain, dkim_selectors=None):
             )
             dns_answer_return_types.append(rtype)
 
+    scan_result.query_res = query_res
     if "NOERROR" not in dns_answer_return_types:
         if "SERVFAIL" in dns_answer_return_types:
             scan_result.rcode = "SERVFAIL"
@@ -284,10 +301,16 @@ def scan_domain(domain, dkim_selectors=None):
         logger.debug(f"Skipping DNSSEC check for {domain} - No zone apex found")
         zone_dnssec_enabled = None
     elif not DNSSEC_NAMESERVER_IP or not DNSSEC_NAMESERVER_HOSTNAME:
-        logger.debug(f"Skipping DNSSEC check for {domain} - DNSSEC nameserver environment variables not set")
+        logger.debug(
+            f"Skipping DNSSEC check for {domain} - DNSSEC nameserver environment variables not set"
+        )
         zone_dnssec_enabled = None
     else:
-        zone_dnssec_enabled = dnssec_check_with_ttl(domain=zone_apex, nameserver_ip=DNSSEC_NAMESERVER_IP, nameserver_hostname=DNSSEC_NAMESERVER_HOSTNAME)
+        zone_dnssec_enabled = dnssec_check_with_ttl(
+            domain=zone_apex,
+            nameserver_ip=DNSSEC_NAMESERVER_IP,
+            nameserver_hostname=DNSSEC_NAMESERVER_HOSTNAME,
+        )
 
     scan_result.zone_dnssec_enabled = zone_dnssec_enabled
 
