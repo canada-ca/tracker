@@ -40,7 +40,10 @@ spec:
                   key: DB_USER
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
-          resources: {}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
           securityContext:
             runAsGroup: 1000
             runAsUser: 1000

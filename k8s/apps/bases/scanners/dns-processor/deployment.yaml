@@ -75,7 +75,10 @@ spec:
                   name: scanners
                   key: ALERT_SUBS
                   optional: true
-          resources: {}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
           securityContext:
             runAsGroup: 1000
             runAsUser: 1000
