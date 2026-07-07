@@ -195,7 +195,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
     return result
 
 
-def dns_query_direct(
+def probe_nameserver(
     where: str, qname: str, qtype: str, recursion_desired: bool, timeout: int
 ):
     query = dns.message.make_query(qname, dns.rdatatype.from_text(qtype), use_edns=True)
@@ -274,7 +274,7 @@ def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_s
                 output["ns_checks"].append(row)
                 continue
 
-            res = dns_query_direct(ns_ip, domain, "SOA", False, timeout_sec)
+            res = probe_nameserver(ns_ip, domain, "SOA", False, timeout_sec)
             row["rcode"] = dns.rcode.to_text(res.rcode())
             row["answered_authoritatively"] = bool(res.flags & dns.flags.AA)
 
