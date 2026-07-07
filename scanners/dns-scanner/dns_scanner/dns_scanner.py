@@ -204,8 +204,42 @@ def dns_query_direct(
     return dns.query.udp(query, where=where, timeout=timeout)
 
 
-def check_ns_delegations(domain, ns_records, resolver=None, timeout_sec=10):
+def get_ns_ip(host: str, resolver):
+    ns_ip = None
+    try:
+        ns_a = resolver.resolve(host, "A")
+        if ns_a:
+            ns_ip = ns_a[0].to_text()
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+        ns_ip = None
+
+    if ns_ip is None:
+        try:
+            ns_aaaa = resolver.resolve(host, "AAAA")
+            if ns_aaaa:
+                ns_ip = ns_aaaa[0].to_text()
+        except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+            ns_ip = None
+
+    return ns_ip
+
+
+def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_sec=10):
+    if resolver is None:
+        resolver = dns.resolver.get_default_resolver()
+
+    qname = zone_apex
+    if not zone_apex:
+        qname = domain
+
     ns_hosts = ns_records.get("hostnames", [])
+    if len(ns_records) == 0:
+        try:
+            ns_res = resolver.resolve(domain, dns.rdatatype.NS)
+            ns_hosts = [host.to_text() for host in ns_res]
+        except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+            ns_hosts = []
+
     # Always return structured output, even when empty
     output = {
         "ns_hosts": ns_hosts,
@@ -217,18 +251,14 @@ def check_ns_delegations(domain, ns_records, resolver=None, timeout_sec=10):
             "lame_type": "none",  # none | partial | full
         },
     }
-
     if len(ns_hosts) == 0:
         output["ns_delegation"]["lame_type"] = "unknown"
         return output
 
-    if resolver is None:
-        resolver = dns.resolver.get_default_resolver()
-
     for host in ns_hosts:
         row = {
             "ns_host": host,
-            "qname": domain,
+            "qname": qname,
             "qtype": "SOA",
             "rcode": None,
             "answered_authoritatively": False,
@@ -237,22 +267,7 @@ def check_ns_delegations(domain, ns_records, resolver=None, timeout_sec=10):
         }
 
         try:
-            ns_ip = None
-            try:
-                ns_a = resolver.resolve(host, "A")
-                if ns_a:
-                    ns_ip = ns_a[0].to_text()
-            except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
-                ns_ip = None
-
-            if ns_ip is None:
-                try:
-                    ns_aaaa = resolver.resolve(host, "AAAA")
-                    if ns_aaaa:
-                        ns_ip = ns_aaaa[0].to_text()
-                except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
-                    ns_ip = None
-
+            ns_ip = get_ns_ip(host, resolver)
             if ns_ip is None:
                 row["error"] = "ns_ip_resolution_failed"
                 output["ns_delegation"]["lame_count"] += 1
@@ -425,7 +440,9 @@ def scan_domain(domain, dkim_selectors=None):
     ns_records = dmarc_scan_result.get("ns", {"hostnames": [], "errors": []})
     scan_result.ns_records = ns_records
     # check nameserver delegations
-    ns_delegations = check_ns_delegations(domain=domain, ns_records=ns_records)
+    ns_delegations = check_ns_delegations(
+        domain=domain, zone_apex=zone_apex, ns_records=ns_records
+    )
     scan_result.ns_delegations = ns_delegations
 
     # If no MX records are found (with warnings), but there are CNAME records, check the CNAME target for MX records
