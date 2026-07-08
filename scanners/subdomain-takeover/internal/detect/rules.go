@@ -1,21 +1,49 @@
 package detect
 
 import (
-	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
+	"fmt"
 )
 
-func MatchCNAMEFingerprints(evidence model.Finding, fingerprints []Fingerprint) {
+type CNAMEHit struct {
+	Matched    bool
+	Provider   string
+	ReasonCode string
+	RuleID     string
+	NeedsNX    bool
+}
+
+type NSHit struct {
+	Matched            bool
+	Provider           string
+	ReasonCode         string
+	RuleID             string
+	ProviderVulnerable bool
+	RegistrarMismatch  bool
+}
+
+func MatchCNAMEFingerprints(evidence CNAMEEvidence, fingerprints []CNAMEProviderFingerprint) *CNAMEHit {
+	for _, fp := range fingerprints {
+		if fp.ContainsTarget(evidence.Target) {
+			if fp.Nxdomain {
+				fmt.Println("check for nxdomain on A record")
+				if evidence.QueryAnswer.A == "NXDOMAIN" {
+					fmt.Println("Bingo")
+				}
+			} // else {
+			// 	fmt.Println("check for other fingerprint")
+			// }
+		}
+	}
+}
+
+func MatchNSProviderRules(evidence NSEvidence, fingerprints []NSProviderFingerprint) *NSHit {
 	return
 }
 
-func MatchNSProviderRules(evidence model.Finding, providerRules []string) {
-	return
+func ShouldEmitCNAME(evidence CNAMEEvidence, hit *CNAMEHit) bool {
+	return false
 }
 
-func ShouldEmitCNAME() {
-	return
-}
-
-func ShouldEmitNSHijack() {
-	return
+func ShouldEmitNSHijack(evidence NSEvidence, hit *NSHit) bool {
+	return false
 }

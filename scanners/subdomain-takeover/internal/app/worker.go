@@ -28,15 +28,21 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 	if err != nil {
 		log.Err(err).Msg("Decoding error")
 	}
-	log.Info().Msg(scan.Domain)
+	// log.Info().Msg(scan.Domain)
 
-	detect.GetEvidence(scan)
+	findings, err := detect.Classify(scan)
+	if err != nil {
+		log.Err(err).Msg("classify error")
+		return err
+	}
 
-	// var finding model.Finding
-	// err := w.pub.Publish(ctx, finding)
-	// if err != nil {
-	// 	return err
-	// }
+	for _, finding := range findings {
+		err = w.pub.Publish(ctx, finding)
+		if err != nil {
+			log.Err(err).Msg("publish error")
+			return err
+		}
+	}
 
 	if err := msg.Ack(); err != nil {
 		log.Err(err).Msg("Ack error")
