@@ -2,7 +2,7 @@ package detect
 
 import "strings"
 
-type Fingerprint struct {
+type CNAMEProviderFingerprint struct {
 	Cname       []string
 	Name        string
 	Nxdomain    bool
@@ -354,7 +354,7 @@ var NSProviderFingerprints = []NSProviderFingerprint{
 	},
 }
 
-func (f *Fingerprint) ContainsCname(target string) bool {
+func (f *CNAMEProviderFingerprint) ContainsTarget(target string) bool {
 	for _, cname := range f.Cname {
 		if strings.HasSuffix(target, cname) {
 			return true
@@ -363,7 +363,7 @@ func (f *Fingerprint) ContainsCname(target string) bool {
 	return false
 }
 
-var Fingerprints = []Fingerprint{
+var CNAMEProviderFingerprints = []CNAMEProviderFingerprint{
 	{
 		Cname: []string{
 			"elasticbeanstalk.com",

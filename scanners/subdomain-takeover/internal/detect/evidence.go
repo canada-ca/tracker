@@ -1,40 +1,42 @@
 package detect
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 )
 
-func ExtractCNAMEEvidence(input model.Input) *model.Finding {
-	cname := parseCname(*input.CnameRecord)
-	for _, fp := range Fingerprints {
-		if fp.ContainsCname(cname) {
-			fmt.Println(fp.Name)
-			if fp.Nxdomain {
-				fmt.Println("check for nxdomain on A record")
-				if input.QueryAnswers.A == "NXDOMAIN" {
-					fmt.Println("fingerprint match, CNAME takeover possible")
-					return &model.Finding{
-						Domain:     input.Domain,
-						RecordType: "CNAME",
-						Provider:   fp.Name,
-						Confidence: "confirmed",
-						Target:     cname,
-					}
-				}
-			} else {
-				fmt.Println("check for other fingerprint")
-			}
-		}
-	}
-
-	return nil
+// inputs from evidence.go
+type CNAMEEvidence struct {
+	Domain      string
+	Target      string
+	QueryAnswer model.QueryAnswers // or just needed fields
 }
 
-func ExtractNSEvidence(input model.Input) *model.Finding {
-	return nil
+type NSEvidence struct {
+	Domain        string
+	NSHosts       []string
+	NSDelegations model.NsDelegations
+	// Registrar     model.RegistrarContext // if/when added
+}
+
+func ExtractCNAMEEvidence(input model.Input) *CNAMEEvidence {
+	if input.CnameRecord == nil {
+		return nil
+	}
+
+	return &CNAMEEvidence{
+		Domain:      input.Domain,
+		Target:      parseCname(*input.CnameRecord),
+		QueryAnswer: input.QueryAnswers,
+	}
+}
+
+func ExtractNSEvidence(input model.Input) *NSEvidence {
+	if len(input.NsDelegations.Hosts) == 0 {
+		return nil
+	}
+	return &NSEvidence{}
 }
 
 func ClassifyLameType(nsChecks []model.NsCheck) {
