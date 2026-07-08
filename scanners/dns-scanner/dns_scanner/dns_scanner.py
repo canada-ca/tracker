@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 DNSSEC_NAMESERVER_IP = os.getenv("DNSSEC_NAMESERVER_IP")
-DNSSEC_NAMESERVER_HOSTNAME= os.getenv("DNSSEC_NAMESERVER_HOSTNAME")
+DNSSEC_NAMESERVER_HOSTNAME = os.getenv("DNSSEC_NAMESERVER_HOSTNAME")
 
 
 @dataclass
@@ -27,6 +27,8 @@ class DNSScanResult:
     zone_apex: str = None
     record_exists: bool = None
     rcode: str = None
+    query_res: dict = None
+    ns_delegations: dict = None
     resolve_chain: list[list[str]] = None
     resolve_ips: [str] = None
     cname_record: str = None
@@ -50,9 +52,9 @@ def find_zone_apex(domain, resolver=None):
         while name != dns.name.root:
             logger.debug(f"Checking for SOA at {name}")
             try:
-                answers = resolver.resolve(name, 'SOA')
+                answers = resolver.resolve(name, "SOA")
                 logger.debug(f"Found SOA for {domain} at {name}: {answers[0]}")
-                zone_apex = str(name).rstrip('.')
+                zone_apex = str(name).rstrip(".")
                 return zone_apex
             except NoAnswer:
                 # Go up one level
@@ -105,7 +107,13 @@ def minimal_dnssec_check(domain, nameserver_ip, nameserver_hostname, _ttl_marker
     """
     try:
         q = dns.message.make_query(domain, dns.rdatatype.DNSKEY, want_dnssec=True)
-        resp = dns.query.tls(q, where=nameserver_ip, timeout=TIMEOUT, server_hostname=nameserver_hostname, verify=True)
+        resp = dns.query.tls(
+            q,
+            where=nameserver_ip,
+            timeout=TIMEOUT,
+            server_hostname=nameserver_hostname,
+            verify=True,
+        )
         if resp.rcode() != dns.rcode.NOERROR:
             return None
     except Timeout:
@@ -114,7 +122,9 @@ def minimal_dnssec_check(domain, nameserver_ip, nameserver_hostname, _ttl_marker
         )
         return None
     except Exception as e:
-        logger.error(f"Error while running minimal DNSSEC check for domain '{domain}': {e}")
+        logger.error(
+            f"Error while running minimal DNSSEC check for domain '{domain}': {e}"
+        )
         return None
     # Check if AD (Authenticated Data) flag is set, showing that the data is DNSSEC validated
     return bool(resp.flags & dns.flags.AD)
@@ -136,7 +146,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
     result = {"wildcard_entry": False, "wildcard_sibling": False}
     try:
         wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
-        wildcard_record = dns.resolver.resolve(
+        wildcard_record = resolver.resolve(
             wildcard_sibling_domain,
             rdtype=dns.rdatatype.A,
             raise_on_no_answer=False,
@@ -148,7 +158,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                 try:
                     # check for mail-only subdomain (e.g. mail.example.com)
                     mx_records = resolver.resolve(qname=domain, rdtype=dns.rdatatype.MX)
-                    wildcard_mx = dns.resolver.resolve(
+                    wildcard_mx = resolver.resolve(
                         wildcard_sibling_domain,
                         rdtype=dns.rdatatype.MX,
                         raise_on_no_answer=False,
@@ -185,6 +195,119 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
     return result
 
 
+def probe_nameserver(
+    where: str, qname: str, qtype: str, recursion_desired: bool, timeout: int
+):
+    query = dns.message.make_query(qname, dns.rdatatype.from_text(qtype), use_edns=True)
+    if not recursion_desired:
+        query.flags &= ~dns.flags.RD
+    return dns.query.udp(query, where=where, timeout=timeout)
+
+
+def get_ns_ip(host: str, resolver):
+    ns_ip = None
+    try:
+        ns_a = resolver.resolve(host, "A")
+        if ns_a:
+            ns_ip = ns_a[0].to_text()
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+        ns_ip = None
+
+    if ns_ip is None:
+        try:
+            ns_aaaa = resolver.resolve(host, "AAAA")
+            if ns_aaaa:
+                ns_ip = ns_aaaa[0].to_text()
+        except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+            ns_ip = None
+
+    return ns_ip
+
+
+def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_sec=10):
+    if resolver is None:
+        resolver = dns.resolver.get_default_resolver()
+
+    qname = zone_apex
+    if not zone_apex:
+        qname = domain
+
+    ns_hosts = ns_records.get("hostnames", [])
+    if len(ns_records) == 0:
+        try:
+            ns_res = resolver.resolve(domain, dns.rdatatype.NS)
+            ns_hosts = [host.to_text() for host in ns_res]
+        except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+            ns_hosts = []
+
+    # Always return structured output, even when empty
+    output = {
+        "ns_hosts": ns_hosts,
+        "ns_checks": [],  # per-NS evidence rows
+        "ns_delegation": {
+            "total_ns": len(ns_hosts),
+            "authoritative_ok": 0,
+            "lame_count": 0,
+            "lame_type": "none",  # none | partial | full
+        },
+    }
+    if len(ns_hosts) == 0:
+        output["ns_delegation"]["lame_type"] = "unknown"
+        return output
+
+    for host in ns_hosts:
+        row = {
+            "ns_host": host,
+            "qname": qname,
+            "qtype": "SOA",
+            "rcode": None,
+            "answered_authoritatively": False,
+            "error": None,
+            "timeout": False,
+        }
+
+        try:
+            ns_ip = get_ns_ip(host, resolver)
+            if ns_ip is None:
+                row["error"] = "ns_ip_resolution_failed"
+                output["ns_delegation"]["lame_count"] += 1
+                output["ns_checks"].append(row)
+                continue
+
+            res = probe_nameserver(ns_ip, domain, "SOA", False, timeout_sec)
+            row["rcode"] = dns.rcode.to_text(res.rcode())
+            row["answered_authoritatively"] = bool(res.flags & dns.flags.AA)
+
+            if row["answered_authoritatively"] and row["rcode"] in [
+                "NOERROR",
+                "NXDOMAIN",
+            ]:
+                output["ns_delegation"]["authoritative_ok"] += 1
+            else:
+                output["ns_delegation"]["lame_count"] += 1
+        except Timeout:
+            row["timeout"] = True
+            row["error"] = "timeout"
+            output["ns_delegation"]["lame_count"] += 1
+        except Exception as e:
+            row["error"] = str(e)
+            output["ns_delegation"]["lame_count"] += 1
+
+        output["ns_checks"].append(row)
+
+    ok = output["ns_delegation"]["authoritative_ok"]
+    total = output["ns_delegation"]["total_ns"]
+
+    if ok == total:
+        output["ns_delegation"]["lame_type"] = "none"
+    elif ok == 0:
+        output["ns_delegation"]["lame_type"] = "full"
+    else:
+        output["ns_delegation"]["lame_type"] = "partial"
+
+    return output
+
+
 def scan_domain(domain, dkim_selectors=None):
     """
     Scan a domain for DNS records
@@ -201,14 +324,19 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     dns_answer_return_types = []
-    for query_type in [dns.rdatatype.A, dns.rdatatype.SOA, dns.rdatatype.NS]:
+    query_res = {}
+    for query_type in [
+        dns.rdatatype.A,
+        dns.rdatatype.SOA,
+        dns.rdatatype.NS,
+        dns.rdatatype.CNAME,
+    ]:
         rtype = get_dns_return_type(domain, query_type)
+        query_res[dns.rdatatype.to_text(query_type)] = rtype
         if rtype == "NOERROR":
             dns_answer_return_types.append(rtype)
-            break
         elif rtype is None:
             dns_answer_return_types.append(None)
-            continue
         elif rtype == "NXDOMAIN":
             scan_result.rcode = rtype
             scan_result.record_exists = False
@@ -221,6 +349,7 @@ def scan_domain(domain, dkim_selectors=None):
             )
             dns_answer_return_types.append(rtype)
 
+    scan_result.query_res = query_res
     if "NOERROR" not in dns_answer_return_types:
         if "SERVFAIL" in dns_answer_return_types:
             scan_result.rcode = "SERVFAIL"
@@ -284,10 +413,16 @@ def scan_domain(domain, dkim_selectors=None):
         logger.debug(f"Skipping DNSSEC check for {domain} - No zone apex found")
         zone_dnssec_enabled = None
     elif not DNSSEC_NAMESERVER_IP or not DNSSEC_NAMESERVER_HOSTNAME:
-        logger.debug(f"Skipping DNSSEC check for {domain} - DNSSEC nameserver environment variables not set")
+        logger.debug(
+            f"Skipping DNSSEC check for {domain} - DNSSEC nameserver environment variables not set"
+        )
         zone_dnssec_enabled = None
     else:
-        zone_dnssec_enabled = dnssec_check_with_ttl(domain=zone_apex, nameserver_ip=DNSSEC_NAMESERVER_IP, nameserver_hostname=DNSSEC_NAMESERVER_HOSTNAME)
+        zone_dnssec_enabled = dnssec_check_with_ttl(
+            domain=zone_apex,
+            nameserver_ip=DNSSEC_NAMESERVER_IP,
+            nameserver_hostname=DNSSEC_NAMESERVER_HOSTNAME,
+        )
 
     scan_result.zone_dnssec_enabled = zone_dnssec_enabled
 
@@ -297,11 +432,18 @@ def scan_domain(domain, dkim_selectors=None):
     dmarc_scanner = DMARCScanner(domain)
     dmarc_scan_result = dmarc_scanner.run()
     scan_result.base_domain = dmarc_scan_result.get("base_domain", "")
-    scan_result.ns_records = dmarc_scan_result.get("ns", {})
     scan_result.mx_records = dmarc_scan_result.get("mx", {})
     scan_result.spf = dmarc_scan_result.get("spf", {})
     scan_result.dmarc = dmarc_scan_result.get("dmarc", {})
     logger.debug(f"DMARC scan elapsed time: {time.monotonic() - dmarc_start_time}")
+
+    ns_records = dmarc_scan_result.get("ns", {"hostnames": [], "errors": []})
+    scan_result.ns_records = ns_records
+    # check nameserver delegations
+    ns_delegations = check_ns_delegations(
+        domain=domain, zone_apex=zone_apex, ns_records=ns_records
+    )
+    scan_result.ns_delegations = ns_delegations
 
     # If no MX records are found (with warnings), but there are CNAME records, check the CNAME target for MX records
     if (
