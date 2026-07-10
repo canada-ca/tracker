@@ -8,9 +8,9 @@ import (
 
 // inputs from evidence.go
 type CNAMEEvidence struct {
-	Domain      string
-	Target      string
-	QueryAnswer model.QueryAnswers // or just needed fields
+	Domain    string
+	Target    string
+	NoResolve bool
 }
 
 type NSEvidence struct {
@@ -26,9 +26,9 @@ func ExtractCNAMEEvidence(input model.Input) *CNAMEEvidence {
 	}
 
 	return &CNAMEEvidence{
-		Domain:      input.Domain,
-		Target:      parseCname(*input.CnameRecord),
-		QueryAnswer: input.QueryAnswers,
+		Domain:    input.Domain,
+		Target:    parseCname(*input.CnameRecord),
+		NoResolve: input.ResolveChain == nil,
 	}
 }
 
@@ -46,6 +46,6 @@ func ClassifyLameType(nsChecks []model.NsCheck) {
 func parseCname(record string) string {
 	trimmed := strings.Trim(record, ".")
 	lower := strings.ToLower(trimmed)
-	record_tokens := strings.Split(lower, " ")
-	return record_tokens[len(record_tokens)-1]
+	recordTokens := strings.Split(lower, " ")
+	return recordTokens[len(recordTokens)-1]
 }
