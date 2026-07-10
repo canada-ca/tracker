@@ -15,8 +15,12 @@ type RunnerDeps struct {
 	Logger      zerolog.Logger
 	WorkerCount int
 	Iter        jetstream.MessagesContext
-	Worker      Worker
+	Worker      MessageHandler
 	NC          *nats.Conn
+}
+
+type MessageHandler interface {
+	Handle(ctx context.Context, msg jetstream.Msg) error
 }
 
 func Run(ctx context.Context, deps RunnerDeps) {
