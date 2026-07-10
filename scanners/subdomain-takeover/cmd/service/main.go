@@ -8,76 +8,70 @@ import (
 	"time"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/app"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/bootstrap"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/config"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
-	"github.com/nats-io/nats.go"
-	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog"
 )
 
-func checkErr(err error, log zerolog.Logger, msg string, exit bool) {
+func main() {
+	logger := bootstrap.NewLogger(zerolog.InfoLevel)
+
+	cfg, err := config.Load()
 	if err != nil {
-		log.Err(err).Msg(msg)
-		if exit {
-			os.Exit(1)
-		}
+		logger.Fatal().Err(err).Msg("failed to load config")
 	}
 
-}
+	logger = bootstrap.NewLogger(cfg.LogLevel)
 
-func main() {
-	cfg := config.InitConfig()
-	logger := cfg.Logger
+	if err := detect.LoadFingerprints(); err != nil {
+		logger.Fatal().Err(err).Msg("failed to load fingerprints")
+	}
 
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+	defer signal.Stop(sig)
 
-	nc, err := nats.Connect(cfg.NatsUrl)
-	checkErr(err, logger, "", true)
+	runtimeDeps, err := bootstrap.NewRuntimeDeps(ctx, cfg)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("failed to initialize runtime dependencies")
+	}
 
-	js, err := jetstream.New(nc)
-	checkErr(err, logger, "", true)
+	logger.Info().Msgf("Connected to NATS at %s", runtimeDeps.NC.ConnectedUrl())
 
-	logger.Info().Msgf("Connected to NATS at %s...", nc.ConnectedUrl())
-
-	s, err := js.CreateOrUpdateStream(ctx, jetstream.StreamConfig{
-		Name:     cfg.NatsStream,
-		Subjects: []string{cfg.SubjectIn, cfg.SubjectOut},
-	})
-	checkErr(err, logger, "", true)
-
-	cons, err := s.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
-		Durable:   cfg.DurableName,
-		AckPolicy: jetstream.AckExplicitPolicy,
-	})
-	checkErr(err, logger, "", true)
-
-	iter, err := cons.Messages(jetstream.PullMaxMessages(1), jetstream.PullExpiry(1*time.Second))
-	checkErr(err, logger, "", true)
-
-	pub := messaging.NewPublisher(logger, js, cfg.SubjectOut)
-	worker := app.NewWorker(logger, *pub)
+	pub := messaging.NewPublisher(logger, runtimeDeps.JS, cfg.SubjectOut)
+	matcher := detect.NewHTTPBodyFingerprintMatcher(5 * time.Second)
+	classifier := detect.NewClassifier(matcher)
+	worker := app.NewWorker(logger, pub, classifier)
 
 	go func() {
 		<-sig
 		logger.Info().Msg("Shutdown requested...")
 		cancel()
-		iter.Stop()
+		runtimeDeps.Iter.Stop()
 	}()
 
 	deps := app.RunnerDeps{
 		Logger:      logger,
 		WorkerCount: cfg.WorkerCount,
-		Iter:        iter,
-		Worker:      *worker,
-		NC:          nc,
+		Iter:        runtimeDeps.Iter,
+		Worker:      worker,
+		NC:          runtimeDeps.NC,
 	}
 
 	app.Run(ctx, deps)
 
-	logger.Info().Msgf("Disconnecting from NATS at %s", nc.ConnectedUrl())
-	nc.Flush()
-	nc.Close()
+	logger.Info().Msgf("Disconnecting from NATS at %s", runtimeDeps.NC.ConnectedUrl())
+	if err := runtimeDeps.NC.Flush(); err != nil {
+		logger.Error().Err(err).Msg("failed to flush nats connection")
+	}
+	runtimeDeps.NC.Close()
+
+	if err := ctx.Err(); err != nil && err != context.Canceled {
+		logger.Error().Err(err).Msg("service exited with context error")
+	}
 }
