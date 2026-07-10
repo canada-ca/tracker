@@ -7,15 +7,25 @@ func Classify(input model.Input) ([]model.Finding, error) {
 
 	cnameEvidence := ExtractCNAMEEvidence(input)
 	cnameHit := MatchCNAMEFingerprints(*cnameEvidence, CNAMEProviderFingerprints)
-	if ShouldEmitCNAME(*cnameEvidence, cnameHit) {
+	if ShouldEmitCNAME(cnameHit) {
+		// compute confidence
+		// compute reason/remediation
 		findings = append(findings, model.Finding{
-			Domain: input.Domain,
+			Domain:      cnameEvidence.Domain,
+			RecordType:  "CNAME",
+			Target:      cnameEvidence.Target,
+			Provider:    cnameHit.Provider,
+			ReasonCode:  cnameHit.ReasonCode,
+			Confidence:  "",
+			Remediation: "",
 		})
 	}
 
 	nsEvidence := ExtractNSEvidence(input)
 	nsHit := MatchNSProviderRules(*nsEvidence, NSProviderFingerprints)
 	if ShouldEmitNSHijack(*nsEvidence, nsHit) {
+		// compute confidence
+		// compute reason/remediation
 		findings = append(findings, model.Finding{
 			Domain: input.Domain,
 		})
