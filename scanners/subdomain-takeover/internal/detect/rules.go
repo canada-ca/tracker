@@ -1,28 +1,21 @@
 package detect
 
-import (
-	"fmt"
-	"io"
-	"net/http"
-	"strings"
-)
-
 type CNAMEHit struct {
 	Matched    bool
 	Provider   string
-	ReasonCode string
+	ReasonCode ReasonCode
 	NeedsNX    bool
 }
 
 type NSHit struct {
 	Matched            bool
 	Provider           string
-	ReasonCode         string
+	ReasonCode         ReasonCode
 	ProviderVulnerable bool
 	RegistrarMismatch  bool
 }
 
-func MatchCNAMEFingerprints(evidence CNAMEEvidence, fingerprints []CNAMEProviderFingerprint) *CNAMEHit {
+func MatchCNAMEFingerprints(evidence CNAMEEvidence, fingerprints []CNAMEProviderFingerprint, matcher BodyFingerprintMatcher) *CNAMEHit {
 	for _, fp := range fingerprints {
 		if fp.ContainsTarget(evidence.Target) {
 			hit := CNAMEHit{
@@ -32,16 +25,17 @@ func MatchCNAMEFingerprints(evidence CNAMEEvidence, fingerprints []CNAMEProvider
 				NeedsNX:    fp.Nxdomain,
 			}
 			if hit.NeedsNX {
-				hit.ReasonCode = "CNAME_TARGET_MATCH_MISSING_NXDOMAIN"
-				if evidence.QueryAnswer.A == "NXDOMAIN" {
+				hit.ReasonCode = ReasonCNAMETargetMatchMissingNXDOMAIN
+				if evidence.NoResolve {
 					hit.Matched = true
-					hit.ReasonCode = "CNAME_DANGLING_NXDOMAIN"
+					hit.ReasonCode = ReasonCNAMEDanglingNXDOMAIN
 				}
 			} else {
-				hit.ReasonCode = "CNAME_TARGET_MATCH_MISSING_BODY_FINGERPRINT"
-				if urlBodyContainsFingerprint(evidence.Domain, fp.Fingerprint) {
+				hit.ReasonCode = ReasonCNAMETargetMatchMissingBodyFP
+				mode := normalizeFingerprintMode(fp.Mode, fp.Fingerprint)
+				if matcher != nil && matcher.Contains(evidence.Domain, fp.Fingerprint, mode) {
 					hit.Matched = true
-					hit.ReasonCode = "CNAME_PROVIDER_FINGERPRINT_BODY_MATCH"
+					hit.ReasonCode = ReasonCNAMEProviderFingerprintBodyMatch
 				}
 			}
 			return &hit
@@ -65,27 +59,5 @@ func ShouldEmitCNAME(hit *CNAMEHit) bool {
 }
 
 func ShouldEmitNSHijack(evidence NSEvidence, hit *NSHit) bool {
-	return false
-}
-
-func urlBodyContainsFingerprint(domain string, fp string) bool {
-	// curl domain and look for matching fp in body
-	url := fmt.Sprintf("http://%s", domain)
-	res, err := http.Get(url)
-	if err != nil {
-		// log error
-		return false
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		// log err
-		return false
-	}
-
-	if strings.Contains(string(body), fp) {
-		return true
-	}
 	return false
 }
