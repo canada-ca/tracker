@@ -20,26 +20,29 @@ type NSEvidence struct {
 	// Registrar     model.RegistrarContext // if/when added
 }
 
-func ExtractCNAMEEvidence(input model.Input) *CNAMEEvidence {
-	if input.CnameRecord == nil {
+func ExtractCNAMEEvidence(results model.ScanResults) *CNAMEEvidence {
+	if results.CnameRecord == nil {
 		return nil
 	}
 
+	domain := results.Domain
+
 	return &CNAMEEvidence{
-		Domain:    input.Domain,
-		Target:    parseCname(*input.CnameRecord),
-		NoResolve: input.ResolveChain == nil,
+		Domain:    *domain,
+		Target:    parseCname(*results.CnameRecord),
+		NoResolve: len(results.ResolveChain) == 0,
 	}
 }
 
 func ExtractNSEvidence(input model.Input) *NSEvidence {
-	if len(input.NsDelegations.Hosts) == 0 {
+	nsDelegations := input.Results.NsDelegations
+	if nsDelegations == nil || len(nsDelegations.Hosts) == 0 {
 		return nil
 	}
 	return &NSEvidence{}
 }
 
-func ClassifyLameType(nsChecks []model.NsCheck) {
+func ClassifyLameType(nsChecks []any) {
 	return
 }
 
