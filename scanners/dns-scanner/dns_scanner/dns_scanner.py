@@ -28,7 +28,6 @@ class DNSScanResult:
     zone_apex: str = None
     record_exists: bool = None
     rcode: str = None
-    query_res: dict = None
     ns_delegations: dict = None
     registrar_context: dict = None
     resolve_chain: list[list[str]] = None
@@ -213,19 +212,14 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     dns_answer_return_types = []
-    query_res = {}
-    for query_type in [
-        dns.rdatatype.A,
-        dns.rdatatype.SOA,
-        dns.rdatatype.NS,
-        dns.rdatatype.CNAME,
-    ]:
+    for query_type in [dns.rdatatype.A, dns.rdatatype.SOA, dns.rdatatype.NS]:
         rtype = get_dns_return_type(domain, query_type)
-        query_res[dns.rdatatype.to_text(query_type)] = rtype
         if rtype == "NOERROR":
             dns_answer_return_types.append(rtype)
+            break
         elif rtype is None:
             dns_answer_return_types.append(None)
+            continue
         elif rtype == "NXDOMAIN":
             scan_result.rcode = rtype
             scan_result.record_exists = False
@@ -238,7 +232,6 @@ def scan_domain(domain, dkim_selectors=None):
             )
             dns_answer_return_types.append(rtype)
 
-    scan_result.query_res = query_res
     if "NOERROR" not in dns_answer_return_types:
         if "SERVFAIL" in dns_answer_return_types:
             scan_result.rcode = "SERVFAIL"
@@ -329,10 +322,9 @@ def scan_domain(domain, dkim_selectors=None):
     ns_records = dmarc_scan_result.get("ns", {"hostnames": [], "errors": []})
     scan_result.ns_records = ns_records
     # check nameserver delegations
-    ns_delegations = check_ns_delegations(
+    scan_result.ns_delegations = check_ns_delegations(
         domain=domain, zone_apex=zone_apex, ns_records=ns_records
     )
-    scan_result.ns_delegations = ns_delegations
 
     registrar_domain = scan_result.base_domain or zone_apex or domain
     scan_result.registrar_context = get_registrar_context(

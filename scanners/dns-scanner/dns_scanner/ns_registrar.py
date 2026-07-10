@@ -16,8 +16,9 @@ def probe_nameserver(
         qname,
         dns.rdatatype.from_text(qtype),
         use_edns=True,
-        recursion_desired=recursion_desired,
     )
+    if not recursion_desired:
+        query.flags &= ~dns.flags.RD
     return dns.query.udp(query, where=where, timeout=timeout)
 
 
@@ -50,7 +51,7 @@ def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_s
         qname = domain
 
     ns_hosts = ns_records.get("hostnames", [])
-    if len(ns_records) == 0:
+    if len(ns_hosts) == 0:
         try:
             ns_res = resolver.resolve(domain, dns.rdatatype.NS)
             ns_hosts = [host.to_text() for host in ns_res]
