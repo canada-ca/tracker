@@ -4,48 +4,59 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 
-	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
-	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog"
 )
 
-type Worker struct {
-	logger zerolog.Logger
-	pub    messaging.Publisher
+type FindingPublisher interface {
+	Publish(ctx context.Context, finding model.Finding) error
 }
 
-func NewWorker(logger zerolog.Logger, pub messaging.Publisher) *Worker {
-	return &Worker{logger: logger, pub: pub}
+type ScanClassifier interface {
+	Classify(input model.Input) ([]model.Finding, error)
+}
+
+type Worker struct {
+	logger     zerolog.Logger
+	publisher  FindingPublisher
+	classifier ScanClassifier
+}
+
+func NewWorker(logger zerolog.Logger, publisher FindingPublisher, classifier ScanClassifier) *Worker {
+	return &Worker{logger: logger, publisher: publisher, classifier: classifier}
 }
 
 func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 	log := w.logger.With().Str("component", "worker").Logger()
-	// decode -> classify -> publish -> ack
+
 	scan, err := decodeScan(msg.Data())
 	if err != nil {
-		log.Err(err).Msg("Decoding error")
+		log.Err(err).Msg("decode error")
+		w.term(msg, log, err)
+		return err
 	}
-	// log.Info().Msg(scan.Domain)
 
-	findings, err := detect.Classify(scan)
+	findings, err := w.classifier.Classify(scan)
 	if err != nil {
 		log.Err(err).Msg("classify error")
+		w.nak(msg, log, err)
 		return err
 	}
 
 	for _, finding := range findings {
-		err = w.pub.Publish(ctx, finding)
+		err = w.publisher.Publish(ctx, finding)
 		if err != nil {
 			log.Err(err).Msg("publish error")
+			w.nak(msg, log, err)
 			return err
 		}
 	}
 
 	if err := msg.Ack(); err != nil {
-		log.Err(err).Msg("Ack error")
+		log.Err(err).Msg("ack error")
 		return err
 	}
 
@@ -57,4 +68,16 @@ func decodeScan(data []byte) (model.Input, error) {
 	trimmed := bytes.Trim(data, "\n")
 	err := json.Unmarshal(trimmed, &scan)
 	return scan, err
+}
+
+func (w *Worker) nak(msg jetstream.Msg, log zerolog.Logger, originalErr error) {
+	if err := msg.Nak(); err != nil {
+		log.Error().Err(fmt.Errorf("original=%v nak=%w", originalErr, err)).Msg("failed to nak message")
+	}
+}
+
+func (w *Worker) term(msg jetstream.Msg, log zerolog.Logger, originalErr error) {
+	if err := msg.Term(); err != nil {
+		log.Error().Err(fmt.Errorf("original=%v term=%w", originalErr, err)).Msg("failed to term message")
+	}
 }
