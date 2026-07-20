@@ -23,6 +23,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def worst_status(statuses):
+    """Return the worst status in the list: fail, else pass, else info."""
     if "fail" in statuses:
         return "fail"
     if "pass" in statuses:
@@ -36,21 +37,31 @@ def ensure_collections(db, target):
             db.create_collection(name)
 
 
+def warn_missing_source_indexes(db):
+    """Warn if dns/web are missing the timestamp index the daily reads rely on."""
+    for name in ("dns", "web"):
+        has_index = any(
+            ix["type"] == "persistent" and ix["fields"] == ["timestamp"]
+            for ix in db.collection(name).indexes()
+        )
+        if not has_index:
+            logging.warning(
+                f"{name} has no persistent 'timestamp' index; each day's read will full-scan "
+                f"{name}. Create it once with: db.{name}.ensureIndex("
+                "{type:'persistent', fields:['timestamp'], inBackground:true})"
+            )
+
+
 DATE_PREFIX = r"^\d{4}-\d{2}-\d{2}"
 
 
 def profile_scans(db):
-    """Report raw-scan form; return the earliest day-bucketable scan date.
-
-    Scans whose timestamp isn't a "YYYY-MM-DD..." string match no day range and
-    are skipped by reconstruction. Count and sample them so a systematic format
-    change is visible rather than silently shrinking the rebuilt history.
-    """
+    """Find the earliest day worth backfilling and flag scans we'll skip."""
     earliest = next(
         db.aql.execute(
             """
             FOR d IN dns
-                FILTER REGEX_TEST(d.timestamp, @pattern)
+                FILTER d.domain != null AND REGEX_TEST(d.timestamp, @pattern)
                 SORT d.timestamp ASC
                 LIMIT 1
                 RETURN d.timestamp
@@ -67,7 +78,7 @@ def profile_scans(db):
             db.aql.execute(
                 """
                 FOR d IN @@collection
-                    FILTER !REGEX_TEST(d.timestamp, @pattern)
+                    FILTER d.domain == null OR NOT REGEX_TEST(d.timestamp, @pattern)
                     COLLECT WITH COUNT INTO total
                     RETURN total
                 """,
@@ -76,49 +87,39 @@ def profile_scans(db):
             0,
         )
         if skipped:
-            samples = list(
-                db.aql.execute(
-                    """
-                    FOR d IN @@collection
-                        FILTER !REGEX_TEST(d.timestamp, @pattern)
-                        LIMIT 3
-                        RETURN d.timestamp
-                    """,
-                    bind_vars={"@collection": collection, "pattern": DATE_PREFIX},
-                )
-            )
-            logging.warning(
-                f"{collection}: {skipped} scans have non-bucketable timestamps and will be "
-                f"skipped. Samples: {samples}"
-            )
-        else:
-            logging.info(f"{collection}: all scan timestamps are day-bucketable.")
+            logging.warning(f"{collection}: {skipped} scans lack a usable domain/timestamp; skipping them.")
 
-    missing_dmarc = next(
-        db.aql.execute(
-            "FOR d IN dns FILTER d.dmarc.status == null COLLECT WITH COUNT INTO total RETURN total"
-        ),
-        0,
-    )
-    if missing_dmarc:
-        logging.warning(
-            f"dns: {missing_dmarc} scans have no dmarc.status; they reconstruct as 'info' "
-            "and drop out of pass/fail totals."
-        )
-
-    logging.info(f"earliest day-bucketable dns scan: {earliest!r}")
+    logging.info(f"Earliest usable dns scan: {earliest!r}")
     return datetime.strptime(earliest[:10], "%Y-%m-%d").date()
 
 
-def reconstruct_day(db, day):
-    """Return {domain_name: entry} for domains scanned on `day` (latest scan wins)."""
+def new_state_entry():
+    """Blank per-domain state: every field unknown ('info') until a scan fills it in."""
+    return {
+        "rcode": None,
+        "phase": None,
+        "status": {
+            "dmarc": "info",
+            "spf": "info",
+            "dkim": "info",
+            "https": "info",
+            "hsts": "info",
+            "ssl": "info",
+        },
+        "dns_tags": [],
+        "web_tags": [],
+    }
+
+
+def reconstruct_day(db, day, state):
+    """Generate a day's state from its scans. Uses the existing state to carry forward any domains that had no scans that day."""
     start = day.isoformat()
     end = (day + timedelta(days=1)).isoformat()
 
     dns_cursor = db.aql.execute(
         """
         FOR d IN dns
-            FILTER d.timestamp >= @start AND d.timestamp < @end
+            FILTER d.domain != null AND d.timestamp >= @start AND d.timestamp < @end
             COLLECT domain = d.domain INTO scans = d
             LET latest = FIRST(FOR s IN scans SORT s.timestamp DESC LIMIT 1 RETURN s)
             RETURN {
@@ -136,33 +137,24 @@ def reconstruct_day(db, day):
         bind_vars={"start": start, "end": end},
     )
 
-    updates = {}
     for row in dns_cursor:
         tags = (
             (row.get("dmarcTags") or [])
             + (row.get("spfTags") or [])
             + (row.get("dkimTags") or [])
         )
-        updates[row["domain"]] = {
-            "rcode": row.get("rcode"),
-            "phase": row.get("phase"),
-            "status": {
-                "dmarc": row.get("dmarc") or "info",
-                "spf": row.get("spf") or "info",
-                "dkim": row.get("dkim") or "info",
-                "https": "info",
-                "hsts": "info",
-                "ssl": "info",
-            },
-            "dns_tags": tags,
-            "web_tags": [],
-        }
+        entry = state.setdefault(row["domain"], new_state_entry())
+        entry["rcode"] = row.get("rcode")
+        entry["phase"] = row.get("phase")
+        entry["status"]["dmarc"] = row.get("dmarc") or "info"
+        entry["status"]["spf"] = row.get("spf") or "info"
+        entry["status"]["dkim"] = row.get("dkim") or "info"
+        entry["dns_tags"] = tags
 
     web_cursor = db.aql.execute(
         """
-        WITH webScan
         FOR w IN web
-            FILTER w.timestamp >= @start AND w.timestamp < @end
+            FILTER w.domain != null AND w.timestamp >= @start AND w.timestamp < @end
             COLLECT domain = w.domain INTO webs = w
             LET latest = FIRST(FOR x IN webs SORT x.timestamp DESC LIMIT 1 RETURN x)
             LET scans = (
@@ -182,10 +174,10 @@ def reconstruct_day(db, day):
     )
 
     for row in web_cursor:
-        entry = updates.get(row["domain"])
-        if entry is None:
-            continue
         scans = row["scans"]
+        if not scans:
+            continue
+        entry = state.setdefault(row["domain"], new_state_entry())
         entry["status"]["https"] = worst_status([s["https"] for s in scans])
         entry["status"]["hsts"] = worst_status([s["hsts"] for s in scans])
         entry["status"]["ssl"] = worst_status([s["ssl"] for s in scans])
@@ -195,10 +187,9 @@ def reconstruct_day(db, day):
             web_tags.extend(s.get("connTags") or [])
         entry["web_tags"] = web_tags
 
-    return updates
-
 
 def build_precomputed(db):
+    """Load the domain, scope, and org lookups reused for every day."""
     domain_by_name = {}
     scopes_by_domain_id = {}
     cursor = db.aql.execute(
@@ -240,6 +231,7 @@ def new_org_acc():
 
 
 def accumulate_chart(chart_summaries, dmarc_phases, scopes, status, phase):
+    """Add one domain's result to the chart summaries for each of its scopes."""
     for chart_type, scan_types in CHARTS.items():
         category_status = [status.get(scan_type) for scan_type in scan_types]
         if "fail" in category_status:
@@ -265,6 +257,7 @@ def accumulate_chart(chart_summaries, dmarc_phases, scopes, status, phase):
 
 
 def accumulate_org(acc, status, phase, tags):
+    """Add one domain's result to its organization's running counters."""
     https = status.get("https")
     dmarc = status.get("dmarc")
     hsts = status.get("hsts")
@@ -322,6 +315,7 @@ def accumulate_org(acc, status, phase, tags):
 
 
 def to_category(metric):
+    """Turn a pass/fail pair into a pass/fail/total block."""
     return {
         "pass": metric["pass"],
         "fail": metric["fail"],
@@ -330,6 +324,7 @@ def to_category(metric):
 
 
 def build_org_doc(org_id, day_iso, acc):
+    """Shape one org's counters into a summary document."""
     phases = acc["dmarc_phase"]
     return {
         "organization": org_id,
@@ -347,25 +342,6 @@ def build_org_doc(org_id, day_iso, acc):
     }
 
 
-def upsert_chart(col, day_iso, scope, charts, phases):
-    doc = {**charts, "dmarc_phase": {**phases, "total": sum(phases.values())}}
-    existing = col.find({"date": day_iso, "scope": scope})
-    if existing.empty():
-        col.insert({"date": day_iso, "scope": scope, **doc})
-    else:
-        col.update_match({"date": day_iso, "scope": scope}, doc)
-
-
-def upsert_org(col, day_iso, org_id, acc):
-    doc = build_org_doc(org_id, day_iso, acc)
-    existing = col.find({"organization": org_id, "date": day_iso})
-    if existing.empty():
-        col.insert(doc)
-    else:
-        existing_doc = existing.next()
-        col.update({"_key": existing_doc["_key"], **doc})
-
-
 def write_day(
     chart_col,
     org_col,
@@ -375,6 +351,7 @@ def write_day(
     scopes_by_domain_id,
     orgs_by_domain_name,
 ):
+    """Roll the day's state into chart + org summaries and save them."""
     day_iso = day.isoformat()
 
     chart_summaries = {
@@ -418,10 +395,25 @@ def write_day(
                 org_accs[org_id] = acc
             accumulate_org(acc, status, phase, tags)
 
+    chart_docs = []
     for scope in SCOPES:
-        upsert_chart(chart_col, day_iso, scope, chart_summaries[scope], dmarc_phases[scope])
+        phases = dmarc_phases[scope]
+        chart_docs.append({
+            "_key": f"{day_iso}:{scope}",
+            "date": day_iso,
+            "scope": scope,
+            **chart_summaries[scope],
+            "dmarc_phase": {**phases, "total": sum(phases.values())},
+        })
+    org_docs = []
     for org_id, acc in org_accs.items():
-        upsert_org(org_col, day_iso, org_id, acc)
+        doc = build_org_doc(org_id, day_iso, acc)
+        doc["_key"] = f"{day_iso}:{org_id.split('/')[-1]}"
+        org_docs.append(doc)
+
+    chart_col.insert_many(chart_docs, overwrite_mode="replace")
+    if org_docs:
+        org_col.insert_many(org_docs, overwrite_mode="replace")
 
 
 def run_backfill(
@@ -433,10 +425,12 @@ def run_backfill(
     start=None,
     end=None,
 ):
+    """Rebuild summaries day by day, from the first scan up to the end date."""
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     ensure_collections(db, target)
+    warn_missing_source_indexes(db)
 
     earliest = profile_scans(db)
     if earliest is None:
@@ -458,7 +452,7 @@ def run_backfill(
     state = {}
     day = earliest
     while day <= write_end:
-        state.update(reconstruct_day(db, day))
+        reconstruct_day(db, day, state)
         if day >= write_start:
             write_day(
                 chart_col,
