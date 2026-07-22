@@ -11,11 +11,15 @@ import (
 
 type Publisher struct {
 	logger  zerolog.Logger
-	js      jetstream.JetStream
+	js      publishClient
 	subject string
 }
 
-func NewPublisher(logger zerolog.Logger, js jetstream.JetStream, subject string) *Publisher {
+type publishClient interface {
+	Publish(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error)
+}
+
+func NewPublisher(logger zerolog.Logger, js publishClient, subject string) *Publisher {
 	return &Publisher{logger: logger, js: js, subject: subject}
 }
 
