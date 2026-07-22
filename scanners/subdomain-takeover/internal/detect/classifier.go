@@ -1,6 +1,8 @@
 package detect
 
-import "github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
+import (
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
+)
 
 type Classifier struct {
 	Matcher BodyFingerprintMatcher
@@ -38,13 +40,21 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher) ([]model.Findin
 		}
 	}
 
-	// nsEvidence := ExtractNSEvidence(input)
-	// nsHit := MatchNSProviderRules(*nsEvidence, NSProviderFingerprints)
-	// if ShouldEmitNSHijack(*nsEvidence, nsHit) {
-	// 	findings = append(findings, model.Finding{
-	// 		Domain: input.Domain,
-	// 	})
-	// }
+	nsEvidence := ExtractNSEvidence(input.Results)
+	if nsEvidence != nil {
+		nsHit := MatchNSProviderRules(*nsEvidence, NSProviderFingerprints)
+		if ShouldEmitNSHijack(nsHit) {
+			findings = append(findings, model.Finding{
+				Domain:     nsEvidence.Domain,
+				DomainKey:  input.DomainKey,
+				RecordType: model.RecordTypeNS,
+				Target:     nsHit.Host,
+				Provider:   nsHit.Provider,
+				ReasonCode: string(nsHit.ReasonCode),
+				Confidence: ConfidenceForReason(nsHit.ReasonCode),
+			})
+		}
+	}
 
 	return findings, nil
 }
