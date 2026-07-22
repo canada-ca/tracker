@@ -5,11 +5,11 @@ type NSHit struct {
 	Host              string
 	Provider          string
 	ReasonCode        ReasonCode
-	RegistrarMismatch bool
 }
 
 func MatchNSProviderRules(evidence NSEvidence, fingerprints []NSProviderFingerprint) *NSHit {
 	if len(evidence.NSHosts) == 0 || len(fingerprints) == 0 {
+		detectLogger.Debug().Int("ns_hosts", len(evidence.NSHosts)).Int("fingerprints", len(fingerprints)).Msg("skipping ns matching due to insufficient inputs")
 		return nil
 	}
 
@@ -20,6 +20,7 @@ func MatchNSProviderRules(evidence NSEvidence, fingerprints []NSProviderFingerpr
 		for _, fp := range fingerprints {
 			if fp.ContainsNSHost(host) {
 				reasonCode := getNSHijackReasonCode(lameType, fp.Status)
+				rank := nsReasonRank(reasonCode)
 				hit := &NSHit{
 					Matched:    isNSMatch(reasonCode),
 					Host:       host,
@@ -27,12 +28,37 @@ func MatchNSProviderRules(evidence NSEvidence, fingerprints []NSProviderFingerpr
 					ReasonCode: reasonCode,
 				}
 
+				detectLogger.Debug().
+					Str("domain", evidence.Domain).
+					Str("host", host).
+					Str("provider", fp.Name).
+					Str("provider_status", string(fp.Status)).
+					Str("lame_type", lameType).
+					Str("reason_code", string(reasonCode)).
+					Int("rank", rank).
+					Bool("emittable", hit.Matched).
+					Msg("ns candidate evaluated")
+
 				if best == nil || nsReasonRank(hit.ReasonCode) > nsReasonRank(best.ReasonCode) {
 					best = hit
 				}
 			}
 		}
 	}
+
+	if best == nil {
+		detectLogger.Debug().Str("domain", evidence.Domain).Msg("no ns provider match")
+		return nil
+	}
+
+	detectLogger.Debug().
+		Str("domain", evidence.Domain).
+		Str("host", best.Host).
+		Str("provider", best.Provider).
+		Str("reason_code", string(best.ReasonCode)).
+		Int("rank", nsReasonRank(best.ReasonCode)).
+		Bool("emittable", best.Matched).
+		Msg("ns best candidate selected")
 
 	return best
 }

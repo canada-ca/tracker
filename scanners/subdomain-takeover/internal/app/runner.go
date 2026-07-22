@@ -26,10 +26,13 @@ type MessageHandler interface {
 func Run(ctx context.Context, deps RunnerDeps) {
 	logger := deps.Logger
 	iter := deps.Iter
+	nextErrCount := 0
 
 	if deps.WorkerCount < 1 {
 		deps.WorkerCount = 1
 	}
+
+	logger.Info().Int("worker_count", deps.WorkerCount).Msg("runner started")
 
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, deps.WorkerCount)
@@ -50,11 +53,18 @@ Loop:
 		msg, err := iter.Next()
 		if err != nil {
 			if ctx.Err() != nil {
+				logger.Info().Msg("runner stopping: context canceled")
 				break Loop
 			}
-			logger.Debug().Err(err).Msg("next returned, continuing")
+			nextErrCount++
+			if nextErrCount%10 == 0 {
+				logger.Warn().Err(err).Int("consecutive_next_errors", nextErrCount).Msg("iterator next repeatedly failed")
+			} else {
+				logger.Debug().Err(err).Int("consecutive_next_errors", nextErrCount).Msg("next returned, continuing")
+			}
 			continue
 		}
+		nextErrCount = 0
 
 		select {
 		case sem <- struct{}{}:
@@ -80,6 +90,6 @@ Loop:
 	case <-waitDone:
 		logger.Info().Msg("all workers drained")
 	case <-time.After(30 * time.Second):
-		logger.Info().Msg("drain timeout")
+		logger.Warn().Msg("drain timeout")
 	}
 }

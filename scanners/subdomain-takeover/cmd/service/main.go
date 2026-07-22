@@ -24,8 +24,17 @@ func main() {
 	}
 
 	logger = bootstrap.NewLogger(cfg.LogLevel)
+	logger.Info().
+		Str("nats_url", cfg.NATSURL).
+		Str("stream", cfg.NATSStream).
+		Str("subject_in", cfg.SubjectIn).
+		Str("subject_out", cfg.SubjectOut).
+		Str("durable", cfg.DurableName).
+		Int("worker_count", cfg.WorkerCount).
+		Str("log_level", cfg.LogLevel.String()).
+		Msg("service configuration loaded")
 
-	if err := detect.LoadFingerprints(); err != nil {
+	if err := detect.LoadFingerprints(logger); err != nil {
 		logger.Fatal().Err(err).Msg("failed to load fingerprints")
 	}
 
@@ -36,7 +45,7 @@ func main() {
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	defer signal.Stop(sig)
 
-	runtimeDeps, err := bootstrap.NewRuntimeDeps(ctx, cfg)
+	runtimeDeps, err := bootstrap.NewRuntimeDeps(ctx, cfg, logger)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("failed to initialize runtime dependencies")
 	}
@@ -45,7 +54,7 @@ func main() {
 
 	pub := messaging.NewPublisher(logger, runtimeDeps.JS, cfg.SubjectOut)
 	matcher := detect.NewHTTPBodyFingerprintMatcher(5 * time.Second)
-	classifier := detect.NewClassifier(matcher)
+	classifier := detect.NewClassifier(matcher).WithLogger(logger)
 	worker := app.NewWorker(logger, pub, classifier)
 
 	go func() {

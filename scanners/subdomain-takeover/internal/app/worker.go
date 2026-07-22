@@ -30,7 +30,11 @@ func NewWorker(logger zerolog.Logger, publisher FindingPublisher, classifier Sca
 }
 
 func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
-	log := w.logger.With().Str("component", "worker").Logger()
+	log := w.logger.With().
+		Str("component", "worker").
+		Str("subject", msg.Subject()).
+		Int("msg_size", len(msg.Data())).
+		Logger()
 
 	scan, err := decodeScan(msg.Data())
 	if err != nil {
@@ -39,11 +43,17 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 		return err
 	}
 
+	log = log.With().Str("domain_key", scan.DomainKey).Logger()
+
 	findings, err := w.classifier.Classify(scan)
 	if err != nil {
 		log.Err(err).Msg("classify error")
 		w.nak(msg, log, err)
 		return err
+	}
+
+	if len(findings) == 0 {
+		log.Debug().Msg("classification produced no findings")
 	}
 
 	for _, finding := range findings {
@@ -59,6 +69,8 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 		log.Err(err).Msg("ack error")
 		return err
 	}
+
+	log.Debug().Int("findings_count", len(findings)).Msg("message acknowledged")
 
 	return nil
 }
