@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+
+	"github.com/rs/zerolog"
 )
 
 //go:embed data/*.json
@@ -16,33 +18,41 @@ var (
 	loadFingerprintsErr  error
 )
 
-func LoadFingerprints() error {
+func LoadFingerprints(logger zerolog.Logger) error {
+	log := logger.With().Str("component", "fingerprint_loader").Logger()
+
 	loadFingerprintsOnce.Do(func() {
 		var cname []CNAMEProviderFingerprint
 		var ns []NSProviderFingerprint
 
 		if err := loadJSON("data/cname_fingerprints.json", &cname); err != nil {
+			log.Error().Err(err).Str("dataset", "cname_fingerprints").Msg("failed to load fingerprint dataset")
 			loadFingerprintsErr = err
 			return
 		}
 
 		if err := loadJSON("data/ns_fingerprints.json", &ns); err != nil {
+			log.Error().Err(err).Str("dataset", "ns_fingerprints").Msg("failed to load fingerprint dataset")
 			loadFingerprintsErr = err
 			return
 		}
 
 		if err := validateCNAMEFingerprints(cname); err != nil {
+			log.Error().Err(err).Str("dataset", "cname_fingerprints").Msg("invalid fingerprint dataset")
 			loadFingerprintsErr = err
 			return
 		}
 
 		if err := validateNSFingerprints(ns); err != nil {
+			log.Error().Err(err).Str("dataset", "ns_fingerprints").Msg("invalid fingerprint dataset")
 			loadFingerprintsErr = err
 			return
 		}
 
 		CNAMEProviderFingerprints = cname
 		NSProviderFingerprints = ns
+
+		log.Info().Int("cname_fingerprints", len(cname)).Int("ns_fingerprints", len(ns)).Msg("fingerprint datasets loaded")
 	})
 
 	return loadFingerprintsErr
