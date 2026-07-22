@@ -5,16 +5,27 @@ Go microservice that consumes DNS scan results and emits normalized subdomain ta
 ## What it does
 
 1. Consumes from `scans.dns_scanner_results` (JetStream stream: `SCANS`)
-2. Evaluates passive CNAME takeover risk using provider fingerprints
+2. Evaluates passive CNAME and NS takeover risk using provider fingerprints
 3. Assigns confidence (`suspected`, `probable`, `confirmed`)
 4. Publishes findings to `scans.findings.upsert`
 
 ## Current detection scope
 
-- Implemented: CNAME-based passive detection
-- Not implemented yet: NS-based (Sitting Duck) detection
+Implemented today:
 
-The service currently focuses on passive CNAME classification only. NS-related types and reason codes exist in the codebase for upcoming work, but NS findings are not emitted yet.
+- CNAME passive detection
+- NS passive detection (vulnerable-only emission policy)
+- Deterministic NS candidate selection when multiple providers/hosts match
+- Nil-safe evidence extraction for CNAME and NS
+- Classifier refactor to support injected fingerprint sources (`FingerprintSource`)
+
+Current NS behavior:
+
+- NS provider/host matches are evaluated and ranked
+- Findings are emitted only for exploitable NS outcomes:
+  - `NS_FULL_LAME_PROVIDER_VULNERABLE`
+  - `NS_PARTIAL_LAME_PROVIDER_VULNERABLE`
+- Non-exploitable NS matches (`NS_LAME_PROVIDER_UNKNOWN`, `NS_PROVIDER_MATCH_ONLY`) are classified but not emitted
 
 ## Passive-only detection policy
 
@@ -28,7 +39,7 @@ As a result, confidence is conservative and evidence-driven:
 
 ## Confidence model (current)
 
-Current production behavior for CNAME findings:
+### CNAME
 
 - `suspected`
   - provider target matched, but required passive signal is missing
@@ -37,6 +48,28 @@ Current production behavior for CNAME findings:
   - provider fingerprint body match for providers that require body verification
 - `confirmed`
   - reserved; not currently emitted by CNAME rules
+
+### NS
+
+- `confirmed`
+  - full lame delegation + exploitable provider status
+- `probable`
+  - partial lame delegation + exploitable provider status
+- `suspected`
+  - reason codes exist for weaker NS states, but these are currently not emitted
+
+## Internal package layout
+
+Detection logic was split into focused files to reduce coupling:
+
+- `internal/detect/cname_rules.go`
+- `internal/detect/ns_rules.go`
+- `internal/detect/ns_reasoning.go`
+- `internal/detect/cname_evidence.go`
+- `internal/detect/ns_evidence.go`
+- `internal/detect/fingerprint_source.go`
+
+`Classifier` now supports dependency injection via `NewClassifierWithSource(...)`, while `NewClassifier(...)` defaults to global loaded fingerprints.
 
 ## Fingerprint data
 
@@ -88,7 +121,7 @@ The worker uses explicit JetStream ack semantics:
 Publish a test request:
 
 ```bash
-nats pub scans.dns_scanner_results '{"domain":"example.gc.ca","domain_key":"12345","base_domain":"example.gc.ca","zone_apex":"example.gc.ca","record_exists":true,"rcode":"NOERROR","resolve_chain":[["old-app.example.gc.ca. 300 IN CNAME old-app.azurewebsites.net."]],"cname_record":"old-app.example.gc.ca. 300 IN CNAME old-app.azurewebsites.net.","ns_records":{"hostnames":["ns1.example-dns-provider.net"],"warnings":[]}}'
+nats pub scans.dns_scanner_results '{"domain_key":"12345","results":{"domain":"example.gc.ca","resolve_chain":[["old-app.example.gc.ca. 300 IN CNAME old-app.azurewebsites.net."]],"cname_record":"old-app.example.gc.ca. 300 IN CNAME old-app.azurewebsites.net.","ns_delegations":{"ns_hosts":["ns1.example-dns-provider.net"],"ns_checks":[],"ns_delegation":{"total_ns":1,"authoritative_ok":0,"lame_count":1,"lame_type":"full"},"error":""}}}'
 ```
 
 Watch findings:
@@ -96,3 +129,12 @@ Watch findings:
 ```bash
 nats sub "scans.findings.upsert"
 ```
+
+## Next steps / nice-to-haves
+
+1. Add table-driven tests for NS reason mapping, ranking, and emission gating.
+2. Add classifier integration tests using injected `FingerprintSource`.
+3. Document and implement explicit policy for `edge_case` and `registration_closed` NS provider statuses.
+4. Add structured debug logs for NS matching decisions (host, provider, status, reason).
+5. Add registrar-context mismatch handling (`RegistrarMismatch`) and confidence policy.
+6. Add metrics (counts by reason code, emitted vs suppressed) for production observability.
