@@ -6,10 +6,19 @@ import (
 
 type Classifier struct {
 	Matcher BodyFingerprintMatcher
+	Source  FingerprintSource
 }
 
 func NewClassifier(matcher BodyFingerprintMatcher) *Classifier {
-	return &Classifier{Matcher: matcher}
+	return &Classifier{Matcher: matcher, Source: GlobalFingerprintSource{}}
+}
+
+func NewClassifierWithSource(matcher BodyFingerprintMatcher, source FingerprintSource) *Classifier {
+	if source == nil {
+		source = GlobalFingerprintSource{}
+	}
+
+	return &Classifier{Matcher: matcher, Source: source}
 }
 
 func (c *Classifier) Classify(input model.Input) ([]model.Finding, error) {
@@ -18,15 +27,23 @@ func (c *Classifier) Classify(input model.Input) ([]model.Finding, error) {
 		matcher = NewNoopBodyFingerprintMatcher()
 	}
 
-	return Classify(input, matcher)
+	source := c.Source
+	if source == nil {
+		source = GlobalFingerprintSource{}
+	}
+
+	return Classify(input, matcher, source)
 }
 
-func Classify(input model.Input, matcher BodyFingerprintMatcher) ([]model.Finding, error) {
+func Classify(input model.Input, matcher BodyFingerprintMatcher, source FingerprintSource) ([]model.Finding, error) {
 	findings := []model.Finding{}
+
+	cnameFingerprints := source.CNAME()
+	nsFingerprints := source.NS()
 
 	cnameEvidence := ExtractCNAMEEvidence(input.Results)
 	if cnameEvidence != nil {
-		cnameHit := MatchCNAMEFingerprints(*cnameEvidence, CNAMEProviderFingerprints, matcher)
+		cnameHit := MatchCNAMEFingerprints(*cnameEvidence, cnameFingerprints, matcher)
 		if ShouldEmitCNAME(cnameHit) {
 			findings = append(findings, model.Finding{
 				Domain:     cnameEvidence.Domain,
@@ -42,7 +59,7 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher) ([]model.Findin
 
 	nsEvidence := ExtractNSEvidence(input.Results)
 	if nsEvidence != nil {
-		nsHit := MatchNSProviderRules(*nsEvidence, NSProviderFingerprints)
+		nsHit := MatchNSProviderRules(*nsEvidence, nsFingerprints)
 		if ShouldEmitNSHijack(nsHit) {
 			findings = append(findings, model.Finding{
 				Domain:     nsEvidence.Domain,
