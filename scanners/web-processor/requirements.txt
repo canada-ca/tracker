@@ -9,6 +9,6 @@ python-arango==8.2.3
 python-dotenv==1.2.2
 requests==2.33.0
 requests-toolbelt==1.0.0
-setuptools==80.9.0
+setuptools==83.0.0
 urllib3==2.7.0
 zipp==3.23.0
