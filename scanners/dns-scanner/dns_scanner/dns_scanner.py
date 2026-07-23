@@ -212,7 +212,12 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     dns_answer_return_types = []
-    for query_type in [dns.rdatatype.A, dns.rdatatype.SOA, dns.rdatatype.NS]:
+    for query_type in [
+        dns.rdatatype.A,
+        dns.rdatatype.CNAME,
+        dns.rdatatype.SOA,
+        dns.rdatatype.NS,
+    ]:
         rtype = get_dns_return_type(domain, query_type)
         if rtype == "NOERROR":
             dns_answer_return_types.append(rtype)
@@ -329,7 +334,7 @@ def scan_domain(domain, dkim_selectors=None):
     registrar_domain = scan_result.base_domain or zone_apex or domain
     scan_result.registrar_context = get_registrar_context(
         base_domain=registrar_domain,
-        ns_hosts=ns_delegations.get("ns_hosts", []),
+        ns_hosts=scan_result.ns_delegations.get("ns_hosts", []),
     )
 
     # If no MX records are found (with warnings), but there are CNAME records, check the CNAME target for MX records
