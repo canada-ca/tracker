@@ -1,0 +1,62 @@
+package messaging
+
+import (
+	"context"
+	"encoding/json"
+
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
+	"github.com/nats-io/nats.go/jetstream"
+	"github.com/rs/zerolog"
+)
+
+type Publisher struct {
+	logger  zerolog.Logger
+	js      publishClient
+	subject string
+}
+
+type publishClient interface {
+	Publish(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error)
+}
+
+func NewPublisher(logger zerolog.Logger, js publishClient, subject string) *Publisher {
+	return &Publisher{logger: logger, js: js, subject: subject}
+}
+
+func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
+	payload, err := json.Marshal(finding)
+	if err != nil {
+		p.logger.Error().
+			Err(err).
+			Str("domain", finding.Domain).
+			Str("domain_key", finding.DomainKey).
+			Str("record_type", string(finding.RecordType)).
+			Str("reason_code", finding.ReasonCode).
+			Str("confidence", finding.Confidence).
+			Msg("marshal finding failed")
+		return err
+	}
+
+	if _, err := p.js.Publish(ctx, p.subject, payload); err != nil {
+		p.logger.Error().
+			Err(err).
+			Str("domain", finding.Domain).
+			Str("domain_key", finding.DomainKey).
+			Str("record_type", string(finding.RecordType)).
+			Str("reason_code", finding.ReasonCode).
+			Str("confidence", finding.Confidence).
+			Str("subject", p.subject).
+			Msg("publish failed")
+		return err
+	}
+
+	p.logger.Debug().
+		Str("domain", finding.Domain).
+		Str("domain_key", finding.DomainKey).
+		Str("record_type", string(finding.RecordType)).
+		Str("reason_code", finding.ReasonCode).
+		Str("confidence", finding.Confidence).
+		Str("subject", p.subject).
+		Msg("finding published")
+	return nil
+}
