@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: web-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-9c5295e-1782148876 # {"$imagepolicy": "flux-system:web-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-c485da6-1784833880 # {"$imagepolicy": "flux-system:web-processor"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
