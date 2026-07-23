@@ -3,13 +3,14 @@ package detect
 import (
 	"testing"
 
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 )
 
 func TestMatchNSProviderRules(t *testing.T) {
-	nsFP := []NSProviderFingerprint{
-		{Name: "UnknownDNS", Status: NSStatusNotVulnerable, HostPatterns: []string{"*.unknown-dns.net"}},
-		{Name: "RiskyDNS", Status: NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
+	nsFP := []fingerprints.NSProviderFingerprint{
+		{Name: "UnknownDNS", Status: fingerprints.NSStatusNotVulnerable, HostPatterns: []string{"*.unknown-dns.net"}},
+		{Name: "RiskyDNS", Status: fingerprints.NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
 	}
 
 	t.Run("returns nil for missing hosts", func(t *testing.T) {

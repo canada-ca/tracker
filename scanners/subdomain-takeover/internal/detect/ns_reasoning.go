@@ -1,8 +1,12 @@
 package detect
 
-import "strings"
+import (
+	"strings"
 
-func getNSHijackReasonCode(lameType string, providerStatus NSProviderStatus) ReasonCode {
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+)
+
+func getNSHijackReasonCode(lameType string, providerStatus fingerprints.NSProviderStatus) ReasonCode {
 	switch normalizeLameType(lameType) {
 	case "full":
 		if isExploitableProviderStatus(providerStatus) {
@@ -23,8 +27,8 @@ func isNSMatch(reasonCode ReasonCode) bool {
 	return reasonCode == ReasonNSFullLameProviderVulnerable || reasonCode == ReasonNSPartialLameProviderVulnerable
 }
 
-func isExploitableProviderStatus(status NSProviderStatus) bool {
-	return status == NSStatusVulnerable || status == NSStatusVulnerableWithPurchase
+func isExploitableProviderStatus(status fingerprints.NSProviderStatus) bool {
+	return status == fingerprints.NSStatusVulnerable || status == fingerprints.NSStatusVulnerableWithPurchase
 }
 
 func normalizeLameType(lameType string) string {

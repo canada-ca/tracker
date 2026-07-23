@@ -1,4 +1,4 @@
-package detect
+package fingerprints
 
 import (
 	"sync"
@@ -7,32 +7,31 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func TestLoadFingerprints(t *testing.T) {
-	origOnce := loadFingerprintsOnce
-	origErr := loadFingerprintsErr
-	origCNAME := CNAMEProviderFingerprints
-	origNS := NSProviderFingerprints
+func TestLoad(t *testing.T) {
+	origErr := loadErr
+	origCNAME := cnameProviderFingerprints
+	origNS := nsProviderFingerprints
 
-	loadFingerprintsOnce = sync.Once{}
-	loadFingerprintsErr = nil
-	CNAMEProviderFingerprints = nil
-	NSProviderFingerprints = nil
+	loadOnce = sync.Once{}
+	loadErr = nil
+	cnameProviderFingerprints = nil
+	nsProviderFingerprints = nil
 
 	t.Cleanup(func() {
-		loadFingerprintsOnce = origOnce
-		loadFingerprintsErr = origErr
-		CNAMEProviderFingerprints = origCNAME
-		NSProviderFingerprints = origNS
+		loadOnce = sync.Once{}
+		loadErr = origErr
+		cnameProviderFingerprints = origCNAME
+		nsProviderFingerprints = origNS
 	})
 
-	err := LoadFingerprints(zerolog.Nop())
+	err := Load(zerolog.Nop())
 	if err != nil {
-		t.Fatalf("LoadFingerprints returned error: %v", err)
+		t.Fatalf("Load returned error: %v", err)
 	}
-	if len(CNAMEProviderFingerprints) == 0 {
+	if len(CNAME()) == 0 {
 		t.Fatal("expected cname fingerprints to be loaded")
 	}
-	if len(NSProviderFingerprints) == 0 {
+	if len(NS()) == 0 {
 		t.Fatal("expected ns fingerprints to be loaded")
 	}
 }

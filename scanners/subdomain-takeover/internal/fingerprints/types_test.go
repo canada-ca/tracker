@@ -1,4 +1,4 @@
-package detect
+package fingerprints
 
 import "testing"
 
@@ -32,16 +32,16 @@ func TestContainsTargetAndNormalizeMode(t *testing.T) {
 		t.Fatal("did not expect suffix mismatch")
 	}
 
-	if got := normalizeFingerprintMode(FingerprintModeLiteral, "foo"); got != FingerprintModeLiteral {
+	if got := NormalizeMode(FingerprintModeLiteral, "foo"); got != FingerprintModeLiteral {
 		t.Fatalf("unexpected mode: %q", got)
 	}
-	if got := normalizeFingerprintMode("", "service unavailable"); got != FingerprintModeLiteral {
+	if got := NormalizeMode("", "service unavailable"); got != FingerprintModeLiteral {
 		t.Fatalf("unexpected inferred mode: %q", got)
 	}
-	if got := normalizeFingerprintMode("", "Error: .* not found"); got != FingerprintModeRegex {
+	if got := NormalizeMode("", "Error: .* not found"); got != FingerprintModeRegex {
 		t.Fatalf("unexpected inferred mode: %q", got)
 	}
-	if got := normalizeFingerprintMode("", "foo\\d+"); got != FingerprintModeRegex {
+	if got := NormalizeMode("", "foo\\d+"); got != FingerprintModeRegex {
 		t.Fatalf("unexpected inferred mode: %q", got)
 	}
 }

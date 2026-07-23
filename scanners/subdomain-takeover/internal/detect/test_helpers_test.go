@@ -1,14 +1,15 @@
 package detect
 
 import (
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 )
 
 type fakeMatcher struct {
-	containsFn func(domain string, fingerprint string, mode FingerprintMode) bool
+	containsFn func(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool
 }
 
-func (f fakeMatcher) Contains(domain string, fingerprint string, mode FingerprintMode) bool {
+func (f fakeMatcher) Contains(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
 	if f.containsFn == nil {
 		return false
 	}
@@ -16,12 +17,12 @@ func (f fakeMatcher) Contains(domain string, fingerprint string, mode Fingerprin
 }
 
 type fakeSource struct {
-	cname []CNAMEProviderFingerprint
-	ns    []NSProviderFingerprint
+	cname []fingerprints.CNAMEProviderFingerprint
+	ns    []fingerprints.NSProviderFingerprint
 }
 
-func (f fakeSource) CNAME() []CNAMEProviderFingerprint { return f.cname }
-func (f fakeSource) NS() []NSProviderFingerprint       { return f.ns }
+func (f fakeSource) CNAME() []fingerprints.CNAMEProviderFingerprint { return f.cname }
+func (f fakeSource) NS() []fingerprints.NSProviderFingerprint       { return f.ns }
 
 func strPtr(v string) *string { return &v }
 

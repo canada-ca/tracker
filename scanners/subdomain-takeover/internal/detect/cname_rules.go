@@ -1,5 +1,7 @@
 package detect
 
+import "github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+
 type CNAMEHit struct {
 	Matched    bool
 	Provider   string
@@ -7,8 +9,8 @@ type CNAMEHit struct {
 	NeedsNX    bool
 }
 
-func MatchCNAMEFingerprints(evidence CNAMEEvidence, fingerprints []CNAMEProviderFingerprint, matcher BodyFingerprintMatcher) *CNAMEHit {
-	for _, fp := range fingerprints {
+func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []fingerprints.CNAMEProviderFingerprint, matcher BodyFingerprintMatcher) *CNAMEHit {
+	for _, fp := range providerFingerprints {
 		if fp.ContainsTarget(evidence.Target) {
 			detectLogger.Debug().
 				Str("domain", evidence.Domain).
@@ -32,7 +34,7 @@ func MatchCNAMEFingerprints(evidence CNAMEEvidence, fingerprints []CNAMEProvider
 				}
 			} else {
 				hit.ReasonCode = ReasonCNAMETargetMatchMissingBodyFP
-				mode := normalizeFingerprintMode(fp.Mode, fp.Fingerprint)
+				mode := fingerprints.NormalizeMode(fp.Mode, fp.Fingerprint)
 				detectLogger.Debug().
 					Str("domain", evidence.Domain).
 					Str("provider", fp.Name).

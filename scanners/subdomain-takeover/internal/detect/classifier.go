@@ -51,13 +51,13 @@ func (c *Classifier) Classify(input model.Input) ([]model.Finding, error) {
 func Classify(input model.Input, matcher BodyFingerprintMatcher, source FingerprintSource, logger zerolog.Logger) ([]model.Finding, error) {
 	findings := []model.Finding{}
 
-	cnameFingerprints := source.CNAME()
-	nsFingerprints := source.NS()
+	cnameProviderFingerprints := source.CNAME()
+	nsProviderFingerprints := source.NS()
 
 	cnameEvidence := ExtractCNAMEEvidence(input.Results)
 	if cnameEvidence != nil {
 		logger.Debug().Str("domain_key", input.DomainKey).Str("domain", cnameEvidence.Domain).Msg("cname evidence extracted")
-		cnameHit := MatchCNAMEFingerprints(*cnameEvidence, cnameFingerprints, matcher)
+		cnameHit := MatchCNAMEFingerprints(*cnameEvidence, cnameProviderFingerprints, matcher)
 		if ShouldEmitCNAME(cnameHit) {
 			logger.Debug().
 				Str("domain_key", input.DomainKey).
@@ -94,7 +94,7 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher, source Fingerpr
 			Str("domain", nsEvidence.Domain).
 			Int("ns_hosts", len(nsEvidence.NSHosts)).
 			Msg("ns evidence extracted")
-		nsHit := MatchNSProviderRules(*nsEvidence, nsFingerprints)
+		nsHit := MatchNSProviderRules(*nsEvidence, nsProviderFingerprints)
 		if ShouldEmitNSHijack(nsHit) {
 			logger.Debug().
 				Str("domain_key", input.DomainKey).

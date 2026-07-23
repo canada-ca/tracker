@@ -1,16 +1,18 @@
 package detect
 
+import "github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+
 type FingerprintSource interface {
-	CNAME() []CNAMEProviderFingerprint
-	NS() []NSProviderFingerprint
+	CNAME() []fingerprints.CNAMEProviderFingerprint
+	NS() []fingerprints.NSProviderFingerprint
 }
 
 type GlobalFingerprintSource struct{}
 
-func (GlobalFingerprintSource) CNAME() []CNAMEProviderFingerprint {
-	return CNAMEProviderFingerprints
+func (GlobalFingerprintSource) CNAME() []fingerprints.CNAMEProviderFingerprint {
+	return fingerprints.CNAME()
 }
 
-func (GlobalFingerprintSource) NS() []NSProviderFingerprint {
-	return NSProviderFingerprints
+func (GlobalFingerprintSource) NS() []fingerprints.NSProviderFingerprint {
+	return fingerprints.NS()
 }

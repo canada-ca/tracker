@@ -13,7 +13,7 @@ import (
 )
 
 type fakePublisher struct {
-	err      error
+	err       error
 	published []model.Finding
 }
 

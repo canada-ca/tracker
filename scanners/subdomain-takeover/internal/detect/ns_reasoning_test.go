@@ -1,21 +1,25 @@
 package detect
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+)
 
 func TestGetNSHijackReasonCode(t *testing.T) {
 	tests := []struct {
 		name     string
 		lameType string
-		status   NSProviderStatus
+		status   fingerprints.NSProviderStatus
 		want     ReasonCode
 	}{
-		{name: "full vulnerable", lameType: "full", status: NSStatusVulnerable, want: ReasonNSFullLameProviderVulnerable},
-		{name: "partial vulnerable", lameType: "partial", status: NSStatusVulnerable, want: ReasonNSPartialLameProviderVulnerable},
-		{name: "full vulnerable with purchase", lameType: "full", status: NSStatusVulnerableWithPurchase, want: ReasonNSFullLameProviderVulnerable},
-		{name: "full not vulnerable", lameType: "full", status: NSStatusNotVulnerable, want: ReasonNSLameProviderUnknown},
-		{name: "partial registration closed", lameType: "partial", status: NSStatusRegistrationClosed, want: ReasonNSLameProviderUnknown},
-		{name: "unknown lame type", lameType: "none", status: NSStatusVulnerable, want: ReasonNSProviderMatchOnly},
-		{name: "normalized lame type", lameType: "  FULL ", status: NSStatusVulnerable, want: ReasonNSFullLameProviderVulnerable},
+		{name: "full vulnerable", lameType: "full", status: fingerprints.NSStatusVulnerable, want: ReasonNSFullLameProviderVulnerable},
+		{name: "partial vulnerable", lameType: "partial", status: fingerprints.NSStatusVulnerable, want: ReasonNSPartialLameProviderVulnerable},
+		{name: "full vulnerable with purchase", lameType: "full", status: fingerprints.NSStatusVulnerableWithPurchase, want: ReasonNSFullLameProviderVulnerable},
+		{name: "full not vulnerable", lameType: "full", status: fingerprints.NSStatusNotVulnerable, want: ReasonNSLameProviderUnknown},
+		{name: "partial registration closed", lameType: "partial", status: fingerprints.NSStatusRegistrationClosed, want: ReasonNSLameProviderUnknown},
+		{name: "unknown lame type", lameType: "none", status: fingerprints.NSStatusVulnerable, want: ReasonNSProviderMatchOnly},
+		{name: "normalized lame type", lameType: "  FULL ", status: fingerprints.NSStatusVulnerable, want: ReasonNSFullLameProviderVulnerable},
 	}
 
 	for _, tt := range tests {
@@ -29,13 +33,13 @@ func TestGetNSHijackReasonCode(t *testing.T) {
 }
 
 func TestNSReasoningHelpers(t *testing.T) {
-	if !isExploitableProviderStatus(NSStatusVulnerable) {
+	if !isExploitableProviderStatus(fingerprints.NSStatusVulnerable) {
 		t.Fatal("expected vulnerable to be exploitable")
 	}
-	if !isExploitableProviderStatus(NSStatusVulnerableWithPurchase) {
+	if !isExploitableProviderStatus(fingerprints.NSStatusVulnerableWithPurchase) {
 		t.Fatal("expected vulnerable_with_purchase to be exploitable")
 	}
-	if isExploitableProviderStatus(NSStatusNotVulnerable) {
+	if isExploitableProviderStatus(fingerprints.NSStatusNotVulnerable) {
 		t.Fatal("expected not_vulnerable to be non-exploitable")
 	}
 

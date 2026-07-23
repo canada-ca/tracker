@@ -1,15 +1,17 @@
 package detect
 
+import "github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+
 type NSHit struct {
-	Matched           bool
-	Host              string
-	Provider          string
-	ReasonCode        ReasonCode
+	Matched    bool
+	Host       string
+	Provider   string
+	ReasonCode ReasonCode
 }
 
-func MatchNSProviderRules(evidence NSEvidence, fingerprints []NSProviderFingerprint) *NSHit {
-	if len(evidence.NSHosts) == 0 || len(fingerprints) == 0 {
-		detectLogger.Debug().Int("ns_hosts", len(evidence.NSHosts)).Int("fingerprints", len(fingerprints)).Msg("skipping ns matching due to insufficient inputs")
+func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprints.NSProviderFingerprint) *NSHit {
+	if len(evidence.NSHosts) == 0 || len(providerFingerprints) == 0 {
+		detectLogger.Debug().Int("ns_hosts", len(evidence.NSHosts)).Int("fingerprints", len(providerFingerprints)).Msg("skipping ns matching due to insufficient inputs")
 		return nil
 	}
 
@@ -17,7 +19,7 @@ func MatchNSProviderRules(evidence NSEvidence, fingerprints []NSProviderFingerpr
 	var best *NSHit
 
 	for _, host := range evidence.NSHosts {
-		for _, fp := range fingerprints {
+		for _, fp := range providerFingerprints {
 			if fp.ContainsNSHost(host) {
 				reasonCode := getNSHijackReasonCode(lameType, fp.Status)
 				rank := nsReasonRank(reasonCode)

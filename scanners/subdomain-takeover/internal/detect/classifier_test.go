@@ -3,18 +3,19 @@ package detect
 import (
 	"testing"
 
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 	"github.com/rs/zerolog"
 )
 
 func TestClassify_ExpectedBehavior(t *testing.T) {
-	cnameFPs := []CNAMEProviderFingerprint{
+	cnameFPs := []fingerprints.CNAMEProviderFingerprint{
 		{Name: "Azure", Cname: []string{"azurewebsites.net"}, Nxdomain: true, Fingerprint: "unused"},
-		{Name: "Ghost", Cname: []string{"ghost.io"}, Nxdomain: false, Fingerprint: "ghost 404", Mode: FingerprintModeLiteral},
+		{Name: "Ghost", Cname: []string{"ghost.io"}, Nxdomain: false, Fingerprint: "ghost 404", Mode: fingerprints.FingerprintModeLiteral},
 	}
-	nsFPs := []NSProviderFingerprint{
-		{Name: "RiskyDNS", Status: NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
-		{Name: "SafeDNS", Status: NSStatusNotVulnerable, HostPatterns: []string{"*.safe-dns.net"}},
+	nsFPs := []fingerprints.NSProviderFingerprint{
+		{Name: "RiskyDNS", Status: fingerprints.NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
+		{Name: "SafeDNS", Status: fingerprints.NSStatusNotVulnerable, HostPatterns: []string{"*.safe-dns.net"}},
 	}
 
 	source := fakeSource{cname: cnameFPs, ns: nsFPs}
@@ -77,7 +78,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 			},
 		}
 
-		matcher := fakeMatcher{containsFn: func(domain string, fingerprint string, mode FingerprintMode) bool {
+		matcher := fakeMatcher{containsFn: func(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
 			return true
 		}}
 
