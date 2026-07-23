@@ -75,10 +75,10 @@ Detection logic was split into focused files to reduce coupling:
 
 Provider fingerprint data is stored in:
 
-- `internal/detect/data/cname_fingerprints.json`
-- `internal/detect/data/ns_fingerprints.json`
+- `internal/fingerprints/data/cname_fingerprints.json`
+- `internal/fingerprints/data/ns_fingerprints.json`
 
-The service embeds and validates these files at startup (`detect.LoadFingerprints`).
+The service embeds and validates these files at startup (`fingerprints.Load`).
 
 For CNAME body matching:
 
@@ -97,6 +97,19 @@ For CNAME body matching:
 ```bash
 go mod tidy
 go run ./cmd/service
+```
+
+## Local commands
+
+This service includes a local `Makefile` for common workflows:
+
+```bash
+make help      # list targets
+make run       # run the service
+make test      # run tests
+make lint      # fmt-check + vet
+make build     # build bin/subdomain-takeover
+make ci        # lint + test + build
 ```
 
 Environment variables:

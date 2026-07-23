@@ -1,4 +1,4 @@
-package detect
+package fingerprints
 
 import "strings"
 
@@ -16,9 +16,6 @@ const (
 	FingerprintModeLiteral FingerprintMode = "literal"
 	FingerprintModeRegex   FingerprintMode = "regex"
 )
-
-var CNAMEProviderFingerprints []CNAMEProviderFingerprint
-var NSProviderFingerprints []NSProviderFingerprint
 
 type NSProviderStatus string
 
@@ -95,7 +92,7 @@ func (f *CNAMEProviderFingerprint) ContainsTarget(target string) bool {
 	return false
 }
 
-func normalizeFingerprintMode(mode FingerprintMode, fingerprint string) FingerprintMode {
+func NormalizeMode(mode FingerprintMode, fingerprint string) FingerprintMode {
 	if mode == FingerprintModeLiteral || mode == FingerprintModeRegex {
 		return mode
 	}

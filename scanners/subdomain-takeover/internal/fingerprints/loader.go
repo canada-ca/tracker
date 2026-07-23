@@ -1,4 +1,4 @@
-package detect
+package fingerprints
 
 import (
 	"embed"
@@ -11,55 +11,66 @@ import (
 )
 
 //go:embed data/*.json
-var fingerprintFS embed.FS
+var dataFS embed.FS
 
 var (
-	loadFingerprintsOnce sync.Once
-	loadFingerprintsErr  error
+	loadOnce sync.Once
+	loadErr  error
+
+	cnameProviderFingerprints []CNAMEProviderFingerprint
+	nsProviderFingerprints    []NSProviderFingerprint
 )
 
-func LoadFingerprints(logger zerolog.Logger) error {
+func Load(logger zerolog.Logger) error {
 	log := logger.With().Str("component", "fingerprint_loader").Logger()
 
-	loadFingerprintsOnce.Do(func() {
+	loadOnce.Do(func() {
 		var cname []CNAMEProviderFingerprint
 		var ns []NSProviderFingerprint
 
 		if err := loadJSON("data/cname_fingerprints.json", &cname); err != nil {
 			log.Error().Err(err).Str("dataset", "cname_fingerprints").Msg("failed to load fingerprint dataset")
-			loadFingerprintsErr = err
+			loadErr = err
 			return
 		}
 
 		if err := loadJSON("data/ns_fingerprints.json", &ns); err != nil {
 			log.Error().Err(err).Str("dataset", "ns_fingerprints").Msg("failed to load fingerprint dataset")
-			loadFingerprintsErr = err
+			loadErr = err
 			return
 		}
 
 		if err := validateCNAMEFingerprints(cname); err != nil {
 			log.Error().Err(err).Str("dataset", "cname_fingerprints").Msg("invalid fingerprint dataset")
-			loadFingerprintsErr = err
+			loadErr = err
 			return
 		}
 
 		if err := validateNSFingerprints(ns); err != nil {
 			log.Error().Err(err).Str("dataset", "ns_fingerprints").Msg("invalid fingerprint dataset")
-			loadFingerprintsErr = err
+			loadErr = err
 			return
 		}
 
-		CNAMEProviderFingerprints = cname
-		NSProviderFingerprints = ns
+		cnameProviderFingerprints = cname
+		nsProviderFingerprints = ns
 
 		log.Info().Int("cname_fingerprints", len(cname)).Int("ns_fingerprints", len(ns)).Msg("fingerprint datasets loaded")
 	})
 
-	return loadFingerprintsErr
+	return loadErr
+}
+
+func CNAME() []CNAMEProviderFingerprint {
+	return cnameProviderFingerprints
+}
+
+func NS() []NSProviderFingerprint {
+	return nsProviderFingerprints
 }
 
 func loadJSON(path string, out any) error {
-	b, err := fingerprintFS.ReadFile(path)
+	b, err := dataFS.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("read %s: %w", path, err)
 	}
@@ -90,7 +101,7 @@ func validateCNAMEFingerprints(fingerprints []CNAMEProviderFingerprint) error {
 			return fmt.Errorf("cname fingerprint[%d] missing fingerprint", i)
 		}
 
-		fingerprints[i].Mode = normalizeFingerprintMode(fp.Mode, fp.Fingerprint)
+		fingerprints[i].Mode = NormalizeMode(fp.Mode, fp.Fingerprint)
 	}
 
 	return nil

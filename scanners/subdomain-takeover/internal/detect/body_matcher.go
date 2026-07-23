@@ -7,10 +7,12 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 )
 
 type BodyFingerprintMatcher interface {
-	Contains(domain string, fingerprint string, mode FingerprintMode) bool
+	Contains(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool
 }
 
 type HTTPBodyFingerprintMatcher struct {
@@ -29,11 +31,11 @@ func NewNoopBodyFingerprintMatcher() *NoopBodyFingerprintMatcher {
 	return &NoopBodyFingerprintMatcher{}
 }
 
-func (m *NoopBodyFingerprintMatcher) Contains(domain string, fingerprint string, mode FingerprintMode) bool {
+func (m *NoopBodyFingerprintMatcher) Contains(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
 	return false
 }
 
-func (m *HTTPBodyFingerprintMatcher) Contains(domain string, fingerprint string, mode FingerprintMode) bool {
+func (m *HTTPBodyFingerprintMatcher) Contains(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
 	if m == nil || m.client == nil {
 		return false
 	}
@@ -51,9 +53,9 @@ func (m *HTTPBodyFingerprintMatcher) Contains(domain string, fingerprint string,
 	}
 
 	bodyText := string(body)
-	resolvedMode := normalizeFingerprintMode(mode, fingerprint)
+	resolvedMode := fingerprints.NormalizeMode(mode, fingerprint)
 
-	if resolvedMode == FingerprintModeRegex {
+	if resolvedMode == fingerprints.FingerprintModeRegex {
 		re, err := regexp.Compile(fingerprint)
 		if err != nil {
 			return false

@@ -33,7 +33,7 @@ func (f *fakeMessagesIter) Next(...jetstream.NextOpt) (jetstream.Msg, error) {
 	return m, nil
 }
 
-func (f *fakeMessagesIter) Stop() { f.stopCalled = true }
+func (f *fakeMessagesIter) Stop()  { f.stopCalled = true }
 func (f *fakeMessagesIter) Drain() {}
 
 type fakeHandler struct {

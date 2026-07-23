@@ -1,9 +1,13 @@
 package detect
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+)
 
 func TestMatchCNAMEFingerprints(t *testing.T) {
-	fps := []CNAMEProviderFingerprint{
+	fps := []fingerprints.CNAMEProviderFingerprint{
 		{
 			Name:        "Azure",
 			Cname:       []string{"azurewebsites.net"},
@@ -15,7 +19,7 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 			Cname:       []string{"ghost.io"},
 			Nxdomain:    false,
 			Fingerprint: "The thing you were looking for is no longer here",
-			Mode:        FingerprintModeLiteral,
+			Mode:        fingerprints.FingerprintModeLiteral,
 		},
 	}
 
@@ -56,8 +60,8 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 
 	t.Run("body fingerprint provider emits when matcher returns true", func(t *testing.T) {
 		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", NoResolve: false}
-		matcher := fakeMatcher{containsFn: func(domain string, fingerprint string, mode FingerprintMode) bool {
-			if domain != "a.example.ca" || mode != FingerprintModeLiteral {
+		matcher := fakeMatcher{containsFn: func(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
+			if domain != "a.example.ca" || mode != fingerprints.FingerprintModeLiteral {
 				t.Fatalf("unexpected matcher args: domain=%q mode=%q", domain, mode)
 			}
 			return true
@@ -76,7 +80,7 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 
 	t.Run("body fingerprint provider suppressed when matcher false", func(t *testing.T) {
 		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", NoResolve: false}
-		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{containsFn: func(string, string, FingerprintMode) bool { return false }})
+		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{containsFn: func(string, string, fingerprints.FingerprintMode) bool { return false }})
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}

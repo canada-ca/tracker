@@ -11,6 +11,7 @@ import (
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/bootstrap"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/config"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
 	"github.com/rs/zerolog"
 )
@@ -34,7 +35,7 @@ func main() {
 		Str("log_level", cfg.LogLevel.String()).
 		Msg("service configuration loaded")
 
-	if err := detect.LoadFingerprints(logger); err != nil {
+	if err := fingerprints.Load(logger); err != nil {
 		logger.Fatal().Err(err).Msg("failed to load fingerprints")
 	}
 
