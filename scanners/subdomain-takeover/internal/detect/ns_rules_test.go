@@ -39,8 +39,8 @@ func TestMatchNSProviderRules(t *testing.T) {
 
 	t.Run("matches vulnerable full lame and emits correct reason", func(t *testing.T) {
 		evidence := NSEvidence{
-			Domain:  "a.example.ca",
-			NSHosts: []string{"ns1.risky-dns.net"},
+			Domain:    "a.example.ca",
+			NSHosts:   []string{"ns1.risky-dns.net"},
 			Registrar: namecheapRegistrar,
 			NSDelegations: model.NsDelegations{Delegation: model.Delegation{
 				LameType: "full",
@@ -63,8 +63,8 @@ func TestMatchNSProviderRules(t *testing.T) {
 
 	t.Run("ranks vulnerable higher than unknown", func(t *testing.T) {
 		evidence := NSEvidence{
-			Domain:  "a.example.ca",
-			NSHosts: []string{"ns1.unknown-dns.net", "ns1.risky-dns.net"},
+			Domain:    "a.example.ca",
+			NSHosts:   []string{"ns1.unknown-dns.net", "ns1.risky-dns.net"},
 			Registrar: namecheapRegistrar,
 			NSDelegations: model.NsDelegations{Delegation: model.Delegation{
 				LameType: "partial",
@@ -84,8 +84,8 @@ func TestMatchNSProviderRules(t *testing.T) {
 
 	t.Run("non-vulnerable full lame is classified but not emittable", func(t *testing.T) {
 		evidence := NSEvidence{
-			Domain:  "a.example.ca",
-			NSHosts: []string{"ns1.unknown-dns.net"},
+			Domain:    "a.example.ca",
+			NSHosts:   []string{"ns1.unknown-dns.net"},
 			Registrar: namecheapRegistrar,
 			NSDelegations: model.NsDelegations{Delegation: model.Delegation{
 				LameType: "full",
