@@ -14,18 +14,24 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 		{Name: "Ghost", Cname: []string{"ghost.io"}, Nxdomain: false, Fingerprint: "ghost 404", Mode: fingerprints.FingerprintModeLiteral},
 	}
 	nsFPs := []fingerprints.NSProviderFingerprint{
-		{Name: "RiskyDNS", Status: fingerprints.NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
+		{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
 		{Name: "SafeDNS", Status: fingerprints.NSStatusNotVulnerable, HostPatterns: []string{"*.safe-dns.net"}},
 	}
 
 	source := fakeSource{cname: cnameFPs, ns: nsFPs}
 
 	t.Run("emits cname and ns findings when both are exploitable", func(t *testing.T) {
+		rdapMatch := true
 		input := model.Input{
 			DomainKey: "k1",
 			Results: model.ScanResults{
 				Domain:      strPtr("a.example.ca"),
 				CnameRecord: strPtr("a.example.ca. 300 IN CNAME foo.azurewebsites.net."),
+				RegistrarContext: &model.RegistrarContext{
+					LookupSuccess:         true,
+					RegistrarName:         "Namecheap",
+					DelegationMatchesRDAP: &rdapMatch,
+				},
 				NsDelegations: &model.NsDelegations{
 					Hosts: []string{"ns1.risky-dns.net"},
 					Delegation: model.Delegation{

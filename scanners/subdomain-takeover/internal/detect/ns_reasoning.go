@@ -4,31 +4,71 @@ import (
 	"strings"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 )
 
-func getNSHijackReasonCode(lameType string, providerStatus fingerprints.NSProviderStatus) ReasonCode {
+func getNSHijackReasonCode(lameType string, fingerprint fingerprints.NSProviderFingerprint, registrar *model.RegistrarContext) ReasonCode {
+	if !isLameType(lameType) {
+		return ReasonNSProviderMatchOnly
+	}
+
+	if !isExploitableProviderStatus(fingerprint.Status) {
+		return ReasonNSLameProviderUnknown
+	}
+
+	registrarReason := getRegistrarReasonCode(fingerprint.Name, registrar)
+	if registrarReason != "" {
+		return registrarReason
+	}
+
 	switch normalizeLameType(lameType) {
 	case "full":
-		if isExploitableProviderStatus(providerStatus) {
-			return ReasonNSFullLameProviderVulnerable
-		}
-		return ReasonNSLameProviderUnknown
+		return ReasonNSFullLameProviderVulnerable
 	case "partial":
-		if isExploitableProviderStatus(providerStatus) {
-			return ReasonNSPartialLameProviderVulnerable
-		}
-		return ReasonNSLameProviderUnknown
+		return ReasonNSPartialLameProviderVulnerable
 	default:
 		return ReasonNSProviderMatchOnly
 	}
 }
 
-func isNSMatch(reasonCode ReasonCode) bool {
-	return reasonCode == ReasonNSFullLameProviderVulnerable || reasonCode == ReasonNSPartialLameProviderVulnerable
+func getRegistrarReasonCode(provider string, registrar *model.RegistrarContext) ReasonCode {
+	if registrar == nil {
+		return ReasonNSRegistrarContextInsufficient
+	}
+
+	if !registrar.LookupSuccess || registrar.RegistrarName == "" {
+		return ReasonNSRegistrarContextInsufficient
+	}
+
+	if registrar.DelegationMatchesRDAP != nil && !*registrar.DelegationMatchesRDAP {
+		return ReasonNSRegistrarContextInsufficient
+	}
+
+	registrarKey := canonicalProviderKey(registrar.RegistrarName)
+	providerKey := canonicalProviderKey(provider)
+
+	if registrarKey == "" || providerKey == "" {
+		return ReasonNSRegistrarContextInsufficient
+	}
+
+	if registrarKey == providerKey {
+		return ReasonNSRegistrarProviderMatch
+	}
+
+	return ""
+}
+
+func isRegistrarMismatch(provider string, registrar *model.RegistrarContext) bool {
+	return getRegistrarReasonCode(provider, registrar) == ""
 }
 
 func isExploitableProviderStatus(status fingerprints.NSProviderStatus) bool {
 	return status == fingerprints.NSStatusVulnerable || status == fingerprints.NSStatusVulnerableWithPurchase
+}
+
+func isLameType(lameType string) bool {
+	ltNorm := normalizeLameType(lameType)
+	return ltNorm == "full" || ltNorm == "partial"
 }
 
 func normalizeLameType(lameType string) string {
@@ -41,10 +81,14 @@ func nsReasonRank(reasonCode ReasonCode) int {
 		return 4
 	case ReasonNSPartialLameProviderVulnerable:
 		return 3
-	case ReasonNSLameProviderUnknown:
+	case ReasonNSRegistrarProviderMatch:
 		return 2
-	case ReasonNSProviderMatchOnly:
+	case ReasonNSRegistrarContextInsufficient:
+		return 2
+	case ReasonNSLameProviderUnknown:
 		return 1
+	case ReasonNSProviderMatchOnly:
+		return 0
 	default:
 		return 0
 	}

@@ -44,6 +44,9 @@ func TestNewPublisher(t *testing.T) {
 }
 
 func TestPublisherPublish(t *testing.T) {
+	origMarshal := marshalFinding
+	t.Cleanup(func() { marshalFinding = origMarshal })
+
 	finding := model.Finding{
 		Domain:     "a.example.ca",
 		DomainKey:  "123",
@@ -88,6 +91,23 @@ func TestPublisherPublish(t *testing.T) {
 		}
 		if client.called != 1 {
 			t.Fatalf("expected one publish call, got %d", client.called)
+		}
+	})
+
+	t.Run("returns marshal error and does not publish", func(t *testing.T) {
+		marshalFinding = func(v any) ([]byte, error) {
+			return nil, errors.New("marshal failed")
+		}
+
+		client := &fakePublishClient{}
+		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.upsert"}
+
+		err := p.Publish(context.Background(), finding)
+		if err == nil {
+			t.Fatal("expected marshal error")
+		}
+		if client.called != 0 {
+			t.Fatalf("expected no publish call, got %d", client.called)
 		}
 	})
 }

@@ -11,7 +11,7 @@ type NSEvidence struct {
 	Domain        string
 	NSHosts       []string
 	NSDelegations model.NsDelegations
-	// Registrar     model.RegistrarContext // if/when added
+	Registrar     *model.RegistrarContext
 }
 
 func ExtractNSEvidence(input model.ScanResults) *NSEvidence {
@@ -24,6 +24,7 @@ func ExtractNSEvidence(input model.ScanResults) *NSEvidence {
 		Domain:        *input.Domain,
 		NSHosts:       parseHostnames(input.NsDelegations.Hosts),
 		NSDelegations: *input.NsDelegations,
+		Registrar:     input.RegistrarContext,
 	}
 }
 
