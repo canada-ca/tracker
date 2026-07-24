@@ -33,7 +33,6 @@ export const pqcResultType = new GraphQLObjectType({
     tls13Supported: {
       type: GraphQLBoolean,
       description: `Whether the scanned server supports TLS 1.3, which is a prerequisite for post-quantum key exchange.`,
-      resolve: async ({ tls1_3Supported }) => tls1_3Supported,
     },
     scanStatus: {
       type: GraphQLString,
