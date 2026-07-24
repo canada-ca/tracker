@@ -10,6 +10,8 @@ const (
 
 	ReasonNSFullLameProviderVulnerable    ReasonCode = "NS_FULL_LAME_PROVIDER_VULNERABLE"
 	ReasonNSPartialLameProviderVulnerable ReasonCode = "NS_PARTIAL_LAME_PROVIDER_VULNERABLE"
+	ReasonNSRegistrarProviderMatch        ReasonCode = "NS_REGISTRAR_PROVIDER_MATCH"
+	ReasonNSRegistrarContextInsufficient  ReasonCode = "NS_REGISTRAR_CONTEXT_INSUFFICIENT"
 	ReasonNSLameProviderUnknown           ReasonCode = "NS_LAME_PROVIDER_UNKNOWN"
 	ReasonNSProviderMatchOnly             ReasonCode = "NS_PROVIDER_MATCH_ONLY"
 )

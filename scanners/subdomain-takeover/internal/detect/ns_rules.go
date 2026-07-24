@@ -21,14 +21,16 @@ func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprin
 	for _, host := range evidence.NSHosts {
 		for _, fp := range providerFingerprints {
 			if fp.ContainsNSHost(host) {
-				reasonCode := getNSHijackReasonCode(lameType, fp.Status)
-				rank := nsReasonRank(reasonCode)
 				hit := &NSHit{
-					Matched:    isNSMatch(reasonCode),
+					Matched:    false,
 					Host:       host,
 					Provider:   fp.Name,
-					ReasonCode: reasonCode,
+					ReasonCode: getNSHijackReasonCode(lameType, fp, evidence.Registrar),
 				}
+
+				hit.Matched = hit.ReasonCode == ReasonNSFullLameProviderVulnerable || hit.ReasonCode == ReasonNSPartialLameProviderVulnerable
+
+				rank := nsReasonRank(hit.ReasonCode)
 
 				detectLogger.Debug().
 					Str("domain", evidence.Domain).
@@ -36,12 +38,12 @@ func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprin
 					Str("provider", fp.Name).
 					Str("provider_status", string(fp.Status)).
 					Str("lame_type", lameType).
-					Str("reason_code", string(reasonCode)).
+					Str("reason_code", string(hit.ReasonCode)).
 					Int("rank", rank).
 					Bool("emittable", hit.Matched).
 					Msg("ns candidate evaluated")
 
-				if best == nil || nsReasonRank(hit.ReasonCode) > nsReasonRank(best.ReasonCode) {
+				if best == nil || rank > nsReasonRank(best.ReasonCode) {
 					best = hit
 				}
 			}

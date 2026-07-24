@@ -23,6 +23,8 @@ type MessageHandler interface {
 	Handle(ctx context.Context, msg jetstream.Msg) error
 }
 
+var checkConnection = messaging.CheckConnection
+
 func Run(ctx context.Context, deps RunnerDeps) {
 	logger := deps.Logger
 	iter := deps.Iter
@@ -39,7 +41,7 @@ func Run(ctx context.Context, deps RunnerDeps) {
 
 Loop:
 	for {
-		if err := messaging.CheckConnection(deps.NC); err != nil {
+		if err := checkConnection(deps.NC); err != nil {
 			logger.Error().Err(err).Msg("NATS connection unhealthy")
 			break Loop
 		}

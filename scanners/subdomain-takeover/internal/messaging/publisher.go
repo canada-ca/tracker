@@ -9,6 +9,8 @@ import (
 	"github.com/rs/zerolog"
 )
 
+var marshalFinding = json.Marshal
+
 type Publisher struct {
 	logger  zerolog.Logger
 	js      publishClient
@@ -24,7 +26,7 @@ func NewPublisher(logger zerolog.Logger, js publishClient, subject string) *Publ
 }
 
 func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
-	payload, err := json.Marshal(finding)
+	payload, err := marshalFinding(finding)
 	if err != nil {
 		p.logger.Error().
 			Err(err).

@@ -4,27 +4,82 @@ import (
 	"testing"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 )
 
 func TestGetNSHijackReasonCode(t *testing.T) {
+	namecheapRegistrar := &model.RegistrarContext{LookupSuccess: true, RegistrarName: "Namecheap"}
+	digitalOceanRegistrar := &model.RegistrarContext{LookupSuccess: true, RegistrarName: "DigitalOcean, Inc."}
+	invalidRegistrar := &model.RegistrarContext{LookupSuccess: false, RegistrarName: "Namecheap"}
+
 	tests := []struct {
-		name     string
-		lameType string
-		status   fingerprints.NSProviderStatus
-		want     ReasonCode
+		name      string
+		lameType  string
+		provider  fingerprints.NSProviderFingerprint
+		registrar *model.RegistrarContext
+		want      ReasonCode
 	}{
-		{name: "full vulnerable", lameType: "full", status: fingerprints.NSStatusVulnerable, want: ReasonNSFullLameProviderVulnerable},
-		{name: "partial vulnerable", lameType: "partial", status: fingerprints.NSStatusVulnerable, want: ReasonNSPartialLameProviderVulnerable},
-		{name: "full vulnerable with purchase", lameType: "full", status: fingerprints.NSStatusVulnerableWithPurchase, want: ReasonNSFullLameProviderVulnerable},
-		{name: "full not vulnerable", lameType: "full", status: fingerprints.NSStatusNotVulnerable, want: ReasonNSLameProviderUnknown},
-		{name: "partial registration closed", lameType: "partial", status: fingerprints.NSStatusRegistrationClosed, want: ReasonNSLameProviderUnknown},
-		{name: "unknown lame type", lameType: "none", status: fingerprints.NSStatusVulnerable, want: ReasonNSProviderMatchOnly},
-		{name: "normalized lame type", lameType: "  FULL ", status: fingerprints.NSStatusVulnerable, want: ReasonNSFullLameProviderVulnerable},
+		{
+			name:      "full vulnerable with registrar mismatch",
+			lameType:  "full",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable},
+			registrar: namecheapRegistrar,
+			want:      ReasonNSFullLameProviderVulnerable,
+		},
+		{
+			name:      "partial vulnerable with registrar mismatch",
+			lameType:  "partial",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable},
+			registrar: namecheapRegistrar,
+			want:      ReasonNSPartialLameProviderVulnerable,
+		},
+		{
+			name:      "full vulnerable with purchase and mismatch",
+			lameType:  "full",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerableWithPurchase},
+			registrar: namecheapRegistrar,
+			want:      ReasonNSFullLameProviderVulnerable,
+		},
+		{
+			name:      "full non vulnerable",
+			lameType:  "full",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusNotVulnerable},
+			registrar: namecheapRegistrar,
+			want:      ReasonNSLameProviderUnknown,
+		},
+		{
+			name:      "unknown lame type",
+			lameType:  "none",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable},
+			registrar: namecheapRegistrar,
+			want:      ReasonNSProviderMatchOnly,
+		},
+		{
+			name:      "same registrar/provider suppressed",
+			lameType:  "full",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable},
+			registrar: digitalOceanRegistrar,
+			want:      ReasonNSRegistrarProviderMatch,
+		},
+		{
+			name:      "missing registrar context suppressed",
+			lameType:  "full",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable},
+			registrar: nil,
+			want:      ReasonNSRegistrarContextInsufficient,
+		},
+		{
+			name:      "invalid registrar context suppressed",
+			lameType:  "full",
+			provider:  fingerprints.NSProviderFingerprint{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable},
+			registrar: invalidRegistrar,
+			want:      ReasonNSRegistrarContextInsufficient,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := getNSHijackReasonCode(tt.lameType, tt.status)
+			got := getNSHijackReasonCode(tt.lameType, tt.provider, tt.registrar)
 			if got != tt.want {
 				t.Fatalf("getNSHijackReasonCode()=%q want=%q", got, tt.want)
 			}
@@ -47,20 +102,20 @@ func TestNSReasoningHelpers(t *testing.T) {
 		t.Fatalf("normalizeLameType mismatch: %q", got)
 	}
 
-	if !isNSMatch(ReasonNSFullLameProviderVulnerable) || !isNSMatch(ReasonNSPartialLameProviderVulnerable) {
-		t.Fatal("expected vulnerable reason codes to be emittable")
+	if !isRegistrarMismatch("Digital Ocean", &model.RegistrarContext{LookupSuccess: true, RegistrarName: "Namecheap"}) {
+		t.Fatal("expected registrar mismatch for different providers")
 	}
-	if isNSMatch(ReasonNSLameProviderUnknown) {
-		t.Fatal("expected unknown reason not to be emittable")
+	if isRegistrarMismatch("Digital Ocean", &model.RegistrarContext{LookupSuccess: true, RegistrarName: "DigitalOcean, Inc."}) {
+		t.Fatal("expected same provider to fail mismatch check")
 	}
 
 	if nsReasonRank(ReasonNSFullLameProviderVulnerable) <= nsReasonRank(ReasonNSPartialLameProviderVulnerable) {
 		t.Fatal("expected full lame rank > partial lame rank")
 	}
-	if nsReasonRank(ReasonNSPartialLameProviderVulnerable) <= nsReasonRank(ReasonNSLameProviderUnknown) {
-		t.Fatal("expected partial lame rank > unknown rank")
+	if nsReasonRank(ReasonNSPartialLameProviderVulnerable) <= nsReasonRank(ReasonNSRegistrarProviderMatch) {
+		t.Fatal("expected partial lame rank > registrar-provider-match rank")
 	}
-	if nsReasonRank(ReasonNSLameProviderUnknown) <= nsReasonRank(ReasonNSProviderMatchOnly) {
-		t.Fatal("expected unknown rank > provider-only rank")
+	if nsReasonRank(ReasonNSRegistrarProviderMatch) <= nsReasonRank(ReasonNSProviderMatchOnly) {
+		t.Fatal("expected registrar gate rank > provider-only rank")
 	}
 }

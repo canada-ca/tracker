@@ -23,6 +23,10 @@ func ConfidenceForReason(reasonCode ReasonCode) string {
 		return ConfidenceConfirmed
 	case ReasonNSPartialLameProviderVulnerable:
 		return ConfidenceProbable
+	case ReasonNSRegistrarProviderMatch:
+		return ConfidenceSuspected
+	case ReasonNSRegistrarContextInsufficient:
+		return ConfidenceSuspected
 	case ReasonNSLameProviderUnknown:
 		return ConfidenceSuspected
 	case ReasonNSProviderMatchOnly:
