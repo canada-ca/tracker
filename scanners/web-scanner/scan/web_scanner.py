@@ -1,14 +1,18 @@
 import concurrent
+import os
 import socket
 from concurrent.futures import ProcessPoolExecutor
 import datetime
 from dataclasses import asdict
 
 from scan.tls_scanner.tls_scanner import scan_tls
+from scan.tls_scanner.pqc_scanner import scan_pqc
 from scan.endpoint_chain_scanner.endpoint_chain_scanner import scan_chain
 
+PQC_SCAN_ENABLED = os.getenv("PQC_SCAN_ENABLED", "false").lower() in ("true", "1")
 
-def scan_web(domain, ip_address=None):
+
+def scan_web(domain, ip_address=None, pqc_enabled=None):
     timestamp = str(datetime.datetime.now().astimezone())
 
     # Get IP address if not provided to ensure same IP address is used for TLS and chain scan
@@ -40,8 +44,17 @@ def scan_web(domain, ip_address=None):
         future = executor.submit(scan_tls, domain=domain, ip_address=ip_address)
         tls_result = future.result()
 
-    return {
+    results = {
         "tls_result": asdict(tls_result),
         "chain_result": asdict(chain_result),
         "timestamp": timestamp,
     }
+
+    if pqc_enabled is None:
+        pqc_enabled = PQC_SCAN_ENABLED
+
+    # Runs last so it cannot affect the connectivity or timing of the production scans
+    if pqc_enabled:
+        results["pqc_result"] = scan_pqc(domain, ip_address)
+
+    return results

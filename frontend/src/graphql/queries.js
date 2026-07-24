@@ -616,6 +616,21 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     }
                   }
                 }
+                experimental {
+                  pqc {
+                    supportsPqKeyExchange
+                    supportedPqGroups
+                    tls13Supported
+                    scanStatus
+                    status
+                    error
+                    durationSeconds
+                    buildRefs {
+                      nasslCommit
+                      sslyzeCommit
+                    }
+                  }
+                }
               }
             }
           }

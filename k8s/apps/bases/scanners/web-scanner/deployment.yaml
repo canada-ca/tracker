@@ -32,6 +32,8 @@ spec:
               value: "4"
             - name: MAX_SLOTS_PER_IP
               value: "10"
+            - name: PQC_SCAN_ENABLED
+              value: "true"
             - name: PYTHONWARNINGS
               value: ignore
             - name: NATS_SERVERS
