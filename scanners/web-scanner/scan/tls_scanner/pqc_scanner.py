@@ -186,7 +186,7 @@ if __name__ == "__main__":
 
     try:
         scan_data = run_pqc_scan(domain=args.domain, ip_address=args.ip)
-    except BaseException as error:
+    except Exception as error:
         logger.error(
             f"Unexpected error during PQC scan for domain '{args.domain}' at IP '{args.ip}': {str(error)}"
         )
