@@ -88,7 +88,7 @@ def scan_pqc(domain: str, ip_address: str) -> dict:
             f"Could not parse PQC scan output for domain '{domain}' at IP '{ip_address}': {str(e)}"
         )
         return {"error": f"Could not parse PQC scan output: {str(e)}"}
-    except BaseException as e:
+    except Exception as e:
         logger.error(
             f"Unknown error running PQC scan for domain '{domain}' at IP '{ip_address}': {str(e)}"
         )
