@@ -60,6 +60,9 @@ def build_endpoint(domain):
             "[STATUS] == any(200, 429)",  # prevents rate limiting from triggering alerts
             "[RESPONSE_TIME] < 30000",
         ],
+        "headers": {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0 Tracker-Suivi (+https://github.com/canada-ca/tracker)",
+        },
         "alerts": [{"type": "custom"}],
         "client": {
             "insecure": True,  # bypasses TLS verification, removes false positives
