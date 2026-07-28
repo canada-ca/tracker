@@ -620,7 +620,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                   pqc {
                     supportsPqKeyExchange
                     supportedPqGroups
-                    tls13Supported
+                    tls1_3Supported
                     scanStatus
                     status
                     error

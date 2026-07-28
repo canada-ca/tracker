@@ -7,7 +7,7 @@ import withSuperAdmin from '../app/withSuperAdmin'
 function PqcResults({ pqcResult }) {
   if (!pqcResult) return null
 
-  const { supportsPqKeyExchange, supportedPqGroups, tls13Supported, scanStatus, status, error, buildRefs } = pqcResult
+  const { supportsPqKeyExchange, supportedPqGroups, tls1_3Supported, scanStatus, status, error, buildRefs } = pqcResult
 
   const sslyzeCommit = buildRefs?.sslyzeCommit?.slice(0, 8)
   const nasslCommit = buildRefs?.nasslCommit?.slice(0, 8)
@@ -71,7 +71,7 @@ function PqcResults({ pqcResult }) {
           <Text mr="auto">
             <Trans>TLS 1.3 supported</Trans>
           </Text>
-          <Text>{tls13Supported ? <Trans>Yes</Trans> : <Trans>No</Trans>}</Text>
+          <Text>{tls1_3Supported ? <Trans>Yes</Trans> : <Trans>No</Trans>}</Text>
         </Flex>
 
         <Flex {...rowProps}>

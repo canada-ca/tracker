@@ -30,10 +30,9 @@ export const pqcResultType = new GraphQLObjectType({
       description: `The post-quantum hybrid key exchange groups accepted by the scanned server. Null when the server does not support TLS 1.3, in which case nothing was tested.`,
       resolve: async ({ supportedPqGroups }) => supportedPqGroups,
     },
-    tls13Supported: {
+    tls1_3Supported: {
       type: GraphQLBoolean,
       description: `Whether the scanned server supports TLS 1.3, which is a prerequisite for post-quantum key exchange.`,
-      resolve: async ({ tls1_3Supported }) => tls1_3Supported,
     },
     scanStatus: {
       type: GraphQLString,
