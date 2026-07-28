@@ -19,8 +19,6 @@ from nats.errors import TimeoutError as NatsTimeoutError
 from nats.js import JetStreamContext
 from nats.js.api import ConsumerConfig, AckPolicy
 
-from web_processor.web_processor import process_results
-
 
 load_dotenv()
 
@@ -46,6 +44,10 @@ logging.basicConfig(
     handlers=[h1, h2],
 )
 logger = logging.getLogger(__name__)
+
+
+from web_processor.web_processor import process_results
+
 
 NAME = os.getenv("NAME", "web_processor")
 SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
