@@ -45,6 +45,8 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
+            - name: PQC_SCAN_ENABLED
+              value: "true"
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           securityContext:
