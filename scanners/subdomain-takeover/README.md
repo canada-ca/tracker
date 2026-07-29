@@ -7,7 +7,7 @@ Go microservice that consumes DNS scan results and emits normalized subdomain ta
 1. Consumes from `scans.dns_scanner_results` (JetStream stream: `SCANS`)
 2. Evaluates passive CNAME and NS takeover risk using provider fingerprints
 3. Assigns confidence (`suspected`, `probable`, `confirmed`)
-4. Publishes findings to `scans.findings.upsert`
+4. Publishes findings to `scans.findings.subdomain_takeover`
 
 ## Current detection scope
 
@@ -33,6 +33,7 @@ This service uses passive checks only.
 It does not attempt account takeover, resource claiming, or any active validation.
 
 As a result, confidence is conservative and evidence-driven:
+
 - `suspected`: weak or incomplete takeover indicators
 - `probable`: strong passive indicators with known exploitable conditions
 - `confirmed`: reserved for deterministic passive signatures only
@@ -113,10 +114,11 @@ make ci        # lint + test + build
 ```
 
 Environment variables:
+
 - `NATS_URL` (default: `nats://localhost:4222`)
 - `NATS_STREAM` (default: `SCANS`)
 - `SUBJECT_IN` (default: `scans.dns_scanner_results`)
-- `SUBJECT_OUT` (default: `scans.findings.upsert`)
+- `SUBJECT_OUT` (default: `scans.findings.subdomain_takeover`)
 - `DURABLE_NAME` (default: `subdomain_takeover`)
 - `WORKER_COUNT` (default: `5`)
 - `LOG_LEVEL` (default: `info`)
@@ -140,7 +142,7 @@ nats pub scans.dns_scanner_results '{"domain_key":"12345","results":{"domain":"e
 Watch findings:
 
 ```bash
-nats sub "scans.findings.upsert"
+nats sub "scans.findings.subdomain_takeover"
 ```
 
 ## Next steps / nice-to-haves

@@ -34,11 +34,11 @@ func (f *fakePublishClient) Publish(_ context.Context, subj string, data []byte,
 
 func TestNewPublisher(t *testing.T) {
 	client := &fakePublishClient{}
-	p := NewPublisher(zerolog.Nop(), client, "scans.findings.upsert")
+	p := NewPublisher(zerolog.Nop(), client, "scans.findings.subdomain_takeover")
 	if p == nil {
 		t.Fatal("expected publisher instance")
 	}
-	if p.subject != "scans.findings.upsert" {
+	if p.subject != "scans.findings.subdomain_takeover" {
 		t.Fatalf("unexpected subject: %q", p.subject)
 	}
 }
@@ -59,7 +59,7 @@ func TestPublisherPublish(t *testing.T) {
 
 	t.Run("publishes serialized finding", func(t *testing.T) {
 		client := &fakePublishClient{}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.upsert"}
+		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain_takeover"}
 
 		err := p.Publish(context.Background(), finding)
 		if err != nil {
@@ -68,7 +68,7 @@ func TestPublisherPublish(t *testing.T) {
 		if client.called != 1 {
 			t.Fatalf("expected one publish call, got %d", client.called)
 		}
-		if client.lastSubj != "scans.findings.upsert" {
+		if client.lastSubj != "scans.findings.subdomain_takeover" {
 			t.Fatalf("unexpected subject: %q", client.lastSubj)
 		}
 
@@ -83,7 +83,7 @@ func TestPublisherPublish(t *testing.T) {
 
 	t.Run("returns publish client error", func(t *testing.T) {
 		client := &fakePublishClient{err: errors.New("publish failed")}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.upsert"}
+		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain_takeover"}
 
 		err := p.Publish(context.Background(), finding)
 		if err == nil {
@@ -100,7 +100,7 @@ func TestPublisherPublish(t *testing.T) {
 		}
 
 		client := &fakePublishClient{}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.upsert"}
+		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain_takeover"}
 
 		err := p.Publish(context.Background(), finding)
 		if err == nil {
