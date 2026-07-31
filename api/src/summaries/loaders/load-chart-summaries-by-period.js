@@ -3,9 +3,11 @@ import { aql } from 'arangojs'
 
 export const loadChartSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ startDate, endDate, sortDirection = 'ASC', limit, scope = 'verified' }) => {
+  async ({ startDate, endDate, sortDirection = 'ASC', limit, scope = 'verified', source = 'live' }) => {
     const cleansedStartDate = startDate ? cleanseInput(startDate) : null
     const cleansedEndDate = endDate ? cleanseInput(endDate) : new Date().toISOString()
+
+    const collection = source === 'rebuild' ? aql`chartSummaries_rebuild` : aql`chartSummaries`
 
     const filterUniqueDates = (array) => {
       const filteredArray = []
@@ -41,7 +43,7 @@ export const loadChartSummariesByPeriod =
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
-        FOR summary IN chartSummaries
+        FOR summary IN ${collection}
           ${scopeFilter}
           ${startDateFilter}
           ${endDateFilter}
