@@ -12,13 +12,18 @@ from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Resolver, Answer
 from dns.exception import Timeout
 
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
-from dns_scanner.ns_registrar import check_ns_delegations, get_registrar_context
+from dns_scanner.ns_registrar import (
+    check_ns_delegations,
+    get_registrar_context,
+    build_registrar_context,
+)
 
 logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
 DNSSEC_NAMESERVER_IP = os.getenv("DNSSEC_NAMESERVER_IP")
 DNSSEC_NAMESERVER_HOSTNAME = os.getenv("DNSSEC_NAMESERVER_HOSTNAME")
+ENABLE_RDAP_LOOKUP = os.getenv("ENABLE_RDAP_LOOKUP", "false").lower() == "true"
 
 
 @dataclass
@@ -332,10 +337,16 @@ def scan_domain(domain, dkim_selectors=None):
     )
 
     registrar_domain = scan_result.base_domain or zone_apex or domain
-    scan_result.registrar_context = get_registrar_context(
-        base_domain=registrar_domain,
-        ns_hosts=scan_result.ns_delegations.get("ns_hosts", []),
-    )
+    if ENABLE_RDAP_LOOKUP:
+        scan_result.registrar_context = get_registrar_context(
+            base_domain=registrar_domain,
+            ns_hosts=scan_result.ns_delegations.get("ns_hosts", []),
+        )
+    else:
+        scan_result.registrar_context = build_registrar_context(
+            base_domain=registrar_domain,
+            error="rdap_lookup_disabled",
+        )
 
     # If no MX records are found (with warnings), but there are CNAME records, check the CNAME target for MX records
     if (
