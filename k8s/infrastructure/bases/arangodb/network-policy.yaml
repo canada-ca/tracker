@@ -83,6 +83,12 @@ spec:
               kubernetes.io/metadata.name: scanners
           podSelector:
             matchLabels:
+              app: summaries-backfill
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
               app: update-selectors
         - namespaceSelector:
             matchLabels:

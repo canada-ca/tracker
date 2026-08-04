@@ -19,9 +19,9 @@ replicas:
   - name: tracker-frontend
     count: 2
   - name: dns-scanner
-    count: 6
+    count: 3
   - name: web-scanner
-    count: 13
+    count: 6
 patchesStrategicMerge:
   - domain-dispatcher-suspend-patch.yaml
 components:

@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: web-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-9c5295e-1782148876 # {"$imagepolicy": "flux-system:web-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-11426a9-1785350733 # {"$imagepolicy": "flux-system:web-processor"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
@@ -45,6 +45,8 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
+            - name: PQC_SCAN_ENABLED
+              value: "true"
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           securityContext:
@@ -57,6 +59,9 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
             runAsNonRoot: true
-          resources: {}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
           imagePullPolicy: Always
 status: {}
