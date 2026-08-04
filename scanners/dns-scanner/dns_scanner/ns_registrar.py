@@ -7,6 +7,20 @@ from dns.exception import Timeout
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "20"))
+RDAP_TIMEOUT_SEC = float(os.getenv("RDAP_TIMEOUT_SEC", "3"))
+
+
+def build_registrar_context(base_domain, error=None):
+    return {
+        "base_domain": base_domain,
+        "lookup_success": False,
+        "rdap_url": None,
+        "registrar_name": None,
+        "registrar_id": None,
+        "rdap_nameservers": [],
+        "delegation_matches_rdap": None,
+        "error": error,
+    }
 
 
 def probe_nameserver(
@@ -52,8 +66,9 @@ def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_s
 
     ns_hosts = ns_records.get("hostnames", [])
     if len(ns_hosts) == 0:
+        ns_lookup_name = zone_apex or domain
         try:
-            ns_res = resolver.resolve(domain, dns.rdatatype.NS)
+            ns_res = resolver.resolve(ns_lookup_name, dns.rdatatype.NS)
             ns_hosts = [host.to_text() for host in ns_res]
         except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
             ns_hosts = []
@@ -126,16 +141,7 @@ def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_s
 
 
 def get_registrar_context(base_domain, ns_hosts=None):
-    context = {
-        "base_domain": base_domain,
-        "lookup_success": False,
-        "rdap_url": None,
-        "registrar_name": None,
-        "registrar_id": None,
-        "rdap_nameservers": [],
-        "delegation_matches_rdap": None,
-        "error": None,
-    }
+    context = build_registrar_context(base_domain)
 
     if not base_domain:
         context["error"] = "missing_base_domain"
@@ -145,7 +151,7 @@ def get_registrar_context(base_domain, ns_hosts=None):
     context["rdap_url"] = rdap_url
 
     try:
-        response = requests.get(rdap_url, timeout=TIMEOUT)
+        response = requests.get(rdap_url, timeout=RDAP_TIMEOUT_SEC)
         response.raise_for_status()
         payload = response.json()
     except Exception as e:
