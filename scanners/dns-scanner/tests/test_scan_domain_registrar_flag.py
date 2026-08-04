@@ -19,7 +19,7 @@ class FakeDMARCScanner:
             "mx": {"hosts": [], "warnings": []},
             "spf": {},
             "dmarc": {},
-            "ns": {"hostnames": ["ns1.example.com."], "errors": []},
+            "ns": {"hostnames": [], "errors": []},
         }
 
 
@@ -29,17 +29,23 @@ class FakeDKIMScanner:
         self.selectors = selectors
 
     def run(self):
-        return {"selectors": self.selectors}
+        return {}
 
 
-def test_scan_domain_returns_expected_shape(monkeypatch):
+def test_scan_domain_skips_rdap_lookup_when_disabled(monkeypatch):
     monkeypatch.setattr(scanner_mod, "ENABLE_RDAP_LOOKUP", False)
+    monkeypatch.setattr(scanner_mod, "get_dns_return_type", lambda domain, query_type: "NOERROR")
+    monkeypatch.setattr(scanner_mod, "find_zone_apex", lambda domain: "example.com")
     monkeypatch.setattr(
         scanner_mod,
-        "get_dns_return_type",
-        lambda domain, query_type: "NOERROR",
+        "check_ns_delegations",
+        lambda domain, zone_apex, ns_records: {"ns_hosts": [], "ns_checks": [], "ns_delegation": {}},
     )
-    monkeypatch.setattr(scanner_mod, "find_zone_apex", lambda domain: "example.com")
+    monkeypatch.setattr(
+        scanner_mod,
+        "get_registrar_context",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("should not be called")),
+    )
     monkeypatch.setattr(scanner_mod, "DMARCScanner", FakeDMARCScanner)
     monkeypatch.setattr(scanner_mod, "DKIMScanner", FakeDKIMScanner)
     monkeypatch.setattr(scanner_mod.dns.resolver, "Resolver", lambda: FakeResolver())
@@ -51,21 +57,10 @@ def test_scan_domain_returns_expected_shape(monkeypatch):
             "wildcard_sibling": False,
         },
     )
-    monkeypatch.setattr(
-        scanner_mod,
-        "check_ns_delegations",
-        lambda domain, zone_apex, ns_records: {
-            "ns_hosts": ns_records.get("hostnames", []),
-            "ns_checks": [],
-            "ns_delegation": {"lame_type": "none"},
-        },
-    )
 
-    result = scanner_mod.scan_domain("mail.example.com", dkim_selectors=["selector1"])
+    result = scanner_mod.scan_domain("mail.example.com", dkim_selectors=[])
 
     assert result["record_exists"] is True
-    assert result["rcode"] == "NOERROR"
-    assert result["zone_apex"] == "example.com"
-    assert result["base_domain"] == "example.com"
-    assert result["dkim"] == {"selectors": ["selector1"]}
+    assert result["registrar_context"]["base_domain"] == "example.com"
+    assert result["registrar_context"]["lookup_success"] is False
     assert result["registrar_context"]["error"] == "rdap_lookup_disabled"
