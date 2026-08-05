@@ -99,7 +99,7 @@ These elements support the use of variables and any other Javascript inside them
 
 The frontend user interface is styled using [Chakra](https://chakra-ui.com/).
 Chakra contains many React components that are used for designing page layouts.
-Chakra also allows for the use of ['style props'](https://chakra-ui.com/docs/features/style-props), which apply css properties to components.
+Chakra also allows for the use of ['style props'](https://v2.chakra-ui.com/docs/styled-system/style-props), which apply css properties to components.
 Chakra comes with a default theme, that Tracker extends in [/frontend/src/theme/canada.js](https://github.com/canada-ca/tracker/blob/master/frontend/src/theme/canada.js).
 The theme contains colour, size, and spacing definitions, along with default component styles and custom component variants.
 
