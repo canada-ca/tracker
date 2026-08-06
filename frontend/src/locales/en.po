@@ -488,7 +488,7 @@ msgstr "All {domainCount} domains are selected. Updates will apply to all filter
 msgid "All {domainCount} selected"
 msgstr "All {domainCount} selected"
 
-#: src/summaries/HistoricalSummariesGraph.js:218
+#: src/summaries/HistoricalSummariesGraph.js:228
 msgid "All Time"
 msgstr "All Time"
 
@@ -794,6 +794,10 @@ msgstr "Availability Requirement"
 msgid "Back"
 msgstr "Back"
 
+#: src/summaries/HistoricalSummariesGraph.js:313
+msgid "Backfill"
+msgstr "Backfill"
+
 #: src/organizationDetails/OrganizationSummary.js:20
 #~ msgid "Based in:"
 #~ msgstr "Based in:"
@@ -827,11 +831,15 @@ msgstr "Blocked"
 msgid "BLOCKED"
 msgstr "BLOCKED"
 
+#: src/summaries/HistoricalSummariesGraph.js:316
+msgid "Both"
+msgstr "Both"
+
 #: src/guidance/WebPqcResults.js:97
 #~ msgid "Built from sslyze {0} and nassl {nasslCommit}"
 #~ msgstr "Built from sslyze {0} and nassl {nasslCommit}"
 
-#: src/guidance/WebPqcResults.js:97
+#: src/guidance/WebPqcResults.js:96
 msgid "Built from sslyze {sslyzeCommit} and nassl {nasslCommit}"
 msgstr "Built from sslyze {sslyzeCommit} and nassl {nasslCommit}"
 
@@ -1316,7 +1324,7 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:115
-#: src/summaries/HistoricalSummariesGraph.js:245
+#: src/summaries/HistoricalSummariesGraph.js:255
 msgid "Data:"
 msgstr "Data:"
 
@@ -1544,8 +1552,8 @@ msgstr "DMARC Phase"
 #~ msgid "DMARC phase summary"
 #~ msgstr "DMARC phase summary"
 
-#: src/organizationDetails/OrganizationDetails.js:145
-#: src/organizationDetails/OrganizationDetails.js:186
+#: src/organizationDetails/OrganizationDetails.js:173
+#: src/organizationDetails/OrganizationDetails.js:218
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -1628,7 +1636,7 @@ msgstr "Domain"
 msgid "Domain added"
 msgstr "Domain added"
 
-#: src/summaries/HistoricalSummariesGraph.js:259
+#: src/summaries/HistoricalSummariesGraph.js:269
 msgid "Domain count"
 msgstr "Domain count"
 
@@ -1683,7 +1691,7 @@ msgstr "Domain:"
 #: src/app/FloatingMenu.js:117
 #: src/domains/DomainsPage.js:218
 #: src/domains/DomainsPage.js:286
-#: src/organizationDetails/OrganizationDetails.js:148
+#: src/organizationDetails/OrganizationDetails.js:176
 #: src/organizationDetails/OrganizationDomains.js:143
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -1955,7 +1963,7 @@ msgstr "Envelope From"
 msgid "EQUALS"
 msgstr "EQUALS"
 
-#: src/guidance/WebPqcResults.js:88
+#: src/guidance/WebPqcResults.js:87
 msgid "Error"
 msgstr "Error"
 
@@ -1976,11 +1984,11 @@ msgstr "Error while retrieving DMARC data for {domainSlug}. <0/>This could be du
 msgid "Eventually"
 msgstr "Eventually"
 
-#: src/guidance/WebPqcResults.js:51
+#: src/guidance/WebPqcResults.js:50
 msgid "Experimental"
 msgstr "Experimental"
 
-#: src/guidance/WebPqcResults.js:58
+#: src/guidance/WebPqcResults.js:57
 msgid "Experimental result from an unreleased version of SSLyze. This does not affect compliance scoring and is visible to super admins only."
 msgstr "Experimental result from an unreleased version of SSLyze. This does not affect compliance scoring and is visible to super admins only."
 
@@ -2271,7 +2279,7 @@ msgstr "Getting top 25 report"
 
 #: src/admin/DomainTagsList.js:51
 #: src/admin/TagForm.js:269
-#: src/summaries/HistoricalSummariesGraph.js:239
+#: src/summaries/HistoricalSummariesGraph.js:249
 msgid "Global"
 msgstr "Global"
 
@@ -2989,7 +2997,7 @@ msgstr "Label (FR)"
 msgid "Language:"
 msgstr "Language:"
 
-#: src/summaries/HistoricalSummariesGraph.js:207
+#: src/summaries/HistoricalSummariesGraph.js:217
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
@@ -2997,7 +3005,7 @@ msgstr "Last 30 Days"
 msgid "Last 30 Days of Data"
 msgstr "Last 30 Days of Data"
 
-#: src/summaries/HistoricalSummariesGraph.js:210
+#: src/summaries/HistoricalSummariesGraph.js:220
 msgid "Last 365 Days"
 msgstr "Last 365 Days"
 
@@ -3052,6 +3060,10 @@ msgstr "Links to Review:"
 msgid "List of guidance tags"
 msgstr "List of guidance tags"
 
+#: src/summaries/HistoricalSummariesGraph.js:310
+msgid "Live"
+msgstr "Live"
+
 #: src/components/LoadingMessage.js:12
 msgid "Loading {children}..."
 msgstr "Loading {children}..."
@@ -3060,7 +3072,7 @@ msgstr "Loading {children}..."
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
-#: src/summaries/HistoricalSummariesGraph.js:236
+#: src/summaries/HistoricalSummariesGraph.js:246
 msgid "Local"
 msgstr "Local"
 
@@ -3085,7 +3097,7 @@ msgstr "Lookups:"
 msgid "Low"
 msgstr "Low"
 
-#: src/summaries/HistoricalSummariesGraph.js:103
+#: src/summaries/HistoricalSummariesGraph.js:112
 msgid "Mail"
 msgstr "Mail"
 
@@ -3152,7 +3164,7 @@ msgstr "Menu"
 msgid "Message dismissed successfully"
 msgstr "Message dismissed successfully"
 
-#: src/summaries/HistoricalSummariesGraph.js:263
+#: src/summaries/HistoricalSummariesGraph.js:273
 msgid "Metrics:"
 msgstr "Metrics:"
 
@@ -3268,7 +3280,7 @@ msgstr "Negative"
 msgid "Negative Finding"
 msgstr "Negative Finding"
 
-#: src/summaries/HistoricalSummariesGraph.js:104
+#: src/summaries/HistoricalSummariesGraph.js:113
 msgid "Negative Findings"
 msgstr "Negative Findings"
 
@@ -3276,7 +3288,7 @@ msgstr "Negative Findings"
 #~ msgid "Negative Tags"
 #~ msgstr "Negative Tags"
 
-#: src/guidance/WebPqcResults.js:80
+#: src/guidance/WebPqcResults.js:79
 msgid "Negotiated groups"
 msgstr "Negotiated groups"
 
@@ -3349,8 +3361,8 @@ msgstr "Next Steps:"
 #: src/guidance/WebConnectionResults.js:208
 #: src/guidance/WebConnectionResults.js:220
 #: src/guidance/WebConnectionResults.js:226
-#: src/guidance/WebPqcResults.js:68
-#: src/guidance/WebPqcResults.js:75
+#: src/guidance/WebPqcResults.js:67
+#: src/guidance/WebPqcResults.js:74
 #: src/guidance/WebTLSResults.js:217
 #: src/guidance/WebTLSResults.js:275
 #: src/guidance/WebTLSResults.js:286
@@ -3546,7 +3558,7 @@ msgstr "Non-compliant"
 #: src/guidance/EmailGuidance.js:274
 #: src/guidance/IgnoredCves.js:23
 #: src/guidance/IgnoredCves.js:67
-#: src/guidance/WebPqcResults.js:82
+#: src/guidance/WebPqcResults.js:81
 #: src/user/EditableUserTFAMethod.js:165
 msgid "None"
 msgstr "None"
@@ -3575,11 +3587,11 @@ msgstr "Not Enrolled"
 msgid "Not Implemented"
 msgstr "Not Implemented"
 
-#: src/guidance/WebPqcResults.js:27
+#: src/guidance/WebPqcResults.js:26
 msgid "Not scanned"
 msgstr "Not scanned"
 
-#: src/guidance/WebPqcResults.js:39
+#: src/guidance/WebPqcResults.js:38
 msgid "Not supported"
 msgstr "Not supported"
 
@@ -3672,7 +3684,7 @@ msgstr "Organization"
 msgid "Organization created"
 msgstr "Organization created"
 
-#: src/organizationDetails/OrganizationDetails.js:74
+#: src/organizationDetails/OrganizationDetails.js:102
 msgid "Organization Details"
 msgstr "Organization Details"
 
@@ -3831,7 +3843,7 @@ msgstr "Pending"
 msgid "PENDING"
 msgstr "PENDING"
 
-#: src/summaries/HistoricalSummariesGraph.js:256
+#: src/summaries/HistoricalSummariesGraph.js:266
 msgid "Percentage"
 msgstr "Percentage"
 
@@ -3956,7 +3968,7 @@ msgstr "Positive"
 #~ msgid "Positive Tags"
 #~ msgstr "Positive Tags"
 
-#: src/guidance/WebPqcResults.js:48
+#: src/guidance/WebPqcResults.js:47
 msgid "Post-Quantum Key Exchange"
 msgstr "Post-Quantum Key Exchange"
 
@@ -4076,7 +4088,7 @@ msgstr "PSD"
 msgid "PSD applies:"
 msgstr "PSD applies:"
 
-#: src/summaries/HistoricalSummariesGraph.js:203
+#: src/summaries/HistoricalSummariesGraph.js:213
 msgid "Range:"
 msgstr "Range:"
 
@@ -4176,7 +4188,7 @@ msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Request an invite if you are unaffiliated with your organization."
 
 #: src/guidance/GuidancePage.js:168
-#: src/organizationDetails/OrganizationDetails.js:122
+#: src/organizationDetails/OrganizationDetails.js:150
 #: src/organizations/Organizations.js:142
 #: src/organizations/RequestOrgInviteModal.js:63
 msgid "Request Invite"
@@ -4340,7 +4352,7 @@ msgstr "Scan Request"
 #~ msgid "Scanner Finding"
 #~ msgstr "Scanner Finding"
 
-#: src/summaries/HistoricalSummariesGraph.js:226
+#: src/summaries/HistoricalSummariesGraph.js:236
 msgid "Scope:"
 msgstr "Scope:"
 
@@ -4783,6 +4795,10 @@ msgstr "Skip to main content"
 msgid "Slug:"
 msgstr "Slug:"
 
+#: src/summaries/HistoricalSummariesGraph.js:324
+msgid "Solid lines = live, dashed lines = backfill"
+msgstr "Solid lines = live, dashed lines = backfill"
+
 #: src/components/SearchBox.js:68
 #~ msgid "Sort by:"
 #~ msgstr "Sort by:"
@@ -4794,6 +4810,10 @@ msgstr "Sort by: "
 #: src/dmarc/DmarcReportPage.js:173
 msgid "Source IP Address"
 msgstr "Source IP Address"
+
+#: src/summaries/HistoricalSummariesGraph.js:300
+msgid "Source:"
+msgstr "Source:"
 
 #: src/guidance/EmailGuidance.js:241
 msgid "sp:"
@@ -4981,7 +5001,7 @@ msgstr "Successfully removed user {0}."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:170
 msgid "Summaries"
 msgstr "Summaries"
 
@@ -5005,7 +5025,7 @@ msgstr "Super Admin Menu:"
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/guidance/WebPqcResults.js:33
+#: src/guidance/WebPqcResults.js:32
 msgid "Supported"
 msgstr "Supported"
 
@@ -5013,7 +5033,7 @@ msgstr "Supported"
 #~ msgid "Supports ECDH Key Exchange:"
 #~ msgstr "Supports ECDH Key Exchange:"
 
-#: src/guidance/WebPqcResults.js:66
+#: src/guidance/WebPqcResults.js:65
 msgid "Supports post-quantum key exchange"
 msgstr "Supports post-quantum key exchange"
 
@@ -5414,7 +5434,7 @@ msgstr "This will update {0} domain(s)."
 #~ msgid "Tier 1"
 #~ msgstr "Tier 1"
 
-#: src/summaries/HistoricalSummariesGraph.js:273
+#: src/summaries/HistoricalSummariesGraph.js:283
 #: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
@@ -5423,7 +5443,7 @@ msgstr "Tier 1: Minimum Requirements"
 #~ msgid "Tier 2"
 #~ msgstr "Tier 2"
 
-#: src/summaries/HistoricalSummariesGraph.js:276
+#: src/summaries/HistoricalSummariesGraph.js:286
 #: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
@@ -5432,7 +5452,7 @@ msgstr "Tier 2: Improved Posture"
 #~ msgid "Tier 3"
 #~ msgstr "Tier 3"
 
-#: src/summaries/HistoricalSummariesGraph.js:279
+#: src/summaries/HistoricalSummariesGraph.js:289
 #: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
@@ -5453,7 +5473,7 @@ msgstr "Time Generated (UTC)"
 #~ msgid "TLS"
 #~ msgstr "TLS"
 
-#: src/guidance/WebPqcResults.js:73
+#: src/guidance/WebPqcResults.js:72
 msgid "TLS 1.3 supported"
 msgstr "TLS 1.3 supported"
 
@@ -5510,7 +5530,7 @@ msgstr "To view detailed scan results and other functionality, <0>please affilia
 msgid "Total Messages"
 msgstr "Total Messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:283
+#: src/summaries/HistoricalSummariesGraph.js:293
 msgid "Total Negative Findings"
 msgstr "Total Negative Findings"
 
@@ -5913,7 +5933,7 @@ msgstr "User: "
 
 #: src/admin/AdminPage.js:240
 #: src/admin/AdminPanel.js:25
-#: src/organizationDetails/OrganizationDetails.js:152
+#: src/organizationDetails/OrganizationDetails.js:180
 msgid "Users"
 msgstr "Users"
 
@@ -6066,7 +6086,7 @@ msgstr "weak"
 #~ msgid "Weak Curves:"
 #~ msgstr "Weak Curves:"
 
-#: src/summaries/HistoricalSummariesGraph.js:102
+#: src/summaries/HistoricalSummariesGraph.js:111
 msgid "Web"
 msgstr "Web"
 
@@ -6082,7 +6102,7 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Components"
 msgstr "Web Components"
 
-#: src/summaries/HistoricalSummariesGraph.js:97
+#: src/summaries/HistoricalSummariesGraph.js:106
 msgid "Web Connections"
 msgstr "Web Connections"
 
@@ -6226,7 +6246,7 @@ msgstr "WILDCARD SIBLING"
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Would you like to request an invite to {orgName}?"
 
-#: src/summaries/HistoricalSummariesGraph.js:213
+#: src/summaries/HistoricalSummariesGraph.js:223
 msgid "Year to Date"
 msgstr "Year to Date"
 
@@ -6237,8 +6257,8 @@ msgstr "Year to Date"
 #: src/guidance/WebConnectionResults.js:208
 #: src/guidance/WebConnectionResults.js:220
 #: src/guidance/WebConnectionResults.js:226
-#: src/guidance/WebPqcResults.js:68
-#: src/guidance/WebPqcResults.js:75
+#: src/guidance/WebPqcResults.js:67
+#: src/guidance/WebPqcResults.js:74
 #: src/guidance/WebTLSResults.js:217
 #: src/guidance/WebTLSResults.js:275
 #: src/guidance/WebTLSResults.js:286
