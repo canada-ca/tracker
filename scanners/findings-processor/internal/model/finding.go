@@ -4,6 +4,7 @@ import (
 	b64 "encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -32,6 +33,7 @@ type FindingEvent struct {
 
 type FindingDocument struct {
 	Key             string         `json:"_key"`
+	Domain          string         `json:"domain"`
 	Source          string         `json:"source"`
 	FindingType     string         `json:"findingType"`
 	DomainKey       string         `json:"domainKey"`
@@ -61,8 +63,11 @@ func NewFindingDocumentFromEvent(e FindingEvent) (FindingDocument, error) {
 		return FindingDocument{}, err
 	}
 
+	domain := fmt.Sprintf("domains/%s", e.DomainKey)
+
 	return FindingDocument{
 		Key:             e.GetKey(),
+		Domain:          domain,
 		DomainKey:       e.DomainKey,
 		Source:          e.Source,
 		FindingType:     e.FindingType,
@@ -76,7 +81,7 @@ func NewFindingDocumentFromEvent(e FindingEvent) (FindingDocument, error) {
 		OccurrenceCount: 1,
 		Evidence:        nonNilMap(e.Evidence),
 		Attributes:      nonNilMap(e.Attributes),
-		Raw:             toMap(e),
+		Raw:             eventToMap(e),
 	}, nil
 }
 
@@ -87,8 +92,8 @@ func nonNilMap(m map[string]any) map[string]any {
 	return m
 }
 
-func toMap(v any) map[string]any {
-	b, _ := json.Marshal(v)
+func eventToMap(e FindingEvent) map[string]any {
+	b, _ := json.Marshal(e)
 	out := map[string]any{}
 	_ = json.Unmarshal(b, &out)
 	return out

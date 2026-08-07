@@ -68,6 +68,9 @@ func TestNewFindingDocumentFromEvent(t *testing.T) {
 	if doc.Key != evt.GetKey() {
 		t.Fatalf("unexpected key: got %q want %q", doc.Key, evt.GetKey())
 	}
+	if doc.Domain != "domains/"+evt.DomainKey {
+		t.Fatalf("unexpected domain: got %q want %q", doc.Domain, "domains/"+evt.DomainKey)
+	}
 	if doc.Status != "active" {
 		t.Fatalf("unexpected status: got %q", doc.Status)
 	}
