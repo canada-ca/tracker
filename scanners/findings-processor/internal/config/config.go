@@ -21,8 +21,8 @@ type Config struct {
 	NATSMaxPending int           `envconfig:"NATS_MAX_ACK_PENDING" default:"256"`
 
 	DBURL      string `envconfig:"DB_URL" default:"http://localhost:8529"`
-	DBUser     string `envconfig:"DB_USER" required:"true"`
-	DBName     string `envconfig:"DB_NAME" required:"true"`
+	DBUser     string `envconfig:"DB_USER"`
+	DBName     string `envconfig:"DB_NAME"`
 	DBPassword string `envconfig:"DB_PASS"`
 
 	LogLevel        string `envconfig:"LOG_LEVEL" default:"info"`
