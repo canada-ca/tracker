@@ -8,8 +8,30 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+var (
+	getCollection = func(ctx context.Context, db arangodb.Database, name string) (arangodb.Collection, error) {
+		return db.GetCollection(ctx, name, nil)
+	}
+	documentExists = func(ctx context.Context, col arangodb.Collection, key string) (bool, error) {
+		return col.DocumentExists(ctx, key)
+	}
+	readDocument = func(ctx context.Context, col arangodb.Collection, key string, result any) error {
+		_, err := col.ReadDocument(ctx, key, result)
+		return err
+	}
+	updateDocument = func(ctx context.Context, col arangodb.Collection, key string, patch any) error {
+		_, err := col.UpdateDocument(ctx, key, patch)
+		return err
+	}
+	createDocument = func(ctx context.Context, col arangodb.Collection, doc any) error {
+		_, err := col.CreateDocument(ctx, doc)
+		return err
+	}
+	newDocumentFromEvent = model.NewFindingDocumentFromEvent
+)
+
 func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingEvent) error {
-	findingsCol, err := db.GetCollection(ctx, "additionalFindings", nil)
+	findingsCol, err := getCollection(ctx, db, "additionalFindings")
 	if err != nil {
 		log.Warn().Err(err).Msg("failed to find collection")
 		return err
@@ -17,7 +39,7 @@ func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingE
 
 	key := evt.GetKey()
 
-	findingExists, err := findingsCol.DocumentExists(ctx, key)
+	findingExists, err := documentExists(ctx, findingsCol, key)
 	if err != nil {
 		log.Warn().Err(err).Msg("failed to find collection")
 		return err
@@ -25,7 +47,7 @@ func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingE
 
 	if findingExists {
 		var finding model.FindingDocument
-		_, err := findingsCol.ReadDocument(ctx, key, &finding)
+		err := readDocument(ctx, findingsCol, key, &finding)
 		if err != nil {
 			log.Warn().Err(err).Msg("failed to read finding doc")
 			return err
@@ -36,19 +58,19 @@ func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingE
 			"occurenceCount": finding.OccurrenceCount + 1,
 		}
 
-		_, err = findingsCol.UpdateDocument(ctx, key, patch)
+		err = updateDocument(ctx, findingsCol, key, patch)
 		if err != nil {
 			log.Warn().Err(err).Msg("failed to update finding doc")
 			return err
 		}
 	} else {
-		newDoc, err := model.NewFindingDocumentFromEvent(evt)
+		newDoc, err := newDocumentFromEvent(evt)
 		if err != nil {
 			log.Warn().Err(err).Msg("failed to create doc")
 			return err
 		}
 
-		_, err = findingsCol.CreateDocument(ctx, newDoc)
+		err = createDocument(ctx, findingsCol, newDoc)
 		if err != nil {
 			log.Warn().Err(err).Msg("failed to create doc")
 			return err

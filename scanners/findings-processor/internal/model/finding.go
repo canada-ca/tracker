@@ -8,6 +8,15 @@ import (
 	"time"
 )
 
+func ParseEvent(payload []byte) (FindingEvent, error) {
+	var event FindingEvent
+	if err := json.Unmarshal(payload, &event); err != nil {
+		return FindingEvent{}, err
+	}
+
+	return event, nil
+}
+
 type FindingEvent struct {
 	Source      string         `json:"source"`
 	FindingType string         `json:"findingType"`

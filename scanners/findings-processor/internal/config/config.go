@@ -1,10 +1,12 @@
 package config
 
 import (
+	"errors"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -30,6 +32,10 @@ type Config struct {
 }
 
 func Load() (Config, error) {
+	if err := godotenv.Load(); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return Config{}, err
+	}
+
 	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		return Config{}, err
