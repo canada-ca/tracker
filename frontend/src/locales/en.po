@@ -4795,9 +4795,13 @@ msgstr "Skip to main content"
 msgid "Slug:"
 msgstr "Slug:"
 
+#: src/summaries/HistoricalSummariesGraph.js:325
+msgid "Solid lines = live data, dashed lines = backfilled data"
+msgstr "Solid lines = live data, dashed lines = backfilled data"
+
 #: src/summaries/HistoricalSummariesGraph.js:324
-msgid "Solid lines = live, dashed lines = backfill"
-msgstr "Solid lines = live, dashed lines = backfill"
+#~ msgid "Solid lines = live, dashed lines = backfill"
+#~ msgstr "Solid lines = live, dashed lines = backfill"
 
 #: src/components/SearchBox.js:68
 #~ msgid "Sort by:"

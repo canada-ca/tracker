@@ -4694,9 +4694,13 @@ msgstr "Passer au contenu principal"
 msgid "Slug:"
 msgstr "Slug:"
 
+#: src/summaries/HistoricalSummariesGraph.js:325
+msgid "Solid lines = live data, dashed lines = backfilled data"
+msgstr "Lignes pleines = données en temps réel, lignes pointillées = données interpolées"
+
 #: src/summaries/HistoricalSummariesGraph.js:324
-msgid "Solid lines = live, dashed lines = backfill"
-msgstr "Lignes pleines = en direct, lignes pointillées = remplissage"
+#~ msgid "Solid lines = live, dashed lines = backfill"
+#~ msgstr "Lignes pleines = en direct, lignes pointillées = remplissage"
 
 #: src/components/SearchBox.js:68
 #~ msgid "Sort by:"
