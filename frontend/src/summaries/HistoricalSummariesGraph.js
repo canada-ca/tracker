@@ -320,9 +320,11 @@ export function HistoricalSummariesGraph({
         )}
       </Flex>
       {isSuperAdmin && sourceParam === 'both' && (
-        <Text fontSize="sm" mb="2">
-          <Trans>Solid lines = live, dashed lines = backfill</Trans>
-        </Text>
+        <Box mb="3" px="3" py="1" borderLeftWidth="4px" borderLeftColor="yellow.500" bg="yellow.50">
+          <Text fontSize="md" fontWeight="semibold" color="black">
+            <Trans>Solid lines = live data, dashed lines = backfilled data</Trans>
+          </Text>
+        </Box>
       )}
       <Box position="relative">
         <svg width={width} height={height}>
@@ -430,11 +432,15 @@ export function HistoricalSummariesGraph({
         {tooltipData && (
           <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
             <Text fontWeight="bold" color="white">{`${formatDate(getDate(tooltipData[0]))}`}</Text>
-            {tooltipData.map((d, i) => (
-              <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(
-                tooltipData[i],
-              )}${scoreTypeParam === 'percentage' && summaryTierParam !== 'four' ? '%' : ''}`}</Text>
-            ))}
+            {tooltipData.map((d, i) => {
+              const suffix = scoreTypeParam === 'percentage' && summaryTierParam !== 'four' ? '%' : ''
+              const backfill = overlaySummaries.find((s) => s.date === d.date && s.type === d.type)
+              return (
+                <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(d)}${suffix}${
+                  backfill ? ` (backfill: ${getRD(backfill)}${suffix})` : ''
+                }`}</Text>
+              )
+            })}
           </TooltipWithBounds>
         )}
       </Box>
