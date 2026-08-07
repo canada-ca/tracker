@@ -29,13 +29,13 @@ func stubUpsertFunctions(t *testing.T) {
 	documentExists = func(context.Context, arangodb.Collection, string) (bool, error) {
 		return false, nil
 	}
-	readDocument = func(context.Context, arangodb.Collection, string, any) error {
+	readFindingDocument = func(context.Context, arangodb.Collection, string, *model.FindingDocument) error {
 		return nil
 	}
-	updateDocument = func(context.Context, arangodb.Collection, string, any) error {
+	updateFindingDocument = func(context.Context, arangodb.Collection, string, findingUpdatePatch) error {
 		return nil
 	}
-	createDocument = func(context.Context, arangodb.Collection, any) error {
+	createFindingDocument = func(context.Context, arangodb.Collection, model.FindingDocument) error {
 		return nil
 	}
 	newDocumentFromEvent = model.NewFindingDocumentFromEvent
@@ -44,16 +44,16 @@ func stubUpsertFunctions(t *testing.T) {
 func TestUpsertFinding(t *testing.T) {
 	originalGetCollection := getCollection
 	originalDocumentExists := documentExists
-	originalReadDocument := readDocument
-	originalUpdateDocument := updateDocument
-	originalCreateDocument := createDocument
+	originalReadDocument := readFindingDocument
+	originalUpdateDocument := updateFindingDocument
+	originalCreateDocument := createFindingDocument
 	originalNewDocumentFromEvent := newDocumentFromEvent
 	t.Cleanup(func() {
 		getCollection = originalGetCollection
 		documentExists = originalDocumentExists
-		readDocument = originalReadDocument
-		updateDocument = originalUpdateDocument
-		createDocument = originalCreateDocument
+		readFindingDocument = originalReadDocument
+		updateFindingDocument = originalUpdateDocument
+		createFindingDocument = originalCreateDocument
 		newDocumentFromEvent = originalNewDocumentFromEvent
 	})
 
@@ -89,7 +89,7 @@ func TestUpsertFinding(t *testing.T) {
 		documentExists = func(context.Context, arangodb.Collection, string) (bool, error) {
 			return true, nil
 		}
-		readDocument = func(context.Context, arangodb.Collection, string, any) error {
+		readFindingDocument = func(context.Context, arangodb.Collection, string, *model.FindingDocument) error {
 			return errors.New("read error")
 		}
 
@@ -104,12 +104,11 @@ func TestUpsertFinding(t *testing.T) {
 		documentExists = func(context.Context, arangodb.Collection, string) (bool, error) {
 			return true, nil
 		}
-		readDocument = func(_ context.Context, _ arangodb.Collection, _ string, result any) error {
-			doc := result.(*model.FindingDocument)
+		readFindingDocument = func(_ context.Context, _ arangodb.Collection, _ string, doc *model.FindingDocument) error {
 			doc.OccurrenceCount = 3
 			return nil
 		}
-		updateDocument = func(context.Context, arangodb.Collection, string, any) error {
+		updateFindingDocument = func(context.Context, arangodb.Collection, string, findingUpdatePatch) error {
 			return errors.New("update error")
 		}
 
@@ -133,7 +132,7 @@ func TestUpsertFinding(t *testing.T) {
 
 	t.Run("new document creation fails", func(t *testing.T) {
 		stubUpsertFunctions(t)
-		createDocument = func(context.Context, arangodb.Collection, any) error {
+		createFindingDocument = func(context.Context, arangodb.Collection, model.FindingDocument) error {
 			return errors.New("create error")
 		}
 
@@ -148,17 +147,16 @@ func TestUpsertFinding(t *testing.T) {
 		documentExists = func(context.Context, arangodb.Collection, string) (bool, error) {
 			return true, nil
 		}
-		readDocument = func(_ context.Context, _ arangodb.Collection, _ string, result any) error {
-			doc := result.(*model.FindingDocument)
+		readFindingDocument = func(_ context.Context, _ arangodb.Collection, _ string, doc *model.FindingDocument) error {
 			doc.OccurrenceCount = 10
 			return nil
 		}
 
-		var capturedPatch map[string]interface{}
+		var capturedPatch findingUpdatePatch
 		var capturedKey string
-		updateDocument = func(_ context.Context, _ arangodb.Collection, key string, patch any) error {
+		updateFindingDocument = func(_ context.Context, _ arangodb.Collection, key string, patch findingUpdatePatch) error {
 			capturedKey = key
-			capturedPatch = patch.(map[string]interface{})
+			capturedPatch = patch
 			return nil
 		}
 
@@ -167,25 +165,25 @@ func TestUpsertFinding(t *testing.T) {
 			t.Fatalf("expected no error, got %v", err)
 		}
 
-		if capturedPatch["occurenceCount"] != 11 {
-			t.Fatalf("expected occurrence increment to 11, got %v", capturedPatch["occurenceCount"])
+		if capturedPatch.OccurenceCount != 11 {
+			t.Fatalf("expected occurrence increment to 11, got %v", capturedPatch.OccurenceCount)
 		}
-		if capturedPatch["lastSeen"] != evt.ObservedAt {
-			t.Fatalf("unexpected lastSeen value: %v", capturedPatch["lastSeen"])
+		if capturedPatch.LastSeen != evt.ObservedAt {
+			t.Fatalf("unexpected lastSeen value: %v", capturedPatch.LastSeen)
 		}
 		if capturedKey != evt.GetKey() {
 			t.Fatalf("update key mismatch: got %q want %q", capturedKey, evt.GetKey())
 		}
 	})
 
-	t.Run("create path creates expected document", func(t *testing.T) {
-		stubUpsertFunctions(t)
+		t.Run("create path creates expected document", func(t *testing.T) {
+			stubUpsertFunctions(t)
 
-		var createdDoc model.FindingDocument
-		createDocument = func(_ context.Context, _ arangodb.Collection, doc any) error {
-			createdDoc = doc.(model.FindingDocument)
-			return nil
-		}
+			var createdDoc model.FindingDocument
+			createFindingDocument = func(_ context.Context, _ arangodb.Collection, doc model.FindingDocument) error {
+				createdDoc = doc
+				return nil
+			}
 
 		err := UpsertFinding(context.Background(), nil, evt)
 		if err != nil {
