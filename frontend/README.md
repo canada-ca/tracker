@@ -21,7 +21,7 @@ Before diving into the details of the development workflow itself, it's worth ta
 ### The philosophy
 
 Applications without APIs project organizational silos into the digital space.
-With an API, experiences can be created that are [centered on the user](https://www.publictechnology.net/articles/features/interview-singapore%E2%80%99s-digital-chief-redesigning-government-around-%E2%80%98moments-life%E2%80%99) rather than organizational silos.
+With an API, experiences can be created that are [centered on the user](https://www.publictechnology.net/2019/07/26/international-relations/interview-singapores-digital-chief-redesigning-government-around-moments-life/) rather than organizational silos.
 
 By adopting a microservices approach we can lay the foundation for a user centered service, and our new application can fit with the [TBS Directive on Management of Information Technology](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=15249#claD.2.2.4), but the developer workflow around this isn't clear.
 
