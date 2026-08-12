@@ -10,7 +10,6 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
-import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug, loadOrgByKey } from '../../loaders'
@@ -159,18 +158,15 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey(query, 'en'),
+                  bySlug: loadOrgBySlug({ query, language: 'en' }),
+                },
+              },
               loaders: {
-                loadOrgByKey: loadOrgByKey(query, 'en'),
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequiredBool: true },
-                  i18n,
-                }),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
                   query,
                   userKey: user._key,
                   cleanseInput,
@@ -265,21 +261,19 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey(query, 'fr'),
+                  bySlug: loadOrgBySlug({ query, language: 'fr' }),
+                },
+              },
               loaders: {
-                loadOrgByKey: loadOrgByKey(query, 'fr'),
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequiredBool: true },
-                  i18n,
-                }),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
                   i18n,
                 }),
               },
@@ -361,11 +355,9 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue(),
-                },
-              },
+                } } },
             },
           })
 
@@ -410,11 +402,9 @@ describe('given findOrganizationBySlugQuery', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue({}),
-                },
-              },
+                } } },
             },
           })
 
@@ -477,11 +467,9 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
                 auth: { loginRequiredBool: true },
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue(),
-                },
-              },
+                } } },
             },
           })
 
@@ -526,11 +514,9 @@ describe('given findOrganizationBySlugQuery', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadOrgBySlug: {
+              dataSources: { organization: { bySlug: {
                   load: jest.fn().mockReturnValue({}),
-                },
-              },
+                } } },
             },
           })
 

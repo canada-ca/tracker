@@ -130,8 +130,8 @@ describe('given spfFailureTable gql object', () => {
               { guidance: 'agg1' },
               {},
               {
-                loaders: {
-                  loadGuidanceTagByTagId: jest.fn().mockReturnValue([expectedResult]),
+                dataSources: {
+                  guidanceTag: { byTagId: jest.fn().mockReturnValue([expectedResult]) },
                 },
               },
             ),
@@ -149,8 +149,8 @@ describe('given spfFailureTable gql object', () => {
               { guidance: null },
               {},
               {
-                loaders: {
-                  loadGuidanceTagByTagId: jest.fn().mockReturnValue(expectedResult),
+                dataSources: {
+                  guidanceTag: { byTagId: jest.fn().mockReturnValue(expectedResult) },
                 },
               },
             ),

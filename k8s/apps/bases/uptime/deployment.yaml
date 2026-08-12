@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-uptime
+  name: tracker-uptime
+  namespace: uptime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-uptime
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tracker-uptime
+    spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: gatus-config
+          emptyDir: {}
+      initContainers:
+        - name: sync-init
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-38a65e2-1785168880 #{"$imagepolicy": "flux-system:uptime-sync"}
+          command: ["python", "/app/sync-gatus-config.py"]
+          env:
+            - name: ARANGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: ARANGO_URL
+            - name: ARANGO_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: ARANGO_DATABASE
+            - name: ARANGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: ARANGO_USERNAME
+            - name: ARANGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: ARANGO_PASSWORD
+            - name: GATUS_CONFIG_PATH
+              value: /config/config.yaml
+            - name: NOTIFICATION_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: NOTIFICATION_API_KEY
+            - name: NOTIFICATION_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: NOTIFICATION_API_URL
+            - name: SERVICE_ACCOUNT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: SERVICE_ACCOUNT_EMAIL
+            - name: NOTIFICATION_UPTIME_ALERT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: uptime
+                  key: NOTIFICATION_UPTIME_ALERT_ID
+          volumeMounts:
+            - name: gatus-config
+              mountPath: /config
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            runAsNonRoot: true
+      containers:
+        - name: gatus
+          image: ghcr.io/twin/gatus:v5.35.0
+          env:
+            - name: GATUS_CONFIG_PATH
+              value: /config/config.yaml
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: gatus-config
+              mountPath: /config
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+status: {}

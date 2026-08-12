@@ -79,8 +79,8 @@ describe('testing the period gql object', () => {
             { domainKey: domain._key },
             {},
             {
-              loaders: {
-                loadDomainByKey: { load: jest.fn().mockReturnValue(domain) },
+              dataSources: {
+                domain: { byKey: { load: jest.fn().mockReturnValue(domain) } },
               },
             },
           ),

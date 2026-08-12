@@ -19,8 +19,6 @@ from nats.errors import TimeoutError as NatsTimeoutError
 from nats.js import JetStreamContext
 from nats.js.api import ConsumerConfig, AckPolicy
 
-from web_processor.web_processor import process_results
-
 
 load_dotenv()
 
@@ -46,6 +44,10 @@ logging.basicConfig(
     handlers=[h1, h2],
 )
 logger = logging.getLogger(__name__)
+
+
+from web_processor.web_processor import process_results
+
 
 NAME = os.getenv("NAME", "web_processor")
 SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
@@ -122,6 +124,17 @@ def process_msg(msg):
             )
 
             domain = db.collection("domains").get({"_key": domain_key})
+
+            web_doc_cursor = db.aql.execute(
+                """
+                FOR webV, e IN 1 ANY @web_scan_id webToWebScans
+                    LIMIT 1
+                    RETURN webV._id
+                """,
+                bind_vars={"web_scan_id": f"webScan/{web_scan_key}"},
+            )
+            if not web_doc_cursor.empty():
+                domain.update({"latestWebScan": web_doc_cursor.next()})
 
             if domain.get("status", None) == None:
                 domain.update(

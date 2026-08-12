@@ -1,4 +1,4 @@
-FROM python:3.11.11-alpine AS python-builder
+FROM python:3.14.3-alpine AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -21,7 +21,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.11.11-alpine
+FROM python:3.14.3-alpine
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1

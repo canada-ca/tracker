@@ -12,8 +12,13 @@ import { DnsScanDataSource } from './dns-scan'
 import { WebScanDataSource } from './web-scan'
 import { AuditLogsDataSource } from './audit-logs'
 import { AdditionalFindingsDataSource } from './additional-findings'
+import { GuidanceTagDataSource } from './guidance-tag'
+import { OrganizationDataSource } from './organization'
 import { TagsDataSource } from './tags'
+import { DomainDataSource } from './domain'
+import { AffiliationDataSource } from './affiliation'
 import {
+  AuthDataSource,
   checkDomainOwnership,
   checkDomainPermission,
   checkOrgOwner,
@@ -140,12 +145,43 @@ export async function createContext({
       sendRoleChangeEmail: sendRoleChangeEmail({ notifyClient, i18n }),
     },
     dataSources: {
+      auth: new AuthDataSource({ query, userKey, i18n }),
       summaries: new SummariesDataSource({ query, userKey, cleanseInput, i18n }),
       additionalFindings: new AdditionalFindingsDataSource({ query, userKey, i18n, language: request.language }),
       auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
+      guidanceTag: new GuidanceTagDataSource({ query, userKey, i18n, language: request.language, cleanseInput }),
+      organization: new OrganizationDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
+        loginRequiredBool,
+        transaction,
+        collections,
+      }),
       tags: new TagsDataSource({ query, userKey, i18n, language: request.language, transaction, collections }),
       webScan: new WebScanDataSource({ query, userKey, cleanseInput, i18n }),
+      domain: new DomainDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
+        loginRequiredBool,
+        transaction,
+        collections,
+      }),
+      affiliation: new AffiliationDataSource({
+        query,
+        userKey,
+        i18n,
+        language: request.language,
+        cleanseInput,
+        transaction,
+        collections,
+      }),
     },
     loaders: initializeLoaders({
       query,

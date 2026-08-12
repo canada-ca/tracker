@@ -1,4 +1,4 @@
-FROM node:20.16-alpine3.19 as build-env
+FROM node:20.18.1-alpine3.19 as build-env
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm ci && npm run build && npm prune --production
 
-FROM node:20.16-alpine3.19
+FROM node:20.18.1-alpine3.19
 
 ENV HOST 0.0.0.0
 ENV PORT 3000

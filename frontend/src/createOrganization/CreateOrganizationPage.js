@@ -1,11 +1,9 @@
 import React from 'react'
 import { Box, Button, Flex, SimpleGrid, Heading, Stack, useToast, Switch, Badge } from '@chakra-ui/react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { Trans, useLingui } from "@lingui/react/macro"
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { Link as RouteLink, useNavigate } from 'react-router-dom'
-import { useLingui } from '@lingui/react'
 
 import { CreateOrganizationField } from '../components/fields/CreateOrganizationField'
 
@@ -19,10 +17,10 @@ import withSuperAdmin from '../app/withSuperAdmin'
 export default function CreateOrganizationPage() {
   const toast = useToast()
   const navigate = useNavigate()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
 
   const fieldRequirement = getRequirement('field')
-  const acronymRequirement = getRequirement('acronym').required(i18n._(t`This field cannot be empty`))
+  const acronymRequirement = getRequirement('acronym').required(t`This field cannot be empty`)
 
   const validationSchema = schemaToValidation({
     nameEN: fieldRequirement,

@@ -11,6 +11,8 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $includeSuperAdminOrg: Boolean
     $isVerified: Boolean
     $isAffiliated: Boolean
+    $hasPsd: Boolean
+    $hasPgs: Boolean
   ) {
     findMyOrganizations(
       after: $after
@@ -20,6 +22,8 @@ export const PAGINATED_ORGANIZATIONS = gql`
       includeSuperAdminOrg: $includeSuperAdminOrg
       isVerified: $isVerified
       isAffiliated: $isAffiliated
+      hasPsd: $hasPsd
+      hasPgs: $hasPgs
     ) {
       edges {
         cursor
@@ -31,6 +35,10 @@ export const PAGINATED_ORGANIZATIONS = gql`
           domainCount
           verified
           userHasPermission
+          policies {
+            psd
+            pgs
+          }
           summaries {
             dmarc {
               total
@@ -72,6 +80,10 @@ export const FIND_ORGANIZATION_BY_SLUG = gql`
       domainCount
       verified
       userHasPermission
+      policies {
+        psd
+        pgs
+      }
       summaries {
         dmarc {
           total
@@ -280,6 +292,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             archived
             ignoreRua
             rcode
+            highAvailability
             cvdEnrollment {
               status
               description
@@ -603,6 +616,21 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     }
                   }
                 }
+                experimental {
+                  pqc {
+                    supportsPqKeyExchange
+                    supportedPqGroups
+                    tls1_3Supported
+                    scanStatus
+                    status
+                    error
+                    durationSeconds
+                    buildRefs {
+                      nasslCommit
+                      sslyzeCommit
+                    }
+                  }
+                }
               }
             }
           }
@@ -663,6 +691,10 @@ export const ORG_DETAILS_PAGE = gql`
       acronym
       verified
       userHasPermission
+      policies {
+        psd
+        pgs
+      }
       summaries {
         https {
           ...RequiredSummaryFields
@@ -1141,6 +1173,10 @@ export const ORGANIZATION_INFORMATION = gql`
       city
       verified
       externalId
+      policies {
+        psd
+        pgs
+      }
     }
   }
 `

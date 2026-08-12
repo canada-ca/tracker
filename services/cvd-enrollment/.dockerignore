@@ -1,6 +1,5 @@
 **/*.env
 Dockerfile
-tests
 *.yaml
 *.md
 .venv

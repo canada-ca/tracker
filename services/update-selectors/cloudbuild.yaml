@@ -1,68 +1,74 @@
 steps:
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: start_testdb
-    entrypoint: /bin/sh
+    entrypoint: /bin/ash
     args:
       [
-        "-c",
-        "docker run --net cloudbuild --name arangodb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1",
+        '-c',
+        'docker run --net cloudbuild --name arangodb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1',
       ]
 
   - name: mikewilliamson/wait-for
     id: wait_testdb
-    args: ["arangodb:8529"]
+    args: ['arangodb:8529']
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: start_test_cosmosdb
-    entrypoint: /bin/sh
+    entrypoint: /bin/ash
     args:
       [
-        "-c",
-        "docker run --net cloudbuild --name cosmosdb -d -p 8081:8081 -p 10250-10255:10250-10255 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest",
+        '-c',
+        'docker run --net cloudbuild --name cosmosdb -d -p 8081:8081 -p 10250-10255:10250-10255 -e PROTOCOL=https -e GATEWAY_PUBLIC_ENDPOINT=cosmosdb mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview',
       ]
 
   - name: mikewilliamson/wait-for
     id: wait_test_cosmosdb
-    args: ["cosmosdb:8081", "--timeout=180"]
+    args: ['cosmosdb:8081', '--timeout=180']
 
-  - name: "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci"
-    id: test-results
+  - name: 'docker:29'
+    id: build-test-image
     dir: services/update-selectors
-    entrypoint: /bin/sh
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest -v"]
+    args: ['build', '--target=test', '-t', 'test-image', '.']
+
+  - name: 'test-image'
+    id: test-results
+    dir: /selectors
+    entrypoint: python3
+    args: [ '-m', 'pytest', '-v' ]
     env:
       - ARANGO_DB_URL=http://arangodb:8529
       - ARANGO_DB_USER=root
-      - ARANGO_DB_PASSWORD=test
+      - ARANGO_DB_PASS=test
       - COSMOS_DB_HOST=cosmosdb
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: generate-image-name
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/update-selectors
     args:
-      - "-c"
+      - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:'"$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: build-results
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/update-selectors
     args:
-      - "-c"
+      - '-c'
       - |
         image=$(cat /workspace/imagename)
+        echo "Building image $image"
         docker build -t $image .
 
-  - name: "gcr.io/cloud-builders/docker"
+  - name: 'docker:29'
     id: push-results-if-master
-    entrypoint: "bash"
+    entrypoint: 'ash'
     dir: services/update-selectors
     args:
-      - "-c"
+      - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "master" ]]
+        if [[ '$BRANCH_NAME' == 'master' ]]
         then
           image=$(cat /workspace/imagename)
           docker push $image

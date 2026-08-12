@@ -35,6 +35,7 @@ import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import useSearchParam from '../utilities/useSearchParam'
 import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
+import PolicyBadges from '../components/PolicyBadges'
 import { bool } from 'prop-types'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 import { getRangeDates } from '../helpers/getDateRange'
@@ -112,6 +113,7 @@ export default function OrganizationDetails({ loginRequired }) {
           <Flex align="center">
             {orgName}
             {data?.organization?.verified && <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />}
+            <PolicyBadges policies={data?.organization?.policies} ml="1" fontSize="md" />
           </Flex>
         </Heading>
         {isLoggedIn() && !data?.organization?.userHasPermission && (

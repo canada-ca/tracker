@@ -3,7 +3,6 @@ import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 
 import { Domain } from '../../scalars'
-import { logActivity } from '../../audit-logs'
 
 export const requestDiscovery = new mutationWithClientMutationId({
   name: 'RequestDiscovery',
@@ -28,15 +27,12 @@ export const requestDiscovery = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
-      query,
-      collections,
-      transaction,
       i18n,
       userKey,
       publish,
       request: { ip },
       auth: { checkDomainPermission, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      loaders: { loadDomainByDomain, loadOrgByKey },
+      dataSources: { domain: domainDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
   ) => {
@@ -64,7 +60,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
     }
 
     // Check to see if domain exists
-    const domain = await loadDomainByDomain.load(domainInput)
+    const domain = await domainDS.byDomain.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(
@@ -74,7 +70,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -107,10 +103,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
       },
     })
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogs.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkSuperAdmin, superAdminRequired, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
-import { loadOrgBySlug } from '../../loaders'
+import { OrganizationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -107,6 +107,7 @@ describe('create an organization', () => {
           contextValue: {
             request: {
               language: 'en',
+              ip: '1.2.3.4',
             },
             query,
             collections: collectionNames,
@@ -121,8 +122,19 @@ describe('create an organization', () => {
               checkSuperAdmin: checkSuperAdmin({ i18n, query, userKey: user._key }),
               superAdminRequired: superAdminRequired({ i18n }),
             },
+            dataSources: {
+              auditLogs: { logActivity: jest.fn() },
+              organization: new OrganizationDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+                transaction,
+                collections: collectionNames,
+              }),
+            },
             loaders: {
-              loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
               loadUserByKey: loadUserByKey({ query }),
             },
             validators: {
@@ -194,6 +206,7 @@ describe('create an organization', () => {
           contextValue: {
             request: {
               language: 'fr',
+              ip: '1.2.3.4',
             },
             query,
             collections: collectionNames,
@@ -208,8 +221,19 @@ describe('create an organization', () => {
               checkSuperAdmin: checkSuperAdmin({ i18n, query, userKey: user._key }),
               superAdminRequired: superAdminRequired({ i18n }),
             },
+            dataSources: {
+              auditLogs: { logActivity: jest.fn() },
+              organization: new OrganizationDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'fr',
+                cleanseInput,
+                transaction,
+                collections: collectionNames,
+              }),
+            },
             loaders: {
-              loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
               loadUserByKey: loadUserByKey({ query }),
             },
             validators: {
@@ -301,10 +325,8 @@ describe('create an organization', () => {
                 checkSuperAdmin: jest.fn(),
                 superAdminRequired: jest.fn(),
               },
+              dataSources: { organization: { bySlug: { loadMany: jest.fn().mockReturnValue([{}, undefined]) } } },
               loaders: {
-                loadOrgBySlug: {
-                  loadMany: jest.fn().mockReturnValue([{}, undefined]),
-                },
                 loadUserByKey: jest.fn(),
               },
               validators: {
@@ -331,226 +353,61 @@ describe('create an organization', () => {
           ])
         })
       })
-      describe('transaction error occurs', () => {
-        describe('when inserting organization', () => {
-          it('returns an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  createOrganization(
-                    input: {
-                      acronymEN: "TBS"
-                      acronymFR: "SCT"
-                      nameEN: "Treasury Board of Canada Secretariat"
-                      nameFR: "Secrétariat du Conseil Trésor du Canada"
+      describe('data source error occurs', () => {
+        it('returns an error', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+              mutation {
+                createOrganization(
+                  input: {
+                    acronymEN: "TBS"
+                    acronymFR: "SCT"
+                    nameEN: "Treasury Board of Canada Secretariat"
+                    nameFR: "Secrétariat du Conseil Trésor du Canada"
+                  }
+                ) {
+                  result {
+                    ... on Organization {
+                      id
+                      acronym
+                      slug
+                      name
+                      verified
                     }
-                  ) {
-                    result {
-                      ... on Organization {
-                        id
-                        acronym
-                        slug
-                        name
-                        verified
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
+                    ... on OrganizationError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request: {
-                  language: 'en',
-                },
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                  verifiedRequired: jest.fn(),
-                  checkSuperAdmin: jest.fn(),
-                  superAdminRequired: jest.fn(),
-                },
-                loaders: {
-                  loadOrgBySlug: {
-                    loadMany: jest.fn().mockReturnValue([undefined, undefined]),
-                  },
-                  loadUserByKey: jest.fn(),
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
+              }
+            `,
+            rootValue: null,
+            contextValue: {
+              i18n,
+              request: { language: 'en' },
+              userKey: 123,
+              auth: {
+                userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                verifiedRequired: jest.fn(),
+                checkSuperAdmin: jest.fn(),
+                superAdminRequired: jest.fn(),
+              },
+              dataSources: {
+                organization: {
+                  bySlug: { loadMany: jest.fn().mockReturnValue([undefined, undefined]) },
+                  create: jest.fn().mockRejectedValue(new Error('Unable to create organization. Please try again.')),
                 },
               },
-            })
-
-            const error = [new GraphQLError('Unable to create organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred when user: 123 was creating new organization treasury-board-of-canada-secretariat: Error: trx step error`,
-            ])
+              validators: { cleanseInput, slugify },
+            },
           })
-        })
-        describe('when inserting edge', () => {
-          it('returns an error message', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  createOrganization(
-                    input: {
-                      acronymEN: "TBS"
-                      acronymFR: "SCT"
-                      nameEN: "Treasury Board of Canada Secretariat"
-                      nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    }
-                  ) {
-                    result {
-                      ... on Organization {
-                        id
-                        acronym
-                        slug
-                        name
-                        verified
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request: {
-                  language: 'en',
-                },
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce({ next: jest.fn() })
-                    .mockRejectedValue(new Error('trx step error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                  verifiedRequired: jest.fn(),
-                  checkSuperAdmin: jest.fn(),
-                  superAdminRequired: jest.fn(),
-                },
-                loaders: {
-                  loadOrgBySlug: {
-                    loadMany: jest.fn().mockReturnValue([undefined, undefined]),
-                  },
-                  loadUserByKey: jest.fn(),
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
-                },
-              },
-            })
 
-            const error = [new GraphQLError('Unable to create organization. Please try again.')]
+          const error = [new GraphQLError('Unable to create organization. Please try again.')]
 
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred when inserting edge definition for user: 123 to treasury-board-of-canada-secretariat: Error: trx step error`,
-            ])
-          })
-        })
-        describe('when committing information to db', () => {
-          it('returns an error message', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  createOrganization(
-                    input: {
-                      acronymEN: "TBS"
-                      acronymFR: "SCT"
-                      nameEN: "Treasury Board of Canada Secretariat"
-                      nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    }
-                  ) {
-                    result {
-                      ... on Organization {
-                        id
-                        acronym
-                        slug
-                        name
-                        verified
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request: {
-                  language: 'en',
-                },
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
-                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                  verifiedRequired: jest.fn(),
-                  checkSuperAdmin: jest.fn(),
-                  superAdminRequired: jest.fn(),
-                },
-                loaders: {
-                  loadOrgBySlug: {
-                    loadMany: jest.fn().mockReturnValue([undefined, undefined]),
-                  },
-                  loadUserByKey: jest.fn(),
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Unable to create organization. Please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred when committing new organization: treasury-board-of-canada-secretariat for user: 123 to db: Error: trx commit error`,
-            ])
-          })
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([])
         })
       })
     })
@@ -617,10 +474,8 @@ describe('create an organization', () => {
                 checkSuperAdmin: jest.fn(),
                 superAdminRequired: jest.fn(),
               },
+              dataSources: { organization: { bySlug: { loadMany: jest.fn().mockReturnValue([{}, undefined]) } } },
               loaders: {
-                loadOrgBySlug: {
-                  loadMany: jest.fn().mockReturnValue([{}, undefined]),
-                },
                 loadUserByKey: jest.fn(),
               },
               validators: {
@@ -647,226 +502,61 @@ describe('create an organization', () => {
           ])
         })
       })
-      describe('transaction error occurs', () => {
-        describe('when inserting organization', () => {
-          it('returns an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  createOrganization(
-                    input: {
-                      acronymEN: "TBS"
-                      acronymFR: "SCT"
-                      nameEN: "Treasury Board of Canada Secretariat"
-                      nameFR: "Secrétariat du Conseil Trésor du Canada"
+      describe('data source error occurs', () => {
+        it('returns an error', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+              mutation {
+                createOrganization(
+                  input: {
+                    acronymEN: "TBS"
+                    acronymFR: "SCT"
+                    nameEN: "Treasury Board of Canada Secretariat"
+                    nameFR: "Secrétariat du Conseil Trésor du Canada"
+                  }
+                ) {
+                  result {
+                    ... on Organization {
+                      id
+                      acronym
+                      slug
+                      name
+                      verified
                     }
-                  ) {
-                    result {
-                      ... on Organization {
-                        id
-                        acronym
-                        slug
-                        name
-                        verified
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
+                    ... on OrganizationError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request: {
-                  language: 'en',
-                },
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                  verifiedRequired: jest.fn(),
-                  checkSuperAdmin: jest.fn(),
-                  superAdminRequired: jest.fn(),
-                },
-                loaders: {
-                  loadOrgBySlug: {
-                    loadMany: jest.fn().mockReturnValue([undefined, undefined]),
-                  },
-                  loadUserByKey: jest.fn(),
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
+              }
+            `,
+            rootValue: null,
+            contextValue: {
+              i18n,
+              request: { language: 'en' },
+              userKey: 123,
+              auth: {
+                userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                verifiedRequired: jest.fn(),
+                checkSuperAdmin: jest.fn(),
+                superAdminRequired: jest.fn(),
+              },
+              dataSources: {
+                organization: {
+                  bySlug: { loadMany: jest.fn().mockReturnValue([undefined, undefined]) },
+                  create: jest.fn().mockRejectedValue(new Error('Impossible de créer une organisation. Veuillez réessayer.')),
                 },
               },
-            })
-
-            const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred when user: 123 was creating new organization treasury-board-of-canada-secretariat: Error: trx step error`,
-            ])
+              validators: { cleanseInput, slugify },
+            },
           })
-        })
-        describe('when inserting edge', () => {
-          it('returns an error message', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  createOrganization(
-                    input: {
-                      acronymEN: "TBS"
-                      acronymFR: "SCT"
-                      nameEN: "Treasury Board of Canada Secretariat"
-                      nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    }
-                  ) {
-                    result {
-                      ... on Organization {
-                        id
-                        acronym
-                        slug
-                        name
-                        verified
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request: {
-                  language: 'en',
-                },
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce({ next: jest.fn() })
-                    .mockRejectedValue(new Error('trx step error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                  verifiedRequired: jest.fn(),
-                  checkSuperAdmin: jest.fn(),
-                  superAdminRequired: jest.fn(),
-                },
-                loaders: {
-                  loadOrgBySlug: {
-                    loadMany: jest.fn().mockReturnValue([undefined, undefined]),
-                  },
-                  loadUserByKey: jest.fn(),
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
-                },
-              },
-            })
 
-            const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
+          const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
 
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred when inserting edge definition for user: 123 to treasury-board-of-canada-secretariat: Error: trx step error`,
-            ])
-          })
-        })
-        describe('when committing information to db', () => {
-          it('returns an error message', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  createOrganization(
-                    input: {
-                      acronymEN: "TBS"
-                      acronymFR: "SCT"
-                      nameEN: "Treasury Board of Canada Secretariat"
-                      nameFR: "Secrétariat du Conseil Trésor du Canada"
-                    }
-                  ) {
-                    result {
-                      ... on Organization {
-                        id
-                        acronym
-                        slug
-                        name
-                        verified
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request: {
-                  language: 'en',
-                },
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
-                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                  verifiedRequired: jest.fn(),
-                  checkSuperAdmin: jest.fn(),
-                  superAdminRequired: jest.fn(),
-                },
-                loaders: {
-                  loadOrgBySlug: {
-                    loadMany: jest.fn().mockReturnValue([undefined, undefined]),
-                  },
-                  loadUserByKey: jest.fn(),
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Transaction error occurred when committing new organization: treasury-board-of-canada-secretariat for user: 123 to db: Error: trx commit error`,
-            ])
-          })
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([])
         })
       })
     })

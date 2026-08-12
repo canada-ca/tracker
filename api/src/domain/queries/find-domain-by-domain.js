@@ -20,7 +20,7 @@ export const findDomainByDomain = {
       i18n,
       userKey,
       auth: { checkDomainPermission, userRequired, verifiedRequired, loginRequiredBool },
-      loaders: { loadDomainByDomain },
+      dataSources: { domain: domainDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -34,7 +34,7 @@ export const findDomainByDomain = {
     const domainInput = cleanseInput(args.domain)
 
     // Retrieve domain by domain
-    const domain = await loadDomainByDomain.load(domainInput)
+    const domain = await domainDataSource.byDomain.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(`User ${userKey} could not retrieve domain.`)

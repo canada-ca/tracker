@@ -215,15 +215,17 @@ describe('given the domain object', () => {
 
         expect(
           demoType.selectors.resolve(
-            { selectors },
+            { _id: 'domains/1', selectors },
             {},
             {
               auth: {
                 userRequired: jest.fn().mockReturnValue(true),
-                checkDomainPermission: jest.fn().mockReturnValue(true),
               },
-              loaders: {
-                loadDkimSelectorsByDomainId: jest.fn().mockReturnValue(selectors),
+              dataSources: {
+                auth: { domainPermissionByDomainId: { load: jest.fn().mockResolvedValue(true) } },
+                domain: {
+                  dkimSelectorsByDomainId: jest.fn().mockReturnValue(selectors),
+                },
               },
             },
           ),
@@ -304,8 +306,10 @@ describe('given the domain object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadOrgConnectionsByDomainId: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                organization: {
+                  connectionsByDomainId: jest.fn().mockReturnValue(expectedResult),
+                },
               },
               auth: {
                 checkSuperAdmin: jest.fn().mockReturnValue(false),
@@ -324,11 +328,10 @@ describe('given the domain object', () => {
           { limit: 1 },
           {
             dataSources: {
+              auth: { domainPermissionByDomainId: { load: jest.fn().mockResolvedValue(true) } },
               webScan: { getConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }) },
             },
             auth: {
-              checkDomainPermission: jest.fn().mockReturnValue(true),
-              checkSuperAdmin: jest.fn().mockReturnValue(false),
               userRequired: jest.fn().mockReturnValue(true),
             },
           },
@@ -349,11 +352,10 @@ describe('given the domain object', () => {
           { limit: 1 },
           {
             dataSources: {
+              auth: { domainPermissionByDomainId: { load: jest.fn().mockResolvedValue(true) } },
               dnsScan: { getConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }) },
             },
             auth: {
-              checkDomainPermission: jest.fn().mockReturnValue(true),
-              checkSuperAdmin: jest.fn().mockReturnValue(false),
               userRequired: jest.fn().mockReturnValue(true),
             },
           },

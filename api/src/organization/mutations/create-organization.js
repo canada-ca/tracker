@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
 import { createOrganizationUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const createOrganization = new mutationWithClientMutationId({
   name: 'CreateOrganization',
@@ -47,13 +46,10 @@ export const createOrganization = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      collections,
-      transaction,
-      query,
       userKey,
       request: { ip },
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      loaders: { loadOrgBySlug },
+      dataSources: { auditLogs, organization: organizationDS },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -79,7 +75,7 @@ export const createOrganization = new mutationWithClientMutationId({
     const slugFR = slugify(nameFR)
 
     // Check to see if org already exists
-    const [orgEN, orgFR] = await loadOrgBySlug.loadMany([slugEN, slugFR])
+    const [orgEN, orgFR] = await organizationDS.bySlug.loadMany([slugEN, slugFR])
 
     if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
       console.warn(`User: ${userKey} attempted to create an organization that already exists: ${slugEN}`)
@@ -90,7 +86,6 @@ export const createOrganization = new mutationWithClientMutationId({
       }
     }
 
-    // Create new organization
     const organizationDetails = {
       verified: args.verified || false,
       externallyManaged: false,
@@ -109,73 +104,14 @@ export const createOrganization = new mutationWithClientMutationId({
       },
     }
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
-    let cursor
-    try {
-      cursor = await trx.step(
-        () =>
-          query`
-            WITH organizations
-            INSERT ${organizationDetails} INTO organizations
-            RETURN MERGE(
-              {
-                _id: NEW._id,
-                _key: NEW._key,
-                _rev: NEW._rev,
-                _type: "organization",
-                id: NEW._key,
-                verified: NEW.verified,
-                domainCount: 0,
-                summaries: NEW.summaries
-              },
-              TRANSLATE(${request.language}, NEW.orgDetails)
-            )
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction error occurred when user: ${userKey} was creating new organization ${slugEN}: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to create organization. Please try again.`))
-    }
-    const organization = await cursor.next()
-
-    try {
-      await trx.step(
-        () =>
-          query`
-            WITH affiliations, organizations, users
-            INSERT {
-              _from: ${organization._id},
-              _to: ${user._id},
-              permission: "owner",
-            } INTO affiliations
-          `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction error occurred when inserting edge definition for user: ${userKey} to ${slugEN}: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to create organization. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction error occurred when committing new organization: ${slugEN} for user: ${userKey} to db: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to create organization. Please try again.`))
-    }
+    const organization = await organizationDS.create({
+      organizationDetails,
+      userId: user._id,
+      language: request.language,
+    })
 
     console.info(`User: ${userKey} successfully created a new organization: ${slugEN}`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogs.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
@@ -186,8 +122,8 @@ export const createOrganization = new mutationWithClientMutationId({
         resource: {
           en: organizationDetails.orgDetails.en.name,
           fr: organizationDetails.orgDetails.fr.name,
-        }, // name of resource being acted upon
-        resourceType: 'organization', // user, org, domain
+        },
+        resourceType: 'organization',
       },
     })
 

@@ -1,7 +1,7 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
-import { graphql, GraphQLSchema } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
@@ -12,10 +12,37 @@ import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
 import { loadOrgByKey, loadOrganizationNamesById } from '../../../organization/loaders'
 import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
+import { AffiliationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
+
+const withAffiliationDataSource = (contextValue = {}) => {
+  const dataSources = contextValue.dataSources || {}
+  if (dataSources.affiliation && dataSources.auditLogs) return contextValue
+
+  return {
+    ...contextValue,
+    dataSources: {
+      ...dataSources,
+      affiliation:
+        dataSources.affiliation ||
+        new AffiliationDataSource({
+          query: contextValue.query,
+          transaction: contextValue.transaction,
+          collections: contextValue.collections,
+          userKey: contextValue.userKey,
+          i18n: contextValue.i18n,
+          language: contextValue.request?.language,
+          cleanseInput: contextValue.validators?.cleanseInput,
+        }),
+      auditLogs: dataSources.auditLogs || { logActivity: jest.fn().mockResolvedValue(undefined) },
+    },
+  }
+}
+
+const graphql = (args) => executeGraphql({ ...args, contextValue: withAffiliationDataSource(args.contextValue) })
 
 describe('invite user to org', () => {
   let query, drop, truncate, schema, collections, transaction, i18n, tokenize, user, org, userToInvite
@@ -1622,7 +1649,7 @@ describe('invite user to org', () => {
               query,
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
-                step: jest.fn().mockRejectedValue('trx step err'),
+                step: jest.fn().mockRejectedValue(new Error('trx step err')),
                 abort: jest.fn(),
               }),
               userKey: 123,
@@ -1659,7 +1686,7 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: trx step err`,
+            `Transaction step error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: Error: trx step err`,
           ])
         })
       })
@@ -1700,7 +1727,7 @@ describe('invite user to org', () => {
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest.fn().mockRejectedValue('trx commit err'),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit err')),
                 abort: jest.fn(),
               }),
               userKey: 123,
@@ -1740,7 +1767,7 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: trx commit err`,
+            `Transaction commit error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: Error: trx commit err`,
           ])
         })
       })

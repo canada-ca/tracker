@@ -1,16 +1,16 @@
 import { dbNameFromFile } from 'arango-tools'
-import { ensureDatabase as ensure } from '../../testUtilities'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
-import { checkOrgOwner } from '../check-org-owner'
-import englishMessages from '../../locale/en/messages'
-import frenchMessages from '../../locale/fr/messages'
-import dbschema from '../../../database.json'
+import { checkUserBelongsToOrg } from '../check-user-belongs-to-org'
+import englishMessages from '../../../locale/en/messages'
+import frenchMessages from '../../../locale/fr/messages'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the checkOrgOwner function', () => {
-  describe('given a successful check', () => {
+describe('given the checkUserBelongsToOrg function', () => {
+  describe('given a successful call', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
@@ -72,31 +72,30 @@ describe('given the checkOrgOwner function', () => {
         })
       })
       it('returns true', async () => {
-        const testCheckOrgOwner = checkOrgOwner({ query, userKey: user._key })
+        const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
+          query,
+          userKey: user._key,
+        })
 
-        const result = await testCheckOrgOwner({ orgId: org._id })
+        const result = await testCheckUserBelongsToOrg({ orgId: org._id })
 
         expect(result).toEqual(true)
       })
     })
     describe('user is not the owner of the org', () => {
-      beforeEach(async () => {
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-      })
       it('returns false', async () => {
-        const testCheckOrgOwner = checkOrgOwner({ query, userKey: user._key })
+        const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
+          query,
+          userKey: user._key,
+        })
 
-        const result = await testCheckOrgOwner({ orgId: org._id })
+        const result = await testCheckUserBelongsToOrg({ orgId: org._id })
 
         expect(result).toEqual(false)
       })
     })
   })
-  describe('given an unsuccessful check', () => {
+  describe('given an unsuccessful call', () => {
     let i18n
     const consoleOutput = []
     const mockedError = (output) => consoleOutput.push(output)
@@ -123,41 +122,19 @@ describe('given the checkOrgOwner function', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
-          const testCheckOrgOwner = checkOrgOwner({
+          const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
             i18n,
             query: mockedQuery,
             userKey: '123',
           })
 
           try {
-            await testCheckOrgOwner({ orgId: '123' })
+            await testCheckUserBelongsToOrg({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(new Error(`Unable to load owner information. Please try again.`))
+            expect(err).toEqual(new Error(`Unable to load affiliation information. Please try again.`))
           }
           expect(consoleOutput).toEqual([
-            `Database error when checking to see if user: 123 is the owner of: 123: Error: Database error occurred`,
-          ])
-        })
-      })
-      describe('cursor error occurs', () => {
-        it('throws an error', async () => {
-          const mockedQuery = jest.fn().mockReturnValue({
-            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred')),
-          })
-
-          const testCheckOrgOwner = checkOrgOwner({
-            i18n,
-            query: mockedQuery,
-            userKey: '123',
-          })
-
-          try {
-            await testCheckOrgOwner({ orgId: '123' })
-          } catch (err) {
-            expect(err).toEqual(new Error(`Unable to load owner information. Please try again.`))
-          }
-          expect(consoleOutput).toEqual([
-            `Cursor error when checking to see if user: 123 is the owner of: 123: Error: Cursor error occurred`,
+            `Database error when checking to see if user: 123 belongs to org: 123: Error: Database error occurred`,
           ])
         })
       })
@@ -179,45 +156,19 @@ describe('given the checkOrgOwner function', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
-          const testCheckOrgOwner = checkOrgOwner({
+          const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
             i18n,
             query: mockedQuery,
             userKey: '123',
           })
 
           try {
-            await testCheckOrgOwner({ orgId: '123' })
+            await testCheckUserBelongsToOrg({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(`Impossible de charger les informations sur le propriétaire. Veuillez réessayer.`),
-            )
+            expect(err).toEqual(new Error(`Impossible de charger les informations d'affiliation. Veuillez réessayer.`))
           }
           expect(consoleOutput).toEqual([
-            `Database error when checking to see if user: 123 is the owner of: 123: Error: Database error occurred`,
-          ])
-        })
-      })
-      describe('cursor error occurs', () => {
-        it('throws an error', async () => {
-          const mockedQuery = jest.fn().mockReturnValue({
-            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred')),
-          })
-
-          const testCheckOrgOwner = checkOrgOwner({
-            i18n,
-            query: mockedQuery,
-            userKey: '123',
-          })
-
-          try {
-            await testCheckOrgOwner({ orgId: '123' })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(`Impossible de charger les informations sur le propriétaire. Veuillez réessayer.`),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Cursor error when checking to see if user: 123 is the owner of: 123: Error: Cursor error occurred`,
+            `Database error when checking to see if user: 123 belongs to org: 123: Error: Database error occurred`,
           ])
         })
       })

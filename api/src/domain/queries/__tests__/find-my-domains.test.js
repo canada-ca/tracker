@@ -9,8 +9,8 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
-import { loadDkimSelectorsByDomainId, loadDomainConnectionsByUserId } from '../../loaders'
+import { AuthDataSource, checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
+import { DomainDataSource } from '../../data-source'
 import { loadUserByKey } from '../../../user'
 import dbschema from '../../../../database.json'
 
@@ -195,19 +195,14 @@ describe('given findMyDomainsQuery', () => {
               }),
               verifiedRequired: verifiedRequired({}),
             },
-            loaders: {
-              loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              }),
-              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
+              domain: new DomainDataSource({
                 query,
                 userKey: user._key,
                 cleanseInput,
                 i18n,
-                auth: { loginRequiredBool: true },
+                loginRequiredBool: true,
               }),
             },
           },
@@ -304,12 +299,12 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+              dataSources: {
+                domain: new DomainDataSource({
                   query: mockedQuery,
                   userKey: 1,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  loginRequiredBool: true,
                   i18n,
                 }),
               },
@@ -379,12 +374,12 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+              dataSources: {
+                domain: new DomainDataSource({
                   query: mockedQuery,
                   userKey: 1,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  loginRequiredBool: true,
                   i18n,
                 }),
               },

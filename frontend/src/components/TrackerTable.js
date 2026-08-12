@@ -33,9 +33,7 @@ import {
   ChevronRightIcon,
   ExternalLinkIcon,
 } from '@chakra-ui/icons'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { useLingui } from '@lingui/react'
+import { Trans, useLingui } from "@lingui/react/macro"
 import { ExportButton } from './ExportButton'
 import { InfoButton } from './InfoPanel'
 import 'regenerator-runtime'
@@ -43,7 +41,7 @@ import 'regenerator-runtime'
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
 
 export function TrackerTable({ ...props }) {
-  const { i18n } = useLingui()
+  const { t } = useLingui()
   const {
     data,
     columns,
@@ -292,7 +290,7 @@ export function TrackerTable({ ...props }) {
               >
                 {[5, 10, 20].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
-                    {i18n._(t`Show ${pageSize}`)}
+                    {t`Show ${pageSize}`}
                   </option>
                 ))}
               </Select>

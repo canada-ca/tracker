@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { bulkModifyDomainsUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { Domain } from '../../scalars'
 
 export const removeOrganizationsDomains = new mutationWithClientMutationId({
@@ -45,7 +44,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByDomain, loadOrgByKey },
+      dataSources: { domain: domainDS, organization: orgDS, auditLogs },
     },
   ) => {
     // Get User
@@ -78,7 +77,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
     }
 
     // Get Org from db
-    const org = await loadOrgByKey.load(orgId)
+    const org = await orgDS.byKey.load(orgId)
 
     // Check to see if org exists
     if (typeof org === 'undefined') {
@@ -136,7 +135,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       const trx = await transaction(collections)
 
       // Get domain from db
-      const checkDomain = await loadDomainByDomain.load(domain)
+      const checkDomain = await domainDS.byDomain.load(domain)
 
       // Check to see if domain exists
       if (typeof checkDomain === 'undefined') {
@@ -154,10 +153,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           )
 
           if (audit) {
-            await logActivity({
-              transaction,
-              collections,
-              query,
+            await auditLogs.logActivity({
               initiatedBy: {
                 id: user._key,
                 userName: user.userName,
@@ -392,10 +388,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
 
         if (audit) {
           console.info(`User: ${userKey} successfully removed domain: ${domain} from org: ${org.slug}.`)
-          await logActivity({
-            transaction,
-            collections,
-            query,
+          await auditLogs.logActivity({
             initiatedBy: {
               id: user._key,
               userName: user.userName,
@@ -421,10 +414,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
     if (!audit) {
       console.info(`User: ${userKey} successfully removed ${domainCount} domain(s) from org: ${org.slug}.`)
       if (archiveDomains) {
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -449,10 +439,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           },
         })
       } else {
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,

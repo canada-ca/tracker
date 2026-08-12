@@ -157,6 +157,14 @@ class TestCreateAsset:
         payload = mock_req.call_args[1]["json"]
         assert payload["data"]["relationships"]["asset_tags"]["data"] == []
 
+    @patch("hackerone._request")
+    def test_omits_none_option_values(self, mock_req):
+        mock_req.return_value = _ok_response({"data": {}})
+        create_asset(domain="example.com", options={"description": None, "maxSeverity": "HIGH"})
+        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
+        assert "description" not in attrs
+        assert attrs["maxSeverity"] == "HIGH"
+
 
 # ---------------------------------------------------------------------------
 # add_scope
@@ -166,35 +174,42 @@ class TestAddScope:
     @patch("hackerone._request")
     def test_eligible_for_submission_true_when_enrolled(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_name="example.com", enrollment_status="enrolled")
+        add_scope(asset_id="asset-123", enrollment_status="enrolled")
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert attrs["eligible_for_submission"] is True
 
     @patch("hackerone._request")
     def test_eligible_for_submission_false_when_denied(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_name="example.com", enrollment_status="deny")
+        add_scope(asset_id="asset-123", enrollment_status="deny")
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert attrs["eligible_for_submission"] is False
 
     @patch("hackerone._request")
     def test_eligible_for_bounty_always_false(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_name="example.com", enrollment_status="enrolled")
+        add_scope(asset_id="asset-123", enrollment_status="enrolled")
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert attrs["eligible_for_bounty"] is False
 
     @patch("hackerone._request")
-    def test_sets_asset_identifier(self, mock_req):
+    def test_asset_id_in_url(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_name="example.com", enrollment_status="enrolled")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["asset_identifier"] == "example.com"
+        add_scope(asset_id="asset-123", enrollment_status="enrolled")
+        url = mock_req.call_args[0][1]
+        assert "asset-123" in url
+
+    @patch("hackerone._request")
+    def test_includes_program_relationship(self, mock_req):
+        mock_req.return_value = _ok_response({"data": {}})
+        add_scope(asset_id="asset-123", enrollment_status="enrolled")
+        relationships = mock_req.call_args[1]["json"]["data"]["relationships"]
+        assert relationships["programs"]["data"][0]["type"] == "program"
 
     @patch("hackerone._request")
     def test_uses_post_method(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_name="example.com", enrollment_status="enrolled")
+        add_scope(asset_id="asset-123", enrollment_status="enrolled")
         assert mock_req.call_args[0][0] == "POST"
 
 
@@ -206,36 +221,30 @@ class TestUpdateScope:
     @patch("hackerone._request")
     def test_uses_put_method(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_name="example.com", scope_id="s-1", enrollment_status="enrolled")
+        update_scope(asset_id="asset-123", scope_id="s-1", enrollment_status="enrolled")
         assert mock_req.call_args[0][0] == "PUT"
 
     @patch("hackerone._request")
-    def test_scope_id_included_in_url(self, mock_req):
+    def test_asset_id_and_scope_id_in_url(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_name="example.com", scope_id="scope-abc", enrollment_status="deny")
+        update_scope(asset_id="asset-123", scope_id="scope-abc", enrollment_status="deny")
         url = mock_req.call_args[0][1]
+        assert "asset-123" in url
         assert "scope-abc" in url
 
     @patch("hackerone._request")
     def test_eligible_for_submission_true_when_enrolled(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_name="example.com", scope_id="s-1", enrollment_status="enrolled")
+        update_scope(asset_id="asset-123", scope_id="s-1", enrollment_status="enrolled")
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert attrs["eligible_for_submission"] is True
 
     @patch("hackerone._request")
     def test_eligible_for_submission_false_when_denied(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_name="example.com", scope_id="s-1", enrollment_status="deny")
+        update_scope(asset_id="asset-123", scope_id="s-1", enrollment_status="deny")
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert attrs["eligible_for_submission"] is False
-
-    @patch("hackerone._request")
-    def test_sets_asset_identifier(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_name="example.com", scope_id="s-1", enrollment_status="deny")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["asset_identifier"] == "example.com"
 
 
 # ---------------------------------------------------------------------------
@@ -244,16 +253,16 @@ class TestUpdateScope:
 
 class TestGetScope:
     @patch("hackerone._request")
-    def test_includes_asset_identifier_in_url(self, mock_req):
+    def test_asset_id_in_url(self, mock_req):
         mock_req.return_value = _ok_response({"data": []})
-        get_scope("example.com")
+        get_scope("asset-123")
         url = mock_req.call_args[0][1]
-        assert "example.com" in url
+        assert "asset-123" in url
 
     @patch("hackerone._request")
     def test_uses_get_method(self, mock_req):
         mock_req.return_value = _ok_response({"data": []})
-        get_scope("example.com")
+        get_scope("asset-123")
         assert mock_req.call_args[0][0] == "GET"
 
 

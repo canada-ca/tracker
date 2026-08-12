@@ -213,7 +213,6 @@ describe('given the organization object', () => {
     describe('testing the domains resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = organizationType.getFields()
-        const checkPermission = jest.fn().mockReturnValue('user')
 
         const expectedResult = {
           edges: [
@@ -243,9 +242,9 @@ describe('given the organization object', () => {
             { _id: 'organizations/1' },
             { first: 1 },
             {
-              auth: { checkPermission },
-              loaders: {
-                loadDomainConnectionsByOrgId: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
+                domain: { connectionsByOrgId: jest.fn().mockReturnValue(expectedResult) },
               },
             },
           ),
@@ -256,8 +255,6 @@ describe('given the organization object', () => {
       describe('user has correct permission to the resolver', () => {
         it('returns the resolved value', async () => {
           const demoType = organizationType.getFields()
-
-          const checkPermission = jest.fn().mockReturnValue('admin')
 
           const expectedResults = {
             edges: [
@@ -291,9 +288,11 @@ describe('given the organization object', () => {
               { _id: 'organizations/1' },
               { first: 5 },
               {
-                auth: { checkPermission },
-                loaders: {
-                  loadAffiliationConnectionsByOrgId: jest.fn().mockReturnValue(expectedResults),
+                i18n,
+                auth: { loginRequiredBool: true },
+                dataSources: {
+                  auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('admin') } },
+                  affiliation: { connectionsByOrgId: jest.fn().mockReturnValue(expectedResults) },
                 },
               },
             ),
@@ -319,16 +318,17 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const checkPermission = jest.fn().mockReturnValue('user')
-
             try {
               await demoType.affiliations.resolve(
                 { _id: '1' },
                 { first: 5 },
                 {
                   i18n,
-                  auth: { checkPermission },
-                  loaders: { loadAffiliationConnectionsByOrgId: jest.fn() },
+                  auth: { loginRequiredBool: true },
+                  dataSources: {
+                    auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
+                    affiliation: { connectionsByOrgId: jest.fn() },
+                  },
                 },
               )
             } catch (err) {
@@ -356,16 +356,17 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const checkPermission = jest.fn().mockReturnValue('user')
-
             try {
               await demoType.affiliations.resolve(
                 { _id: '1' },
                 { first: 5 },
                 {
                   i18n,
-                  auth: { checkPermission },
-                  loaders: { loadAffiliationConnectionsByOrgId: jest.fn() },
+                  auth: { loginRequiredBool: true },
+                  dataSources: {
+                    auth: { permissionByOrgId: { load: jest.fn().mockResolvedValue('user') } },
+                    affiliation: { connectionsByOrgId: jest.fn() },
+                  },
                 },
               )
             } catch (err) {

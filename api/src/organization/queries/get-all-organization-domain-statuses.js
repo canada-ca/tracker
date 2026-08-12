@@ -18,7 +18,7 @@ export const getAllOrganizationDomainStatuses = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
-      loaders: { loadAllOrganizationDomainStatuses },
+      dataSources: { organization: organizationDS },
     },
   ) => {
     const user = await userRequired()
@@ -27,7 +27,7 @@ export const getAllOrganizationDomainStatuses = {
     const isSuperAdmin = await checkSuperAdmin()
     superAdminRequired({ user, isSuperAdmin })
 
-    const domainStatuses = await loadAllOrganizationDomainStatuses({ ...args })
+    const domainStatuses = await organizationDS.allDomainStatuses({ ...args })
 
     console.info(`User ${userKey} successfully retrieved all domain statuses.`)
 

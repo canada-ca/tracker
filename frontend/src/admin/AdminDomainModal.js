@@ -1,7 +1,5 @@
 import React, { useRef } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { useLingui } from '@lingui/react'
+import { Trans, useLingui } from '@lingui/react/macro'
 import {
   Badge,
   Box,
@@ -54,18 +52,19 @@ export function AdminDomainModal({
   mutation,
   orgCount,
   cvdEnrollment,
+  highAvailability,
   permission,
   ...rest
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -77,8 +76,8 @@ export function AdminDomainModal({
       if (createDomain.result.__typename === 'Domain') {
         onClose()
         toast({
-          title: i18n._(t`Domain added`),
-          description: i18n._(t`${createDomain.result.domain} was added to ${orgSlug}`),
+          title: t`Domain added`,
+          description: t`${createDomain.result.domain} was added to ${orgSlug}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -86,7 +85,7 @@ export function AdminDomainModal({
         })
       } else if (createDomain.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to create new domain.`),
+          title: t`Unable to create new domain.`,
           description: createDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -95,8 +94,8 @@ export function AdminDomainModal({
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect createDomain.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect createDomain.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -111,7 +110,7 @@ export function AdminDomainModal({
     refetchQueries: ['FindAuditLogs'],
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -123,8 +122,8 @@ export function AdminDomainModal({
       if (updateDomain.result.__typename === 'Domain') {
         onClose()
         toast({
-          title: i18n._(t`Domain updated`),
-          description: i18n._(t`${editingDomainUrl} from ${orgSlug} successfully updated.`),
+          title: t`Domain updated`,
+          description: t`${editingDomainUrl} from ${orgSlug} successfully updated.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -132,7 +131,7 @@ export function AdminDomainModal({
         })
       } else if (updateDomain.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to update domain.`),
+          title: t`Unable to update domain.`,
           description: updateDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -141,8 +140,8 @@ export function AdminDomainModal({
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect updateDomain.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect updateDomain.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -214,6 +213,7 @@ export function AdminDomainModal({
             archiveDomain: archived,
             assetState: assetState || 'APPROVED',
             cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
+            highAvailability: highAvailability || false,
           }}
           initialTouched={{
             domainUrl: true,
@@ -236,6 +236,7 @@ export function AdminDomainModal({
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
                   cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
+                  highAvailability: values.highAvailability,
                 },
               })
             } else if (mutation === 'create') {
@@ -337,6 +338,7 @@ export function AdminDomainModal({
                     </ABTestVariant>
                   </ABTestWrapper>
 
+                  <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
@@ -363,6 +365,8 @@ export function AdminDomainModal({
 }
 
 const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgCount }) => {
+  const { t } = useLingui()
+
   return (
     <Box>
       <Flex align="center">
@@ -391,6 +395,33 @@ const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgC
           <Trans>Note: This could affect results for multiple organizations</Trans>
         )}
       </Text>
+    </Box>
+  )
+})
+
+const HighAvailabilitySwitch = withSuperAdmin(({ defaultChecked, handleChange }) => {
+  const { t } = useLingui()
+
+  return (
+    <Box>
+      <Flex align="center">
+        <Tooltip label={t`Mark this domain as high availability. It will be monitored by the uptime dashboard.`}>
+          <QuestionOutlineIcon tabIndex={0} />
+        </Tooltip>
+        <label>
+          <Switch
+            colorScheme="green"
+            isFocusable={true}
+            name="highAvailability"
+            mx="2"
+            defaultChecked={defaultChecked}
+            onChange={handleChange}
+          />
+        </label>
+        <Badge variant="outline" color="gray.900" p="1.5">
+          <Trans>High Availability</Trans>
+        </Badge>
+      </Flex>
     </Box>
   )
 })
@@ -433,6 +464,7 @@ AdminDomainModal.propTypes = {
   myOrg: object,
   assetState: string,
   cvdEnrollment: object,
+  highAvailability: bool,
   availableTags: array,
   permission: string,
 }

@@ -48,23 +48,23 @@ export const loadAffiliationConnectionsByUserId =
             affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).verified`
             documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).verified`
           } else if (orderBy.field === 'org-summary-mail-pass') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.pass`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).summaries.mail.pass`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.pass`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).latestSummaryId).mail.pass`
           } else if (orderBy.field === 'org-summary-mail-fail') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.fail`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).summaries.mail.fail`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.fail`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).latestSummaryId).mail.fail`
           } else if (orderBy.field === 'org-summary-mail-total') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.total`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).summaries.mail.total`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.total`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).latestSummaryId).mail.total`
           } else if (orderBy.field === 'org-summary-web-pass') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.pass`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).summaries.web.pass`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.pass`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).latestSummaryId).web.pass`
           } else if (orderBy.field === 'org-summary-web-fail') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.fail`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).summaries.web.fail`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.fail`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).latestSummaryId).web.fail`
           } else if (orderBy.field === 'org-summary-web-total') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.total`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).summaries.web.total`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.total`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key).latestSummaryId).web.total`
           } else if (orderBy.field === 'org-domain-count') {
             affiliationField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key)._id claims RETURN e._to)`
             documentField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._from).key)._id claims RETURN e._to)`
@@ -121,23 +121,23 @@ export const loadAffiliationConnectionsByUserId =
             affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).verified`
             documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).verified`
           } else if (orderBy.field === 'org-summary-mail-pass') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.pass`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).summaries.mail.pass`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.pass`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).latestSummaryId).mail.pass`
           } else if (orderBy.field === 'org-summary-mail-fail') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.fail`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).summaries.mail.fail`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.fail`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).latestSummaryId).mail.fail`
           } else if (orderBy.field === 'org-summary-mail-total') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.total`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).summaries.mail.total`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.total`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).latestSummaryId).mail.total`
           } else if (orderBy.field === 'org-summary-web-pass') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.pass`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).summaries.web.pass`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.pass`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).latestSummaryId).web.pass`
           } else if (orderBy.field === 'org-summary-web-fail') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.fail`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).summaries.web.fail`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.fail`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).latestSummaryId).web.fail`
           } else if (orderBy.field === 'org-summary-web-total') {
-            affiliationField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.total`
-            documentField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).summaries.web.total`
+            affiliationField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.total`
+            documentField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key).latestSummaryId).web.total`
           } else if (orderBy.field === 'org-domain-count') {
             affiliationField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key)._id claims RETURN e._to)`
             documentField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._from).key)._id claims RETURN e._to)`
@@ -261,29 +261,29 @@ export const loadAffiliationConnectionsByUserId =
           hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).verified`
           hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).verified`
         } else if (orderBy.field === 'org-summary-mail-pass') {
-          affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.pass`
-          hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.mail.pass`
-          hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.mail.pass`
+          affField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.pass`
+          hasNextPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).latestSummaryId).mail.pass`
+          hasPreviousPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).latestSummaryId).mail.pass`
         } else if (orderBy.field === 'org-summary-mail-fail') {
-          affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.fail`
-          hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.mail.fail`
-          hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.mail.fail`
+          affField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.fail`
+          hasNextPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).latestSummaryId).mail.fail`
+          hasPreviousPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).latestSummaryId).mail.fail`
         } else if (orderBy.field === 'org-summary-mail-total') {
-          affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.total`
-          hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.mail.total`
-          hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.mail.total`
+          affField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.total`
+          hasNextPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).latestSummaryId).mail.total`
+          hasPreviousPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).latestSummaryId).mail.total`
         } else if (orderBy.field === 'org-summary-web-pass') {
-          affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.pass`
-          hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.web.pass`
-          hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.web.pass`
+          affField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.pass`
+          hasNextPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).latestSummaryId).web.pass`
+          hasPreviousPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).latestSummaryId).web.pass`
         } else if (orderBy.field === 'org-summary-web-fail') {
-          affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.fail`
-          hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.web.fail`
-          hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.web.fail`
+          affField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.fail`
+          hasNextPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).latestSummaryId).web.fail`
+          hasPreviousPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).latestSummaryId).web.fail`
         } else if (orderBy.field === 'org-summary-web-total') {
-          affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.total`
-          hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.web.total`
-          hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.web.total`
+          affField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.total`
+          hasNextPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).latestSummaryId).web.total`
+          hasPreviousPageDocument = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).latestSummaryId).web.total`
         } else if (orderBy.field === 'org-domain-count') {
           affField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key)._id claims RETURN e._to)`
           hasNextPageDocument = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key)._id claims RETURN e._to)`
@@ -325,17 +325,17 @@ export const loadAffiliationConnectionsByUserId =
         } else if (orderBy.field === 'org-verified') {
           sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).verified ${orderBy.direction},`
         } else if (orderBy.field === 'org-summary-mail-pass') {
-          sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.pass ${orderBy.direction},`
+          sortByField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.pass ${orderBy.direction},`
         } else if (orderBy.field === 'org-summary-mail-fail') {
-          sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.fail ${orderBy.direction},`
+          sortByField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.fail ${orderBy.direction},`
         } else if (orderBy.field === 'org-summary-mail-total') {
-          sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.total ${orderBy.direction},`
+          sortByField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).mail.total ${orderBy.direction},`
         } else if (orderBy.field === 'org-summary-web-pass') {
-          sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.pass ${orderBy.direction},`
+          sortByField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.pass ${orderBy.direction},`
         } else if (orderBy.field === 'org-summary-web-fail') {
-          sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.fail ${orderBy.direction},`
+          sortByField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.fail ${orderBy.direction},`
         } else if (orderBy.field === 'org-summary-web-total') {
-          sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.total ${orderBy.direction},`
+          sortByField = aql`DOCUMENT(DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).latestSummaryId).web.total ${orderBy.direction},`
         } else if (orderBy.field === 'org-domain-count') {
           sortByField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key)._id claims RETURN e._to) ${orderBy.direction},`
         }

@@ -60,19 +60,20 @@ def fetch_domains(db: StandardDatabase) -> tuple[list[dict], list[dict], list[di
         FOR d IN domains
             FILTER d.archived != true
             FILTER d.rcode != "NXDOMAIN"
-            FILTER d.blocked != true
             RETURN d
         """
     )
     all_domains = list(cursor)
 
     enrolled = [
-        d for d in all_domains
+        d
+        for d in all_domains
         if isinstance(d.get("cvdEnrollment"), dict)
         and d.get("cvdEnrollment", {}).get("status") == "enrolled"
     ]
     denied = [
-        d for d in all_domains
+        d
+        for d in all_domains
         if isinstance(d.get("cvdEnrollment"), dict)
         and d.get("cvdEnrollment", {}).get("status") == "deny"
     ]
@@ -104,8 +105,9 @@ def create_assets(domains: list[dict]) -> tuple[int, int]:
         try:
             res = create_asset(domain=domain, options=enrollment_options)
             logger.info(res)
+            asset_id = res.get("data", {}).get("id")
             res = add_scope(
-                asset_name=domain,
+                asset_id=asset_id,
                 enrollment_status=enrollment_options.get("status"),
             )
             logger.info(res)
@@ -116,18 +118,27 @@ def create_assets(domains: list[dict]) -> tuple[int, int]:
     return successes, failures
 
 
-def rescope_assets(domain_names: list[str], enrollment_status: str) -> tuple[int, int]:
+def rescope_assets(
+    domain_names: list[str], enrollment_status: str, asset_id_map: dict[str, str]
+) -> tuple[int, int]:
     successes, failures = 0, 0
     for domain in domain_names:
+        asset_id = asset_id_map.get(domain)
+        if not asset_id:
+            logger.error(f"No asset ID found for {domain}, skipping rescope.")
+            failures += 1
+            continue
         try:
-            scope_data = get_scope(domain).get("data", [])
+            scope_data = get_scope(asset_id).get("data", [])
             if not scope_data:
-                logger.error(f"No existing scope entry found for {domain}, skipping rescope.")
+                logger.error(
+                    f"No existing scope entry found for {domain}, skipping rescope."
+                )
                 failures += 1
                 continue
             scope_id = scope_data[0].get("id", "")
             res = update_scope(
-                asset_name=domain,
+                asset_id=asset_id,
                 scope_id=scope_id,
                 enrollment_status=enrollment_status,
             )
@@ -162,13 +173,19 @@ def main(db: StandardDatabase):
     # pre-compute sets for O(1) lookups
     cvd_identifiers = set(get_asset_identifiers(cvd_assets))
     out_of_scope_identifiers = set(get_asset_identifiers(cvd_assets_out_of_scope))
+    asset_id_map = {
+        a.get("attributes", {}).get("identifier"): a.get("id")
+        for a in cvd_assets + cvd_assets_out_of_scope
+        if a.get("attributes", {}).get("identifier")
+    }
     all_domain_names = set(get_domain_names(all_domains))
     enrolled_domain_names = set(get_domain_names(enrolled_domains))
     denied_domain_names = set(get_domain_names(denied_domains))
 
     # enrolled domains not yet in H1
     new_assets = [
-        d for d in enrolled_domains
+        d
+        for d in enrolled_domains
         if d.get("domain") not in cvd_identifiers
         and d.get("domain") not in out_of_scope_identifiers
     ]
@@ -182,18 +199,22 @@ def main(db: StandardDatabase):
 
     # deny → enrolled: already exist in H1 as out-of-scope
     rescoped_to_enrolled = [
-        d.get("domain") for d in enrolled_domains
+        d.get("domain")
+        for d in enrolled_domains
         if d.get("domain") in out_of_scope_identifiers
     ]
     if rescoped_to_enrolled:
         logger.info(f"Rescoping {len(rescoped_to_enrolled)} assets to enrolled.")
-        _, fail = rescope_assets(rescoped_to_enrolled, "enrolled")
+        _, fail = rescope_assets(rescoped_to_enrolled, "enrolled", asset_id_map)
         if fail:
-            logger.warning(f"{fail}/{len(rescoped_to_enrolled)} rescopes to enrolled failed.")
+            logger.warning(
+                f"{fail}/{len(rescoped_to_enrolled)} rescopes to enrolled failed."
+            )
 
     # denied domains not yet in H1
     new_unscoped_assets = [
-        d for d in denied_domains
+        d
+        for d in denied_domains
         if d.get("domain") not in cvd_identifiers
         and d.get("domain") not in out_of_scope_identifiers
     ]
@@ -201,23 +222,29 @@ def main(db: StandardDatabase):
         logger.info(f"Creating {len(new_unscoped_assets)} new out-of-scope assets.")
         _, fail = create_assets(new_unscoped_assets)
         if fail:
-            logger.warning(f"{fail}/{len(new_unscoped_assets)} out-of-scope asset creations failed.")
+            logger.warning(
+                f"{fail}/{len(new_unscoped_assets)} out-of-scope asset creations failed."
+            )
 
     # enrolled → deny: currently in-scope in H1
     rescoped_to_denied = [
-        identifier for a in cvd_assets
+        identifier
+        for a in cvd_assets
         if (identifier := a.get("attributes", {}).get("identifier"))
         and identifier in denied_domain_names
     ]
     if rescoped_to_denied:
         logger.info(f"Rescoping {len(rescoped_to_denied)} assets to out-of-scope.")
-        _, fail = rescope_assets(rescoped_to_denied, "deny")
+        _, fail = rescope_assets(rescoped_to_denied, "deny", asset_id_map)
         if fail:
-            logger.warning(f"{fail}/{len(rescoped_to_denied)} rescopes to out-of-scope failed.")
+            logger.warning(
+                f"{fail}/{len(rescoped_to_denied)} rescopes to out-of-scope failed."
+            )
 
     # archive in-scope H1 assets that are no longer enrolled or denied
     archive_list = [
-        a for a in cvd_assets
+        a
+        for a in cvd_assets
         if (identifier := a.get("attributes", {}).get("identifier"))
         and identifier not in enrolled_domain_names
         and identifier not in denied_domain_names

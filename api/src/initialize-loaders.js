@@ -1,9 +1,4 @@
 import {
-  loadAffiliationByKey,
-  loadAffiliationConnectionsByUserId,
-  loadAffiliationConnectionsByOrgId,
-} from './affiliation/loaders'
-import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
   loadDmarcSummaryConnectionsByUserId,
@@ -15,39 +10,7 @@ import {
   loadDmarcYearlySumEdge,
   loadAllVerifiedRuaDomains,
 } from './dmarc-summaries/loaders'
-import {
-  loadDomainByKey,
-  loadDomainByDomain,
-  loadDomainConnectionsByOrgId,
-  loadDomainConnectionsByUserId,
-  loadDkimSelectorsByDomainId,
-} from './domain/loaders'
-import {
-  loadAggregateGuidanceTagByTagId,
-  loadAggregateGuidanceTagConnectionsByTagId,
-  loadDkimGuidanceTagByTagId,
-  loadDkimGuidanceTagConnectionsByTagId,
-  loadDmarcGuidanceTagByTagId,
-  loadDmarcGuidanceTagConnectionsByTagId,
-  loadHttpsGuidanceTagByTagId,
-  loadHttpsGuidanceTagConnectionsByTagId,
-  loadSpfGuidanceTagByTagId,
-  loadSpfGuidanceTagConnectionsByTagId,
-  loadSslGuidanceTagByTagId,
-  loadSslGuidanceTagConnectionsByTagId,
-  loadGuidanceTagByTagId,
-  loadGuidanceTagSummaryConnectionsByTagId,
-} from './guidance-tag/loaders'
-import {
-  loadOrgByKey,
-  loadOrgBySlug,
-  loadOrgConnectionsByDomainId,
-  loadOrgConnectionsByUserId,
-  loadAllOrganizationDomainStatuses,
-  loadOrganizationDomainStatuses,
-  loadOrganizationSummariesByPeriod,
-  loadOrganizationNamesById,
-} from './organization/loaders'
+import { loadOrgByKey, loadOrganizationNamesById } from './organization/loaders'
 import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
 import {
   loadVerifiedDomainsById,
@@ -61,35 +24,9 @@ import {
   loadVerifiedOrgConnectionsByDomainId,
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
-import { loadTagByTagId, loadTagsByOrg } from './tags'
 
 export function initializeLoaders({ query, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
-    loadTagByTagId: loadTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadTagsByOrg: loadTagsByOrg({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadAggregateGuidanceTagByTagId: loadAggregateGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId({
-      query,
-      userKey,
-      i18n,
-      cleanseInput,
-      language,
-    }),
     loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
       query,
       userKey,
@@ -138,165 +75,8 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
     }),
     loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
-    loadDomainByDomain: loadDomainByDomain({ query, userKey, i18n }),
-    loadDomainByKey: loadDomainByKey({ query, userKey, i18n }),
-    loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
-      query,
-      userKey,
-      language,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadDkimGuidanceTagByTagId: loadDkimGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      language,
-    }),
-    loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      language,
-    }),
-    loadGuidanceTagSummaryConnectionsByTagId: loadGuidanceTagSummaryConnectionsByTagId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      language,
-    }),
-    loadGuidanceTagByTagId: loadGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      language,
-    }),
-    loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadSpfGuidanceTagConnectionsByTagId: loadSpfGuidanceTagConnectionsByTagId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      language,
-    }),
-    loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
-      query,
-      userKey,
-      i18n,
-      language,
-    }),
-    loadSslGuidanceTagConnectionsByTagId: loadSslGuidanceTagConnectionsByTagId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-      language,
-    }),
-    loadOrgByKey: loadOrgByKey({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadOrgBySlug: loadOrgBySlug({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-      query,
-      language,
-      userKey,
-      cleanseInput,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadOrganizationSummariesByPeriod: loadOrganizationSummariesByPeriod({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
-    loadOrganizationNamesById: loadOrganizationNamesById({
-      query,
-      language,
-      userKey,
-      i18n,
-    }),
-    loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-    }),
-    loadOrganizationDomainStatuses: loadOrganizationDomainStatuses({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
-      auth: { loginRequiredBool },
-    }),
+    loadOrgByKey: loadOrgByKey({ query, language, userKey, i18n }),
+    loadOrganizationNamesById: loadOrganizationNamesById({ query, userKey, i18n }),
     loadMyTrackerByUserId: loadMyTrackerByUserId({
       query,
       language,
@@ -311,20 +91,6 @@ export function initializeLoaders({ query, userKey, i18n, language, cleanseInput
       i18n,
     }),
     loadUserByKey: loadUserByKey({ query, userKey, i18n }),
-    loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),
-    loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
-      query,
-      language,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
     loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
     loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
     loadVerifiedDomainConnections: loadVerifiedDomainConnections({

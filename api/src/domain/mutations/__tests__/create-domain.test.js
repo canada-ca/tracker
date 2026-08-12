@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as rawGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
@@ -17,14 +17,69 @@ import {
   verifiedRequired,
   tfaRequired,
   checkDomainPermission,
+  AuthDataSource,
 } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadOrgByKey, loadOrgConnectionsByDomainId } from '../../../organization/loaders'
+import { OrganizationDataSource } from '../../../organization/data-source'
+import { DomainDataSource } from '../../data-source'
+import { TagsDataSource } from '../../../tags/data-source'
+import { AuditLogsDataSource } from '../../../audit-logs/data-source'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
+
+const withDataSources = (contextValue) => {
+  const query = contextValue?.query
+  const transaction = contextValue?.transaction
+  const collections = contextValue?.collections
+  const userKey = contextValue?.userKey
+  const i18n = contextValue?.i18n
+  const language = contextValue?.request?.language
+  const cleanseInput = contextValue?.validators?.cleanseInput
+
+  const domainDataSource =
+    contextValue?.dataSources?.domain || new DomainDataSource({ query, userKey, i18n, transaction, collections })
+  if (contextValue?.loaders?.loadDomainByDomain) {
+    domainDataSource.byDomain = contextValue.loaders.loadDomainByDomain
+  }
+
+  const organizationDataSource =
+    contextValue?.dataSources?.organization ||
+    new OrganizationDataSource({ query, userKey, i18n, language, cleanseInput, transaction, collections })
+  if (contextValue?.loaders?.loadOrgByKey) {
+    organizationDataSource.byKey = contextValue.loaders.loadOrgByKey
+  }
+
+  const tagsDataSource =
+    contextValue?.dataSources?.tags || new TagsDataSource({ query, userKey, i18n, language, transaction, collections })
+  if (contextValue?.loaders?.loadTagByTagId) {
+    tagsDataSource.byTagId = contextValue.loaders.loadTagByTagId
+  }
+
+  const auditLogs =
+    contextValue?.dataSources?.auditLogs || new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections })
+
+  return {
+    ...contextValue,
+    dataSources: {
+      ...contextValue?.dataSources,
+      domain: domainDataSource,
+      organization: organizationDataSource,
+      tags: tagsDataSource,
+      auditLogs,
+    },
+  }
+}
+
+const graphql = ({ contextValue, ...args }) => {
+  return rawGraphql({
+    ...args,
+    contextValue: withDataSources(contextValue),
+  })
+}
 
 describe('create a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user, org, domain
@@ -206,6 +261,19 @@ describe('create a domain', () => {
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
+              },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
                   query,
@@ -367,6 +435,19 @@ describe('create a domain', () => {
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
+              },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
                   query,
@@ -503,6 +584,19 @@ describe('create a domain', () => {
               checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
+            },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
+              organization: new OrganizationDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+                loginRequiredBool: true,
+                transaction,
+                collections: collectionNames,
+              }),
             },
             loaders: {
               loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -681,6 +775,19 @@ describe('create a domain', () => {
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
             },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
+              organization: new OrganizationDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+                loginRequiredBool: true,
+                transaction,
+                collections: collectionNames,
+              }),
+            },
             loaders: {
               loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
                 query,
@@ -820,6 +927,19 @@ describe('create a domain', () => {
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
+              },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -961,6 +1081,19 @@ describe('create a domain', () => {
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
+              },
+              dataSources: {
+                auth: new AuthDataSource({ query, userKey: user._key }),
+                organization: new OrganizationDataSource({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                  language: 'en',
+                  cleanseInput,
+                  loginRequiredBool: true,
+                  transaction,
+                  collections: collectionNames,
+                }),
               },
               loaders: {
                 loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
@@ -1321,7 +1454,7 @@ describe('create a domain', () => {
         data: {
           createDomain: {
             result: {
-              code: 400,
+              code: 403,
               description: 'Permission Denied: Please contact organization user for help with creating domain.',
             },
           },

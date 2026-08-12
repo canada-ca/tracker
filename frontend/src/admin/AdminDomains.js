@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { Trans, useLingui } from '@lingui/react/macro'
 import {
   Box,
   Button,
@@ -26,7 +25,6 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon, HamburgerIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
-import { useLingui } from '@lingui/react'
 import { array, bool, number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
@@ -44,14 +42,13 @@ import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import useSearchParam from '../utilities/useSearchParam'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { DomainUpdateList } from './DomainUpdateList'
 import { AdminDomainList } from './AdminDomainList'
 
 export function AdminDomains({ orgSlug, orgId, verified, permission, availableTags }) {
   const [showUpdateList, setShowUpdateList] = useState(false)
   const toast = useToast()
-  const { i18n } = useLingui()
+  const { t } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(50)
@@ -69,6 +66,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     editingDomainId: '',
     editingDomainUrl: '',
     cvdEnrollment: { status: 'NOT_ENROLLED' },
+    highAvailability: false,
   })
   const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
     name: 'domain-filters',
@@ -131,7 +129,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     },
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -143,8 +141,8 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
       if (removeDomain.result.__typename === 'DomainResult') {
         removeOnClose()
         toast({
-          title: i18n._(t`Domain removed`),
-          description: i18n._(t`Domain removed from ${orgSlug}`),
+          title: t`Domain removed`,
+          description: t`Domain removed from ${orgSlug}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -152,7 +150,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
         })
       } else if (removeDomain.result.__typename === 'DomainError') {
         toast({
-          title: i18n._(t`Unable to remove domain.`),
+          title: t`Unable to remove domain.`,
           description: removeDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -161,8 +159,8 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
         })
       } else {
         toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect removeDomain.result typename.`),
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect removeDomain.result typename.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -310,57 +308,38 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
           )
         }}
       </Formik>
-      <ABTestWrapper>
-        <ABTestVariant name="A">
-          <AdminDomainList
-            nodes={nodes}
-            verified={verified}
-            permission={permission}
-            orgId={orgId}
-            orgSlug={orgSlug}
-            i18n={i18n}
-            setSelectedRemoveProps={setSelectedRemoveProps}
-            removeOnOpen={removeOnOpen}
-            setModalProps={setModalProps}
-            updateOnOpen={updateOnOpen}
-          />
-        </ABTestVariant>
-        <ABTestVariant name="B">
-          <Button
-            leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
-            mt={4}
-            mb={2}
-            variant="primary"
-            onClick={() => setShowUpdateList((prev) => !prev)}
-          >
-            {showUpdateList ? <Trans>Show Domain List</Trans> : <Trans>Show Update List</Trans>}
-          </Button>
-          {showUpdateList ? (
-            <DomainUpdateList
-              availableTags={availableTags}
-              orgId={orgId}
-              domains={nodes.map(({ id, domain, claimTags }) => {
-                return { id, domain, tags: claimTags.map(({ label }) => label) }
-              })}
-              filters={filters}
-              search={debouncedSearchTerm}
-              domainCount={totalCount}
-              resetToFirstPage={resetToFirstPage}
-            />
-          ) : (
-            <AdminDomainList
-              nodes={nodes}
-              verified={verified}
-              permission={permission}
-              i18n={i18n}
-              setSelectedRemoveProps={setSelectedRemoveProps}
-              removeOnOpen={removeOnOpen}
-              setModalProps={setModalProps}
-              updateOnOpen={updateOnOpen}
-            />
-          )}
-        </ABTestVariant>
-      </ABTestWrapper>
+      <Button
+        leftIcon={showUpdateList ? <HamburgerIcon /> : <EditIcon />}
+        mt={4}
+        mb={2}
+        variant="primary"
+        onClick={() => setShowUpdateList((prev) => !prev)}
+      >
+        {showUpdateList ? <Trans>Show Domain List</Trans> : <Trans>Show Update List</Trans>}
+      </Button>
+      {showUpdateList ? (
+        <DomainUpdateList
+          availableTags={availableTags}
+          orgId={orgId}
+          domains={nodes.map(({ id, domain, claimTags }) => {
+            return { id, domain, tags: claimTags.map(({ label }) => label) }
+          })}
+          filters={filters}
+          search={debouncedSearchTerm}
+          domainCount={totalCount}
+          resetToFirstPage={resetToFirstPage}
+        />
+      ) : (
+        <AdminDomainList
+          nodes={nodes}
+          verified={verified}
+          permission={permission}
+          setSelectedRemoveProps={setSelectedRemoveProps}
+          removeOnOpen={removeOnOpen}
+          setModalProps={setModalProps}
+          updateOnOpen={updateOnOpen}
+        />
+      )}
       <RelayPaginationControls
         onlyPagination={false}
         selectedDisplayLimit={domainsPerPage}
@@ -414,8 +393,8 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
                 borderColor="black"
                 id="Search-for-domain-field"
                 type="text"
-                placeholder={i18n._(t`Domain URL`)}
-                aria-label={i18n._(t`Search by Domain URL`)}
+                placeholder={t`Domain URL`}
+                aria-label={t`Search by Domain URL`}
                 onChange={(e) => {
                   setNewDomainUrl(e.target.value)
                   resetToFirstPage()
@@ -471,6 +450,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
         orgId={orgId}
         orgSlug={orgSlug}
         availableTags={availableTags}
+        permission={permission}
         {...modalProps}
       />
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">

@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 import {setupI18n} from '@lingui/core'
 
 import {verifyToken} from '../index'
-import englishMessages from '../../locale/en/messages'
-import frenchMessages from '../../locale/fr/messages'
+import englishMessages from '../../../locale/en/messages'
+import frenchMessages from '../../../locale/fr/messages'
 
 const {AUTHENTICATED_KEY} = process.env
 

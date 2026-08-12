@@ -24,12 +24,9 @@ export const verifyOrganization = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
       auth: { checkPermission, userRequired, verifiedRequired },
-      loaders: { loadOrgByKey },
+      dataSources: { organization: organizationDS },
       validators: { cleanseInput },
     },
   ) => {
@@ -41,7 +38,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
     const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
 
     // Check to see if org exists
-    const currentOrg = await loadOrgByKey.load(orgKey)
+    const currentOrg = await organizationDS.byKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
@@ -82,54 +79,9 @@ export const verifyOrganization = new mutationWithClientMutationId({
       }
     }
 
-    // Set org to verified
     currentOrg.verified = true
 
-    // Setup Trans action
-    const trx = await transaction(collections)
-
-    // Upsert new org details
-    try {
-      await trx.step(
-        () =>
-          query`
-            WITH organizations
-            UPSERT { _key: ${orgKey} }
-              INSERT ${currentOrg}
-              UPDATE ${currentOrg}
-              IN organizations
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction error occurred while upserting verified org: ${orgKey}, err: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
-    }
-
-    // unarchive all archived affiliated domains
-    try {
-      await trx.step(
-        () =>
-          query`
-            WITH domains, claims
-            FOR v, e IN 1..1 OUTBOUND ${currentOrg._id} claims
-              FILTER v.archived == true
-              UPDATE v WITH { archived: false } IN domains
-          `,
-      )
-    } catch (err) {
-      console.error(`Transaction error occurred while unarchiving affiliated domains for org: ${orgKey}, err: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Transaction error occurred while committing newly verified org: ${orgKey}, err: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
-    }
+    await organizationDS.verify({ currentOrg })
 
     console.info(`User: ${userKey}, successfully verified org: ${orgKey}.`)
 

@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 const { SERVICE_ACCOUNT_EMAIL } = process.env
 
@@ -28,11 +27,9 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
       request,
-      collections,
-      transaction,
       userKey,
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByKey, loadOrganizationNamesById },
@@ -61,13 +58,9 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     }
 
     // Check to see if user is already a member of the org
-    let affiliationCursor
+    let requestedAffiliation
     try {
-      affiliationCursor = await query`
-        FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-          FILTER e._to == ${user._id}
-          RETURN e
-      `
+      requestedAffiliation = await affiliationDataSource.affiliationByOrgAndUser({ orgId: org._id, userId: user._id })
     } catch (err) {
       console.error(
         `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
@@ -75,8 +68,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
-    if (affiliationCursor.count > 0) {
-      const requestedAffiliation = await affiliationCursor.next()
+    if (typeof requestedAffiliation !== 'undefined') {
       if (requestedAffiliation.permission === 'pending') {
         console.warn(
           `User: ${userKey} attempted to request invite to org: ${orgId} however they have already requested to join that org.`,
@@ -100,55 +92,36 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
     // Create pending affiliation
     try {
-      await trx.step(
-        () =>
-          query`
-            WITH affiliations, organizations, users
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "pending",
-            } INTO affiliations
-          `,
-      )
+      await affiliationDataSource.createPendingAffiliation({ orgId: org._id, userId: user._id })
     } catch (err) {
-      console.error(
-        `Transaction step error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
-      )
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'trx-commit') {
+        console.error(
+          `Transaction commit error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
+        )
+      } else {
+        console.error(
+          `Transaction step error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
     // get all org admins
-    let orgAdminsCursor
-    try {
-      orgAdminsCursor = await query`
-        WITH affiliations, organizations, users
-        FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-          FILTER e.permission IN ["admin", "owner", "super_admin"]
-          RETURN v._key
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to request invite. Please try again.`))
-    }
-
     let orgAdmins
     try {
-      orgAdmins = await orgAdminsCursor.all()
+      orgAdmins = await affiliationDataSource.orgAdminUserKeys({ orgId: org._id })
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
-      )
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'cursor') {
+        console.error(
+          `Cursor error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
+        )
+      } else {
+        console.error(
+          `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
@@ -163,7 +136,6 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
         console.error(
           `Error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
         )
-        await trx.abort()
         throw new Error(i18n._(t`Unable to request invite. Please try again.`))
       }
       const adminLink = `https://${request.get('host')}/admin/organizations`
@@ -187,22 +159,8 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       }
     }
 
-    // Commit Transaction
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to request invite. Please try again.`))
-    }
-
     console.info(`User: ${userKey} successfully requested invite to the org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

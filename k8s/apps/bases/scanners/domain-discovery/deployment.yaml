@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: domain-discovery
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-f5ec985-1772475700 # {"$imagepolicy": "flux-system:domain-discovery"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-d6c7bd4-1777032665 # {"$imagepolicy": "flux-system:domain-discovery"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -40,7 +40,10 @@ spec:
                   key: DB_USER
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
-          resources: {}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
           securityContext:
             runAsGroup: 1000
             runAsUser: 1000

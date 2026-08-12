@@ -3,7 +3,6 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeUserFromOrgUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ac from '../../access-control'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
@@ -31,10 +30,8 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByKey },
@@ -81,22 +78,23 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     }
 
     // Get requested users current permission level
-    let affiliationCursor
+    let affiliation
     try {
-      affiliationCursor = await query`
-        WITH affiliations, organizations, users
-        FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations
-          FILTER e._from == ${requestedOrg._id}
-          RETURN { _key: e._key, permission: e.permission }
-      `
+      affiliation = await affiliationDataSource.affiliationByOrgAndUser({ orgId: requestedOrg._id, userId: requestedUser._id })
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
-      )
+      if (err.affiliationDataSourceOp === 'query') {
+        console.error(
+          `Database error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
+        )
+      } else if (err.affiliationDataSourceOp === 'cursor') {
+        console.error(
+          `Cursor error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
     }
 
-    if (affiliationCursor.count < 1) {
+    if (typeof affiliation === 'undefined') {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUser._key}, but they do not have any affiliations to org: ${requestedOrg._key}.`,
       )
@@ -105,16 +103,6 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         code: 400,
         description: i18n._(t`Unable to remove a user that already does not belong to this organization.`),
       }
-    }
-
-    let affiliation
-    try {
-      affiliation = await affiliationCursor.next()
-    } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
-      )
-      throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
     }
 
     // Only admins, owners, and super admins can remove users
@@ -141,44 +129,23 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       }
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
     try {
-      await trx.step(
-        () =>
-          query`
-            WITH affiliations, organizations, users
-            FOR aff IN affiliations
-              FILTER aff._from == ${requestedOrg._id}
-              FILTER aff._to == ${requestedUser._id}
-              REMOVE aff IN affiliations
-              RETURN true
-        `,
-      )
+      await affiliationDataSource.removeAffiliation({ orgId: requestedOrg._id, userId: requestedUser._id })
     } catch (err) {
-      console.error(
-        `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
-      )
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'trx-step') {
+        console.error(
+          `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
+        )
+      } else if (err.affiliationDataSourceOp === 'trx-commit') {
+        console.error(
+          `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
     }
 
     console.info(`User: ${userKey} successfully removed user: ${requestedUser._key} from org: ${requestedOrg._key}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

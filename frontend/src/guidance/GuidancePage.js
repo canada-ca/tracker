@@ -27,8 +27,8 @@ import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 import { useMutation, useQuery } from '@apollo/client'
 import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
 import { FAVOURITE_DOMAIN } from '../graphql/mutations'
@@ -100,7 +100,7 @@ function GuidancePage() {
     if (!activeTab) {
       navigate(`/domains/${domain}/${defaultActiveTab}`, { replace: true, state: location.state })
     }
-  }, [activeTab, navigate, domainName, defaultActiveTab])
+  }, [activeTab, navigate, defaultActiveTab])
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {

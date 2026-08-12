@@ -10,7 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey, loadMyTrackerByUserId } from '../../loaders'
-import { loadDomainConnectionsByUserId } from '../../../domain/loaders'
+import { DomainDataSource } from '../../../domain/data-source'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -200,10 +200,10 @@ describe('given findMyTracker query', () => {
                   }
                 `,
                 rootValue: null,
-                contextValue: {
-                  i18n,
-                  userKey: user._key,
-                  auth: {
+              contextValue: {
+                i18n,
+                userKey: user._key,
+                auth: {
                     userRequired: userRequired({
                       i18n,
                       userKey: user._key,
@@ -215,23 +215,26 @@ describe('given findMyTracker query', () => {
                     }),
                     verifiedRequired: verifiedRequired({}),
                   },
-                  loaders: {
-                    loadMyTrackerByUserId: loadMyTrackerByUserId({
-                      query,
-                      userKey: user._key,
-                      cleanseInput,
-                      language: 'en',
-                    }),
-                    loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
-                      query,
-                      userKey: user._key,
-                      cleanseInput,
-                      language: 'en',
-                      auth: { loginRequiredBool: true },
-                    }),
-                  },
+                loaders: {
+                  loadMyTrackerByUserId: loadMyTrackerByUserId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    language: 'en',
+                  }),
                 },
-              })
+                dataSources: {
+                  domain: new DomainDataSource({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    language: 'en',
+                    loginRequiredBool: true,
+                    i18n,
+                  }),
+                },
+              },
+            })
 
               const expectedResponse = {
                 data: {

@@ -10,12 +10,12 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
-import { loadDomainByKey } from '../../loaders'
+import { DomainDataSource } from '../../data-source'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('favourite a domain', () => {
   let query, drop, i18n, truncate, schema, collections, transaction, user, domain1, favourite1
@@ -122,10 +122,13 @@ describe('favourite a domain', () => {
                 }),
                 verifiedRequired: verifiedRequired({}),
               },
-              loaders: {
-                loadDomainByKey: loadDomainByKey({
+              dataSources: {
+                domain: new DomainDataSource({
                   query,
                   userKey: user._key,
+                  i18n,
+                  transaction,
+                  collections: collectionNames,
                 }),
               },
               validators: { cleanseInput },

@@ -47,9 +47,9 @@ export const userSharedType = new GraphQLObjectType({
       resolve: async (
         {_id},
         args,
-        {loaders: {loadAffiliationConnectionsByUserId}},
+        {dataSources: {affiliation}},
       ) => {
-        const affiliations = await loadAffiliationConnectionsByUserId({
+        const affiliations = await affiliation.connectionsByUserId({
           userId: _id,
           ...args,
         })

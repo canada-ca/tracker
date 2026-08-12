@@ -4,7 +4,6 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { InvitationRoleEnums } from '../../enums'
 import ac from '../../access-control'
 
@@ -39,11 +38,9 @@ able to sign-up and be assigned to that organization in one mutation.`,
     args,
     {
       i18n,
-      query,
       request,
-      collections,
-      transaction,
       userKey,
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { checkPermission, tokenize, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
@@ -143,10 +140,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       })
 
       console.info(`User: ${userKey} successfully invited user: ${userName} to the service, and org: ${org.slug}.`)
-      await logActivity({
-        transaction,
-        collections,
-        query,
+      await auditLogsDataSource.logActivity({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
@@ -172,14 +166,9 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // If account is found, check if already affiliated with org
-    let affiliationCursor
+    let affiliation
     try {
-      affiliationCursor = await query`
-        WITH affiliations, organizations, users
-        FOR v, e IN 1..1 INBOUND ${requestedUser._id} affiliations
-          FILTER e._from == ${org._id}
-          RETURN e
-      `
+      affiliation = await affiliationDataSource.affiliationByOrgAndUser({ orgId: org._id, userId: requestedUser._id })
     } catch (err) {
       console.error(
         `Database error occurred when user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
@@ -191,7 +180,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       }
     }
 
-    if (affiliationCursor.count > 0) {
+    if (typeof affiliation !== 'undefined') {
       // If affiliation is found, return error
       console.warn(
         `User: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug} however they are already affiliated with that org.`,
@@ -205,27 +194,18 @@ able to sign-up and be assigned to that organization in one mutation.`,
 
     // User is not affiliated with org, create affiliation
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    // Create affiliation
     try {
-      await trx.step(
-        () =>
-          query`
-            WITH affiliations, organizations, users
-            INSERT {
-              _from: ${org._id},
-              _to: ${requestedUser._id},
-              permission: ${requestedRole},
-            } INTO affiliations
-          `,
-      )
+      await affiliationDataSource.createAffiliation({ orgId: org._id, userId: requestedUser._id, permission: requestedRole })
     } catch (err) {
-      console.error(
-        `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
-      )
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'trx-commit') {
+        console.error(
+          `Transaction commit error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
+        )
+      } else {
+        console.error(
+          `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
+        )
+      }
       return {
         _type: 'error',
         code: 500,
@@ -239,26 +219,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
       orgNameFR: orgNames.orgNameFR,
     })
 
-    // Commit affiliation
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
-      )
-      await trx.abort()
-      return {
-        _type: 'error',
-        code: 500,
-        description: i18n._(t`Unable to invite user. Please try again.`),
-      }
-    }
-
     console.info(`User: ${userKey} successfully invited user: ${requestedUser._key} to the org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

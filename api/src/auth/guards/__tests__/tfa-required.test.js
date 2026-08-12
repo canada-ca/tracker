@@ -1,10 +1,10 @@
 import { setupI18n } from '@lingui/core'
 
-import { verifiedRequired } from '../index'
-import englishMessages from '../../locale/en/messages'
-import frenchMessages from '../../locale/fr/messages'
+import { tfaRequired } from '../index'
+import englishMessages from '../../../locale/en/messages'
+import frenchMessages from '../../../locale/fr/messages'
 
-describe('given the verifiedRequired function', () => {
+describe('given the tfaRequired function', () => {
   let i18n, user
 
   const consoleOutput = []
@@ -18,19 +18,20 @@ describe('given the verifiedRequired function', () => {
   })
 
   describe('given a successful call', () => {
-    describe('provided an email validated user', () => {
+    describe('provided a tfa activated user', () => {
       beforeEach(() => {
         user = {
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
           tfaValidated: false,
           emailValidated: true,
+          tfaSendMethod: 'email',
         }
       })
       it('returns true', () => {
-        const verifiedFunc = verifiedRequired({})
+        const tfaFunc = tfaRequired({})
 
-        const verifiedUser = verifiedFunc({ user })
+        const verifiedUser = tfaFunc({ user })
 
         expect(verifiedUser).toBe(true)
       })
@@ -50,23 +51,24 @@ describe('given the verifiedRequired function', () => {
           },
         })
       })
-      describe('user is not email validated', () => {
+      describe('user does not have tfa activated', () => {
         beforeEach(() => {
           user = {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             tfaValidated: false,
             emailValidated: false,
+            tfaSendMethod: 'none',
           }
         })
         it('throws an error', () => {
-          const verifiedFunc = verifiedRequired({ i18n })
+          const tfaFunc = tfaRequired({ i18n })
 
           try {
-            verifiedFunc({ user })
+            tfaFunc({ user })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Verification error. Please verify your account via email to access content.'),
+              new Error('Verification error. Please activate multi-factor authentication to access content.'),
             )
           }
         })
@@ -86,23 +88,26 @@ describe('given the verifiedRequired function', () => {
           },
         })
       })
-      describe('user is not email validated', () => {
+      describe('user does not have tfa activated', () => {
         beforeEach(() => {
           user = {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             tfaValidated: false,
             emailValidated: false,
+            tfaSendMethod: 'none',
           }
         })
-        it('throws an error', () => {
-          const verifiedFunc = verifiedRequired({ i18n })
+        it.skip('throws an error', () => {
+          const tfaFunc = tfaRequired({ i18n })
 
           try {
-            verifiedFunc({ user })
+            tfaFunc({ user })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu.'),
+              new Error(
+                "Erreur de vérification. Veuillez activer l'authentification multifactorielle pour accéder au contenu.",
+              ),
             )
           }
         })

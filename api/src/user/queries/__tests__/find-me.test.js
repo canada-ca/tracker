@@ -6,9 +6,7 @@ import { toGlobalId } from 'graphql-relay'
 import { userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
 import { loadUserByKey } from '../../loaders'
-import { cleanseInput } from '../../../validators'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -80,13 +78,6 @@ describe('given the findMe query', () => {
             userRequired: userRequired({
               userKey: user._key,
               loadUserByKey: loadUserByKey({ query }),
-            }),
-          },
-          loaders: {
-            loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
-              query,
-              userKey: user._key,
-              cleanseInput,
             }),
           },
         },

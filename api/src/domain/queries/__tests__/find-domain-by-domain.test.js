@@ -9,8 +9,8 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkDomainPermission, userRequired, verifiedRequired } from '../../../auth'
-import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
+import { checkDomainPermission, userRequired, verifiedRequired, AuthDataSource } from '../../../auth'
+import { DomainDataSource } from '../../data-source'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
@@ -142,7 +142,7 @@ describe('given findDomainByDomain query', () => {
           contextValue: {
             i18n,
             userKey: user._key,
-            query: query,
+            query,
             auth: {
               loginRequiredBool: true,
               checkDomainPermission: checkDomainPermission({
@@ -155,19 +155,15 @@ describe('given findDomainByDomain query', () => {
               }),
               verifiedRequired: verifiedRequired({}),
             },
+            dataSources: {
+              auth: new AuthDataSource({ query, userKey: user._key }),
+              domain: new DomainDataSource({ query, userKey: user._key }),
+            },
             validators: {
               cleanseInput,
             },
             loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
               loadUserByKey: loadUserByKey({ query }),
-              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                i18n,
-                auth: { loginRequiredBool: true },
-              }),
             },
           },
         })
@@ -236,7 +232,7 @@ describe('given findDomainByDomain query', () => {
               contextValue: {
                 i18n,
                 userKey: 1,
-                query: query,
+                query,
                 auth: {
                   checkDomainPermission: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({
@@ -247,9 +243,9 @@ describe('given findDomainByDomain query', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadDomainByDomain: {
-                    load: jest.fn().mockReturnValue(undefined),
+                dataSources: {
+                  domain: {
+                    byDomain: { load: jest.fn().mockReturnValue(undefined) },
                   },
                 },
               },
@@ -298,9 +294,9 @@ describe('given findDomainByDomain query', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadDomainByDomain: {
-                    load: jest.fn().mockReturnValue({ _id: '1' }),
+                dataSources: {
+                  domain: {
+                    byDomain: { load: jest.fn().mockReturnValue({ _id: '1' }) },
                   },
                 },
               },
@@ -351,7 +347,7 @@ describe('given findDomainByDomain query', () => {
             contextValue: {
               i18n,
               userKey: 1,
-              query: query,
+              query,
               auth: {
                 checkDomainPermission: jest.fn().mockReturnValue(true),
                 userRequired: jest.fn().mockReturnValue({
@@ -362,9 +358,9 @@ describe('given findDomainByDomain query', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadDomainByDomain: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                domain: {
+                  byDomain: { load: jest.fn().mockReturnValue(undefined) },
                 },
               },
             },
@@ -413,9 +409,9 @@ describe('given findDomainByDomain query', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadDomainByDomain: {
-                  load: jest.fn().mockReturnValue({ _id: '1' }),
+              dataSources: {
+                domain: {
+                  byDomain: { load: jest.fn().mockReturnValue({ _id: '1' }) },
                 },
               },
             },

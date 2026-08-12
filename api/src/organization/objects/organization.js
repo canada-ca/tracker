@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
+import { organizationPoliciesType } from './organization-policies'
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
 import { Acronym, Slug } from '../../scalars'
@@ -9,7 +10,6 @@ import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
-import { logActivity } from '../../audit-logs'
 import { OrderDirection } from '../../enums'
 import { tagType } from '../../tags/objects'
 import ac from '../../access-control'
@@ -93,14 +93,14 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _key },
         args,
-        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, dataSources: { tags } },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
         }
 
-        const orgTags = await loadTagsByOrg({
+        const orgTags = await tags.byOrg({
           orgId: _key,
           ...args,
         })
@@ -109,6 +109,11 @@ export const organizationType = new GraphQLObjectType({
 
         return orgTags
       },
+    },
+    policies: {
+      type: organizationPoliciesType,
+      description: 'Policies that apply to this organization.',
+      resolve: ({ policies }) => policies,
     },
     summaries: {
       type: organizationSummaryType,
@@ -142,7 +147,7 @@ export const organizationType = new GraphQLObjectType({
         {
           userKey,
           auth: { userRequired, loginRequiredBool, verifiedRequired },
-          loaders: { loadOrganizationSummariesByPeriod },
+          dataSources: { organization: organizationDS },
         },
       ) => {
         if (loginRequiredBool) {
@@ -150,7 +155,7 @@ export const organizationType = new GraphQLObjectType({
           verifiedRequired({ user })
         }
 
-        const historicalSummaries = await loadOrganizationSummariesByPeriod({
+        const historicalSummaries = await organizationDS.summariesByPeriod({
           orgId: _id,
           ...args,
         })
@@ -180,18 +185,15 @@ export const organizationType = new GraphQLObjectType({
         {
           i18n,
           userKey,
-          query,
-          transaction,
-          collections,
           request: { ip },
-          auth: { checkPermission, userRequired, verifiedRequired },
-          loaders: { loadOrganizationDomainStatuses, loadOrganizationNamesById },
+          auth: { userRequired, verifiedRequired },
+          dataSources: { auth: authDS, auditLogs, organization: organizationDS },
         },
       ) => {
         const user = await userRequired()
         verifiedRequired({ user })
 
-        const permission = await checkPermission({ orgId: _id })
+        const permission = await authDS.permissionByOrgId.load(_id)
         if (!ac.can(permission).createOwn('csv').granted) {
           console.error(
             `User "${userKey}" attempted to retrieve CSV output for organization "${_id}". Permission: ${permission}`,
@@ -199,7 +201,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
         }
 
-        const domains = await loadOrganizationDomainStatuses({
+        const domains = await organizationDS.domainStatuses({
           orgId: _id,
           ...args,
         })
@@ -261,7 +263,7 @@ export const organizationType = new GraphQLObjectType({
         // Get org names to use in activity log
         let orgNames
         try {
-          orgNames = await loadOrganizationNamesById.load(_id)
+          orgNames = await organizationDS.namesById.load(_id)
         } catch (err) {
           console.error(
             `Error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
@@ -269,10 +271,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(i18n._(t`Unable to export organization. Please try again.`))
         }
 
-        await logActivity({
-          transaction,
-          collections,
-          query,
+        await auditLogs.logActivity({
           initiatedBy: {
             id: user._key,
             userName: user.userName,
@@ -288,7 +287,7 @@ export const organizationType = new GraphQLObjectType({
             organization: {
               id: _id,
               name: orgNames.orgNameEN,
-            }, // name of resource being acted upon
+            },
             resourceType: 'organization',
           },
         })
@@ -322,11 +321,10 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        { auth: { checkPermission }, loaders: { loadDomainConnectionsByOrgId } },
+        { dataSources: { auth: authDS, domain: domainDataSource } },
       ) => {
-        // Check to see requesting users permission to the org is
-        const permission = await checkPermission({ orgId: _id })
-        const connections = await loadDomainConnectionsByOrgId({
+        const permission = await authDS.permissionByOrgId.load(_id)
+        const connections = await domainDataSource.connectionsByOrgId({
           orgId: _id,
           permission,
           ...args,
@@ -355,14 +353,18 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { i18n, auth: { checkPermission, loginRequiredBool }, loaders: { loadAffiliationConnectionsByOrgId } },
+        {
+          i18n,
+          auth: { loginRequiredBool },
+          dataSources: { auth: authDS, affiliation },
+        },
       ) => {
-        const permission = await checkPermission({ orgId: _id })
+        const permission = await authDS.permissionByOrgId.load(_id)
         if (!ac.can(permission).readOwn('affiliation').granted && loginRequiredBool) {
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 
-        const affiliations = await loadAffiliationConnectionsByOrgId({
+        const affiliations = await affiliation.connectionsByOrgId({
           orgId: _id,
           ...args,
         })
@@ -373,8 +375,8 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description:
         'Value that determines if a user is affiliated with an organization, whether through organization affiliation, verified affiliation, or through super admin status.',
-      resolve: async ({ _id }, _args, { auth: { checkPermission } }) => {
-        const permission = await checkPermission({ orgId: _id })
+      resolve: async ({ _id }, _args, { dataSources: { auth: authDS } }) => {
+        const permission = await authDS.permissionByOrgId.load(_id)
         return ['user', 'admin', 'super_admin', 'owner'].includes(permission)
       },
     },

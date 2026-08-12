@@ -32,6 +32,14 @@ export const findMyOrganizations = {
       type: GraphQLBoolean,
       description: 'Filter the results based on the users affiliation.',
     },
+    hasPsd: {
+      type: GraphQLBoolean,
+      description: 'Filter org list to organizations the Policy on Service and Digital applies to.',
+    },
+    hasPgs: {
+      type: GraphQLBoolean,
+      description: 'Filter org list to organizations the Policy on Government Security applies to.',
+    },
     ...connectionArgs,
   },
   resolve: async (
@@ -40,7 +48,7 @@ export const findMyOrganizations = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired, verifiedRequired, loginRequiredBool },
-      loaders: { loadOrgConnectionsByUserId },
+      dataSources: { organization: organizationDS },
     },
   ) => {
     if (loginRequiredBool) {
@@ -50,7 +58,7 @@ export const findMyOrganizations = {
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    const orgConnections = await loadOrgConnectionsByUserId({
+    const orgConnections = await organizationDS.connectionsByUserId({
       isSuperAdmin,
       ...args,
     })

@@ -56,16 +56,16 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDkimSelectorsByDomainId } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS, domain: domainDataSource } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(`User: ${userKey} attempted to access selectors for ${_id}, but does not have permission.`)
           throw new Error(t`Cannot query domain selectors without permission.`)
         }
 
-        return await loadDkimSelectorsByDomainId({
+        return await domainDataSource.dkimSelectorsByDomainId({
           domainId: _id,
         })
       },
@@ -122,10 +122,10 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
-      resolve: async ({ _id }, args, { auth: { checkSuperAdmin }, loaders: { loadOrgConnectionsByDomainId } }) => {
+      resolve: async ({ _id }, args, { auth: { checkSuperAdmin }, dataSources: { organization } }) => {
         const isSuperAdmin = await checkSuperAdmin()
 
-        return await loadOrgConnectionsByDomainId({
+        return await organization.connectionsByDomainId({
           domainId: _id,
           isSuperAdmin,
           ...args,
@@ -154,13 +154,9 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       description: `DNS scan results.`,
-      resolve: async (
-        { _id },
-        args,
-        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { dnsScan } },
-      ) => {
+      resolve: async ({ _id }, args, { userKey, auth: { userRequired }, dataSources: { auth: authDS, dnsScan } }) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access dns scan results for ${_id}, but does not have permission.`,
@@ -200,13 +196,9 @@ export const domainType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: async (
-        { _id },
-        args,
-        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { webScan } },
-      ) => {
+      resolve: async ({ _id }, args, { userKey, auth: { userRequired }, dataSources: { auth: authDS, webScan } }) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
@@ -226,10 +218,10 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { userKey, auth: { checkDomainPermission, userRequired }, dataSources: { additionalFindings } },
+        { userKey, auth: { userRequired }, dataSources: { auth: authDS, additionalFindings } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access additional findings for domain: ${_id}, but does not have permission.`,
@@ -292,7 +284,7 @@ export const domainType = new GraphQLObjectType({
         return {
           domainKey: _key,
           _id: dmarcSummaryEdge._to,
-          startDate: startDate,
+          startDate,
         }
       },
     },
@@ -338,8 +330,8 @@ export const domainType = new GraphQLObjectType({
           defaultValue: true,
         },
       },
-      resolve: async ({ claimTags }, args, { loaders: { loadTagByTagId } }) => {
-        const loadedTags = await loadTagByTagId.loadMany(claimTags)
+      resolve: async ({ claimTags }, args, { dataSources: { tags } }) => {
+        const loadedTags = await tags.byTagId.loadMany(claimTags)
         return loadedTags.filter((tag) => {
           return args.isVisible ? tag.visible : true
         })
@@ -349,10 +341,8 @@ export const domainType = new GraphQLObjectType({
       description:
         'Value that determines if a user is affiliated with a domain, whether through organization affiliation, verified organization network affiliation, or through super admin status.',
       type: GraphQLBoolean,
-      resolve: async ({ _id }, __, { auth: { checkDomainPermission } }) => {
-        return await checkDomainPermission({
-          domainId: _id,
-        })
+      resolve: async ({ _id }, __, { dataSources: { auth: authDS } }) => {
+        return await authDS.domainPermissionByDomainId.load(_id)
       },
     },
     ignoreRua: {
@@ -383,6 +373,15 @@ export const domainType = new GraphQLObjectType({
         await userRequired()
 
         return cvdEnrollment
+      },
+    },
+    highAvailability: {
+      type: GraphQLBoolean,
+      description: 'Value that determines if the service is scanned for uptime.',
+      resolve: async ({ highAvailability }, __, { auth: { checkSuperAdmin } }) => {
+        const isSuperAdmin = await checkSuperAdmin()
+        if (isSuperAdmin) return highAvailability
+        return false
       },
     },
   }),
