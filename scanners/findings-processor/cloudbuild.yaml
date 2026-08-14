@@ -1,7 +1,7 @@
 steps:
   - name: "golang:1.25"
     id: ci-checks
-    dir: scanners/subdomain-takeover
+    dir: scanners/findings-processor
     entrypoint: "bash"
     args:
       - "-c"
