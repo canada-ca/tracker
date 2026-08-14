@@ -7,7 +7,34 @@ Go microservice that consumes DNS scan results and emits normalized subdomain ta
 1. Consumes from `scans.dns_scanner_results` (JetStream stream: `SCANS`)
 2. Evaluates passive CNAME and NS takeover risk using provider fingerprints
 3. Assigns confidence (`suspected`, `probable`, `confirmed`)
-4. Publishes findings to `scans.findings.subdomain_takeover`
+4. Publishes findings to `scans.findings.subdomain-takeover`
+
+Published finding event contract:
+
+```json
+{
+  "source": "subdomain-takeover",
+  "findingType": "subdomain-takeover-cname",
+  "domainKey": "12345",
+  "subject": "old-app.example.gc.ca",
+  "confidence": "probable",
+  "reasonCode": "CNAME_DANGLING_NXDOMAIN",
+  "observedAt": "2026-08-07T12:34:56Z",
+  "evidence": {
+    "target": "old-app.azurewebsites.net",
+    "recordType": "CNAME"
+  },
+  "attributes": {
+    "provider": "azure",
+    "lameType": ""
+  }
+}
+```
+
+`findingType` values emitted by this service:
+
+- `subdomain-takeover-cname`
+- `subdomain-takeover-ns`
 
 ## Current detection scope
 
@@ -118,8 +145,8 @@ Environment variables:
 - `NATS_URL` (default: `nats://localhost:4222`)
 - `NATS_STREAM` (default: `SCANS`)
 - `SUBJECT_IN` (default: `scans.dns_scanner_results`)
-- `SUBJECT_OUT` (default: `scans.findings.subdomain_takeover`)
-- `DURABLE_NAME` (default: `subdomain_takeover`)
+- `SUBJECT_OUT` (default: `scans.findings.subdomain-takeover`)
+- `DURABLE_NAME` (default: `subdomain-takeover`)
 - `WORKER_COUNT` (default: `5`)
 - `LOG_LEVEL` (default: `info`)
 
@@ -142,7 +169,7 @@ nats pub scans.dns_scanner_results '{"domain_key":"12345","results":{"domain":"e
 Watch findings:
 
 ```bash
-nats sub "scans.findings.subdomain_takeover"
+nats sub "scans.findings.subdomain-takeover"
 ```
 
 ## Next steps / nice-to-haves
