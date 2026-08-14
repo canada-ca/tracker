@@ -176,14 +176,14 @@ func TestUpsertFinding(t *testing.T) {
 		}
 	})
 
-		t.Run("create path creates expected document", func(t *testing.T) {
-			stubUpsertFunctions(t)
+	t.Run("create path creates expected document", func(t *testing.T) {
+		stubUpsertFunctions(t)
 
-			var createdDoc model.FindingDocument
-			createFindingDocument = func(_ context.Context, _ arangodb.Collection, doc model.FindingDocument) error {
-				createdDoc = doc
-				return nil
-			}
+		var createdDoc model.FindingDocument
+		createFindingDocument = func(_ context.Context, _ arangodb.Collection, doc model.FindingDocument) error {
+			createdDoc = doc
+			return nil
+		}
 
 		err := UpsertFinding(context.Background(), nil, evt)
 		if err != nil {

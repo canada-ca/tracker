@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	newEndpoints = connection.NewRoundRobinEndpoints
-	newConnection = connection.NewHttp2Connection
+	newEndpoints       = connection.NewRoundRobinEndpoints
+	newConnection      = connection.NewHttp2Connection
 	defaultHTTP2Config = connection.DefaultHTTP2ConfigurationWrapper
-	newBasicAuth = connection.NewBasicAuth
-	setAuthentication = func(conn connection.Connection, auth connection.Authentication) error {
+	newBasicAuth       = connection.NewBasicAuth
+	setAuthentication  = func(conn connection.Connection, auth connection.Authentication) error {
 		return conn.SetAuthentication(auth)
 	}
 	newArangoClient = arangodb.NewClient

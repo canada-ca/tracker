@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	parseEventFn = model.ParseEvent
+	parseEventFn    = model.ParseEvent
 	validateEventFn = model.Validate
 	upsertFindingFn = database.UpsertFinding
 )
