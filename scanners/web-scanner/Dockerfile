@@ -4,7 +4,7 @@ RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --ta
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.3-slim-bookworm AS python-builder
+FROM python:3.14.7-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -28,7 +28,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 # A self-contained venv with dev versions of nassl and sslyze that enable the PQC plugin. Kept
 # isolated from the prod interpreter and invoked as a subprocess by pqc_scanner.py for the PQC scan.
 
-FROM python:3.14.3-slim-bookworm AS experimental-builder
+FROM python:3.14.7-slim-bookworm AS experimental-builder
 
 # Pinned to explicit dev branch commits which enable the PQC plugin.
 ARG NASSL_REF=9c8be2b118700a34bcb2b63c81ec33e736d98168
@@ -77,7 +77,7 @@ RUN printf '{"nassl_commit": "%s", "sslyze_commit": "%s"}\n' "${NASSL_REF}" "${S
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.14.3-slim-bookworm
+FROM python:3.14.7-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
