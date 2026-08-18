@@ -28,7 +28,7 @@ import { TieredSummaries } from '../summaries/TieredSummaries'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { ORG_DETAILS_PAGE, GET_HISTORICAL_ORG_SUMMARIES } from '../graphql/queries'
+import { ORG_DETAILS_PAGE, GET_HISTORICAL_ORG_SUMMARIES, IS_USER_SUPER_ADMIN } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
@@ -52,15 +52,43 @@ export default function OrganizationDetails({ loginRequired }) {
     validOptions: ['last30days', 'lastyear', 'ytd', 'all'],
     defaultValue: 'last30days',
   })
+  const { searchValue: sourceParam, setSearchParams: setSourceParam } = useSearchParam({
+    name: 'summary-source',
+    validOptions: ['live', 'backfill', 'both'],
+    defaultValue: 'live',
+  })
 
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, { variables: { slug: orgSlug } })
   const { startDate, endDate } = getRangeDates(progressChartRangeParam)
+
+  const { data: superAdminData } = useQuery(IS_USER_SUPER_ADMIN)
+  const isSuperAdmin = Boolean(superAdminData?.isUserSuperAdmin)
+  const showLive = !isSuperAdmin || sourceParam !== 'backfill'
+  const showBackfill = isSuperAdmin && (sourceParam === 'backfill' || sourceParam === 'both')
+
   const { data: orgSummariesData, loading: orgSummariesLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
-    variables: { orgSlug, startDate, endDate, sortDirection: 'DESC' },
+    variables: { orgSlug, startDate, endDate, sortDirection: 'DESC', source: 'LIVE' },
     errorPolicy: 'ignore', // allow partial success
+    skip: !showLive,
   })
+  const { data: backfillSummariesData, loading: backfillLoading } = useQuery(GET_HISTORICAL_ORG_SUMMARIES, {
+    variables: { orgSlug, startDate, endDate, sortDirection: 'DESC', source: 'REBUILD' },
+    errorPolicy: 'ignore', // allow partial success
+    skip: !showBackfill,
+  })
+
+  const liveOrgData = orgSummariesData?.findOrganizationBySlug?.historicalSummaries
+  const backfillOrgData = backfillSummariesData?.findOrganizationBySlug?.historicalSummaries
+  let graphData = liveOrgData
+  let overlayData = null
+  if (showBackfill && sourceParam === 'backfill') {
+    graphData = backfillOrgData
+  } else if (showBackfill && sourceParam === 'both') {
+    overlayData = backfillOrgData
+  }
+  const histSummariesLoading = (showLive && orgSummariesLoading) || (showBackfill && backfillLoading)
 
   useEffect(() => {
     if (!activeTab || !tabNames.includes(activeTab)) {
@@ -160,12 +188,16 @@ export default function OrganizationDetails({ loginRequired }) {
               <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
             <Divider />
-            {orgSummariesLoading ? (
+            {histSummariesLoading ? (
               <LoadingMessage height={500} />
             ) : (
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <HistoricalSummariesGraph
-                  data={orgSummariesData?.findOrganizationBySlug?.historicalSummaries}
+                  data={graphData || []}
+                  overlayData={overlayData}
+                  isSuperAdmin={isSuperAdmin}
+                  sourceParam={sourceParam}
+                  setSourceParam={setSourceParam}
                   setRange={setProgressChartRangeParam}
                   selectedRange={progressChartRangeParam}
                   width={1200}

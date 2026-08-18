@@ -63,6 +63,10 @@ const tieredSummaries = {
 
 export function HistoricalSummariesGraph({
   data,
+  overlayData = null,
+  isSuperAdmin = false,
+  sourceParam = 'live',
+  setSourceParam,
   setRange,
   selectedRange = 'last30days',
   width = 1200,
@@ -91,6 +95,11 @@ export function HistoricalSummariesGraph({
   const summaries = getSummaries(data, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
 
+  const overlaySummaries = getSummaries(overlayData, tieredSummaries[summaryTierParam], scoreTypeParam)
+  overlaySummaries.sort((a, b) => getDate(a) - getDate(b))
+
+  const allSummaries = summaries.concat(overlaySummaries)
+
   const summaryNames = {
     https: `HTTPS`,
     dmarc: `DMARC`,
@@ -115,6 +124,7 @@ export function HistoricalSummariesGraph({
   const innerHeight = height - margin.top - margin.bottom
 
   const series = getSeries(summaries, tieredSummaries[summaryTierParam])
+  const overlaySeries = getSeries(overlaySummaries, tieredSummaries[summaryTierParam])
 
   // colors for lines
   const graphColours = [
@@ -143,12 +153,12 @@ export function HistoricalSummariesGraph({
   // horizontal, x scale
   const timeScale = scaleLinear({
     range: [0, innerWidth],
-    domain: extent(summaries, getDate),
+    domain: extent(allSummaries, getDate),
     nice: true,
   })
 
   const getDomain = () => {
-    const scores = summaries.map(getRD)
+    const scores = allSummaries.map(getRD)
     const minScore = Math.min(...scores)
     const maxScore = Math.max(...scores)
     if (domainScopeParam === 'local') {
@@ -284,7 +294,38 @@ export function HistoricalSummariesGraph({
             </option>
           )}
         </Select>
+        {isSuperAdmin && (
+          <>
+            <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
+              <Trans>Source:</Trans>
+            </Text>
+            <Select
+              mx="2"
+              maxW="20%"
+              borderColor="black"
+              value={sourceParam}
+              onChange={(e) => setSourceParam(e.target.value)}
+            >
+              <option value="live">
+                <Trans>Live</Trans>
+              </option>
+              <option value="backfill">
+                <Trans>Backfill</Trans>
+              </option>
+              <option value="both">
+                <Trans>Both</Trans>
+              </option>
+            </Select>
+          </>
+        )}
       </Flex>
+      {isSuperAdmin && sourceParam === 'both' && (
+        <Box mb="3" px="3" py="1" borderLeftWidth="4px" borderLeftColor="yellow.500" bg="yellow.50">
+          <Text fontSize="md" fontWeight="semibold" color="black">
+            <Trans>Solid lines = live data, dashed lines = backfilled data</Trans>
+          </Text>
+        </Box>
+      )}
       <Box position="relative">
         <svg width={width} height={height}>
           <rect x={0} y={0} width={width} height={height} fill={'#24242c'} rx={14} />
@@ -338,6 +379,18 @@ export function HistoricalSummariesGraph({
                 y={(d) => rdScale(getRD(d)) ?? 0}
               />
             ))}
+            {overlaySeries.map((sData, i) => (
+              <LinePath
+                key={`overlay-${i}`}
+                stroke={graphColours[i]}
+                strokeWidth={3}
+                strokeDasharray="6,4"
+                strokeOpacity={0.7}
+                data={sData}
+                x={(d) => timeScale(getDate(d)) ?? 0}
+                y={(d) => rdScale(getRD(d)) ?? 0}
+              />
+            ))}
             {tooltipData &&
               tooltipData.map((d, i) => (
                 <g key={i}>
@@ -379,11 +432,15 @@ export function HistoricalSummariesGraph({
         {tooltipData && (
           <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
             <Text fontWeight="bold" color="white">{`${formatDate(getDate(tooltipData[0]))}`}</Text>
-            {tooltipData.map((d, i) => (
-              <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(
-                tooltipData[i],
-              )}${scoreTypeParam === 'percentage' && summaryTierParam !== 'four' ? '%' : ''}`}</Text>
-            ))}
+            {tooltipData.map((d, i) => {
+              const suffix = scoreTypeParam === 'percentage' && summaryTierParam !== 'four' ? '%' : ''
+              const backfill = overlaySummaries.find((s) => s.date === d.date && s.type === d.type)
+              return (
+                <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(d)}${suffix}${
+                  backfill ? ` (backfill: ${getRD(backfill)}${suffix})` : ''
+                }`}</Text>
+              )
+            })}
           </TooltipWithBounds>
         )}
       </Box>
@@ -393,6 +450,10 @@ export function HistoricalSummariesGraph({
 
 HistoricalSummariesGraph.propTypes = {
   data: array.isRequired,
+  overlayData: array,
+  isSuperAdmin: bool,
+  sourceParam: string,
+  setSourceParam: func,
   setRange: func.isRequired,
   selectedRange: string,
   width: number,

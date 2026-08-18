@@ -436,7 +436,7 @@ msgstr "Tous les {domainCount} domaines sont sélectionnés. Les mises à jour s
 msgid "All {domainCount} selected"
 msgstr "Tous les {domainCount} sélectionnés"
 
-#: src/summaries/HistoricalSummariesGraph.js:218
+#: src/summaries/HistoricalSummariesGraph.js:228
 msgid "All Time"
 msgstr "Tout le temps"
 
@@ -742,6 +742,10 @@ msgstr "Exigence de disponibilité"
 msgid "Back"
 msgstr "Retour"
 
+#: src/summaries/HistoricalSummariesGraph.js:313
+msgid "Backfill"
+msgstr "Remblai"
+
 #: src/organizationDetails/OrganizationSummary.js:20
 #~ msgid "Based in:"
 #~ msgstr "Basé à:"
@@ -775,7 +779,11 @@ msgstr "Bloqué"
 msgid "BLOCKED"
 msgstr "BLOQUÉ"
 
-#: src/guidance/WebPqcResults.js:97
+#: src/summaries/HistoricalSummariesGraph.js:316
+msgid "Both"
+msgstr "Les deux"
+
+#: src/guidance/WebPqcResults.js:96
 msgid "Built from sslyze {sslyzeCommit} and nassl {nasslCommit}"
 msgstr "Conçu à partir de sslyze {sslyzeCommit} et de nassl {nasslCommit}"
 
@@ -1260,7 +1268,7 @@ msgid "Data Security and Use"
 msgstr "Sécurité et utilisation des données"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:115
-#: src/summaries/HistoricalSummariesGraph.js:245
+#: src/summaries/HistoricalSummariesGraph.js:255
 msgid "Data:"
 msgstr "Données:"
 
@@ -1488,8 +1496,8 @@ msgstr "Phase DMARC"
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
 
-#: src/organizationDetails/OrganizationDetails.js:145
-#: src/organizationDetails/OrganizationDetails.js:186
+#: src/organizationDetails/OrganizationDetails.js:173
+#: src/organizationDetails/OrganizationDetails.js:218
 #: src/user/MyTrackerPage.js:81
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -1572,7 +1580,7 @@ msgstr "Domaine"
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/summaries/HistoricalSummariesGraph.js:259
+#: src/summaries/HistoricalSummariesGraph.js:269
 msgid "Domain count"
 msgstr "Compte de domaine"
 
@@ -1627,7 +1635,7 @@ msgstr "Domaine:"
 #: src/app/FloatingMenu.js:117
 #: src/domains/DomainsPage.js:218
 #: src/domains/DomainsPage.js:286
-#: src/organizationDetails/OrganizationDetails.js:148
+#: src/organizationDetails/OrganizationDetails.js:176
 #: src/organizationDetails/OrganizationDomains.js:143
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
@@ -1883,7 +1891,7 @@ msgstr "Enveloppe De"
 msgid "EQUALS"
 msgstr "ÉGAUX"
 
-#: src/guidance/WebPqcResults.js:88
+#: src/guidance/WebPqcResults.js:87
 msgid "Error"
 msgstr "Erreur"
 
@@ -1904,11 +1912,11 @@ msgstr "Erreur lors de la récupération des données DMARC pour {domainSlug}. <
 msgid "Eventually"
 msgstr "Éventuellement"
 
-#: src/guidance/WebPqcResults.js:51
+#: src/guidance/WebPqcResults.js:50
 msgid "Experimental"
 msgstr "Expérimental"
 
-#: src/guidance/WebPqcResults.js:58
+#: src/guidance/WebPqcResults.js:57
 msgid "Experimental result from an unreleased version of SSLyze. This does not affect compliance scoring and is visible to super admins only."
 msgstr "Résultat expérimental issu d'une version non publiée de SSLyze. Cela n'a aucune incidence sur la note de conformité et n'est visible que par les super-administrateurs."
 
@@ -2187,7 +2195,7 @@ msgstr "Obtenir un rapport sur les 25 principales"
 
 #: src/admin/DomainTagsList.js:51
 #: src/admin/TagForm.js:269
-#: src/summaries/HistoricalSummariesGraph.js:239
+#: src/summaries/HistoricalSummariesGraph.js:249
 msgid "Global"
 msgstr "Mondial"
 
@@ -2903,7 +2911,7 @@ msgstr "Label (FR)"
 msgid "Language:"
 msgstr "La langue:"
 
-#: src/summaries/HistoricalSummariesGraph.js:207
+#: src/summaries/HistoricalSummariesGraph.js:217
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
 
@@ -2911,7 +2919,7 @@ msgstr "Les 30 derniers jours"
 msgid "Last 30 Days of Data"
 msgstr "Données des 30 derniers jours"
 
-#: src/summaries/HistoricalSummariesGraph.js:210
+#: src/summaries/HistoricalSummariesGraph.js:220
 msgid "Last 365 Days"
 msgstr "Les 365 derniers jours"
 
@@ -2966,6 +2974,10 @@ msgstr "Liens à revoir :"
 msgid "List of guidance tags"
 msgstr "Liste des balises d'orientation"
 
+#: src/summaries/HistoricalSummariesGraph.js:310
+msgid "Live"
+msgstr "En direct"
+
 #: src/components/LoadingMessage.js:12
 msgid "Loading {children}..."
 msgstr "Chargement {children}..."
@@ -2974,7 +2986,7 @@ msgstr "Chargement {children}..."
 msgid "Loading Data..."
 msgstr "Chargement des données..."
 
-#: src/summaries/HistoricalSummariesGraph.js:236
+#: src/summaries/HistoricalSummariesGraph.js:246
 msgid "Local"
 msgstr "Local"
 
@@ -2999,7 +3011,7 @@ msgstr "Les recherches :"
 msgid "Low"
 msgstr "Faible"
 
-#: src/summaries/HistoricalSummariesGraph.js:103
+#: src/summaries/HistoricalSummariesGraph.js:112
 msgid "Mail"
 msgstr "Courrier"
 
@@ -3066,7 +3078,7 @@ msgstr "Menu"
 msgid "Message dismissed successfully"
 msgstr "Message rejeté avec succès"
 
-#: src/summaries/HistoricalSummariesGraph.js:263
+#: src/summaries/HistoricalSummariesGraph.js:273
 msgid "Metrics:"
 msgstr "Indicateurs :"
 
@@ -3174,7 +3186,7 @@ msgstr "Négatif"
 msgid "Negative Finding"
 msgstr "Constat négatif"
 
-#: src/summaries/HistoricalSummariesGraph.js:104
+#: src/summaries/HistoricalSummariesGraph.js:113
 msgid "Negative Findings"
 msgstr "Constatations négatives"
 
@@ -3182,7 +3194,7 @@ msgstr "Constatations négatives"
 #~ msgid "Negative Tags"
 #~ msgstr "Étiquettes négatives"
 
-#: src/guidance/WebPqcResults.js:80
+#: src/guidance/WebPqcResults.js:79
 msgid "Negotiated groups"
 msgstr "Groupes négociés"
 
@@ -3253,8 +3265,8 @@ msgstr "Prochaines étapes :"
 #: src/guidance/WebConnectionResults.js:208
 #: src/guidance/WebConnectionResults.js:220
 #: src/guidance/WebConnectionResults.js:226
-#: src/guidance/WebPqcResults.js:68
-#: src/guidance/WebPqcResults.js:75
+#: src/guidance/WebPqcResults.js:67
+#: src/guidance/WebPqcResults.js:74
 #: src/guidance/WebTLSResults.js:217
 #: src/guidance/WebTLSResults.js:275
 #: src/guidance/WebTLSResults.js:286
@@ -3450,7 +3462,7 @@ msgstr "Non conforme"
 #: src/guidance/EmailGuidance.js:274
 #: src/guidance/IgnoredCves.js:23
 #: src/guidance/IgnoredCves.js:67
-#: src/guidance/WebPqcResults.js:82
+#: src/guidance/WebPqcResults.js:81
 #: src/user/EditableUserTFAMethod.js:165
 msgid "None"
 msgstr "Aucun"
@@ -3479,11 +3491,11 @@ msgstr "Non inscrit"
 msgid "Not Implemented"
 msgstr "Non mis en œuvre"
 
-#: src/guidance/WebPqcResults.js:27
+#: src/guidance/WebPqcResults.js:26
 msgid "Not scanned"
 msgstr "Non numérisé"
 
-#: src/guidance/WebPqcResults.js:39
+#: src/guidance/WebPqcResults.js:38
 msgid "Not supported"
 msgstr "Non pris en charge"
 
@@ -3575,7 +3587,7 @@ msgstr "Organisation"
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/organizationDetails/OrganizationDetails.js:74
+#: src/organizationDetails/OrganizationDetails.js:102
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
@@ -3734,7 +3746,7 @@ msgstr "En attente"
 msgid "PENDING"
 msgstr "EN ATTENTE"
 
-#: src/summaries/HistoricalSummariesGraph.js:256
+#: src/summaries/HistoricalSummariesGraph.js:266
 msgid "Percentage"
 msgstr "Pourcentage"
 
@@ -3859,7 +3871,7 @@ msgstr "Positif"
 #~ msgid "Positive Tags"
 #~ msgstr "Étiquettes positives"
 
-#: src/guidance/WebPqcResults.js:48
+#: src/guidance/WebPqcResults.js:47
 msgid "Post-Quantum Key Exchange"
 msgstr "Échange de clés post-quantique"
 
@@ -3973,7 +3985,7 @@ msgstr "PSN"
 msgid "PSD applies:"
 msgstr "Le format PSN s'applique :"
 
-#: src/summaries/HistoricalSummariesGraph.js:203
+#: src/summaries/HistoricalSummariesGraph.js:213
 msgid "Range:"
 msgstr "Gamme :"
 
@@ -4073,7 +4085,7 @@ msgid "Request an invite if you are unaffiliated with your organization."
 msgstr "Demandez une invitation si vous n'êtes pas affilié à votre organisation."
 
 #: src/guidance/GuidancePage.js:168
-#: src/organizationDetails/OrganizationDetails.js:122
+#: src/organizationDetails/OrganizationDetails.js:150
 #: src/organizations/Organizations.js:142
 #: src/organizations/RequestOrgInviteModal.js:63
 msgid "Request Invite"
@@ -4237,7 +4249,7 @@ msgstr "Demande de numérisation"
 #~ msgid "Scanner Finding"
 #~ msgstr "Recherche de scanner"
 
-#: src/summaries/HistoricalSummariesGraph.js:226
+#: src/summaries/HistoricalSummariesGraph.js:236
 msgid "Scope:"
 msgstr "Portée :"
 
@@ -4682,6 +4694,14 @@ msgstr "Passer au contenu principal"
 msgid "Slug:"
 msgstr "Slug:"
 
+#: src/summaries/HistoricalSummariesGraph.js:325
+msgid "Solid lines = live data, dashed lines = backfilled data"
+msgstr "Lignes pleines = données en temps réel, lignes pointillées = données interpolées"
+
+#: src/summaries/HistoricalSummariesGraph.js:324
+#~ msgid "Solid lines = live, dashed lines = backfill"
+#~ msgstr "Lignes pleines = en direct, lignes pointillées = remplissage"
+
 #: src/components/SearchBox.js:68
 #~ msgid "Sort by:"
 #~ msgstr "Trier par:"
@@ -4693,6 +4713,10 @@ msgstr "Trier par: "
 #: src/dmarc/DmarcReportPage.js:173
 msgid "Source IP Address"
 msgstr "Adresse IP source"
+
+#: src/summaries/HistoricalSummariesGraph.js:300
+msgid "Source:"
+msgstr "Source :"
 
 #: src/guidance/EmailGuidance.js:241
 msgid "sp:"
@@ -4874,7 +4898,7 @@ msgstr "L'utilisateur {0} a été supprimé."
 msgid "Successfully stopped ignoring CVE for domain \"{0}\". New ignored CVEs: \"{1}\"."
 msgstr "Arrêt réussi de l'ignorance des CVE pour le domaine « {0} ». Nouvelles CVE ignorées : « {1} »."
 
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/organizationDetails/OrganizationDetails.js:170
 msgid "Summaries"
 msgstr "Résumés"
 
@@ -4898,7 +4922,7 @@ msgstr "Super Admin Menu :"
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/guidance/WebPqcResults.js:33
+#: src/guidance/WebPqcResults.js:32
 msgid "Supported"
 msgstr "Pris en charge"
 
@@ -4906,7 +4930,7 @@ msgstr "Pris en charge"
 #~ msgid "Supports ECDH Key Exchange:"
 #~ msgstr "Supporte l'échange de clés ECDH:"
 
-#: src/guidance/WebPqcResults.js:66
+#: src/guidance/WebPqcResults.js:65
 msgid "Supports post-quantum key exchange"
 msgstr "Prend en charge l'échange de clés post-quantique"
 
@@ -5288,17 +5312,17 @@ msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 msgid "This will update {0} domain(s)."
 msgstr "Cela mettra à jour {0} domaine(s)."
 
-#: src/summaries/HistoricalSummariesGraph.js:273
+#: src/summaries/HistoricalSummariesGraph.js:283
 #: src/summaries/TieredSummaries.js:19
 msgid "Tier 1: Minimum Requirements"
 msgstr "Niveau 1 : Exigences minimales"
 
-#: src/summaries/HistoricalSummariesGraph.js:276
+#: src/summaries/HistoricalSummariesGraph.js:286
 #: src/summaries/TieredSummaries.js:30
 msgid "Tier 2: Improved Posture"
 msgstr "Niveau 2 : Amélioration de la posture"
 
-#: src/summaries/HistoricalSummariesGraph.js:279
+#: src/summaries/HistoricalSummariesGraph.js:289
 #: src/summaries/TieredSummaries.js:47
 msgid "Tier 3: Compliance"
 msgstr "Niveau 3 : Conformité"
@@ -5315,7 +5339,7 @@ msgstr "Heure générée (UTC)"
 #~ msgid "TLS"
 #~ msgstr "TLS"
 
-#: src/guidance/WebPqcResults.js:73
+#: src/guidance/WebPqcResults.js:72
 msgid "TLS 1.3 supported"
 msgstr "Prise en charge de TLS 1.3"
 
@@ -5372,7 +5396,7 @@ msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonct
 msgid "Total Messages"
 msgstr "Total des messages"
 
-#: src/summaries/HistoricalSummariesGraph.js:283
+#: src/summaries/HistoricalSummariesGraph.js:293
 msgid "Total Negative Findings"
 msgstr "Total des conclusions négatives"
 
@@ -5767,7 +5791,7 @@ msgstr "Utilisateur: "
 
 #: src/admin/AdminPage.js:240
 #: src/admin/AdminPanel.js:25
-#: src/organizationDetails/OrganizationDetails.js:152
+#: src/organizationDetails/OrganizationDetails.js:180
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -5916,7 +5940,7 @@ msgstr "faible"
 #~ msgid "Weak Curves:"
 #~ msgstr "Courbes faibles:"
 
-#: src/summaries/HistoricalSummariesGraph.js:102
+#: src/summaries/HistoricalSummariesGraph.js:111
 msgid "Web"
 msgstr "Web"
 
@@ -5932,7 +5956,7 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Components"
 msgstr "Composants Web"
 
-#: src/summaries/HistoricalSummariesGraph.js:97
+#: src/summaries/HistoricalSummariesGraph.js:106
 msgid "Web Connections"
 msgstr "Connexions web"
 
@@ -6064,7 +6088,7 @@ msgstr "WILDCARD EN RAPPORT"
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Souhaitez-vous demander une invitation à {orgName} ?"
 
-#: src/summaries/HistoricalSummariesGraph.js:213
+#: src/summaries/HistoricalSummariesGraph.js:223
 msgid "Year to Date"
 msgstr "Depuis le début de l'année"
 
@@ -6075,8 +6099,8 @@ msgstr "Depuis le début de l'année"
 #: src/guidance/WebConnectionResults.js:208
 #: src/guidance/WebConnectionResults.js:220
 #: src/guidance/WebConnectionResults.js:226
-#: src/guidance/WebPqcResults.js:68
-#: src/guidance/WebPqcResults.js:75
+#: src/guidance/WebPqcResults.js:67
+#: src/guidance/WebPqcResults.js:74
 #: src/guidance/WebTLSResults.js:217
 #: src/guidance/WebTLSResults.js:275
 #: src/guidance/WebTLSResults.js:286
