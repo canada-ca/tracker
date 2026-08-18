@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
-import { Guidance, Summary, Status } from './fragments'
+import { gql } from "@apollo/client"
+import { Guidance, Summary, Status } from "./fragments"
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
@@ -334,7 +334,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       wildcardSibling
       wildcardEntry
       webScanPending
-      cveDetected
       status {
         ...RequiredDomainStatusFields
       }
@@ -865,7 +864,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
             wildcardEntry
             webScanPending
             userHasPermission
-            cveDetected
             cvdEnrollment {
               status
             }
@@ -938,7 +936,6 @@ export const PAGINATED_DOMAINS = gql`
           archived
           hasDMARCReport
           userHasPermission
-          cveDetected
           cvdEnrollment {
             status
           }
