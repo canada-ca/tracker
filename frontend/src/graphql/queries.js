@@ -1,5 +1,5 @@
-import { gql } from "@apollo/client"
-import { Guidance, Summary, Status } from "./fragments"
+import { gql } from '@apollo/client'
+import { Guidance, Summary, Status } from './fragments'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
