@@ -35,7 +35,6 @@ import { FAVOURITE_DOMAIN } from '../graphql/mutations'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
-import { AdditionalFindings } from './AdditionalFindings'
 
 import { ListOf } from '../components/ListOf'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
@@ -49,7 +48,7 @@ function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { domainSlug: domain, activeTab } = useParams()
   const toast = useToast()
-  const tabNames = ['web-guidance', 'email-guidance', 'additional-findings']
+  const tabNames = ['web-guidance', 'email-guidance']
   const defaultActiveTab = tabNames[0]
 
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
@@ -61,7 +60,9 @@ function GuidancePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isLoggedIn, isEmailValidated } = useUserVar()
-  const { from, searchParams } = location.state || { from: { pathname: '/domains', searchParams: '' } }
+  const { from, searchParams } = location.state || {
+    from: { pathname: '/domains', searchParams: '' },
+  }
   const [orgInfo, setOrgInfo] = useState({})
 
   const formatTimestamp = (ts) => {
@@ -92,13 +93,19 @@ function GuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      navigate(`/domains/${domain}/${tab}`, { replace: true, state: location.state })
+      navigate(`/domains/${domain}/${tab}`, {
+        replace: true,
+        state: location.state,
+      })
     }
   }
 
   useEffect(() => {
     if (!activeTab) {
-      navigate(`/domains/${domain}/${defaultActiveTab}`, { replace: true, state: location.state })
+      navigate(`/domains/${domain}/${defaultActiveTab}`, {
+        replace: true,
+        state: location.state,
+      })
     }
   }, [activeTab, navigate, defaultActiveTab])
 
@@ -291,9 +298,6 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Additional Findings</Trans>
-          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -313,9 +317,6 @@ function GuidancePage() {
                 <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
               </EmailGuidance>
             )}
-          </TabPanel>
-          <TabPanel>
-            <AdditionalFindings domain={domainName} />
           </TabPanel>
         </TabPanels>
       </Tabs>

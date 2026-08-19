@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 import {
   Badge,
   Box,
@@ -19,7 +19,7 @@ import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
-import { LinkIcon, StarIcon } from '@chakra-ui/icons'
+import { StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
@@ -39,7 +39,6 @@ function DomainCard({
   wildcardEntry,
   webScanPending,
   userHasPermission,
-  cveDetected,
   cvdEnrollment,
   ...rest
 }) {
@@ -181,21 +180,6 @@ function DomainCard({
                 )
               })}
 
-              {userHasPermission && cveDetected && (
-                <Tag
-                  my="1"
-                  bg="gray.50"
-                  borderWidth="1px"
-                  borderColor="gray.900"
-                  as={RouteLink}
-                  to={`/domains/${url}/additional-findings#vulnerabilities`}
-                >
-                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                    <Trans>SPIN Top 25</Trans> <LinkIcon />
-                  </TagLabel>
-                </Tag>
-              )}
-
               {userHasPermission && cvdEnrollment && cvdEnrollment.status !== 'NOT_ENROLLED' && (
                 <Tag my="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                   <TagLabel textColor="primary" fontWeight="bold" mx="auto">
@@ -236,7 +220,10 @@ function DomainCard({
               variant="primary"
               as={RouteLink}
               to={isLoggedIn() ? `/domains/${url}` : '/sign-in'}
-              state={{ from: location.pathname, searchParams: `?${searchParams.toString()}` }}
+              state={{
+                from: location.pathname,
+                searchParams: `?${searchParams.toString()}`,
+              }}
               px="10"
             >
               <Text whiteSpace="noWrap">
@@ -303,7 +290,6 @@ DomainCard.propTypes = {
   webScanPending: bool,
   userHasPermission: bool,
   assetState: string,
-  cveDetected: bool,
   cvdEnrollment: object,
 }
 
