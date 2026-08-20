@@ -14,7 +14,8 @@ import { organizationConnection } from '../../organization/objects'
 import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
-import { additionalFinding } from '../../additional-findings/objects/additional-finding'
+import { additionalFindingConnection } from '../../additional-findings/objects'
+import { additionalFindingFilter, additionalFindingOrder } from '../../additional-findings/input'
 import { tagType } from '../../tags/objects'
 import { cvdEnrollment } from '../../additional-findings/objects'
 
@@ -213,11 +214,26 @@ export const domainType = new GraphQLObjectType({
       },
     },
     additionalFindings: {
-      type: additionalFinding,
+      type: additionalFindingConnection.connectionType,
       description: 'Additional findings imported from an external ASM tool.',
+      args: {
+        orderBy: {
+          type: additionalFindingOrder,
+          description: 'Ordering options for additional findings.',
+        },
+        filters: {
+          type: new GraphQLList(additionalFindingFilter),
+          description: 'Filters used to limit additional findings returned.',
+        },
+        limit: {
+          type: GraphQLInt,
+          description: 'Number of additional findings to retrieve.',
+        },
+        ...connectionArgs,
+      },
       resolve: async (
-        { _id },
-        _,
+        { _id, _key },
+        args,
         { userKey, auth: { userRequired }, dataSources: { auth: authDS, additionalFindings } },
       ) => {
         await userRequired()
@@ -230,7 +246,8 @@ export const domainType = new GraphQLObjectType({
         }
 
         return await additionalFindings.getByDomainId({
-          domainId: _id,
+          domainId: _key,
+          ...args,
         })
       },
     },

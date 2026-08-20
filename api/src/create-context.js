@@ -147,7 +147,7 @@ export async function createContext({
     dataSources: {
       auth: new AuthDataSource({ query, userKey, i18n }),
       summaries: new SummariesDataSource({ query, userKey, cleanseInput, i18n }),
-      additionalFindings: new AdditionalFindingsDataSource({ query, userKey, i18n, language: request.language }),
+      additionalFindings: new AdditionalFindingsDataSource({ query, userKey, cleanseInput, i18n, language: request.language }),
       auditLogs: new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections }),
       dnsScan: new DnsScanDataSource({ query, userKey, cleanseInput, i18n }),
       guidanceTag: new GuidanceTagDataSource({ query, userKey, i18n, language: request.language, cleanseInput }),
