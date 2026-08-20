@@ -123,7 +123,7 @@ msgstr "`{argSet}` sur la connexion `VerifiedDomain` ne peut être inférieur à
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro."
 
-#: src/organization/objects/organization.js:246
+#: src/organization/objects/organization.js:256
 #: src/organization/queries/get-all-organization-domain-statuses.js:69
 msgid "Assess"
 msgstr "Évaluez"
@@ -138,11 +138,11 @@ msgstr "Évaluez"
 msgid "Authentication error. Please sign in."
 msgstr "Erreur d'authentification. Veuillez vous connecter."
 
-#: src/domain/objects/domain.js:229
+#: src/domain/objects/domain.js:245
 msgid "Cannot query additional findings without permission."
 msgstr "Il n'est pas possible de demander des résultats supplémentaires sans autorisation."
 
-#: src/organization/objects/organization.js:364
+#: src/organization/objects/organization.js:374
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus."
 
@@ -151,15 +151,15 @@ msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autor
 msgid "Cannot query audit logs on organization without admin permission or higher."
 msgstr "Impossible d'interroger les journaux d'audit sur l'organisation sans l'autorisation d'administrateur ou plus."
 
-#: src/domain/objects/domain.js:164
+#: src/domain/objects/domain.js:165
 msgid "Cannot query dns scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse DNS sans autorisation."
 
-#: src/domain/objects/domain.js:65
+#: src/domain/objects/domain.js:66
 msgid "Cannot query domain selectors without permission."
 msgstr "Impossible d'interroger les sélecteurs de domaine sans autorisation."
 
-#: src/domain/objects/domain.js:206
+#: src/domain/objects/domain.js:207
 msgid "Cannot query web scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse web sans autorisation."
 
@@ -171,7 +171,7 @@ msgstr "CVE est déjà ignoré pour ce domaine."
 msgid "CVE is not ignored for this domain."
 msgstr "Le CVE n'est pas ignoré dans ce domaine."
 
-#: src/organization/objects/organization.js:248
+#: src/organization/objects/organization.js:258
 #: src/organization/queries/get-all-organization-domain-statuses.js:71
 msgid "Deploy"
 msgstr "msgstr Déployer"
@@ -180,7 +180,7 @@ msgstr "msgstr Déployer"
 msgid "Email already in use."
 msgstr "Courriel déjà utilisé."
 
-#: src/organization/objects/organization.js:250
+#: src/organization/objects/organization.js:260
 #: src/organization/queries/get-all-organization-domain-statuses.js:73
 msgid "Enforce"
 msgstr "Appliquer"
@@ -217,7 +217,7 @@ msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessay
 msgid "Invalid token, please sign in."
 msgstr "Jeton invalide, veuillez vous connecter."
 
-#: src/organization/objects/organization.js:252
+#: src/organization/objects/organization.js:262
 #: src/organization/queries/get-all-organization-domain-statuses.js:75
 msgid "Maintain"
 msgstr "Maintenir"
@@ -454,7 +454,7 @@ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation
 #~ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide afin de récupérer les étiquettes."
 
 #: src/domain/queries/find-domain-by-domain.js:51
-#: src/organization/objects/organization.js:201
+#: src/organization/objects/organization.js:211
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide pour récupérer ce domaine."
 
@@ -871,7 +871,7 @@ msgstr "Impossible de rejeter le message. Veuillez réessayer."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Impossible d'envoyer un scan unique. Veuillez réessayer."
 
-#: src/organization/objects/organization.js:271
+#: src/organization/objects/organization.js:281
 msgid "Unable to export organization. Please try again."
 msgstr "Impossible d'exporter l'organisation. Veuillez réessayer."
 
@@ -1018,8 +1018,8 @@ msgstr "Impossible de s'inviter à un org."
 msgid "Unable to leave undefined organization."
 msgstr "Impossible de quitter une organisation non définie."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:24
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:34
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:149
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:159
 msgid "Unable to load additional findings. Please try again."
 msgstr "Impossible de charger des résultats supplémentaires. Veuillez réessayer."
 
@@ -1041,8 +1041,8 @@ msgstr "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez
 #~ msgid "Unable to load all organization domain statuses. Please try again."
 #~ msgstr "Impossible de charger tous les statuts de domaine d'organisation. Veuillez réessayer."
 
-#: src/summaries/loaders/load-chart-summaries-by-period.js:56
-#: src/summaries/loaders/load-chart-summaries-by-period.js:66
+#: src/summaries/loaders/load-chart-summaries-by-period.js:58
+#: src/summaries/loaders/load-chart-summaries-by-period.js:68
 msgid "Unable to load chart summary data. Please try again."
 msgstr "Impossible de charger les données du résumé du graphique. Veuillez réessayer."
 
@@ -1167,7 +1167,6 @@ msgstr "Impossible de charger le(s) journal(s). Veuillez réessayer."
 #~ msgid "Unable to load mail summary. Please try again."
 #~ msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 
-#: src/additional-findings/loaders/load-top-25-reports.js:29
 #: src/organization/loaders/load-all-organization-domain-statuses.js:164
 #: src/organization/loaders/load-organization-domain-statuses.js:172
 msgid "Unable to load organization domain statuses. Please try again."
@@ -1178,8 +1177,8 @@ msgstr "Impossible de charger les statuts des domaines d'organisation. Veuillez 
 msgid "Unable to load organization names. Please try again."
 msgstr "Impossible de charger les noms des organisations. Veuillez réessayer."
 
-#: src/organization/loaders/load-organization-summaries-by-period.js:50
-#: src/organization/loaders/load-organization-summaries-by-period.js:60
+#: src/organization/loaders/load-organization-summaries-by-period.js:52
+#: src/organization/loaders/load-organization-summaries-by-period.js:62
 msgid "Unable to load organization summary data. Please try again."
 msgstr "Impossible de charger les données de synthèse de l'organisation. Veuillez réessayer."
 
@@ -1460,8 +1459,8 @@ msgstr "Impossible de demander une invitation. Veuillez réessayer."
 msgid "Unable to reset password. Please try again."
 msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 
-#: src/domain/objects/domain.js:274
-#: src/domain/objects/domain.js:309
+#: src/domain/objects/domain.js:291
+#: src/domain/objects/domain.js:326
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
@@ -1749,7 +1748,7 @@ msgstr "Erreur de vérification. Veuillez activer l'authentification multifactor
 msgid "Verification error. Please verify your account via email to access content."
 msgstr "Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:8
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:9
 msgid "You must provide a `domainId` to retrieve a domain's additional findings."
 msgstr "Vous devez fournir un `domainId` pour récupérer les résultats supplémentaires d'un domaine."
 
@@ -1839,6 +1838,10 @@ msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctemen
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedOrganization`."
 
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:20
+msgid "You must provide a `limit` value in the range of 1-100 to properly paginate additional findings."
+msgstr "Vous devez indiquer une valeur « limit » comprise entre 1 et 100 pour paginer correctement les résultats supplémentaires."
+
 #: src/dns-scan/loaders/load-dns-connections-by-domain-id.js:16
 msgid "You must provide a `limit` value in the range of 1-100 to properly paginate the `DNS` connection."
 msgstr "Vous devez fournir une valeur `limit` comprise entre 1 et 100 pour paginer correctement la connexion `DNS`."
@@ -1850,6 +1853,10 @@ msgstr "Vous devez fournir une valeur `limit` comprise entre 1 et 100 pour pagin
 #: src/web-scan/loaders/load-web-connections-by-domain-id.js:16
 msgid "You must provide a `limit` value in the range of 1-100 to properly paginate the `web` connection."
 msgstr "Vous devez fournir une valeur `limit` comprise entre 1 et 100 pour paginer correctement la connexion `web`."
+
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:14
+msgid "You must provide a `limit` value to properly paginate additional findings."
+msgstr "Vous devez indiquer une valeur pour le paramètre `limit` afin de paginer correctement les résultats supplémentaires."
 
 #: src/dns-scan/loaders/load-dns-connections-by-domain-id.js:9
 msgid "You must provide a `limit` value to properly paginate the `DNS` connection."
