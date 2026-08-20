@@ -14,10 +14,9 @@ import { organizationConnection } from '../../organization/objects'
 import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
-import { additionalFindingConnection } from '../../additional-findings/objects'
+import { additionalFindingConnection, cvdEnrollment } from '../../additional-findings/objects'
 import { additionalFindingFilter, additionalFindingOrder } from '../../additional-findings/input'
 import { tagType } from '../../tags/objects'
-import { cvdEnrollment } from '../../additional-findings/objects'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
