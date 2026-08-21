@@ -398,6 +398,9 @@ describe('<CreateUserPage />', () => {
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
 
+      // click required checkbox
+      userEvent.click(getByRole('checkbox'))
+
       // fire mutation
       const createAccountButton = getByRole('button', {
         name: /Create Account/,
@@ -468,6 +471,9 @@ describe('<CreateUserPage />', () => {
       userEvent.type(displayNameInput, 'Test User')
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
+
+      // click required checkbox
+      userEvent.click(getByRole('checkbox'))
 
       // fire mutation
       const createAccountButton = getByRole('button', {

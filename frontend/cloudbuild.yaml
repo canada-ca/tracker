@@ -3,7 +3,7 @@ steps:
     id: install
     dir: frontend
     entrypoint: npm
-    args: ['ci', '--no-optional']
+    args: ['ci']
 
   - name: node:20.10.0-alpine
     id: lint
