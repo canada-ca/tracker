@@ -27,6 +27,7 @@ import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
+import { AdditionalFindings } from './AdditionalFindings'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useMutation, useQuery } from '@apollo/client'
@@ -43,6 +44,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DmarcPhaseStepper } from './DmarcPhaseStepper'
+import { AdditionalFindings } from './AdditionalFindings'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -298,6 +300,9 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Additonal Findings</Trans>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -317,6 +322,9 @@ function GuidancePage() {
                 <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
               </EmailGuidance>
             )}
+          </TabPanel>
+          <TabPanel>
+            <AdditionalFindings domain={domain} />
           </TabPanel>
         </TabPanels>
       </Tabs>
