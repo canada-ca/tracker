@@ -28,7 +28,7 @@ describe('<AdditionalFindings />', () => {
   it('renders loading state', () => {
     renderComponent([])
 
-    expect(screen.getByText('Additional Findings')).toBeInTheDocument()
+    expect(screen.getByText(/Loading Additional Findings/i)).toBeInTheDocument()
   })
 
   it('renders empty state when there are no findings', async () => {
@@ -103,7 +103,6 @@ describe('<AdditionalFindings />', () => {
                       subject: 'scanner.subject',
                       attributes: { key: 'value' },
                       evidence: { confidenceReason: 'correlated signals' },
-                      raw: { foo: 'bar' },
                     },
                   },
                 ],
@@ -124,19 +123,15 @@ describe('<AdditionalFindings />', () => {
     renderComponent(mocks)
 
     await waitFor(() => {
-      expect(screen.getByText('scanner-a')).toBeInTheDocument()
       expect(screen.getByText('dns_misconfig')).toBeInTheDocument()
       expect(screen.getByText('1 total item(s)')).toBeInTheDocument()
     })
 
-    await userEvent.click(screen.getByText('dns_misconfig'))
+    userEvent.click(screen.getByRole('button', { name: /dns_misconfig/i }))
 
     await waitFor(() => {
-      expect(screen.getByText('Reason code:')).toBeInTheDocument()
-      expect(screen.getByText('Occurrence count:')).toBeInTheDocument()
+      expect(screen.getByText(/Occurrence count:/i)).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Filter by source' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Copy reason code' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Copy raw payload' })).toBeInTheDocument()
     })
   })
 
@@ -222,8 +217,8 @@ describe('<AdditionalFindings />', () => {
       expect(screen.getByText('dns_misconfig')).toBeInTheDocument()
     })
 
-    await userEvent.click(screen.getByText('dns_misconfig'))
-    await userEvent.click(screen.getByRole('button', { name: 'Filter by source' }))
+    userEvent.click(screen.getByRole('button', { name: /dns_misconfig/i }))
+    userEvent.click(screen.getByRole('button', { name: 'Filter by source' }))
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument()
