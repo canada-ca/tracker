@@ -17,8 +17,6 @@ WORKDIR /app
 COPY --from=build-env /app .
 
 ENV NODE_ENV production
-# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
-ENV NODE_OPTIONS=--openssl-legacy-provider
 
 USER 1000:1000
 EXPOSE 3000
