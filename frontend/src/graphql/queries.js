@@ -665,7 +665,6 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
             attributes
             evidence
             reasonCode
-            raw
           }
         }
         totalCount

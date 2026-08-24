@@ -112,7 +112,7 @@ function GuidancePage() {
     }
   }, [activeTab, navigate, defaultActiveTab])
 
-  const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
+  const [favouriteDomain] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
       toast({
         title: t`An error occurred while favouriting a domain.`,

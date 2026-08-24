@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -8,7 +8,6 @@ import {
   Badge,
   Box,
   Button,
-  Code,
   Divider,
   Flex,
   HStack,
@@ -217,7 +216,6 @@ export function AdditionalFindings({ domain }) {
 
       <Accordion allowMultiple defaultIndex={[]}>
         {findings.map((finding, index) => {
-          const rawValue = finding.raw ? JSON.stringify(finding.raw, null, 2) : ''
           const evidenceValue = finding.evidence ? JSON.stringify(finding.evidence, null, 2) : ''
           const attributesValue = finding.attributes ? JSON.stringify(finding.attributes, null, 2) : ''
 
