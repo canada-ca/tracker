@@ -45,6 +45,7 @@ import { UserIcon } from '../theme/Icons'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DmarcPhaseStepper } from './DmarcPhaseStepper'
 import { AdditionalFindings } from './AdditionalFindings'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -300,9 +301,13 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Additonal Findings</Trans>
-          </Tab>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <Tab borderTopWidth="0.25">
+                <Trans>Additonal Findings</Trans>
+              </Tab>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -323,9 +328,13 @@ function GuidancePage() {
               </EmailGuidance>
             )}
           </TabPanel>
-          <TabPanel>
-            <AdditionalFindings domain={domain} />
-          </TabPanel>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <TabPanel>
+                <AdditionalFindings domain={domain} />
+              </TabPanel>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabPanels>
       </Tabs>
     )
