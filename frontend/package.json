@@ -6,7 +6,7 @@
     "build:dev": "webpack --env development --config webpack.config.js",
     "dev": "webpack serve --hot --env development",
     "webpack": "webpack",
-    "start": "NODE_OPTIONS=--openssl-legacy-provider node index.js",
+    "start": "node index.js",
     "start:dev": "NODE_ENV=development PORT=3300 HOST=127.0.0.1 node index.js",
     "test": "jest --silent",
     "test-coverage": "jest --coverage",
