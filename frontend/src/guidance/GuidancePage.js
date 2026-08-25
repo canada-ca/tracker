@@ -44,7 +44,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DmarcPhaseStepper } from './DmarcPhaseStepper'
-import { AdditionalFindings } from './AdditionalFindings'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 function GuidancePage() {
@@ -304,7 +303,7 @@ function GuidancePage() {
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               <Tab borderTopWidth="0.25">
-                <Trans>Additonal Findings</Trans>
+                <Trans>Additional Findings</Trans>
               </Tab>
             </ABTestVariant>
           </ABTestWrapper>
