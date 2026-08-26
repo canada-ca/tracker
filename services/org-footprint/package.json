@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.29.7",
     "arango-tools": "^0.6.0",
     "dotenv-safe": "^8.2.0",
     "notifications-node-client": "^8.2.1",
