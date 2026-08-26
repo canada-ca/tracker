@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
@@ -13,10 +13,12 @@ jest.mock('../../utilities/usePaginatedCollection', () => ({
 }))
 
 jest.mock('../../components/LoadingMessage', () => ({
+  // eslint-disable-next-line react/prop-types
   LoadingMessage: ({ children }) => <div data-testid="loading-message">Loading {children}</div>,
 }))
 
 jest.mock('../../components/ErrorFallbackMessage', () => ({
+  // eslint-disable-next-line react/prop-types
   ErrorFallbackMessage: ({ error }) => <div data-testid="error-fallback">Error: {error.message}</div>,
 }))
 
@@ -59,6 +61,17 @@ const makeFinding = (overrides = {}) => ({
   ...overrides,
 })
 
+const createUser = () => {
+  if (typeof userEvent.setup === 'function') {
+    return userEvent.setup()
+  }
+
+  return {
+    click: (...args) => Promise.resolve(userEvent.click(...args)),
+    selectOptions: (...args) => Promise.resolve(userEvent.selectOptions(...args)),
+  }
+}
+
 const setup = (hookStateOverrides = {}) => {
   const hookState = {
     ...baseHookState,
@@ -81,11 +94,6 @@ const setup = (hookStateOverrides = {}) => {
 describe('<AdditionalFindings />', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    if (typeof userEvent.setup !== 'function') {
-      userEvent.setup = () => ({
-        click: async (...args) => userEvent.click(...args),
-      })
-    }
   })
 
   it('renders loading state', () => {
@@ -108,7 +116,7 @@ describe('<AdditionalFindings />', () => {
   })
 
   it('renders one finding and expands with details', async () => {
-    const user = userEvent.setup()
+    const user = createUser()
     setup({ nodes: [makeFinding()], totalCount: 1 })
 
     expect(screen.getByText('dns_misconfig')).toBeInTheDocument()
@@ -122,7 +130,7 @@ describe('<AdditionalFindings />', () => {
   })
 
   it('supports source filter add then remove and clear', async () => {
-    const user = userEvent.setup()
+    const user = createUser()
     setup({
       nodes: [
         makeFinding({ source: 'scanner-a', findingType: 'finding-a' }),
@@ -148,7 +156,7 @@ describe('<AdditionalFindings />', () => {
   })
 
   it('toggles sort direction and sends updated hook args while resetting pagination', async () => {
-    const user = userEvent.setup()
+    const user = createUser()
     const { hookState } = setup({ nodes: [makeFinding()], totalCount: 1 })
 
     const sortDirectionButton = screen.getByRole('button', {
@@ -163,12 +171,13 @@ describe('<AdditionalFindings />', () => {
     expect(latestHookCallArgs.variables.orderBy.direction).toBe('ASC')
   })
 
-  it('changes sort field and sends updated hook args while resetting pagination', () => {
+  it('changes sort field and sends updated hook args while resetting pagination', async () => {
+    const user = createUser()
     const { hookState } = setup({ nodes: [makeFinding()], totalCount: 1 })
 
     const sortFieldSelect = screen.getByRole('combobox', { name: 'Select sorting field' })
 
-    fireEvent.change(sortFieldSelect, { target: { value: 'SEVERITY' } })
+    await user.selectOptions(sortFieldSelect, 'SEVERITY')
 
     expect(hookState.resetToFirstPage).toHaveBeenCalledTimes(1)
 
