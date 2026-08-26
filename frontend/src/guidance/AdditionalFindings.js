@@ -93,7 +93,7 @@ const formatSeenDate = (value) => {
   const dateValue = new Date(value)
 
   if (Number.isNaN(dateValue.getTime())) {
-    return value === null || value === undefined || value === '' ? '-' : String(value)
+    return String(value)
   }
 
   return dateValue.toLocaleString()
