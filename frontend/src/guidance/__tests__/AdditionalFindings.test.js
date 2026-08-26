@@ -1,7 +1,7 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ChakraProvider, useToast } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 
@@ -29,14 +29,6 @@ jest.mock('../../graphql/queries', () => ({
 }))
 
 jest.mock('../additionalFindings.fixture.json', () => ({}), { virtual: true })
-
-jest.mock('@chakra-ui/react', () => {
-  const actual = jest.requireActual('@chakra-ui/react')
-  return {
-    ...actual,
-    useToast: jest.fn(),
-  }
-})
 
 const baseHookState = {
   loading: false,
@@ -87,22 +79,13 @@ const setup = (hookStateOverrides = {}) => {
 }
 
 describe('<AdditionalFindings />', () => {
-  const toastSpy = jest.fn()
-
   beforeEach(() => {
     jest.clearAllMocks()
-    useToast.mockReturnValue(toastSpy)
     if (typeof userEvent.setup !== 'function') {
       userEvent.setup = () => ({
         click: async (...args) => userEvent.click(...args),
       })
     }
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: {
-        writeText: jest.fn(),
-      },
-    })
   })
 
   it('renders loading state', () => {
@@ -180,42 +163,17 @@ describe('<AdditionalFindings />', () => {
     expect(latestHookCallArgs.variables.orderBy.direction).toBe('ASC')
   })
 
-  it('shows success toast when copying value succeeds', async () => {
-    const user = userEvent.setup()
-    navigator.clipboard.writeText.mockResolvedValue(undefined)
+  it('changes sort field and sends updated hook args while resetting pagination', () => {
+    const { hookState } = setup({ nodes: [makeFinding()], totalCount: 1 })
 
-    setup({ nodes: [makeFinding()], totalCount: 1 })
+    const sortFieldSelect = screen.getByRole('combobox', { name: 'Select sorting field' })
 
-    await user.click(screen.getByRole('button', { name: /dns_misconfig/i }))
+    fireEvent.change(sortFieldSelect, { target: { value: 'SEVERITY' } })
 
-    const copyButtons = screen.getAllByRole('button', { name: 'Copy technical value' })
-    await user.click(copyButtons[0])
+    expect(hookState.resetToFirstPage).toHaveBeenCalledTimes(1)
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('value')
-    expect(toastSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'Copied value to clipboard.',
-        status: 'success',
-      }),
-    )
+    const latestHookCallArgs = usePaginatedCollection.mock.calls[usePaginatedCollection.mock.calls.length - 1][0]
+    expect(latestHookCallArgs.variables.orderBy.field).toBe('SEVERITY')
   })
 
-  it('shows error toast when copying value fails', async () => {
-    const user = userEvent.setup()
-    navigator.clipboard.writeText.mockRejectedValue(new Error('nope'))
-
-    setup({ nodes: [makeFinding()], totalCount: 1 })
-
-    await user.click(screen.getByRole('button', { name: /dns_misconfig/i }))
-
-    const copyButton = screen.getAllByRole('button', { name: 'Copy technical value' })[0]
-    await user.click(copyButton)
-
-    expect(toastSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'Unable to copy value.',
-        status: 'error',
-      }),
-    )
-  })
 })

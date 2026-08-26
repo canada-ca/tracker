@@ -22,35 +22,17 @@ import {
   Tbody,
   Td,
   Tr,
-  useToast,
 } from '@chakra-ui/react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { string } from 'prop-types'
 
-import additionalFindingsFixture from './additionalFindings.fixture.json'
-import { ArrowDownIcon, ArrowUpIcon, CopyIcon } from '@chakra-ui/icons'
+import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-
-export const additionalFindingsUserTestFixture = additionalFindingsFixture
-
-const severityRank = {
-  critical: 4,
-  high: 3,
-  medium: 2,
-  low: 1,
-  info: 0,
-}
-
-const confidenceRank = {
-  high: 3,
-  medium: 2,
-  low: 1,
-}
 
 const severityColorMap = {
   critical: 'red',
@@ -89,14 +71,21 @@ const buildFindingKey = (finding) => {
     finding.status,
   ]
 
-  return keyParts.map((keyPart) => normalizeToken(keyPart)).join('|')
+  return keyParts
+    .map((keyPart) => {
+      const keyText = keyPart === null || keyPart === undefined || keyPart === '' ? '-' : String(keyPart)
+      return keyText.trim().toLowerCase()
+    })
+    .join('|')
 }
 
-const safeText = (value) => (value === null || value === undefined || value === '' ? '-' : String(value))
+const getBadgeColor = (value, colorMap) => {
+  const normalizedValue = (value === null || value === undefined || value === '' ? '-' : String(value))
+    .trim()
+    .toLowerCase()
 
-const normalizeToken = (value) => safeText(value).trim().toLowerCase()
-
-const getBadgeColor = (value, colorMap) => colorMap[normalizeToken(value)] || 'gray'
+  return colorMap[normalizedValue] || 'gray'
+}
 
 const formatSeenDate = (value) => {
   if (!value) return '-'
@@ -104,36 +93,13 @@ const formatSeenDate = (value) => {
   const dateValue = new Date(value)
 
   if (Number.isNaN(dateValue.getTime())) {
-    return safeText(value)
+    return value === null || value === undefined || value === '' ? '-' : String(value)
   }
 
   return dateValue.toLocaleString()
 }
 
-const compareByField = (left, right, field) => {
-  if (field === 'LAST_SEEN' || field === 'FIRST_SEEN') {
-    const leftTime = new Date(left[field === 'LAST_SEEN' ? 'lastSeen' : 'firstSeen']).getTime() || 0
-    const rightTime = new Date(right[field === 'LAST_SEEN' ? 'lastSeen' : 'firstSeen']).getTime() || 0
-    return leftTime - rightTime
-  }
-
-  if (field === 'SEVERITY') {
-    const leftSeverity = severityRank[normalizeToken(left.severity)] ?? -1
-    const rightSeverity = severityRank[normalizeToken(right.severity)] ?? -1
-    return leftSeverity - rightSeverity
-  }
-
-  if (field === 'CONFIDENCE') {
-    const leftConfidence = confidenceRank[normalizeToken(left.confidence)] ?? -1
-    const rightConfidence = confidenceRank[normalizeToken(right.confidence)] ?? -1
-    return leftConfidence - rightConfidence
-  }
-
-  return safeText(left.source).localeCompare(safeText(right.source))
-}
-
 export function AdditionalFindings({ domain }) {
-  const toast = useToast()
   const [findingsPerPage, setFindingsPerPage] = useState(10)
   const [orderDirection, setOrderDirection] = useState('DESC')
   const [orderField, setOrderField] = useState('LAST_SEEN')
@@ -182,6 +148,11 @@ export function AdditionalFindings({ domain }) {
     resetToFirstPage()
   }
 
+  const handleOrderFieldChange = (event) => {
+    setOrderField(event.target.value)
+    resetToFirstPage()
+  }
+
   const addSourceFilter = (source) => {
     if (!source) return
 
@@ -217,27 +188,6 @@ export function AdditionalFindings({ domain }) {
       ),
     )
     resetToFirstPage()
-  }
-
-  const copyText = async (value, message) => {
-    try {
-      await navigator.clipboard.writeText(value)
-      toast({
-        title: message,
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    } catch {
-      toast({
-        title: t`Unable to copy value.`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    }
   }
 
   const renderKeyValueTable = (data) => {
@@ -277,8 +227,10 @@ export function AdditionalFindings({ domain }) {
                 normalizedValue = JSON.stringify(value, null, 2)
               }
 
-              const valueText = safeText(normalizedValue)
-              const copyLabel = t`Copied value to clipboard.`
+              const valueText =
+                normalizedValue === null || normalizedValue === undefined || normalizedValue === ''
+                  ? '-'
+                  : String(normalizedValue)
 
               return (
                 <Tr key={key}>
@@ -295,20 +247,8 @@ export function AdditionalFindings({ domain }) {
                       overflowY="auto"
                       fontFamily="mono"
                       whiteSpace="pre-wrap"
-                      align="center"
-                      justify="space-between"
                     >
                       {valueText}
-
-                      <Button
-                        size="xs"
-                        width="fit-content"
-                        variant="ghost"
-                        onClick={() => copyText(valueText, copyLabel)}
-                        aria-label={t`Copy technical value`}
-                      >
-                        <CopyIcon boxSize="icons.sm" />
-                      </Button>
                     </Flex>
                   </Td>
                 </Tr>
@@ -332,24 +272,7 @@ export function AdditionalFindings({ domain }) {
     )
   }
 
-  const filteredFindings = findings.filter((finding) => {
-    if (filters.length === 0) return true
-
-    return filters.every(({ filterCategory, comparison, filterValue }) => {
-      if (filterCategory === 'source' && comparison === '==') {
-        return safeText(finding.source) === safeText(filterValue)
-      }
-
-      return true
-    })
-  })
-
-  const sortedFindings = [...filteredFindings].sort((left, right) => {
-    const sortValue = compareByField(left, right, orderField)
-    return orderDirection === 'ASC' ? sortValue : sortValue * -1
-  })
-
-  if (findings.length === 0) {
+  if (findings.length === 0 && filters.length === 0) {
     return (
       <Box borderWidth="1px" borderColor="gray.200" bg="gray.50" px="6" py="8" rounded="md">
         <Text fontSize="xl" fontWeight="semibold" textAlign="center" color="gray.700">
@@ -396,7 +319,7 @@ export function AdditionalFindings({ domain }) {
             <Select
               size="sm"
               value={orderField}
-              onChange={(event) => setOrderField(event.target.value)}
+              onChange={handleOrderFieldChange}
               aria-label={t`Select sorting field`}
               borderColor="gray.900"
               bg="white"
@@ -428,7 +351,7 @@ export function AdditionalFindings({ domain }) {
         </HStack>
       </Flex>
 
-      {sortedFindings.length === 0 && (
+      {filters.length > 0 && findings.length === 0 && (
         <Box borderWidth="1px" borderColor="gray.200" bg="gray.50" px="6" py="7" rounded="md" mb="4">
           <Text fontSize="lg" fontWeight="semibold" textAlign="center" color="gray.700">
             <Trans>No findings match your current filters.</Trans>
@@ -445,10 +368,8 @@ export function AdditionalFindings({ domain }) {
       )}
 
       <Accordion allowMultiple defaultIndex={[]}>
-        {sortedFindings.map((finding) => {
-          const evidenceValue = finding.evidence ? JSON.stringify(finding.evidence, null, 2) : ''
-          const attributesValue = finding.attributes ? JSON.stringify(finding.attributes, null, 2) : ''
-          const occurrenceCount = finding.occurrenceCount ?? finding.occurenceCount ?? '-'
+        {findings.map((finding) => {
+          const occurrenceCount = finding.occurrenceCount ?? '-'
 
           return (
             <AccordionItem
@@ -494,8 +415,14 @@ export function AdditionalFindings({ domain }) {
                     </HStack>
                   </Flex>
                   <Text color="gray.700" fontSize="sm" mb="1">
-                    <Trans>Source:</Trans> {safeText(finding.source)} • <Trans>Subject:</Trans>{' '}
-                    {safeText(finding.subject)}
+                    <Trans>Source:</Trans>{' '}
+                    {finding.source === null || finding.source === undefined || finding.source === ''
+                      ? '-'
+                      : String(finding.source)}{' '}
+                    • <Trans>Subject:</Trans>{' '}
+                    {finding.subject === null || finding.subject === undefined || finding.subject === ''
+                      ? '-'
+                      : String(finding.subject)}
                   </Text>
                   <Text color="gray.700" fontSize="sm">
                     <Trans>First seen:</Trans> {formatSeenDate(finding.firstSeen)} • <Trans>Last seen:</Trans>{' '}
@@ -519,7 +446,7 @@ export function AdditionalFindings({ domain }) {
                       <Trans>Filter by source</Trans>
                     </Button>
                   )}
-                  {attributesValue && (
+                  {finding.attributes && (
                     <Box>
                       <Text fontWeight="bold" mb="1">
                         <Trans>Attributes</Trans>
@@ -527,7 +454,7 @@ export function AdditionalFindings({ domain }) {
                       {renderKeyValueTable(finding.attributes)}
                     </Box>
                   )}
-                  {evidenceValue && (
+                  {finding.evidence && (
                     <Box>
                       <Text fontWeight="bold" mb="1">
                         <Trans>Evidence</Trans>

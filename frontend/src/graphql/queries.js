@@ -657,7 +657,7 @@ export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
             confidence
             firstSeen
             lastSeen
-            occurenceCount
+            occurrenceCount
             severity
             source
             subject
