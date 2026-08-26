@@ -30,6 +30,11 @@ import { string } from 'prop-types'
 
 import additionalFindingsFixture from './additionalFindings.fixture.json'
 import { ArrowDownIcon, ArrowUpIcon, CopyIcon } from '@chakra-ui/icons'
+import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
+import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { RelayPaginationControls } from '../components/RelayPaginationControls'
 
 export const additionalFindingsUserTestFixture = additionalFindingsFixture
 
@@ -129,6 +134,7 @@ const compareByField = (left, right, field) => {
 
 export function AdditionalFindings({ domain }) {
   const toast = useToast()
+  const [findingsPerPage, setFindingsPerPage] = useState(10)
   const [orderDirection, setOrderDirection] = useState('DESC')
   const [orderField, setOrderField] = useState('LAST_SEEN')
   const [filters, setFilters] = useState([])
@@ -143,7 +149,7 @@ export function AdditionalFindings({ domain }) {
     resetToFirstPage,
     hasNextPage,
     hasPreviousPage,
-    // totalCount,
+    totalCount,
   } = usePaginatedCollection({
     fetchForward: GUIDANCE_ADDITIONAL_FINDINGS,
     recordsPerPage: findingsPerPage,

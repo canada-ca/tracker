@@ -1,227 +1,221 @@
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
-import { MockedProvider } from '@apollo/client/testing'
-import { MemoryRouter } from 'react-router-dom'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { ChakraProvider, useToast } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
-import { ChakraProvider, theme } from '@chakra-ui/react'
-import userEvent from '@testing-library/user-event'
 
 import { AdditionalFindings } from '../AdditionalFindings'
-import { GUIDANCE_ADDITIONAL_FINDINGS } from '../../graphql/queries'
+import { usePaginatedCollection } from '../../utilities/usePaginatedCollection'
 
-const renderComponent = (mocks) => {
-  return render(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <ChakraProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter>
-            <AdditionalFindings domain="test.domain" />
-          </MemoryRouter>
-        </I18nProvider>
-      </ChakraProvider>
-    </MockedProvider>,
+jest.mock('../../utilities/usePaginatedCollection', () => ({
+  usePaginatedCollection: jest.fn(),
+}))
+
+jest.mock('../../components/LoadingMessage', () => ({
+  LoadingMessage: ({ children }) => <div data-testid="loading-message">Loading {children}</div>,
+}))
+
+jest.mock('../../components/ErrorFallbackMessage', () => ({
+  ErrorFallbackMessage: ({ error }) => <div data-testid="error-fallback">Error: {error.message}</div>,
+}))
+
+jest.mock('../../components/RelayPaginationControls', () => ({
+  RelayPaginationControls: () => <div data-testid="relay-pagination-controls" />,
+}))
+
+jest.mock('../../graphql/queries', () => ({
+  GUIDANCE_ADDITIONAL_FINDINGS: 'GUIDANCE_ADDITIONAL_FINDINGS_QUERY',
+}))
+
+jest.mock('../additionalFindings.fixture.json', () => ({}), { virtual: true })
+
+jest.mock('@chakra-ui/react', () => {
+  const actual = jest.requireActual('@chakra-ui/react')
+  return {
+    ...actual,
+    useToast: jest.fn(),
+  }
+})
+
+const baseHookState = {
+  loading: false,
+  isLoadingMore: false,
+  error: null,
+  nodes: [],
+  next: jest.fn(),
+  previous: jest.fn(),
+  resetToFirstPage: jest.fn(),
+  hasNextPage: false,
+  hasPreviousPage: false,
+  totalCount: 0,
+}
+
+const makeFinding = (overrides = {}) => ({
+  source: 'scanner-a',
+  findingType: 'dns_misconfig',
+  severity: 'high',
+  confidence: 'medium',
+  status: 'open',
+  firstSeen: '2026-01-01T00:00:00.000Z',
+  lastSeen: '2026-08-01T00:00:00.000Z',
+  reasonCode: 'RC-1',
+  occurrenceCount: 2,
+  subject: 'scanner.subject',
+  attributes: { key: 'value' },
+  evidence: { confidenceReason: 'correlated signals' },
+  ...overrides,
+})
+
+const setup = (hookStateOverrides = {}) => {
+  const hookState = {
+    ...baseHookState,
+    ...hookStateOverrides,
+  }
+
+  usePaginatedCollection.mockImplementation(() => hookState)
+
+  render(
+    <ChakraProvider>
+      <I18nProvider i18n={i18n}>
+        <AdditionalFindings domain="test.domain" />
+      </I18nProvider>
+    </ChakraProvider>,
   )
+
+  return { hookState }
 }
 
 describe('<AdditionalFindings />', () => {
+  const toastSpy = jest.fn()
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    useToast.mockReturnValue(toastSpy)
+    if (typeof userEvent.setup !== 'function') {
+      userEvent.setup = () => ({
+        click: async (...args) => userEvent.click(...args),
+      })
+    }
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: jest.fn(),
+      },
+    })
+  })
+
   it('renders loading state', () => {
-    renderComponent([])
+    setup({ loading: true })
 
-    expect(screen.getByText(/Loading Additional Findings/i)).toBeInTheDocument()
+    expect(screen.getByTestId('loading-message')).toHaveTextContent('Loading Additional Findings')
   })
 
-  it('renders empty state when there are no findings', async () => {
-    const mocks = [
-      {
-        request: {
-          query: GUIDANCE_ADDITIONAL_FINDINGS,
-          variables: {
-            domain: 'test.domain',
-            first: 10,
-            limit: 10,
-            filters: [],
-            orderBy: { field: 'LAST_SEEN', direction: 'DESC' },
-          },
-        },
-        result: {
-          data: {
-            findDomainByDomain: {
-              additionalFindings: {
-                edges: [],
-                totalCount: 0,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: null,
-                  endCursor: null,
-                },
-              },
-            },
-          },
-        },
-      },
-    ]
+  it('renders error state', () => {
+    setup({ error: new Error('boom') })
 
-    renderComponent(mocks)
-
-    await waitFor(() => {
-      expect(screen.getByText('No additional findings available at this time.')).toBeInTheDocument()
-    })
+    expect(screen.getByTestId('error-fallback')).toHaveTextContent('Error: boom')
   })
 
-  it('renders findings cards from paginated nodes', async () => {
-    const mocks = [
-      {
-        request: {
-          query: GUIDANCE_ADDITIONAL_FINDINGS,
-          variables: {
-            domain: 'test.domain',
-            first: 10,
-            limit: 10,
-            filters: [],
-            orderBy: { field: 'LAST_SEEN', direction: 'DESC' },
-          },
-        },
-        result: {
-          data: {
-            findDomainByDomain: {
-              additionalFindings: {
-                edges: [
-                  {
-                    cursor: 'cursor-1',
-                    node: {
-                      source: 'scanner-a',
-                      findingType: 'dns_misconfig',
-                      severity: 'high',
-                      confidence: 'medium',
-                      status: 'ongoing',
-                      firstSeen: '2026-01-01',
-                      lastSeen: '2026-08-01',
-                      reasonCode: 'RC-1',
-                      occurenceCount: 2,
-                      subject: 'scanner.subject',
-                      attributes: { key: 'value' },
-                      evidence: { confidenceReason: 'correlated signals' },
-                    },
-                  },
-                ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: 'cursor-1',
-                  endCursor: 'cursor-1',
-                },
-              },
-            },
-          },
-        },
-      },
-    ]
+  it('renders empty findings state', () => {
+    setup({ nodes: [] })
 
-    renderComponent(mocks)
-
-    await waitFor(() => {
-      expect(screen.getByText('dns_misconfig')).toBeInTheDocument()
-      expect(screen.getByText('1 total item(s)')).toBeInTheDocument()
-    })
-
-    userEvent.click(screen.getByRole('button', { name: /dns_misconfig/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Occurrence count:/i)).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Filter by source' })).toBeInTheDocument()
-    })
+    expect(screen.getByText('No additional findings are available right now.')).toBeInTheDocument()
+    expect(screen.getByText('Try rerunning the scan for this domain later.')).toBeInTheDocument()
   })
 
-  it('applies source filter from a finding action', async () => {
-    const mocks = [
-      {
-        request: {
-          query: GUIDANCE_ADDITIONAL_FINDINGS,
-          variables: {
-            domain: 'test.domain',
-            first: 10,
-            limit: 10,
-            filters: [],
-            orderBy: { field: 'LAST_SEEN', direction: 'DESC' },
-          },
-        },
-        result: {
-          data: {
-            findDomainByDomain: {
-              additionalFindings: {
-                edges: [
-                  {
-                    cursor: 'cursor-1',
-                    node: {
-                      source: 'scanner-a',
-                      findingType: 'dns_misconfig',
-                    },
-                  },
-                ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: 'cursor-1',
-                  endCursor: 'cursor-1',
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        request: {
-          query: GUIDANCE_ADDITIONAL_FINDINGS,
-          variables: {
-            domain: 'test.domain',
-            first: 10,
-            limit: 10,
-            filters: [{ filterCategory: 'source', comparison: '==', filterValue: 'scanner-a' }],
-            orderBy: { field: 'LAST_SEEN', direction: 'DESC' },
-          },
-        },
-        result: {
-          data: {
-            findDomainByDomain: {
-              additionalFindings: {
-                edges: [
-                  {
-                    cursor: 'cursor-1',
-                    node: {
-                      source: 'scanner-a',
-                      findingType: 'dns_misconfig',
-                    },
-                  },
-                ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: 'cursor-1',
-                  endCursor: 'cursor-1',
-                },
-              },
-            },
-          },
-        },
-      },
-    ]
+  it('renders one finding and expands with details', async () => {
+    const user = userEvent.setup()
+    setup({ nodes: [makeFinding()], totalCount: 1 })
 
-    renderComponent(mocks)
+    expect(screen.getByText('dns_misconfig')).toBeInTheDocument()
 
-    await waitFor(() => {
-      expect(screen.getByText('dns_misconfig')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /dns_misconfig/i }))
+
+    expect(screen.getByText(/Occurrence count:/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Filter findings by this source' })).toBeInTheDocument()
+    expect(screen.getByText('Attributes')).toBeInTheDocument()
+    expect(screen.getByText('Evidence')).toBeInTheDocument()
+  })
+
+  it('supports source filter add then remove and clear', async () => {
+    const user = userEvent.setup()
+    setup({
+      nodes: [
+        makeFinding({ source: 'scanner-a', findingType: 'finding-a' }),
+        makeFinding({ source: 'scanner-b', findingType: 'finding-b', reasonCode: 'RC-2', subject: 'other.subject' }),
+      ],
+      totalCount: 2,
     })
 
-    userEvent.click(screen.getByRole('button', { name: /dns_misconfig/i }))
-    userEvent.click(screen.getByRole('button', { name: 'Filter by source' }))
+    await user.click(screen.getByRole('button', { name: /finding-a/i }))
+    await user.click(screen.getByRole('button', { name: 'Filter findings by this source' }))
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Remove source filter' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Clear all' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Remove source filter' }))
+    expect(screen.queryByText('Source: scanner-a')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /finding-a/i }))
+    await user.click(screen.getByRole('button', { name: 'Filter findings by this source' }))
+
+    await user.click(screen.getByRole('button', { name: 'Clear all' }))
+    expect(screen.queryByText('Source: scanner-a')).not.toBeInTheDocument()
+  })
+
+  it('toggles sort direction and sends updated hook args while resetting pagination', async () => {
+    const user = userEvent.setup()
+    const { hookState } = setup({ nodes: [makeFinding()], totalCount: 1 })
+
+    const sortDirectionButton = screen.getByRole('button', {
+      name: 'Sorting descending, activate for ascending',
     })
+
+    await user.click(sortDirectionButton)
+
+    expect(hookState.resetToFirstPage).toHaveBeenCalledTimes(1)
+
+    const latestHookCallArgs = usePaginatedCollection.mock.calls[usePaginatedCollection.mock.calls.length - 1][0]
+    expect(latestHookCallArgs.variables.orderBy.direction).toBe('ASC')
+  })
+
+  it('shows success toast when copying value succeeds', async () => {
+    const user = userEvent.setup()
+    navigator.clipboard.writeText.mockResolvedValue(undefined)
+
+    setup({ nodes: [makeFinding()], totalCount: 1 })
+
+    await user.click(screen.getByRole('button', { name: /dns_misconfig/i }))
+
+    const copyButtons = screen.getAllByRole('button', { name: 'Copy technical value' })
+    await user.click(copyButtons[0])
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('value')
+    expect(toastSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Copied value to clipboard.',
+        status: 'success',
+      }),
+    )
+  })
+
+  it('shows error toast when copying value fails', async () => {
+    const user = userEvent.setup()
+    navigator.clipboard.writeText.mockRejectedValue(new Error('nope'))
+
+    setup({ nodes: [makeFinding()], totalCount: 1 })
+
+    await user.click(screen.getByRole('button', { name: /dns_misconfig/i }))
+
+    const copyButton = screen.getAllByRole('button', { name: 'Copy technical value' })[0]
+    await user.click(copyButton)
+
+    expect(toastSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Unable to copy value.',
+        status: 'error',
+      }),
+    )
   })
 })
