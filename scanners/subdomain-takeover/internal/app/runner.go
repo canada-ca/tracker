@@ -16,12 +16,8 @@ type RunnerDeps struct {
 	Logger      zerolog.Logger
 	WorkerCount int
 	Iter        jetstream.MessagesContext
-	Worker      MessageHandler
+	Worker      *Worker
 	NC          *nats.Conn
-}
-
-type MessageHandler interface {
-	Handle(ctx context.Context, msg jetstream.Msg) error
 }
 
 var checkConnection = messaging.CheckConnection

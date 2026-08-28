@@ -15,17 +15,17 @@ var marshalFinding = json.Marshal
 var nowUTC = func() time.Time { return time.Now().UTC() }
 
 type Publisher struct {
-	logger  zerolog.Logger
-	js      publishClient
-	subject string
+	logger        zerolog.Logger
+	publishToNATS func(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error)
+	subject       string
 }
 
-type publishClient interface {
-	Publish(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error)
-}
-
-func NewPublisher(logger zerolog.Logger, js publishClient, subject string) *Publisher {
-	return &Publisher{logger: logger, js: js, subject: subject}
+func NewPublisher(
+	logger zerolog.Logger,
+	publishToNATS func(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error),
+	subject string,
+) *Publisher {
+	return &Publisher{logger: logger, publishToNATS: publishToNATS, subject: subject}
 }
 
 func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
@@ -54,7 +54,7 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 		return err
 	}
 
-	if _, err := p.js.Publish(ctx, p.subject, payload); err != nil {
+	if _, err := p.publishToNATS(ctx, p.subject, payload); err != nil {
 		p.logger.Error().
 			Err(err).
 			Str("domain", finding.Domain).

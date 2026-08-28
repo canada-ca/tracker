@@ -35,7 +35,7 @@ func (f *fakePublishClient) Publish(_ context.Context, subj string, data []byte,
 
 func TestNewPublisher(t *testing.T) {
 	client := &fakePublishClient{}
-	p := NewPublisher(zerolog.Nop(), client, "scans.findings.subdomain-takeover")
+	p := NewPublisher(zerolog.Nop(), client.Publish, "scans.findings.subdomain-takeover")
 	if p == nil {
 		t.Fatal("expected publisher instance")
 	}
@@ -72,76 +72,79 @@ func TestPublisherPublish(t *testing.T) {
 		ReasonCode: "CNAME_DANGLING_NXDOMAIN",
 	}
 
-	t.Run("publishes ns finding event payload", func(t *testing.T) {
-		client := &fakePublishClient{}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain-takeover"}
-
-		err := p.Publish(context.Background(), nsFinding)
-		if err != nil {
-			t.Fatalf("unexpected publish error: %v", err)
-		}
-		if client.called != 1 {
-			t.Fatalf("expected one publish call, got %d", client.called)
-		}
-		if client.lastSubj != "scans.findings.subdomain-takeover" {
-			t.Fatalf("unexpected subject: %q", client.lastSubj)
-		}
-
-		var got model.FindingEvent
-		if err := json.Unmarshal(client.lastBytes, &got); err != nil {
-			t.Fatalf("payload not valid json: %v", err)
+	t.Run("publishes expected finding event payload", func(t *testing.T) {
+		tests := []struct {
+			name            string
+			finding         model.Finding
+			wantFindingType string
+		}{
+			{
+				name:            "ns record",
+				finding:         nsFinding,
+				wantFindingType: "subdomain-takeover-ns",
+			},
+			{
+				name:            "cname record",
+				finding:         cnameFinding,
+				wantFindingType: "subdomain-takeover-cname",
+			},
 		}
 
-		if got.Source != "subdomain-takeover" {
-			t.Fatalf("unexpected source: %q", got.Source)
-		}
-		if got.FindingType != "subdomain-takeover-ns" {
-			t.Fatalf("unexpected findingType: %q", got.FindingType)
-		}
-		if got.DomainKey != nsFinding.DomainKey {
-			t.Fatalf("unexpected domainKey: %q", got.DomainKey)
-		}
-		if got.Subject != nsFinding.Domain {
-			t.Fatalf("unexpected subject: %q", got.Subject)
-		}
-		if got.ObservedAt != fixedNow.Format(time.RFC3339) {
-			t.Fatalf("unexpected observedAt: %q", got.ObservedAt)
-		}
-		if got.Evidence["target"] != nsFinding.Target {
-			t.Fatalf("unexpected evidence target: %v", got.Evidence["target"])
-		}
-		if got.Evidence["recordType"] != string(nsFinding.RecordType) {
-			t.Fatalf("unexpected evidence recordType: %v", got.Evidence["recordType"])
-		}
-		if got.Attributes["provider"] != nsFinding.Provider {
-			t.Fatalf("unexpected attributes provider: %v", got.Attributes["provider"])
-		}
-		if got.Attributes["lameType"] != nsFinding.LameType {
-			t.Fatalf("unexpected attributes lameType: %v", got.Attributes["lameType"])
+		for _, tc := range tests {
+			t.Run(tc.name, func(t *testing.T) {
+				client := &fakePublishClient{}
+				p := &Publisher{logger: zerolog.Nop(), publishToNATS: client.Publish, subject: "scans.findings.subdomain-takeover"}
+
+				err := p.Publish(context.Background(), tc.finding)
+				if err != nil {
+					t.Fatalf("unexpected publish error: %v", err)
+				}
+				if client.called != 1 {
+					t.Fatalf("expected one publish call, got %d", client.called)
+				}
+				if client.lastSubj != "scans.findings.subdomain-takeover" {
+					t.Fatalf("unexpected subject: %q", client.lastSubj)
+				}
+
+				var got model.FindingEvent
+				if err := json.Unmarshal(client.lastBytes, &got); err != nil {
+					t.Fatalf("payload not valid json: %v", err)
+				}
+
+				if got.Source != "subdomain-takeover" {
+					t.Fatalf("unexpected source: %q", got.Source)
+				}
+				if got.FindingType != tc.wantFindingType {
+					t.Fatalf("unexpected findingType: %q", got.FindingType)
+				}
+				if got.DomainKey != tc.finding.DomainKey {
+					t.Fatalf("unexpected domainKey: %q", got.DomainKey)
+				}
+				if got.Subject != tc.finding.Domain {
+					t.Fatalf("unexpected subject: %q", got.Subject)
+				}
+				if got.ObservedAt != fixedNow.Format(time.RFC3339) {
+					t.Fatalf("unexpected observedAt: %q", got.ObservedAt)
+				}
+				if got.Evidence["target"] != tc.finding.Target {
+					t.Fatalf("unexpected evidence target: %v", got.Evidence["target"])
+				}
+				if got.Evidence["recordType"] != string(tc.finding.RecordType) {
+					t.Fatalf("unexpected evidence recordType: %v", got.Evidence["recordType"])
+				}
+				if got.Attributes["provider"] != tc.finding.Provider {
+					t.Fatalf("unexpected attributes provider: %v", got.Attributes["provider"])
+				}
+				if got.Attributes["lameType"] != tc.finding.LameType {
+					t.Fatalf("unexpected attributes lameType: %v", got.Attributes["lameType"])
+				}
+			})
 		}
 	})
 
-	t.Run("maps cname record to cname findingType", func(t *testing.T) {
-		client := &fakePublishClient{}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain-takeover"}
-
-		err := p.Publish(context.Background(), cnameFinding)
-		if err != nil {
-			t.Fatalf("unexpected publish error: %v", err)
-		}
-
-		var got model.FindingEvent
-		if err := json.Unmarshal(client.lastBytes, &got); err != nil {
-			t.Fatalf("payload not valid json: %v", err)
-		}
-		if got.FindingType != "subdomain-takeover-cname" {
-			t.Fatalf("unexpected findingType: %q", got.FindingType)
-		}
-	})
-
-	t.Run("returns publish client error", func(t *testing.T) {
+	t.Run("propagates publish client error", func(t *testing.T) {
 		client := &fakePublishClient{err: errors.New("publish failed")}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain-takeover"}
+		p := &Publisher{logger: zerolog.Nop(), publishToNATS: client.Publish, subject: "scans.findings.subdomain-takeover"}
 
 		err := p.Publish(context.Background(), nsFinding)
 		if err == nil {
@@ -152,36 +155,45 @@ func TestPublisherPublish(t *testing.T) {
 		}
 	})
 
-	t.Run("returns marshal error and does not publish", func(t *testing.T) {
-		marshalFinding = func(v any) ([]byte, error) {
-			return nil, errors.New("marshal failed")
+	t.Run("returns mapping or marshal errors without publish", func(t *testing.T) {
+		tests := []struct {
+			name       string
+			finding    model.Finding
+			marshalErr error
+		}{
+			{
+				name:       "marshal error",
+				finding:    nsFinding,
+				marshalErr: errors.New("marshal failed"),
+			},
+			{
+				name: "unsupported record type mapping error",
+				finding: func() model.Finding {
+					badFinding := nsFinding
+					badFinding.RecordType = model.RecordType("TXT")
+					return badFinding
+				}(),
+			},
 		}
 
-		client := &fakePublishClient{}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain-takeover"}
+		for _, tc := range tests {
+			t.Run(tc.name, func(t *testing.T) {
+				marshalFinding = origMarshal
+				if tc.marshalErr != nil {
+					marshalFinding = func(any) ([]byte, error) { return nil, tc.marshalErr }
+				}
 
-		err := p.Publish(context.Background(), nsFinding)
-		if err == nil {
-			t.Fatal("expected marshal error")
-		}
-		if client.called != 0 {
-			t.Fatalf("expected no publish call, got %d", client.called)
-		}
-	})
+				client := &fakePublishClient{}
+				p := &Publisher{logger: zerolog.Nop(), publishToNATS: client.Publish, subject: "scans.findings.subdomain-takeover"}
 
-	t.Run("returns mapping error for unsupported record type", func(t *testing.T) {
-		client := &fakePublishClient{}
-		p := &Publisher{logger: zerolog.Nop(), js: client, subject: "scans.findings.subdomain-takeover"}
-
-		badFinding := nsFinding
-		badFinding.RecordType = model.RecordType("TXT")
-
-		err := p.Publish(context.Background(), badFinding)
-		if err == nil {
-			t.Fatal("expected mapping error")
-		}
-		if client.called != 0 {
-			t.Fatalf("expected no publish call, got %d", client.called)
+				err := p.Publish(context.Background(), tc.finding)
+				if err == nil {
+					t.Fatal("expected error")
+				}
+				if client.called != 0 {
+					t.Fatalf("expected no publish call, got %d", client.called)
+				}
+			})
 		}
 	})
 }

@@ -38,35 +38,23 @@ func (f *fakeMessagesIter) Next(...jetstream.NextOpt) (jetstream.Msg, error) {
 func (f *fakeMessagesIter) Stop()  { f.stopCalled = true }
 func (f *fakeMessagesIter) Drain() {}
 
-type fakeHandler struct {
-	mu    sync.Mutex
-	count int
-}
-
-func (f *fakeHandler) Handle(context.Context, jetstream.Msg) error {
-	f.mu.Lock()
-	f.count++
-	f.mu.Unlock()
-	return nil
-}
-
 // nolint:revive // nats Conn fields are unexported; this fake nil connection path only.
 func TestRun_ReturnsImmediatelyWhenConnectionUnhealthy(t *testing.T) {
 	iter := &fakeMessagesIter{}
-	h := &fakeHandler{}
+	worker := NewWorker(zerolog.Nop(), (&fakePublisher{}).Publish, (fakeClassifier{}).Classify)
 
 	deps := RunnerDeps{
 		Logger:      zerolog.Nop(),
 		WorkerCount: 2,
 		Iter:        iter,
-		Worker:      h,
+		Worker:      worker,
 		NC:          nil,
 	}
 
 	Run(context.Background(), deps)
 
-	if h.count != 0 {
-		t.Fatalf("expected no handled messages, got %d", h.count)
+	if iter.idx != 0 {
+		t.Fatalf("expected no iterator reads, got %d", iter.idx)
 	}
 }
 
@@ -83,20 +71,21 @@ func TestRun_ClampsWorkerCountBelowOne(t *testing.T) {
 		return nil
 	}
 
-	iter := &fakeMessagesIter{msgs: []jetstream.Msg{&fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}}}
-	h := &fakeHandler{}
+	msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
+	iter := &fakeMessagesIter{msgs: []jetstream.Msg{msg}}
+	worker := NewWorker(zerolog.Nop(), (&fakePublisher{}).Publish, (fakeClassifier{}).Classify)
 
 	deps := RunnerDeps{
 		Logger:      zerolog.Nop(),
 		WorkerCount: 0,
 		Iter:        iter,
-		Worker:      h,
+		Worker:      worker,
 		NC:          nil,
 	}
 
 	Run(context.Background(), deps)
-	if h.count != 1 {
-		t.Fatalf("expected one handled message, got %d", h.count)
+	if msg.ackCount != 1 {
+		t.Fatalf("expected one handled message (ack once), got ack=%d", msg.ackCount)
 	}
 }
 
@@ -106,7 +95,7 @@ func TestRun_ExitsWhenContextCancelledDuringNextErrors(t *testing.T) {
 	checkConnection = func(_ *nats.Conn) error { return nil }
 
 	iter := &fakeMessagesIter{err: errors.New("next failed")}
-	h := &fakeHandler{}
+	worker := NewWorker(zerolog.Nop(), (&fakePublisher{}).Publish, (fakeClassifier{}).Classify)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
@@ -118,13 +107,13 @@ func TestRun_ExitsWhenContextCancelledDuringNextErrors(t *testing.T) {
 		Logger:      zerolog.Nop(),
 		WorkerCount: 1,
 		Iter:        iter,
-		Worker:      h,
+		Worker:      worker,
 		NC:          nil,
 	}
 
 	Run(ctx, deps)
 
-	if h.count != 0 {
-		t.Fatalf("expected no handled messages, got %d", h.count)
+	if iter.idx != 0 {
+		t.Fatalf("expected no iterator reads, got %d", iter.idx)
 	}
 }

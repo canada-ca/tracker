@@ -81,120 +81,111 @@ func (m *fakeJSMsg) TermWithReason(string) error { return nil }
 func TestWorkerHandle(t *testing.T) {
 	logger := zerolog.Nop()
 
-	t.Run("decode error terminates message", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{}
-		worker := NewWorker(logger, pub, classifier)
+	tests := []struct {
+		name                 string
+		data                 []byte
+		ackErr               error
+		nakErr               error
+		termErr              error
+		classifier           fakeClassifier
+		publisherErr         error
+		wantErr              bool
+		wantAck              int
+		wantNak              int
+		wantTerm             int
+		wantPublishedFindings int
+	}{
+		{
+			name:     "decode error terminates message",
+			data:     []byte("{not-json"),
+			wantErr:  true,
+			wantAck:  0,
+			wantNak:  0,
+			wantTerm: 1,
+		},
+		{
+			name:       "classification error naks message",
+			data:       []byte(`{"domain_key":"k","results":{}}`),
+			classifier: fakeClassifier{err: errors.New("classify failed")},
+			wantErr:    true,
+			wantAck:    0,
+			wantNak:    1,
+			wantTerm:   0,
+		},
+		{
+			name:         "publish error naks message",
+			data:         []byte(`{"domain_key":"k","results":{}}`),
+			classifier:   fakeClassifier{findings: []model.Finding{{Domain: "a.example.ca"}}},
+			publisherErr: errors.New("publish failed"),
+			wantErr:      true,
+			wantAck:      0,
+			wantNak:      1,
+			wantTerm:     0,
+		},
+		{
+			name:                 "successful processing publishes all findings and acks",
+			data:                 []byte(`{"domain_key":"k","results":{}}`),
+			classifier:           fakeClassifier{findings: []model.Finding{{Domain: "a.example.ca"}, {Domain: "b.example.ca"}}},
+			wantErr:              false,
+			wantAck:              1,
+			wantNak:              0,
+			wantTerm:             0,
+			wantPublishedFindings: 2,
+		},
+		{
+			name:     "ack failure returns error",
+			data:     []byte(`{"domain_key":"k","results":{}}`),
+			ackErr:   errors.New("ack failed"),
+			wantErr:  true,
+			wantAck:  1,
+			wantNak:  0,
+			wantTerm: 0,
+		},
+		{
+			name:     "decode error still returned when term fails",
+			data:     []byte("{bad-json"),
+			termErr:  errors.New("term failed"),
+			wantErr:  true,
+			wantAck:  0,
+			wantNak:  0,
+			wantTerm: 1,
+		},
+	}
 
-		msg := &fakeJSMsg{data: []byte("{not-json"), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected decode error")
-		}
-		if msg.termCount != 1 {
-			t.Fatalf("expected term once, got %d", msg.termCount)
-		}
-		if msg.nakCount != 0 || msg.ackCount != 0 {
-			t.Fatalf("unexpected ack/nak counts: ack=%d nak=%d", msg.ackCount, msg.nakCount)
-		}
-	})
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			pub := &fakePublisher{err: tc.publisherErr}
+			worker := NewWorker(logger, pub.Publish, tc.classifier.Classify)
 
-	t.Run("classification error naks message", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{err: errors.New("classify failed")}
-		worker := NewWorker(logger, pub, classifier)
+			msg := &fakeJSMsg{
+				data:    tc.data,
+				subject: "scans.dns_scanner_results",
+				ackErr:  tc.ackErr,
+				nakErr:  tc.nakErr,
+				termErr: tc.termErr,
+			}
 
-		msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected classification error")
-		}
-		if msg.nakCount != 1 {
-			t.Fatalf("expected nak once, got %d", msg.nakCount)
-		}
-		if msg.ackCount != 0 || msg.termCount != 0 {
-			t.Fatalf("unexpected ack/term counts: ack=%d term=%d", msg.ackCount, msg.termCount)
-		}
-	})
-
-	t.Run("publish error naks message", func(t *testing.T) {
-		pub := &fakePublisher{err: errors.New("publish failed")}
-		classifier := fakeClassifier{findings: []model.Finding{{Domain: "a.example.ca"}}}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected publish error")
-		}
-		if msg.nakCount != 1 {
-			t.Fatalf("expected nak once, got %d", msg.nakCount)
-		}
-		if msg.ackCount != 0 || msg.termCount != 0 {
-			t.Fatalf("unexpected ack/term counts: ack=%d term=%d", msg.ackCount, msg.termCount)
-		}
-	})
-
-	t.Run("successful processing publishes all findings and acks", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{findings: []model.Finding{{Domain: "a.example.ca"}, {Domain: "b.example.ca"}}}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if len(pub.published) != 2 {
-			t.Fatalf("expected 2 published findings, got %d", len(pub.published))
-		}
-		if msg.ackCount != 1 {
-			t.Fatalf("expected ack once, got %d", msg.ackCount)
-		}
-		if msg.nakCount != 0 || msg.termCount != 0 {
-			t.Fatalf("unexpected nak/term counts: nak=%d term=%d", msg.nakCount, msg.termCount)
-		}
-	})
-
-	t.Run("ack failure returns error", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{
-			data:    []byte(`{"domain_key":"k","results":{}}`),
-			subject: "scans.dns_scanner_results",
-			ackErr:  errors.New("ack failed"),
-		}
-
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected ack error")
-		}
-		if msg.ackCount != 1 {
-			t.Fatalf("expected ack once, got %d", msg.ackCount)
-		}
-	})
-
-	t.Run("decode error still returned when term fails", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{
-			data:    []byte("{bad-json"),
-			subject: "scans.dns_scanner_results",
-			termErr: errors.New("term failed"),
-		}
-
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected decode error")
-		}
-		if msg.termCount != 1 {
-			t.Fatalf("expected term once, got %d", msg.termCount)
-		}
-	})
+			err := worker.Handle(context.Background(), msg)
+			if tc.wantErr && err == nil {
+				t.Fatal("expected error")
+			}
+			if !tc.wantErr && err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if msg.ackCount != tc.wantAck {
+				t.Fatalf("unexpected ack count: got=%d want=%d", msg.ackCount, tc.wantAck)
+			}
+			if msg.nakCount != tc.wantNak {
+				t.Fatalf("unexpected nak count: got=%d want=%d", msg.nakCount, tc.wantNak)
+			}
+			if msg.termCount != tc.wantTerm {
+				t.Fatalf("unexpected term count: got=%d want=%d", msg.termCount, tc.wantTerm)
+			}
+			if len(pub.published) != tc.wantPublishedFindings {
+				t.Fatalf("unexpected published findings count: got=%d want=%d", len(pub.published), tc.wantPublishedFindings)
+			}
+		})
+	}
 }
 
 func TestDecodeScan_TrimsTrailingNewline(t *testing.T) {

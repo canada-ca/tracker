@@ -11,22 +11,22 @@ import (
 	"github.com/rs/zerolog"
 )
 
-type FindingPublisher interface {
-	Publish(ctx context.Context, finding model.Finding) error
-}
-
-type ScanClassifier interface {
-	Classify(input model.Input) ([]model.Finding, error)
-}
-
 type Worker struct {
-	logger     zerolog.Logger
-	publisher  FindingPublisher
-	classifier ScanClassifier
+	logger          zerolog.Logger
+	publishFinding  func(ctx context.Context, finding model.Finding) error
+	classifyFinding func(input model.Input) ([]model.Finding, error)
 }
 
-func NewWorker(logger zerolog.Logger, publisher FindingPublisher, classifier ScanClassifier) *Worker {
-	return &Worker{logger: logger, publisher: publisher, classifier: classifier}
+func NewWorker(
+	logger zerolog.Logger,
+	publishFinding func(ctx context.Context, finding model.Finding) error,
+	classifyFinding func(input model.Input) ([]model.Finding, error),
+) *Worker {
+	return &Worker{
+		logger:          logger,
+		publishFinding:  publishFinding,
+		classifyFinding: classifyFinding,
+	}
 }
 
 func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
@@ -45,7 +45,7 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 
 	log = log.With().Str("domain_key", scan.DomainKey).Logger()
 
-	findings, err := w.classifier.Classify(scan)
+	findings, err := w.classifyFinding(scan)
 	if err != nil {
 		log.Err(err).Msg("classify error")
 		w.nak(msg, log, err)
@@ -57,7 +57,7 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 	}
 
 	for _, finding := range findings {
-		err = w.publisher.Publish(ctx, finding)
+		err = w.publishFinding(ctx, finding)
 		if err != nil {
 			log.Err(err).Msg("publish error")
 			w.nak(msg, log, err)
