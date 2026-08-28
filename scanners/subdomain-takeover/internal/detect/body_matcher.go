@@ -20,6 +20,8 @@ type HTTPBodyFingerprintMatcher struct {
 	client *http.Client
 }
 
+var httpStatusFingerprintRegex = regexp.MustCompile(`^HTTP_STATUS=(\d{3})$`)
+
 func NewHTTPBodyFingerprintMatcher(timeout time.Duration) *HTTPBodyFingerprintMatcher {
 	return &HTTPBodyFingerprintMatcher{
 		client: &http.Client{Timeout: timeout},
@@ -74,7 +76,7 @@ func (m *HTTPBodyFingerprintMatcher) Contains(domain string, fingerprint string,
 }
 
 func parseHTTPStatusFingerprint(fingerprint string) (int, bool) {
-	matches := regexp.MustCompile(`^HTTP_STATUS=(\d{3})$`).FindStringSubmatch(fingerprint)
+	matches := httpStatusFingerprintRegex.FindStringSubmatch(fingerprint)
 	if len(matches) != 2 {
 		return 0, false
 	}
