@@ -88,34 +88,80 @@ func TestGetNSHijackReasonCode(t *testing.T) {
 }
 
 func TestNSReasoningHelpers(t *testing.T) {
-	if !isExploitableProviderStatus(fingerprints.NSStatusVulnerable) {
-		t.Fatal("expected vulnerable to be exploitable")
-	}
-	if !isExploitableProviderStatus(fingerprints.NSStatusVulnerableWithPurchase) {
-		t.Fatal("expected vulnerable_with_purchase to be exploitable")
-	}
-	if isExploitableProviderStatus(fingerprints.NSStatusNotVulnerable) {
-		t.Fatal("expected not_vulnerable to be non-exploitable")
-	}
+	t.Run("isExploitableProviderStatus", func(t *testing.T) {
+		tests := []struct {
+			name   string
+			status fingerprints.NSProviderStatus
+			want   bool
+		}{
+			{name: "vulnerable", status: fingerprints.NSStatusVulnerable, want: true},
+			{name: "vulnerable with purchase", status: fingerprints.NSStatusVulnerableWithPurchase, want: true},
+			{name: "not vulnerable", status: fingerprints.NSStatusNotVulnerable, want: false},
+		}
 
-	if got := normalizeLameType(" Partial "); got != "partial" {
-		t.Fatalf("normalizeLameType mismatch: %q", got)
-	}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := isExploitableProviderStatus(tt.status); got != tt.want {
+					t.Fatalf("isExploitableProviderStatus(%q)=%v want=%v", tt.status, got, tt.want)
+				}
+			})
+		}
+	})
 
-	if !isRegistrarMismatch("Digital Ocean", &model.RegistrarContext{LookupSuccess: true, RegistrarName: "Namecheap"}) {
-		t.Fatal("expected registrar mismatch for different providers")
-	}
-	if isRegistrarMismatch("Digital Ocean", &model.RegistrarContext{LookupSuccess: true, RegistrarName: "DigitalOcean, Inc."}) {
-		t.Fatal("expected same provider to fail mismatch check")
-	}
+	t.Run("normalizeLameType", func(t *testing.T) {
+		if got := normalizeLameType(" Partial "); got != "partial" {
+			t.Fatalf("normalizeLameType mismatch: %q", got)
+		}
+	})
 
-	if nsReasonRank(ReasonNSFullLameProviderVulnerable) <= nsReasonRank(ReasonNSPartialLameProviderVulnerable) {
-		t.Fatal("expected full lame rank > partial lame rank")
-	}
-	if nsReasonRank(ReasonNSPartialLameProviderVulnerable) <= nsReasonRank(ReasonNSRegistrarProviderMatch) {
-		t.Fatal("expected partial lame rank > registrar-provider-match rank")
-	}
-	if nsReasonRank(ReasonNSRegistrarProviderMatch) <= nsReasonRank(ReasonNSProviderMatchOnly) {
-		t.Fatal("expected registrar gate rank > provider-only rank")
-	}
+	t.Run("isRegistrarMismatch", func(t *testing.T) {
+		tests := []struct {
+			name      string
+			provider  string
+			registrar *model.RegistrarContext
+			want      bool
+		}{
+			{
+				name:      "different providers",
+				provider:  "Digital Ocean",
+				registrar: &model.RegistrarContext{LookupSuccess: true, RegistrarName: "Namecheap"},
+				want:      true,
+			},
+			{
+				name:      "same provider",
+				provider:  "Digital Ocean",
+				registrar: &model.RegistrarContext{LookupSuccess: true, RegistrarName: "DigitalOcean, Inc."},
+				want:      false,
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := isRegistrarMismatch(tt.provider, tt.registrar); got != tt.want {
+					t.Fatalf("isRegistrarMismatch()=%v want=%v", got, tt.want)
+				}
+			})
+		}
+	})
+
+	t.Run("nsReasonRank ordering", func(t *testing.T) {
+		checks := []struct {
+			name  string
+			high  ReasonCode
+			low   ReasonCode
+			label string
+		}{
+			{name: "full above partial", high: ReasonNSFullLameProviderVulnerable, low: ReasonNSPartialLameProviderVulnerable, label: "full lame > partial lame"},
+			{name: "partial above registrar-provider-match", high: ReasonNSPartialLameProviderVulnerable, low: ReasonNSRegistrarProviderMatch, label: "partial lame > registrar-provider-match"},
+			{name: "registrar gate above provider only", high: ReasonNSRegistrarProviderMatch, low: ReasonNSProviderMatchOnly, label: "registrar gate > provider-only"},
+		}
+
+		for _, check := range checks {
+			t.Run(check.name, func(t *testing.T) {
+				if nsReasonRank(check.high) <= nsReasonRank(check.low) {
+					t.Fatalf("expected %s", check.label)
+				}
+			})
+		}
+	})
 }

@@ -148,13 +148,21 @@ func TestMatchNSProviderRules(t *testing.T) {
 }
 
 func TestShouldEmitNSHijack(t *testing.T) {
-	if ShouldEmitNSHijack(nil) {
-		t.Fatal("expected false for nil hit")
+	tests := []struct {
+		name string
+		hit  *NSHit
+		want bool
+	}{
+		{name: "nil hit", hit: nil, want: false},
+		{name: "unmatched hit", hit: &NSHit{Matched: false}, want: false},
+		{name: "matched hit", hit: &NSHit{Matched: true}, want: true},
 	}
-	if ShouldEmitNSHijack(&NSHit{Matched: false}) {
-		t.Fatal("expected false for unmatched hit")
-	}
-	if !ShouldEmitNSHijack(&NSHit{Matched: true}) {
-		t.Fatal("expected true for matched hit")
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ShouldEmitNSHijack(tt.hit); got != tt.want {
+				t.Fatalf("ShouldEmitNSHijack()=%v want=%v", got, tt.want)
+			}
+		})
 	}
 }

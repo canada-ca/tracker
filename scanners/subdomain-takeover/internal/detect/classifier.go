@@ -1,26 +1,18 @@
 package detect
 
 import (
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 	"github.com/rs/zerolog"
 )
 
 type Classifier struct {
 	Matcher BodyFingerprintMatcher
-	Source  FingerprintSource
 	logger  zerolog.Logger
 }
 
 func NewClassifier(matcher BodyFingerprintMatcher) *Classifier {
-	return &Classifier{Matcher: matcher, Source: GlobalFingerprintSource{}, logger: zerolog.Nop()}
-}
-
-func NewClassifierWithSource(matcher BodyFingerprintMatcher, source FingerprintSource) *Classifier {
-	if source == nil {
-		source = GlobalFingerprintSource{}
-	}
-
-	return &Classifier{Matcher: matcher, Source: source, logger: zerolog.Nop()}
+	return &Classifier{Matcher: matcher, logger: zerolog.Nop()}
 }
 
 func (c *Classifier) WithLogger(logger zerolog.Logger) *Classifier {
@@ -35,24 +27,19 @@ func (c *Classifier) Classify(input model.Input) ([]model.Finding, error) {
 		matcher = NewNoopBodyFingerprintMatcher()
 	}
 
-	source := c.Source
-	if source == nil {
-		source = GlobalFingerprintSource{}
-	}
-
 	logger := c.logger
 	if logger.GetLevel() == zerolog.NoLevel {
 		logger = zerolog.Nop()
 	}
 
-	return Classify(input, matcher, source, logger)
+	return Classify(input, matcher, logger)
 }
 
-func Classify(input model.Input, matcher BodyFingerprintMatcher, source FingerprintSource, logger zerolog.Logger) ([]model.Finding, error) {
+func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.Logger) ([]model.Finding, error) {
 	findings := []model.Finding{}
 
-	cnameProviderFingerprints := source.CNAME()
-	nsProviderFingerprints := source.NS()
+	cnameProviderFingerprints := fingerprints.CNAME()
+	nsProviderFingerprints := fingerprints.NS()
 
 	cnameEvidence := ExtractCNAMEEvidence(input.Results)
 	if cnameEvidence != nil {

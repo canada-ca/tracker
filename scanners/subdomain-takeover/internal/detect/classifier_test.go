@@ -9,16 +9,9 @@ import (
 )
 
 func TestClassify_ExpectedBehavior(t *testing.T) {
-	cnameFPs := []fingerprints.CNAMEProviderFingerprint{
-		{Name: "Azure", Cname: []string{"azurewebsites.net"}, Nxdomain: true, Fingerprint: "unused"},
-		{Name: "Ghost", Cname: []string{"ghost.io"}, Nxdomain: false, Fingerprint: "ghost 404", Mode: fingerprints.FingerprintModeLiteral},
+	if err := fingerprints.Load(zerolog.Nop()); err != nil {
+		t.Fatalf("failed to load fingerprints: %v", err)
 	}
-	nsFPs := []fingerprints.NSProviderFingerprint{
-		{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
-		{Name: "SafeDNS", Status: fingerprints.NSStatusNotVulnerable, HostPatterns: []string{"*.safe-dns.net"}},
-	}
-
-	source := fakeSource{cname: cnameFPs, ns: nsFPs}
 
 	t.Run("emits cname and ns findings when both are exploitable", func(t *testing.T) {
 		rdapMatch := true
@@ -33,7 +26,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 					DelegationMatchesRDAP: &rdapMatch,
 				},
 				NsDelegations: &model.NsDelegations{
-					Hosts: []string{"ns1.risky-dns.net"},
+					Hosts: []string{"ns1.digitalocean.com"},
 					Delegation: model.Delegation{
 						LameType: "partial",
 					},
@@ -41,7 +34,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 			},
 		}
 
-		findings, err := Classify(input, fakeMatcher{}, source, zerolog.Nop())
+		findings, err := Classify(input, fakeMatcher{}, zerolog.Nop())
 		if err != nil {
 			t.Fatalf("Classify error: %v", err)
 		}
@@ -56,11 +49,17 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 				if f.ReasonCode != string(ReasonCNAMEDanglingNXDOMAIN) {
 					t.Fatalf("unexpected cname reason: %q", f.ReasonCode)
 				}
+				if f.Confidence != ConfidenceProbable {
+					t.Fatalf("unexpected cname confidence: %q", f.Confidence)
+				}
 			}
 			if f.RecordType == model.RecordTypeNS {
 				sawNS = true
 				if f.ReasonCode != string(ReasonNSPartialLameProviderVulnerable) {
 					t.Fatalf("unexpected ns reason: %q", f.ReasonCode)
+				}
+				if f.Confidence != ConfidenceProbable {
+					t.Fatalf("unexpected ns confidence: %q", f.Confidence)
 				}
 			}
 		}
@@ -76,7 +75,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 				Domain:      strPtr("b.example.ca"),
 				CnameRecord: strPtr("b.example.ca. 300 IN CNAME foo.ghost.io."),
 				NsDelegations: &model.NsDelegations{
-					Hosts: []string{"ns1.safe-dns.net"},
+					Hosts: []string{"aria.ns.cloudflare.com"},
 					Delegation: model.Delegation{
 						LameType: "full",
 					},
@@ -88,7 +87,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 			return true
 		}}
 
-		findings, err := Classify(input, matcher, source, zerolog.Nop())
+		findings, err := Classify(input, matcher, zerolog.Nop())
 		if err != nil {
 			t.Fatalf("Classify error: %v", err)
 		}
@@ -99,11 +98,17 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 		if findings[0].RecordType != model.RecordTypeCNAME {
 			t.Fatalf("expected cname-only finding, got %s", findings[0].RecordType)
 		}
+		if findings[0].ReasonCode != string(ReasonCNAMEProviderFingerprintBodyMatch) {
+			t.Fatalf("unexpected cname reason: %q", findings[0].ReasonCode)
+		}
+		if findings[0].Confidence != ConfidenceProbable {
+			t.Fatalf("unexpected cname confidence: %q", findings[0].Confidence)
+		}
 	})
 
 	t.Run("returns no findings and no panic when evidence absent", func(t *testing.T) {
 		input := model.Input{DomainKey: "k3", Results: model.ScanResults{}}
-		findings, err := Classify(input, fakeMatcher{}, source, zerolog.Nop())
+		findings, err := Classify(input, fakeMatcher{}, zerolog.Nop())
 		if err != nil {
 			t.Fatalf("Classify error: %v", err)
 		}
@@ -128,12 +133,7 @@ func TestClassifier_MethodDefaults(t *testing.T) {
 		t.Fatalf("expected no findings, got %d", len(findings))
 	}
 
-	custom := NewClassifierWithSource(fakeMatcher{}, fakeSource{})
-	if custom == nil {
-		t.Fatal("expected classifier with source")
-	}
-
-	if custom.WithLogger(zerolog.Nop()) != custom {
+	if classifier.WithLogger(zerolog.Nop()) != classifier {
 		t.Fatal("WithLogger should return same classifier pointer")
 	}
 }
