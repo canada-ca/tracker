@@ -17,12 +17,30 @@ var (
 	getCollection = func(ctx context.Context, db arangodb.Database, name string) (arangodb.Collection, error) {
 		return db.GetCollection(ctx, name, nil)
 	}
-	documentExists = func(ctx context.Context, col arangodb.Collection, key string) (bool, error) {
-		return col.DocumentExists(ctx, key)
-	}
-	readFindingDocument = func(ctx context.Context, col arangodb.Collection, key string, result *model.FindingDocument) error {
-		_, err := col.ReadDocument(ctx, key, result)
-		return err
+	readFindingDocument = func(ctx context.Context, db arangodb.Database, key string) (*model.FindingDocument, error) {
+		var finding model.FindingDocument
+		options := arangodb.QueryOptions{
+			Count: true,
+			BindVars: map[string]interface{}{
+				"key": key,
+			},
+		}
+		query := "FOR f IN additionalFindings FILTER f.findingKey == @key LIMIT 1 RETURN f"
+
+		cursor, err := db.Query(ctx, query, &options)
+		if err != nil {
+			return nil, err
+		}
+		defer cursor.Close()
+
+		if cursor.Count() == 0 {
+			return nil, nil
+		}
+
+		if _, err := cursor.ReadDocument(ctx, &finding); err != nil {
+			return nil, err
+		}
+		return &finding, nil
 	}
 	updateFindingDocument = func(ctx context.Context, col arangodb.Collection, key string, patch findingUpdatePatch) error {
 		_, err := col.UpdateDocument(ctx, key, patch)
@@ -42,28 +60,21 @@ func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingE
 		return err
 	}
 
-	key := evt.GetKey()
+	key := evt.DeriveFindingKey()
 
-	findingExists, err := documentExists(ctx, findingsCol, key)
+	finding, err := readFindingDocument(ctx, db, key)
 	if err != nil {
-		log.Warn().Err(err).Msg("failed to find collection")
+		log.Warn().Err(err).Msg("failed to check finding existence")
 		return err
 	}
 
-	if findingExists {
-		var finding model.FindingDocument
-		err := readFindingDocument(ctx, findingsCol, key, &finding)
-		if err != nil {
-			log.Warn().Err(err).Msg("failed to read finding doc")
-			return err
-		}
-
+	if finding != nil {
 		patch := findingUpdatePatch{
 			LastSeen:        evt.ObservedAt,
 			OccurrenceCount: finding.OccurrenceCount + 1,
 		}
 
-		err = updateFindingDocument(ctx, findingsCol, key, patch)
+		err = updateFindingDocument(ctx, findingsCol, finding.Key, patch)
 		if err != nil {
 			log.Warn().Err(err).Msg("failed to update finding doc")
 			return err

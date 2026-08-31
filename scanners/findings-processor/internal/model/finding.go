@@ -1,7 +1,8 @@
 package model
 
 import (
-	b64 "encoding/base64"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -32,7 +33,8 @@ type FindingEvent struct {
 }
 
 type FindingDocument struct {
-	Key             string         `json:"_key"`
+	Key             string         `json:"_key,omitempty"`
+	FindingKey      string         `json:"findingKey"`
 	Domain          string         `json:"domain"`
 	Source          string         `json:"source"`
 	FindingType     string         `json:"findingType"`
@@ -50,11 +52,11 @@ type FindingDocument struct {
 	Status          string         `json:"status"`
 }
 
-func (e FindingEvent) GetKey() string {
-	// domainKey + source + findingType + subject + reasonCode
+func (e FindingEvent) DeriveFindingKey() string {
 	keyArgs := []string{e.DomainKey, e.Source, e.FindingType, e.Subject, e.ReasonCode}
-	data := strings.Join(keyArgs, "_")
-	return b64.StdEncoding.EncodeToString([]byte(data))
+	data := strings.Join(keyArgs, "\x00")
+	h := sha256.Sum256([]byte(data))
+	return hex.EncodeToString(h[:])
 }
 
 func NewFindingDocumentFromEvent(e FindingEvent) (FindingDocument, error) {
@@ -66,7 +68,7 @@ func NewFindingDocumentFromEvent(e FindingEvent) (FindingDocument, error) {
 	domain := fmt.Sprintf("domains/%s", e.DomainKey)
 
 	return FindingDocument{
-		Key:             e.GetKey(),
+		FindingKey:      e.DeriveFindingKey(),
 		Domain:          domain,
 		DomainKey:       e.DomainKey,
 		Source:          e.Source,
