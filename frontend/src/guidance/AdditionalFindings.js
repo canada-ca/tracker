@@ -159,14 +159,14 @@ export function AdditionalFindings({ domain }) {
     setFilters((currentFilters) => {
       const hasSameFilter = currentFilters.some(
         ({ filterCategory, comparison, filterValue }) =>
-          filterCategory === 'source' && comparison === '==' && filterValue === source,
+          filterCategory === 'SOURCE' && comparison === 'EQUAL' && filterValue === source,
       )
 
       if (hasSameFilter) {
         return currentFilters
       }
 
-      return [...currentFilters, { filterCategory: 'source', comparison: '==', filterValue: source }]
+      return [...currentFilters, { filterCategory: 'SOURCE', comparison: 'EQUAL', filterValue: source }]
     })
     resetToFirstPage()
   }
