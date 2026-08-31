@@ -2,6 +2,7 @@ import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 import { GraphQLJSONObject } from 'graphql-scalars'
 
 import { additionalFinding } from '../additional-finding'
+import { domainType } from '../../../domain/objects'
 
 describe('additionalFinding GraphQLObjectType', () => {
   it('is an instance of GraphQLObjectType', () => {
@@ -28,13 +29,16 @@ describe('additionalFinding GraphQLObjectType', () => {
       expect(fields).toHaveProperty('lastSeen')
       expect(fields).toHaveProperty('evidence')
       expect(fields).toHaveProperty('attributes')
-      expect(fields).toHaveProperty('occurenceCount')
+      expect(fields).toHaveProperty('occurrenceCount')
       expect(fields).toHaveProperty('raw')
       expect(fields).toHaveProperty('status')
     })
 
+    it('assigns the domain field type correctly', () => {
+      expect(fields.domain.type).toMatchObject(domainType)
+    })
+
     it('assigns scalar field types correctly', () => {
-      expect(fields.domain.type).toBe(GraphQLString)
       expect(fields.source.type).toBe(GraphQLString)
       expect(fields.findingType.type).toBe(GraphQLString)
       expect(fields.subject.type).toBe(GraphQLString)
@@ -43,7 +47,7 @@ describe('additionalFinding GraphQLObjectType', () => {
       expect(fields.reasonCode.type).toBe(GraphQLString)
       expect(fields.firstSeen.type).toBe(GraphQLString)
       expect(fields.lastSeen.type).toBe(GraphQLString)
-      expect(fields.occurenceCount.type).toBe(GraphQLInt)
+      expect(fields.occurrenceCount.type).toBe(GraphQLInt)
       expect(fields.status.type).toBe(GraphQLString)
     })
 
@@ -51,6 +55,30 @@ describe('additionalFinding GraphQLObjectType', () => {
       expect(fields.evidence.type).toBe(GraphQLJSONObject)
       expect(fields.attributes.type).toBe(GraphQLJSONObject)
       expect(fields.raw.type).toBe(GraphQLJSONObject)
+    })
+
+    describe('testing the domain resolver', () => {
+      it('returns the resolved field', async () => {
+        const domain = {
+          _id: 'domains/1',
+          _rev: 'rev',
+          _key: '1',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+        }
+
+        await expect(
+          fields.domain.resolve(
+            { domainKey: domain._key },
+            {},
+            {
+              dataSources: {
+                domain: { byKey: { load: jest.fn().mockReturnValue(domain) } },
+              },
+            },
+          ),
+        ).resolves.toEqual(domain)
+      })
     })
   })
 })

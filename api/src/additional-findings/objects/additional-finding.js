@@ -1,13 +1,18 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 import { GraphQLJSONObject } from 'graphql-scalars'
 
+import { domainType } from '../../domain/objects'
+
 export const additionalFinding = new GraphQLObjectType({
   name: 'AdditionalFinding',
   description: 'Out-of-policy security finding emitted by additional scanners.',
   fields: () => ({
     domain: {
-      type: GraphQLString,
-      description: 'Name of the domain the finding is attributed to.',
+      type: domainType,
+      description: 'The domain the finding is attributed to.',
+      resolve: async ({ domainKey }, _args, { dataSources: { domain: domainDataSource } }) => {
+        return await domainDataSource.byKey.load(domainKey)
+      },
     },
     source: {
       type: GraphQLString,
@@ -19,7 +24,7 @@ export const additionalFinding = new GraphQLObjectType({
     },
     subject: {
       type: GraphQLString,
-      description: 'NATS channel subject of the scanner.',
+      description: 'Domain/entity (e.g. hostname) the finding was observed on, as reported by the scanner.',
     },
     confidence: {
       type: GraphQLString,
@@ -49,7 +54,7 @@ export const additionalFinding = new GraphQLObjectType({
       type: GraphQLJSONObject,
       description: 'Additional notable information about the detected vulnerability and/or affiliated resource.',
     },
-    occurenceCount: {
+    occurrenceCount: {
       type: GraphQLInt,
       description: 'Amount of times the vulnerability has been detected.',
     },

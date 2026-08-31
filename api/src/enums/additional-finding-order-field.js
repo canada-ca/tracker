@@ -36,9 +36,9 @@ export const AdditionalFindingOrderField = new GraphQLEnumType({
       value: 'lastSeen',
       description: 'Order additional findings by last seen.',
     },
-    OCCURENCE_COUNT: {
-      value: 'occurenceCount',
-      description: 'Order additional findings by occurence count.',
+    OCCURRENCE_COUNT: {
+      value: 'occurrenceCount',
+      description: 'Order additional findings by occurrence count.',
     },
     STATUS: {
       value: 'status',
