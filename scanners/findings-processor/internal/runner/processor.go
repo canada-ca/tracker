@@ -65,8 +65,16 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 		eventCtx, cancelEvent := context.WithTimeout(ctx, 5*time.Second)
 		defer cancelEvent()
 
-		action := deps.handleEvent(eventCtx, db, msg.Data)
-		applyAction(msg, action)
+		switch deps.handleEvent(eventCtx, db, msg.Data) {
+		case "ack":
+			_ = msg.Ack()
+		case "nak":
+			_ = msg.Nak()
+		case "term":
+			_ = msg.Term()
+		default:
+			_ = msg.Nak()
+		}
 	}
 
 	var sub *nats.Subscription
