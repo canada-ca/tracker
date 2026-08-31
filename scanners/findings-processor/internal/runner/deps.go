@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/arangodb/go-driver/v2/arangodb"
 	"github.com/canada-ca/tracker/scanners/findings-processor/internal/config"
@@ -81,7 +82,20 @@ func defaultDependencies() dependencies {
 			if sub == nil {
 				return nil
 			}
-			return sub.Drain()
+
+			done := make(chan struct{})
+			sub.SetClosedHandler(func(string) { close(done) })
+
+			if err := sub.Drain(); err != nil {
+				return err
+			}
+
+			select {
+			case <-done:
+				return nil
+			case <-time.After(10 * time.Second):
+				return errors.New("timed out waiting for subscription drain")
+			}
 		},
 		handleEvent:   HandleEvent,
 		notifyContext: signal.NotifyContext,
