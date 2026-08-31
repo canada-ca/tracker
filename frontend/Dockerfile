@@ -1,4 +1,4 @@
-FROM node:24.19.0-alpine3.24 as build-env
+FROM node:26.8.1-alpine3.24 as build-env
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm ci && npm run build && npm prune --omit=dev
 
-FROM node:24.19.0-alpine3.24
+FROM node:26.8.1-alpine3.24
 
 ENV HOST 0.0.0.0
 ENV PORT 3000
