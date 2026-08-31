@@ -13,11 +13,11 @@ import (
 
 type Publisher struct {
 	logger  zerolog.Logger
-	js      jetstream.JetStream
+	js      jetstream.Publisher
 	subject string
 }
 
-func NewPublisher(logger zerolog.Logger, js jetstream.JetStream, subject string) *Publisher {
+func NewPublisher(logger zerolog.Logger, js jetstream.Publisher, subject string) *Publisher {
 	return &Publisher{logger: logger, js: js, subject: subject}
 }
 
