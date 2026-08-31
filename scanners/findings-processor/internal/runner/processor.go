@@ -2,7 +2,9 @@ package runner
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os/signal"
 	"syscall"
 	"time"
 
@@ -14,18 +16,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	parseEventFn    = model.ParseEvent
-	validateEventFn = model.Validate
-	upsertFindingFn = database.UpsertFinding
-)
-
 func Run(cfg config.Config) error {
-	return runWithDeps(cfg, defaultDependencies())
-}
-
-func runWithDeps(cfg config.Config, deps dependencies) error {
-	nc, err := deps.connectNATS(cfg.NATSURL)
+	nc, err := nats.Connect(cfg.NATSURL)
 	if err != nil {
 		return fmt.Errorf("failed to connect to NATS: %w", err)
 	}
@@ -36,7 +28,7 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 		return fmt.Errorf("failed to create JetStream context: %w", err)
 	}
 
-	ctx, stop := deps.notifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
 	opts := []nats.SubOpt{
@@ -48,7 +40,7 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 		nats.MaxAckPending(cfg.NATSMaxPending),
 	}
 
-	client, err := deps.createDBClient(cfg)
+	client, err := database.CreateDBClient(cfg)
 	if err != nil {
 		return fmt.Errorf("failed to create ArangoDB client: %w", err)
 	}
@@ -56,7 +48,7 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 	dbCtx, cancelDB := context.WithTimeout(ctx, 10*time.Second)
 	defer cancelDB()
 
-	db, err := deps.getDatabase(dbCtx, client, cfg.DBName)
+	db, err := client.GetDatabase(dbCtx, cfg.DBName, nil)
 	if err != nil {
 		return fmt.Errorf("get database failed: %w", err)
 	}
@@ -65,7 +57,7 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 		eventCtx, cancelEvent := context.WithTimeout(ctx, 5*time.Second)
 		defer cancelEvent()
 
-		switch deps.handleEvent(eventCtx, db, msg.Data) {
+		switch HandleEvent(eventCtx, db, msg.Data) {
 		case "ack":
 			_ = msg.Ack()
 		case "nak":
@@ -86,7 +78,7 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 	if err != nil {
 		return fmt.Errorf("failed to subscribe: %w", err)
 	}
-	defer deps.drainSubscription(sub)
+	defer drainSubscription(sub)
 
 	log.Info().
 		Str("stream", cfg.NATSStream).
@@ -101,20 +93,39 @@ func runWithDeps(cfg config.Config, deps dependencies) error {
 	return nil
 }
 
+func drainSubscription(sub *nats.Subscription) error {
+	if sub == nil {
+		return nil
+	}
+
+	done := make(chan struct{})
+	sub.SetClosedHandler(func(string) { close(done) })
+
+	if err := sub.Drain(); err != nil {
+		return err
+	}
+
+	select {
+	case <-done:
+		return nil
+	case <-time.After(10 * time.Second):
+		return errors.New("timed out waiting for subscription drain")
+	}
+}
+
 func HandleEvent(ctx context.Context, db arangodb.Database, payload []byte) string {
-	evt, err := parseEventFn(payload)
+	evt, err := model.ParseEvent(payload)
 	if err != nil {
 		log.Warn().Err(err).Msg("invalid json payload")
 		return "term"
 	}
 
-	if err := validateEventFn(evt); err != nil {
+	if err := model.Validate(evt); err != nil {
 		log.Warn().Err(err).Msg("invalid event payload")
 		return "term"
 	}
 
-	err = upsertFindingFn(ctx, db, evt)
-	if err != nil {
+	if err := database.UpsertFinding(ctx, db, evt); err != nil {
 		log.Warn().Err(err).Msg("failed to upsert finding")
 		return "nak"
 	}

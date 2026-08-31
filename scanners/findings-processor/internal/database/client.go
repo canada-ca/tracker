@@ -6,30 +6,14 @@ import (
 	"github.com/canada-ca/tracker/scanners/findings-processor/internal/config"
 )
 
-var (
-	newEndpoints       = connection.NewRoundRobinEndpoints
-	newConnection      = connection.NewHttp2Connection
-	defaultHTTP2Config = connection.DefaultHTTP2ConfigurationWrapper
-	newBasicAuth       = connection.NewBasicAuth
-	setAuthentication  = func(conn connection.Connection, auth connection.Authentication) error {
-		return conn.SetAuthentication(auth)
-	}
-	newArangoClient = arangodb.NewClient
-)
-
 func CreateDBClient(cfg config.Config) (arangodb.Client, error) {
-	// Setup a client connection
-	endpoint := newEndpoints([]string{cfg.DBURL})
-	conn := newConnection(defaultHTTP2Config(endpoint, false))
+	endpoint := connection.NewRoundRobinEndpoints([]string{cfg.DBURL})
+	conn := connection.NewHttp2Connection(connection.DefaultHTTP2ConfigurationWrapper(endpoint, false))
 
-	// Add authentication
-	auth := newBasicAuth(cfg.DBUser, cfg.DBPassword)
-	err := setAuthentication(conn, auth)
-	if err != nil {
+	auth := connection.NewBasicAuth(cfg.DBUser, cfg.DBPassword)
+	if err := conn.SetAuthentication(auth); err != nil {
 		return nil, err
 	}
 
-	// Create a client
-	client := newArangoClient(conn)
-	return client, nil
+	return arangodb.NewClient(conn), nil
 }
