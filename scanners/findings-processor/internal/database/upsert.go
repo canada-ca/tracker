@@ -13,7 +13,7 @@ type findingUpdatePatch struct {
 	OccurrenceCount int    `json:"occurrenceCount"`
 }
 
-func readFindingDocument(ctx context.Context, db arangodb.Database, key string) (*model.FindingDocument, error) {
+func readFinding(ctx context.Context, db arangodb.Database, key string) (*model.FindingDocument, error) {
 	var finding model.FindingDocument
 	options := arangodb.QueryOptions{
 		Count: true,
@@ -48,7 +48,7 @@ func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingE
 
 	key := evt.DeriveFindingKey()
 
-	finding, err := readFindingDocument(ctx, db, key)
+	finding, err := readFinding(ctx, db, key)
 	if err != nil {
 		log.Warn().Err(err).Msg("failed to check finding existence")
 		return err
