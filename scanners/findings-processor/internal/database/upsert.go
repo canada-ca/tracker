@@ -9,8 +9,8 @@ import (
 )
 
 type findingUpdatePatch struct {
-	LastSeen       string `json:"lastSeen"`
-	OccurenceCount int    `json:"occurenceCount"`
+	LastSeen        string `json:"lastSeen"`
+	OccurrenceCount int    `json:"occurrenceCount"`
 }
 
 var (
@@ -59,8 +59,8 @@ func UpsertFinding(ctx context.Context, db arangodb.Database, evt model.FindingE
 		}
 
 		patch := findingUpdatePatch{
-			LastSeen:       evt.ObservedAt,
-			OccurenceCount: finding.OccurrenceCount + 1,
+			LastSeen:        evt.ObservedAt,
+			OccurrenceCount: finding.OccurrenceCount + 1,
 		}
 
 		err = updateFindingDocument(ctx, findingsCol, key, patch)
