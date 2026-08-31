@@ -13,7 +13,7 @@ Consumes finding events from NATS JetStream and upserts normalized finding docum
 
 Expected JSON fields:
 
-- Required: `schemaVersion`, `source`, `findingType`, `domainKey`, `subject`, `confidence`, `observedAt`
+- Required: `source`, `findingType`, `domainKey`, `subject`, `confidence`, `observedAt`
 - Optional: `severity`, `reasonCode`, `evidence`, `attributes`
 
 `observedAt` must be RFC3339.
@@ -36,22 +36,22 @@ go run ./cmd/service
 
 ## Environment variables
 
-| Variable | Default | Notes |
-| --- | --- | --- |
-| `NATS_URL` | `nats://localhost:4222` | NATS server URL |
-| `NATS_STREAM` | `SCANS` | JetStream stream name |
-| `NATS_SUBJECT` | `scans.findings.*` | Subscription subject |
-| `NATS_CONSUMER_DURABLE` | `findings-processor` | Durable consumer name |
-| `NATS_QUEUE_GROUP` | _(empty)_ | Leave empty for single instance |
-| `NATS_ACK_WAIT` | `30s` | Ack timeout |
-| `NATS_MAX_DELIVER` | `10` | Max redeliveries |
-| `NATS_MAX_ACK_PENDING` | `256` | Max pending unacked messages |
-| `DB_URL` | `http://localhost:8529` | ArangoDB URL |
-| `DB_USER` | _(none)_ | ArangoDB user |
-| `DB_NAME` | _(none)_ | ArangoDB database |
-| `DB_PASS` | _(empty)_ | ArangoDB password |
-| `LOG_LEVEL` | `info` | Zerolog global level |
-| `LOG_PRETTY` | `true` | Human-readable logs |
+| Variable                | Default                 | Notes                           |
+| ----------------------- | ----------------------- | ------------------------------- |
+| `NATS_URL`              | `nats://localhost:4222` | NATS server URL                 |
+| `NATS_STREAM`           | `SCANS`                 | JetStream stream name           |
+| `NATS_SUBJECT`          | `scans.findings.*`      | Subscription subject            |
+| `NATS_CONSUMER_DURABLE` | `findings-processor`    | Durable consumer name           |
+| `NATS_QUEUE_GROUP`      | _(empty)_               | Leave empty for single instance |
+| `NATS_ACK_WAIT`         | `30s`                   | Ack timeout                     |
+| `NATS_MAX_DELIVER`      | `10`                    | Max redeliveries                |
+| `NATS_MAX_ACK_PENDING`  | `256`                   | Max pending unacked messages    |
+| `DB_URL`                | `http://localhost:8529` | ArangoDB URL                    |
+| `DB_USER`               | _(none)_                | ArangoDB user                   |
+| `DB_NAME`               | _(none)_                | ArangoDB database               |
+| `DB_PASS`               | _(empty)_               | ArangoDB password               |
+| `LOG_LEVEL`             | `info`                  | Zerolog global level            |
+| `LOG_PRETTY`            | `true`                  | Human-readable logs             |
 
 ## Subscription mode
 
