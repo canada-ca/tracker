@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from "@lingui/react/macro"
 import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from '../organizationDetails/OrganizationDomains'

@@ -3,7 +3,7 @@ import { Button, Flex, Stack, Text, useToast, Select } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useQuery } from '@apollo/client'
-import { Link as RouteLink, useNavigate, useParams } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useParams } from 'react-router'
 
 import { AdminPanel } from './AdminPanel'
 import { OrganizationInformation } from './OrganizationInformation'

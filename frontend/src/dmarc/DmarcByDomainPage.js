@@ -17,7 +17,7 @@ import {
 import { LinkIcon, SearchIcon } from '@chakra-ui/icons'
 import { Trans, useLingui } from "@lingui/react/macro"
 import { ErrorBoundary } from 'react-error-boundary'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router'
 import withSuperAdmin from '../app/withSuperAdmin'
 
 import { TrackerTable } from '../components/TrackerTable'

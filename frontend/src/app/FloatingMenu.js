@@ -1,6 +1,6 @@
 import { FloatingMenuLink } from './FloatingMenuLink'
 import React from 'react'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router'
 import {
   Box,
   Button,
