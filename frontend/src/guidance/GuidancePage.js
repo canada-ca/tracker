@@ -27,6 +27,7 @@ import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
+import { AdditionalFindings } from './AdditionalFindings'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useMutation, useQuery } from '@apollo/client'
@@ -43,6 +44,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DmarcPhaseStepper } from './DmarcPhaseStepper'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -109,7 +111,7 @@ function GuidancePage() {
     }
   }, [activeTab, navigate, defaultActiveTab])
 
-  const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
+  const [favouriteDomain] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
       toast({
         title: t`An error occurred while favouriting a domain.`,
@@ -298,6 +300,13 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <Tab borderTopWidth="0.25">
+                <Trans>Additional Findings</Trans>
+              </Tab>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -318,6 +327,13 @@ function GuidancePage() {
               </EmailGuidance>
             )}
           </TabPanel>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <TabPanel>
+                <AdditionalFindings domain={domain} />
+              </TabPanel>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabPanels>
       </Tabs>
     )

@@ -24,11 +24,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import {
-  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
-  PAGINATED_DOMAINS as FORWARD,
-  GET_TOP_25_REPORT,
-} from '../graphql/queries'
+import { GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, PAGINATED_DOMAINS as FORWARD } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
@@ -71,21 +67,6 @@ export default function DomainsPage() {
       },
     },
   )
-
-  const [getTop25Report, { loading: top25ReportLoading }] = useLazyQuery(GET_TOP_25_REPORT, {
-    variables: { filters },
-    fetchPolicy: 'no-cache',
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`An error occurred when you attempted to download all domain statuses.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -142,74 +123,40 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
     return (
-      <Flex>
-        <ExportButton
-          fileName={`Tracker_all_domains_${new Date().toLocaleDateString('en-CA')}`}
-          dataFunction={async () => {
+      <ExportButton
+        fileName={`Tracker_all_domains_${new Date().toLocaleDateString('en-CA')}`}
+        dataFunction={async () => {
+          toast({
+            title: t`Getting domain statuses`,
+            description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          const result = await getAllOrgDomainStatuses()
+          if (result.data?.getAllOrganizationDomainStatuses === undefined) {
             toast({
-              title: t`Getting domain statuses`,
-              description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
-              status: 'info',
+              title: t`No data found`,
+              description: t`No data found when retrieving all domain statuses.`,
+              status: 'error',
               duration: 9000,
               isClosable: true,
               position: 'top-left',
             })
-            const result = await getAllOrgDomainStatuses()
-            if (result.data?.getAllOrganizationDomainStatuses === undefined) {
-              toast({
-                title: t`No data found`,
-                description: t`No data found when retrieving all domain statuses.`,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
 
-              throw t`No data found`
-            }
+            throw t`No data found`
+          }
 
-            return result.data?.getAllOrganizationDomainStatuses
-          }}
-          isLoading={allOrgDomainStatusesLoading}
-          mr="2"
-        />
-        <ExportButton
-          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString('en-CA')}`}
-          dataFunction={async () => {
-            toast({
-              title: t`Getting top 25 report`,
-              description: t`Request successfully sent to get top 25 report.`,
-              status: 'info',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-            const result = await getTop25Report()
-            if (result.data?.getTop25Reports === undefined) {
-              toast({
-                title: t`No data found`,
-                description: t`No data found when retrieving top 25 report.`,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
-
-              throw t`No data found`
-            }
-
-            return result.data?.getTop25Reports
-          }}
-          isLoading={top25ReportLoading}
-        >
-          <Trans>Export SPIN Top 25</Trans>
-        </ExportButton>
-      </Flex>
+          return result.data?.getAllOrganizationDomainStatuses
+        }}
+        isLoading={allOrgDomainStatusesLoading}
+        mr="2"
+      />
     )
   })
 
@@ -317,7 +264,6 @@ export default function DomainsPage() {
         />
         <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
-        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
