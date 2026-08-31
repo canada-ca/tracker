@@ -20,8 +20,6 @@ type RunnerDeps struct {
 	NC          *nats.Conn
 }
 
-var checkConnection = messaging.CheckConnection
-
 func isBenignNextError(err error) bool {
 	return errors.Is(err, jetstream.ErrMsgIteratorClosed) ||
 		errors.Is(err, jetstream.ErrNoMessages) ||
@@ -45,7 +43,7 @@ func Run(ctx context.Context, deps RunnerDeps) {
 
 Loop:
 	for {
-		if err := checkConnection(deps.NC); err != nil {
+		if err := messaging.CheckConnection(deps.NC); err != nil {
 			logger.Error().Err(err).Msg("NATS connection unhealthy")
 			break Loop
 		}

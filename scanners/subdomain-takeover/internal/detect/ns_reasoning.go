@@ -58,10 +58,6 @@ func getRegistrarReasonCode(provider string, registrar *model.RegistrarContext) 
 	return ""
 }
 
-func isRegistrarMismatch(provider string, registrar *model.RegistrarContext) bool {
-	return getRegistrarReasonCode(provider, registrar) == ""
-}
-
 func isExploitableProviderStatus(status fingerprints.NSProviderStatus) bool {
 	return status == fingerprints.NSStatusVulnerable || status == fingerprints.NSStatusVulnerableWithPurchase
 }

@@ -56,74 +56,74 @@ func normalizeOrgName(raw string) string {
 
 	return strings.Join(out, " ")
 }
+
+var canonicalProviderAliases = map[string][]string{
+	"aws-route53": {
+		"aws route 53", "route 53", "route53", "amazon route 53", "amazon web services", "aws",
+	},
+	"azure-dns": {
+		"azure", "azure dns", "microsoft", "microsoft azure",
+	},
+	"cloudflare": {
+		"cloudflare", "cloudflare inc",
+	},
+	"digitalocean": {
+		"digital ocean", "digitalocean",
+	},
+	"dnsmadeeasy": {
+		"dns made easy", "dnsmadeeasy",
+	},
+	"dnsimple": {
+		"dnsimple",
+	},
+	"domaincom": {
+		"domain com", "domain.com", "domain",
+	},
+	"dreamhost": {
+		"dreamhost",
+	},
+	"easydns": {
+		"easydns", "easy dns",
+	},
+	"gandi": {
+		"gandi", "gandi sas", "gandi.net",
+	},
+	"google-cloud-dns": {
+		"google cloud", "google cloud dns", "google domains", "googledomains", "google",
+	},
+	"hurricane-electric": {
+		"hurricane electric", "he net", "he",
+	},
+	"linode": {
+		"linode", "akamai linode", "akamai",
+	},
+	"namecom": {
+		"name.com", "name com", "namecom",
+	},
+	"namecheap": {
+		"namecheap",
+	},
+	"network-solutions": {
+		"network solutions", "web.com", "webcom",
+	},
+	"ns1": {
+		"ns1", "nsone", "nsone.net",
+	},
+	"reg-ru": {
+		"reg ru", "reg.ru",
+	},
+	"tierranet": {
+		"tierranet", "tierra net", "domaindiscover",
+	},
+	"ultradns": {
+		"ultradns", "neustar ultradns", "neustar",
+	},
+	"yahoo-smb": {
+		"yahoo small business", "yahoo", "yns",
+	},
+}
+
 func canonicalProviderKey(raw string) string {
-
-	var canonicalProviderAliases = map[string][]string{
-		"aws-route53": {
-			"aws route 53", "route 53", "route53", "amazon route 53", "amazon web services", "aws",
-		},
-		"azure-dns": {
-			"azure", "azure dns", "microsoft", "microsoft azure",
-		},
-		"cloudflare": {
-			"cloudflare", "cloudflare inc",
-		},
-		"digitalocean": {
-			"digital ocean", "digitalocean",
-		},
-		"dnsmadeeasy": {
-			"dns made easy", "dnsmadeeasy",
-		},
-		"dnsimple": {
-			"dnsimple",
-		},
-		"domaincom": {
-			"domain com", "domain.com", "domain",
-		},
-		"dreamhost": {
-			"dreamhost",
-		},
-		"easydns": {
-			"easydns", "easy dns",
-		},
-		"gandi": {
-			"gandi", "gandi sas", "gandi.net",
-		},
-		"google-cloud-dns": {
-			"google cloud", "google cloud dns", "google domains", "googledomains", "google",
-		},
-		"hurricane-electric": {
-			"hurricane electric", "he net", "he",
-		},
-		"linode": {
-			"linode", "akamai linode", "akamai",
-		},
-		"namecom": {
-			"name.com", "name com", "namecom",
-		},
-		"namecheap": {
-			"namecheap",
-		},
-		"network-solutions": {
-			"network solutions", "web.com", "webcom",
-		},
-		"ns1": {
-			"ns1", "nsone", "nsone.net",
-		},
-		"reg-ru": {
-			"reg ru", "reg.ru",
-		},
-		"tierranet": {
-			"tierranet", "tierra net", "domaindiscover",
-		},
-		"ultradns": {
-			"ultradns", "neustar ultradns", "neustar",
-		},
-		"yahoo-smb": {
-			"yahoo small business", "yahoo", "yns",
-		},
-	}
-
 	s := normalizeOrgName(raw) // lowercase, trim, collapse spaces, strip punctuation/legal suffixes
 	if s == "" {
 		return ""

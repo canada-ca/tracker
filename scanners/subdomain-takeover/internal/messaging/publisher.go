@@ -11,25 +11,18 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var marshalFinding = json.Marshal
-var nowUTC = func() time.Time { return time.Now().UTC() }
-
 type Publisher struct {
-	logger        zerolog.Logger
-	publishToNATS func(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error)
-	subject       string
+	logger  zerolog.Logger
+	js      jetstream.JetStream
+	subject string
 }
 
-func NewPublisher(
-	logger zerolog.Logger,
-	publishToNATS func(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error),
-	subject string,
-) *Publisher {
-	return &Publisher{logger: logger, publishToNATS: publishToNATS, subject: subject}
+func NewPublisher(logger zerolog.Logger, js jetstream.JetStream, subject string) *Publisher {
+	return &Publisher{logger: logger, js: js, subject: subject}
 }
 
 func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
-	event, err := model.NewFindingEventFromFinding(finding, nowUTC())
+	event, err := model.NewFindingEventFromFinding(finding, time.Now().UTC())
 	if err != nil {
 		p.logger.Error().
 			Err(err).
@@ -40,7 +33,7 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 		return err
 	}
 
-	payload, err := marshalFinding(event)
+	payload, err := json.Marshal(event)
 	if err != nil {
 		p.logger.Error().
 			Err(err).
@@ -54,7 +47,7 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 		return err
 	}
 
-	if _, err := p.publishToNATS(ctx, p.subject, payload); err != nil {
+	if _, err := p.js.Publish(ctx, p.subject, payload); err != nil {
 		p.logger.Error().
 			Err(err).
 			Str("domain", finding.Domain).

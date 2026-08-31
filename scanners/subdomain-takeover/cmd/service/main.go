@@ -53,10 +53,10 @@ func main() {
 
 	logger.Info().Msgf("Connected to NATS at %s", runtimeDeps.NC.ConnectedUrl())
 
-	pub := messaging.NewPublisher(logger, runtimeDeps.JS.Publish, cfg.SubjectOut)
+	pub := messaging.NewPublisher(logger, runtimeDeps.JS, cfg.SubjectOut)
 	matcher := detect.NewHTTPBodyFingerprintMatcher(5 * time.Second)
-	classifier := detect.NewClassifier(matcher).WithLogger(logger)
-	worker := app.NewWorker(logger, pub.Publish, classifier.Classify)
+	classifier := detect.NewClassifier(matcher, logger)
+	worker := app.NewWorker(logger, pub, classifier)
 
 	go func() {
 		<-sig

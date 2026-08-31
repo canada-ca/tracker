@@ -7,35 +7,21 @@ import (
 )
 
 type Classifier struct {
-	Matcher BodyFingerprintMatcher
+	matcher BodyFingerprintMatcher
 	logger  zerolog.Logger
 }
 
-func NewClassifier(matcher BodyFingerprintMatcher) *Classifier {
-	return &Classifier{Matcher: matcher, logger: zerolog.Nop()}
-}
-
-func (c *Classifier) WithLogger(logger zerolog.Logger) *Classifier {
-	c.logger = logger.With().Str("component", "classifier").Logger()
-	SetLogger(logger)
-	return c
-}
-
-func (c *Classifier) Classify(input model.Input) ([]model.Finding, error) {
-	matcher := c.Matcher
+func NewClassifier(matcher BodyFingerprintMatcher, logger zerolog.Logger) *Classifier {
 	if matcher == nil {
 		matcher = NewNoopBodyFingerprintMatcher()
 	}
-
-	logger := c.logger
-	if logger.GetLevel() == zerolog.NoLevel {
-		logger = zerolog.Nop()
+	return &Classifier{
+		matcher: matcher,
+		logger:  logger.With().Str("component", "classifier").Logger(),
 	}
-
-	return Classify(input, matcher, logger)
 }
 
-func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.Logger) ([]model.Finding, error) {
+func (c *Classifier) Classify(input model.Input) ([]model.Finding, error) {
 	findings := []model.Finding{}
 
 	cnameProviderFingerprints := fingerprints.CNAME()
@@ -43,10 +29,10 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.
 
 	cnameEvidence := ExtractCNAMEEvidence(input.Results)
 	if cnameEvidence != nil {
-		logger.Debug().Str("domain_key", input.DomainKey).Str("domain", cnameEvidence.Domain).Msg("cname evidence extracted")
-		cnameHit := MatchCNAMEFingerprints(*cnameEvidence, cnameProviderFingerprints, matcher)
+		c.logger.Debug().Str("domain_key", input.DomainKey).Str("domain", cnameEvidence.Domain).Msg("cname evidence extracted")
+		cnameHit := MatchCNAMEFingerprints(*cnameEvidence, cnameProviderFingerprints, c.matcher, c.logger)
 		if ShouldEmitCNAME(cnameHit) {
-			logger.Debug().
+			c.logger.Debug().
 				Str("domain_key", input.DomainKey).
 				Str("domain", cnameEvidence.Domain).
 				Str("provider", cnameHit.Provider).
@@ -61,9 +47,8 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.
 				ReasonCode: string(cnameHit.ReasonCode),
 				Confidence: ConfidenceForReason(cnameHit.ReasonCode),
 			})
-		}
-		if cnameHit != nil && !ShouldEmitCNAME(cnameHit) {
-			logger.Debug().
+		} else if cnameHit != nil {
+			c.logger.Debug().
 				Str("domain_key", input.DomainKey).
 				Str("domain", cnameEvidence.Domain).
 				Str("provider", cnameHit.Provider).
@@ -71,19 +56,19 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.
 				Msg("cname finding suppressed")
 		}
 	} else {
-		logger.Debug().Str("domain_key", input.DomainKey).Msg("no cname evidence")
+		c.logger.Debug().Str("domain_key", input.DomainKey).Msg("no cname evidence")
 	}
 
 	nsEvidence := ExtractNSEvidence(input.Results)
 	if nsEvidence != nil {
-		logger.Debug().
+		c.logger.Debug().
 			Str("domain_key", input.DomainKey).
 			Str("domain", nsEvidence.Domain).
 			Int("ns_hosts", len(nsEvidence.NSHosts)).
 			Msg("ns evidence extracted")
-		nsHit := MatchNSProviderRules(*nsEvidence, nsProviderFingerprints)
+		nsHit := MatchNSProviderRules(*nsEvidence, nsProviderFingerprints, c.logger)
 		if ShouldEmitNSHijack(nsHit) {
-			logger.Debug().
+			c.logger.Debug().
 				Str("domain_key", input.DomainKey).
 				Str("domain", nsEvidence.Domain).
 				Str("provider", nsHit.Provider).
@@ -100,7 +85,7 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.
 				Confidence: ConfidenceForReason(nsHit.ReasonCode),
 			})
 		} else if nsHit != nil {
-			logger.Debug().
+			c.logger.Debug().
 				Str("domain_key", input.DomainKey).
 				Str("domain", nsEvidence.Domain).
 				Str("provider", nsHit.Provider).
@@ -109,7 +94,7 @@ func Classify(input model.Input, matcher BodyFingerprintMatcher, logger zerolog.
 				Msg("ns finding suppressed")
 		}
 	} else {
-		logger.Debug().Str("domain_key", input.DomainKey).Msg("no ns evidence")
+		c.logger.Debug().Str("domain_key", input.DomainKey).Msg("no ns evidence")
 	}
 
 	return findings, nil

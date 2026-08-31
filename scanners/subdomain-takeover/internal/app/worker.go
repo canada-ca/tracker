@@ -6,26 +6,24 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog"
 )
 
 type Worker struct {
-	logger          zerolog.Logger
-	publishFinding  func(ctx context.Context, finding model.Finding) error
-	classifyFinding func(input model.Input) ([]model.Finding, error)
+	logger     zerolog.Logger
+	publisher  *messaging.Publisher
+	classifier *detect.Classifier
 }
 
-func NewWorker(
-	logger zerolog.Logger,
-	publishFinding func(ctx context.Context, finding model.Finding) error,
-	classifyFinding func(input model.Input) ([]model.Finding, error),
-) *Worker {
+func NewWorker(logger zerolog.Logger, publisher *messaging.Publisher, classifier *detect.Classifier) *Worker {
 	return &Worker{
-		logger:          logger,
-		publishFinding:  publishFinding,
-		classifyFinding: classifyFinding,
+		logger:     logger,
+		publisher:  publisher,
+		classifier: classifier,
 	}
 }
 
@@ -47,7 +45,7 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 
 	log = log.With().Str("domain_key", scan.DomainKey).Logger()
 
-	findings, err := w.classifyFinding(scan)
+	findings, err := w.classifier.Classify(scan)
 	if err != nil {
 		log.Err(err).Msg("classify error")
 		if nakErr := msg.Nak(); nakErr != nil {
@@ -61,7 +59,7 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 	}
 
 	for _, finding := range findings {
-		err = w.publishFinding(ctx, finding)
+		err = w.publisher.Publish(ctx, finding)
 		if err != nil {
 			log.Err(err).Msg("publish error")
 			if nakErr := msg.Nak(); nakErr != nil {
