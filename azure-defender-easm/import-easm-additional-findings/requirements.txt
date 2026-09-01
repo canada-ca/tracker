@@ -1,5 +1,5 @@
 azure-kusto-data==4.3.1
 python-dotenv==1.2.2
-python-arango==8.3.1
+python-arango==8.3.2
 numpy==2.4.4
 pandas==3.0.2
