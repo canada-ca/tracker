@@ -3,7 +3,7 @@ import { Box, Button, Flex, SimpleGrid, Heading, Stack, useToast, Switch, Badge 
 import { Trans, useLingui } from "@lingui/react/macro"
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
-import { Link as RouteLink, useNavigate } from 'react-router-dom'
+import { Link as RouteLink, useNavigate } from 'react-router'
 
 import { CreateOrganizationField } from '../components/fields/CreateOrganizationField'
 

@@ -5,7 +5,7 @@ import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { waitFor, render, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { makeVar } from '@apollo/client'
 import { MonthSelect } from '../MonthSelect'
 const handleChange = jest.fn()
