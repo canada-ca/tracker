@@ -10,7 +10,8 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput, decryptPhoneNumber } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { loadUserByUserName } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -87,6 +88,7 @@ describe('user sets a new phone number', () => {
         })
         it('returns status text and updated user', async () => {
           const newPhoneNumber = '+12345678901'
+          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
           const response = await graphql({
             schema,
             source: `
@@ -120,15 +122,15 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: userDataSource.byKey,
                 }),
               },
               validators: {
                 cleanseInput,
                 decryptPhoneNumber,
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+              dataSources: {
+                user: userDataSource,
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
@@ -179,6 +181,7 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and updated user', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -212,15 +215,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -257,6 +260,7 @@ describe('user sets a new phone number', () => {
           })
           it('tfaSendMethod stays as none', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -290,15 +294,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -314,6 +318,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -347,15 +352,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -384,6 +389,7 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and update user', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -417,15 +423,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -462,6 +468,7 @@ describe('user sets a new phone number', () => {
           })
           it('tfaSendMethod stays as email', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -495,15 +502,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -519,6 +526,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -552,15 +560,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -589,6 +597,7 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and updated user', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -622,15 +631,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -667,6 +676,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets tfaSendMethod to email', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -700,15 +710,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -724,6 +734,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -757,15 +768,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -808,6 +819,7 @@ describe('user sets a new phone number', () => {
         })
         it('returns status text and updated user', async () => {
           const newPhoneNumber = '+12345678901'
+          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
           const response = await graphql({
             schema,
             source: `
@@ -841,15 +853,15 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: userDataSource.byKey,
                 }),
               },
               validators: {
                 cleanseInput,
                 decryptPhoneNumber,
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+              dataSources: {
+                user: userDataSource,
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
@@ -900,6 +912,7 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and updated user', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -933,15 +946,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -978,6 +991,7 @@ describe('user sets a new phone number', () => {
           })
           it('tfaSendMethod stays as none', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -1011,15 +1025,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1035,6 +1049,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -1068,15 +1083,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1105,6 +1120,7 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -1138,15 +1154,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1183,6 +1199,7 @@ describe('user sets a new phone number', () => {
           })
           it('tfaSendMethod stays as email', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -1216,15 +1233,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1240,6 +1257,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -1273,15 +1291,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1310,6 +1328,7 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -1343,15 +1362,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1388,6 +1407,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets tfaSendMethod to email', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -1421,15 +1441,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1445,6 +1465,7 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -1478,15 +1499,15 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1569,10 +1590,11 @@ describe('user sets a new phone number', () => {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    { byKey: { load: jest.fn() } },
+                  ),
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1637,10 +1659,11 @@ describe('user sets a new phone number', () => {
                   cleanseInput,
                   decryptPhoneNumber,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    { byKey: { load: jest.fn() } },
+                  ),
                 },
                 notify: {
                   sendAuthTextMsg: mockNotify,
@@ -1649,159 +1672,6 @@ describe('user sets a new phone number', () => {
             })
 
             const error = [new GraphQLError('Unable to set phone number, please try again.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred for user: 123 when upserting phone number information: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
-    })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
-      describe('transaction step error occurs', () => {
-        describe('when setting phone number', () => {
-          it('throws an error', async () => {
-            const newPhoneNumber = '+12345678901'
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
-                  result {
-                    ... on SetPhoneNumberResult {
-                      status
-                      user {
-                        phoneNumber
-                      }
-                    }
-                    ... on SetPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request,
-                userKey: 123,
-                query,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                  decryptPhoneNumber,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-                notify: {
-                  sendAuthTextMsg: mockNotify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de définir le numéro de téléphone, veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 when upserting phone number information: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when setting phone number', () => {
-          it('throws an error', async () => {
-            const newPhoneNumber = '+12345678901'
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-              abort: jest.fn(),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
-                  result {
-                    ... on SetPhoneNumberResult {
-                      status
-                      user {
-                        phoneNumber
-                      }
-                    }
-                    ... on SetPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                request,
-                userKey: 123,
-                query,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
-                },
-                validators: {
-                  cleanseInput,
-                  decryptPhoneNumber,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-                notify: {
-                  sendAuthTextMsg: mockNotify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de définir le numéro de téléphone, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

@@ -9,7 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
-import { loadUserByKey, loadUserByUserName } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -93,6 +93,7 @@ describe('user send password reset email', () => {
 
         const sendUpdatedUserNameEmail = jest.fn()
 
+        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -124,9 +125,8 @@ describe('user send password reset email', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
-              loadUserByUserName: loadUserByUserName({ query }),
+            dataSources: {
+              user: userDataSource,
             },
             notify: { sendUpdatedUserNameEmail },
           },
@@ -216,16 +216,17 @@ describe('user send password reset email', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    userName: 'test.account@istio.actually.exists',
-                    displayName: 'Test Account',
-                    tfaValidated: false,
-                    emailValidated: false,
-                  }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      tfaValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
                 },
-                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: { sendUpdatedUserNameEmail: jest.fn() },
             },
@@ -285,16 +286,17 @@ describe('user send password reset email', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    userName: 'test.account@istio.actually.exists',
-                    displayName: 'Test Account',
-                    tfaValidated: false,
-                    emailValidated: false,
-                  }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      tfaValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
                 },
-                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: { sendUpdatedUserNameEmail: jest.fn() },
             },
@@ -353,11 +355,12 @@ describe('user send password reset email', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
-                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: { sendUpdatedUserNameEmail: jest.fn() },
             },
@@ -411,27 +414,36 @@ describe('user send password reset email', () => {
                 userKey: 123,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error occurred.')),
-                  abort: jest.fn(),
-                }),
                 auth: {
                   verifyToken: verifyToken({}),
                 },
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      userName: 'test.account@istio.actually.exists',
-                      displayName: 'Test Account',
-                      tfaValidated: false,
-                      emailValidated: false,
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({
+                      query,
+                      userKey: 123,
+                      i18n,
+                      transaction: jest.fn().mockReturnValue({
+                        step: jest.fn().mockRejectedValue(new Error('Transaction step error occurred.')),
+                        abort: jest.fn(),
+                      }),
+                      collections: collectionNames,
                     }),
-                  },
-                  loadUserByUserName: loadUserByUserName({ query, userKey: 123, i18n }),
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 123,
+                          userName: 'test.account@istio.actually.exists',
+                          displayName: 'Test Account',
+                          tfaValidated: false,
+                          emailValidated: false,
+                        }),
+                      },
+                    },
+                  ),
                 },
                 notify: { sendUpdatedUserNameEmail: jest.fn() },
               },
@@ -477,28 +489,37 @@ describe('user send password reset email', () => {
                 userKey: 123,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error occurred.')),
-                  abort: jest.fn(),
-                }),
                 auth: {
                   verifyToken: verifyToken({}),
                 },
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      userName: 'test.account@istio.actually.exists',
-                      displayName: 'Test Account',
-                      tfaValidated: false,
-                      emailValidated: false,
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({
+                      query,
+                      userKey: 123,
+                      i18n,
+                      transaction: jest.fn().mockReturnValue({
+                        step: jest.fn().mockReturnValue({}),
+                        commit: jest.fn().mockRejectedValue(new Error('Transaction commit error occurred.')),
+                        abort: jest.fn(),
+                      }),
+                      collections: collectionNames,
                     }),
-                  },
-                  loadUserByUserName: loadUserByUserName({ query, userKey: 123, i18n }),
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 123,
+                          userName: 'test.account@istio.actually.exists',
+                          displayName: 'Test Account',
+                          tfaValidated: false,
+                          emailValidated: false,
+                        }),
+                      },
+                    },
+                  ),
                 },
                 notify: { sendUpdatedUserNameEmail: jest.fn() },
               },
