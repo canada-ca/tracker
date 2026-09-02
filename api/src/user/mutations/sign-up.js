@@ -57,7 +57,8 @@ export const signUp = new mutationWithClientMutationId({
       uuidv4,
       request: { ip },
       auth: { bcrypt, tokenize, verifyToken },
-      loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
+      loaders: { loadOrgByKey },
+      dataSources: { user: userDataSource },
       notify: { sendAuthEmail },
       validators: { cleanseInput },
     },
@@ -101,7 +102,7 @@ export const signUp = new mutationWithClientMutationId({
     }
 
     // Check to see if user already exists
-    const checkUser = await loadUserByUserName.load(userName)
+    const checkUser = await userDataSource.byUserName.load(userName)
 
     if (typeof checkUser !== 'undefined') {
       console.warn(`User: ${userName} tried to sign up, however there is already an account in use with that email.`)
@@ -142,42 +143,8 @@ export const signUp = new mutationWithClientMutationId({
       },
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    let insertedUserCursor
-    try {
-      insertedUserCursor = await trx.step(
-        () => query`
-          WITH users
-          INSERT ${user} INTO users
-          RETURN MERGE(
-            {
-              id: NEW._key,
-              _type: "user"
-            },
-            NEW
-          )
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to sign up. Please try again.`))
-    }
-
-    let insertedUser
-    try {
-      insertedUser = await insertedUserCursor.next()
-    } catch (err) {
-      console.error(`Cursor error occurred while user: ${userName} attempted to sign up, creating user: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to sign up. Please try again.`))
-    }
-
     // Assign user to org
+    let affiliation
     if (signUpToken !== '') {
       // Gather token parameters
       const tokenParameters = verifyToken({
@@ -190,7 +157,6 @@ export const signUp = new mutationWithClientMutationId({
 
       if (userName !== tokenUserName) {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however emails do not match.`)
-        await trx.abort()
         return {
           _type: 'error',
           code: 400,
@@ -201,7 +167,6 @@ export const signUp = new mutationWithClientMutationId({
       const checkOrg = await loadOrgByKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however the org could not be found.`)
-        await trx.abort()
         return {
           _type: 'error',
           code: 400,
@@ -209,36 +174,12 @@ export const signUp = new mutationWithClientMutationId({
         }
       }
 
-      try {
-        await trx.step(
-          () =>
-            query`
-            WITH affiliations, organizations, users
-            INSERT {
-              _from: ${checkOrg._id},
-              _to: ${insertedUser._id},
-              permission: ${tokenRequestedRole},
-            } INTO affiliations
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Transaction step error occurred while user: ${userName} attempted to sign up, assigning affiliation: ${err}`,
-        )
-        await trx.abort()
-        throw new Error(i18n._(t`Unable to sign up. Please try again.`))
-      }
+      affiliation = { orgId: checkOrg._id, permission: tokenRequestedRole }
     }
 
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Transaction commit error occurred while user: ${userName} attempted to sign up: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to sign up. Please try again.`))
-    }
+    const insertedUser = await userDataSource.create({ user, affiliation })
 
-    const returnUser = await loadUserByKey.load(insertedUser._key)
+    const returnUser = await userDataSource.byKey.load(insertedUser._key)
     await sendAuthEmail({ user: returnUser })
 
     const authenticateToken = tokenize({

@@ -39,14 +39,11 @@ export const signIn = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       uuidv4,
       response,
       jwt,
       auth: { tokenize, bcrypt },
-      loaders: { loadUserByUserName },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
       notify: { sendAuthEmail, sendAuthTextMsg },
     },
@@ -57,7 +54,7 @@ export const signIn = new mutationWithClientMutationId({
     const rememberMe = args.rememberMe
 
     // Gather user who just signed in
-    let user = await loadUserByUserName.load(userName)
+    let user = await userDataSource.byUserName.load(userName)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -78,26 +75,8 @@ export const signIn = new mutationWithClientMutationId({
         description: i18n._(t`Too many failed login attempts, please reset your password, and try again.`),
       }
     } else {
-      // Setup Transaction
-      const trx = await transaction(collections)
-
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
-        // Reset Failed Login attempts
-        try {
-          await trx.step(
-            () => query`
-              WITH users
-              FOR u IN users
-                UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
-            `,
-          )
-        } catch (err) {
-          console.error(`Trx step error occurred when resetting failed login attempts for user: ${user._key}: ${err}`)
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
-        }
-
         const refreshId = uuidv4()
         const refreshInfo = {
           refreshId,
@@ -109,40 +88,12 @@ export const signIn = new mutationWithClientMutationId({
           // Generate TFA code
           const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
-          // Insert TFA code into DB
-          try {
-            await trx.step(
-              () => query`
-                WITH users
-                UPSERT { _key: ${user._key} }
-                  INSERT {
-                    tfaCode: ${tfaCode},
-                    refreshInfo: ${refreshInfo}
-                  }
-                  UPDATE {
-                    tfaCode: ${tfaCode},
-                    refreshInfo: ${refreshInfo}
-                  }
-                  IN users
-                `,
-            )
-          } catch (err) {
-            console.error(`Trx step error occurred when inserting TFA code for user: ${user._key}: ${err}`)
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
-
-          try {
-            await trx.commit()
-          } catch (err) {
-            console.error(`Trx commit error occurred while user: ${user._key} attempted to tfa sign in: ${err}`)
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
+          // Reset failed login attempts and insert TFA code into DB
+          await userDataSource.resetFailedLoginAttemptsAndSetTfaCode({ userKey: user._key, tfaCode, refreshInfo })
 
           // Get newly updated user
-          await loadUserByUserName.clear(userName)
-          user = await loadUserByUserName.load(userName)
+          await userDataSource.byUserName.clear(userName)
+          user = await userDataSource.byUserName.load(userName)
 
           // Check if user's last successful login was over 30 days ago
           let lastLogin
@@ -180,31 +131,7 @@ export const signIn = new mutationWithClientMutationId({
           }
         } else {
           const loginDate = new Date().toISOString()
-          try {
-            await trx.step(
-              () => query`
-                WITH users
-                UPSERT { _key: ${user._key} }
-                  INSERT { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
-                  UPDATE { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
-                  IN users
-              `,
-            )
-          } catch (err) {
-            console.error(
-              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
-            )
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
-
-          try {
-            await trx.commit()
-          } catch (err) {
-            console.error(`Trx commit error occurred while user: ${user._key} attempted a regular sign in: ${err}`)
-            await trx.abort()
-            throw new Error(i18n._(t`Unable to sign in, please try again.`))
-          }
+          await userDataSource.resetFailedLoginAttemptsAndSetRefreshInfo({ userKey: user._key, refreshInfo, loginDate })
 
           const token = tokenize({
             expiresIn: AUTH_TOKEN_EXPIRY,
@@ -251,32 +178,10 @@ export const signIn = new mutationWithClientMutationId({
         // increment failed login attempts
         user.failedLoginAttempts += 1
 
-        try {
-          // Increase users failed login attempts
-          await trx.step(
-            () => query`
-              WITH users
-              FOR u IN users
-                UPDATE ${user._key} WITH {
-                  failedLoginAttempts: ${user.failedLoginAttempts}
-                } IN users
-            `,
-          )
-        } catch (err) {
-          console.error(
-            `Trx step error occurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
-          )
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
-        }
-
-        try {
-          await trx.commit()
-        } catch (err) {
-          console.error(`Trx commit error occurred while user: ${user._key} failed to sign in: ${err}`)
-          await trx.abort()
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
-        }
+        await userDataSource.incrementFailedLoginAttempts({
+          userKey: user._key,
+          failedLoginAttempts: user.failedLoginAttempts,
+        })
 
         console.warn(`User attempted to authenticate: ${user._key} with invalid credentials.`)
         return {

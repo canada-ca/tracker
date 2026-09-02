@@ -23,7 +23,7 @@ export const dismissMessage = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, auth: { userRequired }, loaders: { loadUserByKey }, validators: { cleanseInput } },
+    { i18n, auth: { userRequired }, dataSources: { user: userDataSource }, validators: { cleanseInput } },
   ) => {
     // Cleanse Input
     const messageId = cleanseInput(args.messageId)
@@ -41,33 +41,10 @@ export const dismissMessage = new mutationWithClientMutationId({
     }
 
     // Dismiss message
-    try {
-      const dismissMessageCursor = await query`
-        LET userDismissedMessages = FIRST(
-          FOR user IN users
-            FILTER user._key == ${user._key}
-            LIMIT 1
-            RETURN user.dismissedMessages
-        )
-        UPDATE { _key: ${user._key} }
-        WITH {
-          dismissedMessages: APPEND(
-            userDismissedMessages[* FILTER CURRENT.messageId != ${messageId}],
-            { messageId: ${messageId}, dismissedAt: DATE_ISO8601(DATE_NOW()) }
-          )
-        }
-        IN users
-      `
-      await dismissMessageCursor.next()
-    } catch (err) {
-      console.error(
-        `Database error occurred when user: ${user._key} attempted to dismiss message: ${messageId}: ${err}`,
-      )
-      throw new Error(i18n._(t`Unable to dismiss message. Please try again.`))
-    }
+    await userDataSource.dismissMessage({ userKey: user._key, messageId })
 
-    await loadUserByKey.clear(user._key)
-    const returnUser = await loadUserByKey.load(user._key)
+    await userDataSource.byKey.clear(user._key)
+    const returnUser = await userDataSource.byKey.load(user._key)
 
     console.info(`User: ${user._key} successfully dismissed message: ${messageId}`)
     return {
