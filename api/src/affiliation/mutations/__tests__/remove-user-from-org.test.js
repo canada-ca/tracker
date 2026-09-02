@@ -254,11 +254,16 @@ describe('given the removeUserFromOrg mutation', () => {
                   userKey: admin._key,
                   i18n,
                 }),
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: admin._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -353,11 +358,16 @@ describe('given the removeUserFromOrg mutation', () => {
                     userKey: admin._key,
                     i18n,
                   }),
-                  loadUserByKey: loadUserByKey({
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
                     query,
                     userKey: admin._key,
                     i18n,
                   }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -458,11 +468,16 @@ describe('given the removeUserFromOrg mutation', () => {
                     userKey: admin._key,
                     i18n,
                   }),
-                  loadUserByKey: loadUserByKey({
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
                     query,
                     userKey: admin._key,
                     i18n,
                   }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -550,11 +565,16 @@ describe('given the removeUserFromOrg mutation', () => {
                   userKey: admin._key,
                   i18n,
                 }),
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: admin._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -649,11 +669,16 @@ describe('given the removeUserFromOrg mutation', () => {
                     userKey: admin._key,
                     i18n,
                   }),
-                  loadUserByKey: loadUserByKey({
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
                     query,
                     userKey: admin._key,
                     i18n,
                   }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -754,11 +779,16 @@ describe('given the removeUserFromOrg mutation', () => {
                     userKey: admin._key,
                     i18n,
                   }),
-                  loadUserByKey: loadUserByKey({
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
                     query,
                     userKey: admin._key,
                     i18n,
                   }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -864,11 +894,16 @@ describe('given the removeUserFromOrg mutation', () => {
                   userKey: admin._key,
                   i18n,
                 }),
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: admin._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -963,11 +998,16 @@ describe('given the removeUserFromOrg mutation', () => {
                     userKey: admin._key,
                     i18n,
                   }),
-                  loadUserByKey: loadUserByKey({
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
                     query,
                     userKey: admin._key,
                     i18n,
                   }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -1068,11 +1108,16 @@ describe('given the removeUserFromOrg mutation', () => {
                     userKey: admin._key,
                     i18n,
                   }),
-                  loadUserByKey: loadUserByKey({
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
                     query,
                     userKey: admin._key,
                     i18n,
                   }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -1165,8 +1210,13 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn(),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1246,10 +1296,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1329,10 +1384,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1412,8 +1472,13 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue(undefined),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1490,10 +1555,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1569,10 +1639,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1643,10 +1718,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1722,10 +1802,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1801,10 +1886,15 @@ describe('given the removeUserFromOrg mutation', () => {
               loadOrgByKey: {
                 load: jest.fn().mockReturnValue({ _key: 12345 }),
               },
-              loadUserByKey: {
+
+            },
+            dataSources: {
+              user: {
+                byKey: {
                 load: jest.fn().mockReturnValue({
                   _key: 456,
                 }),
+              },
               },
             },
             validators: { cleanseInput },
@@ -1884,8 +1974,13 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn(),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1965,10 +2060,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2049,10 +2149,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2133,8 +2238,13 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue(undefined),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2211,10 +2321,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2291,10 +2406,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2367,10 +2487,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2448,10 +2573,15 @@ describe('given the removeUserFromOrg mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -2529,10 +2659,15 @@ describe('given the removeUserFromOrg mutation', () => {
               loadOrgByKey: {
                 load: jest.fn().mockReturnValue({ _key: 12345 }),
               },
-              loadUserByKey: {
+
+            },
+            dataSources: {
+              user: {
+                byKey: {
                 load: jest.fn().mockReturnValue({
                   _key: 456,
                 }),
+              },
               },
             },
             validators: { cleanseInput },

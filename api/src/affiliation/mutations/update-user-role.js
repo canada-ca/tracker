@@ -38,10 +38,10 @@ given organization.`,
     {
       i18n,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource, user: userDataSource },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
+      loaders: { loadOrgByKey, loadOrganizationNamesById },
       validators: { cleanseInput },
       notify: { sendRoleChangeEmail },
     },
@@ -68,7 +68,7 @@ given organization.`,
     }
 
     // Check to see if requested user exists
-    const requestedUser = await loadUserByUserName.load(userName)
+    const requestedUser = await userDataSource.byUserName.load(userName)
 
     if (typeof requestedUser === 'undefined') {
       console.warn(

@@ -70,9 +70,11 @@ describe('given the user affiliation object', () => {
             { _to: 'users/1' },
             {},
             {
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(expectedResult),
+                  },
                 },
               },
             },

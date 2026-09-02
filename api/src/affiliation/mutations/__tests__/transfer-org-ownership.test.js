@@ -192,7 +192,12 @@ describe('given the transferOrgOwnership mutation', () => {
                 i18n,
                 userKey: user._key,
               }),
-              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
+
+            },
+            dataSources: {
+              user: {
+                byKey: loadUserByKey({ query, userKey: user._key, i18n }),
+              },
             },
             validators: { cleanseInput },
           },
@@ -260,7 +265,12 @@ describe('given the transferOrgOwnership mutation', () => {
                 i18n,
                 userKey: user._key,
               }),
-              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
+
+            },
+            dataSources: {
+              user: {
+                byKey: loadUserByKey({ query, userKey: user._key, i18n }),
+              },
             },
             validators: { cleanseInput },
           },
@@ -341,11 +351,16 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                   userKey: user._key,
                 }),
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: user._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -435,11 +450,16 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                   userKey: user._key,
                 }),
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: user._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -526,11 +546,16 @@ describe('given the transferOrgOwnership mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: user._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -596,11 +621,16 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: user._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -668,8 +698,13 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue(undefined),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -738,10 +773,15 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -812,10 +852,15 @@ describe('given the transferOrgOwnership mutation', () => {
                       slug: 'mocked-org',
                     }),
                   },
-                  loadUserByKey: {
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 456,
                     }),
+                  },
                   },
                 },
                 validators: { cleanseInput },
@@ -885,10 +930,15 @@ describe('given the transferOrgOwnership mutation', () => {
                       slug: 'mocked-org',
                     }),
                   },
-                  loadUserByKey: {
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 456,
                     }),
+                  },
                   },
                 },
                 validators: { cleanseInput },
@@ -956,10 +1006,15 @@ describe('given the transferOrgOwnership mutation', () => {
                       slug: 'mocked-org',
                     }),
                   },
-                  loadUserByKey: {
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 456,
                     }),
+                  },
                   },
                 },
                 validators: { cleanseInput },
@@ -1029,10 +1084,15 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1109,11 +1169,16 @@ describe('given the transferOrgOwnership mutation', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: user._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -1179,11 +1244,16 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: loadUserByKey({
+
+              },
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
                   query,
                   userKey: user._key,
                   i18n,
                 }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -1252,8 +1322,13 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue(undefined),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1322,10 +1397,15 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },
@@ -1396,10 +1476,15 @@ describe('given the transferOrgOwnership mutation', () => {
                       slug: 'mocked-org',
                     }),
                   },
-                  loadUserByKey: {
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 456,
                     }),
+                  },
                   },
                 },
                 validators: { cleanseInput },
@@ -1471,10 +1556,15 @@ describe('given the transferOrgOwnership mutation', () => {
                       slug: 'mocked-org',
                     }),
                   },
-                  loadUserByKey: {
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 456,
                     }),
+                  },
                   },
                 },
                 validators: { cleanseInput },
@@ -1544,10 +1634,15 @@ describe('given the transferOrgOwnership mutation', () => {
                       slug: 'mocked-org',
                     }),
                   },
-                  loadUserByKey: {
+
+                },
+                dataSources: {
+                  user: {
+                    byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 456,
                     }),
+                  },
                   },
                 },
                 validators: { cleanseInput },
@@ -1619,10 +1714,15 @@ describe('given the transferOrgOwnership mutation', () => {
                     slug: 'mocked-org',
                   }),
                 },
-                loadUserByKey: {
+
+              },
+              dataSources: {
+                user: {
+                  byKey: {
                   load: jest.fn().mockReturnValue({
                     _key: 456,
                   }),
+                },
                 },
               },
               validators: { cleanseInput },

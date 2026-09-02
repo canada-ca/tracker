@@ -18,9 +18,9 @@ export const affiliationType = new GraphQLObjectType({
     user: {
       type: userSharedType,
       description: 'The affiliated users information.',
-      resolve: async ({_to}, _args, {loaders: {loadUserByKey}}) => {
+      resolve: async ({_to}, _args, {dataSources: {user: userDataSource}}) => {
         const userKey = _to.split('/')[1]
-        const user = await loadUserByKey.load(userKey)
+        const user = await userDataSource.byKey.load(userKey)
         user.id = user._key
         return user
       },

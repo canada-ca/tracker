@@ -31,10 +31,10 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     {
       i18n,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource, user: userDataSource },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByKey },
+      loaders: { loadOrgByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -65,7 +65,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     const permission = await checkPermission({ orgId: requestedOrg._id })
 
     // Get requested user
-    const requestedUser = await loadUserByKey.load(requestedUserKey)
+    const requestedUser = await userDataSource.byKey.load(requestedUserKey)
     if (typeof requestedUser === 'undefined') {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however no user with that id could be found.`,

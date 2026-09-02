@@ -29,10 +29,10 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       i18n,
       request,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource, user: userDataSource },
       request: { ip },
       auth: { userRequired, verifiedRequired },
-      loaders: { loadOrgByKey, loadUserByKey, loadOrganizationNamesById },
+      loaders: { loadOrgByKey, loadOrganizationNamesById },
       notify: { sendInviteRequestEmail },
       validators: { cleanseInput },
     },
@@ -148,7 +148,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
             displayName: 'Service Account',
             _key: 'service-account',
           }
-        } else adminUser = await loadUserByKey.load(userKey)
+        } else adminUser = await userDataSource.byKey.load(userKey)
 
         await sendInviteRequestEmail({
           user: adminUser,

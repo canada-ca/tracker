@@ -40,10 +40,10 @@ able to sign-up and be assigned to that organization in one mutation.`,
       i18n,
       request,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource, user: userDataSource },
       request: { ip },
       auth: { checkPermission, tokenize, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
+      loaders: { loadOrgByKey, loadOrganizationNamesById },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -122,7 +122,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see if requested user exists
-    const requestedUser = await loadUserByUserName.load(userName)
+    const requestedUser = await userDataSource.byUserName.load(userName)
 
     // If there is not associated account with that username send invite to org with create account
     if (typeof requestedUser === 'undefined') {
