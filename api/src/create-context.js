@@ -4,7 +4,6 @@ import fetch from 'isomorphic-fetch'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
-import { loadUserByKey } from './user/loaders'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import { initializeLoaders } from './initialize-loaders'
 import { SummariesDataSource } from './summaries'
@@ -17,6 +16,7 @@ import { OrganizationDataSource } from './organization'
 import { TagsDataSource } from './tags'
 import { DomainDataSource } from './domain'
 import { AffiliationDataSource } from './affiliation'
+import { UserDataSource } from './user'
 import {
   AuthDataSource,
   checkDomainOwnership,
@@ -71,6 +71,16 @@ export async function createContext({
     userKey = 'NO_USER'
   }
 
+  const userDataSource = new UserDataSource({
+    query,
+    userKey,
+    i18n,
+    language: request.language,
+    cleanseInput,
+    transaction,
+    collections,
+  })
+
   return {
     query,
     db,
@@ -117,7 +127,7 @@ export async function createContext({
       userRequired: userRequired({
         i18n,
         userKey,
-        loadUserByKey: loadUserByKey({ query, userKey, i18n }),
+        loadUserByKey: userDataSource.byKey,
       }),
       verifiedRequired: verifiedRequired({ i18n }),
       verifyToken: verifyToken({ i18n }),
@@ -182,6 +192,7 @@ export async function createContext({
         transaction,
         collections,
       }),
+      user: userDataSource,
     },
     loaders: initializeLoaders({
       query,
