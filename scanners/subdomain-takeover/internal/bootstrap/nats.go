@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/config"
@@ -30,20 +31,18 @@ func NewRuntimeDeps(ctx context.Context, cfg *config.Config, logger zerolog.Logg
 		return nil, err
 	}
 
-	logger.Debug().Str("stream", cfg.NATSStream).Strs("subjects", []string{cfg.SubjectIn, cfg.SubjectOut}).Msg("creating or updating stream")
-	stream, err := js.CreateOrUpdateStream(ctx, jetstream.StreamConfig{
-		Name:     cfg.NATSStream,
-		Subjects: []string{cfg.SubjectIn, cfg.SubjectOut},
-	})
+	logger.Debug().Str("stream", cfg.NATSStream).Msg("loading existing stream")
+	stream, err := js.Stream(ctx, cfg.NATSStream)
 	if err != nil {
 		nc.Close()
-		return nil, err
+		return nil, fmt.Errorf("stream %q not found or inaccessible: %w", cfg.NATSStream, err)
 	}
 
 	logger.Debug().Str("durable", cfg.DurableName).Msg("creating or updating consumer")
 	cons, err := stream.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
-		Durable:   cfg.DurableName,
-		AckPolicy: jetstream.AckExplicitPolicy,
+		Durable:       cfg.DurableName,
+		AckPolicy:     jetstream.AckExplicitPolicy,
+		FilterSubject: cfg.SubjectIn,
 	})
 	if err != nil {
 		nc.Close()

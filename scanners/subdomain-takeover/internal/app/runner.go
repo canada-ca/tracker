@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 	"sync"
 	"time"
 
@@ -24,6 +25,13 @@ type MessageHandler interface {
 }
 
 var checkConnection = messaging.CheckConnection
+
+func isBenignNextError(err error) bool {
+	return errors.Is(err, jetstream.ErrMsgIteratorClosed) ||
+		errors.Is(err, jetstream.ErrNoMessages) ||
+		errors.Is(err, nats.ErrTimeout) ||
+		errors.Is(err, context.DeadlineExceeded)
+}
 
 func Run(ctx context.Context, deps RunnerDeps) {
 	logger := deps.Logger
@@ -57,6 +65,11 @@ Loop:
 			if ctx.Err() != nil {
 				logger.Info().Msg("runner stopping: context canceled")
 				break Loop
+			}
+			if isBenignNextError(err) {
+				nextErrCount = 0
+				logger.Debug().Err(err).Msg("next returned benign idle/closed state, continuing")
+				continue
 			}
 			nextErrCount++
 			if nextErrCount%10 == 0 {

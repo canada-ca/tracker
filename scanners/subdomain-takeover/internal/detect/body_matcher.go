@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,6 +19,8 @@ type BodyFingerprintMatcher interface {
 type HTTPBodyFingerprintMatcher struct {
 	client *http.Client
 }
+
+var httpStatusFingerprintRegex = regexp.MustCompile(`^HTTP_STATUS=(\d{3})$`)
 
 func NewHTTPBodyFingerprintMatcher(timeout time.Duration) *HTTPBodyFingerprintMatcher {
 	return &HTTPBodyFingerprintMatcher{
@@ -40,12 +43,18 @@ func (m *HTTPBodyFingerprintMatcher) Contains(domain string, fingerprint string,
 		return false
 	}
 
-	url := fmt.Sprintf("http://%s", domain)
-	res, err := m.client.Get(url)
+	res, err := m.client.Get(fmt.Sprintf("https://%s", domain))
+	if err != nil {
+		res, err = m.client.Get(fmt.Sprintf("http://%s", domain))
+	}
 	if err != nil {
 		return false
 	}
 	defer res.Body.Close()
+
+	if expectedStatus, ok := parseHTTPStatusFingerprint(fingerprint); ok {
+		return res.StatusCode == expectedStatus
+	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
@@ -64,4 +73,18 @@ func (m *HTTPBodyFingerprintMatcher) Contains(domain string, fingerprint string,
 	}
 
 	return strings.Contains(bodyText, fingerprint)
+}
+
+func parseHTTPStatusFingerprint(fingerprint string) (int, bool) {
+	matches := httpStatusFingerprintRegex.FindStringSubmatch(fingerprint)
+	if len(matches) != 2 {
+		return 0, false
+	}
+
+	statusCode, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return 0, false
+	}
+
+	return statusCode, true
 }
