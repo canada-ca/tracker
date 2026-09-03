@@ -1,6 +1,9 @@
 package detect
 
-import "github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+import (
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+	"github.com/rs/zerolog"
+)
 
 type CNAMEHit struct {
 	Matched    bool
@@ -9,10 +12,10 @@ type CNAMEHit struct {
 	NeedsNX    bool
 }
 
-func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []fingerprints.CNAMEProviderFingerprint, matcher BodyFingerprintMatcher) *CNAMEHit {
+func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []fingerprints.CNAMEProviderFingerprint, matcher BodyFingerprintMatcher, logger zerolog.Logger) *CNAMEHit {
 	for _, fp := range providerFingerprints {
 		if fp.ContainsTarget(evidence.Target) {
-			detectLogger.Debug().
+			logger.Debug().
 				Str("domain", evidence.Domain).
 				Str("target", evidence.Target).
 				Str("provider", fp.Name).
@@ -35,7 +38,7 @@ func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []finge
 			} else {
 				hit.ReasonCode = ReasonCNAMETargetMatchMissingBodyFP
 				mode := fingerprints.NormalizeMode(fp.Mode, fp.Fingerprint)
-				detectLogger.Debug().
+				logger.Debug().
 					Str("domain", evidence.Domain).
 					Str("provider", fp.Name).
 					Str("fingerprint_mode", string(mode)).
@@ -43,13 +46,13 @@ func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []finge
 				if matcher != nil && matcher.Contains(evidence.Domain, fp.Fingerprint, mode) {
 					hit.Matched = true
 					hit.ReasonCode = ReasonCNAMEProviderFingerprintBodyMatch
-					detectLogger.Debug().
+					logger.Debug().
 						Str("domain", evidence.Domain).
 						Str("provider", fp.Name).
 						Str("reason_code", string(hit.ReasonCode)).
 						Msg("cname body fingerprint matched")
 				} else {
-					detectLogger.Debug().
+					logger.Debug().
 						Str("domain", evidence.Domain).
 						Str("provider", fp.Name).
 						Str("reason_code", string(hit.ReasonCode)).
@@ -58,7 +61,7 @@ func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []finge
 			}
 
 			if hit.NeedsNX && !hit.Matched {
-				detectLogger.Debug().
+				logger.Debug().
 					Str("domain", evidence.Domain).
 					Str("provider", fp.Name).
 					Str("reason_code", string(hit.ReasonCode)).

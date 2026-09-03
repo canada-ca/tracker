@@ -11,25 +11,18 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var marshalFinding = json.Marshal
-var nowUTC = func() time.Time { return time.Now().UTC() }
-
 type Publisher struct {
 	logger  zerolog.Logger
-	js      publishClient
+	js      jetstream.Publisher
 	subject string
 }
 
-type publishClient interface {
-	Publish(ctx context.Context, subj string, data []byte, opts ...jetstream.PublishOpt) (*jetstream.PubAck, error)
-}
-
-func NewPublisher(logger zerolog.Logger, js publishClient, subject string) *Publisher {
+func NewPublisher(logger zerolog.Logger, js jetstream.Publisher, subject string) *Publisher {
 	return &Publisher{logger: logger, js: js, subject: subject}
 }
 
 func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
-	event, err := model.NewFindingEventFromFinding(finding, nowUTC())
+	event, err := model.NewFindingEventFromFinding(finding, time.Now().UTC())
 	if err != nil {
 		p.logger.Error().
 			Err(err).
@@ -40,7 +33,7 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 		return err
 	}
 
-	payload, err := marshalFinding(event)
+	payload, err := json.Marshal(event)
 	if err != nil {
 		p.logger.Error().
 			Err(err).

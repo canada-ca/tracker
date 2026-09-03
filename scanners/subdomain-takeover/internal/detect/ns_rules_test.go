@@ -5,6 +5,7 @@ import (
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
+	"github.com/rs/zerolog"
 )
 
 func TestMatchNSProviderRules(t *testing.T) {
@@ -18,21 +19,21 @@ func TestMatchNSProviderRules(t *testing.T) {
 
 	t.Run("returns nil for missing hosts", func(t *testing.T) {
 		evidence := NSEvidence{Domain: "a.example.ca"}
-		if got := MatchNSProviderRules(evidence, nsFP); got != nil {
+		if got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop()); got != nil {
 			t.Fatalf("expected nil, got %+v", got)
 		}
 	})
 
 	t.Run("returns nil for missing fingerprints", func(t *testing.T) {
 		evidence := NSEvidence{Domain: "a.example.ca", NSHosts: []string{"ns1.risky-dns.net"}}
-		if got := MatchNSProviderRules(evidence, nil); got != nil {
+		if got := MatchNSProviderRules(evidence, nil, zerolog.Nop()); got != nil {
 			t.Fatalf("expected nil, got %+v", got)
 		}
 	})
 
 	t.Run("returns nil when no provider matches", func(t *testing.T) {
 		evidence := NSEvidence{Domain: "a.example.ca", NSHosts: []string{"ns1.nomatch.net"}}
-		if got := MatchNSProviderRules(evidence, nsFP); got != nil {
+		if got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop()); got != nil {
 			t.Fatalf("expected nil, got %+v", got)
 		}
 	})
@@ -46,7 +47,7 @@ func TestMatchNSProviderRules(t *testing.T) {
 				LameType: "full",
 			}},
 		}
-		got := MatchNSProviderRules(evidence, nsFP)
+		got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -70,7 +71,7 @@ func TestMatchNSProviderRules(t *testing.T) {
 				LameType: "partial",
 			}},
 		}
-		got := MatchNSProviderRules(evidence, nsFP)
+		got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -91,7 +92,7 @@ func TestMatchNSProviderRules(t *testing.T) {
 				LameType: "full",
 			}},
 		}
-		got := MatchNSProviderRules(evidence, nsFP)
+		got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -113,7 +114,7 @@ func TestMatchNSProviderRules(t *testing.T) {
 			}},
 		}
 
-		got := MatchNSProviderRules(evidence, nsFP)
+		got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -134,7 +135,7 @@ func TestMatchNSProviderRules(t *testing.T) {
 			}},
 		}
 
-		got := MatchNSProviderRules(evidence, nsFP)
+		got := MatchNSProviderRules(evidence, nsFP, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -148,13 +149,21 @@ func TestMatchNSProviderRules(t *testing.T) {
 }
 
 func TestShouldEmitNSHijack(t *testing.T) {
-	if ShouldEmitNSHijack(nil) {
-		t.Fatal("expected false for nil hit")
+	tests := []struct {
+		name string
+		hit  *NSHit
+		want bool
+	}{
+		{name: "nil hit", hit: nil, want: false},
+		{name: "unmatched hit", hit: &NSHit{Matched: false}, want: false},
+		{name: "matched hit", hit: &NSHit{Matched: true}, want: true},
 	}
-	if ShouldEmitNSHijack(&NSHit{Matched: false}) {
-		t.Fatal("expected false for unmatched hit")
-	}
-	if !ShouldEmitNSHijack(&NSHit{Matched: true}) {
-		t.Fatal("expected true for matched hit")
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ShouldEmitNSHijack(tt.hit); got != tt.want {
+				t.Fatalf("ShouldEmitNSHijack()=%v want=%v", got, tt.want)
+			}
+		})
 	}
 }

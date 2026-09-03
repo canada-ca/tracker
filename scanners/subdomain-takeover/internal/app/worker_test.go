@@ -6,36 +6,38 @@ import (
 	"testing"
 	"time"
 
-	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog"
 )
 
-type fakePublisher struct {
-	err       error
-	published []model.Finding
+type fakeJSPublishClient struct {
+	err    error
+	called int
 }
 
-func (f *fakePublisher) Publish(_ context.Context, finding model.Finding) error {
-	if f.err != nil {
-		return f.err
-	}
-	f.published = append(f.published, finding)
-	return nil
-}
-
-type fakeClassifier struct {
-	findings []model.Finding
-	err      error
-}
-
-func (f fakeClassifier) Classify(model.Input) ([]model.Finding, error) {
+func (f *fakeJSPublishClient) Publish(context.Context, string, []byte, ...jetstream.PublishOpt) (*jetstream.PubAck, error) {
+	f.called++
 	if f.err != nil {
 		return nil, f.err
 	}
-	return f.findings, nil
+	return &jetstream.PubAck{}, nil
 }
+func (f *fakeJSPublishClient) PublishMsg(context.Context, *nats.Msg, ...jetstream.PublishOpt) (*jetstream.PubAck, error) {
+	return nil, nil
+}
+func (f *fakeJSPublishClient) PublishAsync(string, []byte, ...jetstream.PublishOpt) (jetstream.PubAckFuture, error) {
+	return nil, nil
+}
+func (f *fakeJSPublishClient) PublishMsgAsync(*nats.Msg, ...jetstream.PublishOpt) (jetstream.PubAckFuture, error) {
+	return nil, nil
+}
+func (f *fakeJSPublishClient) PublishAsyncPending() int              { return 0 }
+func (f *fakeJSPublishClient) PublishAsyncComplete() <-chan struct{} { return nil }
+func (f *fakeJSPublishClient) CleanupPublisher()                     {}
 
 type fakeJSMsg struct {
 	data    []byte
@@ -78,123 +80,111 @@ func (m *fakeJSMsg) Term() error {
 
 func (m *fakeJSMsg) TermWithReason(string) error { return nil }
 
+// scanWithFinding is DNS scan input that the real classifier turns into exactly
+// one CNAME finding (a dangling Azure Web Apps CNAME), so Worker.Handle's
+// publish path can be exercised without inventing a classifier seam.
+const scanWithFinding = `{"domain_key":"k","results":{"domain":"a.example.ca","cname_record":"a.example.ca. 300 IN CNAME foo.azurewebsites.net."}}`
+
+const scanWithNoFinding = `{"domain_key":"k","results":{}}`
+
 func TestWorkerHandle(t *testing.T) {
+	if err := fingerprints.Load(zerolog.Nop()); err != nil {
+		t.Fatalf("failed to load fingerprints: %v", err)
+	}
 	logger := zerolog.Nop()
+	classifier := detect.NewClassifier(nil, logger)
 
-	t.Run("decode error terminates message", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{data: []byte("{not-json"), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected decode error")
-		}
-		if msg.termCount != 1 {
-			t.Fatalf("expected term once, got %d", msg.termCount)
-		}
-		if msg.nakCount != 0 || msg.ackCount != 0 {
-			t.Fatalf("unexpected ack/nak counts: ack=%d nak=%d", msg.ackCount, msg.nakCount)
-		}
-	})
-
-	t.Run("classification error naks message", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{err: errors.New("classify failed")}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected classification error")
-		}
-		if msg.nakCount != 1 {
-			t.Fatalf("expected nak once, got %d", msg.nakCount)
-		}
-		if msg.ackCount != 0 || msg.termCount != 0 {
-			t.Fatalf("unexpected ack/term counts: ack=%d term=%d", msg.ackCount, msg.termCount)
-		}
-	})
-
-	t.Run("publish error naks message", func(t *testing.T) {
-		pub := &fakePublisher{err: errors.New("publish failed")}
-		classifier := fakeClassifier{findings: []model.Finding{{Domain: "a.example.ca"}}}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected publish error")
-		}
-		if msg.nakCount != 1 {
-			t.Fatalf("expected nak once, got %d", msg.nakCount)
-		}
-		if msg.ackCount != 0 || msg.termCount != 0 {
-			t.Fatalf("unexpected ack/term counts: ack=%d term=%d", msg.ackCount, msg.termCount)
-		}
-	})
-
-	t.Run("successful processing publishes all findings and acks", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{findings: []model.Finding{{Domain: "a.example.ca"}, {Domain: "b.example.ca"}}}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}
-		err := worker.Handle(context.Background(), msg)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if len(pub.published) != 2 {
-			t.Fatalf("expected 2 published findings, got %d", len(pub.published))
-		}
-		if msg.ackCount != 1 {
-			t.Fatalf("expected ack once, got %d", msg.ackCount)
-		}
-		if msg.nakCount != 0 || msg.termCount != 0 {
-			t.Fatalf("unexpected nak/term counts: nak=%d term=%d", msg.nakCount, msg.termCount)
-		}
-	})
-
-	t.Run("ack failure returns error", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{}
-		worker := NewWorker(logger, pub, classifier)
-
-		msg := &fakeJSMsg{
-			data:    []byte(`{"domain_key":"k","results":{}}`),
-			subject: "scans.dns_scanner_results",
+	tests := []struct {
+		name            string
+		data            []byte
+		ackErr          error
+		nakErr          error
+		termErr         error
+		publisherErr    error
+		wantErr         bool
+		wantAck         int
+		wantNak         int
+		wantTerm        int
+		wantPublishCall int
+	}{
+		{
+			name:     "decode error terminates message",
+			data:     []byte("{not-json"),
+			wantErr:  true,
+			wantTerm: 1,
+		},
+		{
+			name:            "publish error naks message",
+			data:            []byte(scanWithFinding),
+			publisherErr:    errors.New("publish failed"),
+			wantErr:         true,
+			wantNak:         1,
+			wantPublishCall: 1,
+		},
+		{
+			name:            "successful processing publishes finding and acks",
+			data:            []byte(scanWithFinding),
+			wantErr:         false,
+			wantAck:         1,
+			wantPublishCall: 1,
+		},
+		{
+			name:    "no findings still acks without publishing",
+			data:    []byte(scanWithNoFinding),
+			wantErr: false,
+			wantAck: 1,
+		},
+		{
+			name:    "ack failure returns error",
+			data:    []byte(scanWithNoFinding),
 			ackErr:  errors.New("ack failed"),
-		}
+			wantErr: true,
+			wantAck: 1,
+		},
+		{
+			name:     "decode error still returned when term fails",
+			data:     []byte("{bad-json"),
+			termErr:  errors.New("term failed"),
+			wantErr:  true,
+			wantTerm: 1,
+		},
+	}
 
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected ack error")
-		}
-		if msg.ackCount != 1 {
-			t.Fatalf("expected ack once, got %d", msg.ackCount)
-		}
-	})
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			client := &fakeJSPublishClient{err: tc.publisherErr}
+			publisher := messaging.NewPublisher(logger, client, "scans.findings.subdomain-takeover")
+			worker := NewWorker(logger, publisher, classifier)
 
-	t.Run("decode error still returned when term fails", func(t *testing.T) {
-		pub := &fakePublisher{}
-		classifier := fakeClassifier{}
-		worker := NewWorker(logger, pub, classifier)
+			msg := &fakeJSMsg{
+				data:    tc.data,
+				subject: "scans.dns_scanner_results",
+				ackErr:  tc.ackErr,
+				nakErr:  tc.nakErr,
+				termErr: tc.termErr,
+			}
 
-		msg := &fakeJSMsg{
-			data:    []byte("{bad-json"),
-			subject: "scans.dns_scanner_results",
-			termErr: errors.New("term failed"),
-		}
-
-		err := worker.Handle(context.Background(), msg)
-		if err == nil {
-			t.Fatal("expected decode error")
-		}
-		if msg.termCount != 1 {
-			t.Fatalf("expected term once, got %d", msg.termCount)
-		}
-	})
+			err := worker.Handle(context.Background(), msg)
+			if tc.wantErr && err == nil {
+				t.Fatal("expected error")
+			}
+			if !tc.wantErr && err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if msg.ackCount != tc.wantAck {
+				t.Fatalf("unexpected ack count: got=%d want=%d", msg.ackCount, tc.wantAck)
+			}
+			if msg.nakCount != tc.wantNak {
+				t.Fatalf("unexpected nak count: got=%d want=%d", msg.nakCount, tc.wantNak)
+			}
+			if msg.termCount != tc.wantTerm {
+				t.Fatalf("unexpected term count: got=%d want=%d", msg.termCount, tc.wantTerm)
+			}
+			if client.called != tc.wantPublishCall {
+				t.Fatalf("unexpected publish call count: got=%d want=%d", client.called, tc.wantPublishCall)
+			}
+		})
+	}
 }
 
 func TestDecodeScan_TrimsTrailingNewline(t *testing.T) {

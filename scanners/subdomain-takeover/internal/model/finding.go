@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type FindingType string
 
@@ -75,10 +78,4 @@ func FindingTypeForRecord(recordType RecordType) (string, error) {
 	}
 }
 
-var ErrUnsupportedRecordType = unsupportedRecordTypeError{}
-
-type unsupportedRecordTypeError struct{}
-
-func (unsupportedRecordTypeError) Error() string {
-	return "unsupported record type"
-}
+var ErrUnsupportedRecordType = errors.New("unsupported record type")

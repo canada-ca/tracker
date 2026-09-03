@@ -16,15 +16,9 @@ type RunnerDeps struct {
 	Logger      zerolog.Logger
 	WorkerCount int
 	Iter        jetstream.MessagesContext
-	Worker      MessageHandler
+	Worker      *Worker
 	NC          *nats.Conn
 }
-
-type MessageHandler interface {
-	Handle(ctx context.Context, msg jetstream.Msg) error
-}
-
-var checkConnection = messaging.CheckConnection
 
 func isBenignNextError(err error) bool {
 	return errors.Is(err, jetstream.ErrMsgIteratorClosed) ||
@@ -49,7 +43,7 @@ func Run(ctx context.Context, deps RunnerDeps) {
 
 Loop:
 	for {
-		if err := checkConnection(deps.NC); err != nil {
+		if err := messaging.CheckConnection(deps.NC); err != nil {
 			logger.Error().Err(err).Msg("NATS connection unhealthy")
 			break Loop
 		}

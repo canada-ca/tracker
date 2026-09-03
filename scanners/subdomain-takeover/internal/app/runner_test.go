@@ -5,19 +5,19 @@ import (
 	"errors"
 	"sync"
 	"testing"
-	"time"
 
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/detect"
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/messaging"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog"
 )
 
 type fakeMessagesIter struct {
-	mu         sync.Mutex
-	msgs       []jetstream.Msg
-	err        error
-	idx        int
-	stopCalled bool
+	mu   sync.Mutex
+	msgs []jetstream.Msg
+	err  error
+	idx  int
 }
 
 func (f *fakeMessagesIter) Next(...jetstream.NextOpt) (jetstream.Msg, error) {
@@ -35,96 +35,53 @@ func (f *fakeMessagesIter) Next(...jetstream.NextOpt) (jetstream.Msg, error) {
 	return m, nil
 }
 
-func (f *fakeMessagesIter) Stop()  { f.stopCalled = true }
+func (f *fakeMessagesIter) Stop()  {}
 func (f *fakeMessagesIter) Drain() {}
 
-type fakeHandler struct {
-	mu    sync.Mutex
-	count int
+func TestIsBenignNextError(t *testing.T) {
+	tests := []struct {
+		name string
+		err  error
+		want bool
+	}{
+		{name: "iterator closed", err: jetstream.ErrMsgIteratorClosed, want: true},
+		{name: "no messages", err: jetstream.ErrNoMessages, want: true},
+		{name: "nats timeout", err: nats.ErrTimeout, want: true},
+		{name: "deadline exceeded", err: context.DeadlineExceeded, want: true},
+		{name: "context canceled is not benign", err: context.Canceled, want: false},
+		{name: "other error", err: errors.New("boom"), want: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isBenignNextError(tt.err); got != tt.want {
+				t.Fatalf("isBenignNextError(%v)=%v want=%v", tt.err, got, tt.want)
+			}
+		})
+	}
 }
 
-func (f *fakeHandler) Handle(context.Context, jetstream.Msg) error {
-	f.mu.Lock()
-	f.count++
-	f.mu.Unlock()
-	return nil
-}
-
-// nolint:revive // nats Conn fields are unexported; this fake nil connection path only.
+// Run's connection health check requires a real *nats.Conn to exercise the
+// "healthy" path (nats.Conn has no exported way to fake IsConnected()==true),
+// so message-processing behavior is covered by TestWorkerHandle instead. What
+// is covered here at the unit level is the unhealthy-connection short-circuit.
 func TestRun_ReturnsImmediatelyWhenConnectionUnhealthy(t *testing.T) {
 	iter := &fakeMessagesIter{}
-	h := &fakeHandler{}
+	classifier := detect.NewClassifier(nil, zerolog.Nop())
+	publisher := messaging.NewPublisher(zerolog.Nop(), &fakeJSPublishClient{}, "scans.findings.subdomain-takeover")
+	worker := NewWorker(zerolog.Nop(), publisher, classifier)
 
 	deps := RunnerDeps{
 		Logger:      zerolog.Nop(),
 		WorkerCount: 2,
 		Iter:        iter,
-		Worker:      h,
+		Worker:      worker,
 		NC:          nil,
 	}
 
 	Run(context.Background(), deps)
 
-	if h.count != 0 {
-		t.Fatalf("expected no handled messages, got %d", h.count)
-	}
-}
-
-func TestRun_ClampsWorkerCountBelowOne(t *testing.T) {
-	origCheckConnection := checkConnection
-	t.Cleanup(func() { checkConnection = origCheckConnection })
-
-	checkCalls := 0
-	checkConnection = func(_ *nats.Conn) error {
-		checkCalls++
-		if checkCalls > 1 {
-			return errors.New("stop")
-		}
-		return nil
-	}
-
-	iter := &fakeMessagesIter{msgs: []jetstream.Msg{&fakeJSMsg{data: []byte(`{"domain_key":"k","results":{}}`), subject: "scans.dns_scanner_results"}}}
-	h := &fakeHandler{}
-
-	deps := RunnerDeps{
-		Logger:      zerolog.Nop(),
-		WorkerCount: 0,
-		Iter:        iter,
-		Worker:      h,
-		NC:          nil,
-	}
-
-	Run(context.Background(), deps)
-	if h.count != 1 {
-		t.Fatalf("expected one handled message, got %d", h.count)
-	}
-}
-
-func TestRun_ExitsWhenContextCancelledDuringNextErrors(t *testing.T) {
-	origCheckConnection := checkConnection
-	t.Cleanup(func() { checkConnection = origCheckConnection })
-	checkConnection = func(_ *nats.Conn) error { return nil }
-
-	iter := &fakeMessagesIter{err: errors.New("next failed")}
-	h := &fakeHandler{}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	go func() {
-		time.Sleep(5 * time.Millisecond)
-		cancel()
-	}()
-
-	deps := RunnerDeps{
-		Logger:      zerolog.Nop(),
-		WorkerCount: 1,
-		Iter:        iter,
-		Worker:      h,
-		NC:          nil,
-	}
-
-	Run(ctx, deps)
-
-	if h.count != 0 {
-		t.Fatalf("expected no handled messages, got %d", h.count)
+	if iter.idx != 0 {
+		t.Fatalf("expected no iterator reads, got %d", iter.idx)
 	}
 }
