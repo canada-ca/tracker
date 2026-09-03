@@ -101,11 +101,9 @@ describe('authenticate user account', () => {
           validators: {
             cleanseInput,
           },
-          loaders: {
-            loadOrgByKey: loadOrgByKey({ query }),
-          },
           dataSources: {
             user: userDataSource,
+            organization: { byKey: loadOrgByKey({ query }) },
           },
           notify: {
             sendVerificationEmail: jest.fn(),

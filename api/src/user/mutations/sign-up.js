@@ -57,8 +57,7 @@ export const signUp = new mutationWithClientMutationId({
       uuidv4,
       request: { ip },
       auth: { bcrypt, tokenize, verifyToken },
-      loaders: { loadOrgByKey },
-      dataSources: { user: userDataSource },
+      dataSources: { user: userDataSource, organization },
       notify: { sendAuthEmail },
       validators: { cleanseInput },
     },
@@ -164,7 +163,7 @@ export const signUp = new mutationWithClientMutationId({
         }
       }
 
-      const checkOrg = await loadOrgByKey.load(tokenOrgKey)
+      const checkOrg = await organization.byKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
         console.warn(`User: ${userName} attempted to sign up with an invite token, however the org could not be found.`)
         return {

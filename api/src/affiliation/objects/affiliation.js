@@ -28,9 +28,9 @@ export const affiliationType = new GraphQLObjectType({
     organization: {
       type: organizationType,
       description: 'The affiliated organizations information.',
-      resolve: async ({_from}, _args, {loaders: {loadOrgByKey}}) => {
+      resolve: async ({_from}, _args, {dataSources: {organization}}) => {
         const orgKey = _from.split('/')[1]
-        const org = await loadOrgByKey.load(orgKey)
+        const org = await organization.byKey.load(orgKey)
         org.id = org._key
         return org
       },

@@ -140,7 +140,13 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('removes the users affiliations', async () => {
-        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+        const userDataSource = new UserDataSource({
+          query,
+          userKey: user._key,
+          i18n,
+          transaction,
+          collections: collectionNames,
+        })
         await graphql({
           schema,
           source: `
@@ -178,15 +184,17 @@ describe('given the closeAccount mutation', () => {
                 loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadOrgByKey: loadOrgByKey({
-                query,
-                language: 'en',
-                i18n,
-                userKey: user._key,
-              }),
+            dataSources: {
+              organization: {
+                byKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              user: userDataSource,
             },
-            dataSources: { user: userDataSource },
             validators: { cleanseInput },
           },
         })
@@ -217,7 +225,13 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+          const userDataSource = new UserDataSource({
+            query,
+            userKey: user._key,
+            i18n,
+            transaction,
+            collections: collectionNames,
+          })
           const response = await graphql({
             schema,
             source: `
@@ -255,15 +269,17 @@ describe('given the closeAccount mutation', () => {
                   loadUserByKey: userDataSource.byKey,
                 }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
+                user: userDataSource,
               },
-              dataSources: { user: userDataSource },
               validators: { cleanseInput },
             },
           })
@@ -298,7 +314,13 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+          const userDataSource = new UserDataSource({
+            query,
+            userKey: user._key,
+            i18n,
+            transaction,
+            collections: collectionNames,
+          })
           const response = await graphql({
             schema,
             source: `
@@ -336,15 +358,17 @@ describe('given the closeAccount mutation', () => {
                   loadUserByKey: userDataSource.byKey,
                 }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
+                user: userDataSource,
               },
-              dataSources: { user: userDataSource },
               validators: { cleanseInput },
             },
           })
@@ -364,7 +388,13 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('closes the users account', async () => {
-        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+        const userDataSource = new UserDataSource({
+          query,
+          userKey: user._key,
+          i18n,
+          transaction,
+          collections: collectionNames,
+        })
         await graphql({
           schema,
           source: `
@@ -402,15 +432,17 @@ describe('given the closeAccount mutation', () => {
                 loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadOrgByKey: loadOrgByKey({
-                query,
-                language: 'en',
-                i18n,
-                userKey: user._key,
-              }),
+            dataSources: {
+              organization: {
+                byKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              user: userDataSource,
             },
-            dataSources: { user: userDataSource },
             validators: { cleanseInput },
           },
         })
@@ -531,7 +563,13 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('removes the users affiliations', async () => {
-        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+        const userDataSource = new UserDataSource({
+          query,
+          userKey: user._key,
+          i18n,
+          transaction,
+          collections: collectionNames,
+        })
         await graphql({
           schema,
           source: `
@@ -569,15 +607,17 @@ describe('given the closeAccount mutation', () => {
                 loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadOrgByKey: loadOrgByKey({
-                query,
-                language: 'en',
-                i18n,
-                userKey: user._key,
-              }),
+            dataSources: {
+              organization: {
+                byKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              user: userDataSource,
             },
-            dataSources: { user: userDataSource },
             validators: { cleanseInput },
           },
         })
@@ -609,7 +649,13 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+          const userDataSource = new UserDataSource({
+            query,
+            userKey: user._key,
+            i18n,
+            transaction,
+            collections: collectionNames,
+          })
           const response = await graphql({
             schema,
             source: `
@@ -647,15 +693,17 @@ describe('given the closeAccount mutation', () => {
                   loadUserByKey: userDataSource.byKey,
                 }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
+                user: userDataSource,
               },
-              dataSources: { user: userDataSource },
               validators: { cleanseInput },
             },
           })
@@ -690,7 +738,13 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
+          const userDataSource = new UserDataSource({
+            query,
+            userKey: user._key,
+            i18n,
+            transaction,
+            collections: collectionNames,
+          })
           const response = await graphql({
             schema,
             source: `
@@ -728,15 +782,17 @@ describe('given the closeAccount mutation', () => {
                   loadUserByKey: userDataSource.byKey,
                 }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
+                user: userDataSource,
               },
-              dataSources: { user: userDataSource },
               validators: { cleanseInput },
             },
           })
@@ -756,7 +812,13 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('closes the users account', async () => {
-        const userDataSource = new UserDataSource({ query, userKey: superAdmin._key, i18n, transaction, collections: collectionNames })
+        const userDataSource = new UserDataSource({
+          query,
+          userKey: superAdmin._key,
+          i18n,
+          transaction,
+          collections: collectionNames,
+        })
         await graphql({
           schema,
           source: `
@@ -865,15 +927,17 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(false),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
+                dataSources: {
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      i18n,
+                      userKey: '123',
+                    }),
+                  },
+                  user: {},
                 },
-                dataSources: { user: {} },
                 validators: { cleanseInput },
               },
             })
@@ -928,15 +992,15 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
-                },
                 dataSources: {
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      i18n,
+                      userKey: '123',
+                    }),
+                  },
                   user: {
                     byKey: {
                       load: jest.fn().mockReturnValue(undefined),
@@ -1009,17 +1073,23 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
-                },
                 dataSources: {
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      i18n,
+                      userKey: '123',
+                    }),
+                  },
                   user: Object.assign(
-                    new UserDataSource({ query: mockedQuery, userKey: '123', i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    new UserDataSource({
+                      query: mockedQuery,
+                      userKey: '123',
+                      i18n,
+                      transaction: mockedTransaction,
+                      collections: collectionNames,
+                    }),
                     { byKey: { load: jest.fn().mockReturnValue({ _key: '123' }) } },
                   ),
                 },
@@ -1078,17 +1148,23 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
-                },
                 dataSources: {
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      i18n,
+                      userKey: '123',
+                    }),
+                  },
                   user: Object.assign(
-                    new UserDataSource({ query: mockedQuery, userKey: '123', i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    new UserDataSource({
+                      query: mockedQuery,
+                      userKey: '123',
+                      i18n,
+                      transaction: mockedTransaction,
+                      collections: collectionNames,
+                    }),
                     { byKey: { load: jest.fn().mockReturnValue({ _key: '123' }) } },
                   ),
                 },
@@ -1148,17 +1224,23 @@ describe('given the closeAccount mutation', () => {
                 checkSuperAdmin: jest.fn().mockReturnValue(true),
                 userRequired: jest.fn().mockReturnValue({ _key: '123', _id: 'users/123' }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: '123',
-                }),
-              },
               dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: '123',
+                  }),
+                },
                 user: Object.assign(
-                  new UserDataSource({ query: mockedQuery, userKey: '123', i18n, transaction: mockedTransaction, collections: collectionNames }),
+                  new UserDataSource({
+                    query: mockedQuery,
+                    userKey: '123',
+                    i18n,
+                    transaction: mockedTransaction,
+                    collections: collectionNames,
+                  }),
                   { byKey: { load: jest.fn().mockReturnValue({ _key: '123' }) } },
                 ),
               },
@@ -1224,15 +1306,17 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(false),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
+                dataSources: {
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      i18n,
+                      userKey: '123',
+                    }),
+                  },
+                  user: {},
                 },
-                dataSources: { user: {} },
                 validators: { cleanseInput },
               },
             })
@@ -1287,15 +1371,15 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest.fn().mockReturnValue({ _key: '123' }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: '123',
-                  }),
-                },
                 dataSources: {
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      i18n,
+                      userKey: '123',
+                    }),
+                  },
                   user: {
                     byKey: {
                       load: jest.fn().mockReturnValue(undefined),

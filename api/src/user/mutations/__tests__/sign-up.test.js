@@ -122,8 +122,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -196,8 +195,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -259,8 +257,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -334,8 +331,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -434,10 +430,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -512,10 +505,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -588,10 +578,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -655,10 +642,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -733,10 +717,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -809,10 +790,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -893,8 +871,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -966,8 +943,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1029,8 +1005,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1103,8 +1078,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1204,10 +1178,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1282,10 +1253,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1358,10 +1326,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1426,10 +1391,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1504,10 +1466,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1580,10 +1539,7 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                  },
-                  dataSources: {
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
                     user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
@@ -1665,8 +1621,7 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-              dataSources: {
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                 user: {
                   byUserName: {
                     load: jest.fn(),
@@ -1741,8 +1696,7 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-              dataSources: {
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                 user: {
                   byUserName: {
                     load: jest.fn(),
@@ -1817,8 +1771,7 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-              dataSources: {
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                 user: {
                   byUserName: {
                     load: jest.fn().mockReturnValue({
@@ -1916,8 +1869,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -1943,10 +1896,7 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                },
-                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                dataSources: {
+                  } },
                   user: {
                     byUserName: {
                       load: jest.fn(),
@@ -2038,12 +1988,9 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue(undefined),
-                  },
-                },
-                dataSources: {
+                  } },
                   user: {
                     byUserName: {
                       load: jest.fn(),
@@ -2126,8 +2073,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2153,10 +2100,7 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                },
-                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                dataSources: {
+                  } },
                   user: Object.assign(new UserDataSource({
                     query,
                     userKey: undefined,
@@ -2233,8 +2177,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2260,10 +2204,7 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                },
-                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                dataSources: {
+                  } },
                   user: Object.assign(new UserDataSource({
                     query,
                     userKey: undefined,
@@ -2347,8 +2288,7 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2374,9 +2314,7 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                },
-                dataSources: {
+                  } },
                   user: Object.assign(new UserDataSource({
                     query,
                     userKey: undefined,
@@ -2450,8 +2388,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2477,10 +2415,7 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                },
-                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                dataSources: {
+                  } },
                   user: Object.assign(new UserDataSource({
                     query,
                     userKey: undefined,
@@ -2567,8 +2502,7 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-              dataSources: {
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                 user: {
                   byUserName: {
                     load: jest.fn(),
@@ -2643,8 +2577,7 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-              dataSources: {
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                 user: {
                   byUserName: {
                     load: jest.fn(),
@@ -2719,8 +2652,7 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-              dataSources: {
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
                 user: {
                   byUserName: {
                     load: jest.fn().mockReturnValue({
@@ -2818,8 +2750,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2845,10 +2777,7 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                },
-                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
-                dataSources: {
+                  } },
                   user: {
                     byUserName: {
                       load: jest.fn(),
@@ -2941,12 +2870,9 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue(undefined),
-                  },
-                },
-                dataSources: {
+                  } },
                   user: {
                     byUserName: {
                       load: jest.fn(),

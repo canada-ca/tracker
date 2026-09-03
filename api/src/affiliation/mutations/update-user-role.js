@@ -38,10 +38,14 @@ given organization.`,
     {
       i18n,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource, user: userDataSource },
+      dataSources: {
+        affiliation: affiliationDataSource,
+        auditLogs: auditLogsDataSource,
+        user: userDataSource,
+        organization,
+      },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadOrganizationNamesById },
       validators: { cleanseInput },
       notify: { sendRoleChangeEmail },
     },
@@ -82,7 +86,7 @@ given organization.`,
     }
 
     // Check to see if org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await organization.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -178,7 +182,7 @@ given organization.`,
     // Get org names to use in email
     let orgNames
     try {
-      orgNames = await loadOrganizationNamesById.load(org._id)
+      orgNames = await organization.namesById.load(org._id)
     } catch (err) {
       console.error(
         `Error occurred when user: ${userKey} attempted to update a user's: ${userName} role. Error while retrieving organization names. error: ${err}`,

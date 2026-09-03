@@ -13,7 +13,7 @@ describe('Tag.organizations', () => {
     context = {
       userKey,
       auth: { userRequired, verifiedRequired, checkPermission },
-      loaders: { loadOrgByKey },
+      dataSources: { organization: { byKey: loadOrgByKey } },
     }
   })
 

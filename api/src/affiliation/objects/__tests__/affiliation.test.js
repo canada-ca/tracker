@@ -121,9 +121,11 @@ describe('given the user affiliation object', () => {
             { _from: '1' },
             {},
             {
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(expectedResult),
+                  },
                 },
               },
             },
