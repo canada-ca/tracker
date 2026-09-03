@@ -40,10 +40,14 @@ able to sign-up and be assigned to that organization in one mutation.`,
       i18n,
       request,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
+      dataSources: {
+        affiliation: affiliationDataSource,
+        auditLogs: auditLogsDataSource,
+        user: userDataSource,
+        organization,
+      },
       request: { ip },
       auth: { checkPermission, tokenize, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -69,7 +73,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see if requested org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await organization.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -113,7 +117,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // Get org names to use in email
     let orgNames
     try {
-      orgNames = await loadOrganizationNamesById.load(org._id)
+      orgNames = await organization.namesById.load(org._id)
     } catch (err) {
       console.error(
         `Error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
@@ -122,7 +126,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see if requested user exists
-    const requestedUser = await loadUserByUserName.load(userName)
+    const requestedUser = await userDataSource.byUserName.load(userName)
 
     // If there is not associated account with that username send invite to org with create account
     if (typeof requestedUser === 'undefined') {

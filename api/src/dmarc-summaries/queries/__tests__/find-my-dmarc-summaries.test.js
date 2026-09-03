@@ -192,15 +192,17 @@ describe('given the findMyDmarcSummaries query', () => {
             }),
             verifiedRequired: verifiedRequired({ i18n }),
           },
-          loaders: {
-            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              auth: { loginRequired: true },
-              i18n,
-              loadStartDateFromPeriod: mockedStartDateLoader,
-            }),
+          dataSources: {
+            dmarcSummaries: {
+              connectionsByUserId: loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                auth: { loginRequired: true },
+                i18n,
+                loadStartDateFromPeriod: mockedStartDateLoader,
+              }),
+            },
           },
         },
       })
@@ -291,8 +293,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: verifiedRequired({ i18n }),
                 loginRequiredBool: true,
               },
-              loaders: {
-                loadDmarcSummaryConnectionsByUserId: jest.fn(),
+              dataSources: {
+                dmarcSummaries: { connectionsByUserId: jest.fn() },
               },
             },
           })
@@ -337,15 +339,17 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
-                  query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequired: true },
-                  i18n,
-                  loadStartDateFromPeriod: jest.fn(),
-                }),
+              dataSources: {
+                dmarcSummaries: {
+                  connectionsByUserId: loadDmarcSummaryConnectionsByUserId({
+                    query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+                    userKey: user._key,
+                    cleanseInput,
+                    auth: { loginRequired: true },
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  }),
+                },
               },
             },
           })
@@ -415,8 +419,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 loginRequiredBool: true,
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadDmarcSummaryConnectionsByUserId: jest.fn(),
+              dataSources: {
+                dmarcSummaries: { connectionsByUserId: jest.fn() },
               },
             },
           })
@@ -461,15 +465,17 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
-                  query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequired: true },
-                  i18n,
-                  loadStartDateFromPeriod: jest.fn(),
-                }),
+              dataSources: {
+                dmarcSummaries: {
+                  connectionsByUserId: loadDmarcSummaryConnectionsByUserId({
+                    query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+                    userKey: user._key,
+                    cleanseInput,
+                    auth: { loginRequired: true },
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  }),
+                },
               },
             },
           })

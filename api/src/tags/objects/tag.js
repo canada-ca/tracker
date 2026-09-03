@@ -40,7 +40,7 @@ export const tagType = new GraphQLObjectType({
         {
           userKey,
           auth: { userRequired, verifiedRequired, checkPermission },
-          loaders: { loadOrgByKey },
+          dataSources: { organization },
         },
       ) => {
         const user = await userRequired()
@@ -50,7 +50,7 @@ export const tagType = new GraphQLObjectType({
 
         const orgs = []
         for (const orgId of organizations) {
-          const org = await loadOrgByKey.load(orgId)
+          const org = await organization.byKey.load(orgId)
           if (!org) continue
           const permission = await checkPermission({ orgId: org._id })
           if (!ac.can(permission).readOwn('tag').granted) continue

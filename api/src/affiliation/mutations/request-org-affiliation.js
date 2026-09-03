@@ -29,10 +29,14 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       i18n,
       request,
       userKey,
-      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
+      dataSources: {
+        affiliation: affiliationDataSource,
+        auditLogs: auditLogsDataSource,
+        user: userDataSource,
+        organization,
+      },
       request: { ip },
       auth: { userRequired, verifiedRequired },
-      loaders: { loadOrgByKey, loadUserByKey, loadOrganizationNamesById },
       notify: { sendInviteRequestEmail },
       validators: { cleanseInput },
     },
@@ -44,7 +48,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     verifiedRequired({ user })
 
     // Check to see if requested org exists
-    const org = await loadOrgByKey.load(orgId)
+    const org = await organization.byKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -131,7 +135,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       // Get org names to use in email
       let orgNames
       try {
-        orgNames = await loadOrganizationNamesById.load(org._id)
+        orgNames = await organization.namesById.load(org._id)
       } catch (err) {
         console.error(
           `Error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
@@ -148,7 +152,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
             displayName: 'Service Account',
             _key: 'service-account',
           }
-        } else adminUser = await loadUserByKey.load(userKey)
+        } else adminUser = await userDataSource.byKey.load(userKey)
 
         await sendInviteRequestEmail({
           user: adminUser,

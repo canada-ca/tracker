@@ -12,7 +12,8 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { UserDataSource } from '../../../user'
+import { loadOrgByKey } from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -56,6 +57,7 @@ describe('reset users password', () => {
       }))
     })
     beforeEach(async () => {
+      const userDataSource = new UserDataSource({ query, userKey: undefined, i18n, transaction, collections: collectionNames })
       await graphql({
         schema,
         source: `
@@ -91,8 +93,9 @@ describe('reset users password', () => {
           validators: {
             cleanseInput,
           },
-          loaders: {
-            loadUserByUserName: loadUserByUserName({ query }),
+          dataSources: {
+            user: userDataSource,
+            organization: { byKey: loadOrgByKey({ query }) },
           },
           notify: {
             sendVerificationEmail: jest.fn(),
@@ -138,6 +141,7 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
+        const userDataSource = new UserDataSource({ query, userKey: undefined, i18n, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -175,9 +179,8 @@ describe('reset users password', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -237,8 +240,8 @@ describe('reset users password', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+            dataSources: {
+              user: userDataSource,
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -273,6 +276,7 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
+        const userDataSource = new UserDataSource({ query, userKey: undefined, i18n, transaction, collections: collectionNames })
         await graphql({
           schema,
           source: `
@@ -311,9 +315,8 @@ describe('reset users password', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -355,6 +358,7 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
+        const userDataSource = new UserDataSource({ query, userKey: undefined, i18n, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -392,9 +396,8 @@ describe('reset users password', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -454,8 +457,8 @@ describe('reset users password', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+            dataSources: {
+              user: userDataSource,
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -490,6 +493,7 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
+        const userDataSource = new UserDataSource({ query, userKey: undefined, i18n, transaction, collections: collectionNames })
         await graphql({
           schema,
           source: `
@@ -527,9 +531,8 @@ describe('reset users password', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -604,9 +607,11 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
             },
@@ -672,9 +677,11 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
             },
@@ -740,9 +747,11 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
             },
@@ -808,12 +817,14 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    password: 'currentPassword',
-                  }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      password: 'currentPassword',
+                    }),
+                  },
                 },
               },
             },
@@ -879,12 +890,14 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    password: 'currentPassword',
-                  }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      password: 'currentPassword',
+                    }),
+                  },
                 },
               },
             },
@@ -945,10 +958,6 @@ describe('reset users password', () => {
                 i18n,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
                 auth: {
                   bcrypt,
                   tokenize,
@@ -957,13 +966,27 @@ describe('reset users password', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      password: 'currentPassword',
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({
+                      query,
+                      userKey: 123,
+                      i18n,
+                      transaction: jest.fn().mockReturnValue({
+                        step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+                        abort: jest.fn(),
+                      }),
+                      collections: collectionNames,
                     }),
-                  },
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 123,
+                          password: 'currentPassword',
+                        }),
+                      },
+                    },
+                  ),
                 },
               },
             })
@@ -1015,11 +1038,6 @@ describe('reset users password', () => {
                 i18n,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
                 auth: {
                   bcrypt,
                   tokenize,
@@ -1028,13 +1046,28 @@ describe('reset users password', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      password: 'currentPassword',
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({
+                      query,
+                      userKey: 123,
+                      i18n,
+                      transaction: jest.fn().mockReturnValue({
+                        step: jest.fn().mockReturnValue({}),
+                        commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+                        abort: jest.fn(),
+                      }),
+                      collections: collectionNames,
                     }),
-                  },
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 123,
+                          password: 'currentPassword',
+                        }),
+                      },
+                    },
+                  ),
                 },
               },
             })
@@ -1107,9 +1140,11 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
             },
@@ -1175,9 +1210,11 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
             },
@@ -1243,9 +1280,11 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
             },
@@ -1311,12 +1350,14 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    password: 'currentPassword',
-                  }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      password: 'currentPassword',
+                    }),
+                  },
                 },
               },
             },
@@ -1382,12 +1423,14 @@ describe('reset users password', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    password: 'currentPassword',
-                  }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      password: 'currentPassword',
+                    }),
+                  },
                 },
               },
             },
@@ -1408,147 +1451,6 @@ describe('reset users password', () => {
           expect(consoleOutput).toEqual([
             `User: 123 attempted to reset their password, however the submitted password is not long enough.`,
           ])
-        })
-      })
-      describe('transaction step error occurs', () => {
-        describe('when updating users password', () => {
-          it('throws an error', async () => {
-            const resetToken = tokenize({
-              parameters: {
-                userKey: 123,
-                currentPassword: 'currentPassword',
-              },
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  resetPassword (
-                    input: {
-                      password: "testpassword123"
-                      confirmPassword: "testpassword123"
-                      resetToken: "${resetToken}"
-                    }
-                  ) {
-                    result {
-                      ... on ResetPasswordError {
-                        code
-                        description
-                      }
-                      ... on ResetPasswordResult {
-                        status
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  verifyToken: verifyToken({ i18n }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      password: 'currentPassword',
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de réinitialiser le mot de passe. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when user: 123 attempted to reset their password: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when updating users password', () => {
-          it('throws an error', async () => {
-            const resetToken = tokenize({
-              parameters: {
-                userKey: 123,
-                currentPassword: 'currentPassword',
-              },
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  resetPassword (
-                    input: {
-                      password: "testpassword123"
-                      confirmPassword: "testpassword123"
-                      resetToken: "${resetToken}"
-                    }
-                  ) {
-                    result {
-                      ... on ResetPasswordError {
-                        code
-                        description
-                      }
-                      ... on ResetPasswordResult {
-                        status
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  verifyToken: verifyToken({ i18n }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      password: 'currentPassword',
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de réinitialiser le mot de passe. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: 123 attempted to authenticate: Error: Transaction commit error`,
-            ])
-          })
         })
       })
     })

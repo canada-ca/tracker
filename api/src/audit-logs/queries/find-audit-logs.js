@@ -35,8 +35,7 @@ export const findAuditLogs = {
       userKey,
       i18n,
       auth: { checkPermission, userRequired, verifiedRequired },
-      loaders: { loadOrgByKey },
-      dataSources: { auditLogs },
+      dataSources: { auditLogs, organization },
       validators: { cleanseInput },
     },
   ) => {
@@ -45,7 +44,7 @@ export const findAuditLogs = {
 
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     // Get Org from db
-    const org = await loadOrgByKey.load(orgId)
+    const org = await organization.byKey.load(orgId)
 
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org?._id })

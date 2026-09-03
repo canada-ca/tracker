@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, superAdminRequired, userRequired, verifiedRequired } from '../../../auth'
-import { loadUserByKey, loadUserConnectionsByUserId } from '../../loaders'
+import { UserDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -189,6 +189,13 @@ describe('given findMyUsersQuery', () => {
         describe('super admin queries for their users', () => {
           describe('in english', () => {
             it('returns users with affiliations', async () => {
+              const userDataSource = new UserDataSource({
+                query,
+                userKey: superAdmin._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+              })
               const response = await graphql({
                 schema,
                 source: `
@@ -225,23 +232,13 @@ describe('given findMyUsersQuery', () => {
                     userRequired: userRequired({
                       i18n,
                       userKey: superAdmin._key,
-                      loadUserByKey: loadUserByKey({
-                        query,
-                        userKey: superAdmin._key,
-                        i18n,
-                      }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                     verifiedRequired: verifiedRequired({}),
                     superAdminRequired: superAdminRequired({}),
                   },
-                  loaders: {
-                    loadUserConnectionsByUserId: loadUserConnectionsByUserId({
-                      query,
-                      userKey: superAdmin._key,
-                      cleanseInput,
-                      auth: { loginRequired: true },
-                      language: 'en',
-                    }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                 },
               })
@@ -348,14 +345,13 @@ describe('given findMyUsersQuery', () => {
                   verifiedRequired: jest.fn(),
                   superAdminRequired: jest.fn(),
                 },
-                loaders: {
-                  loadUserConnectionsByUserId: loadUserConnectionsByUserId({
+                dataSources: {
+                  user: new UserDataSource({
                     query: mockedQuery,
                     userKey: superAdmin._key,
-                    cleanseInput,
-                    auth: { loginRequired: true },
-                    language: 'en',
                     i18n,
+                    language: 'en',
+                    cleanseInput,
                   }),
                 },
               },

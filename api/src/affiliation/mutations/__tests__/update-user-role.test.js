@@ -212,11 +212,15 @@ describe('update a users role', () => {
                     tfaRequired: tfaRequired({ i18n }),
                   },
                   notify: { sendRoleChangeEmail },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadOrganizationNamesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                  dataSources: {
+                    user: {
+                      byUserName: loadUserByUserName({ query }),
+                      byKey: loadUserByKey({ query }),
+                    },
+                    organization: {
+                      byKey: loadOrgByKey({ query, language: 'en' }),
+                      namesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -292,11 +296,15 @@ describe('update a users role', () => {
                     tfaRequired: tfaRequired({ i18n }),
                   },
                   notify: { sendRoleChangeEmail },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadOrganizationNamesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                  dataSources: {
+                    user: {
+                      byUserName: loadUserByUserName({ query }),
+                      byKey: loadUserByKey({ query }),
+                    },
+                    organization: {
+                      byKey: loadOrgByKey({ query, language: 'en' }),
+                      namesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -381,11 +389,15 @@ describe('update a users role', () => {
                     tfaRequired: tfaRequired({ i18n }),
                   },
                   notify: { sendRoleChangeEmail },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadOrganizationNamesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                  dataSources: {
+                    user: {
+                      byUserName: loadUserByUserName({ query }),
+                      byKey: loadUserByKey({ query }),
+                    },
+                    organization: {
+                      byKey: loadOrgByKey({ query, language: 'en' }),
+                      namesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -461,11 +473,15 @@ describe('update a users role', () => {
                     tfaRequired: tfaRequired({ i18n }),
                   },
                   notify: { sendRoleChangeEmail },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadOrganizationNamesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                  dataSources: {
+                    user: {
+                      byUserName: loadUserByUserName({ query }),
+                      byKey: loadUserByKey({ query }),
+                    },
+                    organization: {
+                      byKey: loadOrgByKey({ query, language: 'en' }),
+                      namesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -559,11 +575,15 @@ describe('update a users role', () => {
                     tfaRequired: tfaRequired({ i18n }),
                   },
                   notify: { sendRoleChangeEmail },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadOrganizationNamesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                  dataSources: {
+                    user: {
+                      byUserName: loadUserByUserName({ query }),
+                      byKey: loadUserByKey({ query }),
+                    },
+                    organization: {
+                      byKey: loadOrgByKey({ query, language: 'en' }),
+                      namesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -637,11 +657,15 @@ describe('update a users role', () => {
                     tfaRequired: tfaRequired({ i18n }),
                   },
                   notify: { sendRoleChangeEmail },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadOrganizationNamesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                  dataSources: {
+                    user: {
+                      byUserName: loadUserByUserName({ query }),
+                      byKey: loadUserByKey({ query }),
+                    },
+                    organization: {
+                      byKey: loadOrgByKey({ query, language: 'en' }),
+                      namesById: { load: jest.fn().mockResolvedValue(orgNames) },
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -719,12 +743,16 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn(),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn(),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn(),
+                  organization: {
+                    byKey: {
+                      load: jest.fn(),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -791,12 +819,16 @@ describe('update a users role', () => {
                   tfaRequired: jest.fn(),
                 },
                 notify: { sendRoleChangeEmail },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn(),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue(undefined),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
+                  organization: {
+                    byKey: {
+                      load: jest.fn(),
+                    },
                   },
                 },
                 validators: {
@@ -864,14 +896,18 @@ describe('update a users role', () => {
                   tfaRequired: jest.fn(),
                 },
                 notify: { sendRoleChangeEmail },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue(undefined),
+                    },
                   },
                 },
                 validators: {
@@ -938,16 +974,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -1016,16 +1056,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -1094,16 +1138,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -1175,16 +1223,20 @@ describe('update a users role', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        slug: 'treasury-board-secretariat',
-                      }),
+                  dataSources: {
+                    user: {
+                      byUserName: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 456,
+                        }),
+                      },
                     },
-                    loadUserByUserName: {
-                      load: jest.fn().mockReturnValue({
-                        _key: 456,
-                      }),
+                    organization: {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          slug: 'treasury-board-secretariat',
+                        }),
+                      },
                     },
                   },
                   notify: { sendRoleChangeEmail },
@@ -1255,16 +1307,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -1328,16 +1384,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -1404,16 +1464,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },
@@ -1479,16 +1543,20 @@ describe('update a users role', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      slug: 'treasury-board-secretariat',
-                    }),
+                dataSources: {
+                  user: {
+                    byUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 456,
-                    }),
+                  organization: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
                   },
                 },
                 notify: { sendRoleChangeEmail },

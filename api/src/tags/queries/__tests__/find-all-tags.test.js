@@ -14,8 +14,7 @@ describe('findAllTags', () => {
     userKey = 'test-user'
     context = {
       userKey,
-      dataSources: { tags: { all: tagsAll } },
-      loaders: { loadOrgByKey: jest.fn() },
+      dataSources: { tags: { all: tagsAll }, organization: { byKey: jest.fn() } },
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
       validators: { cleanseInput },
     }

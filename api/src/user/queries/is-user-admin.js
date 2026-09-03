@@ -19,7 +19,7 @@ export const isUserAdmin = {
       query,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { loadOrgByKey },
+      dataSources: { organization },
       validators: { cleanseInput },
     },
   ) => {
@@ -28,7 +28,7 @@ export const isUserAdmin = {
 
     // check if for a specific org
     if (orgKey) {
-      const org = await loadOrgByKey.load(orgKey)
+      const org = await organization.byKey.load(orgKey)
       const permission = await checkPermission({ orgId: org._id })
 
       return ['admin', 'owner', 'super_admin'].includes(permission)

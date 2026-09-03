@@ -29,9 +29,8 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      dataSources: { affiliation: affiliationDataSource },
+      dataSources: { affiliation: affiliationDataSource, user: userDataSource, organization },
       auth: { checkOrgOwner, userRequired, verifiedRequired },
-      loaders: { loadOrgByKey, loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -46,7 +45,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     verifiedRequired({ user: requestingUser })
 
     // load the requested org
-    const org = await loadOrgByKey.load(orgKey)
+    const org = await organization.byKey.load(orgKey)
 
     // ensure requested org is not undefined
     if (typeof org === 'undefined') {
@@ -74,7 +73,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     }
 
     // get the user that is org ownership is being transferred to
-    const requestedUser = await loadUserByKey.load(userTransferKey)
+    const requestedUser = await userDataSource.byKey.load(userTransferKey)
 
     // check to ensure requested user is not undefined
     if (typeof requestedUser === 'undefined') {

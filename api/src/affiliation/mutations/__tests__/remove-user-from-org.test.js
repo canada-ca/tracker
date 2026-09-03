@@ -247,18 +247,22 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: verifiedRequired({ i18n }),
                 tfaRequired: tfaRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: admin._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: admin._key,
-                  i18n,
-                }),
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
+                    query,
+                    userKey: admin._key,
+                    i18n,
+                  }),
+                },
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -346,18 +350,22 @@ describe('given the removeUserFromOrg mutation', () => {
                   verifiedRequired: verifiedRequired({ i18n }),
                   tfaRequired: tfaRequired({ i18n }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: admin._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: admin._key,
-                    i18n,
-                  }),
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
+                      query,
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -451,18 +459,22 @@ describe('given the removeUserFromOrg mutation', () => {
                   verifiedRequired: verifiedRequired({ i18n }),
                   tfaRequired: tfaRequired({ i18n }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: admin._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: admin._key,
-                    i18n,
-                  }),
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
+                      query,
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -543,18 +555,22 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: verifiedRequired({ i18n }),
                 tfaRequired: tfaRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: admin._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: admin._key,
-                  i18n,
-                }),
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
+                    query,
+                    userKey: admin._key,
+                    i18n,
+                  }),
+                },
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -642,18 +658,22 @@ describe('given the removeUserFromOrg mutation', () => {
                   verifiedRequired: verifiedRequired({ i18n }),
                   tfaRequired: tfaRequired({ i18n }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: admin._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: admin._key,
-                    i18n,
-                  }),
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
+                      query,
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -747,18 +767,22 @@ describe('given the removeUserFromOrg mutation', () => {
                   verifiedRequired: verifiedRequired({ i18n }),
                   tfaRequired: tfaRequired({ i18n }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: admin._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: admin._key,
-                    i18n,
-                  }),
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
+                      query,
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -857,18 +881,22 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: verifiedRequired({ i18n }),
                 tfaRequired: tfaRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: admin._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: admin._key,
-                  i18n,
-                }),
+              dataSources: {
+                user: {
+                  byKey: loadUserByKey({
+                    query,
+                    userKey: admin._key,
+                    i18n,
+                  }),
+                },
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -956,18 +984,22 @@ describe('given the removeUserFromOrg mutation', () => {
                   verifiedRequired: verifiedRequired({ i18n }),
                   tfaRequired: tfaRequired({ i18n }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: admin._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: admin._key,
-                    i18n,
-                  }),
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
+                      query,
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -1061,18 +1093,22 @@ describe('given the removeUserFromOrg mutation', () => {
                   verifiedRequired: verifiedRequired({ i18n }),
                   tfaRequired: tfaRequired({ i18n }),
                 },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: admin._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: admin._key,
-                    i18n,
-                  }),
+                dataSources: {
+                  user: {
+                    byKey: loadUserByKey({
+                      query,
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
+                  organization: {
+                    byKey: loadOrgByKey({
+                      query,
+                      language: 'en',
+                      userKey: admin._key,
+                      i18n,
+                    }),
+                  },
                 },
                 validators: { cleanseInput },
               },
@@ -1161,12 +1197,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn(),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1242,14 +1282,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1325,14 +1369,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1408,12 +1456,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1486,14 +1538,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1565,14 +1621,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1639,14 +1699,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1718,14 +1782,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1797,14 +1865,18 @@ describe('given the removeUserFromOrg mutation', () => {
               verifiedRequired: jest.fn(),
               tfaRequired: jest.fn(),
             },
-            loaders: {
-              loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 12345 }),
+            dataSources: {
+              user: {
+                byKey: {
+                  load: jest.fn().mockReturnValue({
+                    _key: 456,
+                  }),
+                },
               },
-              loadUserByKey: {
-                load: jest.fn().mockReturnValue({
-                  _key: 456,
-                }),
+              organization: {
+                byKey: {
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                },
               },
             },
             validators: { cleanseInput },
@@ -1880,12 +1952,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn(),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -1961,14 +2037,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2045,14 +2125,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2129,12 +2213,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2207,14 +2295,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2287,14 +2379,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2363,14 +2459,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2444,14 +2544,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -2525,14 +2629,18 @@ describe('given the removeUserFromOrg mutation', () => {
               verifiedRequired: jest.fn(),
               tfaRequired: jest.fn(),
             },
-            loaders: {
-              loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 12345 }),
+            dataSources: {
+              user: {
+                byKey: {
+                  load: jest.fn().mockReturnValue({
+                    _key: 456,
+                  }),
+                },
               },
-              loadUserByKey: {
-                load: jest.fn().mockReturnValue({
-                  _key: 456,
-                }),
+              organization: {
+                byKey: {
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                },
               },
             },
             validators: { cleanseInput },

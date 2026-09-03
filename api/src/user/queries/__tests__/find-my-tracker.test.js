@@ -9,7 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
-import { loadUserByKey, loadMyTrackerByUserId } from '../../loaders'
+import { UserDataSource } from '../../data-source'
 import { DomainDataSource } from '../../../domain/data-source'
 import dbschema from '../../../../database.json'
 
@@ -143,6 +143,13 @@ describe('given findMyTracker query', () => {
         describe('user queries for myTracker', () => {
           describe('in english', () => {
             it('returns myTracker results', async () => {
+              const userDataSource = new UserDataSource({
+                query,
+                userKey: user._key,
+                i18n,
+                language: 'en',
+                cleanseInput,
+              })
               const response = await graphql({
                 schema,
                 source: `
@@ -207,22 +214,10 @@ describe('given findMyTracker query', () => {
                     userRequired: userRequired({
                       i18n,
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({
-                        query,
-                        userKey: user._key,
-                        i18n,
-                      }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                     verifiedRequired: verifiedRequired({}),
                   },
-                loaders: {
-                  loadMyTrackerByUserId: loadMyTrackerByUserId({
-                    query,
-                    userKey: user._key,
-                    cleanseInput,
-                    language: 'en',
-                  }),
-                },
                 dataSources: {
                   domain: new DomainDataSource({
                     query,
@@ -232,6 +227,7 @@ describe('given findMyTracker query', () => {
                     loginRequiredBool: true,
                     i18n,
                   }),
+                  user: userDataSource,
                 },
               },
             })
@@ -388,13 +384,13 @@ describe('given findMyTracker query', () => {
                 userRequired: jest.fn().mockReturnValue({}),
                 verifiedRequired: jest.fn(),
               },
-              loaders: {
-                loadMyTrackerByUserId: loadMyTrackerByUserId({
+              dataSources: {
+                user: new UserDataSource({
                   query: mockedQuery,
                   userKey: user._key,
-                  cleanseInput,
-                  language: 'en',
                   i18n,
+                  language: 'en',
+                  cleanseInput,
                 }),
               },
             },

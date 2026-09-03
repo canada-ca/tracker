@@ -11,7 +11,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -91,6 +91,7 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
+          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
           const response = await graphql({
             schema,
             source: `
@@ -123,15 +124,14 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: userDataSource.byKey,
                 }),
               },
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+              dataSources: {
+                user: userDataSource,
               },
               notify: { sendVerificationEmail: jest.fn() },
             },
@@ -172,6 +172,7 @@ describe('authenticate user account', () => {
             secret: String(AUTHENTICATED_KEY),
           })}`
 
+          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
           const response = await graphql({
             schema,
             source: `
@@ -210,15 +211,14 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: userDataSource.byKey,
                 }),
               },
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+              dataSources: {
+                user: userDataSource,
               },
               notify: { sendVerificationEmail },
             },
@@ -260,6 +260,7 @@ describe('authenticate user account', () => {
             `
             const user = await cursor.next()
 
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             await graphql({
               schema,
               source: `
@@ -297,15 +298,14 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -358,6 +358,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -390,15 +391,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -456,6 +456,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -488,15 +489,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -539,6 +539,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -571,15 +572,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -620,6 +620,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -652,15 +653,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -702,6 +702,7 @@ describe('authenticate user account', () => {
               `
             const user = await cursor.next()
 
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -734,15 +735,14 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -791,6 +791,7 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
+          const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
           const response = await graphql({
             schema,
             source: `
@@ -823,15 +824,14 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: userDataSource.byKey,
                 }),
               },
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+              dataSources: {
+                user: userDataSource,
               },
               notify: { sendVerificationEmail: jest.fn() },
             },
@@ -873,6 +873,7 @@ describe('authenticate user account', () => {
               secret: String(AUTHENTICATED_KEY),
             })}`
 
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -911,15 +912,14 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: { sendVerificationEmail },
               },
@@ -961,6 +961,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               await graphql({
                 schema,
                 source: `
@@ -998,15 +999,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -1060,6 +1060,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -1092,15 +1093,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -1158,6 +1158,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -1190,15 +1191,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -1241,6 +1241,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -1273,15 +1274,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -1322,6 +1322,7 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
+              const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
               const response = await graphql({
                 schema,
                 source: `
@@ -1354,15 +1355,14 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: userDataSource.byKey,
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: {
+                    user: userDataSource,
                   },
                   notify: { sendVerificationEmail: jest.fn() },
                 },
@@ -1404,6 +1404,7 @@ describe('authenticate user account', () => {
               `
             const user = await cursor.next()
 
+            const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
             const response = await graphql({
               schema,
               source: `
@@ -1436,15 +1437,14 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: userDataSource.byKey,
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                dataSources: {
+                  user: userDataSource,
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -1527,12 +1527,11 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({}),
-                },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({}),
+                  },
                 },
               },
               notify: { sendVerificationEmail: jest.fn() },
@@ -1559,6 +1558,10 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
+            })
             const response = await graphql({
               schema,
               source: `
@@ -1589,10 +1592,7 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
+                transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
                   bcrypt,
@@ -1604,13 +1604,11 @@ describe('authenticate user account', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    { byUserName: { load: jest.fn().mockReturnValue(undefined) } },
+                  ),
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -1628,6 +1626,11 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
+            })
             const response = await graphql({
               schema,
               source: `
@@ -1658,11 +1661,7 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
+                transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
                   bcrypt,
@@ -1674,13 +1673,11 @@ describe('authenticate user account', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    { byUserName: { load: jest.fn().mockReturnValue(undefined) } },
+                  ),
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -1752,12 +1749,11 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({}),
-                },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({}),
+                  },
                 },
               },
               notify: { sendVerificationEmail: jest.fn() },
@@ -1779,145 +1775,6 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: 123 attempted to update their username, but the username is already in use.`,
           ])
-        })
-      })
-      describe('given a transaction step error', () => {
-        describe('when updating profile', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  updateUserProfile(
-                    input: {
-                      displayName: "John Smith"
-                      userName: "john.smith@istio.actually.works"
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          id
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: jest.fn().mockReturnValue({
-                    tfaSendMethod: 'none',
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when user: 123 attempted to update their profile: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('given a transaction step error', () => {
-        describe('when updating profile', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  updateUserProfile(
-                    input: {
-                      displayName: "John Smith"
-                      userName: "john.smith@istio.actually.works"
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          id
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
-                userKey: 123,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: jest.fn().mockReturnValue({
-                    tfaSendMethod: 'none',
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
-                  },
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred when user: 123 attempted to update their profile: Error: Transaction commit error`,
-            ])
-          })
         })
       })
     })

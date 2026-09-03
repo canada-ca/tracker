@@ -11,7 +11,8 @@ import { tokenize, verifyToken } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { loadUserByUserName } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import { loadOrgByKey } from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -121,9 +122,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -195,9 +195,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -258,9 +257,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -333,9 +331,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -433,10 +430,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -510,10 +505,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -585,10 +578,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -651,10 +642,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -728,10 +717,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -803,10 +790,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -886,9 +871,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -959,9 +943,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1022,9 +1005,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1096,9 +1078,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1197,10 +1178,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1274,10 +1253,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1349,10 +1326,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1416,10 +1391,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1493,10 +1466,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1568,10 +1539,8 @@ describe('testing user sign up', () => {
                   validators: {
                     cleanseInput,
                   },
-                  loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'fr' }) },
+                    user: new UserDataSource({ query, transaction, collections: collectionNames }),
                   },
                   notify: {
                     sendAuthEmail: mockNotify,
@@ -1652,12 +1621,14 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn(),
-                },
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                user: {
+                  byUserName: {
+                    load: jest.fn(),
+                  },
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
               notify: {
@@ -1725,12 +1696,14 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn(),
-                },
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                user: {
+                  byUserName: {
+                    load: jest.fn(),
+                  },
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
               notify: {
@@ -1798,17 +1771,19 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({
-                    userName: 'test.account@istio.actually.exists',
-                    displayName: 'Test Account',
-                    phoneValidated: false,
-                    emailValidated: false,
-                  }),
-                },
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      phoneValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
               notify: {
@@ -1894,11 +1869,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -1924,9 +1896,14 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
+                  } },
+                  user: {
+                    byUserName: {
+                      load: jest.fn(),
+                    },
+                    byKey: {
+                      load: jest.fn(),
+                    },
                   },
                 },
                 notify: {
@@ -2011,15 +1988,16 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
+                  } },
+                  user: {
+                    byUserName: {
+                      load: jest.fn(),
+                    },
+                    byKey: {
+                      load: jest.fn(),
+                    },
                   },
                 },
                 notify: {
@@ -2095,11 +2073,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2125,10 +2100,19 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                  } },
+                  user: Object.assign(new UserDataSource({
+                    query,
+                    userKey: undefined,
+                    i18n,
+                    transaction: jest.fn().mockReturnValue({
+                      step: jest.fn().mockReturnValue({
+                        next: jest.fn().mockRejectedValue('Cursor Error'),
+                      }),
+                      abort: jest.fn(),
+                    }),
+                    collections: collectionNames,
+                  }), { byUserName: { load: jest.fn() } }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -2193,11 +2177,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2223,10 +2204,17 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                  } },
+                  user: Object.assign(new UserDataSource({
+                    query,
+                    userKey: undefined,
+                    i18n,
+                    transaction: jest.fn().mockReturnValue({
+                      step: jest.fn().mockRejectedValue('Transaction Step Error'),
+                      abort: jest.fn(),
+                    }),
+                    collections: collectionNames,
+                  }), { byUserName: { load: jest.fn() } }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -2300,11 +2288,7 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2330,10 +2314,17 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                  } },
+                  user: Object.assign(new UserDataSource({
+                    query,
+                    userKey: undefined,
+                    i18n,
+                    transaction: jest.fn().mockReturnValue({
+                      step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
+                      abort: jest.fn(),
+                    }),
+                    collections: collectionNames,
+                  }), { byUserName: { load: jest.fn() } }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -2397,11 +2388,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2427,10 +2415,18 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                  } },
+                  user: Object.assign(new UserDataSource({
+                    query,
+                    userKey: undefined,
+                    i18n,
+                    transaction: jest.fn().mockReturnValue({
+                      step: jest.fn().mockReturnValue({ next: jest.fn() }),
+                      commit: jest.fn().mockRejectedValue('Transaction Commit Error'),
+                      abort: jest.fn(),
+                    }),
+                    collections: collectionNames,
+                  }), { byUserName: { load: jest.fn() } }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -2506,12 +2502,14 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn(),
-                },
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                user: {
+                  byUserName: {
+                    load: jest.fn(),
+                  },
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
               notify: {
@@ -2579,12 +2577,14 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn(),
-                },
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                user: {
+                  byUserName: {
+                    load: jest.fn(),
+                  },
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
               notify: {
@@ -2652,17 +2652,19 @@ describe('testing user sign up', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({
-                    userName: 'test.account@istio.actually.exists',
-                    displayName: 'Test Account',
-                    phoneValidated: false,
-                    emailValidated: false,
-                  }),
-                },
-                loadUserByKey: {
-                  load: jest.fn(),
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) },
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      phoneValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
+                  byKey: {
+                    load: jest.fn(),
+                  },
                 },
               },
               notify: {
@@ -2748,11 +2750,8 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                loaders: { loadOrgByKey: loadOrgByKey({ query, language: 'en' }) },
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue({
                       _key: 123,
                       orgDetails: {
@@ -2778,9 +2777,14 @@ describe('testing user sign up', () => {
                         },
                       },
                     }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
+                  } },
+                  user: {
+                    byUserName: {
+                      load: jest.fn(),
+                    },
+                    byKey: {
+                      load: jest.fn(),
+                    },
                   },
                 },
                 notify: {
@@ -2866,15 +2870,16 @@ describe('testing user sign up', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
+                dataSources: { organization: { byKey: {
                     load: jest.fn().mockReturnValue(undefined),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
+                  } },
+                  user: {
+                    byUserName: {
+                      load: jest.fn(),
+                    },
+                    byKey: {
+                      load: jest.fn(),
+                    },
                   },
                 },
                 notify: {
@@ -2898,408 +2903,6 @@ describe('testing user sign up', () => {
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               'User: test.account@istio.actually.exists attempted to sign up with an invite token, however the org could not be found.',
-            ])
-          })
-        })
-      })
-      describe('given a cursor error', () => {
-        describe('when gathering inserted user', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  signUp(
-                    input: {
-                      displayName: "Test Account"
-                      userName: "test.account@istio.actually.exists"
-                      password: "testpassword123"
-                      confirmPassword: "testpassword123"
-                    }
-                  ) {
-                    result {
-                      ... on TFASignInResult {
-                        authenticateToken
-                        sendMethod
-                      }
-                      ... on SignUpError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({
-                    next: jest.fn().mockRejectedValue('Cursor Error'),
-                  }),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  bcrypt,
-                  tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-                notify: {
-                  sendAuthEmail: mockNotify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-
-            expect(consoleOutput).toEqual([
-              'Cursor error occurred while user: test.account@istio.actually.exists attempted to sign up, creating user: Cursor Error',
-            ])
-          })
-        })
-      })
-      describe('given a transaction error', () => {
-        describe('when inserting user', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  signUp(
-                    input: {
-                      displayName: "Test Account"
-                      userName: "test.account@istio.actually.exists"
-                      password: "testpassword123"
-                      confirmPassword: "testpassword123"
-                    }
-                  ) {
-                    result {
-                      ... on TFASignInResult {
-                        authenticateToken
-                        sendMethod
-                      }
-                      ... on SignUpError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue('Transaction Step Error'),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  bcrypt,
-                  tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-                notify: {
-                  sendAuthEmail: mockNotify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-
-            expect(consoleOutput).toEqual([
-              'Transaction step error occurred while user: test.account@istio.actually.exists attempted to sign up, creating user: Transaction Step Error',
-            ])
-          })
-        })
-        describe('when inserting affiliation', () => {
-          let token
-          beforeEach(() => {
-            token = tokenize({
-              parameters: {
-                userName: 'test.account@istio.actually.exists',
-                orgKey: '123',
-                requestedRole: 'admin',
-              },
-            })
-          })
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  signUp(
-                    input: {
-                      displayName: "Test Account"
-                      userName: "test.account@istio.actually.exists"
-                      password: "testpassword123"
-                      confirmPassword: "testpassword123"
-                      signUpToken: "${token}"
-                    }
-                  ) {
-                    result {
-                      ... on TFASignInResult {
-                        authenticateToken
-                        sendMethod
-                      }
-                      ... on SignUpError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  bcrypt,
-                  tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-                notify: {
-                  sendAuthEmail: mockNotify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-
-            expect(consoleOutput).toEqual([
-              'Transaction step error occurred while user: test.account@istio.actually.exists attempted to sign up, assigning affiliation: Transaction Step Error',
-            ])
-          })
-        })
-        describe('when committing transaction', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  signUp(
-                    input: {
-                      displayName: "Test Account"
-                      userName: "test.account@istio.actually.exists"
-                      password: "testpassword123"
-                      confirmPassword: "testpassword123"
-                    }
-                  ) {
-                    result {
-                      ... on TFASignInResult {
-                        authenticateToken
-                        sendMethod
-                      }
-                      ... on SignUpError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
-                  commit: jest.fn().mockRejectedValue('Transaction Commit Error'),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                request: { ip: '127.0.0.1' },
-                auth: {
-                  bcrypt,
-                  tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: {
-                    load: jest.fn(),
-                  },
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-                notify: {
-                  sendAuthEmail: mockNotify,
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-
-            expect(consoleOutput).toEqual([
-              'Transaction commit error occurred while user: test.account@istio.actually.exists attempted to sign up: Transaction Commit Error',
             ])
           })
         })

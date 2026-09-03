@@ -24,9 +24,8 @@ export const leaveOrganization = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      dataSources: { affiliation: affiliationDataSource },
+      dataSources: { affiliation: affiliationDataSource, organization },
       auth: { userRequired, verifiedRequired },
-      loaders: { loadOrgByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -36,7 +35,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
 
     verifiedRequired({ user })
 
-    const org = await loadOrgByKey.load(orgKey)
+    const org = await organization.byKey.load(orgKey)
 
     if (typeof org === 'undefined') {
       console.warn(`User ${user._key} attempted to leave undefined organization: ${orgKey}`)
