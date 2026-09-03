@@ -80,10 +80,12 @@ describe('testing the detailTables gql object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadDkimFailConnectionsBySumId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+              dataSources: {
+                dmarcSummaries: {
+                  dkimFailConnectionsBySumId: jest
+                    .fn()
+                    .mockReturnValue(expectedResult),
+                },
               },
             },
           ),
@@ -127,10 +129,12 @@ describe('testing the detailTables gql object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadDmarcFailConnectionsBySumId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+              dataSources: {
+                dmarcSummaries: {
+                  dmarcFailConnectionsBySumId: jest
+                    .fn()
+                    .mockReturnValue(expectedResult),
+                },
               },
             },
           ),
@@ -173,10 +177,12 @@ describe('testing the detailTables gql object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadFullPassConnectionsBySumId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+              dataSources: {
+                dmarcSummaries: {
+                  fullPassConnectionsBySumId: jest
+                    .fn()
+                    .mockReturnValue(expectedResult),
+                },
               },
             },
           ),
@@ -220,10 +226,12 @@ describe('testing the detailTables gql object', () => {
             { _id: '1' },
             { first: 1 },
             {
-              loaders: {
-                loadSpfFailureConnectionsBySumId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+              dataSources: {
+                dmarcSummaries: {
+                  spfFailureConnectionsBySumId: jest
+                    .fn()
+                    .mockReturnValue(expectedResult),
+                },
               },
             },
           ),

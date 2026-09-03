@@ -19,8 +19,10 @@ describe('getAllVerifiedRuaDomains', () => {
           verifiedRequired: mockVerifiedRequired,
           superAdminRequired: mockSuperAdminRequired,
         },
-        loaders: {
-          loadAllVerifiedRuaDomains: mockLoadAllVerifiedRuaDomains,
+        dataSources: {
+          dmarcSummaries: {
+            allVerifiedRuaDomains: mockLoadAllVerifiedRuaDomains,
+          },
         },
       },
     )

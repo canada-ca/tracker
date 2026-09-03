@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
-import { initializeLoaders } from './initialize-loaders'
 import { SummariesDataSource } from './summaries'
 import { DnsScanDataSource } from './dns-scan'
 import { WebScanDataSource } from './web-scan'
@@ -17,6 +16,7 @@ import { TagsDataSource } from './tags'
 import { DomainDataSource } from './domain'
 import { AffiliationDataSource } from './affiliation'
 import { UserDataSource } from './user'
+import { DmarcSummariesDataSource } from './dmarc-summaries'
 import {
   AuthDataSource,
   checkDomainOwnership,
@@ -193,15 +193,7 @@ export async function createContext({
         collections,
       }),
       user: userDataSource,
+      dmarcSummaries: new DmarcSummariesDataSource({ query, userKey, i18n, cleanseInput, moment, loginRequiredBool }),
     },
-    loaders: initializeLoaders({
-      query,
-      userKey,
-      i18n,
-      language: request.language,
-      cleanseInput,
-      loginRequiredBool,
-      moment,
-    }),
   }
 }

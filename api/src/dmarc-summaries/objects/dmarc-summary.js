@@ -55,9 +55,9 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryPercentages: {
       type: categoryPercentagesType,
       description: 'Category percentages based on the category totals.',
-      resolve: async ({ _id }, _, { loaders: { loadDmarcSummaryByKey } }) => {
+      resolve: async ({ _id }, _, { dataSources: { dmarcSummaries: dmarcSummariesDataSource } }) => {
         const dmarcSummaryKey = _id.split('/')[1]
-        const dmarcSummary = await loadDmarcSummaryByKey.load(dmarcSummaryKey)
+        const dmarcSummary = await dmarcSummariesDataSource.byKey.load(dmarcSummaryKey)
         return {
           totalMessages: dmarcSummary.totalMessages,
           ...dmarcSummary.categoryPercentages,
@@ -67,9 +67,9 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryTotals: {
       type: categoryTotalsType,
       description: 'Category totals for quick viewing.',
-      resolve: async ({ _id }, _, { loaders: { loadDmarcSummaryByKey } }) => {
+      resolve: async ({ _id }, _, { dataSources: { dmarcSummaries: dmarcSummariesDataSource } }) => {
         const dmarcSummaryKey = _id.split('/')[1]
-        const dmarcSummary = await loadDmarcSummaryByKey.load(dmarcSummaryKey)
+        const dmarcSummary = await dmarcSummariesDataSource.byKey.load(dmarcSummaryKey)
         return dmarcSummary.categoryTotals
       },
     },

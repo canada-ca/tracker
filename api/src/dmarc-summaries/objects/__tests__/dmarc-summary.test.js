@@ -158,9 +158,11 @@ describe('testing the period gql object', () => {
             { _id: '1' },
             {},
             {
-              loaders: {
-                loadDmarcSummaryByKey: {
-                  load: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                dmarcSummaries: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(expectedResult),
+                  },
                 },
               },
             },
@@ -189,9 +191,11 @@ describe('testing the period gql object', () => {
             { _id: 'something/1' },
             {},
             {
-              loaders: {
-                loadDmarcSummaryByKey: {
-                  load: jest.fn().mockReturnValue(expectedResult),
+              dataSources: {
+                dmarcSummaries: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(expectedResult),
+                  },
                 },
               },
             },
