@@ -62,7 +62,7 @@ function Server() {
     }),
   )
 
-  server.get('*', (req, res) => {
+  server.get(/(.*)/, (req, res) => {
     const host = req.hostname
     const lang = frenchHosts.includes(host) ? 'fr' : 'en'
 
