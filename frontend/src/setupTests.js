@@ -19,6 +19,7 @@ global['Request'] = jest.fn().mockImplementation((_url, init = {}) => ({
 }))
 
 global.TextEncoder = require('util').TextEncoder
+global.TextDecoder = require('util').TextDecoder
 
 beforeEach(() => {
   i18n.load({
