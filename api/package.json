@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@apollo/server": "^5.5.0",
-    "@as-integrations/express4": "^1.1.2",
+    "@as-integrations/express5": "^1.1.2",
     "@lingui/core": "^4.13.0",
     "accesscontrol": "^2.2.1",
     "arango-tools": "^0.6.0",
