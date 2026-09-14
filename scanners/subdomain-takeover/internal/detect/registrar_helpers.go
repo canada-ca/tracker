@@ -130,7 +130,7 @@ func canonicalProviderKey(raw string) string {
 	}
 	for key, aliases := range canonicalProviderAliases {
 		for _, a := range aliases {
-			if s == a || strings.Contains(s, a) {
+			if s == a {
 				return key
 			}
 		}

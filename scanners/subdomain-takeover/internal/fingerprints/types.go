@@ -84,14 +84,15 @@ func wildcardHostMatch(pattern, host string) bool {
 }
 
 func (f *CNAMEProviderFingerprint) ContainsTarget(target string) bool {
+	target = strings.ToLower(strings.TrimSuffix(strings.TrimSpace(target), "."))
 	for _, cname := range f.Cname {
-		if strings.HasSuffix(target, cname) {
+		pattern := strings.ToLower(strings.TrimSuffix(strings.TrimSpace(cname), "."))
+		if target == pattern || strings.HasSuffix(target, "."+pattern) {
 			return true
 		}
 	}
 	return false
 }
-
 func NormalizeMode(mode FingerprintMode, fingerprint string) FingerprintMode {
 	if mode == FingerprintModeLiteral || mode == FingerprintModeRegex {
 		return mode
