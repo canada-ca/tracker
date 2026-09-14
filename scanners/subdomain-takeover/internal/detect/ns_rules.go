@@ -1,6 +1,9 @@
 package detect
 
-import "github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+import (
+	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+	"github.com/rs/zerolog"
+)
 
 type NSHit struct {
 	Matched    bool
@@ -9,9 +12,9 @@ type NSHit struct {
 	ReasonCode ReasonCode
 }
 
-func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprints.NSProviderFingerprint) *NSHit {
+func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprints.NSProviderFingerprint, logger zerolog.Logger) *NSHit {
 	if len(evidence.NSHosts) == 0 || len(providerFingerprints) == 0 {
-		detectLogger.Debug().Int("ns_hosts", len(evidence.NSHosts)).Int("fingerprints", len(providerFingerprints)).Msg("skipping ns matching due to insufficient inputs")
+		logger.Debug().Int("ns_hosts", len(evidence.NSHosts)).Int("fingerprints", len(providerFingerprints)).Msg("skipping ns matching due to insufficient inputs")
 		return nil
 	}
 
@@ -32,7 +35,7 @@ func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprin
 
 				rank := nsReasonRank(hit.ReasonCode)
 
-				detectLogger.Debug().
+				logger.Debug().
 					Str("domain", evidence.Domain).
 					Str("host", host).
 					Str("provider", fp.Name).
@@ -51,11 +54,11 @@ func MatchNSProviderRules(evidence NSEvidence, providerFingerprints []fingerprin
 	}
 
 	if best == nil {
-		detectLogger.Debug().Str("domain", evidence.Domain).Msg("no ns provider match")
+		logger.Debug().Str("domain", evidence.Domain).Msg("no ns provider match")
 		return nil
 	}
 
-	detectLogger.Debug().
+	logger.Debug().
 		Str("domain", evidence.Domain).
 		Str("host", best.Host).
 		Str("provider", best.Provider).

@@ -16,14 +16,6 @@ func (f fakeMatcher) Contains(domain string, fingerprint string, mode fingerprin
 	return f.containsFn(domain, fingerprint, mode)
 }
 
-type fakeSource struct {
-	cname []fingerprints.CNAMEProviderFingerprint
-	ns    []fingerprints.NSProviderFingerprint
-}
-
-func (f fakeSource) CNAME() []fingerprints.CNAMEProviderFingerprint { return f.cname }
-func (f fakeSource) NS() []fingerprints.NSProviderFingerprint       { return f.ns }
-
 func strPtr(v string) *string { return &v }
 
 func boolPtr(v bool) *bool { return &v }

@@ -55,7 +55,7 @@ func main() {
 
 	pub := messaging.NewPublisher(logger, runtimeDeps.JS, cfg.SubjectOut)
 	matcher := detect.NewHTTPBodyFingerprintMatcher(5 * time.Second)
-	classifier := detect.NewClassifier(matcher).WithLogger(logger)
+	classifier := detect.NewClassifier(matcher, logger)
 	worker := app.NewWorker(logger, pub, classifier)
 
 	go func() {

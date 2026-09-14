@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/fingerprints"
+	"github.com/rs/zerolog"
 )
 
 func TestMatchCNAMEFingerprints(t *testing.T) {
@@ -25,14 +26,14 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 
 	t.Run("returns nil when no target match", func(t *testing.T) {
 		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.not-a-provider.net", NoResolve: true}
-		if got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}); got != nil {
+		if got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}, zerolog.Nop()); got != nil {
 			t.Fatalf("expected nil, got %+v", got)
 		}
 	})
 
 	t.Run("nxdomain provider emits dangling reason when unresolved", func(t *testing.T) {
 		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.azurewebsites.net", NoResolve: true}
-		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{})
+		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -46,7 +47,7 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 
 	t.Run("nxdomain provider suppressed when resolve evidence exists", func(t *testing.T) {
 		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.azurewebsites.net", NoResolve: false}
-		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{})
+		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -66,7 +67,7 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 			}
 			return true
 		}}
-		got := MatchCNAMEFingerprints(evidence, fps, matcher)
+		got := MatchCNAMEFingerprints(evidence, fps, matcher, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -80,7 +81,8 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 
 	t.Run("body fingerprint provider suppressed when matcher false", func(t *testing.T) {
 		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", NoResolve: false}
-		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{containsFn: func(string, string, fingerprints.FingerprintMode) bool { return false }})
+		matcher := fakeMatcher{containsFn: func(string, string, fingerprints.FingerprintMode) bool { return false }}
+		got := MatchCNAMEFingerprints(evidence, fps, matcher, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
 		}
@@ -94,13 +96,21 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 }
 
 func TestShouldEmitCNAME(t *testing.T) {
-	if ShouldEmitCNAME(nil) {
-		t.Fatal("expected false for nil hit")
+	tests := []struct {
+		name string
+		hit  *CNAMEHit
+		want bool
+	}{
+		{name: "nil hit", hit: nil, want: false},
+		{name: "unmatched hit", hit: &CNAMEHit{Matched: false}, want: false},
+		{name: "matched hit", hit: &CNAMEHit{Matched: true}, want: true},
 	}
-	if ShouldEmitCNAME(&CNAMEHit{Matched: false}) {
-		t.Fatal("expected false for unmatched hit")
-	}
-	if !ShouldEmitCNAME(&CNAMEHit{Matched: true}) {
-		t.Fatal("expected true for matched hit")
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ShouldEmitCNAME(tt.hit); got != tt.want {
+				t.Fatalf("ShouldEmitCNAME()=%v want=%v", got, tt.want)
+			}
+		})
 	}
 }

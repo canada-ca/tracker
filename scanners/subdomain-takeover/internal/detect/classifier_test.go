@@ -8,17 +8,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func TestClassify_ExpectedBehavior(t *testing.T) {
-	cnameFPs := []fingerprints.CNAMEProviderFingerprint{
-		{Name: "Azure", Cname: []string{"azurewebsites.net"}, Nxdomain: true, Fingerprint: "unused"},
-		{Name: "Ghost", Cname: []string{"ghost.io"}, Nxdomain: false, Fingerprint: "ghost 404", Mode: fingerprints.FingerprintModeLiteral},
+func TestClassifierClassify(t *testing.T) {
+	if err := fingerprints.Load(zerolog.Nop()); err != nil {
+		t.Fatalf("failed to load fingerprints: %v", err)
 	}
-	nsFPs := []fingerprints.NSProviderFingerprint{
-		{Name: "Digital Ocean", Status: fingerprints.NSStatusVulnerable, HostPatterns: []string{"*.risky-dns.net"}},
-		{Name: "SafeDNS", Status: fingerprints.NSStatusNotVulnerable, HostPatterns: []string{"*.safe-dns.net"}},
-	}
-
-	source := fakeSource{cname: cnameFPs, ns: nsFPs}
 
 	t.Run("emits cname and ns findings when both are exploitable", func(t *testing.T) {
 		rdapMatch := true
@@ -33,7 +26,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 					DelegationMatchesRDAP: &rdapMatch,
 				},
 				NsDelegations: &model.NsDelegations{
-					Hosts: []string{"ns1.risky-dns.net"},
+					Hosts: []string{"ns1.digitalocean.com"},
 					Delegation: model.Delegation{
 						LameType: "partial",
 					},
@@ -41,7 +34,8 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 			},
 		}
 
-		findings, err := Classify(input, fakeMatcher{}, source, zerolog.Nop())
+		classifier := NewClassifier(fakeMatcher{}, zerolog.Nop())
+		findings, err := classifier.Classify(input)
 		if err != nil {
 			t.Fatalf("Classify error: %v", err)
 		}
@@ -56,11 +50,17 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 				if f.ReasonCode != string(ReasonCNAMEDanglingNXDOMAIN) {
 					t.Fatalf("unexpected cname reason: %q", f.ReasonCode)
 				}
+				if f.Confidence != ConfidenceProbable {
+					t.Fatalf("unexpected cname confidence: %q", f.Confidence)
+				}
 			}
 			if f.RecordType == model.RecordTypeNS {
 				sawNS = true
 				if f.ReasonCode != string(ReasonNSPartialLameProviderVulnerable) {
 					t.Fatalf("unexpected ns reason: %q", f.ReasonCode)
+				}
+				if f.Confidence != ConfidenceProbable {
+					t.Fatalf("unexpected ns confidence: %q", f.Confidence)
 				}
 			}
 		}
@@ -76,7 +76,7 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 				Domain:      strPtr("b.example.ca"),
 				CnameRecord: strPtr("b.example.ca. 300 IN CNAME foo.ghost.io."),
 				NsDelegations: &model.NsDelegations{
-					Hosts: []string{"ns1.safe-dns.net"},
+					Hosts: []string{"aria.ns.cloudflare.com"},
 					Delegation: model.Delegation{
 						LameType: "full",
 					},
@@ -84,11 +84,9 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 			},
 		}
 
-		matcher := fakeMatcher{containsFn: func(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
-			return true
-		}}
-
-		findings, err := Classify(input, matcher, source, zerolog.Nop())
+		matcher := fakeMatcher{containsFn: func(string, string, fingerprints.FingerprintMode) bool { return true }}
+		classifier := NewClassifier(matcher, zerolog.Nop())
+		findings, err := classifier.Classify(input)
 		if err != nil {
 			t.Fatalf("Classify error: %v", err)
 		}
@@ -99,11 +97,15 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 		if findings[0].RecordType != model.RecordTypeCNAME {
 			t.Fatalf("expected cname-only finding, got %s", findings[0].RecordType)
 		}
+		if findings[0].ReasonCode != string(ReasonCNAMEProviderFingerprintBodyMatch) {
+			t.Fatalf("unexpected cname reason: %q", findings[0].ReasonCode)
+		}
 	})
 
-	t.Run("returns no findings and no panic when evidence absent", func(t *testing.T) {
+	t.Run("returns no findings when evidence absent", func(t *testing.T) {
 		input := model.Input{DomainKey: "k3", Results: model.ScanResults{}}
-		findings, err := Classify(input, fakeMatcher{}, source, zerolog.Nop())
+		classifier := NewClassifier(fakeMatcher{}, zerolog.Nop())
+		findings, err := classifier.Classify(input)
 		if err != nil {
 			t.Fatalf("Classify error: %v", err)
 		}
@@ -111,29 +113,22 @@ func TestClassify_ExpectedBehavior(t *testing.T) {
 			t.Fatalf("expected no findings, got %d", len(findings))
 		}
 	})
-}
 
-func TestClassifier_MethodDefaults(t *testing.T) {
-	classifier := NewClassifier(nil)
-	if classifier == nil {
-		t.Fatal("expected classifier")
-	}
-
-	input := model.Input{DomainKey: "k", Results: model.ScanResults{}}
-	findings, err := classifier.Classify(input)
-	if err != nil {
-		t.Fatalf("Classify error: %v", err)
-	}
-	if len(findings) != 0 {
-		t.Fatalf("expected no findings, got %d", len(findings))
-	}
-
-	custom := NewClassifierWithSource(fakeMatcher{}, fakeSource{})
-	if custom == nil {
-		t.Fatal("expected classifier with source")
-	}
-
-	if custom.WithLogger(zerolog.Nop()) != custom {
-		t.Fatal("WithLogger should return same classifier pointer")
-	}
+	t.Run("defaults to a no-op matcher when none is given", func(t *testing.T) {
+		classifier := NewClassifier(nil, zerolog.Nop())
+		input := model.Input{
+			DomainKey: "k4",
+			Results: model.ScanResults{
+				Domain:      strPtr("c.example.ca"),
+				CnameRecord: strPtr("c.example.ca. 300 IN CNAME foo.ghost.io."),
+			},
+		}
+		findings, err := classifier.Classify(input)
+		if err != nil {
+			t.Fatalf("Classify error: %v", err)
+		}
+		if len(findings) != 0 {
+			t.Fatalf("expected body-fingerprint match to be suppressed without a matcher, got %d findings", len(findings))
+		}
+	})
 }

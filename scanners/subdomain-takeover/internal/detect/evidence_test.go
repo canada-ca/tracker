@@ -8,20 +8,27 @@ import (
 )
 
 func TestExtractCNAMEEvidence(t *testing.T) {
-	t.Run("returns nil when cname record missing", func(t *testing.T) {
-		results := minimalResults("app.example.ca")
-		if got := ExtractCNAMEEvidence(results); got != nil {
-			t.Fatalf("expected nil, got %+v", got)
-		}
-	})
+	nilCases := []struct {
+		name    string
+		results model.ScanResults
+	}{
+		{name: "returns nil when cname record missing", results: minimalResults("app.example.ca")},
+		{
+			name: "returns nil when domain missing",
+			results: func() model.ScanResults {
+				record := "a.example.ca. 300 IN CNAME foo.azurewebsites.net."
+				return model.ScanResults{CnameRecord: &record}
+			}(),
+		},
+	}
 
-	t.Run("returns nil when domain missing", func(t *testing.T) {
-		record := "a.example.ca. 300 IN CNAME foo.azurewebsites.net."
-		results := model.ScanResults{CnameRecord: &record}
-		if got := ExtractCNAMEEvidence(results); got != nil {
-			t.Fatalf("expected nil, got %+v", got)
-		}
-	})
+	for _, tt := range nilCases {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ExtractCNAMEEvidence(tt.results); got != nil {
+				t.Fatalf("expected nil, got %+v", got)
+			}
+		})
+	}
 
 	t.Run("extracts normalized target and noresolve true", func(t *testing.T) {
 		record := "A.Example.CA. 300 IN CNAME Foo.AzureWebsites.NET."
@@ -61,27 +68,29 @@ func TestExtractCNAMEEvidence(t *testing.T) {
 }
 
 func TestExtractNSEvidence(t *testing.T) {
-	t.Run("returns nil when domain missing", func(t *testing.T) {
-		input := model.ScanResults{NsDelegations: &model.NsDelegations{Hosts: []string{"ns1.example.net"}}}
-		if got := ExtractNSEvidence(input); got != nil {
-			t.Fatalf("expected nil, got %+v", got)
-		}
-	})
+	nilCases := []struct {
+		name  string
+		input model.ScanResults
+	}{
+		{name: "returns nil when domain missing", input: model.ScanResults{NsDelegations: &model.NsDelegations{Hosts: []string{"ns1.example.net"}}}},
+		{name: "returns nil when ns delegations missing", input: minimalResults("app.example.ca")},
+		{
+			name: "returns nil when no hosts",
+			input: func() model.ScanResults {
+				input := minimalResults("app.example.ca")
+				input.NsDelegations = &model.NsDelegations{}
+				return input
+			}(),
+		},
+	}
 
-	t.Run("returns nil when ns delegations missing", func(t *testing.T) {
-		input := minimalResults("app.example.ca")
-		if got := ExtractNSEvidence(input); got != nil {
-			t.Fatalf("expected nil, got %+v", got)
-		}
-	})
-
-	t.Run("returns nil when no hosts", func(t *testing.T) {
-		input := minimalResults("app.example.ca")
-		input.NsDelegations = &model.NsDelegations{}
-		if got := ExtractNSEvidence(input); got != nil {
-			t.Fatalf("expected nil, got %+v", got)
-		}
-	})
+	for _, tt := range nilCases {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ExtractNSEvidence(tt.input); got != nil {
+				t.Fatalf("expected nil, got %+v", got)
+			}
+		})
+	}
 
 	t.Run("normalizes, sorts, and deduplicates hosts", func(t *testing.T) {
 		input := minimalResults("app.example.ca")
@@ -111,18 +120,24 @@ func TestExtractNSEvidence(t *testing.T) {
 }
 
 func TestNormalizeHostAndParseHelpers(t *testing.T) {
-	if got := normalizeHost(".NS1.Example.NET."); got != "ns1.example.net" {
-		t.Fatalf("normalizeHost mismatch: %q", got)
-	}
+	t.Run("normalizeHost trims dots and lowercases", func(t *testing.T) {
+		if got := normalizeHost(".NS1.Example.NET."); got != "ns1.example.net" {
+			t.Fatalf("normalizeHost mismatch: %q", got)
+		}
+	})
 
-	record := "x.example.ca. 300 IN CNAME target.provider.net."
-	if got := parseCname(record); got != "target.provider.net" {
-		t.Fatalf("parseCname mismatch: %q", got)
-	}
+	t.Run("parseCname extracts normalized target", func(t *testing.T) {
+		record := "x.example.ca. 300 IN CNAME target.provider.net."
+		if got := parseCname(record); got != "target.provider.net" {
+			t.Fatalf("parseCname mismatch: %q", got)
+		}
+	})
 
-	hosts := []string{"ns3.example.net", "NS1.example.net.", "ns1.example.net", "ns2.example.net"}
-	expected := []string{"ns1.example.net", "ns2.example.net", "ns3.example.net"}
-	if got := parseHostnames(hosts); !reflect.DeepEqual(got, expected) {
-		t.Fatalf("parseHostnames mismatch: got=%v want=%v", got, expected)
-	}
+	t.Run("parseHostnames sorts and deduplicates", func(t *testing.T) {
+		hosts := []string{"ns3.example.net", "NS1.example.net.", "ns1.example.net", "ns2.example.net"}
+		expected := []string{"ns1.example.net", "ns2.example.net", "ns3.example.net"}
+		if got := parseHostnames(hosts); !reflect.DeepEqual(got, expected) {
+			t.Fatalf("parseHostnames mismatch: got=%v want=%v", got, expected)
+		}
+	})
 }
