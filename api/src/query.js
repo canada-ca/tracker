@@ -9,7 +9,6 @@ import * as userQueries from './user/queries'
 import * as verifiedDomainQueries from './verified-domains/queries'
 import * as verifiedOrgQueries from './verified-organizations/queries'
 import * as auditLogQueries from './audit-logs/queries'
-import * as additionalFindingsQueries from './additional-findings/queries'
 import * as tagsQueries from './tags/queries'
 
 export const createQuerySchema = () => {
@@ -34,7 +33,6 @@ export const createQuerySchema = () => {
       ...verifiedDomainQueries,
       // Verified Organization Queries
       ...verifiedOrgQueries,
-      ...additionalFindingsQueries,
       ...tagsQueries,
     }),
   })
