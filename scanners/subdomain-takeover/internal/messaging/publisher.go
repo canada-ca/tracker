@@ -3,6 +3,8 @@ package messaging
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"time"
 
 	"github.com/canada-ca/tracker/scanners/subdomain-takeover/internal/model"
 	"github.com/nats-io/nats.go/jetstream"
@@ -10,6 +12,7 @@ import (
 )
 
 var marshalFinding = json.Marshal
+var nowUTC = func() time.Time { return time.Now().UTC() }
 
 type Publisher struct {
 	logger  zerolog.Logger
@@ -26,7 +29,18 @@ func NewPublisher(logger zerolog.Logger, js publishClient, subject string) *Publ
 }
 
 func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
-	payload, err := marshalFinding(finding)
+	event, err := model.NewFindingEventFromFinding(finding, nowUTC())
+	if err != nil {
+		p.logger.Error().
+			Err(err).
+			Str("domain", finding.Domain).
+			Str("domain_key", finding.DomainKey).
+			Str("record_type", string(finding.RecordType)).
+			Msg("finding event mapping failed")
+		return err
+	}
+
+	payload, err := marshalFinding(event)
 	if err != nil {
 		p.logger.Error().
 			Err(err).
@@ -35,7 +49,8 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 			Str("record_type", string(finding.RecordType)).
 			Str("reason_code", finding.ReasonCode).
 			Str("confidence", finding.Confidence).
-			Msg("marshal finding failed")
+			Str("finding_type", event.FindingType).
+			Msg("marshal finding event failed")
 		return err
 	}
 
@@ -47,9 +62,10 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 			Str("record_type", string(finding.RecordType)).
 			Str("reason_code", finding.ReasonCode).
 			Str("confidence", finding.Confidence).
+			Str("finding_type", event.FindingType).
 			Str("subject", p.subject).
 			Msg("publish failed")
-		return err
+		return fmt.Errorf("publish finding event: %w", err)
 	}
 
 	p.logger.Debug().
@@ -58,7 +74,8 @@ func (p *Publisher) Publish(ctx context.Context, finding model.Finding) error {
 		Str("record_type", string(finding.RecordType)).
 		Str("reason_code", finding.ReasonCode).
 		Str("confidence", finding.Confidence).
+		Str("finding_type", event.FindingType).
 		Str("subject", p.subject).
-		Msg("finding published")
+		Msg("finding event published")
 	return nil
 }
