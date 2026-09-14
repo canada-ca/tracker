@@ -20,7 +20,7 @@ export const findUserByUsername = {
       i18n,
       userKey,
       auth: { userRequired, checkUserIsAdminForUser },
-      loaders: { loadUserByUserName },
+      dataSources: { user: userDataSource },
       validators: { cleanseInput },
     },
   ) => {
@@ -33,7 +33,7 @@ export const findUserByUsername = {
 
     if (permission) {
       // Retrieve user by userName
-      const user = await loadUserByUserName.load(userName)
+      const user = await userDataSource.byUserName.load(userName)
       user.id = user._key
       return user
     } else {

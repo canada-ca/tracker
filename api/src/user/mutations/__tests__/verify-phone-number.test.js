@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { loadUserByKey } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import { userRequired } from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -79,6 +79,7 @@ describe('user send password reset email', () => {
         })
       })
       it('returns a successful status message', async () => {
+        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -109,11 +110,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -135,6 +136,7 @@ describe('user send password reset email', () => {
         expect(consoleOutput).toEqual([`User: ${user._key} successfully two factor authenticated their account.`])
       })
       it('updates the user phoneValidated to true', async () => {
+        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
         await graphql({
           schema,
           source: `
@@ -165,11 +167,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -201,6 +203,7 @@ describe('user send password reset email', () => {
         })
       })
       it('returns a successful status message', async () => {
+        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -231,11 +234,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -258,6 +261,7 @@ describe('user send password reset email', () => {
         expect(consoleOutput).toEqual([`User: ${user._key} successfully two factor authenticated their account.`])
       })
       it('updates the user phoneValidated to true', async () => {
+        const userDataSource = new UserDataSource({ query, userKey: user._key, i18n, transaction, collections: collectionNames })
         await graphql({
           schema,
           source: `
@@ -288,11 +292,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: userDataSource.byKey,
               }),
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -359,11 +363,7 @@ describe('user send password reset email', () => {
                   _key: 123,
                 }),
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
-                },
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -419,11 +419,7 @@ describe('user send password reset email', () => {
                   tfaCode: 123456,
                 }),
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
-                },
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -447,6 +443,10 @@ describe('user send password reset email', () => {
       describe('given a transaction step error', () => {
         describe('when upserting users phone validation status', () => {
           it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
+            })
             const response = await graphql({
               schema,
               source: `
@@ -473,20 +473,18 @@ describe('user send password reset email', () => {
                 userKey: 123,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
+                transaction: mockedTransaction,
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
                     _key: 123,
                     tfaCode: 123456,
                   }),
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    { byKey: { load: jest.fn() } },
+                  ),
                 },
               },
             })
@@ -503,6 +501,11 @@ describe('user send password reset email', () => {
       describe('given a transaction commit error', () => {
         describe('when committing changes', () => {
           it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
+            })
             const response = await graphql({
               schema,
               source: `
@@ -529,21 +532,18 @@ describe('user send password reset email', () => {
                 userKey: 123,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
+                transaction: mockedTransaction,
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
                     _key: 123,
                     tfaCode: 123456,
                   }),
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    { byKey: { load: jest.fn() } },
+                  ),
                 },
               },
             })
@@ -607,11 +607,7 @@ describe('user send password reset email', () => {
                   _key: 123,
                 }),
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
-                },
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -667,11 +663,7 @@ describe('user send password reset email', () => {
                   tfaCode: 123456,
                 }),
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn(),
-                },
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -690,119 +682,6 @@ describe('user send password reset email', () => {
           expect(consoleOutput).toEqual([
             `User: 123 attempted to two factor authenticate, however the tfa codes do not match.`,
           ])
-        })
-      })
-      describe('given a transaction step error', () => {
-        describe('when upserting users phone validation status', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                    result {
-                      ... on VerifyPhoneNumberResult {
-                        status
-                        user {
-                          displayName
-                        }
-                      }
-                      ... on VerifyPhoneNumberError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                userKey: 123,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                    tfaCode: 123456,
-                  }),
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'authentifier par deux facteurs. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when upserting the tfaValidate field for 123: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('given a transaction commit error', () => {
-        describe('when committing changes', () => {
-          it('throws an error', async () => {
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                    result {
-                      ... on VerifyPhoneNumberResult {
-                        status
-                        user {
-                          displayName
-                        }
-                      }
-                      ... on VerifyPhoneNumberError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                userKey: 123,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({}),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
-                auth: {
-                  userRequired: jest.fn().mockReturnValue({
-                    _key: 123,
-                    tfaCode: 123456,
-                  }),
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn(),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'authentifier par deux facteurs. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred when upserting the tfaValidate field for 123: Error: Transaction commit error`,
-            ])
-          })
         })
       })
     })

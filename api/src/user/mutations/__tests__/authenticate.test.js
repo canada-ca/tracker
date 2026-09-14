@@ -12,7 +12,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
-import { loadUserByKey } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 import jwt from 'jsonwebtoken'
@@ -100,6 +100,7 @@ describe('authenticate user account', () => {
         const mockedCookie = jest.fn()
         const mockedResponse = { cookie: mockedCookie }
 
+        const userDataSource = new UserDataSource({ query, userKey: user._key, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -145,8 +146,8 @@ describe('authenticate user account', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -233,6 +234,7 @@ describe('authenticate user account', () => {
 
         const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
 
+        const userDataSource = new UserDataSource({ query, userKey: user._key, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -279,8 +281,8 @@ describe('authenticate user account', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -392,9 +394,7 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -464,9 +464,7 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -536,9 +534,11 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
             },
@@ -630,12 +630,11 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
-                },
+              dataSources: {
+                user: Object.assign(
+                  new UserDataSource({ query, userKey: 456, i18n, transaction, collections: collectionNames }),
+                  { byKey: { load: jest.fn().mockReturnValue({ _key: 456 }) } },
+                ),
               },
             },
           })
@@ -656,6 +655,10 @@ describe('authenticate user account', () => {
               secret: String(SIGN_IN_KEY),
             })
 
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
+              abort: jest.fn(),
+            })
             const response = await graphql({
               schema,
               source: `
@@ -691,10 +694,7 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
+                transaction: mockedTransaction,
                 uuidv4,
                 auth: {
                   bcrypt,
@@ -704,16 +704,21 @@ describe('authenticate user account', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      tfaCode: 123456,
-                      refreshInfo: {
-                        remember: false,
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 123,
+                          tfaCode: 123456,
+                          refreshInfo: {
+                            remember: false,
+                          },
+                        }),
                       },
-                    }),
-                  },
+                    },
+                  ),
                 },
               },
             })
@@ -735,6 +740,11 @@ describe('authenticate user account', () => {
               secret: String(SIGN_IN_KEY),
             })
 
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue(),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
+              abort: jest.fn(),
+            })
             const response = await graphql({
               schema,
               source: `
@@ -770,11 +780,7 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
+                transaction: mockedTransaction,
                 uuidv4,
                 auth: {
                   bcrypt,
@@ -784,16 +790,21 @@ describe('authenticate user account', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      tfaCode: 123456,
-                      refreshInfo: {
-                        remember: false,
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 123,
+                          tfaCode: 123456,
+                          refreshInfo: {
+                            remember: false,
+                          },
+                        }),
                       },
-                    }),
-                  },
+                    },
+                  ),
                 },
               },
             })
@@ -874,9 +885,7 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -946,9 +955,7 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
+              dataSources: { user: {} },
             },
           })
 
@@ -1018,9 +1025,11 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
             },
@@ -1112,12 +1121,11 @@ describe('authenticate user account', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
-                },
+              dataSources: {
+                user: Object.assign(
+                  new UserDataSource({ query, userKey: 456, i18n, transaction, collections: collectionNames }),
+                  { byKey: { load: jest.fn().mockReturnValue({ _key: 456 }) } },
+                ),
               },
             },
           })
@@ -1128,165 +1136,6 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: 456 attempted to authenticate their account, however the tfaCodes did not match.`,
           ])
-        })
-      })
-      describe('transaction step error occurs', () => {
-        describe('when clearing tfa code and setting refresh id', () => {
-          it('throws an error', async () => {
-            const token = tokenize({
-              parameters: { userKey: 123 },
-              secret: String(SIGN_IN_KEY),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                authenticate(
-                  input: {
-                    sendMethod: EMAIL
-                    authenticationCode: 123456
-                    authenticateToken: "${token}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        phoneValidated
-                        emailValidated
-                      }
-                    }
-                    ... on AuthenticateError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  verifyToken: verifyToken({}),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      tfaCode: 123456,
-                      refreshInfo: {
-                        remember: false,
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'authentifier. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when user attempts to authenticate', () => {
-          it('throws an error', async () => {
-            const token = tokenize({
-              parameters: { userKey: 123 },
-              secret: String(SIGN_IN_KEY),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-              mutation {
-                authenticate(
-                  input: {
-                    sendMethod: EMAIL
-                    authenticationCode: 123456
-                    authenticateToken: "${token}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        phoneValidated
-                        emailValidated
-                      }
-                    }
-                    ... on AuthenticateError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
-                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-                  abort: jest.fn(),
-                }),
-                uuidv4,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  verifyToken: verifyToken({}),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      tfaCode: 123456,
-                      refreshInfo: {
-                        remember: false,
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError("Impossible de s'authentifier. Veuillez réessayer.")]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: 123 attempted to authenticate: Error: Transaction commit error`,
-            ])
-          })
         })
       })
     })

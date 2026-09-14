@@ -258,7 +258,7 @@ export const domainType = new GraphQLObjectType({
         {
           i18n,
           userKey,
-          loaders: { loadDmarcSummaryEdgeByDomainIdAndPeriod, loadStartDateFromPeriod },
+          dataSources: { dmarcSummaries: dmarcSummariesDataSource },
           auth: { checkDomainOwnership, userRequired },
         },
       ) => {
@@ -274,9 +274,9 @@ export const domainType = new GraphQLObjectType({
           throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
         }
 
-        const startDate = loadStartDateFromPeriod({ period: month, year })
+        const startDate = dmarcSummariesDataSource.startDateFromPeriod({ period: month, year })
 
-        const dmarcSummaryEdge = await loadDmarcSummaryEdgeByDomainIdAndPeriod({
+        const dmarcSummaryEdge = await dmarcSummariesDataSource.summaryEdgeByDomainIdAndPeriod({
           domainId: _id,
           startDate,
         })
@@ -294,7 +294,12 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id, _key, domain },
         __,
-        { i18n, userKey, loaders: { loadDmarcYearlySumEdge }, auth: { checkDomainOwnership, userRequired } },
+        {
+          i18n,
+          userKey,
+          dataSources: { dmarcSummaries: dmarcSummariesDataSource },
+          auth: { checkDomainOwnership, userRequired },
+        },
       ) => {
         await userRequired()
 
@@ -309,7 +314,7 @@ export const domainType = new GraphQLObjectType({
           throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
         }
 
-        const dmarcSummaryEdges = await loadDmarcYearlySumEdge({
+        const dmarcSummaryEdges = await dmarcSummariesDataSource.yearlySumEdges({
           domainId: _id,
         })
 

@@ -133,7 +133,7 @@ describe('parse server', () => {
             .post('/graphql')
             .set('Accept', 'application/json')
             .send({
-              query: '{findVerifiedDomains (first: 5) { edges { node { id }}}}',
+              query: '{findMyOrganizations (first: 5) { edges { node { id }}}}',
             })
 
           expect(response.status).toEqual(400)

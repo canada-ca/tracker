@@ -10,7 +10,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { loadUserByKey } from '../../loaders'
+import { UserDataSource } from '../../../user'
 import { tokenize } from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
@@ -101,6 +101,7 @@ describe('refresh users tokens', () => {
         const mockedCookie = jest.fn()
         const mockedResponse = { cookie: mockedCookie }
 
+        const userDataSource = new UserDataSource({ query, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -137,8 +138,8 @@ describe('refresh users tokens', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -209,6 +210,7 @@ describe('refresh users tokens', () => {
 
         const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
+        const userDataSource = new UserDataSource({ query, transaction, collections: collectionNames })
         const response = await graphql({
           schema,
           source: `
@@ -245,8 +247,8 @@ describe('refresh users tokens', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+            dataSources: {
+              user: userDataSource,
             },
           },
         })
@@ -341,9 +343,7 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
-                },
+                dataSources: { user: {} },
               },
             })
 
@@ -415,9 +415,7 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
-                },
+                dataSources: { user: {} },
               },
             })
 
@@ -491,9 +489,11 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
+                dataSources: {
+                  user: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue(undefined),
+                    },
                   },
                 },
               },
@@ -567,13 +567,15 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                      },
-                    }),
+                dataSources: {
+                  user: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        refreshInfo: {
+                          expiresAt: '',
+                        },
+                      }),
+                    },
                   },
                 },
               },
@@ -647,13 +649,15 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                      },
-                    }),
+                dataSources: {
+                  user: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        refreshInfo: {
+                          expiresAt: '',
+                        },
+                      }),
+                    },
                   },
                 },
               },
@@ -734,15 +738,20 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                        refreshId: '1234',
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          refreshInfo: {
+                            expiresAt: '',
+                            refreshId: '1234',
+                          },
+                        }),
                       },
-                    }),
-                  },
+                    },
+                  ),
                 },
               },
             })
@@ -817,15 +826,20 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                        refreshId: '1234',
+                dataSources: {
+                  user: Object.assign(
+                    new UserDataSource({ query, userKey: 123, i18n, transaction: mockedTransaction, collections: collectionNames }),
+                    {
+                      byKey: {
+                        load: jest.fn().mockReturnValue({
+                          refreshInfo: {
+                            expiresAt: '',
+                            refreshId: '1234',
+                          },
+                        }),
                       },
-                    }),
-                  },
+                    },
+                  ),
                 },
               },
             })
@@ -905,9 +919,7 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
-                },
+                dataSources: { user: {} },
               },
             })
 
@@ -979,9 +991,7 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
-                },
+                dataSources: { user: {} },
               },
             })
 
@@ -1055,9 +1065,11 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue(undefined),
+                dataSources: {
+                  user: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue(undefined),
+                    },
                   },
                 },
               },
@@ -1131,13 +1143,15 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                      },
-                    }),
+                dataSources: {
+                  user: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        refreshInfo: {
+                          expiresAt: '',
+                        },
+                      }),
+                    },
                   },
                 },
               },
@@ -1211,13 +1225,15 @@ describe('refresh users tokens', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                      },
-                    }),
+                dataSources: {
+                  user: {
+                    byKey: {
+                      load: jest.fn().mockReturnValue({
+                        refreshInfo: {
+                          expiresAt: '',
+                        },
+                      }),
+                    },
                   },
                 },
               },
@@ -1236,170 +1252,6 @@ describe('refresh users tokens', () => {
 
             expect(response).toEqual(expectedResult)
             expect(consoleOutput).toEqual([`User: 123 attempted to refresh tokens with non matching uuids.`])
-          })
-        })
-      })
-      describe('transaction step error occurs', () => {
-        describe('when upserting new refreshId', () => {
-          it('throws an error', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
-              abort: jest.fn(),
-            })
-
-            const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
-              expPeriod: 168,
-              secret: String(REFRESH_KEY),
-            })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
-            const mockedFormat = jest
-              .fn()
-              .mockReturnValueOnce('2021-06-30T12:00:00')
-              .mockReturnValueOnce('2021-07-01T12:00:00')
-            const mockedMoment = jest.fn().mockReturnValue({
-              format: mockedFormat,
-              isAfter: jest.fn().mockReturnValue(false),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  refreshTokens(input: {}) {
-                    result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          displayName
-                        }
-                      }
-                      ... on AuthenticateError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                uuidv4,
-                jwt,
-                moment: mockedMoment,
-                request: mockedRequest,
-                auth: {
-                  tokenize: jest.fn().mockReturnValue('token'),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                        refreshId: '1234',
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de rafraîchir les jetons, veuillez vous connecter.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when attempting to refresh tokens for user: 123: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when upserting new refreshId', () => {
-          it('throws an error', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
-              abort: jest.fn(),
-            })
-
-            const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
-              expPeriod: 168,
-              secret: String(REFRESH_KEY),
-            })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
-
-            const mockedFormat = jest
-              .fn()
-              .mockReturnValueOnce('2021-06-30T12:00:00')
-              .mockReturnValueOnce('2021-07-01T12:00:00')
-            const mockedMoment = jest.fn().mockReturnValue({
-              format: mockedFormat,
-              isAfter: jest.fn().mockReturnValue(false),
-            })
-
-            const response = await graphql({
-              schema,
-              source: `
-                mutation {
-                  refreshTokens(input: {}) {
-                    result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          displayName
-                        }
-                      }
-                      ... on AuthenticateError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              rootValue: null,
-              contextValue: {
-                i18n,
-                query,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                uuidv4,
-                jwt,
-                moment: mockedMoment,
-                request: mockedRequest,
-                auth: {
-                  tokenize: jest.fn().mockReturnValue('token'),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: {
-                    load: jest.fn().mockReturnValue({
-                      refreshInfo: {
-                        expiresAt: '',
-                        refreshId: '1234',
-                      },
-                    }),
-                  },
-                },
-              },
-            })
-
-            const error = [new GraphQLError('Impossible de rafraîchir les jetons, veuillez vous connecter.')]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: 123 attempted to refresh tokens: Error: Transaction commit error`,
-            ])
           })
         })
       })

@@ -25,8 +25,8 @@ export const targetResourceType = new GraphQLObjectType({
           name: {
             type: GraphQLString,
             description: 'Name of the affiliated organization.',
-            resolve: async ({ id, name }, _, { loaders: { loadOrgByKey } }) => {
-              const org = await loadOrgByKey.load(id)
+            resolve: async ({ id, name }, _, { dataSources: { organization } }) => {
+              const org = await organization.byKey.load(id)
               if (typeof org === 'undefined') {
                 return name
               }

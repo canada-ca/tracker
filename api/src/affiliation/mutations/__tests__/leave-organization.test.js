@@ -230,13 +230,15 @@ describe('given a successful leave', () => {
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -317,13 +319,15 @@ describe('given a successful leave', () => {
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -438,13 +442,15 @@ describe('given a successful leave', () => {
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -525,13 +531,15 @@ describe('given a successful leave', () => {
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
+              dataSources: {
+                organization: {
+                  byKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: user._key,
+                  }),
+                },
               },
               validators: { cleanseInput },
             },
@@ -627,9 +635,11 @@ describe('given an unsuccessful leave', () => {
               }),
               verifiedRequired: verifiedRequired({ i18n }),
             },
-            loaders: {
-              loadOrgByKey: {
-                load: jest.fn().mockReturnValue(undefined),
+            dataSources: {
+              organization: {
+                byKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
             validators: { cleanseInput },
@@ -700,9 +710,11 @@ describe('given an unsuccessful leave', () => {
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+              dataSources: {
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -769,9 +781,11 @@ describe('given an unsuccessful leave', () => {
               }),
               verifiedRequired: verifiedRequired({ i18n }),
             },
-            loaders: {
-              loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 123 }),
+            dataSources: {
+              organization: {
+                byKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
               },
             },
             validators: { cleanseInput },
@@ -840,9 +854,11 @@ describe('given an unsuccessful leave', () => {
               }),
               verifiedRequired: verifiedRequired({ i18n }),
             },
-            loaders: {
-              loadOrgByKey: {
-                load: jest.fn().mockReturnValue(undefined),
+            dataSources: {
+              organization: {
+                byKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
             validators: { cleanseInput },
@@ -913,9 +929,11 @@ describe('given an unsuccessful leave', () => {
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+              dataSources: {
+                organization: {
+                  byKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
                 },
               },
               validators: { cleanseInput },
@@ -982,9 +1000,11 @@ describe('given an unsuccessful leave', () => {
               }),
               verifiedRequired: verifiedRequired({ i18n }),
             },
-            loaders: {
-              loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 123 }),
+            dataSources: {
+              organization: {
+                byKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
               },
             },
             validators: { cleanseInput },

@@ -18,9 +18,9 @@ export const affiliationType = new GraphQLObjectType({
     user: {
       type: userSharedType,
       description: 'The affiliated users information.',
-      resolve: async ({_to}, _args, {loaders: {loadUserByKey}}) => {
+      resolve: async ({_to}, _args, {dataSources: {user: userDataSource}}) => {
         const userKey = _to.split('/')[1]
-        const user = await loadUserByKey.load(userKey)
+        const user = await userDataSource.byKey.load(userKey)
         user.id = user._key
         return user
       },
@@ -28,9 +28,9 @@ export const affiliationType = new GraphQLObjectType({
     organization: {
       type: organizationType,
       description: 'The affiliated organizations information.',
-      resolve: async ({_from}, _args, {loaders: {loadOrgByKey}}) => {
+      resolve: async ({_from}, _args, {dataSources: {organization}}) => {
         const orgKey = _from.split('/')[1]
-        const org = await loadOrgByKey.load(orgKey)
+        const org = await organization.byKey.load(orgKey)
         org.id = org._key
         return org
       },

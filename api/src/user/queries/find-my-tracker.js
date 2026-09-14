@@ -13,7 +13,7 @@ export const findMyTracker = {
       i18n,
       userKey,
       auth: { userRequired, verifiedRequired },
-      loaders: { loadMyTrackerByUserId },
+      dataSources: { user: userDataSource },
     },
   ) => {
     // Get User
@@ -21,7 +21,7 @@ export const findMyTracker = {
     verifiedRequired({ user })
 
     // Retrieve organization by slug
-    const myTracker = await loadMyTrackerByUserId()
+    const myTracker = await userDataSource.myTrackerByUserId()
 
     if (typeof myTracker === 'undefined') {
       console.warn(`User ${userKey} could not retrieve organization.`)

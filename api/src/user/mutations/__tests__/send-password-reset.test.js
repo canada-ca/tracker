@@ -107,8 +107,8 @@ describe('user send password reset email', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+              dataSources: {
+                user: { byUserName: loadUserByUserName({ query }) },
               },
               notify: {
                 sendPasswordResetEmail: mockNotify,
@@ -191,8 +191,8 @@ describe('user send password reset email', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+            dataSources: {
+              user: { byUserName: loadUserByUserName({ query }) },
             },
             notify: {
               sendPasswordResetEmail: mockNotify,
@@ -271,9 +271,11 @@ describe('user send password reset email', () => {
             validators: {
               cleanseInput,
             },
-            loaders: {
-              loadUserByUserName: {
-                load: jest.fn().mockReturnValue(undefined),
+            dataSources: {
+              user: {
+                byUserName: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
             notify: {
@@ -338,9 +340,11 @@ describe('user send password reset email', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
               notify: {

@@ -129,8 +129,8 @@ describe('given the isUserAdmin query', () => {
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query }),
               },
+              dataSources: { organization: { byKey: loadOrgByKey({ query }) } },
               validators: {
                 cleanseInput,
               },
@@ -176,8 +176,8 @@ describe('given the isUserAdmin query', () => {
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query }),
               },
+              dataSources: { organization: { byKey: loadOrgByKey({ query }) } },
               validators: {
                 cleanseInput,
               },
@@ -223,8 +223,8 @@ describe('given the isUserAdmin query', () => {
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query }),
               },
+              dataSources: { organization: { byKey: loadOrgByKey({ query }) } },
               validators: {
                 cleanseInput,
               },
@@ -272,8 +272,8 @@ describe('given the isUserAdmin query', () => {
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) } },
               validators: {
                 cleanseInput,
               },
@@ -319,8 +319,8 @@ describe('given the isUserAdmin query', () => {
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) } },
               validators: {
                 cleanseInput,
               },
@@ -366,8 +366,8 @@ describe('given the isUserAdmin query', () => {
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
+              dataSources: { organization: { byKey: loadOrgByKey({ query, language: 'en' }) } },
               validators: {
                 cleanseInput,
               },
@@ -421,11 +421,7 @@ describe('given the isUserAdmin query', () => {
                   _key: 123,
                 }),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn(),
-                },
-              },
+              dataSources: { organization: { byKey: { load: jest.fn() } } },
               validators: {
                 cleanseInput,
               },
@@ -475,11 +471,7 @@ describe('given the isUserAdmin query', () => {
                   _key: 123,
                 }),
               },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn(),
-                },
-              },
+              dataSources: { organization: { byKey: { load: jest.fn() } } },
               validators: {
                 cleanseInput,
               },

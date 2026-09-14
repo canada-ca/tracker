@@ -24,7 +24,7 @@ export const findMyUsers = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
-      loaders: { loadUserConnectionsByUserId },
+      dataSources: { user: userDataSource },
     },
   ) => {
     const user = await userRequired()
@@ -33,7 +33,7 @@ export const findMyUsers = {
     const isSuperAdmin = await checkSuperAdmin()
     superAdminRequired({ user, isSuperAdmin })
 
-    const userConnections = await loadUserConnectionsByUserId({
+    const userConnections = await userDataSource.connectionsByUserId({
       isSuperAdmin,
       ...args,
     })

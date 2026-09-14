@@ -9,7 +9,7 @@ export const getAllVerifiedRuaDomains = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
-      loaders: { loadAllVerifiedRuaDomains },
+      dataSources: { dmarcSummaries: dmarcSummariesDataSource },
     },
   ) => {
     const user = await userRequired()
@@ -18,7 +18,7 @@ export const getAllVerifiedRuaDomains = {
     const isSuperAdmin = await checkSuperAdmin()
     superAdminRequired({ user, isSuperAdmin })
 
-    const ruaDomains = await loadAllVerifiedRuaDomains({ ...args })
+    const ruaDomains = await dmarcSummariesDataSource.allVerifiedRuaDomains({ ...args })
 
     console.info(`User ${userKey} successfully retrieved all domains with DMARC reports.`)
 

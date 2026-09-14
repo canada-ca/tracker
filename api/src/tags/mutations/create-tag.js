@@ -52,8 +52,7 @@ export const createTag = new mutationWithClientMutationId({
       request,
       userKey,
       auth: { userRequired, verifiedRequired, checkPermission, checkSuperAdmin, superAdminRequired },
-      loaders: { loadOrgByKey },
-      dataSources: { tags, auditLogs },
+      dataSources: { tags, auditLogs, organization },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -110,7 +109,7 @@ export const createTag = new mutationWithClientMutationId({
       }
 
       // Check to see if org exists
-      org = await loadOrgByKey.load(orgId)
+      org = await organization.byKey.load(orgId)
       if (typeof org === 'undefined') {
         console.warn(`User: ${userKey} attempted to create a tag to an organization: ${orgId} that does not exist.`)
         return {

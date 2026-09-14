@@ -49,12 +49,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      collections,
-      transaction,
       userKey,
       request,
       auth: { tokenize, userRequired },
-      loaders: { loadUserByKey, loadUserByUserName },
+      dataSources: { user: userDataSource },
       notify: { sendVerificationEmail },
       validators: { cleanseInput },
     },
@@ -71,7 +69,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     // Check to see if username is already in use
     if (userName !== '') {
-      const checkUser = await loadUserByUserName.load(userName)
+      const checkUser = await userDataSource.byUserName.load(userName)
       if (typeof checkUser !== 'undefined') {
         console.warn(`User: ${userKey} attempted to update their username, but the username is already in use.`)
         return {
@@ -135,35 +133,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
       emailUpdateOptions: typeof emailUpdateOptions !== 'undefined' ? emailUpdateOptions : user?.emailUpdateOptions,
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
+    await userDataSource.updateProfile({ userKey, updatedUser })
 
-    try {
-      await trx.step(
-        () => query`
-          WITH users
-          UPSERT { _key: ${user._key} }
-            INSERT ${updatedUser}
-            UPDATE ${updatedUser}
-            IN users
-        `,
-      )
-    } catch (err) {
-      console.error(`Trx step error occurred when user: ${userKey} attempted to update their profile: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(`Trx commit error occurred when user: ${userKey} attempted to update their profile: ${err}`)
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
-    }
-
-    await loadUserByKey.clear(user._key)
-    const returnUser = await loadUserByKey.load(userKey)
+    await userDataSource.byKey.clear(user._key)
+    const returnUser = await userDataSource.byKey.load(userKey)
 
     if (changedUserName) {
       const token = tokenize({

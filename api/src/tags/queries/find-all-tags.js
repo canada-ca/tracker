@@ -21,8 +21,7 @@ export const findAllTags = {
     {
       userKey,
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
-      loaders: { loadOrgByKey },
-      dataSources: { tags: tagsSource },
+      dataSources: { tags: tagsSource, organization },
       validators: { cleanseInput },
     },
   ) => {
@@ -33,7 +32,7 @@ export const findAllTags = {
     if (args.orgId) {
       const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
       // Get Org from db
-      const org = await loadOrgByKey.load(orgId)
+      const org = await organization.byKey.load(orgId)
       orgKey = org?._key
     } else {
       const isSuperAdmin = await checkSuperAdmin()

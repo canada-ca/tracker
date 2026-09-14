@@ -57,8 +57,7 @@ export const updateTag = new mutationWithClientMutationId({
       userKey,
       auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired, checkPermission },
       validators: { cleanseInput, slugify },
-      loaders: { loadOrgByKey },
-      dataSources: { tags, auditLogs },
+      dataSources: { tags, auditLogs, organization },
     },
   ) => {
     // Get User
@@ -104,7 +103,7 @@ export const updateTag = new mutationWithClientMutationId({
         }
       }
       // Check to see if org exists
-      org = await loadOrgByKey.load(orgId)
+      org = await organization.byKey.load(orgId)
       if (typeof org === 'undefined') {
         console.warn(`User: ${userKey} attempted to update a tag to an organization: ${orgId} that does not exist.`)
         return {

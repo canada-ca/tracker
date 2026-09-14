@@ -8,7 +8,7 @@ import { userRequired, checkUserIsAdminForUser } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
 import { createMutationSchema } from '../../../mutation'
-import { loadUserByKey, loadUserByUserName } from '../../loaders'
+import { UserDataSource } from '../../data-source'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
@@ -143,15 +143,15 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }).byKey,
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
                     query,
                   }),
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                dataSources: {
+                  user: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }),
                 },
                 validators: {
                   cleanseInput,
@@ -204,15 +204,15 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }).byKey,
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
                     query,
                   }),
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                dataSources: {
+                  user: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }),
                 },
                 validators: {
                   cleanseInput,
@@ -280,15 +280,15 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }).byKey,
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
                     query,
                   }),
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                dataSources: {
+                  user: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }),
                 },
                 validators: {
                   cleanseInput,
@@ -341,15 +341,15 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }).byKey,
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
                     query,
                   }),
                 },
-                loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                dataSources: {
+                  user: new UserDataSource({ query, userKey: user._key, i18n, cleanseInput }),
                 },
                 validators: {
                   cleanseInput,
@@ -410,11 +410,13 @@ describe('given the findUserByUsername query', () => {
                 userRequired: jest.fn(),
                 checkUserIsAdminForUser: jest.fn().mockReturnValue(undefined),
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                    }),
+                  },
                 },
               },
               validators: {
@@ -448,11 +450,13 @@ describe('given the findUserByUsername query', () => {
                 userRequired: jest.fn(),
                 checkUserIsAdminForUser: jest.fn().mockReturnValue(false),
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                    }),
+                  },
                 },
               },
               validators: {
@@ -506,11 +510,13 @@ describe('given the findUserByUsername query', () => {
                 userRequired: jest.fn(),
                 checkUserIsAdminForUser: jest.fn().mockReturnValue(undefined),
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                    }),
+                  },
                 },
               },
               validators: {
@@ -544,11 +550,13 @@ describe('given the findUserByUsername query', () => {
                 userRequired: jest.fn(),
                 checkUserIsAdminForUser: jest.fn().mockReturnValue(false),
               },
-              loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                  }),
+              dataSources: {
+                user: {
+                  byUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                    }),
+                  },
                 },
               },
               validators: {

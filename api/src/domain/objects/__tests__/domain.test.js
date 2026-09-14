@@ -388,11 +388,13 @@ describe('given the domain object', () => {
               },
               {
                 userKey: '1',
-                loaders: {
-                  loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn().mockReturnValue({
-                    _to: 'dmarcSummaries/1',
-                  }),
-                  loadStartDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
+                dataSources: {
+                  dmarcSummaries: {
+                    summaryEdgeByDomainIdAndPeriod: jest.fn().mockReturnValue({
+                      _to: 'dmarcSummaries/1',
+                    }),
+                    startDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
+                  },
                 },
                 auth: {
                   checkDomainOwnership: jest.fn().mockReturnValue(true),
@@ -440,9 +442,11 @@ describe('given the domain object', () => {
                 {
                   i18n,
                   userKey: '1',
-                  loaders: {
-                    loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn(),
-                    loadStartDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
+                  dataSources: {
+                    dmarcSummaries: {
+                      summaryEdgeByDomainIdAndPeriod: jest.fn(),
+                      startDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
+                    },
                   },
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
@@ -491,9 +495,11 @@ describe('given the domain object', () => {
                 {
                   i18n,
                   userKey: '1',
-                  loaders: {
-                    loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn(),
-                    loadStartDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
+                  dataSources: {
+                    dmarcSummaries: {
+                      summaryEdgeByDomainIdAndPeriod: jest.fn(),
+                      startDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
+                    },
                   },
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
@@ -528,14 +534,16 @@ describe('given the domain object', () => {
               {},
               {
                 userKey: '1',
-                loaders: {
-                  loadDmarcYearlySumEdge: jest.fn().mockReturnValue([
-                    {
-                      domainKey: '1',
-                      _to: 'dmarcSummaries/1',
-                      startDate: '2021-01-01',
-                    },
-                  ]),
+                dataSources: {
+                  dmarcSummaries: {
+                    yearlySumEdges: jest.fn().mockReturnValue([
+                      {
+                        domainKey: '1',
+                        _to: 'dmarcSummaries/1',
+                        startDate: '2021-01-01',
+                      },
+                    ]),
+                  },
                 },
                 auth: {
                   checkDomainOwnership: jest.fn().mockReturnValue(true),
@@ -587,8 +595,10 @@ describe('given the domain object', () => {
                     language: 'fr',
                   },
                   userKey: '1',
-                  loaders: {
-                    loadDmarcYearlySumEdge: jest.fn(),
+                  dataSources: {
+                    dmarcSummaries: {
+                      yearlySumEdges: jest.fn(),
+                    },
                   },
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
@@ -636,8 +646,10 @@ describe('given the domain object', () => {
                 {
                   i18n,
                   userKey: '1',
-                  loaders: {
-                    loadDmarcYearlySumEdge: jest.fn(),
+                  dataSources: {
+                    dmarcSummaries: {
+                      yearlySumEdges: jest.fn(),
+                    },
                   },
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
