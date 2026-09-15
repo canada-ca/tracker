@@ -57,7 +57,7 @@ export const createDomain = new mutationWithClientMutationId({
       request,
       userKey,
       publish,
-      auth: { checkPermission, saltedHash, userRequired, tfaRequired, verifiedRequired },
+      auth: { checkPermission, saltedHash, userRequired, tfaRequired, verifiedRequired, getDeniedFields },
       dataSources: { domain: domainDS, tags: tagsDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
@@ -143,9 +143,11 @@ export const createDomain = new mutationWithClientMutationId({
       cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
     }
 
-    if (!ac.can(permission).createAny('domain').granted && highAvailability === true) {
+    const deniedFields = getDeniedFields({ permission, resource: 'domain', action: 'create', args })
+
+    if (deniedFields.length > 0) {
       console.warn(
-        `User: ${userKey} attempted to create a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to create a domain with a super admin only field in: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
