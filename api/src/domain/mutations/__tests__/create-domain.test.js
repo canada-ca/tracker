@@ -17,6 +17,7 @@ import {
   verifiedRequired,
   tfaRequired,
   checkDomainPermission,
+  getDeniedFields,
   AuthDataSource,
 } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
@@ -64,6 +65,10 @@ const withDataSources = (contextValue) => {
 
   return {
     ...contextValue,
+    auth: {
+      ...contextValue?.auth,
+      getDeniedFields: contextValue?.auth?.getDeniedFields || getDeniedFields,
+    },
     dataSources: {
       ...contextValue?.dataSources,
       domain: domainDataSource,
@@ -656,6 +661,231 @@ describe('create a domain', () => {
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
         ])
+      })
+    })
+    describe('given super admin only field restrictions', () => {
+      // Regression test: archived/highAvailability must only be settable by super_admin on create.
+      describe.each([
+        ['archived', 'archived: true'],
+        ['highAvailability', 'highAvailability: true'],
+      ])('%s field', (fieldName, fieldInput) => {
+        describe('user has admin permission level', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns a permission denied error', async () => {
+            const response = await graphql({
+              schema,
+              source: `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', org._key)}"
+                      domain: "${fieldName}-admin.gc.ca"
+                      assetState: APPROVED
+                      ${fieldInput}
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              rootValue: null,
+              contextValue: {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections: collectionNames,
+                transaction,
+                userKey: user._key,
+                publish: jest.fn(),
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
+                  checkPermission: checkPermission({ userKey: user._key, query }),
+                  saltedHash: saltedHash(HASHING_SECRET),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                  verifiedRequired: verifiedRequired({}),
+                  tfaRequired: tfaRequired({}),
+                },
+                dataSources: {
+                  auth: new AuthDataSource({ query, userKey: user._key }),
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    loginRequiredBool: true,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
+                loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    cleanseInput,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+                validators: { cleanseInput, slugify },
+              },
+            })
+
+            const expectedResponse = {
+              data: {
+                createDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact super admin for help with creating domain.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to create a domain with a super admin only field in: treasury-board-secretariat, however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user has super_admin permission level', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'super_admin',
+            })
+          })
+          it('successfully creates the domain with the field set', async () => {
+            const response = await graphql({
+              schema,
+              source: `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', org._key)}"
+                      domain: "${fieldName}-super-admin.gc.ca"
+                      assetState: APPROVED
+                      ${fieldInput}
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              rootValue: null,
+              contextValue: {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections: collectionNames,
+                transaction,
+                userKey: user._key,
+                publish: jest.fn(),
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
+                  checkPermission: checkPermission({ userKey: user._key, query }),
+                  saltedHash: saltedHash(HASHING_SECRET),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                  verifiedRequired: verifiedRequired({}),
+                  tfaRequired: tfaRequired({}),
+                },
+                dataSources: {
+                  auth: new AuthDataSource({ query, userKey: user._key }),
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    loginRequiredBool: true,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
+                loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    cleanseInput,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+                validators: { cleanseInput, slugify },
+              },
+            })
+
+            const expectedDomain = `${fieldName}-super-admin.gc.ca`.toLowerCase()
+            expect(response.data.createDomain.result.domain).toEqual(expectedDomain)
+
+            const insertedDomain = await loadDomainByDomain({ query }).load(expectedDomain)
+            expect(insertedDomain[fieldName]).toEqual(true)
+          })
+        })
       })
     })
     describe('domain can be created in a different organization', () => {
