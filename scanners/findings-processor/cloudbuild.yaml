@@ -12,11 +12,6 @@ steps:
     id: integration-tests
     dir: scanners/findings-processor
     entrypoint: "bash"
-    env:
-      - "DOCKER_HOST=unix:///var/run/docker.sock"
-    volumes:
-      - name: "docker-socket"
-        path: "/var/run/docker.sock"
     args:
       - "-c"
       - |
@@ -55,8 +50,3 @@ steps:
         else
           exit 0
         fi
-
-options:
-  volumes:
-    - name: "docker-socket"
-      path: "/var/run/docker.sock"
