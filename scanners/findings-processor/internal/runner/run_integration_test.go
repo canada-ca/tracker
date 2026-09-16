@@ -106,58 +106,47 @@ func TestIntegration_Run_ProcessesEventAndShutsDownCleanly(t *testing.T) {
 		t.Fatalf("JetStream() error = %v", err)
 	}
 
-	tests := []struct {
-		name       string
-		queueGroup string
-	}{
-		{name: "direct subscribe"},
-		{name: "queue group subscribe", queueGroup: "findings-processor-workers"},
-	}
+	t.Run("direct subscribe", func(t *testing.T) {
+		stream := "SCANS_direct"
+		subject := "scans.findings.direct"
+		domainKey := "domain-direct"
 
-	for i, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			stream := fmt.Sprintf("SCANS_%d", i)
-			subject := fmt.Sprintf("scans.findings.%d", i)
-			domainKey := fmt.Sprintf("domain-%d", i)
+		if _, err := js.AddStream(&nats.StreamConfig{
+			Name:     stream,
+			Subjects: []string{subject},
+		}); err != nil {
+			t.Fatalf("AddStream() error = %v", err)
+		}
 
-			if _, err := js.AddStream(&nats.StreamConfig{
-				Name:     stream,
-				Subjects: []string{subject},
-			}); err != nil {
-				t.Fatalf("AddStream() error = %v", err)
-			}
+		evt := model.FindingEvent{
+			Source:      "scanner",
+			FindingType: "tls-weak",
+			DomainKey:   domainKey,
+			Subject:     "example.com",
+			Confidence:  "high",
+			ObservedAt:  "2024-01-01T00:00:00Z",
+		}
+		payload := fmt.Sprintf(
+			`{"source":%q,"findingType":%q,"domainKey":%q,"subject":%q,"confidence":%q,"observedAt":%q}`,
+			evt.Source, evt.FindingType, evt.DomainKey, evt.Subject, evt.Confidence, evt.ObservedAt,
+		)
+		if _, err := js.Publish(subject, []byte(payload)); err != nil {
+			t.Fatalf("Publish() error = %v", err)
+		}
 
-			evt := model.FindingEvent{
-				Source:      "scanner",
-				FindingType: "tls-weak",
-				DomainKey:   domainKey,
-				Subject:     "example.com",
-				Confidence:  "high",
-				ObservedAt:  "2024-01-01T00:00:00Z",
-			}
-			payload := fmt.Sprintf(
-				`{"source":%q,"findingType":%q,"domainKey":%q,"subject":%q,"confidence":%q,"observedAt":%q}`,
-				evt.Source, evt.FindingType, evt.DomainKey, evt.Subject, evt.Confidence, evt.ObservedAt,
-			)
-			if _, err := js.Publish(subject, []byte(payload)); err != nil {
-				t.Fatalf("Publish() error = %v", err)
-			}
+		cfg := dbCfg
+		cfg.NATSURL = natsURL
+		cfg.NATSStream = stream
+		cfg.NATSSubject = subject
+		cfg.NATSDurable = "findings-processor"
+		cfg.NATSAckWait = 30 * time.Second
+		cfg.NATSMaxDeliver = 5
+		cfg.NATSMaxPending = 64
 
-			cfg := dbCfg
-			cfg.NATSURL = natsURL
-			cfg.NATSStream = stream
-			cfg.NATSSubject = subject
-			cfg.NATSDurable = "findings-processor"
-			cfg.NATSQueueGroup = tt.queueGroup
-			cfg.NATSAckWait = 30 * time.Second
-			cfg.NATSMaxDeliver = 5
-			cfg.NATSMaxPending = 64
-
-			if err := runUntilPersistedThenStop(t, cfg, db, evt.DeriveFindingKey()); err != nil {
-				t.Errorf("runner.Run() returned error = %v, want nil (clean shutdown)", err)
-			}
-		})
-	}
+		if err := runUntilPersistedThenStop(t, cfg, db, evt.DeriveFindingKey()); err != nil {
+			t.Errorf("runner.Run() returned error = %v, want nil (clean shutdown)", err)
+		}
+	})
 
 	t.Run("get database error", func(t *testing.T) {
 		cfg := dbCfg
@@ -183,7 +172,7 @@ func TestIntegration_Run_ProcessesEventAndShutsDownCleanly(t *testing.T) {
 		}
 	})
 
-	t.Run("subscribe error on stream mismatch", func(t *testing.T) {
+	t.Run("consumer error on stream mismatch", func(t *testing.T) {
 		cfg := dbCfg
 		cfg.NATSURL = natsURL
 		cfg.NATSStream = "SCANS_DOES_NOT_EXIST"
@@ -194,7 +183,7 @@ func TestIntegration_Run_ProcessesEventAndShutsDownCleanly(t *testing.T) {
 		if err == nil {
 			t.Fatal("runner.Run() error = nil, want error for a subscribe against a non-existent stream")
 		}
-		if !strings.Contains(err.Error(), "failed to subscribe") {
+		if !strings.Contains(err.Error(), "create/update consumer failed") {
 			t.Errorf("runner.Run() error = %q, want it to mention the subscribe failure", err.Error())
 		}
 	})

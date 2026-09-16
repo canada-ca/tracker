@@ -2,7 +2,6 @@ package runner
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os/signal"
 	"syscall"
@@ -13,6 +12,7 @@ import (
 	"github.com/canada-ca/tracker/scanners/findings-processor/internal/database"
 	"github.com/canada-ca/tracker/scanners/findings-processor/internal/model"
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 	"github.com/rs/zerolog/log"
 )
 
@@ -23,22 +23,13 @@ func Run(cfg config.Config) error {
 	}
 	defer nc.Close()
 
-	js, err := nc.JetStream()
+	js, err := jetstream.New(nc)
 	if err != nil {
 		return fmt.Errorf("failed to create JetStream context: %w", err)
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
-
-	opts := []nats.SubOpt{
-		nats.BindStream(cfg.NATSStream),
-		nats.Durable(cfg.NATSDurable),
-		nats.ManualAck(),
-		nats.AckWait(cfg.NATSAckWait),
-		nats.MaxDeliver(cfg.NATSMaxDeliver),
-		nats.MaxAckPending(cfg.NATSMaxPending),
-	}
 
 	client, err := database.CreateDBClient(cfg)
 	if err != nil {
@@ -53,64 +44,54 @@ func Run(cfg config.Config) error {
 		return fmt.Errorf("get database failed: %w", err)
 	}
 
-	handler := func(msg *nats.Msg) {
-		eventCtx, cancelEvent := context.WithTimeout(ctx, 5*time.Second)
-		defer cancelEvent()
+	cons, err := js.CreateOrUpdateConsumer(ctx, cfg.NATSStream, jetstream.ConsumerConfig{
+		Durable:       cfg.NATSDurable,
+		AckPolicy:     jetstream.AckExplicitPolicy,
+		AckWait:       cfg.NATSAckWait,
+		MaxDeliver:    cfg.NATSMaxDeliver,
+		MaxAckPending: cfg.NATSMaxPending,
+		FilterSubject: cfg.NATSSubject,
+	})
+	if err != nil {
+		return fmt.Errorf("create/update consumer failed: %w", err)
+	}
 
-		switch HandleEvent(eventCtx, db, msg.Data) {
+	handler := func(msg jetstream.Msg) {
+		upsertCtx, cancelUpsert := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelUpsert()
+
+		var ackErr error
+		switch HandleEvent(upsertCtx, db, msg.Data()) {
 		case "ack":
-			_ = msg.Ack()
+			ackErr = msg.Ack()
 		case "nak":
-			_ = msg.Nak()
+			ackErr = msg.Nak()
 		case "term":
-			_ = msg.Term()
+			ackErr = msg.Term()
 		default:
-			_ = msg.Nak()
+			ackErr = msg.Nak()
+		}
+		if ackErr != nil {
+			log.Warn().Err(ackErr).Msg("failed to ack/nak/term message")
 		}
 	}
 
-	var sub *nats.Subscription
-	if cfg.NATSQueueGroup != "" {
-		sub, err = js.QueueSubscribe(cfg.NATSSubject, cfg.NATSQueueGroup, handler, opts...)
-	} else {
-		sub, err = js.Subscribe(cfg.NATSSubject, handler, opts...)
-	}
+	consumeCtx, err := cons.Consume(handler)
 	if err != nil {
-		return fmt.Errorf("failed to subscribe: %w", err)
+		return fmt.Errorf("failed to create consumer context: %w", err)
 	}
-	defer drainSubscription(sub)
+	defer consumeCtx.Drain()
 
 	log.Info().
 		Str("stream", cfg.NATSStream).
 		Str("subject", cfg.NATSSubject).
 		Str("durable", cfg.NATSDurable).
-		Str("queueGroup", cfg.NATSQueueGroup).
 		Msg("findings processor started")
 
 	<-ctx.Done()
 	log.Info().Msg("shutdown signal received")
 
 	return nil
-}
-
-func drainSubscription(sub *nats.Subscription) error {
-	if sub == nil {
-		return nil
-	}
-
-	done := make(chan struct{})
-	sub.SetClosedHandler(func(string) { close(done) })
-
-	if err := sub.Drain(); err != nil {
-		return err
-	}
-
-	select {
-	case <-done:
-		return nil
-	case <-time.After(10 * time.Second):
-		return errors.New("timed out waiting for subscription drain")
-	}
 }
 
 func HandleEvent(ctx context.Context, db arangodb.Database, payload []byte) string {

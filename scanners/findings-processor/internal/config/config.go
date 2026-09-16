@@ -17,7 +17,6 @@ type Config struct {
 	NATSStream     string        `envconfig:"NATS_STREAM" default:"SCANS"`
 	NATSSubject    string        `envconfig:"NATS_SUBJECT" default:"scans.findings.*"`
 	NATSDurable    string        `envconfig:"NATS_CONSUMER_DURABLE" default:"findings-processor"`
-	NATSQueueGroup string        `envconfig:"NATS_QUEUE_GROUP"`
 	NATSAckWait    time.Duration `envconfig:"NATS_ACK_WAIT" default:"30s"`
 	NATSMaxDeliver int           `envconfig:"NATS_MAX_DELIVER" default:"10"`
 	NATSMaxPending int           `envconfig:"NATS_MAX_ACK_PENDING" default:"256"`
