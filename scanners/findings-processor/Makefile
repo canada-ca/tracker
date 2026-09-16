@@ -1,4 +1,4 @@
-.PHONY: help run test test-race build fmt fmt-check vet lint tidy ci
+.PHONY: help run test test-race test-integration build fmt fmt-check vet lint tidy ci
 
 GO ?= go
 SERVICE_BIN ?= findings-processor
@@ -6,22 +6,26 @@ BUILD_DIR ?= bin
 
 help:
 	@printf "Targets:\n"
-	@printf "  make run        - Run the service\n"
-	@printf "  make test       - Run all tests\n"
-	@printf "  make test-race  - Run tests with race detector\n"
-	@printf "  make build      - Build service binary\n"
-	@printf "  make fmt        - Format Go files\n"
-	@printf "  make fmt-check  - Check formatting (no changes)\n"
-	@printf "  make vet        - Run go vet\n"
-	@printf "  make lint       - Run fmt-check + vet\n"
-	@printf "  make tidy       - Tidy modules\n"
-	@printf "  make ci         - Lint, test, build\n"
+	@printf "  make run              - Run the service\n"
+	@printf "  make test             - Run all tests\n"
+	@printf "  make test-race        - Run tests with race detector\n"
+	@printf "  make test-integration - Run integration tests (requires Docker)\n"
+	@printf "  make build            - Build service binary\n"
+	@printf "  make fmt              - Format Go files\n"
+	@printf "  make fmt-check        - Check formatting (no changes)\n"
+	@printf "  make vet              - Run go vet\n"
+	@printf "  make lint             - Run fmt-check + vet\n"
+	@printf "  make tidy             - Tidy modules\n"
+	@printf "  make ci               - Lint, test, build\n"
 
 run:
 	$(GO) run ./cmd/service
 
 test:
 	$(GO) test ./...
+
+test-integration:
+	$(GO) test -tags integration ./...
 
 test-race:
 	$(GO) test -race ./...

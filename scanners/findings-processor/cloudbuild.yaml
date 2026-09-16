@@ -8,6 +8,20 @@ steps:
       - |
         make ci
 
+  - name: "golang:1.25"
+    id: integration-tests
+    dir: scanners/findings-processor
+    entrypoint: "bash"
+    env:
+      - "DOCKER_HOST=unix:///var/run/docker.sock"
+    volumes:
+      - name: "docker-socket"
+        path: "/var/run/docker.sock"
+    args:
+      - "-c"
+      - |
+        make test-integration
+
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
     entrypoint: "bash"
@@ -41,3 +55,8 @@ steps:
         else
           exit 0
         fi
+
+options:
+  volumes:
+    - name: "docker-socket"
+      path: "/var/run/docker.sock"
