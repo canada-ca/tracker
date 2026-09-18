@@ -17,7 +17,19 @@ import (
 )
 
 func Run(cfg config.Config) error {
-	nc, err := nats.Connect(cfg.NATSURL)
+	nc, err := nats.Connect(
+		cfg.NATSURL,
+		nats.MaxReconnects(-1),
+		nats.ReconnectHandler(func(c *nats.Conn) {
+			log.Info().Str("url", c.ConnectedUrl()).Msg("nats reconnected")
+		}),
+		nats.DisconnectErrHandler(func(c *nats.Conn, err error) {
+			log.Warn().Err(err).Msg("nats disconnected")
+		}),
+		nats.ClosedHandler(func(c *nats.Conn) {
+			log.Info().Msg("nats connection closed")
+		}),
+	)
 	if err != nil {
 		return fmt.Errorf("failed to connect to NATS: %w", err)
 	}
@@ -76,11 +88,12 @@ func Run(cfg config.Config) error {
 		}
 	}
 
-	consumeCtx, err := cons.Consume(handler)
+	consumeCtx, err := cons.Consume(handler, jetstream.ConsumeErrHandler(func(_ jetstream.ConsumeContext, err error) {
+		log.Warn().Err(err).Msg("consume error")
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to create consumer context: %w", err)
 	}
-	defer consumeCtx.Drain()
 
 	log.Info().
 		Str("stream", cfg.NATSStream).
@@ -89,7 +102,15 @@ func Run(cfg config.Config) error {
 		Msg("findings processor started")
 
 	<-ctx.Done()
-	log.Info().Msg("shutdown signal received")
+	log.Info().Msg("shutdown signal received, draining consumer")
+
+	consumeCtx.Drain()
+	select {
+	case <-consumeCtx.Closed():
+		log.Info().Msg("consumer drained")
+	case <-time.After(15 * time.Second):
+		log.Warn().Msg("timed out waiting for consumer to drain")
+	}
 
 	return nil
 }
