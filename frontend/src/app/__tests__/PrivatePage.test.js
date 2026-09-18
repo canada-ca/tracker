@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'

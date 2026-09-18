@@ -184,5 +184,4 @@ describe('<AdditionalFindings />', () => {
     const latestHookCallArgs = usePaginatedCollection.mock.calls[usePaginatedCollection.mock.calls.length - 1][0]
     expect(latestHookCallArgs.variables.orderBy.field).toBe('SEVERITY')
   })
-
 })

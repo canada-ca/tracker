@@ -1,5 +1,5 @@
 import React from 'react'
-import { MemoryRouter, createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { MemoryRouter, createMemoryRouter, RouterProvider } from 'react-router'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { fireEvent, render, waitFor } from '@testing-library/react'

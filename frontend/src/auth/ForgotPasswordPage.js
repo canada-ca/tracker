@@ -4,7 +4,7 @@ import { Trans } from "@lingui/react/macro"
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
-import { Link as RouteLink, useNavigate } from 'react-router-dom'
+import { Link as RouteLink, useNavigate } from 'react-router'
 import { useMutation } from '@apollo/client'
 
 import { EmailField } from '../components/fields/EmailField'

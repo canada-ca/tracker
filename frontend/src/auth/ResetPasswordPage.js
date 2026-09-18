@@ -4,7 +4,7 @@ import { Trans } from "@lingui/react/macro"
 import { Box, Button, Heading, Text, useToast } from '@chakra-ui/react'
 import { object, ref, string } from 'yup'
 import { Formik } from 'formik'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useMutation } from '@apollo/client'
 
 import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'

@@ -1,6 +1,9 @@
 {
   "name": "tracker-frontend",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=22.15.0"
+  },
   "scripts": {
     "build": "webpack --env production --config webpack.config.js",
     "build:dev": "webpack --env development --config webpack.config.js",
@@ -23,6 +26,7 @@
     "@chakra-ui/system": "^2.6.2",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@json2csv/plainjs": "^7.0.8",
     "@lingui/react": "^5.9.3",
     "@visx/axis": "^2.17.0",
     "@visx/curve": "^3.3.0",
@@ -38,17 +42,16 @@
     "@visx/shape": "^3.5.0",
     "@visx/tooltip": "^2.17.0",
     "@visx/vendor": "^3.5.0",
-    "body-parser": "^1.20.6",
+    "body-parser": "^2.3.0",
     "compression": "^1.8.1",
     "d3": "^7.8.0",
     "dotenv": "^16.0.1",
-    "express": "^4.22.2",
+    "express": "^5.2.1",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "intro.js": "^7.2.0",
     "intro.js-react": "^1.0.0",
     "isomorphic-unfetch": "^3.1.0",
-    "json-2-csv": "^5.5.11",
     "lodash-es": "^4.18.1",
     "make-plural": "^7.1.0",
     "prop-types": "^15.8.1",
@@ -57,7 +60,7 @@
     "react-error-boundary": "^3.1.4",
     "react-joyride": "^2.8.2",
     "react-phone-input-2": "^2.15.1",
-    "react-router-dom": "^6.30.6",
+    "react-router": "^7.18.3",
     "react-table": "^7.8.0",
     "yup": "^0.32.11"
   },
@@ -98,9 +101,9 @@
     "source-map-loader": "^4.0.0",
     "supertest": "^6.2.3",
     "webpack": "^5.105.0",
-    "webpack-cli": "^5.1.4",
+    "webpack-cli": "^7.2.2",
     "webpack-config-utils": "^2.3.1",
-    "webpack-dev-server": "^5.2.6"
+    "webpack-dev-server": "^6.0.0"
   },
   "overrides": {
     "colors": "1.4.0",

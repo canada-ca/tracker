@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { Trans, useLingui } from "@lingui/react/macro"
 import { Formik } from 'formik'
 import { string } from 'prop-types'

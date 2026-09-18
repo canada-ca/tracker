@@ -1,7 +1,7 @@
 # To build image: docker build --tag tracker-api:1.0 .
 # To run image: docker run --network=host --env-file ./.env  tracker-api:1.0
 # Build image
-FROM node:20.20.0-alpine3.22 AS base
+FROM node:24.16.0-alpine3.22 AS base
 
 WORKDIR /app
 
@@ -32,7 +32,7 @@ COPY --from=builder /app/index.js .
 COPY --from=builder /app/lingui.config.js .
 COPY --from=builder /app/dist ./dist
 
-USER node
+USER 1000:1000
 EXPOSE 4000
 
 CMD ["npm", "start", "--node-options=--dns-result-order=ipv4first"]

@@ -8,7 +8,7 @@ import { UserVarProvider } from '../../utilities/userState'
 import { makeVar } from '@apollo/client'
 import { createCache } from '../../client'
 import { ChakraProvider, theme } from '@chakra-ui/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 
 describe('DomainListFilters', () => {
   let setFilters

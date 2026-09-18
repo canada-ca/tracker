@@ -1,6 +1,6 @@
 import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'

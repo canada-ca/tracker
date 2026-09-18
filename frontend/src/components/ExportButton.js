@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { arrayOf, object, string, func } from 'prop-types'
-import { json2csvAsync } from 'json-2-csv'
+import { Parser } from '@json2csv/plainjs'
 import { t } from "@lingui/core/macro"
 import { Trans } from "@lingui/react/macro"
 import { any } from 'prop-types'
@@ -36,7 +36,7 @@ export function ExportButton({ jsonData, fileName, dataFunction, children = t`Ex
     try {
       let data
       if (jsonData) {
-        data = await json2csvAsync(jsonData)
+        data = new Parser().parse(jsonData)
       } else if (dataFunction) {
         data = await dataFunction()
       }

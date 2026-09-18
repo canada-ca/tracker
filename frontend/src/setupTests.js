@@ -10,9 +10,8 @@ window.alert = () => {}
 
 window.matchMedia = () => ({})
 
-// react-router-dom uses Remix router and since
-// Remix router is failing for some reason around the Request obj
-global['Request'] = jest.fn().mockImplementation(() => ({
+global['Request'] = jest.fn().mockImplementation((_url, init = {}) => ({
+  method: init.method || 'GET',
   signal: {
     removeEventListener: () => {},
     addEventListener: () => {},
@@ -20,6 +19,7 @@ global['Request'] = jest.fn().mockImplementation(() => ({
 }))
 
 global.TextEncoder = require('util').TextEncoder
+global.TextDecoder = require('util').TextDecoder
 
 beforeEach(() => {
   i18n.load({

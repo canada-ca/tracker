@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter as Router, useNavigate, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, useNavigate, useLocation } from 'react-router'
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
@@ -106,7 +106,7 @@ const setUpApp = async () => {
     <ApolloProvider client={client}>
       <UserVarProvider userVar={currentUserVar}>
         <ChakraProvider theme={canada}>
-          <Router>
+          <Router useTransitions={false}>
             <TourProvider>
               <I18nApp />
             </TourProvider>

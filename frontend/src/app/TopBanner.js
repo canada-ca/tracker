@@ -2,7 +2,7 @@ import React from 'react'
 import { t } from "@lingui/core/macro"
 import { Trans } from "@lingui/react/macro"
 import { Box, Button, Flex, useToast, Image, Link, Skeleton } from '@chakra-ui/react'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router'
 import { useMutation } from '@apollo/client'
 
 import sigEn from '../images/goc-header-logo-dark-en.svg'
