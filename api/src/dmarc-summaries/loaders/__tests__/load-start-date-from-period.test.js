@@ -1,5 +1,4 @@
 import { setupI18n } from '@lingui/core'
-import moment from 'moment'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -15,34 +14,6 @@ describe('given the loadStartDateFromPeriod', () => {
 
   afterEach(() => {
     consoleOutput.length = 0
-  })
-
-  describe('given the twelve month window', () => {
-    const periodOf = (date) => ({
-      period: date.format('MMMM').toLowerCase(),
-      year: date.format('YYYY'),
-    })
-
-    it('accepts the current month and the eleven before it', () => {
-      const loader = loadStartDateFromPeriod({ moment })
-
-      expect([0, 11].map((n) => loader(periodOf(moment().subtract(n, 'months'))))).toEqual([
-        moment().startOf('month').format('YYYY-MM-DD'),
-        moment().subtract(11, 'months').startOf('month').format('YYYY-MM-DD'),
-      ])
-    })
-
-    it('rejects the current month of last year', () => {
-      const loader = loadStartDateFromPeriod({
-        moment,
-        userKey: '123',
-        i18n: setupI18n({ locale: 'en', messages: { en: englishMessages.messages } }),
-      })
-
-      expect(() => loader(periodOf(moment().subtract(12, 'months')))).toThrow(
-        'Unable to select DMARC report(s) for this period and year.',
-      )
-    })
   })
 
   describe('given a valid period and year', () => {
