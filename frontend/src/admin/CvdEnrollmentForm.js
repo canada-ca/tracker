@@ -21,9 +21,9 @@ import {
   PopoverFooter,
   Link,
 } from '@chakra-ui/react'
-import { func, object, string } from 'prop-types'
+import { func, object } from 'prop-types'
 
-export function CvdEnrollmentForm({ handleChange, values, permission, ...rest }) {
+export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
   return (
     <Box {...rest}>
       <FormControl mb="2">
@@ -251,6 +251,5 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
 
 CvdEnrollmentForm.propTypes = {
   values: object,
-  permission: string,
   handleChange: func,
 }
