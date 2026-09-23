@@ -40,8 +40,10 @@ ac.grant('admin')
   .createOwn('affiliation')
   .updateOwn('affiliation')
   .deleteOwn('affiliation')
+  .createOwn('cvd-enrollment')
+  .updateOwn('cvd-enrollment')
 
-ac.grant('owner').extend('admin').deleteOwn('organization').createOwn('cvd-enrollment').updateOwn('cvd-enrollment')
+ac.grant('owner').extend('admin').deleteOwn('organization')
 
 ac.grant('super_admin')
   .extend('owner')

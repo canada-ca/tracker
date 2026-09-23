@@ -40,24 +40,11 @@ describe('<CvdEnrollmentForm>', () => {
     expect(screen.getByText(/Not Enrolled/i)).toBeInTheDocument()
   })
 
-  it('shows Pending option for ADMIN permission', () => {
-    renderForm({
-      values: { cvdEnrollment: { ...baseValues.cvdEnrollment, status: 'PENDING' } },
-      handleChange,
-      permission: 'ADMIN',
-    })
-    // Use queryByText with fallback for option
-    const pendingOption = screen.queryByText((content, element) => {
-      return element.tagName && element.tagName.toLowerCase() === 'option' && /Pending/i.test(content)
-    })
-    expect(pendingOption).not.toBeNull()
-  })
-
-  it('shows Enrolled option for OWNER permission', () => {
+  it('shows Enrolled option for ADMIN permission', () => {
     renderForm({
       values: { cvdEnrollment: { ...baseValues.cvdEnrollment, status: 'ENROLLED' } },
       handleChange,
-      permission: 'OWNER',
+      permission: 'ADMIN',
     })
     expect(screen.getAllByText(/Enrolled/i)[0]).toBeInTheDocument()
   })
