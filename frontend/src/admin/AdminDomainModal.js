@@ -30,7 +30,6 @@ import { AddIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { array, bool, func, number, object, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
@@ -335,12 +334,7 @@ export function AdminDomainModal({
                     </Select>
                   </FormControl>
 
-                  <ABTestWrapper insiderVariantName="B">
-                    <ABTestVariant name="B">
-                      <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
-                    </ABTestVariant>
-                  </ABTestWrapper>
-
+                  <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
                   <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
