@@ -58,7 +58,7 @@ export const updateDomain = new mutationWithClientMutationId({
       i18n,
       userKey,
       request: { ip },
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired, getDeniedFields },
       validators: { cleanseInput },
       dataSources: { domain: domainDataSource, auditLogs, tags: tagsDS, organization: orgDS },
     },
@@ -168,9 +168,11 @@ export const updateDomain = new mutationWithClientMutationId({
       cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
     }
 
-    if (!ac.can(permission).updateAny('domain').granted && typeof args.highAvailability !== 'undefined') {
+    const deniedFields = getDeniedFields({ permission, resource: 'domain', action: 'update', args })
+
+    if (deniedFields.length > 0) {
       console.warn(
-        `User: ${userKey} attempted to update a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to update a super admin only domain field in: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',

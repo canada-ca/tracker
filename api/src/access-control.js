@@ -16,14 +16,21 @@
 
 import AccessControl from 'accesscontrol'
 
+// Domain fields that only super_admin may set on create/update. Add new
+// super-admin-only domain fields here — mutations enforce this via
+// auth.getDeniedFields, which reads the grants' attrs below (see
+// api/src/auth/utils/get-denied-fields.js).
+const SUPER_ADMIN_ONLY_DOMAIN_FIELDS = ['archived', 'ignoreRua', 'highAvailability']
+const domainAttrsExcludingSuperAdminFields = ['*', ...SUPER_ADMIN_ONLY_DOMAIN_FIELDS.map((field) => `!${field}`)]
+
 const ac = new AccessControl()
 
 ac.grant('user').createOwn('csv').readOwn('affiliation').createOwn('scan-request').readOwn('organization')
 
 ac.grant('admin')
   .extend('user')
-  .createOwn('domain')
-  .updateOwn('domain', ['*', '!archived'])
+  .createOwn('domain', domainAttrsExcludingSuperAdminFields)
+  .updateOwn('domain', domainAttrsExcludingSuperAdminFields)
   .deleteOwn('domain')
   .updateOwn('organization', ['*', '!externalId', '!externallyManaged'])
   .readOwn('log')

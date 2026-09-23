@@ -59,6 +59,7 @@ export function AdminDomainModal({
   const toast = useToast()
   const initialFocusRef = useRef()
   const { t } = useLingui()
+  const isSuperAdmin = permission === 'SUPER_ADMIN'
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
@@ -210,13 +211,10 @@ export function AdminDomainModal({
           initialValues={{
             domainUrl: editingDomainUrl,
             tags: getInitTags(), // convert initial tags to input type
-            archiveDomain: archived,
+            archiveDomain: archived ?? false,
+            highAvailability: highAvailability ?? false,
             assetState: assetState || 'APPROVED',
             cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
-            highAvailability: highAvailability || false,
-          }}
-          initialTouched={{
-            domainUrl: true,
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
@@ -232,11 +230,13 @@ export function AdminDomainModal({
                   domainId: editingDomainId,
                   orgId: orgId,
                   tags: values.tags.map(({ tagId }) => tagId),
-                  archived: values.archiveDomain,
                   assetState: values.assetState,
-                  ignoreRua: values.ignoreRua,
                   cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
-                  highAvailability: values.highAvailability,
+                  ...(isSuperAdmin && {
+                    archived: values.archiveDomain,
+                    ignoreRua: values.ignoreRua,
+                    highAvailability: values.highAvailability,
+                  }),
                 },
               })
             } else if (mutation === 'create') {
@@ -245,9 +245,12 @@ export function AdminDomainModal({
                   orgId: orgId,
                   domain: values.domainUrl.trim(),
                   tags: values.tags.map(({ tagId }) => tagId),
-                  archived: values.archiveDomain,
                   assetState: values.assetState,
                   cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
+                  ...(isSuperAdmin && {
+                    archived: values.archiveDomain,
+                    highAvailability: values.highAvailability,
+                  }),
                 },
               })
             }
