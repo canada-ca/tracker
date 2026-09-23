@@ -98,21 +98,12 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
           <option value="NOT_ENROLLED">
             <Trans>Not Enrolled</Trans>
           </option>
-          {(permission === 'ADMIN' || values.cvdEnrollment.status === 'PENDING') && (
-            <option value="PENDING">
-              <Trans>Pending</Trans>
-            </option>
-          )}
-          {['OWNER', 'SUPER_ADMIN'].includes(permission) && (
-            <>
-              <option value="ENROLLED">
-                <Trans>Enrolled</Trans>
-              </option>
-              <option value="DENY">
-                <Trans>Denied</Trans>
-              </option>
-            </>
-          )}
+          <option value="ENROLLED">
+            <Trans>Enrolled</Trans>
+          </option>
+          <option value="DENY">
+            <Trans>Denied</Trans>
+          </option>
         </Select>
       </FormControl>
 
