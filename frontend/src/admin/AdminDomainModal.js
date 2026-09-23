@@ -59,7 +59,7 @@ export function AdminDomainModal({
   const toast = useToast()
   const initialFocusRef = useRef()
   const { t } = useLingui()
-  const isSuperAdmin = permission === 'super_admin'
+  const isSuperAdmin = permission === 'SUPER_ADMIN'
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
