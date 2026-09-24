@@ -166,11 +166,7 @@ describe('authenticate user account', () => {
           const sendVerificationEmail = jest.fn()
           const newUsername = 'john.doe@istio.actually.works'
 
-          const verifyUrl = `https://domain.ca/validate/${tokenize({
-            expiresIn: AUTH_TOKEN_EXPIRY,
-            parameters: { userKey: user._key, userName: newUsername },
-            secret: String(AUTHENTICATED_KEY),
-          })}`
+          const tokenizeSpy = jest.fn(tokenize)
 
           const response = await graphql({
             schema,
@@ -207,7 +203,7 @@ describe('authenticate user account', () => {
               },
               auth: {
                 bcrypt,
-                tokenize,
+                tokenize: tokenizeSpy,
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -239,8 +235,14 @@ describe('authenticate user account', () => {
           }
           expect(response).toEqual(expectedResponse)
 
+          expect(tokenizeSpy).toHaveBeenCalledWith({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key, userName: newUsername },
+            secret: String(AUTHENTICATED_KEY),
+          })
+
           expect(sendVerificationEmail).toHaveBeenCalledWith({
-            verifyUrl: verifyUrl,
+            verifyUrl: `https://domain.ca/validate/${tokenizeSpy.mock.results[0].value}`,
             userKey: user._key,
             displayName: user.displayName,
             userName: newUsername,
@@ -867,11 +869,7 @@ describe('authenticate user account', () => {
             const sendVerificationEmail = jest.fn()
             const newUsername = 'john.doe@istio.actually.works'
 
-            const verifyUrl = `https://domain.ca/validate/${tokenize({
-              expiresIn: AUTH_TOKEN_EXPIRY,
-              parameters: { userKey: user._key, userName: newUsername },
-              secret: String(AUTHENTICATED_KEY),
-            })}`
+            const tokenizeSpy = jest.fn(tokenize)
 
             const response = await graphql({
               schema,
@@ -908,7 +906,7 @@ describe('authenticate user account', () => {
                 },
                 auth: {
                   bcrypt,
-                  tokenize,
+                  tokenize: tokenizeSpy,
                   userRequired: userRequired({
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
@@ -939,8 +937,14 @@ describe('authenticate user account', () => {
             }
             expect(response).toEqual(expectedResponse)
 
+            expect(tokenizeSpy).toHaveBeenCalledWith({
+              expiresIn: AUTH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key, userName: newUsername },
+              secret: String(AUTHENTICATED_KEY),
+            })
+
             expect(sendVerificationEmail).toHaveBeenCalledWith({
-              verifyUrl: verifyUrl,
+              verifyUrl: `https://domain.ca/validate/${tokenizeSpy.mock.results[0].value}`,
               userKey: user._key,
               displayName: user.displayName,
               userName: newUsername,
