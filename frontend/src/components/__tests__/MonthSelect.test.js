@@ -74,6 +74,27 @@ describe('<MonthSelect />', () => {
     })
     fireEvent.blur(monthSelect)
   })
+  it('offers the last 30 days and the current month plus the eleven before it', () => {
+    const { getAllByRole } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MonthSelect id="month-select" selectedValue="LAST30DAYS" handleChange={handleChange} />
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+
+    const monthValue = (monthsAgo) => {
+      const date = new Date()
+      date.setDate(1)
+      date.setMonth(date.getMonth() - monthsAgo)
+      return `${date.toLocaleString('en', { month: 'long' }).toUpperCase()}, ${date.getFullYear()}`
+    }
+
+    expect(getAllByRole('option').map((option) => option.value)).toEqual([
+      `LAST30DAYS, ${new Date().getFullYear()}`,
+      ...Array.from({ length: 12 }, (_, monthsAgo) => monthValue(monthsAgo)),
+    ])
+  })
   it('changes value on selection', async () => {
     const { getByDisplayValue, queryByText, getByText } = render(
       <MockedProvider>

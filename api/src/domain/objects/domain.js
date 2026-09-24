@@ -281,6 +281,8 @@ export const domainType = new GraphQLObjectType({
           startDate,
         })
 
+        if (!dmarcSummaryEdge) return null
+
         return {
           domainKey: _key,
           _id: dmarcSummaryEdge._to,
