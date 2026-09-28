@@ -58,7 +58,7 @@ export const updateDomain = new mutationWithClientMutationId({
       i18n,
       userKey,
       request: { ip },
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired, getDeniedFields },
+      auth: { checkPermission, checkDomainOwnership, userRequired, verifiedRequired, tfaRequired, getDeniedFields },
       validators: { cleanseInput },
       dataSources: { domain: domainDataSource, auditLogs, tags: tagsDS, organization: orgDS },
     },
@@ -168,6 +168,21 @@ export const updateDomain = new mutationWithClientMutationId({
         _type: 'error',
         code: 403,
         description: i18n._(t`Permission Denied: Please contact super admin for help with updating domain.`),
+      }
+    }
+
+    if (typeof cvdEnrollment !== 'undefined' && cvdEnrollment !== null) {
+      const hasOwnership = await checkDomainOwnership({ domainId: domain._id })
+
+      if (!hasOwnership) {
+        console.warn(
+          `User: ${userKey} attempted to update cvdEnrollment for domain: ${domainId} for org: ${orgId}, however that org does not have ownership of that domain.`,
+        )
+        return {
+          _type: 'error',
+          code: 403,
+          description: i18n._(t`Permission Denied: Please contact organization user for help with updating this domain.`),
+        }
       }
     }
 
