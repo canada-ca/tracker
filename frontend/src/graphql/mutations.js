@@ -183,7 +183,6 @@ export const CREATE_DOMAIN = gql`
     $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums!
-    $cvdEnrollment: CvdEnrollmenInputOptions
     $highAvailability: Boolean
   ) {
     createDomain(
@@ -193,7 +192,6 @@ export const CREATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         assetState: $assetState
-        cvdEnrollment: $cvdEnrollment
         highAvailability: $highAvailability
       }
     ) {
