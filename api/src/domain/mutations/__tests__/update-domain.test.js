@@ -716,6 +716,367 @@ describe('updating a domain', () => {
       })
     })
   })
+  describe('given cvdEnrollment ownership gate', () => {
+    let org, domain
+    const i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
+    })
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+        schema: dbschema,
+      }))
+      publish = jest.fn()
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
+        tfaSendMethod: 'email',
+      })
+      org = await collections.organizations.save({
+        verified: true,
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+        lastRan: null,
+        selectors: [],
+        cvdEnrollment: { status: 'not-enrolled' },
+      })
+      await collections.claims.save({
+        _to: domain._id,
+        _from: org._id,
+        tags: [],
+        assetState: 'monitor-only',
+      })
+      await collections.affiliations.save({
+        _to: user._id,
+        _from: org._id,
+        permission: 'admin',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+
+    const buildContext = () => ({
+      i18n,
+      query,
+      collections: collectionNames,
+      transaction,
+      publish,
+      userKey: user._key,
+      request: { ip: '127.0.0.1' },
+      auth: {
+        checkDomainPermission: checkDomainPermission({
+          i18n,
+          userKey: user._key,
+          query,
+        }),
+        checkPermission: checkPermission({ userKey: user._key, query }),
+        userRequired: userRequired({
+          userKey: user._key,
+          loadUserByKey: loadUserByKey({ query }),
+        }),
+        verifiedRequired: verifiedRequired({}),
+        tfaRequired: tfaRequired({}),
+      },
+      dataSources: {
+        auth: new AuthDataSource({ query, userKey: user._key }),
+      },
+      validators: {
+        cleanseInput,
+        slugify,
+      },
+      loaders: {
+        loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+          query,
+          userKey: user._key,
+          cleanseInput,
+          i18n,
+          auth: { loginRequiredBool: true },
+        }),
+        loadDomainByKey: loadDomainByKey({ query }),
+        loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+        loadUserByKey: loadUserByKey({ query }),
+      },
+    })
+
+    describe('org does not own the domain', () => {
+      describe('cvdEnrollment is unchanged from its current value', () => {
+        it('does not gate the update', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+            mutation {
+              updateDomain (
+                input: {
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
+                  cvdEnrollment: { status: NOT_ENROLLED }
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+            `,
+            rootValue: null,
+            contextValue: buildContext(),
+          })
+
+          const expectedResponse = {
+            data: {
+              updateDomain: {
+                result: {
+                  id: toGlobalId('domain', domain._key),
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+        })
+      })
+      describe('cvdEnrollment is changed from its current value', () => {
+        it('returns a permission denied error and does not update the domain', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+            mutation {
+              updateDomain (
+                input: {
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
+                  cvdEnrollment: { status: ENROLLED }
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+            `,
+            rootValue: null,
+            contextValue: buildContext(),
+          })
+
+          const expectedResponse = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 403,
+                  description: 'Permission Denied: Please contact organization user for help with updating this domain.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update cvdEnrollment for domain: ${domain._key} for org: ${org._key}, however that org does not have ownership of that domain.`,
+          ])
+
+          const updatedDomain = await loadDomainByKey({ query }).load(domain._key)
+          expect(updatedDomain.cvdEnrollment.status).toEqual('not-enrolled')
+        })
+      })
+    })
+    describe('org owns the domain', () => {
+      beforeEach(async () => {
+        await collections.ownership.save({
+          _to: domain._id,
+          _from: org._id,
+        })
+      })
+      describe('cvdEnrollment is changed from its current value', () => {
+        it('successfully updates the domain', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+            mutation {
+              updateDomain (
+                input: {
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
+                  cvdEnrollment: { status: ENROLLED }
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                    cvdEnrollment {
+                      status
+                    }
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+            `,
+            rootValue: null,
+            contextValue: buildContext(),
+          })
+
+          const expectedResponse = {
+            data: {
+              updateDomain: {
+                result: {
+                  id: toGlobalId('domain', domain._key),
+                  cvdEnrollment: { status: 'ENROLLED' },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+        })
+      })
+    })
+    describe('org is affiliated with an unrelated verified org that owns a different domain', () => {
+      beforeEach(async () => {
+        // A different org owns a different domain, and both orgs are "verified" —
+        // this must not grant this org ownership of `domain` (guards against the
+        // false-positive reused by the old checkDomainOwnership helper).
+        const otherOrg = await collections.organizations.save({
+          verified: true,
+          orgDetails: {
+            en: {
+              slug: 'other-org',
+              acronym: 'OO',
+              name: 'Other Org',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'autre-org',
+              acronym: 'AO',
+              name: 'Autre Org',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        const otherDomain = await collections.domains.save({
+          domain: 'other.gc.ca',
+          lastRan: null,
+          selectors: [],
+        })
+        await collections.ownership.save({
+          _to: otherDomain._id,
+          _from: otherOrg._id,
+        })
+        await collections.affiliations.save({
+          _to: user._id,
+          _from: otherOrg._id,
+          permission: 'admin',
+        })
+      })
+      it('returns a permission denied error and does not update the domain', async () => {
+        const response = await graphql({
+          schema,
+          source: `
+            mutation {
+              updateDomain (
+                input: {
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
+                  cvdEnrollment: { status: ENROLLED }
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+            `,
+          rootValue: null,
+          contextValue: buildContext(),
+        })
+
+        const expectedResponse = {
+          data: {
+            updateDomain: {
+              result: {
+                code: 403,
+                description: 'Permission Denied: Please contact organization user for help with updating this domain.',
+              },
+            },
+          },
+        }
+
+        expect(response).toEqual(expectedResponse)
+      })
+    })
+  })
   describe('given an unsuccessful domain update', () => {
     let i18n
     describe('users language is set to english', () => {

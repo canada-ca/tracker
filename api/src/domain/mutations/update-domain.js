@@ -58,7 +58,7 @@ export const updateDomain = new mutationWithClientMutationId({
       i18n,
       userKey,
       request: { ip },
-      auth: { checkPermission, checkDomainOwnership, userRequired, verifiedRequired, tfaRequired, getDeniedFields },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired, getDeniedFields },
       validators: { cleanseInput },
       dataSources: { domain: domainDataSource, auditLogs, tags: tagsDS, organization: orgDS },
     },
@@ -171,8 +171,13 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    if (typeof cvdEnrollment !== 'undefined' && cvdEnrollment !== null) {
-      const hasOwnership = await checkDomainOwnership({ domainId: domain._id })
+    const cvdEnrollmentChanged =
+      typeof cvdEnrollment !== 'undefined' &&
+      cvdEnrollment !== null &&
+      JSON.stringify(cvdEnrollment) !== JSON.stringify(domain?.cvdEnrollment)
+
+    if (cvdEnrollmentChanged) {
+      const hasOwnership = await domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id })
 
       if (!hasOwnership) {
         console.warn(
