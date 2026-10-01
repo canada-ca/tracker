@@ -62,7 +62,7 @@ export function MonthSelect({ selectedValue, handleChange, ...props }) {
   ]
 
   // add dmarc date selection options
-  for (let i = currentDate.getMonth(), j = 13; j > 0; i--, j--) {
+  for (let i = currentDate.getMonth(), j = 12; j > 0; i--, j--) {
     // handle previous year
     if (i < 0) {
       const value = `${months[months.length + i].value.toUpperCase()}, ${currentDate.getFullYear() - 1}`

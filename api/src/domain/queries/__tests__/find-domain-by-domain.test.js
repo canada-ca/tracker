@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkDomainPermission, userRequired, verifiedRequired, AuthDataSource } from '../../../auth'
-import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
+import { DomainDataSource } from '../../data-source'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
@@ -157,20 +157,13 @@ describe('given findDomainByDomain query', () => {
             },
             dataSources: {
               auth: new AuthDataSource({ query, userKey: user._key }),
+              domain: new DomainDataSource({ query, userKey: user._key }),
             },
             validators: {
               cleanseInput,
             },
             loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
               loadUserByKey: loadUserByKey({ query }),
-              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                i18n,
-                auth: { loginRequiredBool: true },
-              }),
             },
           },
         })
@@ -250,9 +243,9 @@ describe('given findDomainByDomain query', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadDomainByDomain: {
-                    load: jest.fn().mockReturnValue(undefined),
+                dataSources: {
+                  domain: {
+                    byDomain: { load: jest.fn().mockReturnValue(undefined) },
                   },
                 },
               },
@@ -301,9 +294,9 @@ describe('given findDomainByDomain query', () => {
                 validators: {
                   cleanseInput,
                 },
-                loaders: {
-                  loadDomainByDomain: {
-                    load: jest.fn().mockReturnValue({ _id: '1' }),
+                dataSources: {
+                  domain: {
+                    byDomain: { load: jest.fn().mockReturnValue({ _id: '1' }) },
                   },
                 },
               },
@@ -365,9 +358,9 @@ describe('given findDomainByDomain query', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadDomainByDomain: {
-                  load: jest.fn().mockReturnValue(undefined),
+              dataSources: {
+                domain: {
+                  byDomain: { load: jest.fn().mockReturnValue(undefined) },
                 },
               },
             },
@@ -416,9 +409,9 @@ describe('given findDomainByDomain query', () => {
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadDomainByDomain: {
-                  load: jest.fn().mockReturnValue({ _id: '1' }),
+              dataSources: {
+                domain: {
+                  byDomain: { load: jest.fn().mockReturnValue({ _id: '1' }) },
                 },
               },
             },

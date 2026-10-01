@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, Text } from '@chakra-ui/react'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router'
 import { bool, string } from 'prop-types'
 
 export const FloatingMenuLink = ({ to, text, isExternal, ...props }) => {

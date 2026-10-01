@@ -223,9 +223,9 @@ describe('given the domain object', () => {
               },
               dataSources: {
                 auth: { domainPermissionByDomainId: { load: jest.fn().mockResolvedValue(true) } },
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: jest.fn().mockReturnValue(selectors),
+                domain: {
+                  dkimSelectorsByDomainId: jest.fn().mockReturnValue(selectors),
+                },
               },
             },
           ),

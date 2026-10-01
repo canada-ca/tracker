@@ -1,41 +1,40 @@
 import { array, object, ref, string } from 'yup'
-import { t } from "@lingui/core/macro"
-import { i18n } from '@lingui/core'
+import { t } from '@lingui/core/macro'
 import { array as arrayProp, object as objectProp, string as stringProp } from 'prop-types'
 
-const nonEmptyMessage = () => i18n._(t`This field cannot be empty`)
+const nonEmptyMessage = () => t`This field cannot be empty`
 
 const getSchema = (options) => {
   return {
     email: string()
-      .required(i18n._(t`Email cannot be empty`))
-      .email(i18n._(t`Invalid email`)),
+      .required(t`Email cannot be empty`)
+      .email(t`Invalid email`),
     matchEmail: string()
-      .required(i18n._(t`Email cannot be empty`))
+      .required(t`Email cannot be empty`)
       .matches(options?.matches, t`User email does not match`),
-    displayName: string().required(i18n._(t`Display name cannot be empty`)),
+    displayName: string().required(t`Display name cannot be empty`),
     password: string()
-      .required(i18n._(t`Password cannot be empty`))
-      .min(12, i18n._(t`Password must be at least 12 characters long`)),
-    passwordSignIn: string().required(i18n._(t`Password cannot be empty`)),
+      .required(t`Password cannot be empty`)
+      .min(12, t`Password must be at least 12 characters long`),
+    passwordSignIn: string().required(t`Password cannot be empty`),
     confirmPassword: string()
-      .required(i18n._(t`Password confirmation cannot be empty`))
+      .required(t`Password confirmation cannot be empty`)
       .oneOf([ref('password')], t`Passwords must match`),
-    currentPassword: string().required(i18n._(t`Please enter your current password.`)),
+    currentPassword: string().required(t`Please enter your current password.`),
     lang: string()
-      .required(i18n._(t`Please choose your preferred language`))
+      .required(t`Please choose your preferred language`)
       .oneOf(['ENGLISH', 'FRENCH'], ''),
     twoFactorCode: string()
-      .required(i18n._(t`Code field must not be empty`))
-      .matches(/^\d+$/, i18n._(t`Verification code must only contains numbers`))
-      .length(6, i18n._(t`Verification code must be exactly 6 digits long`)),
-    domainUrl: string().required(i18n._(t`Domain url field must not be empty`)),
+      .required(t`Code field must not be empty`)
+      .matches(/^\d+$/, t`Verification code must only contains numbers`)
+      .length(6, t`Verification code must be exactly 6 digits long`),
+    domainUrl: string().required(t`Domain url field must not be empty`),
     phoneNumber: string()
-      .required(i18n._(t`Phone number field must not be empty`))
-      .matches(/^[1-9]\d{9,14}$/, i18n._(t`Phone number must be a valid phone number that is 10-15 digits long`)),
+      .required(t`Phone number field must not be empty`)
+      .matches(/^[1-9]\d{9,14}$/, t`Phone number must be a valid phone number that is 10-15 digits long`),
     acronym: string()
-      .matches(/^[A-Z]+(?:_[A-Za-z]+)*$/gm, i18n._(t`Acronyms can only use upper case letters and underscores`))
-      .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
+      .matches(/^[A-Z]+(?:_[A-Za-z]+)*$/gm, t`Acronyms can only use upper case letters and underscores`)
+      .max(50, t`Acronyms must be at most 50 characters`),
     field: string().required(nonEmptyMessage()),
     filterCategory: string()
       .required(nonEmptyMessage())
@@ -76,12 +75,10 @@ const getSchema = (options) => {
       ),
     selectors: array().of(
       string()
-        .required(i18n._(t`Selector cannot be empty`))
+        .required(t`Selector cannot be empty`)
         .matches(
           /^(?:[a-zA-Z0-9](\.?[a-zA-Z0-9])*|\*)$/gm,
-          i18n._(
-            t`Selector must be either a string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters, or an asterisk`,
-          ),
+          t`Selector must be either a string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters, or an asterisk`,
         ),
     ),
     statusOption: string().when('filterCategory', {
@@ -89,7 +86,7 @@ const getSchema = (options) => {
       then: (schema) => schema.required(nonEmptyMessage()),
       otherwise: (schema) => schema.notRequired(),
     }),
-  };
+  }
 }
 
 const filterSchema = (keyArray, options) => {

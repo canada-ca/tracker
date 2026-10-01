@@ -2,9 +2,9 @@ import pytest
 from unittest.mock import MagicMock
 
 
-def make_h1_asset(identifier: str) -> dict:
+def make_h1_asset(identifier: str, asset_id: str = None) -> dict:
     """Build a minimal HackerOne asset dict as returned by the API."""
-    return {"attributes": {"identifier": identifier}}
+    return {"id": asset_id or f"asset-{identifier}", "attributes": {"identifier": identifier}}
 
 
 def make_domain(domain: str, cvd_status: str = None) -> dict:

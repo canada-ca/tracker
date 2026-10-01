@@ -3,7 +3,7 @@ import { Box, Divider, Heading, Link, List, ListItem } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { Trans } from "@lingui/react/macro"
 import { useLingui } from '@lingui/react'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router'
 
 export default function TermsConditionsPage() {
   const { i18n } = useLingui()

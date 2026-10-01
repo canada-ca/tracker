@@ -27,12 +27,13 @@ replicas:
   - name: tracker-frontend
     count: 2
   - name: dns-scanner
-    count: 6
+    count: 3
   - name: web-scanner
-    count: 20
+    count: 10
 patchesStrategicMerge:
   - frontend-production-env-patch.yaml
   - update-selectors-enable-selector-removal-patch.yaml
   - api-production-env-patch.yaml
+  - import-easm-additional-findings-suspend-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component

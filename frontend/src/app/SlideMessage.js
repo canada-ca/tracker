@@ -17,7 +17,7 @@ import {
   Slide,
 } from '@chakra-ui/react'
 
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router'
 import { bool, func } from 'prop-types'
 
 const emailUrlEn = 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27600'

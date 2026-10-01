@@ -1,6 +1,6 @@
 import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { act, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -40,6 +40,10 @@ const mocks = [
           city: 'org city',
           verified: true,
           externalId: 'ORG123',
+          policies: {
+            psd: true,
+            pgs: true,
+          },
           __typename: 'Organization',
         },
       },
@@ -91,6 +95,10 @@ const mocks = [
             city: 'org city',
             verified: true,
             externalId: 'ORG123',
+            policies: {
+              psd: true,
+              pgs: true,
+            },
             __typename: 'Organization',
           },
         },
@@ -175,6 +183,10 @@ describe('<OrganizationInformation />', () => {
                   city: 'org city',
                   verified: true,
                   externalId: 'ORG123',
+                  policies: {
+                    psd: true,
+                    pgs: true,
+                  },
                   __typename: 'Organization',
                 },
               },
@@ -260,6 +272,10 @@ describe('<OrganizationInformation />', () => {
                   city: 'org city',
                   verified: true,
                   externalId: 'ORG123',
+                  policies: {
+                    psd: true,
+                    pgs: true,
+                  },
                   __typename: 'Organization',
                 },
               },
@@ -358,6 +374,10 @@ describe('<OrganizationInformation />', () => {
                   city: 'org city',
                   verified: true,
                   externalId: 'ORG123',
+                  policies: {
+                    psd: true,
+                    pgs: true,
+                  },
                   __typename: 'Organization',
                 },
               },
@@ -406,6 +426,10 @@ describe('<OrganizationInformation />', () => {
                     city: 'org city',
                     verified: true,
                     externalId: 'ORG123',
+                    policies: {
+                      psd: true,
+                      pgs: true,
+                    },
                     __typename: 'Organization',
                   },
                 },
@@ -592,6 +616,10 @@ describe('<OrganizationInformation />', () => {
                       city: 'org city',
                       verified: true,
                       externalId: 'ORG123',
+                      policies: {
+                        psd: true,
+                        pgs: true,
+                      },
                       __typename: 'Organization',
                     },
                   },

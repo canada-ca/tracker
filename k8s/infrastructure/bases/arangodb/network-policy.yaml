@@ -83,6 +83,12 @@ spec:
               kubernetes.io/metadata.name: scanners
           podSelector:
             matchLabels:
+              app: summaries-backfill
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
               app: update-selectors
         - namespaceSelector:
             matchLabels:
@@ -150,6 +156,12 @@ spec:
           podSelector:
             matchLabels:
               app: detect-decay
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: uptime
+          podSelector:
+            matchLabels:
+              app: tracker-uptime
   egress:
     # again, talk amongst themselves.
     - to:

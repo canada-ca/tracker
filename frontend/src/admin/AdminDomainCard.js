@@ -4,7 +4,7 @@ import { Trans } from "@lingui/react/macro"
 import { any, array, bool, object, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
 
-export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, cvdEnrollment, children, ...rest }) {
+export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, cvdEnrollment, highAvailability, children, ...rest }) {
   const assetStateLabels = {
     APPROVED: t`Approved`,
     DEPENDENCY: t`Dependency`,
@@ -46,6 +46,13 @@ export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, cvdE
               </TagLabel>
             </Tag>
           )}
+          {highAvailability && (
+            <Tag colorScheme="green" mx="1">
+              <TagLabel fontWeight="bold">
+                <Trans>HIGH AVAILABILITY</Trans>
+              </TagLabel>
+            </Tag>
+          )}
           {rcode === 'NXDOMAIN' && (
             <Tag colorScheme="red" mr="auto" alignSelf="center">
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
@@ -71,4 +78,5 @@ AdminDomainCard.propTypes = {
   assetState: string,
   children: any,
   cvdEnrollment: object,
+  highAvailability: bool,
 }

@@ -6,7 +6,7 @@ import {
   CheckCircleIcon,
   WarningIcon,
 } from '@chakra-ui/icons'
-import { Link as RouteLink, useParams } from 'react-router-dom'
+import { Link as RouteLink, useParams } from 'react-router'
 import { useMutation } from '@apollo/client'
 
 import { LoadingMessage } from '../components/LoadingMessage'

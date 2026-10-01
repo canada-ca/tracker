@@ -184,6 +184,7 @@ export const CREATE_DOMAIN = gql`
     $archived: Boolean
     $assetState: AssetStateEnums!
     $cvdEnrollment: CvdEnrollmenInputOptions
+    $highAvailability: Boolean
   ) {
     createDomain(
       input: {
@@ -193,6 +194,7 @@ export const CREATE_DOMAIN = gql`
         archived: $archived
         assetState: $assetState
         cvdEnrollment: $cvdEnrollment
+        highAvailability: $highAvailability
       }
     ) {
       result {
@@ -210,6 +212,7 @@ export const CREATE_DOMAIN = gql`
           assetState
           archived
           rcode
+          highAvailability
           cvdEnrollment {
             status
             description
@@ -291,6 +294,7 @@ export const UPDATE_DOMAIN = gql`
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
     $cvdEnrollment: CvdEnrollmenInputOptions
+    $highAvailability: Boolean
   ) {
     updateDomain(
       input: {
@@ -301,6 +305,7 @@ export const UPDATE_DOMAIN = gql`
         assetState: $assetState
         ignoreRua: $ignoreRua
         cvdEnrollment: $cvdEnrollment
+        highAvailability: $highAvailability
       }
     ) {
       result {
@@ -319,6 +324,7 @@ export const UPDATE_DOMAIN = gql`
           archived
           rcode
           ignoreRua
+          highAvailability
           cvdEnrollment {
             status
             description
@@ -525,6 +531,8 @@ export const UPDATE_ORGANIZATION = gql`
     $cityEN: String
     $cityFR: String
     $externalId: String
+    $psd: Boolean
+    $pgs: Boolean
   ) {
     updateOrganization(
       input: {
@@ -544,6 +552,8 @@ export const UPDATE_ORGANIZATION = gql`
         cityEN: $cityEN
         cityFR: $cityFR
         externalId: $externalId
+        psd: $psd
+        pgs: $pgs
       }
     ) {
       result {
@@ -558,6 +568,10 @@ export const UPDATE_ORGANIZATION = gql`
           province
           city
           externalId
+          policies {
+            psd
+            pgs
+          }
         }
         ... on OrganizationError {
           code

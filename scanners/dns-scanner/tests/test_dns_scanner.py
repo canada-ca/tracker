@@ -1,24 +1,71 @@
-import pytest
-from pretend import stub
-from starlette.testclient import TestClient
-from server import Server
+from dns_scanner import dns_scanner as scanner_mod
 
 
-def test_scan():
-    client_stub = stub(post=lambda url, json: None)
+class FakeResolver:
+    timeout = None
+    lifetime = None
 
-    test_app = Server(server_client=client_stub)
+    def resolve(self, *args, **kwargs):
+        raise scanner_mod.NoAnswer
 
-    test_client = TestClient(test_app)
 
-    test_payload = {
-        "user_key": 1,
-        "domain": "cyber.gc.ca",
-        "domain_key": "domains/1",
-        "selectors": ["selector1", "selector2"],
-        "shared_id": 1234
-    }
+class FakeDMARCScanner:
+    def __init__(self, domain):
+        self.domain = domain
 
-    res = test_client.post("/", json=test_payload)
+    def run(self):
+        return {
+            "base_domain": "example.com",
+            "mx": {"hosts": [], "warnings": []},
+            "spf": {},
+            "dmarc": {},
+            "ns": {"hostnames": ["ns1.example.com."], "errors": []},
+        }
 
-    assert "Scan completed" == res.text
+
+class FakeDKIMScanner:
+    def __init__(self, domain, selectors):
+        self.domain = domain
+        self.selectors = selectors
+
+    def run(self):
+        return {"selectors": self.selectors}
+
+
+def test_scan_domain_returns_expected_shape(monkeypatch):
+    monkeypatch.setattr(scanner_mod, "ENABLE_RDAP_LOOKUP", False)
+    monkeypatch.setattr(
+        scanner_mod,
+        "get_dns_return_type",
+        lambda domain, query_type: "NOERROR",
+    )
+    monkeypatch.setattr(scanner_mod, "find_zone_apex", lambda domain: "example.com")
+    monkeypatch.setattr(scanner_mod, "DMARCScanner", FakeDMARCScanner)
+    monkeypatch.setattr(scanner_mod, "DKIMScanner", FakeDKIMScanner)
+    monkeypatch.setattr(scanner_mod.dns.resolver, "Resolver", lambda: FakeResolver())
+    monkeypatch.setattr(
+        scanner_mod,
+        "get_wildcard_status",
+        lambda domain, resolver, a_records: {
+            "wildcard_entry": False,
+            "wildcard_sibling": False,
+        },
+    )
+    monkeypatch.setattr(
+        scanner_mod,
+        "check_ns_delegations",
+        lambda domain, zone_apex, ns_records: {
+            "ns_hosts": ns_records.get("hostnames", []),
+            "ns_checks": [],
+            "ns_delegation": {"lame_type": "none"},
+        },
+    )
+
+    result = scanner_mod.scan_domain("mail.example.com", dkim_selectors=["selector1"])
+
+    assert result["record_exists"] is True
+    assert result["rcode"] == "NOERROR"
+    assert result["zone_apex"] == "example.com"
+    assert result["base_domain"] == "example.com"
+    assert result["dkim"] == {"selectors": ["selector1"]}
+    assert result["registrar_context"]["error"] == "rdap_lookup_disabled"

@@ -36,8 +36,8 @@ export const myTrackerType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: async ({ _id }, args, { loaders: { loadDomainConnectionsByUserId } }) => {
-        const connections = await loadDomainConnectionsByUserId({
+      resolve: async ({ _id }, args, { dataSources: { domain: domainDataSource } }) => {
+        const connections = await domainDataSource.connectionsByUserId({
           ...args,
           myTracker: true,
         })

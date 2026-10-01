@@ -21,8 +21,9 @@ export const loadVerifiedOrgBySlug = ({ query, language, i18n }) =>
               _type: "verifiedOrganization",
               verified: org.verified,
               domainCount: COUNT(orgDomains),
-              summaries: org.summaries
-            }, 
+              policies: org.policies,
+              summaries: org.latestSummaryId ? DOCUMENT(org.latestSummaryId) : null
+            },
             TRANSLATE(${language}, org.orgDetails)
           )
       `

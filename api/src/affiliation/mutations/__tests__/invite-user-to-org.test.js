@@ -1,24 +1,51 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
-import { graphql, GraphQLSchema } from 'graphql'
+import { graphql as executeGraphql, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
+import { checkPermission, tokenize, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
 import { loadOrgByKey, loadOrganizationNamesById } from '../../../organization/loaders'
 import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
+import { AffiliationDataSource } from '../../data-source'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
+const withAffiliationDataSource = (contextValue = {}) => {
+  const dataSources = contextValue.dataSources || {}
+  if (dataSources.affiliation && dataSources.auditLogs) return contextValue
+
+  return {
+    ...contextValue,
+    dataSources: {
+      ...dataSources,
+      affiliation:
+        dataSources.affiliation ||
+        new AffiliationDataSource({
+          query: contextValue.query,
+          transaction: contextValue.transaction,
+          collections: contextValue.collections,
+          userKey: contextValue.userKey,
+          i18n: contextValue.i18n,
+          language: contextValue.request?.language,
+          cleanseInput: contextValue.validators?.cleanseInput,
+        }),
+      auditLogs: dataSources.auditLogs || { logActivity: jest.fn().mockResolvedValue(undefined) },
+    },
+  }
+}
+
+const graphql = (args) => executeGraphql({ ...args, contextValue: withAffiliationDataSource(args.contextValue) })
+
 describe('invite user to org', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n, tokenize, user, org, userToInvite
+  let query, drop, truncate, schema, collections, transaction, i18n, user, org, userToInvite
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -33,7 +60,6 @@ describe('invite user to org', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    tokenize = jest.fn().mockReturnValue('token')
   })
   afterEach(() => {
     consoleOutput.length = 0
@@ -52,7 +78,6 @@ describe('invite user to org', () => {
 
         schema: dbschema,
       }))
-      tokenize = jest.fn().mockReturnValue('token')
       i18n = setupI18n({
         locale: 'en',
         localeData: {
@@ -411,6 +436,7 @@ describe('invite user to org', () => {
         describe('requested role is super_admin', () => {
           it('returns status message', async () => {
             const sendOrgInviteCreateAccount = jest.fn()
+            const tokenizeSpy = jest.fn(tokenize)
             const response = await graphql({
               schema,
               source: `
@@ -451,7 +477,7 @@ describe('invite user to org', () => {
                     userKey: user._key,
                     query,
                   }),
-                  tokenize,
+                  tokenize: tokenizeSpy,
                   userRequired: userRequired({
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
@@ -480,31 +506,28 @@ describe('invite user to org', () => {
               },
             }
 
-            const token = tokenize({
-              parameters: {
-                userName: 'test@email.gc.ca',
-                orgId: org._id,
-                requestedRole: 'super_admin',
-              },
-            })
-            const createAccountLink = `https://host/create-user/${token}`
             expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
             ])
+            expect(tokenizeSpy).toHaveBeenCalledWith({
+              expiresIn: '3d',
+              parameters: { userName: 'test@email.gc.ca', orgKey: org._key, requestedRole: 'super_admin' },
+            })
             expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
               user: {
                 userName: 'test@email.gc.ca',
               },
               orgNameEN: 'Treasury Board of Canada Secretariat',
               orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
-              createAccountLink,
+              createAccountLink: `https://host/create-user/${tokenizeSpy.mock.results[0].value}`,
             })
           })
         })
         describe('requested role is admin', () => {
           it('returns status message', async () => {
             const sendOrgInviteCreateAccount = jest.fn()
+            const tokenizeSpy = jest.fn(tokenize)
 
             const response = await graphql({
               schema,
@@ -546,7 +569,7 @@ describe('invite user to org', () => {
                     userKey: user._key,
                     query,
                   }),
-                  tokenize,
+                  tokenize: tokenizeSpy,
                   userRequired: userRequired({
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
@@ -575,32 +598,28 @@ describe('invite user to org', () => {
               },
             }
 
-            const token = tokenize({
-              parameters: {
-                userName: 'test@email.gc.ca',
-                orgId: org._id,
-                requestedRole: 'admin',
-              },
-            })
-            const createAccountLink = `https://host/create-user/${token}`
-
             expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
             ])
+            expect(tokenizeSpy).toHaveBeenCalledWith({
+              expiresIn: '3d',
+              parameters: { userName: 'test@email.gc.ca', orgKey: org._key, requestedRole: 'admin' },
+            })
             expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
               user: {
                 userName: 'test@email.gc.ca',
               },
               orgNameEN: 'Treasury Board of Canada Secretariat',
               orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
-              createAccountLink,
+              createAccountLink: `https://host/create-user/${tokenizeSpy.mock.results[0].value}`,
             })
           })
         })
         describe('requested role is user', () => {
           it('returns status message', async () => {
             const sendOrgInviteCreateAccount = jest.fn()
+            const tokenizeSpy = jest.fn(tokenize)
 
             const response = await graphql({
               schema,
@@ -642,7 +661,7 @@ describe('invite user to org', () => {
                     userKey: user._key,
                     query,
                   }),
-                  tokenize,
+                  tokenize: tokenizeSpy,
                   userRequired: userRequired({
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
@@ -671,26 +690,21 @@ describe('invite user to org', () => {
               },
             }
 
-            const token = tokenize({
-              parameters: {
-                userName: 'test@email.gc.ca',
-                orgId: org._id,
-                requestedRole: 'user',
-              },
-            })
-            const createAccountLink = `https://host/create-user/${token}`
-
             expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
             ])
+            expect(tokenizeSpy).toHaveBeenCalledWith({
+              expiresIn: '3d',
+              parameters: { userName: 'test@email.gc.ca', orgKey: org._key, requestedRole: 'user' },
+            })
             expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
               user: {
                 userName: 'test@email.gc.ca',
               },
               orgNameEN: 'Treasury Board of Canada Secretariat',
               orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
-              createAccountLink,
+              createAccountLink: `https://host/create-user/${tokenizeSpy.mock.results[0].value}`,
             })
           })
         })
@@ -900,6 +914,7 @@ describe('invite user to org', () => {
         describe('requested role is admin', () => {
           it('returns status message', async () => {
             const sendOrgInviteCreateAccount = jest.fn()
+            const tokenizeSpy = jest.fn(tokenize)
 
             const response = await graphql({
               schema,
@@ -941,7 +956,7 @@ describe('invite user to org', () => {
                     userKey: user._key,
                     query,
                   }),
-                  tokenize,
+                  tokenize: tokenizeSpy,
                   userRequired: userRequired({
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
@@ -970,32 +985,28 @@ describe('invite user to org', () => {
               },
             }
 
-            const token = tokenize({
-              parameters: {
-                userName: 'test@email.gc.ca',
-                orgId: org._id,
-                requestedRole: 'admin',
-              },
-            })
-            const createAccountLink = `https://host/create-user/${token}`
-
             expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
             ])
+            expect(tokenizeSpy).toHaveBeenCalledWith({
+              expiresIn: '3d',
+              parameters: { userName: 'test@email.gc.ca', orgKey: org._key, requestedRole: 'admin' },
+            })
             expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
               user: {
                 userName: 'test@email.gc.ca',
               },
               orgNameEN: 'Treasury Board of Canada Secretariat',
               orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
-              createAccountLink,
+              createAccountLink: `https://host/create-user/${tokenizeSpy.mock.results[0].value}`,
             })
           })
         })
         describe('requested role is user', () => {
           it('returns status message', async () => {
             const sendOrgInviteCreateAccount = jest.fn()
+            const tokenizeSpy = jest.fn(tokenize)
 
             const response = await graphql({
               schema,
@@ -1037,7 +1048,7 @@ describe('invite user to org', () => {
                     userKey: user._key,
                     query,
                   }),
-                  tokenize,
+                  tokenize: tokenizeSpy,
                   userRequired: userRequired({
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
@@ -1066,26 +1077,21 @@ describe('invite user to org', () => {
               },
             }
 
-            const token = tokenize({
-              parameters: {
-                userName: 'test@email.gc.ca',
-                orgId: org._id,
-                requestedRole: 'user',
-              },
-            })
-            const createAccountLink = `https://host/create-user/${token}`
-
             expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
             ])
+            expect(tokenizeSpy).toHaveBeenCalledWith({
+              expiresIn: '3d',
+              parameters: { userName: 'test@email.gc.ca', orgKey: org._key, requestedRole: 'user' },
+            })
             expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
               user: {
                 userName: 'test@email.gc.ca',
               },
               orgNameEN: 'Treasury Board of Canada Secretariat',
               orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
-              createAccountLink,
+              createAccountLink: `https://host/create-user/${tokenizeSpy.mock.results[0].value}`,
             })
           })
         })
@@ -1105,7 +1111,6 @@ describe('invite user to org', () => {
 
         schema: dbschema,
       }))
-      tokenize = jest.fn().mockReturnValue('token')
       i18n = setupI18n({
         locale: 'en',
         localeData: {
@@ -1622,7 +1627,7 @@ describe('invite user to org', () => {
               query,
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
-                step: jest.fn().mockRejectedValue('trx step err'),
+                step: jest.fn().mockRejectedValue(new Error('trx step err')),
                 abort: jest.fn(),
               }),
               userKey: 123,
@@ -1659,7 +1664,7 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: trx step err`,
+            `Transaction step error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: Error: trx step err`,
           ])
         })
       })
@@ -1700,7 +1705,7 @@ describe('invite user to org', () => {
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest.fn().mockRejectedValue('trx commit err'),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit err')),
                 abort: jest.fn(),
               }),
               userKey: 123,
@@ -1740,7 +1745,7 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: trx commit err`,
+            `Transaction commit error occurred while user: 123 attempted to invite user: ${userToInvite._key} to org: treasury-board-secretariat, error: Error: trx commit err`,
           ])
         })
       })

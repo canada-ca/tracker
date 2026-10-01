@@ -128,7 +128,7 @@ class TestCreateAssets:
     @patch("main.add_scope")
     @patch("main.create_asset")
     def test_creates_asset_and_scope_for_each_domain(self, mock_create, mock_add):
-        mock_create.return_value = {"data": {}}
+        mock_create.return_value = {"data": {"id": "asset-1"}}
         mock_add.return_value = {"data": {}}
         ok, fail = create_assets([make_domain("a.com", "enrolled"), make_domain("b.com", "enrolled")])
         assert ok == 2
@@ -139,7 +139,7 @@ class TestCreateAssets:
     @patch("main.add_scope")
     @patch("main.create_asset")
     def test_counts_failure_and_continues(self, mock_create, mock_add):
-        mock_create.side_effect = [HackerOneAPIError("fail"), {"data": {}}]
+        mock_create.side_effect = [HackerOneAPIError("fail"), {"data": {"id": "asset-1"}}]
         mock_add.return_value = {"data": {}}
         ok, fail = create_assets([make_domain("fail.com", "enrolled"), make_domain("ok.com", "enrolled")])
         assert ok == 1
@@ -148,7 +148,7 @@ class TestCreateAssets:
     @patch("main.add_scope")
     @patch("main.create_asset")
     def test_failure_on_add_scope_counted_as_failure(self, mock_create, mock_add):
-        mock_create.return_value = {"data": {}}
+        mock_create.return_value = {"data": {"id": "asset-1"}}
         mock_add.side_effect = HackerOneAPIError("scope fail")
         ok, fail = create_assets([make_domain("a.com", "enrolled")])
         assert ok == 0
@@ -164,16 +164,16 @@ class TestCreateAssets:
 
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_passes_enrollment_status_to_add_scope(self, mock_create, mock_add):
-        mock_create.return_value = {"data": {}}
+    def test_passes_asset_id_and_enrollment_status_to_add_scope(self, mock_create, mock_add):
+        mock_create.return_value = {"data": {"id": "asset-42"}}
         mock_add.return_value = {"data": {}}
         create_assets([make_domain("a.com", "deny")])
-        mock_add.assert_called_once_with(asset_name="a.com", enrollment_status="deny")
+        mock_add.assert_called_once_with(asset_id="asset-42", enrollment_status="deny")
 
     @patch("main.add_scope")
     @patch("main.create_asset")
     def test_passes_full_cvd_options_to_create_asset(self, mock_create, mock_add):
-        mock_create.return_value = {"data": {}}
+        mock_create.return_value = {"data": {"id": "asset-1"}}
         mock_add.return_value = {"data": {}}
         options = {"status": "enrolled", "description": "test desc", "maxSeverity": "HIGH"}
         domain = {"domain": "a.com", "cvdEnrollment": options}
@@ -186,12 +186,15 @@ class TestCreateAssets:
 # ---------------------------------------------------------------------------
 
 class TestRescopeAssets:
+    def _asset_id_map(self, *domains):
+        return {d: f"asset-{d}" for d in domains}
+
     @patch("main.update_scope")
     @patch("main.get_scope")
     def test_rescopes_each_domain(self, mock_get, mock_update):
         mock_get.return_value = {"data": [{"id": "scope-1"}]}
         mock_update.return_value = {"data": {}}
-        ok, fail = rescope_assets(["a.com", "b.com"], "enrolled")
+        ok, fail = rescope_assets(["a.com", "b.com"], "enrolled", self._asset_id_map("a.com", "b.com"))
         assert ok == 2
         assert fail == 0
         assert mock_update.call_count == 2
@@ -200,9 +203,18 @@ class TestRescopeAssets:
     @patch("main.get_scope")
     def test_failure_when_no_scope_data_returned(self, mock_get, mock_update):
         mock_get.return_value = {"data": []}
-        ok, fail = rescope_assets(["a.com"], "enrolled")
+        ok, fail = rescope_assets(["a.com"], "enrolled", self._asset_id_map("a.com"))
         assert ok == 0
         assert fail == 1
+        mock_update.assert_not_called()
+
+    @patch("main.update_scope")
+    @patch("main.get_scope")
+    def test_failure_when_asset_id_missing_from_map(self, mock_get, mock_update):
+        ok, fail = rescope_assets(["a.com"], "enrolled", {})
+        assert ok == 0
+        assert fail == 1
+        mock_get.assert_not_called()
         mock_update.assert_not_called()
 
     @patch("main.update_scope")
@@ -213,24 +225,24 @@ class TestRescopeAssets:
             {"data": [{"id": "scope-2"}]},
         ]
         mock_update.return_value = {"data": {}}
-        ok, fail = rescope_assets(["fail.com", "ok.com"], "deny")
+        ok, fail = rescope_assets(["fail.com", "ok.com"], "deny", self._asset_id_map("fail.com", "ok.com"))
         assert ok == 1
         assert fail == 1
 
     @patch("main.update_scope")
     @patch("main.get_scope")
-    def test_passes_correct_scope_id_and_status(self, mock_get, mock_update):
+    def test_passes_correct_asset_id_scope_id_and_status(self, mock_get, mock_update):
         mock_get.return_value = {"data": [{"id": "scope-789"}]}
         mock_update.return_value = {"data": {}}
-        rescope_assets(["a.com"], "deny")
+        rescope_assets(["a.com"], "deny", {"a.com": "asset-999"})
         mock_update.assert_called_once_with(
-            asset_name="a.com", scope_id="scope-789", enrollment_status="deny"
+            asset_id="asset-999", scope_id="scope-789", enrollment_status="deny"
         )
 
     @patch("main.update_scope")
     @patch("main.get_scope")
     def test_empty_list_returns_zero_counts(self, mock_get, mock_update):
-        ok, fail = rescope_assets([], "enrolled")
+        ok, fail = rescope_assets([], "enrolled", {})
         assert ok == 0
         assert fail == 0
         mock_get.assert_not_called()
@@ -294,7 +306,8 @@ class TestMain:
             [make_domain("rescoped.com", "enrolled")],
             out_of_scope=[make_h1_asset("rescoped.com")],
         )
-        mock_rescope.assert_any_call(["rescoped.com"], "enrolled")
+        calls = mock_rescope.call_args_list
+        assert any(c.args[0] == ["rescoped.com"] and c.args[1] == "enrolled" for c in calls)
 
     def test_does_not_create_asset_when_rescoping_to_enrolled(self):
         """Domain in H1 out-of-scope + enrolled in tracker → rescope only, no create."""
@@ -322,7 +335,8 @@ class TestMain:
             [make_domain("toscope.com", "deny")],
             in_scope=[make_h1_asset("toscope.com")],
         )
-        mock_rescope.assert_any_call(["toscope.com"], "deny")
+        calls = mock_rescope.call_args_list
+        assert any(c.args[0] == ["toscope.com"] and c.args[1] == "deny" for c in calls)
 
     def test_archives_asset_with_no_cvd_enrollment(self):
         """Domain in H1 in-scope but no CVD enrollment in tracker → archive."""

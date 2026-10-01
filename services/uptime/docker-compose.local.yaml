@@ -1,0 +1,37 @@
+services:
+  sync-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tracker-uptime-sync:local
+    user: "0:0"
+    env_file:
+      - .env
+    environment:
+      GATUS_CONFIG_PATH: /config/config.yaml
+    entrypoint:
+      - sh
+      - -c
+    command:
+      - python /app/sync-gatus-config.py
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - gatus-config:/config
+    restart: "no"
+
+  gatus:
+    image: ghcr.io/twin/gatus:v5.35.0
+    depends_on:
+      sync-init:
+        condition: service_completed_successfully
+    environment:
+      GATUS_CONFIG_PATH: /config/config.yaml
+    ports:
+      - "8080:8080"
+    volumes:
+      - gatus-config:/config:ro
+    restart: unless-stopped
+
+volumes:
+  gatus-config:

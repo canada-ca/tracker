@@ -22,16 +22,12 @@ describe('initializeLoaders', () => {
       'loadSpfFailureConnectionsBySumId',
       'loadStartDateFromPeriod',
       'loadDmarcYearlySumEdge',
-      'loadDomainByDomain',
-      'loadDomainByKey',
-      'loadDomainConnectionsByOrgId',
-      'loadDomainConnectionsByUserId',
       'loadOrgByKey',
+      'loadOrganizationNamesById',
       'loadUserByUserName',
+      'loadUserConnectionsByUserId',
       'loadUserByKey',
-      'loadAffiliationByKey',
-      'loadAffiliationConnectionsByUserId',
-      'loadAffiliationConnectionsByOrgId',
+      'loadMyTrackerByUserId',
       'loadVerifiedDomainsById',
       'loadVerifiedDomainByKey',
       'loadVerifiedDomainConnections',
@@ -40,6 +36,7 @@ describe('initializeLoaders', () => {
       'loadVerifiedOrgBySlug',
       'loadVerifiedOrgConnectionsByDomainId',
       'loadVerifiedOrgConnections',
+      'loadAllVerifiedRuaDomains',
     )
   })
 })

@@ -1,13 +1,13 @@
-FROM node:20.18.1-alpine3.19 as build-env
+FROM node:24.19.0-alpine3.24 as build-env
 
 WORKDIR /app
 
 # Copy in whatever isn't filtered by .dockerignore
 COPY . .
 
-RUN npm ci && npm run build && npm prune --production
+RUN npm ci && npm run build && npm prune --omit=dev
 
-FROM node:20.18.1-alpine3.19
+FROM node:24.19.0-alpine3.24
 
 ENV HOST 0.0.0.0
 ENV PORT 3000
@@ -17,10 +17,8 @@ WORKDIR /app
 COPY --from=build-env /app .
 
 ENV NODE_ENV production
-# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
-ENV NODE_OPTIONS=--openssl-legacy-provider
 
-USER nonroot
+USER 1000:1000
 EXPOSE 3000
 
 CMD ["index.js"]

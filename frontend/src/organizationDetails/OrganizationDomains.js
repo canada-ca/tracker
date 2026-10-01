@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { array, bool, string } from 'prop-types'
@@ -41,7 +41,13 @@ export function OrganizationDomains({
 
   const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
     name: 'domain-filters',
-    defaultValue: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
+    defaultValue: [
+      {
+        filterCategory: 'HTTPS_STATUS',
+        comparison: 'NOT_EQUAL',
+        filterValue: 'INFO',
+      },
+    ],
   })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
@@ -133,7 +139,7 @@ export function OrganizationDomains({
 
   const guidanceTagOptions = negativeFindings?.map(({ tagId, tagName }) => {
     const getTagCategoryFromId = (id) => {
-      return id.split(/[0-9]/)[0].toUpperCase();
+      return id.split(/[0-9]/)[0].toUpperCase()
     }
     return { value: tagId, text: `${getTagCategoryFromId(tagId)}: ${tagName}` }
   })
@@ -180,7 +186,6 @@ export function OrganizationDomains({
             wildcardEntry,
             webScanPending,
             userHasPermission,
-            cveDetected,
             cvdEnrollment,
           },
           index,
@@ -201,7 +206,6 @@ export function OrganizationDomains({
               wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
-              cveDetected={cveDetected}
               cvdEnrollment={cvdEnrollment}
               mb="3"
             />

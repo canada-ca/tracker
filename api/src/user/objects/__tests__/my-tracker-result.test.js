@@ -104,10 +104,8 @@ describe('given the myTracker result gql object', () => {
           { _id: 'users/1' },
           { first: 1 },
           {
-            loaders: {
-              loadDomainConnectionsByUserId: jest
-                .fn()
-                .mockReturnValue(expectedResult),
+            dataSources: {
+              domain: { connectionsByUserId: jest.fn().mockReturnValue(expectedResult) },
             },
           },
         ),

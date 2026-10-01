@@ -21,9 +21,9 @@ import {
   PopoverFooter,
   Link,
 } from '@chakra-ui/react'
-import { func, object, string } from 'prop-types'
+import { func, object } from 'prop-types'
 
-export function CvdEnrollmentForm({ handleChange, values, permission, ...rest }) {
+export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
   return (
     <Box {...rest}>
       <FormControl mb="2">
@@ -98,21 +98,12 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
           <option value="NOT_ENROLLED">
             <Trans>Not Enrolled</Trans>
           </option>
-          {(permission === 'ADMIN' || values.cvdEnrollment.status === 'PENDING') && (
-            <option value="PENDING">
-              <Trans>Pending</Trans>
-            </option>
-          )}
-          {['OWNER', 'SUPER_ADMIN'].includes(permission) && (
-            <>
-              <option value="ENROLLED">
-                <Trans>Enrolled</Trans>
-              </option>
-              <option value="DENY">
-                <Trans>Denied</Trans>
-              </option>
-            </>
-          )}
+          <option value="ENROLLED">
+            <Trans>Enrolled</Trans>
+          </option>
+          <option value="DENY">
+            <Trans>Denied</Trans>
+          </option>
         </Select>
       </FormControl>
 
@@ -260,6 +251,5 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
 
 CvdEnrollmentForm.propTypes = {
   values: object,
-  permission: string,
   handleChange: func,
 }

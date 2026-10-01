@@ -1,6 +1,11 @@
 import os
 import json
+import logging
 from urllib.parse import urlparse
+
+logger = logging.getLogger(__name__)
+
+PQC_SCAN_ENABLED = os.getenv("PQC_SCAN_ENABLED", "false").lower() in ("true", "1")
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # Opening JSON file from:
@@ -498,9 +503,36 @@ def process_results(results):
     duration_seconds = results.get("duration_seconds")
     timestamp = results.get("timestamp")
 
-    return {
+    processed_results = {
         "tls_result": tls_result,
         "connection_results": processed_connection_results,
         "duration_seconds": duration_seconds,
         "timestamp": timestamp,
+    }
+
+    processed_results.update(process_experimental_results(results))
+
+    return processed_results
+
+
+def process_experimental_results(results):
+    pqc_result = results.get("pqc_result")
+
+    if pqc_result is None:
+        return {}
+
+    if not PQC_SCAN_ENABLED:
+        # The scanner is emitting PQC results but this processor would drop them silently.
+        logger.warning(
+            "Received a pqc_result but PQC_SCAN_ENABLED is not set on the processor; "
+            "discarding it"
+        )
+        return {}
+
+    return {
+        "experimental": {
+            "pqc": {
+                **pqc_result,
+            }
+        }
     }

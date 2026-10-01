@@ -18,6 +18,7 @@ import { array, string } from 'prop-types'
 import { Trans } from "@lingui/react/macro"
 import { WebTLSResults } from './WebTLSResults'
 import { WebConnectionResults } from './WebConnectionResults'
+import { WebPqcResults } from './WebPqcResults'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 import { NotificationBanner } from '../app/NotificationBanner'
 
@@ -169,7 +170,7 @@ export function WebGuidance({ webResults, timestamp }) {
           </AlertDescription>
         </Box>
       </NotificationBanner>
-      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
         {timestamp && (
           <Text fontSize="lg" mb="2">
             <Trans>
@@ -214,6 +215,7 @@ export function WebGuidance({ webResults, timestamp }) {
               connectionResults={currentEndpoint.results.connectionResults}
             />
             <WebTLSResults tlsResult={currentEndpoint.results.tlsResult} />
+            <WebPqcResults pqcResult={currentEndpoint.results.experimental?.pqc} />
           </>
         )}
       </Accordion>

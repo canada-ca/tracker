@@ -6,7 +6,7 @@ import { t } from "@lingui/core/macro"
 import { Trans } from "@lingui/react/macro"
 import { useUserVar } from '../../utilities/userState'
 import theme from '../../theme/canada'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { toursConfig, matchPathname } from './TourButton'
 import { COMPLETE_TOUR } from '../../graphql/mutations'
 import { useMutation } from '@apollo/client'

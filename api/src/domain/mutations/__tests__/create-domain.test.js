@@ -1,6 +1,6 @@
 import { dbNameFromFile } from 'arango-tools'
 import { ensureDatabase as ensure } from '../../../testUtilities'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql as rawGraphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
@@ -17,16 +17,74 @@ import {
   verifiedRequired,
   tfaRequired,
   checkDomainPermission,
+  getDeniedFields,
   AuthDataSource,
 } from '../../../auth'
 import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadOrgByKey, loadOrgConnectionsByDomainId } from '../../../organization/loaders'
 import { OrganizationDataSource } from '../../../organization/data-source'
+import { DomainDataSource } from '../../data-source'
+import { TagsDataSource } from '../../../tags/data-source'
+import { AuditLogsDataSource } from '../../../audit-logs/data-source'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
+
+const withDataSources = (contextValue) => {
+  const query = contextValue?.query
+  const transaction = contextValue?.transaction
+  const collections = contextValue?.collections
+  const userKey = contextValue?.userKey
+  const i18n = contextValue?.i18n
+  const language = contextValue?.request?.language
+  const cleanseInput = contextValue?.validators?.cleanseInput
+
+  const domainDataSource =
+    contextValue?.dataSources?.domain || new DomainDataSource({ query, userKey, i18n, transaction, collections })
+  if (contextValue?.loaders?.loadDomainByDomain) {
+    domainDataSource.byDomain = contextValue.loaders.loadDomainByDomain
+  }
+
+  const organizationDataSource =
+    contextValue?.dataSources?.organization ||
+    new OrganizationDataSource({ query, userKey, i18n, language, cleanseInput, transaction, collections })
+  if (contextValue?.loaders?.loadOrgByKey) {
+    organizationDataSource.byKey = contextValue.loaders.loadOrgByKey
+  }
+
+  const tagsDataSource =
+    contextValue?.dataSources?.tags || new TagsDataSource({ query, userKey, i18n, language, transaction, collections })
+  if (contextValue?.loaders?.loadTagByTagId) {
+    tagsDataSource.byTagId = contextValue.loaders.loadTagByTagId
+  }
+
+  const auditLogs =
+    contextValue?.dataSources?.auditLogs || new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections })
+
+  return {
+    ...contextValue,
+    auth: {
+      ...contextValue?.auth,
+      getDeniedFields: contextValue?.auth?.getDeniedFields || getDeniedFields,
+    },
+    dataSources: {
+      ...contextValue?.dataSources,
+      domain: domainDataSource,
+      organization: organizationDataSource,
+      tags: tagsDataSource,
+      auditLogs,
+    },
+  }
+}
+
+const graphql = ({ contextValue, ...args }) => {
+  return rawGraphql({
+    ...args,
+    contextValue: withDataSources(contextValue),
+  })
+}
 
 describe('create a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user, org, domain
@@ -603,6 +661,231 @@ describe('create a domain', () => {
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
         ])
+      })
+    })
+    describe('given super admin only field restrictions', () => {
+      // Regression test: archived/highAvailability must only be settable by super_admin on create.
+      describe.each([
+        ['archived', 'archived: true'],
+        ['highAvailability', 'highAvailability: true'],
+      ])('%s field', (fieldName, fieldInput) => {
+        describe('user has admin permission level', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns a permission denied error', async () => {
+            const response = await graphql({
+              schema,
+              source: `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', org._key)}"
+                      domain: "${fieldName}-admin.gc.ca"
+                      assetState: APPROVED
+                      ${fieldInput}
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              rootValue: null,
+              contextValue: {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections: collectionNames,
+                transaction,
+                userKey: user._key,
+                publish: jest.fn(),
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
+                  checkPermission: checkPermission({ userKey: user._key, query }),
+                  saltedHash: saltedHash(HASHING_SECRET),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                  verifiedRequired: verifiedRequired({}),
+                  tfaRequired: tfaRequired({}),
+                },
+                dataSources: {
+                  auth: new AuthDataSource({ query, userKey: user._key }),
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    loginRequiredBool: true,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
+                loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    cleanseInput,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+                validators: { cleanseInput, slugify },
+              },
+            })
+
+            const expectedResponse = {
+              data: {
+                createDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact super admin for help with creating domain.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to create a domain with a super admin only field in: treasury-board-secretariat, however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user has super_admin permission level', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'super_admin',
+            })
+          })
+          it('successfully creates the domain with the field set', async () => {
+            const response = await graphql({
+              schema,
+              source: `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', org._key)}"
+                      domain: "${fieldName}-super-admin.gc.ca"
+                      assetState: APPROVED
+                      ${fieldInput}
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              rootValue: null,
+              contextValue: {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections: collectionNames,
+                transaction,
+                userKey: user._key,
+                publish: jest.fn(),
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
+                  checkPermission: checkPermission({ userKey: user._key, query }),
+                  saltedHash: saltedHash(HASHING_SECRET),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                  verifiedRequired: verifiedRequired({}),
+                  tfaRequired: tfaRequired({}),
+                },
+                dataSources: {
+                  auth: new AuthDataSource({ query, userKey: user._key }),
+                  organization: new OrganizationDataSource({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                    language: 'en',
+                    cleanseInput,
+                    loginRequiredBool: true,
+                    transaction,
+                    collections: collectionNames,
+                  }),
+                },
+                loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    cleanseInput,
+                    auth: { loginRequiredBool: true },
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+                validators: { cleanseInput, slugify },
+              },
+            })
+
+            const expectedDomain = `${fieldName}-super-admin.gc.ca`.toLowerCase()
+            expect(response.data.createDomain.result.domain).toEqual(expectedDomain)
+
+            const insertedDomain = await loadDomainByDomain({ query }).load(expectedDomain)
+            expect(insertedDomain[fieldName]).toEqual(true)
+          })
+        })
       })
     })
     describe('domain can be created in a different organization', () => {
@@ -1401,7 +1684,7 @@ describe('create a domain', () => {
         data: {
           createDomain: {
             result: {
-              code: 400,
+              code: 403,
               description: 'Permission Denied: Please contact organization user for help with creating domain.',
             },
           },

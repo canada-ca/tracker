@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
+import { organizationPoliciesType } from './organization-policies'
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
 import { Acronym, Slug } from '../../scalars'
@@ -9,7 +10,7 @@ import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
-import { OrderDirection } from '../../enums'
+import { OrderDirection, SummarySourceEnums } from '../../enums'
 import { tagType } from '../../tags/objects'
 import ac from '../../access-control'
 
@@ -92,14 +93,14 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _key },
         args,
-        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadTagsByOrg } },
+        { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, dataSources: { tags } },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
         }
 
-        const orgTags = await loadTagsByOrg({
+        const orgTags = await tags.byOrg({
           orgId: _key,
           ...args,
         })
@@ -108,6 +109,11 @@ export const organizationType = new GraphQLObjectType({
 
         return orgTags
       },
+    },
+    policies: {
+      type: organizationPoliciesType,
+      description: 'Policies that apply to this organization.',
+      resolve: ({ policies }) => policies,
     },
     summaries: {
       type: organizationSummaryType,
@@ -134,19 +140,29 @@ export const organizationType = new GraphQLObjectType({
           type: GraphQLInt,
           description: 'The maximum amount of summaries to be returned.',
         },
+        source: {
+          type: SummarySourceEnums,
+          description: 'Which collection to read from. Rebuild is restricted to super admins. Defaults to live.',
+        },
       },
       resolve: async (
         { _id },
         args,
         {
           userKey,
-          auth: { userRequired, loginRequiredBool, verifiedRequired },
+          auth: { checkSuperAdmin, userRequired, loginRequiredBool, verifiedRequired, superAdminRequired },
           dataSources: { organization: organizationDS },
         },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
+        }
+
+        if (args.source === 'rebuild') {
+          const user = await userRequired()
+          const isSuperAdmin = await checkSuperAdmin()
+          superAdminRequired({ user, isSuperAdmin })
         }
 
         const historicalSummaries = await organizationDS.summariesByPeriod({
@@ -315,10 +331,10 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        { dataSources: { auth: authDS }, loaders: { loadDomainConnectionsByOrgId } },
+        { dataSources: { auth: authDS, domain: domainDataSource } },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
-        const connections = await loadDomainConnectionsByOrgId({
+        const connections = await domainDataSource.connectionsByOrgId({
           orgId: _id,
           permission,
           ...args,
@@ -350,8 +366,7 @@ export const organizationType = new GraphQLObjectType({
         {
           i18n,
           auth: { loginRequiredBool },
-          dataSources: { auth: authDS },
-          loaders: { loadAffiliationConnectionsByOrgId },
+          dataSources: { auth: authDS, affiliation },
         },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
@@ -359,7 +374,7 @@ export const organizationType = new GraphQLObjectType({
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 
-        const affiliations = await loadAffiliationConnectionsByOrgId({
+        const affiliations = await affiliation.connectionsByOrgId({
           orgId: _id,
           ...args,
         })

@@ -1,6 +1,7 @@
 import { GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 import { TagOwnershipEnums } from '../../enums/tag-ownership'
 import { organizationType } from '../../organization/objects'
+import ac from '../../access-control'
 
 export const tagType = new GraphQLObjectType({
   name: 'Tag',
@@ -38,15 +39,12 @@ export const tagType = new GraphQLObjectType({
         _,
         {
           userKey,
-          auth: { userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
+          auth: { userRequired, verifiedRequired, checkPermission },
           loaders: { loadOrgByKey },
         },
       ) => {
         const user = await userRequired()
         verifiedRequired({ user })
-
-        const isSuperAdmin = await checkSuperAdmin()
-        superAdminRequired({ user, isSuperAdmin })
 
         if (ownership === 'global') return []
 
@@ -54,6 +52,8 @@ export const tagType = new GraphQLObjectType({
         for (const orgId of organizations) {
           const org = await loadOrgByKey.load(orgId)
           if (!org) continue
+          const permission = await checkPermission({ orgId: org._id })
+          if (!ac.can(permission).readOwn('tag').granted) continue
           orgs.push(org)
         }
 

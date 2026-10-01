@@ -5,7 +5,6 @@ import { t } from '@lingui/macro'
 
 import { RoleEnums } from '../../enums'
 import { updateUserRoleUnion } from '../unions'
-import { logActivity } from '../../audit-logs/mutations/log-activity'
 import ac from '../../access-control'
 
 export const updateUserRole = new mutationWithClientMutationId({
@@ -38,10 +37,8 @@ given organization.`,
     args,
     {
       i18n,
-      query,
-      collections,
-      transaction,
       userKey,
+      dataSources: { affiliation: affiliationDataSource, auditLogs: auditLogsDataSource },
       request: { ip },
       auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByUserName, loadOrganizationNamesById },
@@ -114,23 +111,24 @@ given organization.`,
     }
 
     // Get user's current permission level
-    let affiliationCursor
+    let affiliation
     try {
-      affiliationCursor = await query`
-      WITH affiliations, organizations, users
-      FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations
-        FILTER e._from == ${org._id}
-        RETURN { _key: e._key, permission: e.permission }
-      `
+      affiliation = await affiliationDataSource.affiliationByOrgAndUser({ orgId: org._id, userId: requestedUser._id })
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
-      )
+      if (err.affiliationDataSourceOp === 'query') {
+        console.error(
+          `Database error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
+        )
+      } else if (err.affiliationDataSourceOp === 'cursor') {
+        console.error(
+          `Cursor error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
+        )
+      }
 
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
-    if (affiliationCursor.count < 1) {
+    if (typeof affiliation === 'undefined') {
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however that user does not have an affiliation with that organization.`,
       )
@@ -139,17 +137,6 @@ given organization.`,
         code: 400,
         description: i18n._(t`Unable to update role: user does not belong to organization.`),
       }
-    }
-
-    let affiliation
-    try {
-      affiliation = await affiliationCursor.next()
-    } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
-      )
-
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
     // Only super admins can update or assign privileged roles (those with org-level authority)
@@ -168,41 +155,23 @@ given organization.`,
       }
     }
 
-    // Only super admins can create new super admins
-    const edge = {
-      _from: org._id,
-      _to: requestedUser._id,
-      permission: role,
-    }
-
-    // Setup Transaction
-    const trx = await transaction(collections)
-
     try {
-      await trx.step(async () => {
-        await query`
-          WITH affiliations, organizations, users
-          UPSERT { _key: ${affiliation._key} }
-            INSERT ${edge}
-            UPDATE ${edge}
-            IN affiliations
-        `
+      await affiliationDataSource.updateAffiliationPermission({
+        affiliationKey: affiliation._key,
+        orgId: org._id,
+        userId: requestedUser._id,
+        permission: role,
       })
     } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
-    }
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.warn(
-        `Transaction commit error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
-      )
-      await trx.abort()
+      if (err.affiliationDataSourceOp === 'trx-step') {
+        console.error(
+          `Transaction step error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
+        )
+      } else if (err.affiliationDataSourceOp === 'trx-commit') {
+        console.warn(
+          `Transaction commit error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
+        )
+      }
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
@@ -220,10 +189,7 @@ given organization.`,
     await sendRoleChangeEmail({ user: requestedUser, newRole: role, oldRole: affiliation.permission, orgNames })
 
     console.info(`User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`)
-    await logActivity({
-      transaction,
-      collections,
-      query,
+    await auditLogsDataSource.logActivity({
       initiatedBy: {
         id: user._key,
         userName: user.userName,

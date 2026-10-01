@@ -13,7 +13,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load organization connections by user id function', () => {
-  let query, drop, truncate, collections, user, orgOne, orgTwo, i18n, domain, domainTwo, domainThree
+  let query, drop, truncate, collections, db, user, orgOne, orgTwo, i18n, domain, domainTwo, domainThree
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -29,7 +29,7 @@ describe('given the load organization connections by user id function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
+      ;({ query, drop, truncate, collections, db } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -51,18 +51,6 @@ describe('given the load organization connections by user id function', () => {
       orgOne = await collections.organizations.save({
         verified: false,
         externalId: 'test',
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
         orgDetails: {
           en: {
             slug: 'slug-org-one',
@@ -86,21 +74,23 @@ describe('given the load organization connections by user id function', () => {
           },
         },
       })
+      const orgOneSummary = await collections.organizationSummaries.save({
+        organization: orgOne._id,
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      })
+      await db.collection("organizations").update(orgOne._key, { latestSummaryId: orgOneSummary._id })
       orgTwo = await collections.organizations.save({
         verified: false,
         externalId: 'test',
-        summaries: {
-          web: {
-            pass: 52,
-            fail: 1002,
-            total: 1054,
-          },
-          mail: {
-            pass: 52,
-            fail: 1002,
-            total: 1054,
-          },
-        },
         orgDetails: {
           en: {
             slug: 'slug-org-two',
@@ -124,6 +114,20 @@ describe('given the load organization connections by user id function', () => {
           },
         },
       })
+      const orgTwoSummary = await collections.organizationSummaries.save({
+        organization: orgTwo._id,
+        web: {
+          pass: 52,
+          fail: 1002,
+          total: 1054,
+        },
+        mail: {
+          pass: 52,
+          fail: 1002,
+          total: 1054,
+        },
+      })
+      await db.collection("organizations").update(orgTwo._key, { latestSummaryId: orgTwoSummary._id })
       await collections.affiliations.save({
         _from: orgOne._id,
         _to: user._id,
@@ -514,18 +518,6 @@ describe('given the load organization connections by user id function', () => {
               orgThree = await collections.organizations.save({
                 verified: false,
                 externalId: 'test',
-                summaries: {
-                  web: {
-                    pass: 51,
-                    fail: 1001,
-                    total: 1052,
-                  },
-                  mail: {
-                    pass: 51,
-                    fail: 1001,
-                    total: 1052,
-                  },
-                },
                 orgDetails: {
                   en: {
                     slug: 'slug-org-three',
@@ -549,6 +541,20 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               })
+              const orgThreeSummary = await collections.organizationSummaries.save({
+                organization: orgThree._id,
+                web: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
+                mail: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
+              })
+              await db.collection("organizations").update(orgThree._key, { latestSummaryId: orgThreeSummary._id })
               await collections.affiliations.save({
                 _from: orgThree._id,
                 _to: user._id,
@@ -2247,18 +2253,6 @@ describe('given the load organization connections by user id function', () => {
               saOrg = await collections.organizations.save({
                 verified: false,
                 externalId: 'test',
-                summaries: {
-                  web: {
-                    pass: 52,
-                    fail: 1002,
-                    total: 1054,
-                  },
-                  mail: {
-                    pass: 52,
-                    fail: 1002,
-                    total: 1054,
-                  },
-                },
                 orgDetails: {
                   en: {
                     slug: 'super-admin',
@@ -2282,6 +2276,20 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               })
+              const saOrgSummary = await collections.organizationSummaries.save({
+                organization: saOrg._id,
+                web: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+                mail: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+              })
+              await db.collection("organizations").update(saOrg._key, { latestSummaryId: saOrgSummary._id })
               await collections.affiliations.save({
                 _from: saOrg._id,
                 _to: user._id,
@@ -2621,18 +2629,6 @@ describe('given the load organization connections by user id function', () => {
               orgThree = await collections.organizations.save({
                 verified: false,
                 externalId: 'test',
-                summaries: {
-                  web: {
-                    pass: 51,
-                    fail: 1001,
-                    total: 1052,
-                  },
-                  mail: {
-                    pass: 51,
-                    fail: 1001,
-                    total: 1052,
-                  },
-                },
                 orgDetails: {
                   en: {
                     slug: 'slug-org-three',
@@ -2656,6 +2652,20 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               })
+              const orgThreeSummary = await collections.organizationSummaries.save({
+                organization: orgThree._id,
+                web: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
+                mail: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
+              })
+              await db.collection("organizations").update(orgThree._key, { latestSummaryId: orgThreeSummary._id })
               await collections.affiliations.save({
                 _from: orgThree._id,
                 _to: user._id,
@@ -4455,18 +4465,6 @@ describe('given the load organization connections by user id function', () => {
               saOrg = await collections.organizations.save({
                 verified: false,
                 externalId: 'test',
-                summaries: {
-                  web: {
-                    pass: 52,
-                    fail: 1002,
-                    total: 1054,
-                  },
-                  mail: {
-                    pass: 52,
-                    fail: 1002,
-                    total: 1054,
-                  },
-                },
                 orgDetails: {
                   en: {
                     slug: 'super-admin',
@@ -4490,6 +4488,20 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               })
+              const saOrgSummary = await collections.organizationSummaries.save({
+                organization: saOrg._id,
+                web: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+                mail: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+              })
+              await db.collection("organizations").update(saOrg._key, { latestSummaryId: saOrgSummary._id })
               await collections.affiliations.save({
                 _from: saOrg._id,
                 _to: user._id,
