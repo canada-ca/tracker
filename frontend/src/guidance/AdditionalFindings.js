@@ -1,44 +1,268 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Accordion,
-  AccordionItem,
   AccordionButton,
-  AccordionPanel,
   AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Badge,
   Box,
-  Text,
-  Flex,
+  Button,
   Divider,
-  Link,
+  Flex,
+  HStack,
+  Select,
+  Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   TableContainer,
+  Text,
+  Tbody,
+  Td,
+  Tr,
 } from '@chakra-ui/react'
-import { CheckIcon, ExternalLinkIcon } from '@chakra-ui/icons'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
-import { any, bool, string } from 'prop-types'
-import { useLingui } from '@lingui/react'
-import { useQuery } from '@apollo/client'
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
+import { string } from 'prop-types'
+
+import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
+import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import CveIgnorer from './CveIgnorer'
+import { RelayPaginationControls } from '../components/RelayPaginationControls'
+
+const severityColorMap = {
+  critical: 'red',
+  high: 'orange',
+  medium: 'yellow',
+  low: 'green',
+  info: 'blue',
+}
+
+const confidenceColorMap = {
+  high: 'green',
+  medium: 'yellow',
+  low: 'gray',
+}
+
+const statusColorMap = {
+  active: 'red',
+  open: 'red',
+  in_progress: 'orange',
+  monitoring: 'yellow',
+  resolved: 'green',
+  closed: 'green',
+  dismissed: 'gray',
+}
+
+const buildFindingKey = (finding) => {
+  const keyParts = [
+    finding.source,
+    finding.reasonCode,
+    finding.subject,
+    finding.firstSeen,
+    finding.findingType,
+    finding.lastSeen,
+    finding.severity,
+    finding.confidence,
+    finding.status,
+  ]
+
+  return keyParts
+    .map((keyPart) => {
+      const keyText = keyPart === null || keyPart === undefined || keyPart === '' ? '-' : String(keyPart)
+      return keyText.trim().toLowerCase()
+    })
+    .join('|')
+}
+
+const getBadgeColor = (value, colorMap) => {
+  const normalizedValue = (value === null || value === undefined || value === '' ? '-' : String(value))
+    .trim()
+    .toLowerCase()
+
+  return colorMap[normalizedValue] || 'gray'
+}
+
+const formatSeenDate = (value) => {
+  if (!value) return '-'
+
+  const dateValue = new Date(value)
+
+  if (Number.isNaN(dateValue.getTime())) {
+    return String(value)
+  }
+
+  return dateValue.toLocaleString()
+}
 
 export function AdditionalFindings({ domain }) {
-  const { i18n } = useLingui()
-  const severities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
-  const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
+  const [findingsPerPage, setFindingsPerPage] = useState(10)
+  const [orderDirection, setOrderDirection] = useState('DESC')
+  const [orderField, setOrderField] = useState('LAST_SEEN')
+  const [filters, setFilters] = useState([])
 
-  const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
-
-  const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
-    variables: { domain },
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: GUIDANCE_ADDITIONAL_FINDINGS,
+    recordsPerPage: findingsPerPage,
+    relayRoot: 'findDomainByDomain.additionalFindings',
+    variables: {
+      domain,
+      limit: findingsPerPage,
+      filters,
+      orderBy: {
+        field: orderField,
+        direction: orderDirection,
+      },
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
+
+  const findings = nodes || []
+
+  const orderByOptions = [
+    { value: 'LAST_SEEN', text: t`Last seen` },
+    { value: 'FIRST_SEEN', text: t`First seen` },
+    { value: 'SEVERITY', text: t`Severity` },
+    { value: 'CONFIDENCE', text: t`Confidence` },
+    { value: 'SOURCE', text: t`Source` },
+  ]
+
+  const toggleOrderDirection = () => {
+    setOrderDirection((current) => (current === 'DESC' ? 'ASC' : 'DESC'))
+    resetToFirstPage()
+  }
+
+  const handleOrderFieldChange = (event) => {
+    setOrderField(event.target.value)
+    resetToFirstPage()
+  }
+
+  const addSourceFilter = (source) => {
+    if (!source) return
+
+    setFilters((currentFilters) => {
+      const hasSameFilter = currentFilters.some(
+        ({ filterCategory, comparison, filterValue }) =>
+          filterCategory === 'SOURCE' && comparison === 'EQUAL' && filterValue === source,
+      )
+
+      if (hasSameFilter) {
+        return currentFilters
+      }
+
+      return [...currentFilters, { filterCategory: 'SOURCE', comparison: 'EQUAL', filterValue: source }]
+    })
+    resetToFirstPage()
+  }
+
+  const clearFilters = () => {
+    setFilters([])
+    resetToFirstPage()
+  }
+
+  const removeFilter = (filterToRemove) => {
+    setFilters((currentFilters) =>
+      currentFilters.filter(
+        (activeFilter) =>
+          !(
+            activeFilter.filterCategory === filterToRemove.filterCategory &&
+            activeFilter.comparison === filterToRemove.comparison &&
+            activeFilter.filterValue === filterToRemove.filterValue
+          ),
+      ),
+    )
+    resetToFirstPage()
+  }
+
+  const renderKeyValueTable = (data) => {
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      return (
+        <Text fontSize="sm" color="gray.700">
+          -
+        </Text>
+      )
+    }
+
+    const entries = Object.entries(data)
+
+    if (entries.length === 0) {
+      return (
+        <Text fontSize="sm" color="gray.700">
+          -
+        </Text>
+      )
+    }
+
+    return (
+      <TableContainer
+        borderWidth="1px"
+        borderColor="gray.200"
+        borderRadius="md"
+        bg="white"
+        maxW="100%"
+        overflowX="auto"
+      >
+        <Table size="xs" variant="simple" sx={{ tableLayout: 'fixed' }}>
+          <Tbody>
+            {entries.map(([key, value]) => {
+              let normalizedValue = value
+
+              if (typeof value === 'object' && value !== null) {
+                normalizedValue = JSON.stringify(value, null, 2)
+              }
+
+              const valueText =
+                normalizedValue === null || normalizedValue === undefined || normalizedValue === ''
+                  ? '-'
+                  : String(normalizedValue)
+
+              return (
+                <Tr key={key}>
+                  <Td width="38%" fontWeight="semibold" fontSize="xs" whiteSpace="nowrap" p="2">
+                    {key}
+                  </Td>
+                  <Td fontSize="xs" whiteSpace="normal" wordBreak="break-word">
+                    <Flex
+                      bg="gray.100"
+                      borderRadius="sm"
+                      px="2"
+                      py="1"
+                      maxH="7.5rem"
+                      overflowY="auto"
+                      fontFamily="mono"
+                      whiteSpace="pre-wrap"
+                    >
+                      {valueText}
+                    </Flex>
+                  </Td>
+                </Tr>
+              )
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    )
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
+  }
 
   if (loading) {
     return (
@@ -48,392 +272,221 @@ export function AdditionalFindings({ domain }) {
     )
   }
 
-  if (error) {
-    return <ErrorFallbackMessage error={error} />
-  }
-
-  if (!data.findDomainByDomain.additionalFindings) {
+  if (findings.length === 0 && filters.length === 0) {
     return (
-      <Box borderWidth="1px" borderColor="black" justifyContent="center" rounded="md">
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center" my="1">
-          <Trans>No additional findings available at this time.</Trans>
+      <Box borderWidth="1px" borderColor="gray.200" bg="gray.50" px="6" py="8" rounded="md">
+        <Text fontSize="xl" fontWeight="semibold" textAlign="center" color="gray.700">
+          <Trans>No additional findings are available right now.</Trans>
+        </Text>
+        <Text fontSize="sm" textAlign="center" color="gray.600" mt="2">
+          <Trans>Try rerunning the scan for this domain later.</Trans>
         </Text>
       </Box>
     )
   }
 
-  const { id: domainId, ignoredCves } = data.findDomainByDomain
-  const { timestamp, headers, webComponents, vulnerabilities, ports } = data.findDomainByDomain.additionalFindings
-  const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
-  const ddosProtectionComponent = webComponents.find(
-    ({ webComponentCategory }) => webComponentCategory === 'DDOS Protection',
-  )
-  const cdnComponent = webComponents.find(({ webComponentCategory }) => webComponentCategory === 'CDN')
-  const sortedPorts = ports.slice().sort((a, b) => Number(a.port) - Number(b.port))
-  const otherComponents = webComponents.filter(
-    ({ webComponentCategory }) => !['Framework', 'DDOS Protection', 'CDN'].includes(webComponentCategory),
-  )
-
   return (
-    <>
-      <Box>
-        <Text fontSize="lg">
-          <Trans>
-            <b>Last Scanned:</b> {formatTimestamp(timestamp)}
-          </Trans>
-        </Text>
-
-        <Text fontSize="lg">
-          <Trans>
-            These findings are imported from Microsoft's{' '}
-            <Link
-              color="blue.500"
-              isExternal
-              href="https://learn.microsoft.com/en-us/azure/external-attack-surface-management/"
+    <Box w="100%">
+      <Flex justifyContent="space-between" align="flex-start" gap="3" mb="3">
+        {filters.length > 0 && (
+          <HStack spacing="2" mb="4" wrap="wrap" align="center">
+            {filters.map((activeFilter) => {
+              return (
+                <Tag
+                  key={`${activeFilter.filterCategory}:${activeFilter.comparison}:${activeFilter.filterValue}`}
+                  size="md"
+                  borderRadius="full"
+                  variant="subtle"
+                  colorScheme="blue"
+                >
+                  <TagLabel>
+                    <Trans>Source:</Trans> {activeFilter.filterValue}
+                  </TagLabel>
+                  <TagCloseButton onClick={() => removeFilter(activeFilter)} aria-label={t`Remove source filter`} />
+                </Tag>
+              )
+            })}
+            <Button variant="link" size="sm" onClick={clearFilters}>
+              <Trans>Clear all</Trans>
+            </Button>
+          </HStack>
+        )}
+        <HStack spacing="3" align="center" justify="flex-end" ml="auto">
+          <Flex align="center" gap="2">
+            <Text fontSize="sm" color="gray.700" fontWeight="bold" whiteSpace="nowrap">
+              <Trans>Sort by:</Trans>
+            </Text>
+            <Select
+              size="sm"
+              value={orderField}
+              onChange={handleOrderFieldChange}
+              aria-label={t`Select sorting field`}
+              borderColor="gray.900"
+              bg="white"
+              maxW="14rem"
+              borderWidth="1px"
             >
-              External Attack Surface Management <ExternalLinkIcon />
-            </Link>{' '}
-            tool. <b>Automated updates to these findings occur daily.</b>
-          </Trans>
-        </Text>
-        <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5, 6]} w="100%">
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2" id="vulnerabilities">
-                <Trans>SPIN Top 25 Vulnerabilities</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              <Link
-                colour="blue.500"
-                href={
-                  i18n.locale === 'en'
-                    ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/spin/improving-gc-cyber-security-health.html'
-                    : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/amops/renforcement-cybersecurite-gouvernement-canada.html'
-                }
-                isExternal
-              >
-                <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
-              </Link>
-              <Box>
-                {vulnerabilities.length > 0 ? (
-                  <TableContainer>
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>
-                            <Trans>CVE ID</Trans>
-                          </Th>
-                          <Th>
-                            <Trans>Severity</Trans>
-                          </Th>
-                          <Th>
-                            <Trans>Confidence Level</Trans>
-                          </Th>
-                          <Th>
-                            <Trans>Affected Components</Trans>
-                          </Th>
-                          <Th textAlign="end">
-                            <Trans>Ignored</Trans>
-                          </Th>
-                          <Th />
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {vulnerabilities.map(({ cve, severity, cvss3Score, confidenceLevel }) => {
-                          const affectComponents = webComponents
-                            .filter(({ webComponentCves }) => webComponentCves.some((x) => x.cve === cve))
-                            .map(({ webComponentName, webComponentCategory, webComponentVersion }) => {
-                              return `${webComponentName} ${webComponentCategory} ${webComponentVersion}`
-                            })
-                            .join(',')
+              {orderByOptions.map(({ value, text }) => (
+                <option key={value} value={value}>
+                  {text}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+          <Button
+            size="sm"
+            borderColor="gray.900"
+            borderWidth="1px"
+            variant="outline"
+            onClick={toggleOrderDirection}
+            aria-pressed={orderDirection === 'DESC'}
+            aria-label={
+              orderDirection === 'DESC'
+                ? t`Sorting descending, activate for ascending`
+                : t`Sorting ascending, activate for descending`
+            }
+          >
+            {orderDirection === 'DESC' ? <ArrowDownIcon boxSize="icons.md" /> : <ArrowUpIcon boxSize="icons.md" />}
+          </Button>
+        </HStack>
+      </Flex>
 
-                          return (
-                            <Tr
-                              key={cve}
-                              _hover={{ bg: cveSeverityOnHover[severity] }}
-                              transition="background 0.2s ease-in-out"
-                            >
-                              <Td>
-                                <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal w="20%">
-                                  {cve} <ExternalLinkIcon />
-                                </Link>
-                              </Td>
-                              <Td>
-                                {severities[severity]} ({cvss3Score})
-                              </Td>
-                              <Td>{severities[confidenceLevel]}</Td>
-                              <Td>{affectComponents}</Td>
-                              <Td textAlign="center">
-                                {ignoredCves.includes(cve) && <CheckIcon color="black" boxSize="icons.md" />}
-                              </Td>
-                              <Td>
-                                <CveIgnorer cve={cve} isCveIgnored={ignoredCves?.includes(cve)} domainId={domainId} />
-                              </Td>
-                            </Tr>
-                          )
-                        })}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                ) : (
-                  <Text fontWeight="bold" fontSize="xl">
-                    <Trans>No Top 25 Vulnerabilites Detected</Trans>
+      {filters.length > 0 && findings.length === 0 && (
+        <Box borderWidth="1px" borderColor="gray.200" bg="gray.50" px="6" py="7" rounded="md" mb="4">
+          <Text fontSize="lg" fontWeight="semibold" textAlign="center" color="gray.700">
+            <Trans>No findings match your current filters.</Trans>
+          </Text>
+          <Text fontSize="sm" textAlign="center" color="gray.600" mt="2">
+            <Trans>Try removing one or more filters to see additional findings.</Trans>
+          </Text>
+          <Flex justifyContent="center" mt="3">
+            <Button size="sm" onClick={clearFilters}>
+              <Trans>Clear all filters</Trans>
+            </Button>
+          </Flex>
+        </Box>
+      )}
+
+      <Accordion allowMultiple defaultIndex={[]}>
+        {findings.map((finding) => {
+          const occurrenceCount = finding.occurrenceCount ?? '-'
+
+          return (
+            <AccordionItem
+              key={buildFindingKey(finding)}
+              mb="3"
+              borderWidth="1px"
+              borderColor="gray.300"
+              borderRadius="md"
+              overflow="hidden"
+            >
+              <AccordionButton _expanded={{ bg: 'gray.100' }} alignItems="flex-start" py="3">
+                <Box flex="1" textAlign="left">
+                  <Flex justify="space-between" align="flex-start" mb="2" wrap="wrap" gap="2">
+                    <Text fontWeight="bold" fontSize="md" lineHeight="short">
+                      {finding.findingType || t`Unknown finding`}
+                    </Text>
+                    <HStack spacing="2" align="center" wrap="wrap">
+                      <HStack as="span" spacing="1" align="center">
+                        <Text as="span" fontSize="xs" color="gray.700" fontWeight="bold">
+                          <Trans>Severity</Trans>
+                        </Text>
+                        <Badge colorScheme={getBadgeColor(finding.severity, severityColorMap)}>
+                          {finding.severity || t`unknown severity`}
+                        </Badge>
+                      </HStack>
+                      <HStack as="span" spacing="1" align="center">
+                        <Text as="span" fontSize="xs" color="gray.700" fontWeight="bold">
+                          <Trans>Confidence</Trans>
+                        </Text>
+                        <Badge colorScheme={getBadgeColor(finding.confidence, confidenceColorMap)}>
+                          {finding.confidence || t`unknown confidence`}
+                        </Badge>
+                      </HStack>
+                      <HStack as="span" spacing="1" align="center">
+                        <Text as="span" fontSize="xs" color="gray.700" fontWeight="bold">
+                          <Trans>Status</Trans>
+                        </Text>
+                        <Badge colorScheme={getBadgeColor(finding.status, statusColorMap)}>
+                          {finding.status || t`unknown status`}
+                        </Badge>
+                      </HStack>
+                      <AccordionIcon boxSize="icons.lg" mt="1" />
+                    </HStack>
+                  </Flex>
+                  <Text color="gray.700" fontSize="sm" mb="1">
+                    <Trans>Source:</Trans>{' '}
+                    {finding.source === null || finding.source === undefined || finding.source === ''
+                      ? '-'
+                      : String(finding.source)}{' '}
+                    • <Trans>Subject:</Trans>{' '}
+                    {finding.subject === null || finding.subject === undefined || finding.subject === ''
+                      ? '-'
+                      : String(finding.subject)}
                   </Text>
-                )}
-              </Box>
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Frameworks</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              <WebRequirementsLink>
-                <Trans>
-                  2.1 Robust web application frameworks are used to aid in developing secure web applications.
-                </Trans>
-              </WebRequirementsLink>
-              <Divider borderBottomColor="gray.900" />
-              {frameworkComponents.length > 0 ? (
-                frameworkComponents.map(
-                  ({ webComponentName, webComponentVersion, webComponentFirstSeen, webComponentLastSeen }) => {
-                    return (
-                      <Box key={`${webComponentName}-${webComponentVersion}`}>
-                        <Flex justify="space-between" px="2">
-                          {webComponentVersion ? (
-                            <Text minW="50%">
-                              {webComponentName} ({webComponentVersion})
-                            </Text>
-                          ) : (
-                            <Text minW="50%">{webComponentName}</Text>
-                          )}
-                          <Text minW="25%">
-                            <Trans>First Seen: {formatTimestamp(webComponentFirstSeen)}</Trans>
-                          </Text>
-                          <Text minW="25%">
-                            <Trans>Last Seen: {formatTimestamp(webComponentLastSeen)}</Trans>
-                          </Text>
-                        </Flex>
-                        <Divider borderBottomColor="gray.900" />
-                      </Box>
-                    )
-                  },
-                )
-              ) : (
-                <Text>
-                  <Trans>No frameworks found</Trans>
-                </Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Response Headers</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              <WebRequirementsLink>
-                <Trans>
-                  2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers.
-                </Trans>
-              </WebRequirementsLink>
-              <Divider borderBottomColor="gray.900" />
-              {headers?.length > 0 ? (
-                <Flex justify="space-around" px="2">
-                  {headers.map((header) => {
-                    return <Text key={header}>{header}</Text>
-                  })}
-                </Flex>
-              ) : (
-                <Text px="2">
-                  <Trans>No response headers found</Trans>
-                </Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>DDOS Protection</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              <WebRequirementsLink>
-                <Trans>3.1.2 Use a denial-of-service mitigation service</Trans>
-              </WebRequirementsLink>
-              <Divider borderBottomColor="gray.900" />
-              {ddosProtectionComponent ? (
-                <Flex justify="space-around" px="2">
-                  <Text>{ddosProtectionComponent.webComponentName}</Text>
-                  <Text>{ddosProtectionComponent.webComponentVersion}</Text>
-                  <Text>
-                    <Trans>First Seen: {formatTimestamp(ddosProtectionComponent.webComponentFirstSeen)}</Trans>
+                  <Text color="gray.700" fontSize="sm">
+                    <Trans>First seen:</Trans> {formatSeenDate(finding.firstSeen)} • <Trans>Last seen:</Trans>{' '}
+                    {formatSeenDate(finding.lastSeen)}
                   </Text>
-                  <Text>
-                    <Trans>Last Seen: {formatTimestamp(ddosProtectionComponent.webComponentLastSeen)}</Trans>
-                  </Text>
-                </Flex>
-              ) : (
-                <Text px="2">
-                  <Trans>No DDOS Protection found</Trans>
-                </Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
+                </Box>
+              </AccordionButton>
 
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Content Delivery Network</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              <WebRequirementsLink>
-                <Trans>
-                  3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the
-                  origin server.
-                </Trans>
-              </WebRequirementsLink>
-              <Divider borderBottomColor="gray.900" />
-              {cdnComponent ? (
-                <Flex px="2">
-                  <Text minW="50%">{cdnComponent.webComponentName}</Text>
-                  <Text minW="25%">
-                    <Trans>First Seen: {formatTimestamp(cdnComponent.webComponentFirstSeen)}</Trans>
+              <AccordionPanel bg="gray.50">
+                <Stack spacing="3">
+                  <Text fontSize="sm">
+                    <Trans>Occurrence count:</Trans> {occurrenceCount}
                   </Text>
-                  <Text minW="25%">
-                    <Trans>Last Seen: {formatTimestamp(cdnComponent.webComponentLastSeen)}</Trans>
-                  </Text>
-                </Flex>
-              ) : (
-                <Text>
-                  <Trans>No CDN found</Trans>
-                </Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Web Components</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              {otherComponents.length > 0 ? (
-                otherComponents.map(
-                  ({
-                    webComponentName,
-                    webComponentCategory,
-                    webComponentVersion,
-                    webComponentFirstSeen,
-                    webComponentLastSeen,
-                  }) => {
-                    return (
-                      <Box key={`${webComponentName}-${webComponentVersion}`}>
-                        <Flex justify="space-between" px="2">
-                          {webComponentVersion ? (
-                            <Text minW="50%">
-                              {webComponentName} {webComponentCategory} ({webComponentVersion})
-                            </Text>
-                          ) : (
-                            <Text minW="50%">{webComponentName}</Text>
-                          )}
-                          <Text minW="25%">
-                            <Trans>First Seen: {formatTimestamp(webComponentFirstSeen)}</Trans>
-                          </Text>
-                          <Text minW="25%">
-                            <Trans>Last Seen: {formatTimestamp(webComponentLastSeen)}</Trans>
-                          </Text>
-                        </Flex>
-                        <Divider borderBottomColor="gray.900" />
-                      </Box>
-                    )
-                  },
-                )
-              ) : (
-                <Text>
-                  <Trans>No additional web components found</Trans>
-                </Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Ports</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              {sortedPorts.map(({ port, lastPortState, portStateFirstSeen, portStateLastSeen }) => {
-                const lastPortStateTranslated =
-                  lastPortState.toUpperCase() === 'OPEN'
-                    ? t`Open`
-                    : lastPortState.toUpperCase() === 'FILTERED'
-                    ? t`Filtered`
-                    : lastPortState
-                return (
-                  <Box key={port}>
-                    <Flex justify="flex-start" px="2">
-                      <Text minW="25%">{port}</Text>
-                      <Text minW="25%">
-                        <Trans>State: {lastPortStateTranslated}</Trans>
+                  {finding.source && (
+                    <Button
+                      size="sm"
+                      variant="primaryOutline"
+                      onClick={() => addSourceFilter(finding.source)}
+                      aria-label={t`Filter findings by this source`}
+                    >
+                      <Trans>Filter by source</Trans>
+                    </Button>
+                  )}
+                  {finding.attributes && (
+                    <Box>
+                      <Text fontWeight="bold" mb="1">
+                        <Trans>Attributes</Trans>
                       </Text>
-                      <Text minW="25%">
-                        <Trans>First Seen: {formatTimestamp(portStateFirstSeen)}</Trans>
+                      {renderKeyValueTable(finding.attributes)}
+                    </Box>
+                  )}
+                  {finding.evidence && (
+                    <Box>
+                      <Text fontWeight="bold" mb="1">
+                        <Trans>Evidence</Trans>
                       </Text>
-                      <Text minW="25%">
-                        <Trans>Last Seen: {formatTimestamp(portStateLastSeen)}</Trans>
-                      </Text>
-                    </Flex>
-                    <Divider borderBottomColor="gray.900" />
-                  </Box>
-                )
-              })}
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      </Box>
-    </>
-  )
-}
+                      {renderKeyValueTable(finding.evidence)}
+                    </Box>
+                  )}
+                  <Divider borderColor="gray.300" />
+                </Stack>
+              </AccordionPanel>
+            </AccordionItem>
+          )
+        })}
+      </Accordion>
 
-function WebRequirementsLink({ children }) {
-  const { i18n } = useLingui()
-  return (
-    <Link
-      isExternal
-      href={
-        i18n.locale === 'en'
-          ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html'
-          : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html'
-      }
-    >
-      {children} <ExternalLinkIcon />
-    </Link>
+      <RelayPaginationControls
+        onlyPagination={false}
+        selectedDisplayLimit={findingsPerPage}
+        setSelectedDisplayLimit={setFindingsPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+        totalRecords={totalCount}
+      />
+    </Box>
   )
 }
 
 AdditionalFindings.propTypes = {
   domain: string.isRequired,
-  cveDetected: bool,
-}
-
-WebRequirementsLink.propTypes = {
-  children: any.isRequired,
 }
