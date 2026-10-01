@@ -6,7 +6,6 @@ import { createDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { AssetStateEnums } from '../../enums'
 import { headers } from 'nats'
-import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 import ac from '../../access-control'
 
 export const createDomain = new mutationWithClientMutationId({
@@ -33,11 +32,6 @@ export const createDomain = new mutationWithClientMutationId({
       description: 'Value that determines how the domain relates to the organization.',
       type: new GraphQLNonNull(AssetStateEnums),
     },
-    cvdEnrollment: {
-      description:
-        'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
-      type: CvdEnrollmentInputOptions,
-    },
     highAvailability: {
       description: 'Value that determines if the service is scanned for uptime.',
       type: GraphQLBoolean,
@@ -57,7 +51,14 @@ export const createDomain = new mutationWithClientMutationId({
       request,
       userKey,
       publish,
-      auth: { checkPermission, saltedHash, userRequired, tfaRequired, verifiedRequired, getDeniedFields },
+      auth: {
+        checkPermission,
+        saltedHash,
+        userRequired,
+        tfaRequired,
+        verifiedRequired,
+        getDeniedFields,
+      },
       dataSources: { domain: domainDS, tags: tagsDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
@@ -103,7 +104,6 @@ export const createDomain = new mutationWithClientMutationId({
       assetState = 'approved'
     }
 
-    const cvdEnrollment = args.cvdEnrollment || { status: 'not-enrolled' }
     const highAvailability = args.highAvailability || false
 
     // Check to see if org exists
@@ -163,7 +163,7 @@ export const createDomain = new mutationWithClientMutationId({
       },
       archived,
       ignoreRua: false,
-      cvdEnrollment,
+      cvdEnrollment: { status: 'not-enrolled' },
       highAvailability,
     }
 
@@ -201,14 +201,6 @@ export const createDomain = new mutationWithClientMutationId({
         name: 'assetState',
         oldValue: null,
         newValue: assetState,
-      })
-    }
-
-    if (typeof cvdEnrollment !== 'undefined') {
-      updatedProperties.push({
-        name: 'cvdEnrollment',
-        oldValue: null,
-        newValue: cvdEnrollment.enrollment,
       })
     }
 

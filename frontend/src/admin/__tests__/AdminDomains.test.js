@@ -217,7 +217,6 @@ describe('<AdminDomains />', () => {
               domain: 'test-domain.gc.ca',
               tags: [],
               assetState: 'APPROVED',
-              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {
@@ -313,7 +312,6 @@ describe('<AdminDomains />', () => {
               domain: 'test.domain.gc.ca',
               tags: [],
               assetState: 'APPROVED',
-              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {

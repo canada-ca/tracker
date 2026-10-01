@@ -245,7 +245,6 @@ export function AdminDomainModal({
                   domain: values.domainUrl.trim(),
                   tags: values.tags.map(({ tagId }) => tagId),
                   assetState: values.assetState,
-                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                   ...(isSuperAdmin && {
                     archived: values.archiveDomain,
                     highAvailability: values.highAvailability,
@@ -334,7 +333,9 @@ export function AdminDomainModal({
                     </Select>
                   </FormControl>
 
-                  <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
+                  {mutation === 'update' && (
+                    <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
+                  )}
                   <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch

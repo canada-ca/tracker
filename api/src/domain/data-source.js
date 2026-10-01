@@ -237,6 +237,25 @@ export class DomainDataSource {
     return countCursor.count > 0
   }
 
+  async organizationHasOwnership({ orgId, domainId }) {
+    let countCursor
+    try {
+      countCursor = await this._query`
+        WITH domains, organizations, ownership
+        FOR v IN 1..1 OUTBOUND ${orgId} ownership
+          FILTER v._id == ${domainId}
+          RETURN true
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred while user: ${this._userKey} attempted to check domain ownership for domain: ${domainId}, error: ${err}`,
+      )
+      throw new Error(this._i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    return countCursor.count > 0
+  }
+
   async loadClaimByOrgAndDomain({ orgId, domainId }) {
     let claimCursor
     try {
