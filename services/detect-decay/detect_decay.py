@@ -36,6 +36,9 @@ def get_all_dns_scans(domain_id, db, config: Config):
                    "time_period_start": time_period_start},
     )
     past_day = list(past_day_cursor)
+    if not past_day:
+        logger.warning(f"No recent DNS scans found for {domain_id} since {time_period_start}")
+        return []
     earliest_scan = past_day[len(past_day)-1]
     if "fail" in earliest_scan.values():
         dns_scans = db.aql.execute(
@@ -54,7 +57,7 @@ def get_all_dns_scans(domain_id, db, config: Config):
                        "num": len(past_day) + (config.minimum_scans - 1)},
         )
     else:
-        dns_scans = past_day_cursor
+        dns_scans = past_day
 
     return dns_scans
 
@@ -89,6 +92,9 @@ def get_all_web_scans(domain_id, db, config: Config):
                        "time_period_start": time_period_start},
     )
     past_day = list(past_day_cursor)
+    if not past_day:
+        logger.warning(f"No recent web scans found for {domain_id} since {time_period_start}")
+        return []
     earliest_scan = past_day[len(past_day)-1]
     possible_decay = False
     for s in earliest_scan["scans"]:
@@ -125,7 +131,7 @@ def get_all_web_scans(domain_id, db, config: Config):
                        "num": len(past_day) + (config.minimum_scans - 1)},
         )
     else:
-        web_scans = past_day_cursor
+        web_scans = past_day
 
     return web_scans
 
