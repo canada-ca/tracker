@@ -1,0 +1,43 @@
+steps:
+  - name: "golang:1.25"
+    id: ci-checks
+    dir: scanners/subdomain-takeover
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        make ci
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: generate-image-name
+    entrypoint: "bash"
+    dir: scanners/subdomain-takeover
+    args:
+      - "-c"
+      - |
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/subdomain-takeover:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-scanner
+    entrypoint: "bash"
+    dir: scanners/subdomain-takeover
+    args:
+      - "-c"
+      - |
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-scanner-if-master
+    entrypoint: "bash"
+    dir: scanners/subdomain-takeover
+    args:
+      - "-c"
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi

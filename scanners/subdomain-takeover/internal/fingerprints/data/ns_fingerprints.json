@@ -1,0 +1,416 @@
+[
+  {
+    "name": "000Domains",
+    "provider_url": "https://000domains.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.000domains.com",
+      "ns2.000domains.com",
+      "fwns1.000domains.com",
+      "fwns2.000domains.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/19"
+  },
+  {
+    "name": "AWS Route 53",
+    "provider_url": "https://aws.amazon.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns-*.awsdns-*.org",
+      "ns-*.awsdns-*.co.uk",
+      "ns-*.awsdns-*.com",
+      "ns-*.awsdns-*.net"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/1"
+  },
+  {
+    "name": "Azure (Microsoft)",
+    "provider_url": "https://azure.microsoft.com/",
+    "status": "edge_case",
+    "host_patterns": [
+      "ns1-*.azure-dns.com",
+      "ns2-*.azure-dns.net",
+      "ns3-*.azure-dns.org",
+      "ns4-*.azure-dns.info"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/5"
+  },
+  {
+    "name": "BigCommerce",
+    "provider_url": "https://bigcommerce.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.bigcommerce.com",
+      "ns2.bigcommerce.com",
+      "ns3.bigcommerce.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/35"
+  },
+  {
+    "name": "Bizland",
+    "provider_url": "https://bizland.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.bizland.com",
+      "ns2.bizland.com",
+      "clickme.click2site.com",
+      "clickme2.click2site.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/3"
+  },
+  {
+    "name": "ClouDNS",
+    "provider_url": "https://cloudns.net/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "*.cloudns.net"
+    ]
+  },
+  {
+    "name": "Cloudflare",
+    "provider_url": "https://cloudflare.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "*.ns.cloudflare.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/10"
+  },
+  {
+    "name": "Digital Ocean",
+    "provider_url": "https://digitalocean.com/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns1.digitalocean.com",
+      "ns2.digitalocean.com",
+      "ns3.digitalocean.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/22"
+  },
+  {
+    "name": "DNSMadeEasy",
+    "provider_url": "https://dnsmadeeasy.com/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns*.dnsmadeeasy.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/6"
+  },
+  {
+    "name": "DNSimple",
+    "provider_url": "https://dnsimple.com/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns1.dnsimple.com",
+      "ns2.dnsimple.com",
+      "ns3.dnsimple.com",
+      "ns4.dnsimple.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/16"
+  },
+  {
+    "name": "Domain.com",
+    "provider_url": "https://domain.com/",
+    "status": "vulnerable_with_purchase",
+    "host_patterns": [
+      "ns1.domain.com",
+      "ns2.domain.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/17"
+  },
+  {
+    "name": "DomainPeople",
+    "provider_url": "https://domainpeople.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.domainpeople.com",
+      "ns2.domainpeople.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/14"
+  },
+  {
+    "name": "Dotster",
+    "provider_url": "https://dotster.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.dotster.com",
+      "ns2.dotster.com",
+      "ns1.nameresolve.com",
+      "ns2.nameresolve.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/18"
+  },
+  {
+    "name": "Dreamhost",
+    "provider_url": "https://dreamhost.com/",
+    "status": "edge_case",
+    "host_patterns": [
+      "ns1.dreamhost.com",
+      "ns2.dreamhost.com",
+      "ns3.dreamhost.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/40"
+  },
+  {
+    "name": "EasyDNS",
+    "provider_url": "https://easydns.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "dns1.easydns.com",
+      "dns2.easydns.net",
+      "dns3.easydns.org",
+      "dns4.easydns.info"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/9"
+  },
+  {
+    "name": "Gandi.net",
+    "provider_url": "https://gandi.net/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "a.dns.gandi.net",
+      "b.dns.gandi.net",
+      "c.dns.gandi.net"
+    ]
+  },
+  {
+    "name": "Google Cloud",
+    "provider_url": "https://cloud.google.com/",
+    "status": "edge_case",
+    "host_patterns": [
+      "ns-cloud-*.googledomains.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/2"
+  },
+  {
+    "name": "Hostinger (old NS)",
+    "provider_url": "https://hostinger.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.hostinger.com",
+      "ns2.hostinger.com"
+    ]
+  },
+  {
+    "name": "Hover",
+    "provider_url": "https://hover.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.hover.com",
+      "ns2.hover.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/21"
+  },
+  {
+    "name": "Hurricane Electric",
+    "provider_url": "https://dns.he.net/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns1.he.net",
+      "ns2.he.net",
+      "ns3.he.net",
+      "ns4.he.net",
+      "ns5.he.net"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/25"
+  },
+  {
+    "name": "Linode",
+    "provider_url": "https://linode.com/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns1.linode.com",
+      "ns2.linode.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/26"
+  },
+  {
+    "name": "MediaTemple (mt)",
+    "provider_url": "https://mediatemple.net/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.mediatemple.net",
+      "ns2.mediatemple.net"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/23"
+  },
+  {
+    "name": "MyDomain",
+    "provider_url": "https://mydomain.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns1.mydomain.com",
+      "ns2.mydomain.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/4"
+  },
+  {
+    "name": "Name.com",
+    "provider_url": "https://name.com/",
+    "status": "vulnerable_with_purchase",
+    "host_patterns": [
+      "ns1*.name.com",
+      "ns2*.name.com",
+      "ns3*.name.com",
+      "ns4*.name.com"
+    ],
+    "instructions_url": "https://github.com/libertalialtd/can-i-take-over-dns/issues/8"
+  },
+  {
+    "name": "Namecheap",
+    "provider_url": "https://namecheap.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "*.namecheaphosting.com",
+      "*.registrar-servers.com"
+    ]
+  },
+  {
+    "name": "Network Solutions",
+    "provider_url": "https://networksolutions.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns*.worldnic.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/15"
+  },
+  {
+    "name": "NS1",
+    "provider_url": "https://nsone.net/",
+    "status": "registration_closed",
+    "host_patterns": [
+      "dns1.p*.nsone.net",
+      "dns2.p*.nsone.net",
+      "dns3.p*.nsone.net",
+      "dns4.p*.nsone.net"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/7"
+  },
+  {
+    "name": "TierraNet",
+    "provider_url": "https://tierra.net/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns1.domaindiscover.com",
+      "ns2.domaindiscover.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/24"
+  },
+  {
+    "name": "Reg.ru",
+    "provider_url": "https://reg.ru/",
+    "status": "vulnerable",
+    "host_patterns": [
+      "ns1.reg.ru",
+      "ns2.reg.ru"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/28"
+  },
+  {
+    "name": "UltraDNS",
+    "provider_url": "https://www.home.neustar/dns-services/ultra-dns",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "pdns*.ultradns.com",
+      "udns*.ultradns.com",
+      "sdns*.ultradns.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/29"
+  },
+  {
+    "name": "Yahoo Small Business",
+    "provider_url": "https://yahoosmallbusiness.com/",
+    "status": "vulnerable_with_purchase",
+    "host_patterns": [
+      "yns1.yahoo.com",
+      "yns2.yahoo.com"
+    ],
+    "instructions_url": "https://github.com/indianajson/can-i-take-over-dns/issues/20"
+  },
+  {
+    "name": "Activision",
+    "provider_url": "https://activision.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns*.activision.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Adobe",
+    "provider_url": "https://adobe.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "adobe-dns-0*.adobe.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Apple",
+    "provider_url": "https://apple.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "a.ns.apple.com",
+      "b.ns.apple.com",
+      "c.ns.apple.com",
+      "d.ns.apple.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Automattic",
+    "provider_url": "https://automattic.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns*.automattic.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Capital One",
+    "provider_url": "https://capitalone.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns*.capitalone.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Disney",
+    "provider_url": "https://disney.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns*.twdcns.com",
+      "ns*.twdcns.info",
+      "ns*.twdcns.co.uk"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Google",
+    "provider_url": "https://google.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns*.google.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "Lowe's",
+    "provider_url": "https://lowes.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "authns*.lowes.com"
+    ],
+    "private_dns": true
+  },
+  {
+    "name": "T-Mobile",
+    "provider_url": "https://tmobileus.com/",
+    "status": "not_vulnerable",
+    "host_patterns": [
+      "ns10.tmobileus.com",
+      "ns10.tmobileus.net"
+    ],
+    "private_dns": true
+  }
+]
