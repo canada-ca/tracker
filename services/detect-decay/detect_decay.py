@@ -1,44 +1,10 @@
-import os
-import sys
 import logging
 import copy
 from datetime import datetime, timedelta, timezone
-from arango import ArangoClient
+from config import Config
 from notify.send_email_notifs import send_email_notifs
 
-from config import DB_USER, DB_PASS, DB_NAME, DB_URL, START_HOUR, START_MINUTE, MINIMUM_SCANS, DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-if DRY_RUN_EMAIL_MODE and DRY_RUN_LOG_MODE:
-    logger.error("Both Dry Run Email mode and Dry Run Log mode cannot be enabled at the same time. Please check your environment variables.")
-    sys.exit(1)
-elif DRY_RUN_EMAIL_MODE:
-    logger.info(f"Dry Run Email mode is enabled - emails will only be sent to the tracker service account email")
-elif DRY_RUN_LOG_MODE:
-    logger.info(f"Dry Run Log mode is enabled - no emails will be sent")
-else:
-    logger.info(f"Dry Run modes are disabled - emails will be sent to org owners/admins")
-
-missing_envs = []
-if not DB_USER:
-    missing_envs.append("DB_USER")
-if not DB_PASS:
-    missing_envs.append("DB_PASS")
-if not DB_NAME:
-    missing_envs.append("DB_NAME")
-if not DB_URL:
-    missing_envs.append("DB_URL")
-if not START_HOUR and START_HOUR != 0:
-    missing_envs.append("DETECT_DECAY_START_HOUR")
-if not START_MINUTE and START_MINUTE != 0:
-    missing_envs.append("DETECT_DECAY_START_MINUTE")
-if not MINIMUM_SCANS and MINIMUM_SCANS != 0:
-    missing_envs.append("DETECT_DECAY_MINIMUM_SCANS")
-if missing_envs:
-    logger.error(f"Missing required environment variables: {', '.join(missing_envs)}")
-    sys.exit(1)
 
 def ignore_domain(domain):
     return (
@@ -52,8 +18,8 @@ def ignore_domain(domain):
 def get_timestamp(days, hr, min):
     return (datetime.now(timezone.utc) - timedelta(days=days)).replace(hour=hr, minute=min, second=0, microsecond=0).isoformat(timespec='microseconds')
 
-def get_all_dns_scans(domain_id, db):
-    time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
+def get_all_dns_scans(domain_id, db, config: Config):
+    time_period_start = get_timestamp(1, config.start_hour, config.start_minute)
     past_day_cursor = db.aql.execute(
         """
         WITH domains, dns
@@ -66,7 +32,7 @@ def get_all_dns_scans(domain_id, db):
                     "dkim_status": dnsV.dkim.status,
             }
         """,
-        bind_vars={"domain_id": domain_id, 
+        bind_vars={"domain_id": domain_id,
                    "time_period_start": time_period_start},
     )
     past_day = list(past_day_cursor)
@@ -84,16 +50,16 @@ def get_all_dns_scans(domain_id, db):
                     "dkim_status": dnsV.dkim.status,
                 }
             """,
-            bind_vars={"domain_id": domain_id, 
-                       "num": len(past_day) + (MINIMUM_SCANS - 1)},
+            bind_vars={"domain_id": domain_id,
+                       "num": len(past_day) + (config.minimum_scans - 1)},
         )
     else:
         dns_scans = past_day_cursor
 
     return dns_scans
 
-def get_all_web_scans(domain_id, db):
-    time_period_start = get_timestamp(1, START_HOUR, START_MINUTE)
+def get_all_web_scans(domain_id, db, config: Config):
+    time_period_start = get_timestamp(1, config.start_hour, config.start_minute)
     past_day_cursor = db.aql.execute(
             """
             WITH domains, web, webScan
@@ -119,7 +85,7 @@ def get_all_web_scans(domain_id, db):
                     "scans": scans
                 }
             """,
-            bind_vars={"domain_id": domain_id, 
+            bind_vars={"domain_id": domain_id,
                        "time_period_start": time_period_start},
     )
     past_day = list(past_day_cursor)
@@ -155,12 +121,12 @@ def get_all_web_scans(domain_id, db):
                     "scans": scans
                 }
             """,
-            bind_vars={"domain_id": domain_id, 
-                       "num": len(past_day) + (MINIMUM_SCANS - 1)},
+            bind_vars={"domain_id": domain_id,
+                       "num": len(past_day) + (config.minimum_scans - 1)},
         )
     else:
         web_scans = past_day_cursor
-    
+
     return web_scans
 
 # Returns a single status given a list of multiple statuses
@@ -204,9 +170,9 @@ def finalize_web_scans(scans):
         "cipher_status": cipher,
         "curve_status": curve
     }
-    return final_results                  
+    return final_results
 
-def handle_email_notifs(decays, orgs, db):
+def handle_email_notifs(decays, orgs, db, config: Config, notify_client):
     results = []
     for org, domains in decays.items():
         for o in orgs:
@@ -215,7 +181,7 @@ def handle_email_notifs(decays, orgs, db):
                 break
         org_users = get_users(org_doc["_id"], db)
         if domains:
-            results.append(send_email_notifs(org_doc, domains, org_users))
+            results.append(send_email_notifs(org_doc, domains, org_users, config, notify_client))
     return results
 
 def get_users(org_id, db):
@@ -232,14 +198,14 @@ def get_users(org_id, db):
     )
     return cursor
 
-def find_decay(statuses, i):
-    if len(statuses) < MINIMUM_SCANS:
+def find_decay(statuses, i, minimum_scans: int):
+    if len(statuses) < minimum_scans:
         return False
-    recent_all_failed = all(status == "fail" for status in statuses[i:MINIMUM_SCANS-1+i])
-    previous_passed = statuses[MINIMUM_SCANS-1+i] == "pass"
+    recent_all_failed = all(status == "fail" for status in statuses[i:minimum_scans-1+i])
+    previous_passed = statuses[minimum_scans-1+i] == "pass"
     return recent_all_failed and previous_passed
 
-def detect_decay(db):
+def detect_decay(db, config: Config, notify_client):
     decays = {} # Dictionary to hold domains and their decayed statuses for each org
     orgs = [] # List to hold org documents, used for email notifs
 
@@ -263,9 +229,9 @@ def detect_decay(db):
                 # Check that domain isn't archived, blocked, or NXDOMAIN
                 if not ignore_domain(domain):
                     decayed_statuses = []
-                    # Get web scans                   
+                    # Get web scans
                     try:
-                        all_web_scans = list(get_all_web_scans(domain["_id"], db))
+                        all_web_scans = list(get_all_web_scans(domain["_id"], db, config))
                         final_web_scans = []
                         for web in all_web_scans:
                             scans = web.get("scans")
@@ -288,47 +254,47 @@ def detect_decay(db):
                                 }
                             # If there are multiple scans, combine them into one final scan result
                             else:
-                                final_results = finalize_web_scans(scans)                                                  
+                                final_results = finalize_web_scans(scans)
                             final_web_scans.append(final_results)
-                        if len(final_web_scans) >= MINIMUM_SCANS:
-                            for i in range(len(final_web_scans) - (MINIMUM_SCANS - 1)):
-                                if find_decay([scans["https_status"] for scans in final_web_scans], i):
+                        if len(final_web_scans) >= config.minimum_scans:
+                            for i in range(len(final_web_scans) - (config.minimum_scans - 1)):
+                                if find_decay([scans["https_status"] for scans in final_web_scans], i, config.minimum_scans):
                                     decayed_statuses.append("HTTPS Configuration")
-                                if find_decay([scans["hsts_status"] for scans in final_web_scans], i):
+                                if find_decay([scans["hsts_status"] for scans in final_web_scans], i, config.minimum_scans):
                                     decayed_statuses.append("HSTS Implementation")
-                                if find_decay([scans["certificate_status"] for scans in final_web_scans], i):
+                                if find_decay([scans["certificate_status"] for scans in final_web_scans], i, config.minimum_scans):
                                     decayed_statuses.append("Certificates")
-                                if find_decay([scans["protocol_status"] for scans in final_web_scans], i):
+                                if find_decay([scans["protocol_status"] for scans in final_web_scans], i, config.minimum_scans):
                                     decayed_statuses.append("Protocols")
-                                if find_decay([scans["cipher_status"] for scans in final_web_scans], i):
+                                if find_decay([scans["cipher_status"] for scans in final_web_scans], i, config.minimum_scans):
                                     decayed_statuses.append("Ciphers")
-                                if find_decay([scans["curve_status"] for scans in final_web_scans], i):
-                                    decayed_statuses.append("Curves")                           
-                        
-                    except Exception as e: 
+                                if find_decay([scans["curve_status"] for scans in final_web_scans], i, config.minimum_scans):
+                                    decayed_statuses.append("Curves")
+
+                    except Exception as e:
                         logger.error(f"Error fetching web scans for {domain['domain']}: {e}")
 
                     # Get dns scans
                     try:
-                        all_dns_scans = list(get_all_dns_scans(domain["_id"], db))
-                        if len(all_dns_scans) >= MINIMUM_SCANS:
-                            for i in range(len(all_dns_scans) - (MINIMUM_SCANS - 1)):
-                                if find_decay([scans["dmarc_status"] for scans in all_dns_scans], i):
+                        all_dns_scans = list(get_all_dns_scans(domain["_id"], db, config))
+                        if len(all_dns_scans) >= config.minimum_scans:
+                            for i in range(len(all_dns_scans) - (config.minimum_scans - 1)):
+                                if find_decay([scans["dmarc_status"] for scans in all_dns_scans], i, config.minimum_scans):
                                     decayed_statuses.append("DMARC")
-                                if find_decay([scans["spf_status"] for scans in all_dns_scans], i):
+                                if find_decay([scans["spf_status"] for scans in all_dns_scans], i, config.minimum_scans):
                                     decayed_statuses.append("SPF")
-                                if find_decay([scans["dkim_status"] for scans in all_dns_scans], i):
+                                if find_decay([scans["dkim_status"] for scans in all_dns_scans], i, config.minimum_scans):
                                     decayed_statuses.append("DKIM")
-                    
+
                     except Exception as e:
                         logger.error(f"Error fetching dns scans for {domain['domain']}: {e}")
                         continue
-                    
+
                     # Only add if there are actually decayed statuses
                     if len(decayed_statuses) != 0:
                         domains_dict[domain["domain"]] = decayed_statuses
                         logger.info(f"Decays detected for {domain['domain']}: {decayed_statuses}")
-                        
+
             if domains_dict:
                 decays[org['orgDetails']['en']['name']] = domains_dict
 
@@ -339,13 +305,5 @@ def detect_decay(db):
     logger.info(f"Decay Results Summary: Total Orgs with Decays = {len(decays)}, Total Domains with Decays = {sum(len(domains) for domains in decays.values())}")
     logger.info(f"Orgs Summary: { {org: len(domains) for org, domains in decays.items()} }")
     decays_copy = copy.deepcopy(decays)
-    responses = handle_email_notifs(decays_copy, orgs, db)
+    responses = handle_email_notifs(decays_copy, orgs, db, config, notify_client)
     return [decays, responses]
-
-if __name__ == "__main__":
-    logger.info("Detect decay service started")
-    # Establish DB connection
-    client = ArangoClient(hosts=DB_URL)
-    db = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
-    detect_decay(db)
-    logger.info(f"Detect decay service shutting down...")

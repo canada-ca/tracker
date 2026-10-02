@@ -30,13 +30,13 @@ WORKDIR /decay
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY detect_decay.py config.py ./
+COPY main.py detect_decay.py config.py ./
 COPY notify /decay/notify
 
 RUN adduser -D decay
 USER decay
 
-CMD ["python3", "detect_decay.py"]
+CMD ["python3", "main.py"]
 
 #===============================================================================================
 
