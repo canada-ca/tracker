@@ -1,13 +1,10 @@
 import logging
-import sys
 import json
-from notify.notify_client import notify_client
-from config import DRY_RUN_EMAIL_MODE, DRY_RUN_LOG_MODE, SERVICE_ACCOUNT_EMAIL, EMAIL_TEMPLATE_ID
+from config import Config
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def send_email_notifs(org, domains, org_users):
+def send_email_notifs(org, domains, org_users, config: Config, notify_client):
     org_name_en = org["orgDetails"]["en"]["name"]
     org_name_fr = org["orgDetails"]["fr"]["name"]
     org_acronym_en = org["orgDetails"]["en"]["acronym"]
@@ -46,14 +43,14 @@ def send_email_notifs(org, domains, org_users):
     domains_fr = custom_format(translate_to_fr(domains))
     responses = []
 
-    tracker_email = SERVICE_ACCOUNT_EMAIL
+    tracker_email = config.service_account_email
 
-    if DRY_RUN_EMAIL_MODE:
+    if config.dry_run_email_mode:
         email = tracker_email
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
-                template_id=EMAIL_TEMPLATE_ID,
+                template_id=config.email_template_id,
                 personalisation={
                     "org_name_en": org_name_en,
                     "org_name_fr": org_name_fr,
@@ -71,14 +68,14 @@ def send_email_notifs(org, domains, org_users):
         # Send email to each org owner/admin
         for user in org_users:
             email = user["userName"]
-            if DRY_RUN_LOG_MODE:
+            if config.dry_run_log_mode:
                 logger.info(f"DRY RUN Enabled: would send email to {email} in {org_name_en} with these decays:\n{json.dumps(domains, indent=2)}")
                 responses.append({})
                 continue
             try:
                 response = notify_client.send_email_notification(
                     email_address=email,
-                    template_id=EMAIL_TEMPLATE_ID,
+                    template_id=config.email_template_id,
                     personalisation={
                         "org_name_en": org_name_en,
                         "org_name_fr": org_name_fr,
