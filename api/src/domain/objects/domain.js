@@ -386,6 +386,21 @@ export const domainType = new GraphQLObjectType({
         return false
       },
     },
+    orgHasOwnership: {
+      type: GraphQLBoolean,
+      args: {
+        orgSlug: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: '',
+        },
+      },
+      description: '',
+      resolve: async ({ _id: domainId }, args, { auth: { userRequired }, dataSources: { domain, organization } }) => {
+        const { _id: orgId } = organization.bySlug(args.orgSlug)
+        await userRequired()
+        return await domain.organizationHasOwnership({ orgId, domainId })
+      },
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

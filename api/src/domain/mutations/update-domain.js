@@ -171,23 +171,16 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    const cvdEnrollmentChanged =
-      typeof cvdEnrollment !== 'undefined' &&
-      cvdEnrollment !== null &&
-      JSON.stringify(cvdEnrollment) !== JSON.stringify(domain?.cvdEnrollment)
-
-    if (cvdEnrollmentChanged) {
-      const hasOwnership = await domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id })
-
-      if (!hasOwnership) {
-        console.warn(
-          `User: ${userKey} attempted to update cvdEnrollment for domain: ${domainId} for org: ${orgId}, however that org does not have ownership of that domain.`,
-        )
-        return {
-          _type: 'error',
-          code: 403,
-          description: i18n._(t`Permission Denied: Please contact organization user for help with updating this domain.`),
-        }
+    const cvdEnrollmentChanged = typeof cvdEnrollment !== 'undefined' && cvdEnrollment !== null
+    const hasOwnership = await domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id })
+    if (cvdEnrollmentChanged && !hasOwnership) {
+      console.warn(
+        `User: ${userKey} attempted to update cvdEnrollment for domain: ${domainId} for org: ${orgId}, however that org does not have ownership of that domain.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact organization user for help with updating this domain.`),
       }
     }
 

@@ -53,6 +53,7 @@ export function AdminDomainModal({
   cvdEnrollment,
   highAvailability,
   permission,
+  orgHasOwnership,
   ...rest
 }) {
   const toast = useToast()
@@ -202,6 +203,8 @@ export function AdminDomainModal({
     return tags
   }
 
+  const showCvdForm = mutation === 'update' && orgHasOwnership
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom" {...rest}>
       <ModalOverlay />
@@ -218,11 +221,6 @@ export function AdminDomainModal({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
-            const sanitizeCvdEnrollment = (enrollment) => {
-              if (!enrollment || typeof enrollment !== 'object') return enrollment
-              const { __typename, ...rest } = enrollment
-              return rest
-            }
             if (mutation === 'update') {
               await updateDomain({
                 variables: {
@@ -230,7 +228,7 @@ export function AdminDomainModal({
                   orgId: orgId,
                   tags: values.tags.map(({ tagId }) => tagId),
                   assetState: values.assetState,
-                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
+                  cvdEnrollment: values.cvdEnrollment,
                   ...(isSuperAdmin && {
                     archived: values.archiveDomain,
                     ignoreRua: values.ignoreRua,
@@ -333,9 +331,7 @@ export function AdminDomainModal({
                     </Select>
                   </FormControl>
 
-                  {mutation === 'update' && (
-                    <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
-                  )}
+                  {showCvdForm && <CvdEnrollmentForm handleChange={handleChange} values={values} />}
                   <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
@@ -465,4 +461,5 @@ AdminDomainModal.propTypes = {
   highAvailability: bool,
   availableTags: array,
   permission: string,
+  orgHasOwnership: bool,
 }
