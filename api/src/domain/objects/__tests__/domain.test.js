@@ -3,12 +3,13 @@ import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
 import { tokenize } from '../../../auth'
+import { cleanseInput } from '../../../validators'
 import { organizationConnection } from '../../../organization'
 import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries'
 import { webConnection } from '../../../web-scan'
 import { domainType } from '../../index'
-import { Domain, Selectors } from '../../../scalars'
+import { Domain, Selectors, Slug } from '../../../scalars'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { dnsScanConnection } from '../../../dns-scan'
@@ -92,6 +93,17 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
       expect(demoType).toHaveProperty('cvdEnrollment')
     })
+    it('has an orgHasOwnership field', () => {
+      const demoType = domainType.getFields()
+
+      expect(demoType).toHaveProperty('orgHasOwnership')
+      expect(demoType.orgHasOwnership.type).toMatchObject(GraphQLBoolean)
+    })
+    it('has an orgSlug argument on the orgHasOwnership field', () => {
+      const orgSlugArg = domainType.getFields().orgHasOwnership.args.find(({ name }) => name === 'orgSlug')
+
+      expect(orgSlugArg.type).toMatchObject(new GraphQLNonNull(Slug))
+    })
   })
   describe('testing the field resolvers', () => {
     const consoleOutput = []
@@ -132,6 +144,85 @@ describe('given the domain object', () => {
         await expect(
           demoType.cvdEnrollment.resolve({}, {}, { auth: { userRequired: mockUserRequired } }),
         ).resolves.toBeUndefined()
+      })
+    })
+
+    describe('testing the orgHasOwnership resolver', () => {
+      const parent = { _id: 'domains/1' }
+      const org = { _id: 'organizations/1' }
+      const buildContext = ({ userRequired, loadOrgBySlug, organizationHasOwnership }) => ({
+        auth: { userRequired },
+        dataSources: {
+          organization: { bySlug: { load: loadOrgBySlug } },
+          domain: { organizationHasOwnership },
+        },
+        validators: { cleanseInput },
+      })
+
+      it('returns true when the organization owns the domain', async () => {
+        const demoType = domainType.getFields()
+        const loadOrgBySlug = jest.fn().mockResolvedValue(org)
+        const organizationHasOwnership = jest.fn().mockResolvedValue(true)
+
+        await expect(
+          demoType.orgHasOwnership.resolve(
+            parent,
+            { orgSlug: 'treasury-board-secretariat' },
+            buildContext({ userRequired: jest.fn(), loadOrgBySlug, organizationHasOwnership }),
+          ),
+        ).resolves.toEqual(true)
+        expect(loadOrgBySlug).toHaveBeenCalledWith('treasury-board-secretariat')
+        expect(organizationHasOwnership).toHaveBeenCalledWith({ orgId: org._id, domainId: parent._id })
+      })
+      it('returns false when the organization does not own the domain', async () => {
+        const demoType = domainType.getFields()
+
+        await expect(
+          demoType.orgHasOwnership.resolve(
+            parent,
+            { orgSlug: 'treasury-board-secretariat' },
+            buildContext({
+              userRequired: jest.fn(),
+              loadOrgBySlug: jest.fn().mockResolvedValue(org),
+              organizationHasOwnership: jest.fn().mockResolvedValue(false),
+            }),
+          ),
+        ).resolves.toEqual(false)
+      })
+      it('returns false without checking ownership when the organization cannot be found', async () => {
+        const demoType = domainType.getFields()
+        const organizationHasOwnership = jest.fn()
+
+        await expect(
+          demoType.orgHasOwnership.resolve(
+            parent,
+            { orgSlug: 'unknown-org' },
+            buildContext({
+              userRequired: jest.fn(),
+              loadOrgBySlug: jest.fn().mockResolvedValue(undefined),
+              organizationHasOwnership,
+            }),
+          ),
+        ).resolves.toEqual(false)
+        expect(organizationHasOwnership).not.toHaveBeenCalled()
+      })
+      it('propagates the error and does not load the organization when the user is not authenticated', async () => {
+        const demoType = domainType.getFields()
+        const loadOrgBySlug = jest.fn()
+        const authError = new Error('Authentication error. Please sign in.')
+
+        await expect(
+          demoType.orgHasOwnership.resolve(
+            parent,
+            { orgSlug: 'treasury-board-secretariat' },
+            buildContext({
+              userRequired: jest.fn().mockRejectedValue(authError),
+              loadOrgBySlug,
+              organizationHasOwnership: jest.fn(),
+            }),
+          ),
+        ).rejects.toEqual(authError)
+        expect(loadOrgBySlug).not.toHaveBeenCalled()
       })
     })
 
