@@ -123,7 +123,7 @@ msgstr "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 
-#: src/organization/objects/organization.js:246
+#: src/organization/objects/organization.js:256
 #: src/organization/queries/get-all-organization-domain-statuses.js:69
 msgid "Assess"
 msgstr "Assess"
@@ -142,7 +142,7 @@ msgstr "Authentication error. Please sign in."
 msgid "Cannot query additional findings without permission."
 msgstr "Cannot query additional findings without permission."
 
-#: src/organization/objects/organization.js:364
+#: src/organization/objects/organization.js:374
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
@@ -171,7 +171,7 @@ msgstr "CVE is already ignored for this domain."
 msgid "CVE is not ignored for this domain."
 msgstr "CVE is not ignored for this domain."
 
-#: src/organization/objects/organization.js:248
+#: src/organization/objects/organization.js:258
 #: src/organization/queries/get-all-organization-domain-statuses.js:71
 msgid "Deploy"
 msgstr "Deploy"
@@ -180,7 +180,7 @@ msgstr "Deploy"
 msgid "Email already in use."
 msgstr "Email already in use."
 
-#: src/organization/objects/organization.js:250
+#: src/organization/objects/organization.js:260
 #: src/organization/queries/get-all-organization-domain-statuses.js:73
 msgid "Enforce"
 msgstr "Enforce"
@@ -217,7 +217,7 @@ msgstr "Incorrect username or password. Please try again."
 msgid "Invalid token, please sign in."
 msgstr "Invalid token, please sign in."
 
-#: src/organization/objects/organization.js:252
+#: src/organization/objects/organization.js:262
 #: src/organization/queries/get-all-organization-domain-statuses.js:75
 msgid "Maintain"
 msgstr "Maintain"
@@ -229,6 +229,10 @@ msgstr "Message dismissed successfully"
 #: src/user/mutations/reset-password.js:88
 msgid "New passwords do not match."
 msgstr "New passwords do not match."
+
+#: src/domain/mutations/update-cvd-enrollment.js:65
+msgid "No CVD enrollment fields were provided to update."
+msgstr "No CVD enrollment fields were provided to update."
 
 #: src/organization/queries/find-organization-by-slug.js:42
 #: src/user/queries/find-my-tracker.js:29
@@ -454,7 +458,7 @@ msgstr "Permission Denied: Please contact organization user for help with creati
 #~ msgstr "Permission Denied: Please contact organization user for help with retrieving tags."
 
 #: src/domain/queries/find-domain-by-domain.js:51
-#: src/organization/objects/organization.js:201
+#: src/organization/objects/organization.js:211
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission Denied: Please contact organization user for help with retrieving this domain."
 
@@ -463,7 +467,9 @@ msgstr "Permission Denied: Please contact organization user for help with retrie
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission Denied: Please contact organization user for help with scanning this domain."
 
-#: src/domain/mutations/update-domain.js:134
+#: src/domain/mutations/update-cvd-enrollment.js:104
+#: src/domain/mutations/update-cvd-enrollment.js:139
+#: src/domain/mutations/update-domain.js:127
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Permission Denied: Please contact organization user for help with updating this domain."
 
@@ -471,7 +477,7 @@ msgstr "Permission Denied: Please contact organization user for help with updati
 msgid "Permission Denied: Please contact super admin for help with archiving organization."
 msgstr "Permission Denied: Please contact super admin for help with archiving organization."
 
-#: src/domain/mutations/create-domain.js:153
+#: src/domain/mutations/create-domain.js:144
 msgid "Permission Denied: Please contact super admin for help with creating domain."
 msgstr "Permission Denied: Please contact super admin for help with creating domain."
 
@@ -488,7 +494,7 @@ msgstr "Permission Denied: Please contact super admin for help with removing org
 #~ msgid "Permission Denied: Please contact super admin for help with scanning this domain."
 #~ msgstr "Permission Denied: Please contact super admin for help with scanning this domain."
 
-#: src/domain/mutations/update-domain.js:178
+#: src/domain/mutations/update-domain.js:163
 msgid "Permission Denied: Please contact super admin for help with updating domain."
 msgstr "Permission Denied: Please contact super admin for help with updating domain."
 
@@ -820,7 +826,7 @@ msgstr "Unable to confirm completion of the tour. Please try again."
 msgid "Unable to create domain in unknown organization."
 msgstr "Unable to create domain in unknown organization."
 
-#: src/domain/mutations/create-domain.js:191
+#: src/domain/mutations/create-domain.js:182
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Unable to create domain, organization has already claimed it."
 
@@ -871,7 +877,7 @@ msgstr "Unable to dismiss message. Please try again."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Unable to dispatch one time scan. Please try again."
 
-#: src/organization/objects/organization.js:271
+#: src/organization/objects/organization.js:281
 msgid "Unable to export organization. Please try again."
 msgstr "Unable to export organization. Please try again."
 
@@ -980,10 +986,10 @@ msgstr "Unable to find user affiliation(s). Please try again."
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Unable to find verified organization(s). Please try again."
 
-#: src/domain/data-source.js:764
-#: src/domain/data-source.js:786
-#: src/domain/data-source.js:800
-#: src/domain/data-source.js:810
+#: src/domain/data-source.js:816
+#: src/domain/data-source.js:838
+#: src/domain/data-source.js:852
+#: src/domain/data-source.js:862
 #: src/domain/mutations/ignore-cve.js:61
 msgid "Unable to ignore CVE. Please try again."
 msgstr "Unable to ignore CVE. Please try again."
@@ -1041,8 +1047,8 @@ msgstr "Unable to load Aggregate guidance tag(s). Please try again."
 #~ msgid "Unable to load all organization domain statuses. Please try again."
 #~ msgstr "Unable to load all organization domain statuses. Please try again."
 
-#: src/summaries/loaders/load-chart-summaries-by-period.js:56
-#: src/summaries/loaders/load-chart-summaries-by-period.js:66
+#: src/summaries/loaders/load-chart-summaries-by-period.js:58
+#: src/summaries/loaders/load-chart-summaries-by-period.js:68
 msgid "Unable to load chart summary data. Please try again."
 msgstr "Unable to load chart summary data. Please try again."
 
@@ -1178,8 +1184,8 @@ msgstr "Unable to load organization domain statuses. Please try again."
 msgid "Unable to load organization names. Please try again."
 msgstr "Unable to load organization names. Please try again."
 
-#: src/organization/loaders/load-organization-summaries-by-period.js:50
-#: src/organization/loaders/load-organization-summaries-by-period.js:60
+#: src/organization/loaders/load-organization-summaries-by-period.js:52
+#: src/organization/loaders/load-organization-summaries-by-period.js:62
 msgid "Unable to load organization summary data. Please try again."
 msgstr "Unable to load organization summary data. Please try again."
 
@@ -1348,15 +1354,15 @@ msgstr "Unable to remove domain. Domain is not part of organization."
 
 #: src/domain/data-source.js:164
 #: src/domain/data-source.js:186
-#: src/domain/data-source.js:593
-#: src/domain/data-source.js:613
-#: src/domain/data-source.js:639
-#: src/domain/data-source.js:657
-#: src/domain/data-source.js:674
-#: src/domain/data-source.js:690
-#: src/domain/data-source.js:707
-#: src/domain/data-source.js:731
+#: src/domain/data-source.js:645
+#: src/domain/data-source.js:665
+#: src/domain/data-source.js:691
+#: src/domain/data-source.js:709
+#: src/domain/data-source.js:726
 #: src/domain/data-source.js:742
+#: src/domain/data-source.js:759
+#: src/domain/data-source.js:783
+#: src/domain/data-source.js:794
 #: src/domain/mutations/remove-domain.js:119
 #: src/domain/mutations/remove-domain.js:140
 #: src/domain/mutations/remove-domain.js:151
@@ -1461,7 +1467,7 @@ msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
 #: src/domain/objects/domain.js:274
-#: src/domain/objects/domain.js:309
+#: src/domain/objects/domain.js:311
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Unable to retrieve DMARC report information for: {domain}"
 
@@ -1535,10 +1541,10 @@ msgstr "Unable to sign up, please contact org admin for a new invite."
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
-#: src/domain/data-source.js:835
-#: src/domain/data-source.js:857
-#: src/domain/data-source.js:871
-#: src/domain/data-source.js:881
+#: src/domain/data-source.js:887
+#: src/domain/data-source.js:909
+#: src/domain/data-source.js:923
+#: src/domain/data-source.js:933
 #: src/domain/mutations/unignore-cve.js:61
 msgid "Unable to stop ignoring CVE. Please try again."
 msgstr "Unable to stop ignoring CVE. Please try again."
@@ -1573,8 +1579,8 @@ msgstr "Unable to two factor authenticate. Please try again."
 msgid "Unable to unfavourite domain, domain is not favourited."
 msgstr "Unable to unfavourite domain, domain is not favourited."
 
-#: src/domain/data-source.js:464
-#: src/domain/data-source.js:472
+#: src/domain/data-source.js:516
+#: src/domain/data-source.js:524
 msgid "Unable to unfavourite domain. Please try again."
 msgstr "Unable to unfavourite domain. Please try again."
 
@@ -1588,25 +1594,34 @@ msgstr "Unable to unfavourite unknown domain."
 #~ msgid "Unable to unignore CVE. Please try again."
 #~ msgstr "Unable to unignore CVE. Please try again."
 
-#: src/domain/data-source.js:514
+#: src/domain/data-source.js:275
+msgid "Unable to update CVD enrollment. Please try again."
+msgstr "Unable to update CVD enrollment. Please try again."
+
+#: src/domain/data-source.js:566
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
-#: src/domain/mutations/update-domain.js:120
+#: src/domain/mutations/update-cvd-enrollment.js:91
+#: src/domain/mutations/update-domain.js:113
 msgid "Unable to update domain in an unknown org."
 msgstr "Unable to update domain in an unknown org."
 
-#: src/domain/mutations/update-domain.js:157
+#: src/domain/mutations/update-cvd-enrollment.js:127
+#: src/domain/mutations/update-domain.js:150
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Unable to update domain that does not belong to the given organization."
 
 #: src/domain/data-source.js:234
-#: src/domain/data-source.js:495
-#: src/domain/data-source.js:524
-#: src/domain/data-source.js:550
-#: src/domain/data-source.js:558
-#: src/domain/mutations/update-domain.js:147
-#: src/domain/mutations/update-domain.js:205
+#: src/domain/data-source.js:254
+#: src/domain/data-source.js:285
+#: src/domain/data-source.js:547
+#: src/domain/data-source.js:576
+#: src/domain/data-source.js:602
+#: src/domain/data-source.js:610
+#: src/domain/mutations/update-cvd-enrollment.js:117
+#: src/domain/mutations/update-domain.js:140
+#: src/domain/mutations/update-domain.js:189
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
@@ -1615,9 +1630,9 @@ msgstr "Unable to update domain. Please try again."
 msgid "Unable to update domains in unknown organization."
 msgstr "Unable to update domains in unknown organization."
 
-#: src/domain/data-source.js:424
-#: src/domain/data-source.js:432
-#: src/domain/data-source.js:436
+#: src/domain/data-source.js:476
+#: src/domain/data-source.js:484
+#: src/domain/data-source.js:488
 msgid "Unable to update domains. Please try again."
 msgstr "Unable to update domains. Please try again."
 
@@ -1678,7 +1693,8 @@ msgstr "Unable to update tag, orgId is invalid."
 msgid "Unable to update tag. Please try again."
 msgstr "Unable to update tag. Please try again."
 
-#: src/domain/mutations/update-domain.js:106
+#: src/domain/mutations/update-cvd-enrollment.js:78
+#: src/domain/mutations/update-domain.js:99
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
 
