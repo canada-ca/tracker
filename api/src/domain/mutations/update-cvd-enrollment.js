@@ -143,7 +143,8 @@ export const updateCvdEnrollment = new mutationWithClientMutationId({
     const returnDomain = await domainDataSource.updateCvdEnrollment({ domain, cvdEnrollment })
     console.info(`User: ${userKey} successfully updated cvdEnrollment for domain: ${domainId}.`)
 
-    if (typeof cvdEnrollment.status !== 'undefined' && cvdEnrollment.status !== domain.cvdEnrollment?.status) {
+    const previousStatus = domain.cvdEnrollment?.status ?? 'not-enrolled'
+    if (typeof cvdEnrollment.status !== 'undefined' && cvdEnrollment.status !== previousStatus) {
       await auditLogs.logActivity({
         initiatedBy: {
           id: user._key,
@@ -162,7 +163,7 @@ export const updateCvdEnrollment = new mutationWithClientMutationId({
           updatedProperties: [
             {
               name: 'cvdEnrollment',
-              oldValue: domain.cvdEnrollment?.status,
+              oldValue: previousStatus,
               newValue: cvdEnrollment.status,
             },
           ],

@@ -318,6 +318,15 @@ describe('updating a domain cvdEnrollment', () => {
       expect(await loadStoredCvdEnrollment()).toEqual({ ...storedCvdEnrollment, status: 'deny' })
     })
 
+    it('clears the description when it is set to an empty string', async () => {
+      const response = await runMutation({ fields: 'description: ""' })
+
+      expect(response).toEqual({
+        data: { updateCvdEnrollment: { result: { id: toGlobalId('domain', domain._key) } } },
+      })
+      expect(await loadStoredCvdEnrollment()).toEqual({ ...storedCvdEnrollment, description: '' })
+    })
+
     it('keeps other fields when status is set to NOT_ENROLLED', async () => {
       const response = await runMutation({ fields: 'status: NOT_ENROLLED' })
 
@@ -356,6 +365,34 @@ describe('updating a domain cvdEnrollment', () => {
       await runMutation({ fields: 'description: "Only the description"' })
 
       expect(await loadAuditLogs()).toEqual([])
+    })
+
+    describe('when the domain has no stored cvdEnrollment', () => {
+      beforeEach(async () => {
+        await query`
+          LET domainDoc = DOCUMENT(${domain._id})
+          REPLACE domainDoc WITH UNSET(domainDoc, 'cvdEnrollment') IN domains
+        `
+      })
+
+      it('does not write an audit log entry when status is set to NOT_ENROLLED', async () => {
+        const response = await runMutation({ fields: 'status: NOT_ENROLLED' })
+
+        expect(response).toEqual({
+          data: { updateCvdEnrollment: { result: { id: toGlobalId('domain', domain._key) } } },
+        })
+        expect(await loadAuditLogs()).toEqual([])
+      })
+
+      it('writes an audit log entry with not-enrolled as the old value when status is set to ENROLLED', async () => {
+        await runMutation({ fields: 'status: ENROLLED' })
+
+        const logs = await loadAuditLogs()
+        expect(logs).toHaveLength(1)
+        expect(logs[0].target.updatedProperties).toEqual([
+          { name: 'cvdEnrollment', oldValue: 'not-enrolled', newValue: 'enrolled' },
+        ])
+      })
     })
 
     it('returns a 400 error for an unknown domain', async () => {
@@ -469,6 +506,40 @@ describe('updating a domain cvdEnrollment', () => {
           },
         },
       })
+      expect(await loadStoredCvdEnrollment()).toEqual(storedCvdEnrollment)
+    })
+  })
+
+  describe('given a super admin of an org that claims and owns the domain', () => {
+    beforeEach(async () => {
+      await affiliate('super_admin')
+      await claim()
+      await own()
+    })
+
+    it('updates the domain', async () => {
+      const response = await runMutation({ fields: 'status: DENY' })
+
+      expect(response).toEqual({
+        data: { updateCvdEnrollment: { result: { id: toGlobalId('domain', domain._key) } } },
+      })
+      expect(await loadStoredCvdEnrollment()).toEqual({ ...storedCvdEnrollment, status: 'deny' })
+    })
+  })
+
+  describe('given a super admin of an org that claims but does not own the domain', () => {
+    beforeEach(async () => {
+      await affiliate('super_admin')
+      await claim()
+    })
+
+    it('returns a 403 error and does not update the domain', async () => {
+      const response = await runMutation({ fields: 'status: DENY' })
+
+      expect(response).toEqual(permissionDenied)
+      expect(consoleOutput).toEqual([
+        `User: ${user._key} attempted to update cvdEnrollment for domain: ${domain._key} for org: ${org._key}, however that org does not have ownership of that domain.`,
+      ])
       expect(await loadStoredCvdEnrollment()).toEqual(storedCvdEnrollment)
     })
   })
