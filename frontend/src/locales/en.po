@@ -631,7 +631,7 @@ msgstr "An error occurred while verifying your phone number."
 #: src/admin/AdminDomainModal.js:65
 #: src/admin/AdminDomainModal.js:111
 #: src/admin/AdminDomains.js:131
-#: src/admin/CvdEnrollmentModal.js:52
+#: src/admin/CvdEnrollmentModal.js:58
 #: src/admin/DomainUpdateList.js:57
 #: src/admin/DomainUpdateList.js:104
 #: src/admin/TagForm.js:28
@@ -1275,6 +1275,10 @@ msgstr "Curves"
 msgid "Curves Status"
 msgstr "Curves Status"
 
+#: src/admin/AdminDomainList.js:110
+msgid "CVD"
+msgstr "CVD"
+
 #. placeholder {0}: cvdEnrollment.status
 #: src/admin/AdminDomainCard.js:45
 #: src/domains/DomainCard.js:186
@@ -1291,7 +1295,7 @@ msgstr "CVD Denied"
 msgid "CVD Enrolled"
 msgstr "CVD Enrolled"
 
-#: src/admin/CvdEnrollmentModal.js:65
+#: src/admin/CvdEnrollmentModal.js:71
 msgid "CVD enrollment for {domain} successfully updated."
 msgstr "CVD enrollment for {domain} successfully updated."
 
@@ -1299,7 +1303,7 @@ msgstr "CVD enrollment for {domain} successfully updated."
 msgid "CVD Enrollment Status"
 msgstr "CVD Enrollment Status"
 
-#: src/admin/CvdEnrollmentModal.js:64
+#: src/admin/CvdEnrollmentModal.js:70
 msgid "CVD enrollment updated"
 msgstr "CVD enrollment updated"
 
@@ -1765,7 +1769,7 @@ msgstr "Edit"
 msgid "Edit CVD enrollment"
 msgstr "Edit CVD enrollment"
 
-#: src/admin/CvdEnrollmentModal.js:112
+#: src/admin/CvdEnrollmentModal.js:118
 msgid "Edit CVD Enrollment: {domain}"
 msgstr "Edit CVD Enrollment: {domain}"
 
@@ -2743,7 +2747,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/AdminDomainModal.js:95
 #: src/admin/AdminDomainModal.js:141
 #: src/admin/AdminDomains.js:161
-#: src/admin/CvdEnrollmentModal.js:82
+#: src/admin/CvdEnrollmentModal.js:88
 #: src/admin/DomainUpdateList.js:89
 #: src/admin/DomainUpdateList.js:136
 #: src/admin/SuperAdminUserList.js:107
@@ -2794,7 +2798,7 @@ msgstr "Incorrect unignoreCve.result typename."
 msgid "Incorrect update method received."
 msgstr "Incorrect update method received."
 
-#: src/admin/CvdEnrollmentModal.js:83
+#: src/admin/CvdEnrollmentModal.js:89
 msgid "Incorrect updateCvdEnrollment.result typename."
 msgstr "Incorrect updateCvdEnrollment.result typename."
 
@@ -4331,7 +4335,7 @@ msgstr "Rotate DKIM keys annually."
 msgid "SAN List:"
 msgstr "SAN List:"
 
-#: src/admin/CvdEnrollmentModal.js:122
+#: src/admin/CvdEnrollmentModal.js:128
 #: src/user/EditableUserTFAMethod.js:177
 msgid "Save"
 msgstr "Save"
@@ -5747,7 +5751,7 @@ msgstr "Unable to sign in to your account, please try again."
 msgid "Unable to stop ignoring CVE."
 msgstr "Unable to stop ignoring CVE."
 
-#: src/admin/CvdEnrollmentModal.js:73
+#: src/admin/CvdEnrollmentModal.js:79
 msgid "Unable to update CVD enrollment."
 msgstr "Unable to update CVD enrollment."
 

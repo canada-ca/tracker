@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IconButton, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, IconButton, Text, useDisclosure } from '@chakra-ui/react'
 import { ListOf } from '../components/ListOf'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { EditIcon, MinusIcon, SettingsIcon } from '@chakra-ui/icons'
@@ -95,7 +95,7 @@ export function AdminDomainList({
                 mr="2"
               />
               {orgHasOwnership && (
-                <IconButton
+                <Button
                   data-testid={`edit-cvd-${index}`}
                   variant="primary"
                   px="2"
@@ -103,10 +103,12 @@ export function AdminDomainList({
                     setSelectedCvdDomain({ domainId, domain, cvdEnrollment })
                     cvdOnOpen()
                   }}
-                  icon={<SettingsIcon />}
+                  leftIcon={<SettingsIcon />}
                   aria-label={t`Edit CVD enrollment`}
                   mr="2"
-                />
+                >
+                  <Trans>CVD</Trans>
+                </Button>
               )}
             </AdminDomainCard>
           </React.Fragment>

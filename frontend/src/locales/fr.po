@@ -579,7 +579,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/AdminDomainModal.js:65
 #: src/admin/AdminDomainModal.js:111
 #: src/admin/AdminDomains.js:131
-#: src/admin/CvdEnrollmentModal.js:52
+#: src/admin/CvdEnrollmentModal.js:58
 #: src/admin/DomainUpdateList.js:57
 #: src/admin/DomainUpdateList.js:104
 #: src/admin/TagForm.js:28
@@ -1219,6 +1219,10 @@ msgstr "Courbes"
 msgid "Curves Status"
 msgstr "État des courbes"
 
+#: src/admin/AdminDomainList.js:110
+msgid "CVD"
+msgstr "DCV"
+
 #. placeholder {0}: cvdEnrollment.status
 #: src/admin/AdminDomainCard.js:45
 #: src/domains/DomainCard.js:186
@@ -1235,7 +1239,7 @@ msgstr "Rejet de la demande de DCV"
 msgid "CVD Enrolled"
 msgstr "DCV inscrit"
 
-#: src/admin/CvdEnrollmentModal.js:65
+#: src/admin/CvdEnrollmentModal.js:71
 msgid "CVD enrollment for {domain} successfully updated."
 msgstr "L'inscription au DCV pour {domain} a été mise à jour avec succès."
 
@@ -1243,7 +1247,7 @@ msgstr "L'inscription au DCV pour {domain} a été mise à jour avec succès."
 msgid "CVD Enrollment Status"
 msgstr "Statut d'inscription au DCV"
 
-#: src/admin/CvdEnrollmentModal.js:64
+#: src/admin/CvdEnrollmentModal.js:70
 msgid "CVD enrollment updated"
 msgstr "Mise à jour de l'inscription au programme DCV"
 
@@ -1701,7 +1705,7 @@ msgstr "Edit"
 msgid "Edit CVD enrollment"
 msgstr "Modifier l'inscription au DCV"
 
-#: src/admin/CvdEnrollmentModal.js:112
+#: src/admin/CvdEnrollmentModal.js:118
 msgid "Edit CVD Enrollment: {domain}"
 msgstr "Modifier l'inscription au DCV: {domain}"
 
@@ -2657,7 +2661,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/AdminDomainModal.js:95
 #: src/admin/AdminDomainModal.js:141
 #: src/admin/AdminDomains.js:161
-#: src/admin/CvdEnrollmentModal.js:82
+#: src/admin/CvdEnrollmentModal.js:88
 #: src/admin/DomainUpdateList.js:89
 #: src/admin/DomainUpdateList.js:136
 #: src/admin/SuperAdminUserList.js:107
@@ -2708,7 +2712,7 @@ msgstr "Incorrect unignoreCve.result typename."
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
-#: src/admin/CvdEnrollmentModal.js:83
+#: src/admin/CvdEnrollmentModal.js:89
 msgid "Incorrect updateCvdEnrollment.result typename."
 msgstr "Nom de type incorrect pour `updateCvdEnrollment.result`."
 
@@ -4228,7 +4232,7 @@ msgstr "Effectuer la rotation des clés DKIM annuellement."
 msgid "SAN List:"
 msgstr "Liste des SAN :"
 
-#: src/admin/CvdEnrollmentModal.js:122
+#: src/admin/CvdEnrollmentModal.js:128
 #: src/user/EditableUserTFAMethod.js:177
 msgid "Save"
 msgstr "Sauvez"
@@ -5601,7 +5605,7 @@ msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 msgid "Unable to stop ignoring CVE."
 msgstr "Impossible de cesser d'ignorer le CVE."
 
-#: src/admin/CvdEnrollmentModal.js:73
+#: src/admin/CvdEnrollmentModal.js:79
 msgid "Unable to update CVD enrollment."
 msgstr "Impossible de mettre à jour l'inscription DCV"
 
