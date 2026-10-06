@@ -38,7 +38,7 @@ const domainResult = (status) => ({
   __typename: 'Domain',
 })
 
-const renderModal = ({ mocks = [], onClose = jest.fn() } = {}) =>
+const renderModal = ({ mocks = [], onClose = jest.fn(), cvdEnrollment = existingEnrollment } = {}) =>
   render(
     <MockedProvider mocks={mocks} cache={createCache()}>
       <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
@@ -51,7 +51,7 @@ const renderModal = ({ mocks = [], onClose = jest.fn() } = {}) =>
                 domainId={domainId}
                 orgId={orgId}
                 domain="test.gc.ca"
-                cvdEnrollment={{ ...existingEnrollment, __typename: 'CvdEnrollment' }}
+                cvdEnrollment={{ ...cvdEnrollment, __typename: 'CvdEnrollment' }}
               />
             </MemoryRouter>
           </I18nProvider>
@@ -82,6 +82,36 @@ describe('<CvdEnrollmentModal />', () => {
 
     await waitFor(() => expect(screen.getByText(/CVD enrollment updated/i)).toBeInTheDocument())
     expect(onClose).toHaveBeenCalled()
+  })
+
+  it('sends an empty description when an existing description is cleared', async () => {
+    const onClose = jest.fn()
+    const mocks = [
+      updateCvdEnrollmentMock(
+        { domainId, orgId, description: '' },
+        {
+          id: domainId,
+          cvdEnrollment: { ...existingEnrollment, description: '', __typename: 'CvdEnrollment' },
+          __typename: 'Domain',
+        },
+      ),
+    ]
+    renderModal({ mocks, onClose })
+
+    fireEvent.change(screen.getByRole('textbox', { name: /Description/i }), { target: { value: '' } })
+    await waitFor(() => expect(saveButton()).toBeEnabled())
+    fireEvent.click(saveButton())
+
+    await waitFor(() => expect(screen.getByText(/CVD enrollment updated/i)).toBeInTheDocument())
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('defaults to NOT_ENROLLED and hides extra fields when status is null', async () => {
+    renderModal({ cvdEnrollment: { ...existingEnrollment, status: null } })
+
+    await waitFor(() => expect(statusSelect()).toHaveValue('NOT_ENROLLED'))
+    expect(screen.queryByRole('textbox', { name: /Description/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('combobox', { name: /Max Severity/i })).not.toBeInTheDocument()
   })
 
   it('shows an error toast when the API returns a DomainError', async () => {

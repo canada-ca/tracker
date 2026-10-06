@@ -78,7 +78,7 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
                     variant="primary"
                     size="lg"
                     as={Link}
-                    href={'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=GC%CVD%Support'}
+                    href={'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=GC%20CVD%20Support'}
                     isExternal={true}
                   >
                     <Trans>Contact Us</Trans>
@@ -142,7 +142,7 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
               onChange={handleChange}
               value={values.cvdEnrollment.maxSeverity || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.maxSeverity}>
                 <Trans>Select severity</Trans>
               </option>
               <option value="LOW">
@@ -173,7 +173,7 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
               onChange={handleChange}
               value={values.cvdEnrollment.confidentialityRequirement || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.confidentialityRequirement}>
                 <Trans>Select requirement</Trans>
               </option>
               <option value="NONE">
@@ -201,7 +201,7 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
               onChange={handleChange}
               value={values.cvdEnrollment.integrityRequirement || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.integrityRequirement}>
                 <Trans>Select requirement</Trans>
               </option>
               <option value="NONE">
@@ -229,7 +229,7 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
               onChange={handleChange}
               value={values.cvdEnrollment.availabilityRequirement || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.availabilityRequirement}>
                 <Trans>Select requirement</Trans>
               </option>
               <option value="NONE">

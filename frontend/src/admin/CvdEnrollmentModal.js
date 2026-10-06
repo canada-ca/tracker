@@ -30,11 +30,17 @@ const CVD_ENROLLMENT_FIELDS = [
 
 const isBlank = (value) => value === '' || value === null || value === undefined
 
+// Description may be cleared by sending ''; other fields ignore blank values.
+const hasFieldChanged = (key, currentValue, initialValue) => {
+  if (key === 'description') return (currentValue ?? '') !== (initialValue ?? '')
+  return currentValue !== initialValue && !isBlank(currentValue)
+}
+
 const changedCvdFields = (current, initial) =>
   Object.fromEntries(
-    CVD_ENROLLMENT_FIELDS.filter((key) => current[key] !== initial[key] && !isBlank(current[key])).map((key) => [
+    CVD_ENROLLMENT_FIELDS.filter((key) => hasFieldChanged(key, current[key], initial[key])).map((key) => [
       key,
-      current[key],
+      current[key] ?? '',
     ]),
   )
 
@@ -43,7 +49,7 @@ export function CvdEnrollmentModal({ isOpen, onClose, domainId, orgId, domain, c
   const { t } = useLingui()
 
   const { __typename, ...existingEnrollment } = cvdEnrollment || {}
-  const initialCvdEnrollment = { status: 'NOT_ENROLLED', ...existingEnrollment }
+  const initialCvdEnrollment = { ...existingEnrollment, status: existingEnrollment.status ?? 'NOT_ENROLLED' }
 
   const [updateCvdEnrollment] = useMutation(UPDATE_CVD_ENROLLMENT, {
     refetchQueries: ['FindAuditLogs'],

@@ -113,6 +113,37 @@ describe('<CvdEnrollmentForm>', () => {
     expect(screen.getByLabelText(/Availability Requirement/i).value).toBe('')
   })
 
+  it('offers the placeholder option for select fields with no value', () => {
+    renderForm({
+      values: { cvdEnrollment: { ...baseValues.cvdEnrollment, status: 'ENROLLED' } },
+      handleChange,
+    })
+    expect(screen.getByText('Select severity')).not.toHaveAttribute('hidden')
+    const requirementPlaceholders = screen.getAllByText('Select requirement')
+    expect(requirementPlaceholders).toHaveLength(3)
+    requirementPlaceholders.forEach((option) => expect(option).not.toHaveAttribute('hidden'))
+  })
+
+  it('hides the placeholder option for select fields with a stored value', () => {
+    renderForm({
+      values: {
+        cvdEnrollment: {
+          ...baseValues.cvdEnrollment,
+          status: 'ENROLLED',
+          maxSeverity: 'HIGH',
+          confidentialityRequirement: 'LOW',
+          integrityRequirement: 'HIGH',
+          availabilityRequirement: 'NONE',
+        },
+      },
+      handleChange,
+    })
+    expect(screen.getByText('Select severity')).toHaveAttribute('hidden')
+    const requirementPlaceholders = screen.getAllByText('Select requirement')
+    expect(requirementPlaceholders).toHaveLength(3)
+    requirementPlaceholders.forEach((option) => expect(option).toHaveAttribute('hidden'))
+  })
+
   it('does not render additional fields when status is NOT_ENROLLED', () => {
     renderForm({ values: baseValues, handleChange })
     expect(screen.queryByLabelText(/Description/i)).not.toBeInTheDocument()
