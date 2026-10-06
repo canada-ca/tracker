@@ -34,17 +34,16 @@ describe('<CvdEnrollmentForm>', () => {
   })
 
   it('renders the enrollment status select and info popover', () => {
-    renderForm({ values: baseValues, handleChange, permission: 'USER' })
+    renderForm({ values: baseValues, handleChange })
     expect(screen.getAllByText(/CVD Enrollment Status/i)[0]).toBeInTheDocument()
     expect(screen.getByText(/More Info/i)).toBeInTheDocument()
     expect(screen.getByText(/Not Enrolled/i)).toBeInTheDocument()
   })
 
-  it('shows Enrolled option for ADMIN permission', () => {
+  it('shows the Enrolled option', () => {
     renderForm({
       values: { cvdEnrollment: { ...baseValues.cvdEnrollment, status: 'ENROLLED' } },
       handleChange,
-      permission: 'ADMIN',
     })
     expect(screen.getAllByText(/Enrolled/i)[0]).toBeInTheDocument()
   })
@@ -63,7 +62,6 @@ describe('<CvdEnrollmentForm>', () => {
         },
       },
       handleChange,
-      permission: 'OWNER',
     })
     expect(screen.getByLabelText(/Description/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Max Severity/i)).toBeInTheDocument()
@@ -73,11 +71,11 @@ describe('<CvdEnrollmentForm>', () => {
   })
 
   it('calls handleChange when status is changed', () => {
-    renderForm({ values: baseValues, handleChange, permission: 'ADMIN' })
+    renderForm({ values: baseValues, handleChange })
     // Use getByRole to select by combobox and name
     const select = screen.getByRole('combobox', { name: /CVD Enrollment Status/i })
     fireEvent.change(select, {
-      target: { value: 'PENDING' },
+      target: { value: 'DENY' },
     })
     expect(handleChange).toHaveBeenCalled()
   })
@@ -88,7 +86,6 @@ describe('<CvdEnrollmentForm>', () => {
         cvdEnrollment: { ...baseValues.cvdEnrollment, status: 'ENROLLED' },
       },
       handleChange,
-      permission: 'OWNER',
     })
     fireEvent.change(screen.getByLabelText(/Description/i), {
       target: { value: 'Test description' },
@@ -109,7 +106,6 @@ describe('<CvdEnrollmentForm>', () => {
         },
       },
       handleChange,
-      permission: 'OWNER',
     })
     expect(screen.getByLabelText(/Max Severity/i).value).toBe('')
     expect(screen.getByLabelText(/Confidentiality Requirement/i).value).toBe('')
@@ -118,7 +114,7 @@ describe('<CvdEnrollmentForm>', () => {
   })
 
   it('does not render additional fields when status is NOT_ENROLLED', () => {
-    renderForm({ values: baseValues, handleChange, permission: 'USER' })
+    renderForm({ values: baseValues, handleChange })
     expect(screen.queryByLabelText(/Description/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/Max Severity/i)).not.toBeInTheDocument()
   })

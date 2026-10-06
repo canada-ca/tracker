@@ -487,7 +487,6 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               tags: [],
               assetState: 'MONITOR_ONLY',
-              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {

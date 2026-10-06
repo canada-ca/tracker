@@ -34,7 +34,6 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { CvdEnrollmentForm } from './CvdEnrollmentForm'
 
 export function AdminDomainModal({
   isOpen,
@@ -50,10 +49,8 @@ export function AdminDomainModal({
   assetState,
   mutation,
   orgCount,
-  cvdEnrollment,
   highAvailability,
   permission,
-  orgHasOwnership,
   ...rest
 }) {
   const toast = useToast()
@@ -203,8 +200,6 @@ export function AdminDomainModal({
     return tags
   }
 
-  const showCvdForm = mutation === 'update' && orgHasOwnership
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom" {...rest}>
       <ModalOverlay />
@@ -216,7 +211,6 @@ export function AdminDomainModal({
             archiveDomain: archived ?? false,
             highAvailability: highAvailability ?? false,
             assetState: assetState || 'APPROVED',
-            cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
@@ -228,7 +222,6 @@ export function AdminDomainModal({
                   orgId: orgId,
                   tags: values.tags.map(({ tagId }) => tagId),
                   assetState: values.assetState,
-                  cvdEnrollment: values.cvdEnrollment,
                   ...(isSuperAdmin && {
                     archived: values.archiveDomain,
                     ignoreRua: values.ignoreRua,
@@ -331,7 +324,6 @@ export function AdminDomainModal({
                     </Select>
                   </FormControl>
 
-                  {showCvdForm && <CvdEnrollmentForm handleChange={handleChange} values={values} />}
                   <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
@@ -457,9 +449,7 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
-  cvdEnrollment: object,
   highAvailability: bool,
   availableTags: array,
   permission: string,
-  orgHasOwnership: bool,
 }
