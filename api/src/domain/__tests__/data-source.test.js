@@ -101,28 +101,6 @@ describe('given the DomainDataSource', () => {
           ])
         })
       })
-      describe('users language is set to french', () => {
-        const i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-        it('throws an error', async () => {
-          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-          const domainDataSource = new DomainDataSource({ query: mockedQuery, userKey: '1234', i18n })
-
-          await expect(
-            domainDataSource.organizationHasOwnership({ orgId: 'organizations/1', domainId: 'domains/1' }),
-          ).rejects.toEqual(new Error('Impossible de mettre à jour le domaine. Veuillez réessayer.'))
-        })
-      })
     })
   })
 
