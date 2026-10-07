@@ -1416,7 +1416,7 @@ describe('create a domain', () => {
           source: `
               mutation {
                 createDomain(
-                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", assetState: APPROVED, cvdEnrollment: { status: ENROLLED } }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", assetState: APPROVED }
                 ) {
                   result {
                     ... on Domain {

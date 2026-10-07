@@ -34,7 +34,6 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { CvdEnrollmentForm } from './CvdEnrollmentForm'
 
 export function AdminDomainModal({
   isOpen,
@@ -50,7 +49,6 @@ export function AdminDomainModal({
   assetState,
   mutation,
   orgCount,
-  cvdEnrollment,
   highAvailability,
   permission,
   ...rest
@@ -213,16 +211,10 @@ export function AdminDomainModal({
             archiveDomain: archived ?? false,
             highAvailability: highAvailability ?? false,
             assetState: assetState || 'APPROVED',
-            cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
-            const sanitizeCvdEnrollment = (enrollment) => {
-              if (!enrollment || typeof enrollment !== 'object') return enrollment
-              const { __typename, ...rest } = enrollment
-              return rest
-            }
             if (mutation === 'update') {
               await updateDomain({
                 variables: {
@@ -230,7 +222,6 @@ export function AdminDomainModal({
                   orgId: orgId,
                   tags: values.tags.map(({ tagId }) => tagId),
                   assetState: values.assetState,
-                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                   ...(isSuperAdmin && {
                     archived: values.archiveDomain,
                     ignoreRua: values.ignoreRua,
@@ -245,7 +236,6 @@ export function AdminDomainModal({
                   domain: values.domainUrl.trim(),
                   tags: values.tags.map(({ tagId }) => tagId),
                   assetState: values.assetState,
-                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
                   ...(isSuperAdmin && {
                     archived: values.archiveDomain,
                     highAvailability: values.highAvailability,
@@ -334,7 +324,6 @@ export function AdminDomainModal({
                     </Select>
                   </FormControl>
 
-                  <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
                   <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <ArchiveDomainSwitch
@@ -460,7 +449,6 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
-  cvdEnrollment: object,
   highAvailability: bool,
   availableTags: array,
   permission: string,

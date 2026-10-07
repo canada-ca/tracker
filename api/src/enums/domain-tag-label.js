@@ -35,11 +35,6 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'cvd-enrolled',
       description: 'Label for tagging domains that are enrolled in the Coordinated Vulnerability Disclosure program.',
     },
-    CVD_PENDING: {
-      value: 'cvd-pending',
-      description:
-        'Label for tagging domains that are pending enrollment in the Coordinated Vulnerability Disclosure program.',
-    },
     CVD_DENY: {
       value: 'cvd-deny',
       description: 'Label for tagging domains that have been explicitly excluded from the Coordinated Vulnerability Disclosure program.',

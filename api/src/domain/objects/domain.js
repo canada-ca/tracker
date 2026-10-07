@@ -5,7 +5,7 @@ import { connectionArgs, globalIdField } from 'graphql-relay'
 import { domainStatus } from './domain-status'
 import { AssetStateEnums, PeriodEnums, DmarcPhaseEnum } from '../../enums'
 import { nodeInterface } from '../../node'
-import { CveID, Domain, Selectors, Year } from '../../scalars'
+import { CveID, Domain, Selectors, Slug, Year } from '../../scalars'
 import { dmarcSummaryType } from '../../dmarc-summaries/objects'
 import { dnsScanConnection } from '../../dns-scan/objects/dns-scan-connection'
 import { webConnection } from '../../web-scan/objects'
@@ -384,6 +384,26 @@ export const domainType = new GraphQLObjectType({
         const isSuperAdmin = await checkSuperAdmin()
         if (isSuperAdmin) return highAvailability
         return false
+      },
+    },
+    orgHasOwnership: {
+      type: GraphQLBoolean,
+      args: {
+        orgSlug: {
+          type: new GraphQLNonNull(Slug),
+          description: 'The slug of the organization to check ownership for.',
+        },
+      },
+      description: 'Whether the specified organization has ownership of this domain.',
+      resolve: async (
+        { _id: domainId },
+        args,
+        { auth: { userRequired }, dataSources: { domain, organization }, validators: { cleanseInput } },
+      ) => {
+        await userRequired()
+        const org = await organization.bySlug.load(cleanseInput(args.orgSlug))
+        if (!org) return false
+        return await domain.organizationHasOwnership({ orgId: org._id, domainId })
       },
     },
   }),

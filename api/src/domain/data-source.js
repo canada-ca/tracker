@@ -237,6 +237,58 @@ export class DomainDataSource {
     return countCursor.count > 0
   }
 
+  async organizationHasOwnership({ orgId, domainId }) {
+    let countCursor
+    try {
+      countCursor = await this._query`
+        WITH domains, organizations, ownership
+        FOR e IN ownership
+          FILTER e._to == ${domainId} AND e._from == ${orgId}
+          LIMIT 1
+          RETURN true
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred while user: ${this._userKey} attempted to check domain ownership for domain: ${domainId}, error: ${err}`,
+      )
+      throw new Error(this._i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    return countCursor.count > 0
+  }
+
+  async updateCvdEnrollment({ domain, cvdEnrollment }) {
+    const trx = await this._transaction(this._collections)
+
+    try {
+      await trx.step(
+        async () =>
+          await this._query`
+            UPDATE { _key: ${domain._key} } WITH ${{ cvdEnrollment }} IN domains 
+          `,
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: "${this._userKey}" attempted to update CVD enrollment on domain "${domain._key}", error: ${err}`,
+      )
+      await trx.abort()
+      throw new Error(this._i18n._(t`Unable to update CVD enrollment. Please try again.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Transaction commit error occurred when user: ${this._userKey} attempted to update domain: ${domain._key}, error: ${err}`,
+      )
+      await trx.abort()
+      throw new Error(this._i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    this.byKey.clear(domain._key)
+    return this.byKey.load(domain._key)
+  }
+
   async loadClaimByOrgAndDomain({ orgId, domainId }) {
     let claimCursor
     try {

@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
 import { AssetStateEnums } from '../../enums'
-import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 import ac from '../../access-control'
 
 export const updateDomain = new mutationWithClientMutationId({
@@ -34,11 +33,6 @@ export const updateDomain = new mutationWithClientMutationId({
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
-    },
-    cvdEnrollment: {
-      description:
-        'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
-      type: CvdEnrollmentInputOptions,
     },
     highAvailability: {
       description: 'Value that determines if the service is scanned for uptime.',
@@ -91,7 +85,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const archived = typeof args.archived !== 'undefined' ? args.archived : null
     const assetState = typeof args.assetState !== 'undefined' ? cleanseInput(args.assetState) : null
-    const cvdEnrollment = typeof args.cvdEnrollment !== 'undefined' ? args.cvdEnrollment : null
 
     // Check to see if domain exists
     const domain = await domainDataSource.byKey.load(domainId)
@@ -179,7 +172,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
-      cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
       highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
     }
 
@@ -205,14 +197,6 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'assetState',
         oldValue: claim.assetState,
         newValue: assetState,
-      })
-    }
-
-    if (typeof cvdEnrollment !== 'undefined' && cvdEnrollment?.status !== domain?.cvdEnrollment?.status) {
-      updatedProperties.push({
-        name: 'cvdEnrollment',
-        oldValue: JSON.stringify(domain.cvdEnrollment?.status),
-        newValue: JSON.stringify(cvdEnrollment.status),
       })
     }
 
