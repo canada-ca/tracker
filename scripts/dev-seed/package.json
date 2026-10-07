@@ -1,0 +1,16 @@
+{
+  "name": "dev-seed",
+  "version": "1.0.0",
+  "description": "Seeds a local Tracker database with users, organizations, domains, scans and summaries for development.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "arango-tools": "^0.6.0",
+    "arangojs": "^10.2.2",
+    "bcryptjs": "^2.4.3"
+  }
+}
