@@ -19,6 +19,7 @@ api/api.current.graphql
 **/include
 **/lib
 **/*.env
+!.devcontainer/*.env
 **/.venv
 venv
 **/lib64
@@ -39,6 +40,7 @@ scanner/csv
 scanner/data/backupScanResults
 scanner/data/output
 scanner/logs
+scanners/web-scanner/crlite_db/
 *.csv
 
 # IDE Files
