@@ -5,7 +5,7 @@ import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { waitFor, render, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { makeVar } from '@apollo/client'
 import { MonthSelect } from '../MonthSelect'
 const handleChange = jest.fn()
@@ -73,6 +73,27 @@ describe('<MonthSelect />', () => {
       expect(queryByText(/Last 30 Days/))
     })
     fireEvent.blur(monthSelect)
+  })
+  it('offers the last 30 days and the current month plus the eleven before it', () => {
+    const { getAllByRole } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MonthSelect id="month-select" selectedValue="LAST30DAYS" handleChange={handleChange} />
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+
+    const monthValue = (monthsAgo) => {
+      const date = new Date()
+      date.setDate(1)
+      date.setMonth(date.getMonth() - monthsAgo)
+      return `${date.toLocaleString('en', { month: 'long' }).toUpperCase()}, ${date.getFullYear()}`
+    }
+
+    expect(getAllByRole('option').map((option) => option.value)).toEqual([
+      `LAST30DAYS, ${new Date().getFullYear()}`,
+      ...Array.from({ length: 12 }, (_, monthsAgo) => monthValue(monthsAgo)),
+    ])
   })
   it('changes value on selection', async () => {
     const { getByDisplayValue, queryByText, getByText } = render(

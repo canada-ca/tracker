@@ -21,9 +21,9 @@ import {
   PopoverFooter,
   Link,
 } from '@chakra-ui/react'
-import { func, object, string } from 'prop-types'
+import { func, object } from 'prop-types'
 
-export function CvdEnrollmentForm({ handleChange, values, permission, ...rest }) {
+export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
   return (
     <Box {...rest}>
       <FormControl mb="2">
@@ -78,7 +78,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
                     variant="primary"
                     size="lg"
                     as={Link}
-                    href={'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=GC%CVD%Support'}
+                    href={'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=GC%20CVD%20Support'}
                     isExternal={true}
                   >
                     <Trans>Contact Us</Trans>
@@ -98,21 +98,12 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
           <option value="NOT_ENROLLED">
             <Trans>Not Enrolled</Trans>
           </option>
-          {(permission === 'ADMIN' || values.cvdEnrollment.status === 'PENDING') && (
-            <option value="PENDING">
-              <Trans>Pending</Trans>
-            </option>
-          )}
-          {['OWNER', 'SUPER_ADMIN'].includes(permission) && (
-            <>
-              <option value="ENROLLED">
-                <Trans>Enrolled</Trans>
-              </option>
-              <option value="DENY">
-                <Trans>Denied</Trans>
-              </option>
-            </>
-          )}
+          <option value="ENROLLED">
+            <Trans>Enrolled</Trans>
+          </option>
+          <option value="DENY">
+            <Trans>Denied</Trans>
+          </option>
         </Select>
       </FormControl>
 
@@ -151,7 +142,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               onChange={handleChange}
               value={values.cvdEnrollment.maxSeverity || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.maxSeverity}>
                 <Trans>Select severity</Trans>
               </option>
               <option value="LOW">
@@ -182,7 +173,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               onChange={handleChange}
               value={values.cvdEnrollment.confidentialityRequirement || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.confidentialityRequirement}>
                 <Trans>Select requirement</Trans>
               </option>
               <option value="NONE">
@@ -210,7 +201,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               onChange={handleChange}
               value={values.cvdEnrollment.integrityRequirement || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.integrityRequirement}>
                 <Trans>Select requirement</Trans>
               </option>
               <option value="NONE">
@@ -238,7 +229,7 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
               onChange={handleChange}
               value={values.cvdEnrollment.availabilityRequirement || ''}
             >
-              <option value="">
+              <option value="" hidden={!!values.cvdEnrollment.availabilityRequirement}>
                 <Trans>Select requirement</Trans>
               </option>
               <option value="NONE">
@@ -260,6 +251,5 @@ export function CvdEnrollmentForm({ handleChange, values, permission, ...rest })
 
 CvdEnrollmentForm.propTypes = {
   values: object,
-  permission: string,
   handleChange: func,
 }

@@ -27,6 +27,7 @@ export const rawOrgDomainListData = {
             archived: false,
             assetState: 'APPROVED',
             rcode: 'NOERROR',
+            orgHasOwnership: true,
             organizations: {
               totalCount: 1,
             },
@@ -43,6 +44,7 @@ export const rawOrgDomainListData = {
             archived: false,
             assetState: 'APPROVED',
             rcode: 'NOERROR',
+            orgHasOwnership: true,
             organizations: {
               totalCount: 1,
             },
@@ -59,6 +61,7 @@ export const rawOrgDomainListData = {
             archived: false,
             assetState: 'APPROVED',
             rcode: 'NOERROR',
+            orgHasOwnership: true,
             organizations: {
               totalCount: 1,
             },

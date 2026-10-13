@@ -15,6 +15,7 @@ import {
   verifiedRequired,
   tfaRequired,
   checkDomainPermission,
+  getDeniedFields,
   AuthDataSource,
 } from '../../../auth'
 import { DomainDataSource } from '../../data-source'
@@ -59,6 +60,10 @@ const withDataSources = (contextValue) => {
 
   return {
     ...contextValue,
+    auth: {
+      ...contextValue?.auth,
+      getDeniedFields: contextValue?.auth?.getDeniedFields || getDeniedFields,
+    },
     dataSources: {
       ...contextValue?.dataSources,
       domain: domainDataSource,
@@ -469,6 +474,244 @@ describe('updating a domain', () => {
 
           expect(response).toEqual(expectedResponse)
           expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
+        })
+      })
+    })
+  })
+  describe('given super admin only field restrictions', () => {
+    // Regression test: archived/ignoreRua/highAvailability must only be settable by super_admin.
+    let org, domain
+    const i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
+    })
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+        schema: dbschema,
+      }))
+      publish = jest.fn()
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
+        tfaSendMethod: 'email',
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+        lastRan: null,
+        selectors: [],
+        archived: false,
+        ignoreRua: false,
+        highAvailability: false,
+      })
+      await collections.claims.save({
+        _to: domain._id,
+        _from: org._id,
+        tags: [],
+        assetState: 'monitor-only',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+
+    const buildContext = () => ({
+      i18n,
+      query,
+      collections: collectionNames,
+      transaction,
+      publish,
+      userKey: user._key,
+      request: { ip: '127.0.0.1' },
+      auth: {
+        checkDomainPermission: checkDomainPermission({
+          i18n,
+          userKey: user._key,
+          query,
+        }),
+        checkPermission: checkPermission({ userKey: user._key, query }),
+        userRequired: userRequired({
+          userKey: user._key,
+          loadUserByKey: loadUserByKey({ query }),
+        }),
+        verifiedRequired: verifiedRequired({}),
+        tfaRequired: tfaRequired({}),
+      },
+      dataSources: {
+        auth: new AuthDataSource({ query, userKey: user._key }),
+      },
+      validators: {
+        cleanseInput,
+        slugify,
+      },
+      loaders: {
+        loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+          query,
+          userKey: user._key,
+          cleanseInput,
+          i18n,
+          auth: { loginRequiredBool: true },
+        }),
+        loadDomainByKey: loadDomainByKey({ query }),
+        loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+        loadUserByKey: loadUserByKey({ query }),
+      },
+    })
+
+    describe.each([
+      ['archived', 'archived: true'],
+      ['ignoreRua', 'ignoreRua: true'],
+      ['highAvailability', 'highAvailability: true'],
+    ])('%s field', (fieldName, fieldInput) => {
+      describe('user permission is admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _to: user._id,
+            _from: org._id,
+            permission: 'admin',
+          })
+        })
+        it('returns a permission denied error and does not update the field', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+            mutation {
+              updateDomain (
+                input: {
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
+                  ${fieldInput}
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+            `,
+            rootValue: null,
+            contextValue: buildContext(),
+          })
+
+          const expectedResponse = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 403,
+                  description: 'Permission Denied: Please contact super admin for help with updating domain.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update a super admin only domain field in: treasury-board-secretariat, however they do not have permission to do so.`,
+          ])
+
+          const updatedDomain = await loadDomainByKey({ query }).load(domain._key)
+          expect(updatedDomain[fieldName]).toEqual(false)
+        })
+      })
+      describe('user permission is super_admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _to: user._id,
+            _from: org._id,
+            permission: 'super_admin',
+          })
+        })
+        it('successfully updates the field', async () => {
+          const response = await graphql({
+            schema,
+            source: `
+            mutation {
+              updateDomain (
+                input: {
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
+                  ${fieldInput}
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+            `,
+            rootValue: null,
+            contextValue: buildContext(),
+          })
+
+          const expectedResponse = {
+            data: {
+              updateDomain: {
+                result: {
+                  id: toGlobalId('domain', domain._key),
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+
+          const updatedDomain = await loadDomainByKey({ query }).load(domain._key)
+          expect(updatedDomain[fieldName]).toEqual(true)
         })
       })
     })

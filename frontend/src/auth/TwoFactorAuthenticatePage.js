@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, useLingui } from "@lingui/react/macro"
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router'
 import { useMutation } from '@apollo/client'
 import { ErrorMessage, Formik } from 'formik'
 

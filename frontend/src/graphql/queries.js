@@ -147,8 +147,13 @@ export const LANDING_PAGE_SUMMARIES = gql`
 `
 
 export const GET_HISTORICAL_CHART_SUMMARIES = gql`
-  query FindChartSummaries($startDate: String, $endDate: String, $sortDirection: OrderDirection) {
-    findChartSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection) {
+  query FindChartSummaries(
+    $startDate: String
+    $endDate: String
+    $sortDirection: OrderDirection
+    $source: SummarySourceEnums
+  ) {
+    findChartSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection, source: $source) {
       date
       https {
         ...RequiredSummaryFields
@@ -293,6 +298,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             ignoreRua
             rcode
             highAvailability
+            orgHasOwnership(orgSlug: $orgSlug)
             cvdEnrollment {
               status
               description
@@ -329,7 +335,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       wildcardSibling
       wildcardEntry
       webScanPending
-      cveDetected
       status {
         ...RequiredDomainStatusFields
       }
@@ -742,9 +747,15 @@ export const ORG_DETAILS_PAGE = gql`
 `
 
 export const GET_HISTORICAL_ORG_SUMMARIES = gql`
-  query GetOrgSummaries($orgSlug: Slug!, $startDate: String, $endDate: String, $sortDirection: OrderDirection) {
+  query GetOrgSummaries(
+    $orgSlug: Slug!
+    $startDate: String
+    $endDate: String
+    $sortDirection: OrderDirection
+    $source: SummarySourceEnums
+  ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
-      historicalSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection) {
+      historicalSummaries(startDate: $startDate, endDate: $endDate, sortDirection: $sortDirection, source: $source) {
         date
         https {
           ...RequiredSummaryFields
@@ -854,7 +865,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
             wildcardEntry
             webScanPending
             userHasPermission
-            cveDetected
             cvdEnrollment {
               status
             }
@@ -927,7 +937,6 @@ export const PAGINATED_DOMAINS = gql`
           archived
           hasDMARCReport
           userHasPermission
-          cveDetected
           cvdEnrollment {
             status
           }

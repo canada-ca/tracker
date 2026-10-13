@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { useTour } from '../hooks/useTour'
 // import { QuestionOutlineIcon } from '@chakra-ui/icons'
 // import { IconButton } from '@chakra-ui/react'

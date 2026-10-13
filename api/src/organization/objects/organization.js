@@ -10,7 +10,7 @@ import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
-import { OrderDirection } from '../../enums'
+import { OrderDirection, SummarySourceEnums } from '../../enums'
 import { tagType } from '../../tags/objects'
 import ac from '../../access-control'
 
@@ -140,19 +140,29 @@ export const organizationType = new GraphQLObjectType({
           type: GraphQLInt,
           description: 'The maximum amount of summaries to be returned.',
         },
+        source: {
+          type: SummarySourceEnums,
+          description: 'Which collection to read from. Rebuild is restricted to super admins. Defaults to live.',
+        },
       },
       resolve: async (
         { _id },
         args,
         {
           userKey,
-          auth: { userRequired, loginRequiredBool, verifiedRequired },
+          auth: { checkSuperAdmin, userRequired, loginRequiredBool, verifiedRequired, superAdminRequired },
           dataSources: { organization: organizationDS },
         },
       ) => {
         if (loginRequiredBool) {
           const user = await userRequired()
           verifiedRequired({ user })
+        }
+
+        if (args.source === 'rebuild') {
+          const user = await userRequired()
+          const isSuperAdmin = await checkSuperAdmin()
+          superAdminRequired({ user, isSuperAdmin })
         }
 
         const historicalSummaries = await organizationDS.summariesByPeriod({

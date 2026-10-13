@@ -183,7 +183,6 @@ export const CREATE_DOMAIN = gql`
     $tags: [String]
     $archived: Boolean
     $assetState: AssetStateEnums!
-    $cvdEnrollment: CvdEnrollmenInputOptions
     $highAvailability: Boolean
   ) {
     createDomain(
@@ -193,7 +192,6 @@ export const CREATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         assetState: $assetState
-        cvdEnrollment: $cvdEnrollment
         highAvailability: $highAvailability
       }
     ) {
@@ -293,7 +291,6 @@ export const UPDATE_DOMAIN = gql`
     $archived: Boolean
     $assetState: AssetStateEnums
     $ignoreRua: Boolean
-    $cvdEnrollment: CvdEnrollmenInputOptions
     $highAvailability: Boolean
   ) {
     updateDomain(
@@ -304,7 +301,6 @@ export const UPDATE_DOMAIN = gql`
         archived: $archived
         assetState: $assetState
         ignoreRua: $ignoreRua
-        cvdEnrollment: $cvdEnrollment
         highAvailability: $highAvailability
       }
     ) {
@@ -325,6 +321,50 @@ export const UPDATE_DOMAIN = gql`
           rcode
           ignoreRua
           highAvailability
+          cvdEnrollment {
+            status
+            description
+            maxSeverity
+            confidentialityRequirement
+            integrityRequirement
+            availabilityRequirement
+          }
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_CVD_ENROLLMENT = gql`
+  mutation UpdateCvdEnrollment(
+    $domainId: ID!
+    $orgId: ID!
+    $status: EnrollmentStatusEnums
+    $description: String
+    $maxSeverity: SeverityEnum
+    $confidentialityRequirement: CvdRequirementEnums
+    $integrityRequirement: CvdRequirementEnums
+    $availabilityRequirement: CvdRequirementEnums
+  ) {
+    updateCvdEnrollment(
+      input: {
+        domainId: $domainId
+        orgId: $orgId
+        status: $status
+        description: $description
+        maxSeverity: $maxSeverity
+        confidentialityRequirement: $confidentialityRequirement
+        integrityRequirement: $integrityRequirement
+        availabilityRequirement: $availabilityRequirement
+      }
+    ) {
+      result {
+        ... on Domain {
+          id
           cvdEnrollment {
             status
             description

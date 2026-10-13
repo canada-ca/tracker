@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 import {
   Box,
   Code,
@@ -249,7 +249,6 @@ export default function DomainsPage() {
             wildcardEntry,
             webScanPending,
             userHasPermission,
-            cveDetected,
             cvdEnrollment,
           },
           index,
@@ -268,7 +267,6 @@ export default function DomainsPage() {
               wildcardEntry={wildcardEntry}
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
-              cveDetected={cveDetected}
               cvdEnrollment={cvdEnrollment}
               mb="3"
             />

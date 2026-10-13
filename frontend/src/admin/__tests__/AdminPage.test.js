@@ -5,7 +5,7 @@ import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import AdminPage from '../AdminPage'
 import { waitFor, render } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 import { UserVarProvider } from '../../utilities/userState'
@@ -255,6 +255,7 @@ function mocks() {
                     domain: 'antonia.name',
                     lastRan: '2020-08-13T14:42:03.385294',
                     selectors: ['selector9', 'selector7'],
+                    orgHasOwnership: true,
                     __typename: 'Domain',
                   },
                   __typename: 'DomainEdge',
@@ -265,6 +266,7 @@ function mocks() {
                     domain: 'blaise.biz',
                     lastRan: '2020-08-13T14:42:03.385294',
                     selectors: ['selector3', 'selector5'],
+                    orgHasOwnership: false,
                     __typename: 'Domain',
                   },
                   __typename: 'DomainEdge',

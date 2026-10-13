@@ -3,9 +3,11 @@ import { aql } from 'arangojs'
 
 export const loadOrganizationSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ orgId, startDate, endDate, sortDirection = 'ASC', limit }) => {
+  async ({ orgId, startDate, endDate, sortDirection = 'ASC', limit, source = 'live' }) => {
     const cleansedStartDate = startDate ? cleanseInput(startDate) : null
     const cleansedEndDate = endDate ? cleanseInput(endDate) : new Date().toISOString()
+
+    const collection = source === 'rebuild' ? aql`organizationSummaries_rebuild` : aql`organizationSummaries`
 
     const filterUniqueDates = (array) => {
       const filteredArray = []
@@ -35,7 +37,7 @@ export const loadOrganizationSummariesByPeriod =
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
-        FOR summary IN organizationSummaries
+        FOR summary IN ${collection}
           FILTER summary.organization == ${orgId}
           ${startDateFilter}
           ${endDateFilter}

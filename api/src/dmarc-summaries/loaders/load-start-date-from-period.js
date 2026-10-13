@@ -38,9 +38,9 @@ export const loadStartDateFromPeriod =
     } else {
       const startDate = moment(`${year}-${monthMap[period]}-01`)
       const currentMonth = moment().startOf('month')
-      const lastYearMonth = moment().subtract(1, 'year').startOf('month')
+      const earliestMonth = moment().subtract(11, 'months').startOf('month')
 
-      if (!startDate.isBetween(lastYearMonth, currentMonth, undefined, '[]')) {
+      if (!startDate.isBetween(earliestMonth, currentMonth, undefined, '[]')) {
         console.warn(
           `User: ${userKey} attempted to load startDate that is out of range period: ${period}, year: ${year}`,
         )

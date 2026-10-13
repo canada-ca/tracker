@@ -4,7 +4,6 @@ import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
 import { AssetStateEnums } from '../../enums'
-import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 import ac from '../../access-control'
 
 export const updateDomain = new mutationWithClientMutationId({
@@ -35,11 +34,6 @@ export const updateDomain = new mutationWithClientMutationId({
       description: 'Value that determines how the domain relates to the organization.',
       type: AssetStateEnums,
     },
-    cvdEnrollment: {
-      description:
-        'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
-      type: CvdEnrollmentInputOptions,
-    },
     highAvailability: {
       description: 'Value that determines if the service is scanned for uptime.',
       type: GraphQLBoolean,
@@ -58,7 +52,7 @@ export const updateDomain = new mutationWithClientMutationId({
       i18n,
       userKey,
       request: { ip },
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired, getDeniedFields },
       validators: { cleanseInput },
       dataSources: { domain: domainDataSource, auditLogs, tags: tagsDS, organization: orgDS },
     },
@@ -91,7 +85,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const archived = typeof args.archived !== 'undefined' ? args.archived : null
     const assetState = typeof args.assetState !== 'undefined' ? cleanseInput(args.assetState) : null
-    const cvdEnrollment = typeof args.cvdEnrollment !== 'undefined' ? args.cvdEnrollment : null
 
     // Check to see if domain exists
     const domain = await domainDataSource.byKey.load(domainId)
@@ -158,19 +151,11 @@ export const updateDomain = new mutationWithClientMutationId({
       }
     }
 
-    if (
-      !ac.can(permission).updateOwn('cvd-enrollment').granted &&
-      ['enrolled', 'deny'].includes(cvdEnrollment?.status)
-    ) {
-      console.warn(
-        `User: ${userKey} attempted to update the CVD enrollment for domain: ${domainId} in org: ${orgId}, however they do not have permission in that org.`,
-      )
-      cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
-    }
+    const deniedFields = getDeniedFields({ permission, resource: 'domain', action: 'update', args })
 
-    if (!ac.can(permission).updateAny('domain').granted && typeof args.highAvailability !== 'undefined') {
+    if (deniedFields.length > 0) {
       console.warn(
-        `User: ${userKey} attempted to update a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to update a super admin only domain field in: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
@@ -187,7 +172,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
       ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
-      cvdEnrollment: typeof cvdEnrollment !== 'undefined' ? cvdEnrollment : domain?.cvdEnrollment,
       highAvailability: typeof args.highAvailability !== 'undefined' ? args.highAvailability : domain?.highAvailability,
     }
 
@@ -213,14 +197,6 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'assetState',
         oldValue: claim.assetState,
         newValue: assetState,
-      })
-    }
-
-    if (typeof cvdEnrollment !== 'undefined' && cvdEnrollment?.status !== domain?.cvdEnrollment?.status) {
-      updatedProperties.push({
-        name: 'cvdEnrollment',
-        oldValue: JSON.stringify(domain.cvdEnrollment?.status),
-        newValue: JSON.stringify(cvdEnrollment.status),
       })
     }
 

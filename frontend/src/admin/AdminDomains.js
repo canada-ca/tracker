@@ -65,7 +65,6 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     assetState: '',
     editingDomainId: '',
     editingDomainUrl: '',
-    cvdEnrollment: { status: 'NOT_ENROLLED' },
     highAvailability: false,
   })
   const { searchValue: filters, setSearchParams: setFilters } = useSearchParam({
@@ -186,7 +185,6 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
-    { value: 'CVD_PENDING', text: t`CVD Pending` },
     { value: 'CVD_DENY', text: t`CVD Denied` },
   ]
 
@@ -334,6 +332,7 @@ export function AdminDomains({ orgSlug, orgId, verified, permission, availableTa
           nodes={nodes}
           verified={verified}
           permission={permission}
+          orgId={orgId}
           setSelectedRemoveProps={setSelectedRemoveProps}
           removeOnOpen={removeOnOpen}
           setModalProps={setModalProps}

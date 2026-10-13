@@ -30,12 +30,10 @@ import { AddIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { array, bool, func, number, object, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { CvdEnrollmentForm } from './CvdEnrollmentForm'
 
 export function AdminDomainModal({
   isOpen,
@@ -51,7 +49,6 @@ export function AdminDomainModal({
   assetState,
   mutation,
   orgCount,
-  cvdEnrollment,
   highAvailability,
   permission,
   ...rest
@@ -59,6 +56,7 @@ export function AdminDomainModal({
   const toast = useToast()
   const initialFocusRef = useRef()
   const { t } = useLingui()
+  const isSuperAdmin = permission === 'SUPER_ADMIN'
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
@@ -210,33 +208,25 @@ export function AdminDomainModal({
           initialValues={{
             domainUrl: editingDomainUrl,
             tags: getInitTags(), // convert initial tags to input type
-            archiveDomain: archived,
+            archiveDomain: archived ?? false,
+            highAvailability: highAvailability ?? false,
             assetState: assetState || 'APPROVED',
-            cvdEnrollment: cvdEnrollment || { status: 'NOT_ENROLLED' },
-            highAvailability: highAvailability || false,
-          }}
-          initialTouched={{
-            domainUrl: true,
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
-            const sanitizeCvdEnrollment = (enrollment) => {
-              if (!enrollment || typeof enrollment !== 'object') return enrollment
-              const { __typename, ...rest } = enrollment
-              return rest
-            }
             if (mutation === 'update') {
               await updateDomain({
                 variables: {
                   domainId: editingDomainId,
                   orgId: orgId,
                   tags: values.tags.map(({ tagId }) => tagId),
-                  archived: values.archiveDomain,
                   assetState: values.assetState,
-                  ignoreRua: values.ignoreRua,
-                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
-                  highAvailability: values.highAvailability,
+                  ...(isSuperAdmin && {
+                    archived: values.archiveDomain,
+                    ignoreRua: values.ignoreRua,
+                    highAvailability: values.highAvailability,
+                  }),
                 },
               })
             } else if (mutation === 'create') {
@@ -245,9 +235,11 @@ export function AdminDomainModal({
                   orgId: orgId,
                   domain: values.domainUrl.trim(),
                   tags: values.tags.map(({ tagId }) => tagId),
-                  archived: values.archiveDomain,
                   assetState: values.assetState,
-                  cvdEnrollment: sanitizeCvdEnrollment(values.cvdEnrollment),
+                  ...(isSuperAdmin && {
+                    archived: values.archiveDomain,
+                    highAvailability: values.highAvailability,
+                  }),
                 },
               })
             }
@@ -331,12 +323,6 @@ export function AdminDomainModal({
                       </option>
                     </Select>
                   </FormControl>
-
-                  <ABTestWrapper insiderVariantName="B">
-                    <ABTestVariant name="B">
-                      <CvdEnrollmentForm handleChange={handleChange} values={values} permission={permission} />
-                    </ABTestVariant>
-                  </ABTestWrapper>
 
                   <HighAvailabilitySwitch defaultChecked={values.highAvailability} handleChange={handleChange} />
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
@@ -463,7 +449,6 @@ AdminDomainModal.propTypes = {
   refetchQueries: array,
   myOrg: object,
   assetState: string,
-  cvdEnrollment: object,
   highAvailability: bool,
   availableTags: array,
   permission: string,

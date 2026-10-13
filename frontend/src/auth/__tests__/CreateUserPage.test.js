@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -398,6 +398,9 @@ describe('<CreateUserPage />', () => {
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
 
+      // click required checkbox
+      userEvent.click(getByRole('checkbox'))
+
       // fire mutation
       const createAccountButton = getByRole('button', {
         name: /Create Account/,
@@ -468,6 +471,9 @@ describe('<CreateUserPage />', () => {
       userEvent.type(displayNameInput, 'Test User')
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
+
+      // click required checkbox
+      userEvent.click(getByRole('checkbox'))
 
       // fire mutation
       const createAccountButton = getByRole('button', {
