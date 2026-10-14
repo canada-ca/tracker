@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as ReactRouterLink } from 'react-router-dom'
+import { Link as ReactRouterLink } from 'react-router'
 import { Flex, Stack } from '@chakra-ui/react'
 import { node } from 'prop-types'
 

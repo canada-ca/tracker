@@ -1,6 +1,6 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
@@ -360,6 +360,82 @@ describe('<DmarcReportPage />', () => {
         expect(queryByText(/spf-failure-spf-domains-august.domain/)).toBeInTheDocument()
         expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).toBeInTheDocument()
       })
+    })
+  })
+
+  describe('when the selected period has no data', () => {
+    it('renders the page with empty tables', async () => {
+      const mocks = [
+        {
+          request: {
+            query: DMARC_REPORT_GRAPH,
+            variables: {
+              domain: 'test-domain',
+            },
+          },
+          result: rawDmarcReportGraphData,
+        },
+        {
+          request: {
+            query: PAGINATED_DMARC_REPORT,
+            variables: {
+              domain: 'test-domain',
+              month: 'AUGUST',
+              year: getDynamicYear(),
+              first: 50,
+              after: '',
+            },
+          },
+          result: {
+            data: {
+              findDomainByDomain: {
+                id: 'asdf',
+                dmarcSummaryByPeriod: null,
+              },
+            },
+          },
+        },
+      ]
+
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/domains/:domainSlug/dmarc-report/:period?/:year?',
+            element: <DmarcReportPage />,
+          },
+        ],
+        {
+          initialEntries: [`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`],
+          initialIndex: 0,
+        },
+      )
+
+      const { findByText, getByText, getByRole, queryByText } = render(
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <RouterProvider router={router}>
+                  <DmarcReportPage />
+                </RouterProvider>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      await findByText(/No data for the Fully Aligned by IP Address table/)
+      getByText(/No data for the DKIM Failures by IP Address table/)
+      getByText(/No data for the SPF Failures by IP Address table/)
+      getByText(/No data for the DMARC Failures by IP Address table/)
+      getByRole('combobox', { name: /Showing data for period/i })
+      expect(queryByText(/Error while retrieving DMARC data/)).not.toBeInTheDocument()
     })
   })
 

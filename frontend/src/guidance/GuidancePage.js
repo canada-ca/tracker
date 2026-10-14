@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
-import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useLocation, useParams } from 'react-router'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
 import { t } from '@lingui/core/macro'

@@ -25,7 +25,6 @@ const TAG_FIELD_MAP = {
   'has-entrust-certificate': { field: 'v.hasEntrustCertificate', value: true },
   'cve-detected': { field: 'v.cveDetected', value: true },
   'cvd-enrolled': { field: 'v.cvdEnrollment.status', value: 'enrolled' },
-  'cvd-pending': { field: 'v.cvdEnrollment.status', value: 'pending' },
   'cvd-deny': { field: 'v.cvdEnrollment.status', value: 'deny' },
 }
 

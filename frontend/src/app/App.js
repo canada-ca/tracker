@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Link as RouteLink, Routes, Route, Navigate } from 'react-router-dom'
+import { Link as RouteLink, Routes, Route, Navigate } from 'react-router'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
 import { t } from "@lingui/core/macro"
 import { Trans } from "@lingui/react/macro"

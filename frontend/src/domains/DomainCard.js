@@ -15,7 +15,7 @@ import {
   Tooltip,
   useToast,
 } from '@chakra-ui/react'
-import { Link as RouteLink, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useLocation } from 'react-router'
 import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'

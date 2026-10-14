@@ -12,19 +12,19 @@ steps:
     id: wait_arango
     args: ['arangodb:8529']
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: install
     dir: api
     entrypoint: npm
     args: ['ci']
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: lint
     dir: api
     entrypoint: npm
     args: ['run', lint]
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: lingui-extract
     dir: api
     entrypoint: ash
@@ -33,7 +33,7 @@ steps:
       - |
         npm run extract | tee /workspace/lingui-extract-output.txt
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: lingui-translation-check
     dir: api
     entrypoint: ash
@@ -50,13 +50,13 @@ steps:
           exit 1
         fi
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: lingui-compile
     dir: api
     entrypoint: npm
     args: ['run', 'compile']
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: check-src-files
     dir: api
     entrypoint: ash
@@ -66,7 +66,7 @@ steps:
         "=== checking src directory content ==="
         ls -la src
 
-  - name: node:20-alpine
+  - name: node:24.16.0-alpine3.22
     id: test
     dir: api
     entrypoint: npm

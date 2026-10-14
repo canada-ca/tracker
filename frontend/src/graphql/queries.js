@@ -298,6 +298,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             ignoreRua
             rcode
             highAvailability
+            orgHasOwnership(orgSlug: $orgSlug)
             cvdEnrollment {
               status
               description

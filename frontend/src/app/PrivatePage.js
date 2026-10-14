@@ -1,6 +1,6 @@
 import React from 'react'
 import { bool, func } from 'prop-types'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router'
 import { Page } from './Page'
 
 // A wrapper for <Page> that redirects to the login

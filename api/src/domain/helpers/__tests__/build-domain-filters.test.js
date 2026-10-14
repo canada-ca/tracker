@@ -92,7 +92,6 @@ describe('buildDomainFilters – tags filter (mapped fields)', () => {
     ['has-entrust-certificate', 'v.hasEntrustCertificate', true],
     ['cve-detected', 'v.cveDetected', true],
     ['cvd-enrolled', 'v.cvdEnrollment.status', 'enrolled'],
-    ['cvd-pending', 'v.cvdEnrollment.status', 'pending'],
   ]
 
   test.each(TAG_CASES)('tag value "%s" filters on field %s', (filterValue, aqlField) => {

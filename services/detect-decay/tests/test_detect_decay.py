@@ -1,8 +1,41 @@
+import os
 import pytest
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from arango import ArangoClient
-from detect_decay import *
-from config import DB_URL, DB_USER, DB_PASS, MINIMUM_SCANS
+from dotenv import load_dotenv
+from notifications_python_client.notifications import NotificationsAPIClient
+from config import Config
+from detect_decay import (
+    detect_decay,
+    finalize_web_scans,
+    find_decay,
+    get_all_dns_scans,
+    get_all_web_scans,
+    get_status,
+    get_users,
+)
+
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", "test.env"))
+
+DB_URL = os.getenv("DB_URL", "http://localhost:8530")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASS = os.getenv("DB_PASS", "test")
+MINIMUM_SCANS = 5
+CONFIG = Config(
+    start_hour=12,
+    start_minute=0,
+    minimum_scans=MINIMUM_SCANS,
+    service_account_email="tracker@tbs-sct.gc.ca",
+    email_template_id=os.getenv("DETECT_DECAY_EMAIL_TEMPLATE_ID"),
+)
+
+@pytest.fixture()
+def notify_client():
+    return NotificationsAPIClient(
+        api_key=os.environ["NOTIFICATION_API_KEY"],
+        base_url=os.environ["NOTIFICATION_API_URL"],
+    )
 
 @pytest.fixture()
 def arango_db():
@@ -150,7 +183,7 @@ def arango_db():
             "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
-        {   
+        {
             "_id": "dns/23",
             "timestamp": times[1],
             "dmarc": {"status": "fail"},
@@ -164,25 +197,25 @@ def arango_db():
             "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
-        {   
+        {
             "_id": "dns/25",
             "timestamp": times[3],
             "dmarc": {"status": "fail"},
             "spf": {"status": "fail"},
             "dkim": {"status": "pass"},
         },
-        {   
+        {
             "_id": "dns/26",
             "timestamp": times[4],
             "dmarc": {"status": "fail"},
             "spf": {"status": "pass"},
             "dkim": {"status": "pass"},
         }
-        
+
     ]
     domainsDNS = [
         {
-            "_id": "domainsDNS/11", 
+            "_id": "domainsDNS/11",
             "_from": "domains/1",
             "_to": "dns/11"
         },
@@ -323,9 +356,9 @@ def arango_db():
                     "hstsStatus": "pass",
                 },
                 "timestamp": times[0],
-            }           
+            }
         },
-        {   
+        {
             "_id": "webScan/12",
             "status": "complete",
             "results": {
@@ -343,7 +376,7 @@ def arango_db():
                 "timestamp": times[1],
             }
         },
-        {   
+        {
             "_id": "webScan/13",
             "status": "complete",
             "results": {
@@ -361,7 +394,7 @@ def arango_db():
                 "timestamp": times[2],
             }
         },
-        {   
+        {
             "_id": "webScan/14",
             "status": "complete",
             "results": {
@@ -379,7 +412,7 @@ def arango_db():
                 "timestamp": times[3],
             }
         },
-        {   
+        {
             "_id": "webScan/15",
             "status": "complete",
             "results": {
@@ -398,7 +431,7 @@ def arango_db():
             }
         },
         {   # Domain 2, IP Address 1, HTTPS decay
-            "_id": "webScan/211", 
+            "_id": "webScan/211",
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -416,7 +449,7 @@ def arango_db():
             }
         },
         {   # IP Address 2
-            "_id": "webScan/221", 
+            "_id": "webScan/221",
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -433,8 +466,8 @@ def arango_db():
                 "timestamp": change_minute(datetime.fromisoformat(times[0]), 1),
             }
         },
-        {   
-            "_id": "webScan/212", 
+        {
+            "_id": "webScan/212",
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -451,8 +484,8 @@ def arango_db():
                 "timestamp": times[0],
             }
         },
-        {   
-            "_id": "webScan/213", 
+        {
+            "_id": "webScan/213",
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -469,8 +502,8 @@ def arango_db():
                 "timestamp": times[1],
             }
         },
-        {   
-            "_id": "webScan/214", 
+        {
+            "_id": "webScan/214",
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -487,8 +520,8 @@ def arango_db():
                 "timestamp": times[2],
             }
         },
-        {   
-            "_id": "webScan/215", 
+        {
+            "_id": "webScan/215",
             "status": "complete",
             "results": {
                 "tlsResult": {
@@ -512,22 +545,22 @@ def arango_db():
             "_from": "web/11",
             "_to": "webScan/11"
         },
-        {   
+        {
             "_id": "webToWebScans/12",
             "_from": "web/12",
             "_to": "webScan/12"
         },
-        {   
+        {
             "_id": "webToWebScans/13",
             "_from": "web/13",
             "_to": "webScan/13"
         },
-        {   
+        {
             "_id": "webToWebScans/14",
             "_from": "web/14",
             "_to": "webScan/14"
         },
-        {   
+        {
             "_id": "webToWebScans/15",
             "_from": "web/15",
             "_to": "webScan/15"
@@ -542,22 +575,22 @@ def arango_db():
             "_from": "web/21",
             "_to": "webScan/221"
         },
-        {   
+        {
             "_id": "webToWebScans/212",
             "_from": "web/22",
             "_to": "webScan/212"
         },
-        {   
+        {
             "_id": "webToWebScans/213",
             "_from": "web/23",
             "_to": "webScan/213"
         },
-        {   
+        {
             "_id": "webToWebScans/214",
             "_from": "web/24",
             "_to": "webScan/214"
         },
-        {   
+        {
             "_id": "webToWebScans/215",
             "_from": "web/25",
             "_to": "webScan/215"
@@ -567,7 +600,7 @@ def arango_db():
         {   # Org 1 Owner
             "_id": "users/1",
             "displayName": "user1",
-            "userName": "Sara.Jaffer@tbs-sct.gc.ca",
+            "userName": "tracker+user1@tbs-sct.gc.ca",
             "receiveEmailUpdates": True,
             "emailUpdateOptions": {"detectDecay": True},
             "insideUser": True
@@ -575,7 +608,7 @@ def arango_db():
         {   # Org 1 Admin
             "_id": "users/2",
             "displayName": "user2",
-            "userName": "Sara.Jaffer@tbs-sct.gc.ca",
+            "userName": "tracker+user2@tbs-sct.gc.ca",
             "receiveEmailUpdates": True,
             "emailUpdateOptions": {"detectDecay": True},
             "insideUser": True
@@ -583,7 +616,7 @@ def arango_db():
         {   # Org 1 User
             "_id": "users/3",
             "displayName": "user3",
-            "userName": "Sara.Jaffer@tbs-sct.gc.ca",
+            "userName": "tracker+user3@tbs-sct.gc.ca",
             "receiveEmailUpdates": True,
             "emailUpdateOptions": {"detectDecay": True},
             "insideUser": True
@@ -629,7 +662,7 @@ def arango_db():
     }.items():
         db.create_collection(collection, edge=True)
         db.collection(collection).insert_many(doc)
-    
+
     yield db
     sys_db.delete_database(db_name)
 
@@ -647,23 +680,23 @@ def test_db_data(arango_db):
     assert arango_db["affiliations"].count() == 3, "Should have 3 affiliations"
 
 def test_get_all_dns_scans(arango_db):
-    assert len(list(get_all_dns_scans("domains/1", arango_db))) == 5, "Should return 5 dns scans for domains/1"
-    assert len(list(get_all_dns_scans("domains/2", arango_db))) == 6, "Should return 6 dns scans for domains/2"
+    assert len(list(get_all_dns_scans("domains/1", arango_db, CONFIG))) == 5, "Should return 5 dns scans for domains/1"
+    assert len(list(get_all_dns_scans("domains/2", arango_db, CONFIG))) == 6, "Should return 6 dns scans for domains/2"
 
 def test_get_all_web_scans(arango_db):
-    web_docs1 = list(get_all_web_scans("domains/1", arango_db))
+    web_docs1 = list(get_all_web_scans("domains/1", arango_db, CONFIG))
     assert len(web_docs1) == 5, "Should return 5 web docs for domains/1"
 
-    web_docs2 = list(get_all_web_scans("domains/2", arango_db))
+    web_docs2 = list(get_all_web_scans("domains/2", arango_db, CONFIG))
     assert len(web_docs2) == 5, "Should return 5 web docs for domains/2"
     assert len(web_docs2[0].get("scans")) == 2
 
 def test_get_users(arango_db):
     assert len(list(get_users("organizations/1", arango_db))) == 2, "Should return 2 users for organizations/1"
 
-def test_detect_decay(arango_db):
+def test_detect_decay(arango_db, notify_client):
     # Test that decays are detected correctly, use decays dict
-    output = detect_decay(arango_db)
+    output = detect_decay(arango_db, CONFIG, notify_client)
     decays = output[0]
 
     assert len(decays.keys()) == 1, "Should return 1 org"
@@ -676,10 +709,117 @@ def test_detect_decay(arango_db):
     assert len(decays["Org 1"]["domain2.gc.ca"]) == 2, "Should return 2 decay for domain2.gc.ca"
     assert "SPF" in decays["Org 1"]["domain2.gc.ca"]
     assert "HTTPS Configuration" in decays["Org 1"]["domain2.gc.ca"]
-    
-    
+
+
     # Test that send_email_notifs returns 2 responses for org 1 owner and admin
     responses = output[1]
     assert len(responses[0]) == 2, "Should return 2 responses for org 1 users"
-    
+
+def test_detect_decay_dry_run_email_mode(arango_db, notify_client):
+    output = detect_decay(arango_db, replace(CONFIG, dry_run_email_mode=True), notify_client)
+    assert len(output[1][0]) == 1, "Should return 1 response for the service account"
+
+def test_detect_decay_dry_run_log_mode(arango_db):
+    output = detect_decay(arango_db, replace(CONFIG, dry_run_log_mode=True), None)
+    assert output[1] == [[{}, {}]]
+
+@pytest.mark.parametrize(
+    "ignored_fields",
+    [
+        pytest.param({"archived": True}, id="archived"),
+        pytest.param({"blocked": True}, id="blocked"),
+        pytest.param({"rcode": "NXDOMAIN"}, id="nxdomain"),
+    ],
+)
+def test_detect_decay_skips_ignored_domains(arango_db, ignored_fields):
+    arango_db.collection("domains").update({"_key": "1", **ignored_fields})
+    output = detect_decay(arango_db, replace(CONFIG, dry_run_log_mode=True), None)
+    assert output[0] == {"Org 1": {"domain2.gc.ca": ["HTTPS Configuration", "SPF"]}}
+
+@pytest.mark.parametrize(
+    "statuses, i, expected",
+    [
+        pytest.param(
+            ["fail", "fail", "fail", "fail", "pass"], 0, True,
+            id="decay: four newest fail, the one before passed",
+        ),
+        pytest.param(
+            ["pass", "fail", "fail", "fail", "fail", "pass"], 1, True,
+            id="decay: same pattern starting from the second newest scan",
+        ),
+        pytest.param(
+            ["pass", "fail", "fail", "fail", "fail", "pass"], 0, False,
+            id="no decay: newest scan passes",
+        ),
+        pytest.param(
+            ["fail", "fail", "fail", "pass"], 0, False,
+            id="no decay: fewer scans than the minimum",
+        ),
+        pytest.param(
+            ["fail", "fail", "fail", "fail", "fail"], 0, False,
+            id="no decay: was already failing before",
+        ),
+        pytest.param(
+            ["fail", "fail", "fail", "fail", "info"], 0, False,
+            id="no decay: earlier scan was info, not pass",
+        ),
+        pytest.param(
+            ["fail", "pass", "fail", "fail", "pass"], 0, False,
+            id="no decay: a pass inside the recent run",
+        ),
+        pytest.param(
+            ["fail", "info", "fail", "fail", "pass"], 0, False,
+            id="no decay: an info inside the recent run",
+        ),
+        pytest.param(
+            ["pass", "pass", "pass", "pass", "pass"], 0, False,
+            id="no decay: all passing",
+        ),
+    ],
+)
+def test_find_decay(statuses, i, expected):
+    assert find_decay(statuses, i, MINIMUM_SCANS) is expected
+
+@pytest.mark.parametrize(
+    "statuses, expected",
+    [
+        pytest.param(["pass", "fail", "info"], "fail", id="any fail wins"),
+        pytest.param(["pass", "info"], "pass", id="pass beats info when nothing fails"),
+        pytest.param(["info", "info"], "info", id="only info"),
+        pytest.param([], "info", id="no statuses"),
+    ],
+)
+def test_get_status(statuses, expected):
+    assert get_status(statuses) == expected
+
+def test_finalize_web_scans():
+    scans = [
+        {
+            "status": "complete",
+            "https_status": "pass",
+            "hsts_status": "fail",
+            "certificate_status": "pass",
+            "protocol_status": "info",
+            "cipher_status": "info",
+            "curve_status": "pass",
+        },
+        {
+            "status": "complete",
+            "https_status": "pass",
+            "hsts_status": "pass",
+            "certificate_status": "fail",
+            "protocol_status": "pass",
+            "cipher_status": "info",
+            "curve_status": "pass",
+        },
+    ]
+    assert finalize_web_scans(scans) == {
+        "https_status": "pass",
+        "hsts_status": "fail",
+        "certificate_status": "fail",
+        "protocol_status": "pass",
+        "cipher_status": "info",
+        "curve_status": "pass",
+    }
+
 

@@ -9,12 +9,12 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
+import { tokenize } from '../../../auth'
 import { loadUserByUserName } from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { DB_PASS: rootPass, DB_URL: url, AUTHENTICATED_KEY } = process.env
 const mockNotify = jest.fn()
-const tokenize = jest.fn().mockReturnValue('token')
 
 describe('user send password reset email', () => {
   let query, drop, truncate, collections, schema, request, i18n
@@ -38,27 +38,27 @@ describe('user send password reset email', () => {
   afterEach(() => {
     consoleOutput.length = 0
   })
+  beforeAll(async () => {
+    ;({ query, drop, truncate, collections } = await ensure({
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
+  })
+  afterEach(async () => {
+    await truncate()
+  })
+  afterAll(async () => {
+    await drop()
+  })
 
   describe('successfully sends password reset email', () => {
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        variables: {
-          dbname: dbNameFromFile(__filename),
-          username: 'root',
-          rootPassword: rootPass,
-          password: rootPass,
-          url,
-        },
-
-        schema: dbschema,
-      }))
-    })
-    afterEach(async () => {
-      await truncate()
-    })
-    afterAll(async () => {
-      await drop()
-    })
     describe('users preferred language is english', () => {
       beforeAll(() => {
         i18n = setupI18n({
@@ -84,6 +84,8 @@ describe('user send password reset email', () => {
           })
         })
         it('returns status text', async () => {
+          const tokenizeSpy = jest.fn(tokenize)
+
           const response = await graphql({
             schema,
             source: `
@@ -102,7 +104,7 @@ describe('user send password reset email', () => {
               query,
               auth: {
                 bcrypt,
-                tokenize,
+                tokenize: tokenizeSpy,
               },
               validators: {
                 cleanseInput,
@@ -130,15 +132,15 @@ describe('user send password reset email', () => {
             i18n: {},
           }).load('test.account@istio.actually.exists')
 
-          const token = tokenize({
-            parameters: { userKey: user._key, currentPassword: user.password },
-          })
-          const resetUrl = `https://${request.get('host')}/reset-password/${token}`
-
           expect(response).toEqual(expectedResult)
+          expect(tokenizeSpy).toHaveBeenCalledWith({
+            expiresIn: '1h',
+            parameters: { userKey: user._key, currentPassword: user.password },
+            secret: String(AUTHENTICATED_KEY),
+          })
           expect(mockNotify).toHaveBeenCalledWith({
             user,
-            resetUrl,
+            resetUrl: `https://${request.get('host')}/reset-password/${tokenizeSpy.mock.results[0].value}`,
           })
           expect(consoleOutput).toEqual([`User: ${user._key} successfully sent a password reset email.`])
         })
@@ -168,6 +170,8 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
+        const tokenizeSpy = jest.fn(tokenize)
+
         const response = await graphql({
           schema,
           source: `
@@ -186,7 +190,7 @@ describe('user send password reset email', () => {
             query,
             auth: {
               bcrypt,
-              tokenize,
+              tokenize: tokenizeSpy,
             },
             validators: {
               cleanseInput,
@@ -215,15 +219,15 @@ describe('user send password reset email', () => {
           i18n: {},
         }).load('test.account@istio.actually.exists')
 
-        const token = tokenize({
-          parameters: { userKey: user._key, currentPassword: user.password },
-        })
-        const resetUrl = `https://${request.get('host')}/reset-password/${token}`
-
         expect(response).toEqual(expectedResult)
+        expect(tokenizeSpy).toHaveBeenCalledWith({
+          expiresIn: '1h',
+          parameters: { userKey: user._key, currentPassword: user.password },
+          secret: String(AUTHENTICATED_KEY),
+        })
         expect(mockNotify).toHaveBeenCalledWith({
           user,
-          resetUrl,
+          resetUrl: `https://${request.get('host')}/reset-password/${tokenizeSpy.mock.results[0].value}`,
         })
         expect(consoleOutput).toEqual([`User: ${user._key} successfully sent a password reset email.`])
       })
@@ -272,9 +276,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: {
-                load: jest.fn().mockReturnValue(undefined),
-              },
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendPasswordResetEmail: mockNotify,
@@ -339,9 +341,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: {
-                  load: jest.fn().mockReturnValue(undefined),
-                },
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendPasswordResetEmail: mockNotify,

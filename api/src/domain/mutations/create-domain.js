@@ -6,7 +6,6 @@ import { createDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { AssetStateEnums } from '../../enums'
 import { headers } from 'nats'
-import { CvdEnrollmentInputOptions } from '../../additional-findings/input/cvd-enrollment-options'
 import ac from '../../access-control'
 
 export const createDomain = new mutationWithClientMutationId({
@@ -33,11 +32,6 @@ export const createDomain = new mutationWithClientMutationId({
       description: 'Value that determines how the domain relates to the organization.',
       type: new GraphQLNonNull(AssetStateEnums),
     },
-    cvdEnrollment: {
-      description:
-        'The Coordinated Vulnerability Disclosure (CVD) enrollment details for this domain, including HackerOne integration status and CVSS requirements.',
-      type: CvdEnrollmentInputOptions,
-    },
     highAvailability: {
       description: 'Value that determines if the service is scanned for uptime.',
       type: GraphQLBoolean,
@@ -57,7 +51,14 @@ export const createDomain = new mutationWithClientMutationId({
       request,
       userKey,
       publish,
-      auth: { checkPermission, saltedHash, userRequired, tfaRequired, verifiedRequired },
+      auth: {
+        checkPermission,
+        saltedHash,
+        userRequired,
+        tfaRequired,
+        verifiedRequired,
+        getDeniedFields,
+      },
       dataSources: { domain: domainDS, tags: tagsDS, organization: orgDS, auditLogs },
       validators: { cleanseInput },
     },
@@ -103,7 +104,6 @@ export const createDomain = new mutationWithClientMutationId({
       assetState = 'approved'
     }
 
-    const cvdEnrollment = args.cvdEnrollment || { status: 'not-enrolled' }
     const highAvailability = args.highAvailability || false
 
     // Check to see if org exists
@@ -132,20 +132,11 @@ export const createDomain = new mutationWithClientMutationId({
       }
     }
 
-    // ensure only owners can enroll or deny domains
-    if (
-      !ac.can(permission).createOwn('cvd-enrollment').granted &&
-      ['enrolled', 'deny'].includes(cvdEnrollment.status)
-    ) {
-      console.warn(
-        `User: ${userKey} attempted to update the CVD enrollment for domain: ${domain} in org: ${orgId}, however they do not have permission in that org.`,
-      )
-      cvdEnrollment.status = cvdEnrollment.status === 'enrolled' ? 'pending' : 'not-enrolled'
-    }
+    const deniedFields = getDeniedFields({ permission, resource: 'domain', action: 'create', args })
 
-    if (!ac.can(permission).createAny('domain').granted && highAvailability === true) {
+    if (deniedFields.length > 0) {
       console.warn(
-        `User: ${userKey} attempted to create a high availability domain in: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to create a domain with a super admin only field in: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
@@ -172,7 +163,7 @@ export const createDomain = new mutationWithClientMutationId({
       },
       archived,
       ignoreRua: false,
-      cvdEnrollment,
+      cvdEnrollment: { status: 'not-enrolled' },
       highAvailability,
     }
 
@@ -210,14 +201,6 @@ export const createDomain = new mutationWithClientMutationId({
         name: 'assetState',
         oldValue: null,
         newValue: assetState,
-      })
-    }
-
-    if (typeof cvdEnrollment !== 'undefined') {
-      updatedProperties.push({
-        name: 'cvdEnrollment',
-        oldValue: null,
-        newValue: cvdEnrollment.enrollment,
       })
     }
 

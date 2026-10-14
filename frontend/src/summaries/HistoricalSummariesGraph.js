@@ -18,7 +18,7 @@ import { t } from "@lingui/core/macro"
 import { Trans } from "@lingui/react/macro"
 import { func } from 'prop-types'
 import useSearchParam from '../utilities/useSearchParam'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 const getDate = ({ date }) => new Date(date)

@@ -5,7 +5,7 @@ import { json } from 'body-parser'
 
 import http from 'http'
 import { ApolloServer } from '@apollo/server'
-import { expressMiddleware } from '@as-integrations/express4'
+import { expressMiddleware } from '@as-integrations/express5'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import compression from 'compression'
 

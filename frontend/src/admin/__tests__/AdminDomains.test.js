@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
@@ -216,9 +216,7 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
               tags: [],
-              archived: false,
               assetState: 'APPROVED',
-              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {
@@ -313,9 +311,7 @@ describe('<AdminDomains />', () => {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
               tags: [],
-              archived: false,
               assetState: 'APPROVED',
-              cvdEnrollment: { status: 'NOT_ENROLLED' },
             },
           },
           result: {
@@ -490,11 +486,7 @@ describe('<AdminDomains />', () => {
               domainId: 'testid2=',
               orgId: 'testid=',
               tags: [],
-              archived: false,
               assetState: 'MONITOR_ONLY',
-              ignoreRua: undefined,
-              cvdEnrollment: { status: 'NOT_ENROLLED' },
-              highAvailability: false,
             },
           },
           result: {

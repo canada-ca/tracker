@@ -230,6 +230,10 @@ msgstr "Message rejeté avec succès"
 msgid "New passwords do not match."
 msgstr "Les nouveaux mots de passe ne correspondent pas."
 
+#: src/domain/mutations/update-cvd-enrollment.js:65
+msgid "No CVD enrollment fields were provided to update."
+msgstr "Aucun champ d'inscription DCV n'a été fourni pour la mise à jour."
+
 #: src/organization/queries/find-organization-by-slug.js:42
 #: src/user/queries/find-my-tracker.js:29
 msgid "No organization with the provided slug could be found."
@@ -463,7 +467,9 @@ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/domain/mutations/update-domain.js:134
+#: src/domain/mutations/update-cvd-enrollment.js:104
+#: src/domain/mutations/update-cvd-enrollment.js:139
+#: src/domain/mutations/update-domain.js:127
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
@@ -471,7 +477,7 @@ msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisati
 msgid "Permission Denied: Please contact super admin for help with archiving organization."
 msgstr "Permission refusée : Veuillez contacter le super administrateur pour obtenir de l'aide sur l'organisation de l'archivage."
 
-#: src/domain/mutations/create-domain.js:153
+#: src/domain/mutations/create-domain.js:144
 msgid "Permission Denied: Please contact super admin for help with creating domain."
 msgstr "Permission refusée : Veuillez contacter le super admin pour obtenir de l'aide pour créer le domaine."
 
@@ -488,7 +494,7 @@ msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu
 #~ msgid "Permission Denied: Please contact super admin for help with scanning this domain."
 #~ msgstr "Permission refusée : Veuillez contacter le super administrateur pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/domain/mutations/update-domain.js:178
+#: src/domain/mutations/update-domain.js:163
 msgid "Permission Denied: Please contact super admin for help with updating domain."
 msgstr "Permission refusée : Veuillez contacter le super admin pour obtenir de l'aide pour mettre à jour le domaine."
 
@@ -820,7 +826,7 @@ msgstr "Impossible de confirmer l'achèvement de la visite. Veuillez réessayer.
 msgid "Unable to create domain in unknown organization."
 msgstr "Impossible de créer un domaine dans une organisation inconnue."
 
-#: src/domain/mutations/create-domain.js:191
+#: src/domain/mutations/create-domain.js:182
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Impossible de créer le domaine, l'organisation l'a déjà réclamé."
 
@@ -980,10 +986,10 @@ msgstr "Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez rées
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer."
 
-#: src/domain/data-source.js:764
-#: src/domain/data-source.js:786
-#: src/domain/data-source.js:800
-#: src/domain/data-source.js:810
+#: src/domain/data-source.js:816
+#: src/domain/data-source.js:838
+#: src/domain/data-source.js:852
+#: src/domain/data-source.js:862
 #: src/domain/mutations/ignore-cve.js:61
 msgid "Unable to ignore CVE. Please try again."
 msgstr "Impossible d'ignorer le CVE. Veuillez réessayer."
@@ -1347,15 +1353,15 @@ msgstr "Impossible de supprimer le domaine. Le domaine ne fait pas partie de l'o
 
 #: src/domain/data-source.js:164
 #: src/domain/data-source.js:186
-#: src/domain/data-source.js:593
-#: src/domain/data-source.js:613
-#: src/domain/data-source.js:639
-#: src/domain/data-source.js:657
-#: src/domain/data-source.js:674
-#: src/domain/data-source.js:690
-#: src/domain/data-source.js:707
-#: src/domain/data-source.js:731
+#: src/domain/data-source.js:645
+#: src/domain/data-source.js:665
+#: src/domain/data-source.js:691
+#: src/domain/data-source.js:709
+#: src/domain/data-source.js:726
 #: src/domain/data-source.js:742
+#: src/domain/data-source.js:759
+#: src/domain/data-source.js:783
+#: src/domain/data-source.js:794
 #: src/domain/mutations/remove-domain.js:119
 #: src/domain/mutations/remove-domain.js:140
 #: src/domain/mutations/remove-domain.js:151
@@ -1459,8 +1465,8 @@ msgstr "Impossible de demander une invitation. Veuillez réessayer."
 msgid "Unable to reset password. Please try again."
 msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 
-#: src/domain/objects/domain.js:291
-#: src/domain/objects/domain.js:326
+#: src/domain/objects/domain.js:274
+#: src/domain/objects/domain.js:311
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
@@ -1534,10 +1540,10 @@ msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organ
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
-#: src/domain/data-source.js:835
-#: src/domain/data-source.js:857
-#: src/domain/data-source.js:871
-#: src/domain/data-source.js:881
+#: src/domain/data-source.js:887
+#: src/domain/data-source.js:909
+#: src/domain/data-source.js:923
+#: src/domain/data-source.js:933
 #: src/domain/mutations/unignore-cve.js:61
 msgid "Unable to stop ignoring CVE. Please try again."
 msgstr "Impossible d'arrêter d'ignorer le CVE. Veuillez réessayer."
@@ -1572,8 +1578,8 @@ msgstr "Impossible de s'authentifier par deux facteurs. Veuillez réessayer."
 msgid "Unable to unfavourite domain, domain is not favourited."
 msgstr "Impossible de désactiver le domaine, le domaine n'est pas favorisé."
 
-#: src/domain/data-source.js:464
-#: src/domain/data-source.js:472
+#: src/domain/data-source.js:516
+#: src/domain/data-source.js:524
 msgid "Unable to unfavourite domain. Please try again."
 msgstr "Impossible de défavoriser le domaine. Veuillez réessayer."
 
@@ -1581,25 +1587,34 @@ msgstr "Impossible de défavoriser le domaine. Veuillez réessayer."
 msgid "Unable to unfavourite unknown domain."
 msgstr "Impossible de défavoriser un domaine inconnu."
 
-#: src/domain/data-source.js:514
+#: src/domain/data-source.js:275
+msgid "Unable to update CVD enrollment. Please try again."
+msgstr "Impossible de mettre à jour l'inscription au DCV. Veuillez réessayer."
+
+#: src/domain/data-source.js:566
 msgid "Unable to update domain edge. Please try again."
 msgstr "Impossible de mettre à jour le bord du domaine. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:120
+#: src/domain/mutations/update-cvd-enrollment.js:91
+#: src/domain/mutations/update-domain.js:113
 msgid "Unable to update domain in an unknown org."
 msgstr "Impossible de mettre à jour le domaine dans un org inconnu."
 
-#: src/domain/mutations/update-domain.js:157
+#: src/domain/mutations/update-cvd-enrollment.js:127
+#: src/domain/mutations/update-domain.js:150
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée."
 
 #: src/domain/data-source.js:234
-#: src/domain/data-source.js:495
-#: src/domain/data-source.js:524
-#: src/domain/data-source.js:550
-#: src/domain/data-source.js:558
-#: src/domain/mutations/update-domain.js:147
-#: src/domain/mutations/update-domain.js:205
+#: src/domain/data-source.js:254
+#: src/domain/data-source.js:285
+#: src/domain/data-source.js:547
+#: src/domain/data-source.js:576
+#: src/domain/data-source.js:602
+#: src/domain/data-source.js:610
+#: src/domain/mutations/update-cvd-enrollment.js:117
+#: src/domain/mutations/update-domain.js:140
+#: src/domain/mutations/update-domain.js:189
 msgid "Unable to update domain. Please try again."
 msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 
@@ -1608,9 +1623,9 @@ msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 msgid "Unable to update domains in unknown organization."
 msgstr "Impossible de mettre à jour les domaines dans une organisation inconnue."
 
-#: src/domain/data-source.js:424
-#: src/domain/data-source.js:432
-#: src/domain/data-source.js:436
+#: src/domain/data-source.js:476
+#: src/domain/data-source.js:484
+#: src/domain/data-source.js:488
 msgid "Unable to update domains. Please try again."
 msgstr "Impossible de mettre à jour les domaines. Veuillez réessayer."
 
@@ -1671,7 +1686,8 @@ msgstr "Impossible de mettre à jour la balise, l'orgId est invalide."
 msgid "Unable to update tag. Please try again."
 msgstr "Impossible de mettre à jour la balise. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:106
+#: src/domain/mutations/update-cvd-enrollment.js:78
+#: src/domain/mutations/update-domain.js:99
 msgid "Unable to update unknown domain."
 msgstr "Impossible de mettre à jour un domaine inconnu."
 

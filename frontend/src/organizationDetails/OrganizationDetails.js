@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { UserIcon } from '../theme/Icons'
-import { Link as RouteLink, useParams, useNavigate } from 'react-router-dom'
+import { Link as RouteLink, useParams, useNavigate } from 'react-router'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'

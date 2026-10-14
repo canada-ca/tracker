@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, useLingui } from "@lingui/react/macro"
 import { Box, Button, Checkbox, Flex, Heading, Link, Text, useToast } from '@chakra-ui/react'
-import { Link as RouteLink, useNavigate, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useNavigate, useLocation } from 'react-router'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 
