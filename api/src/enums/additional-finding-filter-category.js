@@ -9,9 +9,5 @@ export const AdditionalFindingFilterCategory = new GraphQLEnumType({
       acc[name] = { value, description }
       return acc
     }, {}),
-    DOMAIN: {
-      value: 'domain',
-      description: 'Filter additional findings by domain.',
-    },
   },
 })
