@@ -144,7 +144,7 @@ Environment variables:
 
 - `NATS_URL` (default: `nats://localhost:4222`)
 - `NATS_STREAM` (default: `SCANS`)
-- `SUBJECT_IN` (default: `scans.dns_scanner_results`)
+- `SUBJECT_IN` (default: `scans.subdomain_takeover_requests`)
 - `SUBJECT_OUT` (default: `scans.findings.subdomain-takeover`)
 - `DURABLE_NAME` (default: `subdomain_takeover`)
 - `WORKER_COUNT` (default: `5`)
