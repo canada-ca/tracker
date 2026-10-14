@@ -18,8 +18,9 @@ func TestClassifierClassify(t *testing.T) {
 		input := model.Input{
 			DomainKey: "k1",
 			Results: model.ScanResults{
-				Domain:      strPtr("a.example.ca"),
-				CnameRecord: strPtr("a.example.ca. 300 IN CNAME foo.azurewebsites.net."),
+				Domain:           strPtr("a.example.ca"),
+				CnameRecord:      strPtr("a.example.ca. 300 IN CNAME foo.azurewebsites.net."),
+				CnameTargetRcode: strPtr("NXDOMAIN"),
 				RegistrarContext: &model.RegistrarContext{
 					LookupSuccess:         true,
 					RegistrarName:         "Namecheap",
@@ -73,8 +74,9 @@ func TestClassifierClassify(t *testing.T) {
 		input := model.Input{
 			DomainKey: "k2",
 			Results: model.ScanResults{
-				Domain:      strPtr("b.example.ca"),
-				CnameRecord: strPtr("b.example.ca. 300 IN CNAME foo.ghost.io."),
+				Domain:           strPtr("b.example.ca"),
+				CnameRecord:      strPtr("b.example.ca. 300 IN CNAME foo.ghost.io."),
+				CnameTargetRcode: strPtr("NOERROR"),
 				NsDelegations: &model.NsDelegations{
 					Hosts: []string{"aria.ns.cloudflare.com"},
 					Delegation: model.Delegation{
@@ -119,8 +121,9 @@ func TestClassifierClassify(t *testing.T) {
 		input := model.Input{
 			DomainKey: "k4",
 			Results: model.ScanResults{
-				Domain:      strPtr("c.example.ca"),
-				CnameRecord: strPtr("c.example.ca. 300 IN CNAME foo.ghost.io."),
+				Domain:           strPtr("c.example.ca"),
+				CnameRecord:      strPtr("c.example.ca. 300 IN CNAME foo.ghost.io."),
+				CnameTargetRcode: strPtr("NOERROR"),
 			},
 		}
 		findings, err := classifier.Classify(input)
@@ -131,4 +134,50 @@ func TestClassifierClassify(t *testing.T) {
 			t.Fatalf("expected body-fingerprint match to be suppressed without a matcher, got %d findings", len(findings))
 		}
 	})
+}
+
+func TestClassifierClassify_CNAMETargetRcode(t *testing.T) {
+	if err := fingerprints.Load(zerolog.Nop()); err != nil {
+		t.Fatalf("failed to load fingerprints: %v", err)
+	}
+
+	tests := []struct {
+		name         string
+		rcode        *string
+		wantFindings int
+	}{
+		{name: "NXDOMAIN with nxdomain fingerprint emits dangling finding", rcode: strPtr("NXDOMAIN"), wantFindings: 1},
+		{name: "SERVFAIL emits no dangling finding", rcode: strPtr("SERVFAIL"), wantFindings: 0},
+		{name: "TIMEOUT emits no dangling finding", rcode: strPtr("TIMEOUT"), wantFindings: 0},
+		{name: "NOERROR emits no dangling finding", rcode: strPtr("NOERROR"), wantFindings: 0},
+		{name: "null rcode emits no dangling finding", rcode: nil, wantFindings: 0},
+	}
+
+	classifier := NewClassifier(fakeMatcher{}, zerolog.Nop())
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			input := model.Input{
+				DomainKey: "k",
+				Results: model.ScanResults{
+					Domain:           strPtr("a.example.ca"),
+					CnameRecord:      strPtr("a.example.ca. 300 IN CNAME foo.azurewebsites.net."),
+					CnameTargetRcode: tt.rcode,
+				},
+			}
+
+			findings := mustNotPanic(t, func() []model.Finding {
+				findings, err := classifier.Classify(input)
+				if err != nil {
+					t.Fatalf("Classify error: %v", err)
+				}
+				return findings
+			})
+			if len(findings) != tt.wantFindings {
+				t.Fatalf("expected %d findings, got %d", tt.wantFindings, len(findings))
+			}
+			if tt.wantFindings == 1 && findings[0].ReasonCode != string(ReasonCNAMEDanglingNXDOMAIN) {
+				t.Fatalf("unexpected reason: %q", findings[0].ReasonCode)
+			}
+		})
+	}
 }

@@ -30,41 +30,51 @@ func TestExtractCNAMEEvidence(t *testing.T) {
 		})
 	}
 
-	t.Run("extracts normalized target and noresolve true", func(t *testing.T) {
+	t.Run("extracts normalized domain and target", func(t *testing.T) {
 		record := "A.Example.CA. 300 IN CNAME Foo.AzureWebsites.NET."
 		results := minimalResults("app.example.ca")
 		results.CnameRecord = &record
+		results.CnameTargetRcode = strPtr("NXDOMAIN")
 
 		got := ExtractCNAMEEvidence(results)
 		if got == nil {
 			t.Fatal("expected evidence, got nil")
 		}
-
 		if got.Domain != "app.example.ca" {
 			t.Fatalf("unexpected domain: %q", got.Domain)
 		}
 		if got.Target != "foo.azurewebsites.net" {
 			t.Fatalf("unexpected target: %q", got.Target)
 		}
-		if !got.NoResolve {
-			t.Fatal("expected NoResolve=true")
-		}
 	})
 
-	t.Run("sets noresolve false when resolve chain present", func(t *testing.T) {
-		record := "a.example.ca. 300 IN CNAME foo.azurewebsites.net."
-		results := minimalResults("app.example.ca")
-		results.CnameRecord = &record
-		results.ResolveChain = [][]string{{"a.example.ca CNAME foo.azurewebsites.net"}}
+	rcodeCases := []struct {
+		name  string
+		rcode *string
+		want  bool
+	}{
+		{name: "NXDOMAIN rcode sets TargetNXDOMAIN", rcode: strPtr("NXDOMAIN"), want: true},
+		{name: "NOERROR rcode does not set TargetNXDOMAIN", rcode: strPtr("NOERROR"), want: false},
+		{name: "SERVFAIL rcode does not set TargetNXDOMAIN", rcode: strPtr("SERVFAIL"), want: false},
+		{name: "TIMEOUT rcode does not set TargetNXDOMAIN", rcode: strPtr("TIMEOUT"), want: false},
+		{name: "null rcode does not set TargetNXDOMAIN", rcode: nil, want: false},
+	}
 
-		got := ExtractCNAMEEvidence(results)
-		if got == nil {
-			t.Fatal("expected evidence, got nil")
-		}
-		if got.NoResolve {
-			t.Fatal("expected NoResolve=false")
-		}
-	})
+	for _, tt := range rcodeCases {
+		t.Run(tt.name, func(t *testing.T) {
+			results := minimalResults("app.example.ca")
+			results.CnameRecord = strPtr("a.example.ca. 300 IN CNAME foo.azurewebsites.net.")
+			results.CnameTargetRcode = tt.rcode
+
+			got := mustNotPanic(t, func() *CNAMEEvidence { return ExtractCNAMEEvidence(results) })
+			if got == nil {
+				t.Fatal("expected evidence, got nil")
+			}
+			if got.TargetNXDOMAIN != tt.want {
+				t.Fatalf("TargetNXDOMAIN=%v want=%v", got.TargetNXDOMAIN, tt.want)
+			}
+		})
+	}
 }
 
 func TestExtractNSEvidence(t *testing.T) {

@@ -83,7 +83,7 @@ func (m *fakeJSMsg) TermWithReason(string) error { return nil }
 // scanWithFinding is DNS scan input that the real classifier turns into exactly
 // one CNAME finding (a dangling Azure Web Apps CNAME), so Worker.Handle's
 // publish path can be exercised without inventing a classifier seam.
-const scanWithFinding = `{"domain_key":"k","results":{"domain":"a.example.ca","cname_record":"a.example.ca. 300 IN CNAME foo.azurewebsites.net."}}`
+const scanWithFinding = `{"domain_key":"k","results":{"domain":"a.example.ca","cname_record":"a.example.ca. 300 IN CNAME foo.azurewebsites.net.","cname_target_rcode":"NXDOMAIN"}}`
 
 const scanWithNoFinding = `{"domain_key":"k","results":{}}`
 

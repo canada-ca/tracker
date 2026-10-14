@@ -9,9 +9,9 @@ type ScanResults struct {
 	Domain           *string           `json:"domain"`
 	NsDelegations    *NsDelegations    `json:"ns_delegations"`
 	RegistrarContext *RegistrarContext `json:"registrar_context"`
-	ResolveChain     [][]string        `json:"resolve_chain"`
 	CnameRecord      *string           `json:"cname_record"`
 	NsRecords        *NsRecords        `json:"ns_records"`
+	CnameTargetRcode *string           `json:"cname_target_rcode"`
 }
 
 type NsRecords struct {

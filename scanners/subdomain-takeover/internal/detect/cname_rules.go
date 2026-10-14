@@ -31,7 +31,7 @@ func MatchCNAMEFingerprints(evidence CNAMEEvidence, providerFingerprints []finge
 
 			if hit.NeedsNX {
 				hit.ReasonCode = ReasonCNAMETargetMatchMissingNXDOMAIN
-				if evidence.NoResolve {
+				if evidence.TargetNXDOMAIN {
 					hit.Matched = true
 					hit.ReasonCode = ReasonCNAMEDanglingNXDOMAIN
 				}

@@ -114,13 +114,14 @@ func TestIntegration_Run_ProcessesMessageEndToEnd(t *testing.T) {
 	worker := app.NewWorker(logger, publisher, classifier)
 
 	// This input matches the real "Microsoft Azure" CNAME fingerprint's
-	// NXDOMAIN mode, so the real classifier deterministically emits one
+	// NXDOMAIN mode and the target rcode is NXDOMAIN, so the real classifier deterministically emits one
 	// finding without needing an HTTP body fetch.
 	scan := model.Input{
 		DomainKey: "integration-test",
 		Results: model.ScanResults{
-			Domain:      strPtrForTest("dangling.example.ca"),
-			CnameRecord: strPtrForTest("dangling.example.ca. 300 IN CNAME foo.azurewebsites.net."),
+			Domain:           strPtrForTest("dangling.example.ca"),
+			CnameRecord:      strPtrForTest("dangling.example.ca. 300 IN CNAME foo.azurewebsites.net."),
+			CnameTargetRcode: strPtrForTest("NXDOMAIN"),
 		},
 	}
 	payload, err := json.Marshal(scan)

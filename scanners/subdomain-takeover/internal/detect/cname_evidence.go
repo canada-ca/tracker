@@ -7,9 +7,9 @@ import (
 )
 
 type CNAMEEvidence struct {
-	Domain    string
-	Target    string
-	NoResolve bool
+	Domain         string
+	Target         string
+	TargetNXDOMAIN bool
 }
 
 func ExtractCNAMEEvidence(results model.ScanResults) *CNAMEEvidence {
@@ -18,9 +18,9 @@ func ExtractCNAMEEvidence(results model.ScanResults) *CNAMEEvidence {
 	}
 
 	return &CNAMEEvidence{
-		Domain:    *results.Domain,
-		Target:    parseCname(*results.CnameRecord),
-		NoResolve: len(results.ResolveChain) == 0,
+		Domain:         *results.Domain,
+		Target:         parseCname(*results.CnameRecord),
+		TargetNXDOMAIN: results.CnameTargetRcode != nil && *results.CnameTargetRcode == "NXDOMAIN",
 	}
 }
 

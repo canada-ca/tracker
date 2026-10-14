@@ -25,14 +25,14 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 	}
 
 	t.Run("returns nil when no target match", func(t *testing.T) {
-		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.not-a-provider.net", NoResolve: true}
+		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.not-a-provider.net", TargetNXDOMAIN: true}
 		if got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}, zerolog.Nop()); got != nil {
 			t.Fatalf("expected nil, got %+v", got)
 		}
 	})
 
-	t.Run("nxdomain provider emits dangling reason when unresolved", func(t *testing.T) {
-		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.azurewebsites.net", NoResolve: true}
+	t.Run("nxdomain provider emits dangling reason when target is NXDOMAIN", func(t *testing.T) {
+		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.azurewebsites.net", TargetNXDOMAIN: true}
 		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
@@ -45,8 +45,8 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 		}
 	})
 
-	t.Run("nxdomain provider suppressed when resolve evidence exists", func(t *testing.T) {
-		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.azurewebsites.net", NoResolve: false}
+	t.Run("nxdomain provider suppressed when target is not NXDOMAIN", func(t *testing.T) {
+		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "foo.azurewebsites.net", TargetNXDOMAIN: false}
 		got := MatchCNAMEFingerprints(evidence, fps, fakeMatcher{}, zerolog.Nop())
 		if got == nil {
 			t.Fatal("expected hit, got nil")
@@ -60,7 +60,7 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 	})
 
 	t.Run("body fingerprint provider emits when matcher returns true", func(t *testing.T) {
-		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", NoResolve: false}
+		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", TargetNXDOMAIN: false}
 		matcher := fakeMatcher{containsFn: func(domain string, fingerprint string, mode fingerprints.FingerprintMode) bool {
 			if domain != "a.example.ca" || mode != fingerprints.FingerprintModeLiteral {
 				t.Fatalf("unexpected matcher args: domain=%q mode=%q", domain, mode)
@@ -80,7 +80,7 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 	})
 
 	t.Run("body fingerprint provider suppressed when matcher false", func(t *testing.T) {
-		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", NoResolve: false}
+		evidence := CNAMEEvidence{Domain: "a.example.ca", Target: "blog.ghost.io", TargetNXDOMAIN: false}
 		matcher := fakeMatcher{containsFn: func(string, string, fingerprints.FingerprintMode) bool { return false }}
 		got := MatchCNAMEFingerprints(evidence, fps, matcher, zerolog.Nop())
 		if got == nil {
@@ -93,6 +93,34 @@ func TestMatchCNAMEFingerprints(t *testing.T) {
 			t.Fatalf("unexpected reason: %q", got.ReasonCode)
 		}
 	})
+}
+
+// TestRegression_PR7582_NoResolveIsNotNXDOMAIN guards against treating an
+// empty resolve_chain as proof the CNAME target is dangling. An empty chain can
+// come from SERVFAIL/TIMEOUT just as easily as NXDOMAIN; only an explicit
+// NXDOMAIN rcode is a takeover signal.
+// See PR #7582 review comment on cname_rules.go:37.
+func TestRegression_PR7582_NoResolveIsNotNXDOMAIN(t *testing.T) {
+	if err := fingerprints.Load(zerolog.Nop()); err != nil {
+		t.Fatalf("failed to load fingerprints: %v", err)
+	}
+
+	results := minimalResults("a.example.ca")
+	results.CnameRecord = strPtr("a.example.ca. 300 IN CNAME foo.azurewebsites.net.")
+	results.CnameTargetRcode = strPtr("SERVFAIL")
+
+	evidence := ExtractCNAMEEvidence(results)
+	if evidence == nil {
+		t.Fatal("expected evidence, got nil")
+	}
+	if evidence.TargetNXDOMAIN {
+		t.Fatal("empty resolve_chain with SERVFAIL must not be treated as NXDOMAIN")
+	}
+
+	hit := MatchCNAMEFingerprints(*evidence, fingerprints.CNAME(), fakeMatcher{}, zerolog.Nop())
+	if ShouldEmitCNAME(hit) {
+		t.Fatalf("expected no dangling finding, got %+v", hit)
+	}
 }
 
 func TestShouldEmitCNAME(t *testing.T) {
