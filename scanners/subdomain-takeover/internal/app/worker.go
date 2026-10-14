@@ -55,7 +55,7 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 	}
 
 	if len(findings) == 0 {
-		log.Debug().Msg("classification produced no findings")
+		log.Info().Msg("classification produced no findings")
 	}
 
 	for _, finding := range findings {
@@ -74,7 +74,7 @@ func (w *Worker) Handle(ctx context.Context, msg jetstream.Msg) error {
 		return err
 	}
 
-	log.Debug().Int("findings_count", len(findings)).Msg("message acknowledged")
+	log.Info().Int("findings_count", len(findings)).Msg("message acknowledged")
 
 	return nil
 }
