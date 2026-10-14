@@ -1,6 +1,11 @@
 package config
 
 import (
+	"errors"
+	"fmt"
+	"os"
+
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/rs/zerolog"
 )
@@ -15,7 +20,14 @@ type Config struct {
 	LogLevel    zerolog.Level `envconfig:"LOG_LEVEL" default:"info"`
 }
 
+// Load reads configuration from the environment. A .env file in the working
+// directory is loaded first if present; variables already set in the
+// environment take precedence over values from .env.
 func Load() (*Config, error) {
+	if err := godotenv.Load(); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return nil, fmt.Errorf("load .env: %w", err)
+	}
+
 	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		return nil, err

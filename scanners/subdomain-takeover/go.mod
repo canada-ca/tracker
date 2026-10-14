@@ -3,6 +3,7 @@ module github.com/canada-ca/tracker/scanners/subdomain-takeover
 go 1.25.0
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/nats-io/nats-server/v2 v2.14.5
 	github.com/nats-io/nats.go v1.52.0

@@ -13,7 +13,7 @@ help:
 	@printf "  make build            - Build service binary\n"
 	@printf "  make fmt              - Format Go files\n"
 	@printf "  make fmt-check        - Check formatting (no changes)\n"
-	@printf "  make vet              - Run go vet\n"
+	@printf "  make vet              - Run go vet (including integration-tagged files)\n"
 	@printf "  make lint             - Run fmt-check + vet\n"
 	@printf "  make tidy             - Tidy modules\n"
 	@printf "  make ci               - Lint, run unit + integration tests, build\n"
@@ -41,7 +41,7 @@ fmt-check:
 	@test -z "$$($(GO)fmt -l .)" || (printf "Unformatted files found. Run 'make fmt'.\n" && exit 1)
 
 vet:
-	$(GO) vet ./...
+	$(GO) vet -tags integration ./...
 
 lint: fmt-check vet
 

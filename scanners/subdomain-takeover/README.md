@@ -140,7 +140,7 @@ make build     # build bin/subdomain-takeover
 make ci        # lint + unit + integration tests + build
 ```
 
-Environment variables:
+Environment variables (a `.env` file in the working directory is loaded automatically if present; variables already set in the environment take precedence over `.env` values):
 
 - `NATS_URL` (default: `nats://localhost:4222`)
 - `NATS_STREAM` (default: `SCANS`)
