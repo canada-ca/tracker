@@ -117,18 +117,6 @@ export const loadAllOrganizationDomainStatuses =
               FILTER latestDnsScan.resolveIps
               RETURN latestDnsScan.resolveIps
             )
-            LET vulnerabilities = (
-              FOR finding IN additionalFindings
-                FILTER finding.domain == d._id
-                LIMIT 1
-                RETURN UNIQUE(
-                  FOR wc IN finding.webComponents
-                    FILTER LENGTH(wc.WebComponentCves) > 0
-                    FOR vuln IN wc.WebComponentCves
-                      FILTER vuln.Cve NOT IN (d.ignoredCves || [])
-                      RETURN vuln.Cve
-                )
-            )[0]
             LET verifiedOrgs = (
               FOR v,e IN 1..1 INBOUND d._id claims
                 FILTER v.verified == true
@@ -154,8 +142,7 @@ export const loadAllOrganizationDomainStatuses =
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
               "wildcardEntry": d.wildcardEntry,
-              "hasEntrustCertificate": d.hasEntrustCertificate,
-              "top25Vulnerabilities": vulnerabilities
+              "hasEntrustCertificate": d.hasEntrustCertificate
             }
           `
       ).all()
