@@ -48,4 +48,4 @@ lint: fmt-check vet
 tidy:
 	$(GO) mod tidy
 
-ci: lint test build
+ci: lint test test-integration build
