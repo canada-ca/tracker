@@ -137,7 +137,7 @@ make run       # run the service
 make test      # run tests
 make lint      # fmt-check + vet
 make build     # build bin/subdomain-takeover
-make ci        # lint + test + build
+make ci        # lint + unit + integration tests + build
 ```
 
 Environment variables:

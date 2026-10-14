@@ -9,14 +9,14 @@ help:
 	@printf "  make run              - Run the service\n"
 	@printf "  make test             - Run all unit tests\n"
 	@printf "  make test-race        - Run unit tests with race detector\n"
-	@printf "  make test-integration - Run integration tests (boots an in-process NATS server)\n"
+	@printf "  make test-integration - Run unit + integration tests (boots an in-process NATS server)\n"
 	@printf "  make build            - Build service binary\n"
 	@printf "  make fmt              - Format Go files\n"
 	@printf "  make fmt-check        - Check formatting (no changes)\n"
 	@printf "  make vet              - Run go vet\n"
 	@printf "  make lint             - Run fmt-check + vet\n"
 	@printf "  make tidy             - Tidy modules\n"
-	@printf "  make ci               - Lint, test, build\n"
+	@printf "  make ci               - Lint, run unit + integration tests, build\n"
 
 run:
 	$(GO) run ./cmd/service
@@ -48,4 +48,4 @@ lint: fmt-check vet
 tidy:
 	$(GO) mod tidy
 
-ci: lint test test-integration build
+ci: lint test-integration build
