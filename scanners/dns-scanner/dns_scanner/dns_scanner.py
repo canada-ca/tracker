@@ -17,6 +17,7 @@ from dns_scanner.ns_registrar import (
     get_registrar_context,
     build_registrar_context,
 )
+from dns_scanner.cname_target import find_final_cname_target, get_cname_target_rcode
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,7 @@ class DNSScanResult:
     resolve_chain: list[list[str]] = None
     resolve_ips: [str] = None
     cname_record: str = None
+    cname_target_rcode: str = None
     mx_records: [str] = None
     ns_records: [str] = None
     dkim: dict = None
@@ -123,14 +125,10 @@ def minimal_dnssec_check(domain, nameserver_ip, nameserver_hostname, _ttl_marker
         if resp.rcode() != dns.rcode.NOERROR:
             return None
     except Timeout:
-        logger.error(
-            f"Timeout while running minimal DNSSEC check for domain '{domain}."
-        )
+        logger.error(f"Timeout while running minimal DNSSEC check for domain '{domain}.")
         return None
     except Exception as e:
-        logger.error(
-            f"Error while running minimal DNSSEC check for domain '{domain}': {e}"
-        )
+        logger.error(f"Error while running minimal DNSSEC check for domain '{domain}': {e}")
         return None
     # Check if AD (Authenticated Data) flag is set, showing that the data is DNSSEC validated
     return bool(resp.flags & dns.flags.AD)
@@ -184,10 +182,7 @@ def get_wildcard_status(domain: str, resolver: Resolver, a_records: Answer):
                         f"Unknown error checking for wildcard status (MX record check) on {domain}: {e}"
                     )
             # check to see if subdomain and wildcard record point to the same endpoints
-            elif (
-                len(a_records.response.answer) > 0
-                and len(wildcard_record.response.answer) > 0
-            ):
+            elif len(a_records.response.answer) > 0 and len(wildcard_record.response.answer) > 0:
                 if format_answers(a_records.response.answer[-1]) == format_answers(
                     wildcard_record.response.answer[-1]
                 ):
@@ -237,18 +232,14 @@ def scan_domain(domain, dkim_selectors=None):
         elif rtype == "SERVFAIL":
             dns_answer_return_types.append(rtype)
         else:
-            logger.error(
-                f"Unknown return type '{rtype}' when checking if domain '{domain}' exists"
-            )
+            logger.error(f"Unknown return type '{rtype}' when checking if domain '{domain}' exists")
             dns_answer_return_types.append(rtype)
 
     if "NOERROR" not in dns_answer_return_types:
         if "SERVFAIL" in dns_answer_return_types:
             scan_result.rcode = "SERVFAIL"
         elif [rtype for rtype in dns_answer_return_types if rtype is not None]:
-            scan_result.rcode = [
-                rtype for rtype in dns_answer_return_types if rtype is not None
-            ][0]
+            scan_result.rcode = [rtype for rtype in dns_answer_return_types if rtype is not None][0]
         else:
             scan_result.rcode = None
         scan_result.record_exists = False
@@ -297,6 +288,9 @@ def scan_domain(domain, dkim_selectors=None):
 
     if cname_record is not None:
         scan_result.cname_record = str(cname_record.response.answer[0])
+        first_target = cname_record[0].target.to_text().rstrip(".")
+        final_target = find_final_cname_target(first_target, resolver)
+        scan_result.cname_target_rcode = get_cname_target_rcode(domain, final_target, resolver)
 
     zone_apex = find_zone_apex(domain)
     scan_result.zone_apex = zone_apex
