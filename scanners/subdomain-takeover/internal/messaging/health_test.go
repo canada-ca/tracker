@@ -7,21 +7,32 @@ import (
 )
 
 func TestCheckConnection(t *testing.T) {
-	t.Run("nil connection", func(t *testing.T) {
-		err := CheckConnection(nil)
-		if err == nil || err.Error() != "nats connection is nil" {
-			t.Fatalf("unexpected error: %v", err)
-		}
-	})
+	tests := []struct {
+		name    string
+		nc      *nats.Conn
+		wantErr string
+	}{
+		{name: "nil connection", nc: nil, wantErr: "nats connection is nil"},
+		// A zero-value Conn reports DISCONNECTED -- the same status a live
+		// connection has between reconnect attempts -- and must not be fatal.
+		{name: "disconnected connection", nc: &nats.Conn{}},
+	}
 
-	// The "closed" branch (IsClosed()==true) requires a real connect/close
-	// cycle against a NATS server -- nats.Conn has no exported way to reach
-	// that state otherwise. Covered by an integration test, not here.
+	// The closed, connected, and reconnecting cases need a real server; see
+	// health_integration_test.go.
 
-	t.Run("not yet connected", func(t *testing.T) {
-		err := CheckConnection(&nats.Conn{})
-		if err == nil || err.Error() != "nats not connected (status=DISCONNECTED)" {
-			t.Fatalf("unexpected error: %v", err)
-		}
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := CheckConnection(tt.nc)
+			if tt.wantErr == "" {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				return
+			}
+			if err == nil || err.Error() != tt.wantErr {
+				t.Fatalf("expected error %q, got %v", tt.wantErr, err)
+			}
+		})
+	}
 }

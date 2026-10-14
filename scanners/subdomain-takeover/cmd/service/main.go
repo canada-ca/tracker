@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -39,12 +38,8 @@ func main() {
 		logger.Fatal().Err(err).Msg("failed to load fingerprints")
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-	defer signal.Stop(sig)
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
 	runtimeDeps, err := bootstrap.NewRuntimeDeps(ctx, cfg, logger)
 	if err != nil {
@@ -59,10 +54,9 @@ func main() {
 	worker := app.NewWorker(logger, pub, classifier)
 
 	go func() {
-		<-sig
+		<-ctx.Done()
 		logger.Info().Msg("Shutdown requested...")
-		cancel()
-		runtimeDeps.Iter.Stop()
+		runtimeDeps.Iter.Drain()
 	}()
 
 	deps := app.RunnerDeps{
@@ -76,12 +70,13 @@ func main() {
 	app.Run(ctx, deps)
 
 	logger.Info().Msgf("Disconnecting from NATS at %s", runtimeDeps.NC.ConnectedUrl())
-	if err := runtimeDeps.NC.Flush(); err != nil {
-		logger.Error().Err(err).Msg("failed to flush nats connection")
+	if err := runtimeDeps.NC.Drain(); err != nil {
+		logger.Error().Err(err).Msg("failed to drain nats connection")
 	}
-	runtimeDeps.NC.Close()
 
-	if err := ctx.Err(); err != nil && err != context.Canceled {
-		logger.Error().Err(err).Msg("service exited with context error")
+	select {
+	case <-runtimeDeps.Closed:
+	case <-time.After(10 * time.Second):
+		logger.Warn().Msg("timed out waiting for nats connection to close")
 	}
 }
