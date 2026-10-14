@@ -34,6 +34,7 @@ COPY --from=python-builder /working/install/lib /usr/local/lib
 
 COPY service.py dns_processor_cli.py ./
 COPY dns_processor ./dns_processor
+COPY check_mx_diff ./check_mx_diff 
 COPY notify ./notify
 
 RUN adduser -D scanner
