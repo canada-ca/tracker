@@ -8,9 +8,12 @@ services:
     init: true
     command: sleep infinity
     depends_on:
-      - arangodb
-      - nats
-      - nats-init
+      arangodb:
+        condition: service_started
+      nats:
+        condition: service_started
+      nats-init:
+        condition: service_completed_successfully
 
   arangodb:
     image: arangodb:3.12.3
@@ -44,8 +47,6 @@ services:
 
         nats kv add WEB_SCANNER_IPS --ttl=5m --server nats://nats:4222 \
           || nats kv edit WEB_SCANNER_IPS --ttl=5m --server nats://nats:4222
-
-        exec sleep infinity
       '
 
 volumes:
