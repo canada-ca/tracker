@@ -104,20 +104,14 @@ def run_scan(msg):
             bind_vars={"domain": domain_id},
         )
         connected_selector_docs = [sel for sel in connected_selectors_cursor]
-        connected_selector_strings = [
-            sel["selector"] for sel in connected_selector_docs
-        ]
+        connected_selector_strings = [sel["selector"] for sel in connected_selector_docs]
     except Exception as e:
         logger.error(f"Error getting selectors for domain '{domain}': {e}")
         return
 
     try:
-        logger.info(
-            f"Scanning {domain} with DKIM selectors '{str(connected_selector_strings)}'"
-        )
-        scan_results = scan_domain(
-            domain=domain, dkim_selectors=connected_selector_strings
-        )
+        logger.info(f"Scanning {domain} with DKIM selectors '{str(connected_selector_strings)}'")
+        scan_results = scan_domain(domain=domain, dkim_selectors=connected_selector_strings)
 
     except TimeoutError:
         logger.error(f"Timeout while scanning {domain}")
@@ -163,9 +157,7 @@ async def run():
         logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
         # Ensure jetstream consumer is still present
         context.sub = await js.pull_subscribe(**pull_subscribe_options)
-        context.priority_sub = await js.pull_subscribe(
-            **priority_pull_subscribe_options
-        )
+        context.priority_sub = await js.pull_subscribe(**priority_pull_subscribe_options)
         logger.info("Re-subscribed to NATS...")
 
     nc = await nats.connect(
@@ -221,18 +213,18 @@ async def run():
             await fut
             res = fut.result()
             if isinstance(res, Exception):
-                logger.error(
-                    f"Uncaught scan error for received message: {original_msg}: {res}"
-                )
+                logger.error(f"Uncaught scan error for received message: {original_msg}: {res}")
                 return
 
             scan_data = res
+            payload = json.dumps(scan_data).encode()
+            original_headers = original_msg.headers
+
             try:
-                original_headers = original_msg.headers
                 await js.publish(
                     stream="SCANS",
                     subject="scans.dns_scanner_results",
-                    payload=json.dumps(scan_data).encode(),
+                    payload=payload,
                     headers=original_headers,
                 )
             except TimeoutError as e:
@@ -240,6 +232,18 @@ async def run():
                     f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return
+
+            try:
+                await js.publish(
+                    stream="SCANS",
+                    subject="scans.subdomain_takeover_requests",
+                    payload=payload,
+                    headers=original_headers,
+                )
+            except Exception as e:
+                logger.error(
+                    f"Failed to publish subdomain takeover request for domain_key={scan_data.get('domain_key')}: {e}"
+                )
 
             try:
                 logger.debug(f"Acknowledging message: {original_msg}")
@@ -310,9 +314,7 @@ async def run():
 
             try:
                 future = loop.run_in_executor(executor, run_scan, msg)
-                loop.create_task(
-                    handle_finished_scan(fut=future, original_msg=msg, semaphore=sem)
-                )
+                loop.create_task(handle_finished_scan(fut=future, original_msg=msg, semaphore=sem))
             except Exception as e:
                 logger.error(
                     f"Error while queueing scans for received message: {msg}: releasing semaphore: {e}"
