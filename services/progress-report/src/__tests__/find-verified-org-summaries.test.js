@@ -29,24 +29,10 @@ describe('given the findChartSummaries function', () => {
   })
 
   describe('given a successful query', () => {
-    // eslint-disable-next-line no-unused-vars
-    let org, sum1
+    let org, sum1, sum2
     beforeEach(async () => {
       org = await collections.organizations.save({
         verified: true,
-        summaries: {
-          date: '2021-01-31',
-          https: {
-            pass: 3,
-            fail: 0,
-            total: 3,
-          },
-          dmarc: {
-            pass: 2,
-            fail: 4,
-            total: 6,
-          },
-        },
       })
       sum1 = await collections.organizationSummaries.save({
         organization: org._id,
@@ -62,6 +48,21 @@ describe('given the findChartSummaries function', () => {
           total: 9,
         },
       })
+      sum2 = await collections.organizationSummaries.save({
+        organization: org._id,
+        date: '2021-01-31',
+        https: {
+          pass: 3,
+          fail: 0,
+          total: 3,
+        },
+        dmarc: {
+          pass: 2,
+          fail: 4,
+          total: 6,
+        },
+      })
+      await query`UPDATE ${org._key} WITH { latestSummaryId: ${sum2._id} } IN organizations`
     })
     it('returns the recent chart summaries', async () => {
       const orgSummaries = await findOrgSummaries({ query, startDate: '2021-01-01' })
@@ -85,6 +86,7 @@ describe('given the findChartSummaries function', () => {
           organization: org._id,
         },
         endSummary: {
+          ...sum2,
           date: '2021-01-31',
           https: {
             pass: 3,
@@ -96,6 +98,7 @@ describe('given the findChartSummaries function', () => {
             fail: 4,
             total: 6,
           },
+          organization: org._id,
         },
       }
 

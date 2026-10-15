@@ -1,0 +1,7 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: progress-report
+  namespace: api
+spec:
+  suspend: true
