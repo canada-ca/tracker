@@ -60,23 +60,23 @@ describe('given the orgFootprintService function', () => {
       orgDetails: { en: { name: 'Test Org' }, fr: { name: 'Le Test Org' } },
     })
     const owner = await collections.users.save({
-      userName: 'owner@test.ca',
+      userName: 'tracker+owner@tbs-sct.gc.ca',
       displayName: 'Owner',
       emailUpdateOptions: { orgFootprint: false },
     })
-    const member = await collections.users.save({
-      userName: 'member@test.ca',
-      displayName: 'Member',
+    const user = await collections.users.save({
+      userName: 'tracker+user@tbs-sct.gc.ca',
+      displayName: 'User',
       emailUpdateOptions: { orgFootprint: true },
     })
-    const requester = await collections.users.save({
-      userName: 'requester@test.ca',
-      displayName: 'Requester',
+    const pending = await collections.users.save({
+      userName: 'tracker+pending@tbs-sct.gc.ca',
+      displayName: 'Pending',
       emailUpdateOptions: { orgFootprint: true },
     })
     await collections.affiliations.save({ _from: org._id, _to: owner._id, permission: 'owner' })
-    await collections.affiliations.save({ _from: org._id, _to: member._id, permission: 'user' })
-    await collections.affiliations.save({ _from: org._id, _to: requester._id, permission: 'pending' })
+    await collections.affiliations.save({ _from: org._id, _to: user._id, permission: 'user' })
+    await collections.affiliations.save({ _from: org._id, _to: pending._id, permission: 'pending' })
     await collections.auditLogs.save({
       timestamp: new Date().toISOString(),
       action: 'add',
@@ -99,10 +99,10 @@ describe('given the orgFootprintService function', () => {
     expect(notifyClient.sendEmail.mock.calls).toEqual([
       [
         NOTIFICATION_ORG_FOOTPRINT_BILINGUAL,
-        'member@test.ca',
+        'tracker+user@tbs-sct.gc.ca',
         {
           personalisation: {
-            display_name: 'Member',
+            display_name: 'User',
             organization_name_en: 'Test Org',
             organization_name_fr: 'Le Test Org',
             add_users_count: 0,
@@ -119,7 +119,7 @@ describe('given the orgFootprintService function', () => {
       ],
       [
         NOTIFICATION_PENDING_USERS,
-        'owner@test.ca',
+        'tracker+owner@tbs-sct.gc.ca',
         {
           personalisation: {
             display_name: 'Owner',
@@ -131,7 +131,7 @@ describe('given the orgFootprintService function', () => {
       ],
       [
         NOTIFICATION_PENDING_CVD_ENROLLMENT,
-        'owner@test.ca',
+        'tracker+owner@tbs-sct.gc.ca',
         {
           personalisation: {
             display_name: 'Owner',
