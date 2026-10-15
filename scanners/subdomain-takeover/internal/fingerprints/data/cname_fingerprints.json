@@ -1,0 +1,227 @@
+[
+  {
+    "cname": [
+      "elasticbeanstalk.com"
+    ],
+    "name": "AWS/Elastic Beanstalk",
+    "nxdomain": true,
+    "fingerprint": "NXDOMAIN"
+  },
+  {
+    "cname": [
+      "s3.amazonaws.com"
+    ],
+    "name": "AWS/S3",
+    "nxdomain": false,
+    "fingerprint": "The specified bucket does not exist"
+  },
+  {
+    "cname": [
+      "agilecrm.com"
+    ],
+    "name": "Agile CRM",
+    "nxdomain": false,
+    "fingerprint": "Sorry, this page is no longer available."
+  },
+  {
+    "cname": [
+      "airee.ru"
+    ],
+    "name": "Airee.ru",
+    "nxdomain": false,
+    "fingerprint": "Ошибка 402. Сервис Айри.рф не оплачен"
+  },
+  {
+    "cname": [
+      "animaapp.io"
+    ],
+    "name": "Anima",
+    "nxdomain": false,
+    "fingerprint": "The page you were looking for does not exist."
+  },
+  {
+    "cname": [
+      "bitbucket.io"
+    ],
+    "name": "Bitbucket",
+    "nxdomain": false,
+    "fingerprint": "Repository not found"
+  },
+  {
+    "cname": [
+      "trydiscourse.com"
+    ],
+    "name": "Discourse",
+    "nxdomain": true,
+    "fingerprint": "NXDOMAIN"
+  },
+  {
+    "cname": [
+      "furyns.com"
+    ],
+    "name": "Gemfury",
+    "nxdomain": false,
+    "fingerprint": "404: This page could not be found."
+  },
+  {
+    "cname": [
+      "ghost.io"
+    ],
+    "name": "Ghost",
+    "nxdomain": false,
+    "fingerprint": "Site unavailable\\.\u0026#124;Failed to resolve DNS path for this host"
+  },
+  {
+    "cname": [
+      "hatenablog.com"
+    ],
+    "name": "HatenaBlog",
+    "nxdomain": false,
+    "fingerprint": "404 Blog is not found"
+  },
+  {
+    "cname": [
+      "helpjuice.com"
+    ],
+    "name": "Help Juice",
+    "nxdomain": false,
+    "fingerprint": "We could not find what you're looking for."
+  },
+  {
+    "cname": [
+      "helpscoutdocs.com"
+    ],
+    "name": "Help Scout",
+    "nxdomain": false,
+    "fingerprint": "No settings were found for this company:"
+  },
+  {
+    "cname": [
+      "helprace.com"
+    ],
+    "name": "Helprace",
+    "nxdomain": false,
+    "fingerprint": "HTTP_STATUS=301"
+  },
+  {
+    "cname": [
+      "youtrack.cloud"
+    ],
+    "name": "JetBrains",
+    "nxdomain": false,
+    "fingerprint": "is not a registered InCloud YouTrack"
+  },
+  {
+    "cname": [
+      "launchrock.com"
+    ],
+    "name": "LaunchRock",
+    "nxdomain": false,
+    "fingerprint": "HTTP_STATUS=500"
+  },
+  {
+    "cname": [
+      "cloudapp.azure.com",
+      "azurewebsites.net",
+      "blob.core.windows.net",
+      "cloudapp.azure.com",
+      "azure-api.net",
+      "azurehdinsight.net",
+      "azureedge.net",
+      "azurecontainer.io",
+      "database.windows.net",
+      "azuredatalakestore.net",
+      "search.windows.net",
+      "azurecr.io",
+      "redis.cache.windows.net",
+      "azurehdinsight.net",
+      "servicebus.windows.net",
+      "trafficmanager.net",
+      "visualstudio.com"
+    ],
+    "name": "Microsoft Azure",
+    "nxdomain": true,
+    "fingerprint": "NXDOMAIN"
+  },
+  {
+    "cname": [
+      "ngrok.io"
+    ],
+    "name": "Ngrok",
+    "nxdomain": false,
+    "fingerprint": "Tunnel .*.ngrok.io not found"
+  },
+  {
+    "cname": [
+      "readme.io"
+    ],
+    "name": "Readme.io",
+    "nxdomain": false,
+    "fingerprint": "The creators of this project are still working on making everything perfect!"
+  },
+  {
+    "cname": [
+      "52.16.160.97"
+    ],
+    "name": "SmartJobBoard",
+    "nxdomain": false,
+    "fingerprint": "This job board website is either expired or its domain name is invalid."
+  },
+  {
+    "cname": [
+      "s.strikinglydns.com"
+    ],
+    "name": "Strikingly",
+    "nxdomain": false,
+    "fingerprint": "PAGE NOT FOUND."
+  },
+  {
+    "cname": [
+      "na-west1.surge.sh"
+    ],
+    "name": "Surge.sh",
+    "nxdomain": false,
+    "fingerprint": "project not found"
+  },
+  {
+    "cname": [
+      "surveysparrow.com"
+    ],
+    "name": "SurveySparrow",
+    "nxdomain": false,
+    "fingerprint": "Account not found."
+  },
+  {
+    "cname": [
+      "read.uberflip.com"
+    ],
+    "name": "Uberflip",
+    "nxdomain": false,
+    "fingerprint": "The URL you've accessed does not provide a hub."
+  },
+  {
+    "cname": [
+      "stats.uptimerobot.com"
+    ],
+    "name": "Uptimerobot",
+    "nxdomain": false,
+    "fingerprint": "page not found"
+  },
+  {
+    "cname": [
+      "wordpress.com"
+    ],
+    "name": "Wordpress",
+    "nxdomain": false,
+    "fingerprint": "Do you want to register .*.wordpress.com?"
+  },
+  {
+    "cname": [
+      "worksites.net",
+      "69.164.223.206"
+    ],
+    "name": "Worksites",
+    "nxdomain": false,
+    "fingerprint": "Hello! Sorry, but the website you\u0026rsquo;re looking for doesn\u0026rsquo;t exist."
+  }
+]
