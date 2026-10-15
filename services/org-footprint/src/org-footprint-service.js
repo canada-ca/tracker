@@ -20,7 +20,7 @@ const orgFootprintService = async ({ query, notifyClient }) => {
     const auditLogs = await getNewAuditLogs({ query, orgKey })
     if (auditLogs.length > 0) {
       const orgUsers = await getOrgUsers({ query, orgKey })
-      if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL) {
+      if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL?.toLowerCase() === 'true') {
         orgUsers.push({
           userName: SERVICE_ACCOUNT_EMAIL,
           displayName: 'Service Account',
