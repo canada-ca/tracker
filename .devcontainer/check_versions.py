@@ -72,7 +72,7 @@ def main() -> int:
     results = [
         check(
             "Python (PQC environment)",
-            expected=major_minor(base_image_tag(WEB_SCANNER_DOCKERFILE, "python")),
+            expected=major_minor(find(r"^FROM python:(\S+)\s+AS experimental-builder", WEB_SCANNER_DOCKERFILE)),
             actual=major_minor(find(r"devcontainers/python:(\S+)", DEV_DOCKERFILE)),
             source=WEB_SCANNER_DOCKERFILE,
         ),

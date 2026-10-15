@@ -38,14 +38,8 @@ def write_env(example: Path, target: Path, values: dict[str, str]) -> None:
 
     lines = []
     for line in example.read_text().splitlines():
-        key, separator, value = line.partition("=")
-        key = key.strip()
-        if key in values:
-            lines.append(f"{key}={values[key]}")
-        elif separator and not value.strip() and not key.startswith("#"):
-            lines.append(f"# {line}")
-        else:
-            lines.append(line)
+        key = line.partition("=")[0].strip()
+        lines.append(f"{key}={values[key]}" if key in values else line)
 
     target.write_text("\n".join(lines) + "\n")
     print(f"    wrote {target.relative_to(REPO_ROOT)}")

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+git rev-parse --show-toplevel > /dev/null
 
 ROOTS=(api frontend database-migration scanners services azure-defender-easm)
 EXCLUDE='log4shell|spring4shell'
