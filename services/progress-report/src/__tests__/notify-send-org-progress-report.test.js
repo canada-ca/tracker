@@ -22,7 +22,7 @@ describe('given the sendOrgProgressReport function', () => {
   describe('email successfully sent', () => {
     it('returns nothing', async () => {
       const user = {
-        userName: 'test@email.ca',
+        userName: 'tracker+user@tbs-sct.gc.ca',
         displayName: 'Test Account',
       }
 

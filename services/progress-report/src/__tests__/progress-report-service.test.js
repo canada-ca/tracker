@@ -67,18 +67,18 @@ describe('given the progressReportService function', () => {
       dmarc: { pass: 6, fail: 6, total: 12 },
     })
     await query`UPDATE ${org._key} WITH { latestSummaryId: ${latest._id} } IN organizations`
-    const member = await collections.users.save({
-      userName: 'member@test.ca',
-      displayName: 'Member',
+    const user = await collections.users.save({
+      userName: 'tracker+user@tbs-sct.gc.ca',
+      displayName: 'User',
       emailUpdateOptions: { progressReport: true },
     })
-    const requester = await collections.users.save({
-      userName: 'requester@test.ca',
-      displayName: 'Requester',
+    const pending = await collections.users.save({
+      userName: 'tracker+pending@tbs-sct.gc.ca',
+      displayName: 'Pending',
       emailUpdateOptions: { progressReport: true },
     })
-    await collections.affiliations.save({ _from: org._id, _to: member._id, permission: 'user' })
-    await collections.affiliations.save({ _from: org._id, _to: requester._id, permission: 'pending' })
+    await collections.affiliations.save({ _from: org._id, _to: user._id, permission: 'user' })
+    await collections.affiliations.save({ _from: org._id, _to: pending._id, permission: 'pending' })
     const domain = await collections.domains.save({ domain: 'vulnerable.test.gc.ca', cveDetected: true })
     await collections.claims.save({ _from: org._id, _to: domain._id })
 
@@ -86,22 +86,22 @@ describe('given the progressReportService function', () => {
       verified: true,
       orgDetails: { en: { name: 'New Org' }, fr: { name: 'Nouvelle Org' } },
     })
-    const newOrgMember = await collections.users.save({
-      userName: 'new-member@test.ca',
-      displayName: 'New Member',
+    const newOrgOwner = await collections.users.save({
+      userName: 'tracker+owner@tbs-sct.gc.ca',
+      displayName: 'Owner',
       emailUpdateOptions: { progressReport: true },
     })
-    await collections.affiliations.save({ _from: newOrg._id, _to: newOrgMember._id, permission: 'owner' })
+    await collections.affiliations.save({ _from: newOrg._id, _to: newOrgOwner._id, permission: 'owner' })
 
     await progressReportService({ query, notifyClient })
 
     expect(notifyClient.sendEmail.mock.calls).toEqual([
       [
         NOTIFICATION_ORG_PROGRESS_REPORT,
-        'member@test.ca',
+        'tracker+user@tbs-sct.gc.ca',
         {
           personalisation: {
-            display_name: 'Member',
+            display_name: 'User',
             org_name_en: 'Test Org',
             org_name_fr: 'Le Test Org',
             https_score: '75.0%',
