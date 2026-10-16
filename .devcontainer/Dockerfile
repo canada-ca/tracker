@@ -37,6 +37,9 @@ RUN git clone -q https://github.com/nabla-c0d3/nassl.git /build/nassl \
     && git -C /build/nassl checkout -q ${NASSL_REF}
 WORKDIR /build/nassl
 
+RUN sed -i 's|https://www.zlib.net/fossils/zlib-\([0-9.]*\)\.tar\.gz|https://github.com/madler/zlib/releases/download/v\1/zlib-\1.tar.gz|' build_config.py \
+    && grep -q 'github.com/madler/zlib/releases' build_config.py
+
 RUN MAKEFLAGS="-j$(nproc)" invoke build.all
 RUN pip install --no-cache-dir --no-build-isolation .
 
