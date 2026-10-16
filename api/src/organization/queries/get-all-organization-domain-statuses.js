@@ -54,13 +54,12 @@ export const getAllOrganizationDomainStatuses = {
       'wildcardSibling',
       'wildcardEntry',
       'hasEntrustCertificate',
-      'top25Vulnerabilities',
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
       const csvLine = headers
         .map((header) => {
-          if (['orgNames', 'orgAcronyms', 'orgExternalIDs', 'ipAddresses', 'top25Vulnerabilities'].includes(header)) {
+          if (['orgNames', 'orgAcronyms', 'orgExternalIDs', 'ipAddresses'].includes(header)) {
             return `"${domainStatus[header]?.join('|') || []}"`
           }
           if (header === 'phase') {

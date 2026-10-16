@@ -816,42 +816,6 @@ export class DomainDataSource {
       throw new Error(this._i18n._(t`Unable to ignore CVE. Please try again.`))
     }
 
-    let currentDomainVulnerabilitiesCursor
-    try {
-      currentDomainVulnerabilitiesCursor = await trx.step(
-        () => this._query`
-          FOR finding IN additionalFindings
-            FILTER finding.domain == ${domain._id}
-            LIMIT 1
-            FOR wc IN finding.webComponents
-              FILTER LENGTH(wc.WebComponentCves) > 0
-              FOR vuln IN wc.WebComponentCves
-                FILTER vuln.Cve NOT IN ${newIgnoredCves}
-                RETURN DISTINCT vuln.Cve
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${this._userKey}" attempted to ignore CVE "${ignoredCve}" on domain "${domain._key}" when getting current CVEs, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(this._i18n._(t`Unable to ignore CVE. Please try again.`))
-    }
-
-    try {
-      await trx.step(
-        () => this._query`
-          UPDATE { _key: ${domain._key}, cveDetected: ${currentDomainVulnerabilitiesCursor.count > 0} } IN domains
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${this._userKey}" attempted to ignore CVE "${ignoredCve}" on domain "${domain._key}" when updating domain, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(this._i18n._(t`Unable to ignore CVE. Please try again.`))
-    }
-
     try {
       await trx.commit()
     } catch (err) {
@@ -882,42 +846,6 @@ export class DomainDataSource {
     } catch (err) {
       console.error(
         `Transaction step error occurred when user: "${this._userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domain._key}", error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(this._i18n._(t`Unable to stop ignoring CVE. Please try again.`))
-    }
-
-    let currentDomainVulnerabilitiesCursor
-    try {
-      currentDomainVulnerabilitiesCursor = await trx.step(
-        () => this._query`
-          FOR finding IN additionalFindings
-            FILTER finding.domain == ${domain._id}
-            LIMIT 1
-            FOR wc IN finding.webComponents
-              FILTER LENGTH(wc.WebComponentCves) > 0
-              FOR vuln IN wc.WebComponentCves
-                FILTER vuln.Cve NOT IN ${newIgnoredCves}
-                RETURN DISTINCT vuln.Cve
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${this._userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domain._key}" when getting current CVEs, error: ${err}`,
-      )
-      await trx.abort()
-      throw new Error(this._i18n._(t`Unable to stop ignoring CVE. Please try again.`))
-    }
-
-    try {
-      await trx.step(
-        () => this._query`
-          UPDATE { _key: ${domain._key}, cveDetected: ${currentDomainVulnerabilitiesCursor.count > 0} } IN domains
-        `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: "${this._userKey}" attempted to unignore CVE "${ignoredCve}" on domain "${domain._key}" when updating domain, error: ${err}`,
       )
       await trx.abort()
       throw new Error(this._i18n._(t`Unable to stop ignoring CVE. Please try again.`))
