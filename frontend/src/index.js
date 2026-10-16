@@ -12,7 +12,7 @@ import { client, currentUserVar } from './client'
 import canada from './theme/canada'
 import { UserVarProvider, useUserVar } from './utilities/userState'
 import { REFRESH_TOKENS } from './graphql/mutations'
-import { activate, defaultLocale } from './utilities/i18n.config'
+import { activate, defaultLocale, getStoredLocale } from './utilities/i18n.config'
 import { IS_LOGIN_REQUIRED } from './graphql/queries'
 import { TourProvider } from './userOnboarding/contexts/TourContext'
 
@@ -98,7 +98,8 @@ const I18nApp = () => {
 
 const setUpApp = async () => {
   await activate(
-    ['en', 'fr'].includes(window.env?.APP_DEFAULT_LANGUAGE) ? window.env?.APP_DEFAULT_LANGUAGE : defaultLocale,
+    getStoredLocale() ??
+      (['en', 'fr'].includes(window.env?.APP_DEFAULT_LANGUAGE) ? window.env?.APP_DEFAULT_LANGUAGE : defaultLocale),
   )
 
   const root = createRoot(document.getElementById('root'))
