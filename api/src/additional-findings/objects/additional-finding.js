@@ -2,11 +2,15 @@ import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 import { GraphQLJSONObject } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
+import { ConfidenceEnum } from '../../enums/additional-findings-confidence'
+import { SeverityEnum } from '../../enums'
+import { globalIdField } from 'graphql-relay'
 
 export const additionalFinding = new GraphQLObjectType({
   name: 'AdditionalFinding',
   description: 'Out-of-policy security finding emitted by additional scanners.',
   fields: () => ({
+    id: globalIdField('additionalFinding'),
     domain: {
       type: domainType,
       description: 'The domain the finding is attributed to.',
@@ -27,11 +31,11 @@ export const additionalFinding = new GraphQLObjectType({
       description: 'Domain/entity (e.g. hostname) the finding was observed on, as reported by the scanner.',
     },
     confidence: {
-      type: GraphQLString,
+      type: ConfidenceEnum,
       description: 'Confidence level of finding being a true positive/exploitable.',
     },
     severity: {
-      type: GraphQLString,
+      type: SeverityEnum,
       description: 'The level of risk associated with the vulnerability.',
     },
     reasonCode: {
