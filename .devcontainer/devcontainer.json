@@ -16,7 +16,7 @@
   },
 
   "postCreateCommand": "bash .devcontainer/setup.sh",
-  "postStartCommand": "bash -c 'until curl -s -o /dev/null http://arangodb:8529/_api/version; do sleep 1; done; npm --prefix database-migration start'",
+  "postStartCommand": "curl -s -o /dev/null --retry 120 --retry-delay 1 --retry-all-errors http://arangodb:8529/_api/version && npm --prefix database-migration start",
 
   "forwardPorts": [4000, "arangodb:8529", "nats:8222"],
   "portsAttributes": {
