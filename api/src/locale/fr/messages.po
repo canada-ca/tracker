@@ -138,7 +138,7 @@ msgstr "Évaluez"
 msgid "Authentication error. Please sign in."
 msgstr "Erreur d'authentification. Veuillez vous connecter."
 
-#: src/domain/objects/domain.js:229
+#: src/domain/objects/domain.js:245
 msgid "Cannot query additional findings without permission."
 msgstr "Il n'est pas possible de demander des résultats supplémentaires sans autorisation."
 
@@ -151,15 +151,15 @@ msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autor
 msgid "Cannot query audit logs on organization without admin permission or higher."
 msgstr "Impossible d'interroger les journaux d'audit sur l'organisation sans l'autorisation d'administrateur ou plus."
 
-#: src/domain/objects/domain.js:164
+#: src/domain/objects/domain.js:165
 msgid "Cannot query dns scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse DNS sans autorisation."
 
-#: src/domain/objects/domain.js:65
+#: src/domain/objects/domain.js:66
 msgid "Cannot query domain selectors without permission."
 msgstr "Impossible d'interroger les sélecteurs de domaine sans autorisation."
 
-#: src/domain/objects/domain.js:206
+#: src/domain/objects/domain.js:207
 msgid "Cannot query web scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse web sans autorisation."
 
@@ -1024,8 +1024,8 @@ msgstr "Impossible de s'inviter à un org."
 msgid "Unable to leave undefined organization."
 msgstr "Impossible de quitter une organisation non définie."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:24
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:34
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:149
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:159
 msgid "Unable to load additional findings. Please try again."
 msgstr "Impossible de charger des résultats supplémentaires. Veuillez réessayer."
 
@@ -1173,7 +1173,6 @@ msgstr "Impossible de charger le(s) journal(s). Veuillez réessayer."
 #~ msgid "Unable to load mail summary. Please try again."
 #~ msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 
-#: src/additional-findings/loaders/load-top-25-reports.js:29
 #: src/organization/loaders/load-all-organization-domain-statuses.js:164
 #: src/organization/loaders/load-organization-domain-statuses.js:172
 msgid "Unable to load organization domain statuses. Please try again."
@@ -1765,7 +1764,7 @@ msgstr "Erreur de vérification. Veuillez activer l'authentification multifactor
 msgid "Verification error. Please verify your account via email to access content."
 msgstr "Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:8
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:9
 msgid "You must provide a `domainId` to retrieve a domain's additional findings."
 msgstr "Vous devez fournir un `domainId` pour récupérer les résultats supplémentaires d'un domaine."
 
@@ -1855,6 +1854,10 @@ msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctemen
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedOrganization`."
 
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:20
+msgid "You must provide a `limit` value in the range of 1-100 to properly paginate additional findings."
+msgstr "Vous devez indiquer une valeur « limit » comprise entre 1 et 100 pour paginer correctement les résultats supplémentaires."
+
 #: src/dns-scan/loaders/load-dns-connections-by-domain-id.js:16
 msgid "You must provide a `limit` value in the range of 1-100 to properly paginate the `DNS` connection."
 msgstr "Vous devez fournir une valeur `limit` comprise entre 1 et 100 pour paginer correctement la connexion `DNS`."
@@ -1866,6 +1869,10 @@ msgstr "Vous devez fournir une valeur `limit` comprise entre 1 et 100 pour pagin
 #: src/web-scan/loaders/load-web-connections-by-domain-id.js:16
 msgid "You must provide a `limit` value in the range of 1-100 to properly paginate the `web` connection."
 msgstr "Vous devez fournir une valeur `limit` comprise entre 1 et 100 pour paginer correctement la connexion `web`."
+
+#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:14
+msgid "You must provide a `limit` value to properly paginate additional findings."
+msgstr "Vous devez indiquer une valeur pour le paramètre `limit` afin de paginer correctement les résultats supplémentaires."
 
 #: src/dns-scan/loaders/load-dns-connections-by-domain-id.js:9
 msgid "You must provide a `limit` value to properly paginate the `DNS` connection."
