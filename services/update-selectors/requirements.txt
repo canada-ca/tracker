@@ -7,7 +7,7 @@ idna==3.15
 nats-py==2.6.0
 notifications-python-client==8.0.1
 PyJWT==2.15.0
-pytest==9.0.3
+pytest==9.1.1
 python-arango==7.3.4
 python-dotenv==1.2.2
 requests==2.33.0
