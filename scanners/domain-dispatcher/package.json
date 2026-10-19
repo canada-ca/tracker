@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.29.7",
-    "arangojs": "^10.2.2",
+    "arangojs": "^10.5.0",
     "async-wait-until": "^2.0.7",
     "dotenv-safe": "^8.2.0",
     "nats": "^2.7.0"
