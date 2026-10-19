@@ -1,0 +1,43 @@
+{
+  "name": "Tracker (full stack)",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/tracker",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "24" },
+    "ghcr.io/devcontainers/features/go:1": { "version": "1.25" },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false }
+  },
+
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb"
+  },
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "curl -s -o /dev/null --retry 120 --retry-delay 1 --retry-all-errors http://arangodb:8529/_api/version && npm --prefix database-migration start",
+
+  "forwardPorts": [4000, "arangodb:8529", "nats:8222"],
+  "portsAttributes": {
+    "4000": { "label": "GraphQL API" },
+    "arangodb:8529": { "label": "ArangoDB Web UI" },
+    "nats:8222": { "label": "NATS Monitor" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "apollographql.vscode-apollo",
+        "golang.go"
+      ]
+    }
+  },
+
+  "remoteUser": "vscode"
+}

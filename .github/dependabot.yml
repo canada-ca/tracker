@@ -24,6 +24,19 @@ updates:
       semver-minor-days: 14
       semver-major-days: 30
 
+  # Monday — devcontainer (uv only)
+  - package-ecosystem: docker
+    directory: "/.devcontainer"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "11:00"
+    open-pull-requests-limit: 1
+    allow:
+      - dependency-name: "*astral-sh/uv"
+    cooldown:
+      default-days: 7
+
   # Tuesday — api (standalone, large dep file)
   - package-ecosystem: docker
     directory: "/api"
