@@ -14,7 +14,7 @@ import { organizationConnection } from '../../organization/objects'
 import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
-import { additionalFinding, cvdEnrollment } from '../../additional-findings/objects'
+import { additionalFindingsPage, cvdEnrollment } from '../../additional-findings/objects'
 import { additionalFindingOrder } from '../../additional-findings/input'
 import { tagType } from '../../tags/objects'
 
@@ -213,28 +213,7 @@ export const domainType = new GraphQLObjectType({
       },
     },
     additionalFindings: {
-      type: new GraphQLObjectType({
-        name: 'AdditionalFindings',
-        description: 'A page of additional findings for a domain, with offset pagination information.',
-        fields: () => ({
-          nodes: {
-            type: new GraphQLList(additionalFinding),
-            description: 'The additional findings on the current page.',
-          },
-          totalCount: {
-            type: GraphQLInt,
-            description: 'The total number of additional findings for the domain, regardless of the current page.',
-          },
-          hasNextPage: {
-            type: GraphQLBoolean,
-            description: 'Whether there are more additional findings after the current page.',
-          },
-          hasPreviousPage: {
-            type: GraphQLBoolean,
-            description: 'Whether there are additional findings before the current page.',
-          },
-        }),
-      }),
+      type: additionalFindingsPage,
       description: 'Additional findings for this domain, with offset pagination.',
       args: {
         orderBy: {
