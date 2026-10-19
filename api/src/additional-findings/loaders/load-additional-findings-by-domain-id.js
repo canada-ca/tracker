@@ -11,7 +11,7 @@ export const loadAdditionalFindingsByDomainId =
       console.warn(
         `User: ${userKey} set \`limit\` argument outside accepted range for: loadAdditionalFindingsByDomainId. `,
       )
-      throw new Error(i18n._(t`limit must be between 1 and 100`))
+      throw new Error(i18n._(t`Limit must be between 1 and 100`))
     }
 
     if (typeof offset !== 'number') {
@@ -21,29 +21,35 @@ export const loadAdditionalFindingsByDomainId =
       console.warn(
         `User: ${userKey} set \`offset\` argument outside accepted range for: loadAdditionalFindingsByDomainId. `,
       )
-      throw new Error(i18n._(t`offset must be between 0 and 100`))
+      throw new Error(i18n._(t`Offset must be between 0 and 100`))
     }
 
     let sortByField = aql``
+    let rankField = aql``
     if (typeof orderBy !== 'undefined') {
       switch (orderBy.field) {
         case 'confidence':
-          sortByField = aql`
+          rankField = aql`
             LET confidenceRank = POSITION(["suspected", "probable", "confirmed"], finding.confidence, true)
-            SORT confidenceRank ${orderBy.direction}, TO_NUMBER(finding._key) ASC
           `
+          sortByField = aql`confidenceRank`
           break
         case 'severity':
-          sortByField = aql`
+          rankField = aql`
             LET severityRank = POSITION(["info", "low", "medium", "high", "critical"], finding.severity, true)
-            SORT severityRank ${orderBy.direction}, TO_NUMBER(finding._key) ASC
           `
+          sortByField = aql`severityRank`
           break
         default:
-          sortByField = aql`SORT finding.${orderBy.field} ${orderBy.direction}`
+          sortByField = aql`finding.${orderBy.field}`
       }
     } else {
-      sortByField = aql`SORT TO_NUMBER(finding._key) ASC`
+      sortByField = aql`TO_NUMBER(finding._key)`
+    }
+
+    let sortByDirection = aql`ASC`
+    if (orderBy.direction === 'DESC') {
+      sortByDirection = aql`DESC`
     }
 
     const additionalFindingQuery = aql`
@@ -56,8 +62,9 @@ export const loadAdditionalFindingsByDomainId =
     LET totalCount = COUNT(domainFindings)
     LET sortedFindings = (
       FOR finding IN domainFindings
-        ${sortByField}
-        LIMIT ${offset} ${limit}
+        ${rankField}
+        SORT ${sortByField} ${sortByDirection}
+        LIMIT ${offset}, ${limit}
         RETURN finding
     )
     RETURN {
@@ -73,19 +80,19 @@ export const loadAdditionalFindingsByDomainId =
       cursor = await query`${additionalFindingQuery}`
     } catch (err) {
       console.error(
-        `User: ${userKey} set \`limit\` argument outside accepted range for: loadAdditionalFindingsByDomainId. `,
+        `Database error occurred while user: ${userKey} was trying to get cursor for additional findings document for domain '${domainId}', error: ${err}`,
       )
-      throw new Error()
+      throw new Error(i18n._(t`Unable to load additional finding(s). Please try again.`))
     }
 
-    let info
+    let additionalFindings
     try {
-      info = await cursor.next()
+      additionalFindings = await cursor.next()
     } catch (err) {
       console.error(
-        `User: ${userKey} set \`limit\` argument outside accepted range for: loadAdditionalFindingsByDomainId. `,
+        `Cursor error occurred while user: ${userKey} was trying to get additional findings information for ${domainId}, error: ${err}`,
       )
-      throw new Error()
+      throw new Error(i18n._(t`Unable to load additional finding(s). Please try again.`))
     }
-    return info
+    return additionalFindings
   }
