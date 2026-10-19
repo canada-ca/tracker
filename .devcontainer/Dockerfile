@@ -3,7 +3,7 @@ ARG BASE=mcr.microsoft.com/devcontainers/python:3.14-bookworm
 #===============================================================================================
 # uv
 
-FROM ghcr.io/astral-sh/uv:0.12.23 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.1 AS uv
 
 #===============================================================================================
 # Web Scanner CRLite
