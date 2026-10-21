@@ -1,12 +1,12 @@
+import logging
+import os
+from typing import TypedDict
+
 import requests
+from dotenv import load_dotenv
 from requests import Response
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import os
-import logging
-from dotenv import load_dotenv
-from typing import TypedDict
-
 
 load_dotenv()
 
@@ -87,12 +87,17 @@ def get_asset(domain: str) -> dict:
     )
 
 
-def create_asset(domain: str, options: EnrollmentOptions) -> dict:
+def create_asset(domain: str, options: EnrollmentOptions, asset_tag_id: int) -> dict:
     data = {
         "data": {
             "type": "asset",
-            "attributes": {"asset_type": "domain", "identifier": domain, **{k: v for k, v in options.items() if v is not None}},
-            "relationships": {"asset_tags": {"data": []}},
+            "attributes": {
+                "asset_type": "domain",
+                "identifier": domain,
+                "max_severity": "critical",
+                **{k: v for k, v in options.items() if v is not None},
+            },
+            "relationships": {"asset_tags": {"data": [{"id": asset_tag_id}]}},
         }
     }
     return handle_res(_request("POST", ORG_ASSETS_URL, json=data))
@@ -119,11 +124,7 @@ def add_scope(asset_id: str, enrollment_status: str) -> dict:
                 "eligible_for_bounty": False,
                 "eligible_for_submission": enrollment_status == "enrolled",
             },
-            "relationships": {
-                "programs": {
-                    "data": [{"id": PROGRAM_ID, "type": "program"}]
-                }
-            },
+            "relationships": {"programs": {"data": [{"id": PROGRAM_ID, "type": "program"}]}},
         }
     }
     return handle_res(
@@ -150,5 +151,14 @@ def update_scope(asset_id: str, scope_id: str, enrollment_status: str) -> dict:
             "PUT",
             f"{ORG_ASSETS_URL}/{asset_id}/scopes/{scope_id}",
             json=data,
+        )
+    )
+
+
+def get_asset_tags(page_number: int = 1, page_size: int = 100) -> dict:
+    return handle_res(
+        _request(
+            "GET",
+            f"{BASE_URL}/organizations/{ORG_ID}/asset_tags?page[size]={page_size}&&page[number]={page_number}",
         )
     )
