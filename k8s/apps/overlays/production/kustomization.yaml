@@ -35,5 +35,6 @@ patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
   - api-production-env-patch.yaml
   - import-easm-additional-findings-suspend-patch.yaml
+  - domain-cleanup-suspend-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component
