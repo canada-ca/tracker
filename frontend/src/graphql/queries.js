@@ -941,6 +941,7 @@ export const PAGINATED_DOMAINS = gql`
           cvdEnrollment {
             status
           }
+          poweredByPHP
           __typename
         }
         __typename
