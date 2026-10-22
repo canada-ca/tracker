@@ -187,6 +187,13 @@ function DomainCard({
                   </TagLabel>
                 </Tag>
               )}
+              {userHasPermission && poweredByPHP && (
+                <Tag my="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    PHP
+                  </TagLabel>
+                </Tag>
+              )}
             </Flex>
           </Box>
 
@@ -291,6 +298,7 @@ DomainCard.propTypes = {
   userHasPermission: bool,
   assetState: string,
   cvdEnrollment: object,
+  poweredByPHP: bool,
 }
 
 const memoizedDomainCard = memo(DomainCard, (prevProps, nextProps) => {

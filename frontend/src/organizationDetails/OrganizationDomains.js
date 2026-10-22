@@ -90,7 +90,7 @@ export function OrganizationDomains({
     errorPolicy: 'ignore',
   })
 
-  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading }] = useLazyQuery(
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
       variables: { orgSlug, filters },
@@ -187,6 +187,7 @@ export function OrganizationDomains({
             webScanPending,
             userHasPermission,
             cvdEnrollment,
+            poweredByPHP,
           },
           index,
         ) => (
@@ -207,6 +208,7 @@ export function OrganizationDomains({
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
+              poweredByPHP={poweredByPHP}
               mb="3"
             />
           </ErrorBoundary>
