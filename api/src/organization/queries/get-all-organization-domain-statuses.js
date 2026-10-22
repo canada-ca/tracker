@@ -54,6 +54,7 @@ export const getAllOrganizationDomainStatuses = {
       'wildcardSibling',
       'wildcardEntry',
       'hasEntrustCertificate',
+      'poweredByPHP',
       'top25Vulnerabilities',
     ]
     let csvOutput = headers.join(',')
