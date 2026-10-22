@@ -4,6 +4,7 @@ const getOrgUsers = async ({ query, orgKey }) => {
   try {
     cursor = await query`
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
+            FILTER e.permission IN ["user", "admin", "owner", "super_admin"]
             FILTER v.emailUpdateOptions.orgFootprint == true
             RETURN v
     `

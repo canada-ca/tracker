@@ -15,7 +15,7 @@ const sendPendingCvdEnrollmentEmail = async ({ notifyClient, user, orgNames }) =
       },
     })
   } catch (err) {
-    logger.error({ err, userKey: user._key }, 'Error occurred when sending pending users alert via email')
+    logger.error({ err, userKey: user._key }, 'Error occurred when sending pending CVD enrollment alert via email')
   }
 }
 
