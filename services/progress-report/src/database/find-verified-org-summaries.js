@@ -12,7 +12,7 @@ const findVerifiedOrgs = async ({ query }) => {
         FOR org IN organizations
           FILTER org.verified == true
           ${unclaimedFilter}
-          RETURN { _key: org._key, _id: org._id, orgDetails: org.orgDetails, summaries: org.summaries }
+          RETURN { _key: org._key, _id: org._id, orgDetails: org.orgDetails, latestSummary: DOCUMENT(org.latestSummaryId) }
     `
   } catch (err) {
     throw new Error(`Database error occurred while trying to find verified orgs: ${err}`)
@@ -32,7 +32,7 @@ const findOrgSummaries = async ({ query, startDate }) => {
   const verifiedOrgs = await findVerifiedOrgs({ query })
   const orgSummaries = {}
   for (const org of verifiedOrgs) {
-    const { _key, _id, orgDetails, summaries } = org
+    const { _key, _id, orgDetails, latestSummary } = org
     // get 30 days previous
     let cursor
     try {
@@ -58,7 +58,7 @@ const findOrgSummaries = async ({ query, startDate }) => {
     orgSummaries[_key] = {
       _id,
       orgDetails,
-      endSummary: summaries,
+      endSummary: latestSummary,
       startSummary: orgSummary,
     }
   }

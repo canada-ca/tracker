@@ -3,6 +3,7 @@ const getOrgUsers = async ({ query, orgId }) => {
   try {
     cursor = await query`
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
+            FILTER e.permission IN ["user", "admin", "owner", "super_admin"]
             FILTER v.emailUpdateOptions.progressReport == true
             RETURN v
     `

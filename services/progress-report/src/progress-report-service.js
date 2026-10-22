@@ -1,5 +1,6 @@
 const { findOrgSummaries, getOrgUsers, findVulnerabilitiesByOrgId } = require('./database')
 const { sendOrgProgressReport } = require('./notify')
+const logger = require('./logger')
 
 const progressReportService = async ({ query, log, notifyClient }) => {
   // get date 30 days ago
@@ -11,6 +12,10 @@ const progressReportService = async ({ query, log, notifyClient }) => {
   const verifiedOrgStats = {}
   for (const [_key, value] of Object.entries(verifiedOrgSummaries)) {
     const { startSummary, endSummary, orgDetails, _id } = value
+    if (!startSummary || !endSummary) {
+      logger.warn({ orgKey: _key }, 'No organization summaries found in the last 30 days')
+      continue
+    }
     const orgStats = calculateSummaryStats({
       startSummary,
       endSummary,
