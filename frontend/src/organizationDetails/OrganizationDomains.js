@@ -127,6 +127,7 @@ export function OrganizationDomains({
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
     { value: 'CVD_DENY', text: t`CVD Denied` },
+    { value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` },
   ]
 
   const assetStateOptions = [

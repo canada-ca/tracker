@@ -143,6 +143,7 @@ export default function DomainsPage() {
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
+    { value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -250,6 +251,7 @@ export default function DomainsPage() {
             webScanPending,
             userHasPermission,
             cvdEnrollment,
+            poweredByPHP,
           },
           index,
         ) => (
@@ -268,6 +270,7 @@ export default function DomainsPage() {
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
+              poweredByPHP={poweredByPHP}
               mb="3"
             />
           </ErrorBoundary>
