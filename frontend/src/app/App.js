@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react'
 import { Link as RouteLink, Routes, Route, Navigate } from 'react-router'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
-import { t } from "@lingui/core/macro"
-import { Trans } from "@lingui/react/macro"
+import { t } from '@lingui/core/macro'
+import { Trans } from '@lingui/react/macro'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
@@ -199,6 +199,17 @@ export function App({ initialLoading, isLoginRequired }) {
               </Link>
               .
             </Trans>
+          </AlertDescription>
+        </Box>
+      </NotificationBanner>
+
+      <NotificationBanner status="error" bannerId="php-tag-filter">
+        <Box>
+          <AlertTitle>
+            <Trans>View/Manage Your PHP Services</Trans>
+          </AlertTitle>
+          <AlertDescription>
+            <Trans>On your organization's domain list, you can filter and export web services by which use PHP.</Trans>
           </AlertDescription>
         </Box>
       </NotificationBanner>

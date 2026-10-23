@@ -5,6 +5,7 @@ import {
   Box,
   Code,
   Divider,
+  Button,
   Flex,
   Heading,
   ListItem,
@@ -344,6 +345,17 @@ export default function DomainsPage() {
           searchTip={domainSearchTip}
           totalRecords={totalCount}
         />
+
+        <Button
+          variant="primary"
+          onClick={() => {
+            setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+            resetToFirstPage()
+          }}
+          mb="2"
+        >
+          <Trans>Filter By PHP</Trans>
+        </Button>
 
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg">
