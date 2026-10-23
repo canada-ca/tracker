@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, Text, useDisclosure, Button } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { array, bool, string } from 'prop-types'
 
@@ -311,18 +311,30 @@ export function OrganizationDomains({
       />
 
       {orgSlug !== 'my-tracker' && (
-        <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold" fontSize="lg">
-            <Trans>Filters:</Trans>
-          </Text>
-          <FilterList
-            filters={filters}
-            setFilters={setFilters}
-            resetToFirstPage={resetToFirstPage}
-            filterTagOptions={filterTagOptions}
-            guidanceTagOptions={guidanceTagOptions}
-          />
-        </Flex>
+        <Box>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+              resetToFirstPage()
+            }}
+            mb="2"
+          >
+            <Trans>Filter By PHP</Trans>
+          </Button>
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold" fontSize="lg">
+              <Trans>Filters:</Trans>
+            </Text>
+            <FilterList
+              filters={filters}
+              setFilters={setFilters}
+              resetToFirstPage={resetToFirstPage}
+              filterTagOptions={filterTagOptions}
+              guidanceTagOptions={guidanceTagOptions}
+            />
+          </Flex>
+        </Box>
       )}
 
       {domainList}
