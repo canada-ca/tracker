@@ -237,6 +237,7 @@ export const organizationType = new GraphQLObjectType({
           'hasEntrustCertificate',
           'top25Vulnerabilities',
           'cvdEnrollmentStatus',
+          'poweredByPHP',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domainDoc) => {
@@ -363,11 +364,7 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        {
-          i18n,
-          auth: { loginRequiredBool },
-          dataSources: { auth: authDS, affiliation },
-        },
+        { i18n, auth: { loginRequiredBool }, dataSources: { auth: authDS, affiliation } },
       ) => {
         const permission = await authDS.permissionByOrgId.load(_id)
         if (!ac.can(permission).readOwn('affiliation').granted && loginRequiredBool) {

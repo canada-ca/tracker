@@ -437,6 +437,11 @@ export class DomainDataSource {
                 ${domainFilters}
                 FILTER v.cveDetected ${comparison} true
               `
+          } else if (filterValue === 'powered-by-php') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.poweredByPHP ${comparison} true
+              `
           } else {
             domainFilters = aql`
                 ${domainFilters}

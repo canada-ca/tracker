@@ -37,7 +37,12 @@ export const DomainTagLabel = new GraphQLEnumType({
     },
     CVD_DENY: {
       value: 'cvd-deny',
-      description: 'Label for tagging domains that have been explicitly excluded from the Coordinated Vulnerability Disclosure program.',
+      description:
+        'Label for tagging domains that have been explicitly excluded from the Coordinated Vulnerability Disclosure program.',
+    },
+    POWERED_BY_PHP: {
+      value: 'powered-by-php',
+      description: 'Label for tagging domains that return a response header including PHP.',
     },
   },
   description: 'An enum used to assign and test user-generated domain tags',
