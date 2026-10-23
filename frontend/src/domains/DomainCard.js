@@ -40,6 +40,7 @@ function DomainCard({
   webScanPending,
   userHasPermission,
   cvdEnrollment,
+  poweredByPHP,
   ...rest
 }) {
   const location = useLocation()
