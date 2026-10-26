@@ -25,7 +25,7 @@ def build_registrar_context(base_domain, error=None):
 
 
 def probe_nameserver(
-    where: str, qname: str, qtype: str, recursion_desired: bool, timeout: int, attempts: int = 2
+    where: str, qname: str, qtype: str, recursion_desired: bool, timeout: int, attempts: int = 1
 ):
     query = dns.message.make_query(
         qname,
