@@ -1,4 +1,5 @@
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 import dns
 import dns.resolver
@@ -24,7 +25,7 @@ def build_registrar_context(base_domain, error=None):
 
 
 def probe_nameserver(
-    where: str, qname: str, qtype: str, recursion_desired: bool, timeout: int
+    where: str, qname: str, qtype: str, recursion_desired: bool, timeout: int, attempts: int = 1
 ):
     query = dns.message.make_query(
         qname,
@@ -33,7 +34,12 @@ def probe_nameserver(
     )
     if not recursion_desired:
         query.flags &= ~dns.flags.RD
-    return dns.query.udp(query, where=where, timeout=timeout)
+    for attempt in range(attempts):
+        try:
+            return dns.query.udp(query, where=where, timeout=timeout)
+        except Timeout:
+            if attempt == attempts - 1:
+                raise
 
 
 def get_ns_ip(host: str, resolver):
@@ -56,7 +62,14 @@ def get_ns_ip(host: str, resolver):
     return ns_ip
 
 
-def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_sec=10):
+def resolve_and_probe_nameserver(host, qname, resolver, timeout_sec):
+    ns_ip = get_ns_ip(host, resolver)
+    if ns_ip is None:
+        return None, None
+    return ns_ip, probe_nameserver(ns_ip, qname, "SOA", False, timeout_sec)
+
+
+def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_sec=2):
     if resolver is None:
         resolver = dns.resolver.get_default_resolver()
 
@@ -87,6 +100,12 @@ def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_s
         output["ns_delegation"]["lame_type"] = "unknown"
         return output
 
+    with ThreadPoolExecutor(max_workers=len(ns_hosts)) as executor:
+        futures = {
+            host: executor.submit(resolve_and_probe_nameserver, host, qname, resolver, timeout_sec)
+            for host in ns_hosts
+        }
+
     for host in ns_hosts:
         row = {
             "ns_host": host,
@@ -99,14 +118,13 @@ def check_ns_delegations(domain, zone_apex, ns_records, resolver=None, timeout_s
         }
 
         try:
-            ns_ip = get_ns_ip(host, resolver)
+            ns_ip, res = futures[host].result()
             if ns_ip is None:
                 row["error"] = "ns_ip_resolution_failed"
                 output["ns_delegation"]["lame_count"] += 1
                 output["ns_checks"].append(row)
                 continue
 
-            res = probe_nameserver(ns_ip, qname, "SOA", False, timeout_sec)
             row["rcode"] = dns.rcode.to_text(res.rcode())
             row["answered_authoritatively"] = bool(res.flags & dns.flags.AA)
 
