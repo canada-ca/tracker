@@ -128,6 +128,25 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
               placeholder={t`Add details about the enrollment (optional)`}
             />
           </FormControl>
+          <FormControl mb="2">
+            <FormLabel htmlFor="cvdEnrollment.reference" fontWeight="bold">
+              <Flex align="center">
+                <Trans>Reference</Trans>
+              </Flex>
+            </FormLabel>
+            <Input
+              type="text"
+              name="cvdEnrollment.reference"
+              id="cvdEnrollment.reference"
+              value={values.cvdEnrollment.reference || ''}
+              onChange={handleChange}
+              borderColor="black"
+              borderRadius={4}
+              padding={2}
+              width="100%"
+              placeholder={t`Add reference identifier or tag of the asset`}
+            />
+          </FormControl>
         </>
       )}
     </Box>

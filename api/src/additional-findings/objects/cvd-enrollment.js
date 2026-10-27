@@ -10,6 +10,10 @@ export const cvdEnrollmentFields = {
     description: 'The asset description.',
     type: GraphQLString,
   },
+  reference: {
+    description: 'The customer defined reference identifier or tag of the asset.',
+    type: GraphQLString,
+  },
 }
 
 export const cvdEnrollment = new GraphQLObjectType({

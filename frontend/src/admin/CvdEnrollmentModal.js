@@ -19,7 +19,7 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_CVD_ENROLLMENT } from '../graphql/mutations'
 import { CvdEnrollmentForm } from './CvdEnrollmentForm'
 
-const CVD_ENROLLMENT_FIELDS = ['status', 'description']
+const CVD_ENROLLMENT_FIELDS = ['status', 'description', 'reference']
 
 const isBlank = (value) => value === '' || value === null || value === undefined
 
