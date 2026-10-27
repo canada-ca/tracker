@@ -4,6 +4,7 @@ resources:
   - ../../bases/api
   - ../../bases/api/org-footprint-cronjob
   - ../../bases/api/progress-report-cronjob
+  - ../../bases/api/cvd-enrollment-cronjob
   - ../../bases/frontend
   - ../../bases/scanners/scanner-platform
   - ../../bases/scanners/dns-processor
