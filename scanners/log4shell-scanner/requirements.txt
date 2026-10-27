@@ -1,6 +1,6 @@
 -i https://pypi.org/simple
 asyncio-nats-client==0.11.5
-certifi==2024.2.2; python_version >= '3.6'
+certifi==2026.10.18; python_version >= '3.6'
 charset-normalizer==3.3.2; python_full_version >= '3.7.0'
 idna==3.7; python_version >= '3.5'
 python-dotenv==1.0.1; python_version >= '3.8'
