@@ -7,7 +7,6 @@ ENV PYTHONWARNINGS ignore
 RUN adduser -D guidance
 
 RUN apk add --no-cache \
-  git \
   python3 \
   py3-pip \
   py3-setuptools \
