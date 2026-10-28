@@ -58,14 +58,14 @@ def get_domain_names(domains: list[dict]):
     return [d.get("domain", None) for d in domains]
 
 
-def fetch_domain_owner_org_external_id(domain):
+def fetch_domain_owner_org_external_id(db: StandardDatabase, domain_id: str):
     cursor = db.aql.execute(
         """
         FOR v, e IN 1..1 INBOUND @domain_id ownership
             LIMIT 1
             RETURN v.externalId
         """,
-        bind_vars={"domain_id": domain["_id"]},
+        bind_vars={"domain_id": domain_id},
     )
     if cursor.count() == 0:
         return None
@@ -115,15 +115,17 @@ def fetch_h1_assets() -> tuple[list[dict], list[dict]]:
     return in_scope, out_of_scope
 
 
-def create_assets(domains: list[dict], asset_tags: list[dict]) -> tuple[int, int]:
+def create_assets(
+    domains: list[dict], asset_tags: list[dict], db: StandardDatabase
+) -> tuple[int, int]:
     successes, failures = 0, 0
     for a in domains:
         domain = a["domain"]
         enrollment_options = a.get("cvdEnrollment", {})
 
         # get asset tag
-        gc_org_id = fetch_domain_owner_org_external_id(domain=domain)
-        asset_tag_id = int(next(tag for tag in asset_tags if tag["name"] == gc_org_id))
+        gc_org_id = fetch_domain_owner_org_external_id(db=db, domain_id=a["_id"])
+        asset_tag_id = int(next(tag["id"] for tag in asset_tags if tag["name"] == gc_org_id))
 
         try:
             res = create_asset(domain=domain, options=enrollment_options, asset_tag_id=asset_tag_id)
@@ -194,7 +196,7 @@ def get_gc_orgid_tags():
         gc_org_id_tags += [tag for tag in res["data"] if tag_is_gc_org_id(tag)]
         current_page += 1
 
-    return [{"tag_name": tag["attributes"]["name"], "tag_id": tag["id"]} for tag in gc_org_id_tags]
+    return [{"name": tag["attributes"]["name"], "id": tag["id"]} for tag in gc_org_id_tags]
 
 
 def main(db: StandardDatabase):
@@ -223,7 +225,7 @@ def main(db: StandardDatabase):
     all_domain_names = set(get_domain_names(all_domains))
     enrolled_domain_names = set(get_domain_names(enrolled_domains))
     denied_domain_names = set(get_domain_names(denied_domains))
-    org_id_asset_tags = set(get_gc_orgid_tags())
+    org_id_asset_tags = get_gc_orgid_tags()
 
     # enrolled domains not yet in H1
     new_assets = [
@@ -234,7 +236,7 @@ def main(db: StandardDatabase):
     ]
     if new_assets:
         logger.info(f"Creating {len(new_assets)} new enrolled assets.")
-        _, fail = create_assets(new_assets, org_id_asset_tags)
+        _, fail = create_assets(domains=new_assets, asset_tags=org_id_asset_tags, db=db)
         if fail:
             logger.warning(f"{fail}/{len(new_assets)} enrolled asset creations failed.")
 
@@ -259,7 +261,7 @@ def main(db: StandardDatabase):
     ]
     if new_unscoped_assets:
         logger.info(f"Creating {len(new_unscoped_assets)} new out-of-scope assets.")
-        _, fail = create_assets(new_unscoped_assets, org_id_asset_tags)
+        _, fail = create_assets(domains=new_unscoped_assets, asset_tags=org_id_asset_tags, db=db)
         if fail:
             logger.warning(
                 f"{fail}/{len(new_unscoped_assets)} out-of-scope asset creations failed."
