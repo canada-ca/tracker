@@ -1,0 +1,7 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: domain-cleanup
+  namespace: api
+spec:
+  suspend: true

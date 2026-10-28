@@ -1,0 +1,7 @@
+steps:
+  - name: 'python:3.14-slim'
+    id: check-devcontainer-versions
+    entrypoint: 'python3'
+    args: ['.devcontainer/check_versions.py']
+
+timeout: 120s

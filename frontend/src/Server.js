@@ -1,7 +1,6 @@
 const { join, resolve } = require('path')
 const express = require('express')
 const compression = require('compression')
-const bodyParser = require('body-parser')
 const fs = require('fs')
 
 const staticPath = join(resolve(process.cwd()), 'public')
@@ -28,7 +27,6 @@ function isHashed(filePath) {
 
 function Server() {
   const server = express()
-  server.use(bodyParser.json())
   server.use(compression())
   server.disable('x-powered-by')
   server.set('trust proxy', true)

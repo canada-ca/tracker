@@ -4,6 +4,7 @@ resources:
   - ../../bases/api
   - ../../bases/api/org-footprint-cronjob
   - ../../bases/api/progress-report-cronjob
+  - ../../bases/api/cvd-enrollment-cronjob
   - ../../bases/frontend
   - ../../bases/scanners/scanner-platform
   - ../../bases/scanners/dns-processor
@@ -35,5 +36,6 @@ patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
   - api-production-env-patch.yaml
   - import-easm-additional-findings-suspend-patch.yaml
+  - domain-cleanup-suspend-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component

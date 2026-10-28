@@ -1,0 +1,53 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/tracker:cached
+    init: true
+    command: sleep infinity
+    depends_on:
+      arangodb:
+        condition: service_started
+      nats:
+        condition: service_started
+      nats-init:
+        condition: service_completed_successfully
+
+  arangodb:
+    image: arangodb:3.12.3
+    environment:
+      - ARANGO_ROOT_PASSWORD=test
+    volumes:
+      - arangodb-data:/var/lib/arangodb3
+
+  nats:
+    image: nats:2.12.1-scratch
+    command: -js -m 8222
+
+  nats-init:
+    image: natsio/nats-box:latest
+    depends_on:
+      - nats
+    volumes:
+      - ../k8s/infrastructure/bases/nats/stream-config.json:/stream-config/stream-config.json:ro
+    entrypoint: >
+      /bin/sh -c '
+        set -e
+        until nc -z nats 4222; do
+          sleep 1
+        done
+        sleep 2
+
+        sed "s/\"max_bytes\": [0-9]*/\"max_bytes\": 1000000000/" /stream-config/stream-config.json > /tmp/stream-config.json
+
+        nats stream add SCANS --config /tmp/stream-config.json --server nats://nats:4222 \
+          || nats stream edit SCANS --config /tmp/stream-config.json --server nats://nats:4222 --force
+
+        nats kv add WEB_SCANNER_IPS --ttl=5m --server nats://nats:4222 \
+          || nats kv edit WEB_SCANNER_IPS --ttl=5m --server nats://nats:4222
+      '
+
+volumes:
+  arangodb-data:

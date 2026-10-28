@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, Text, useDisclosure, Button } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { array, bool, string } from 'prop-types'
 
@@ -90,7 +90,7 @@ export function OrganizationDomains({
     errorPolicy: 'ignore',
   })
 
-  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading }] = useLazyQuery(
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
       variables: { orgSlug, filters },
@@ -127,6 +127,7 @@ export function OrganizationDomains({
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
     { value: 'CVD_DENY', text: t`CVD Denied` },
+    { value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` },
   ]
 
   const assetStateOptions = [
@@ -187,6 +188,7 @@ export function OrganizationDomains({
             webScanPending,
             userHasPermission,
             cvdEnrollment,
+            poweredByPHP,
           },
           index,
         ) => (
@@ -207,6 +209,7 @@ export function OrganizationDomains({
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
+              poweredByPHP={poweredByPHP}
               mb="3"
             />
           </ErrorBoundary>
@@ -308,18 +311,30 @@ export function OrganizationDomains({
       />
 
       {orgSlug !== 'my-tracker' && (
-        <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold" fontSize="lg">
-            <Trans>Filters:</Trans>
-          </Text>
-          <FilterList
-            filters={filters}
-            setFilters={setFilters}
-            resetToFirstPage={resetToFirstPage}
-            filterTagOptions={filterTagOptions}
-            guidanceTagOptions={guidanceTagOptions}
-          />
-        </Flex>
+        <Box>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+              resetToFirstPage()
+            }}
+            mb="2"
+          >
+            <Trans>Filter By PHP</Trans>
+          </Button>
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold" fontSize="lg">
+              <Trans>Filters:</Trans>
+            </Text>
+            <FilterList
+              filters={filters}
+              setFilters={setFilters}
+              resetToFirstPage={resetToFirstPage}
+              filterTagOptions={filterTagOptions}
+              guidanceTagOptions={guidanceTagOptions}
+            />
+          </Flex>
+        </Box>
       )}
 
       {domainList}

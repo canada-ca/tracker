@@ -90,6 +90,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'powered-by-php') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.poweredByPHP ${comparison} true
+          `
           } else if (filterValue === 'cvd-enrolled') {
             domainFilters = aql`
             ${domainFilters}
@@ -163,7 +168,8 @@ export const loadOrganizationDomainStatuses =
               wildcardEntry: v.wildcardEntry,
               hasEntrustCertificate: v.hasEntrustCertificate,
               top25Vulnerabilities: vulnerabilities,
-              cvdEnrollmentStatus: v.cvdEnrollment.status
+              cvdEnrollmentStatus: v.cvdEnrollment.status,
+              poweredByPHP: v.poweredByPHP,
             }
           `
       ).all()

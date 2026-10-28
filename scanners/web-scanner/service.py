@@ -247,6 +247,7 @@ async def scan_service():
 
     async def closed_cb():
         logger.info(f"NATS connection closed")
+        SHUTDOWN_EVENT.set()
 
     async def work_consumer():
         while not SHUTDOWN_EVENT.is_set():
@@ -401,6 +402,7 @@ async def scan_service():
                 break
             except Exception as e:
                 logger.critical(f"Uncaught error in producer: {e} \n\nFull traceback: {traceback.format_exc()}")
+                SHUTDOWN_EVENT.set()
                 raise
         logger.info("Producer shutting down...")
 
@@ -437,6 +439,7 @@ async def scan_service():
         servers=SERVERS,
         name=NAME,
         drain_timeout=30,
+        max_reconnect_attempts=-1,
     )
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
