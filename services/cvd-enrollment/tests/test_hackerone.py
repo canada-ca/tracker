@@ -11,6 +11,7 @@ from hackerone import (
     create_asset,
     archive_assets,
     get_scope,
+    get_asset_tags,
     add_scope,
     update_scope,
     _request,
@@ -130,37 +131,52 @@ class TestCreateAsset:
     @patch("hackerone._request")
     def test_uses_post_method(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={})
+        create_asset(domain="example.com", options={}, asset_tag_id=7)
         assert mock_req.call_args[0][0] == "POST"
 
     @patch("hackerone._request")
     def test_sets_identifier_and_asset_type(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={})
+        create_asset(domain="example.com", options={}, asset_tag_id=7)
         payload = mock_req.call_args[1]["json"]
         attrs = payload["data"]["attributes"]
         assert attrs["identifier"] == "example.com"
         assert attrs["asset_type"] == "domain"
 
     @patch("hackerone._request")
+    def test_sets_max_severity_to_critical(self, mock_req):
+        mock_req.return_value = _ok_response({"data": {}})
+        create_asset(domain="example.com", options={}, asset_tag_id=7)
+        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
+        assert attrs["max_severity"] == "critical"
+
+    @patch("hackerone._request")
     def test_spreads_options_into_attributes(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={"description": "test", "maxSeverity": "HIGH"})
+        create_asset(
+            domain="example.com",
+            options={"description": "test", "maxSeverity": "HIGH"},
+            asset_tag_id=7,
+        )
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert attrs["description"] == "test"
         assert attrs["maxSeverity"] == "HIGH"
 
     @patch("hackerone._request")
-    def test_includes_empty_asset_tags_relationship(self, mock_req):
+    def test_includes_asset_tag_relationship(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={})
+        create_asset(domain="example.com", options={}, asset_tag_id=7)
         payload = mock_req.call_args[1]["json"]
-        assert payload["data"]["relationships"]["asset_tags"]["data"] == []
+        assert payload["data"]["relationships"]["asset_tags"]["data"] == [{"id": 7}]
 
     @patch("hackerone._request")
     def test_omits_none_option_values(self, mock_req):
         mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={"description": None, "maxSeverity": "HIGH"})
+        create_asset(
+            domain="example.com",
+            options={"description": None, "maxSeverity": "HIGH"},
+            asset_tag_id=7,
+        )
         attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
         assert "description" not in attrs
         assert attrs["maxSeverity"] == "HIGH"
@@ -290,3 +306,30 @@ class TestArchiveAssets:
         payload = {"data": [{"id": "asset-1"}]}
         archive_assets(data=payload)
         assert mock_req.call_args[1]["json"] == payload
+
+
+# ---------------------------------------------------------------------------
+# get_asset_tags
+# ---------------------------------------------------------------------------
+
+class TestGetAssetTags:
+    @patch("hackerone._request")
+    def test_uses_get_method(self, mock_req):
+        mock_req.return_value = _ok_response({"data": []})
+        get_asset_tags()
+        assert mock_req.call_args[0][0] == "GET"
+
+    @patch("hackerone._request")
+    def test_url_contains_asset_tags_path(self, mock_req):
+        mock_req.return_value = _ok_response({"data": []})
+        get_asset_tags()
+        url = mock_req.call_args[0][1]
+        assert "asset_tags" in url
+
+    @patch("hackerone._request")
+    def test_includes_pagination_params(self, mock_req):
+        mock_req.return_value = _ok_response({"data": []})
+        get_asset_tags(page_number=3, page_size=50)
+        url = mock_req.call_args[0][1]
+        assert "page[size]=50" in url
+        assert "page[number]=3" in url
