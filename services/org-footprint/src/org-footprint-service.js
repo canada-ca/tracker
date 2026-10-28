@@ -5,10 +5,9 @@ const {
   getBilingualOrgNames,
   getPendingOrgUserCount,
   getOrgUsers,
-  getPendingCvdEnrollmentCount,
   getOrgOwner,
 } = require('./database')
-const { sendOrgFootprintEmail, sendPendingOrgUsersEmail, sendPendingCvdEnrollmentEmail } = require('./notify')
+const { sendOrgFootprintEmail, sendPendingOrgUsersEmail } = require('./notify')
 const logger = require('./logger')
 
 const { SERVICE_ACCOUNT_EMAIL, REDIRECT_TO_SERVICE_ACCOUNT_EMAIL } = process.env
@@ -41,17 +40,6 @@ const orgFootprintService = async ({ query, notifyClient }) => {
       for (const admin of orgAdmins) {
         await sendPendingOrgUsersEmail({ notifyClient, user: admin, orgNames })
       }
-    }
-
-    const pendingEnrollmentCount = await getPendingCvdEnrollmentCount({ query, orgKey })
-    if (pendingEnrollmentCount > 0) {
-      const orgOwner = await getOrgOwner({ query, orgKey })
-      if (!orgOwner) {
-        logger.warn({ orgKey, pendingEnrollmentCount }, 'No owner found for org with pending CVD enrollments')
-        continue
-      }
-      logger.info({ orgKey, pendingEnrollmentCount }, 'Sending pending CVD enrollments email to owner of org')
-      await sendPendingCvdEnrollmentEmail({ notifyClient, user: orgOwner, orgNames })
     }
   }
 }

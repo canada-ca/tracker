@@ -3,7 +3,6 @@ const {
   DB_URL: url,
   NOTIFICATION_ORG_FOOTPRINT_BILINGUAL,
   NOTIFICATION_PENDING_USERS,
-  NOTIFICATION_PENDING_CVD_ENROLLMENT,
   NOTIFICATION_API_KEY,
   NOTIFICATION_API_URL,
 } = process.env
@@ -83,7 +82,7 @@ describe('given the orgFootprintService function', () => {
       action: 'add',
       target: { resource: 'new.test.gc.ca', resourceType: 'domain', organization: { id: org._key } },
     })
-    const domain = await collections.domains.save({ domain: 'new.test.gc.ca', cvdEnrollment: { status: 'pending' } })
+    const domain = await collections.domains.save({ domain: 'new.test.gc.ca' })
     await collections.claims.save({ _from: org._id, _to: domain._id })
 
     const ownerlessOrg = await collections.organizations.save({
@@ -91,7 +90,6 @@ describe('given the orgFootprintService function', () => {
     })
     const ownerlessDomain = await collections.domains.save({
       domain: 'ownerless.test.gc.ca',
-      cvdEnrollment: { status: 'pending' },
     })
     await collections.claims.save({ _from: ownerlessOrg._id, _to: ownerlessDomain._id })
 
@@ -130,22 +128,6 @@ describe('given the orgFootprintService function', () => {
           },
         },
       ],
-      [
-        NOTIFICATION_PENDING_CVD_ENROLLMENT,
-        'tracker+owner@tbs-sct.gc.ca',
-        {
-          personalisation: {
-            display_name: 'Owner',
-            organization_name_en: 'Test Org',
-            organization_name_fr: 'Le Test Org',
-            admin_link: 'https://tracker.canada.ca/admin/organizations',
-          },
-        },
-      ],
-    ])
-    expect(await Promise.all(notifyClient.sendEmail.mock.results.map(notifyResult))).toEqual([201, 201, 201])
-    expect(logger.warn.mock.calls).toEqual([
-      [{ orgKey: ownerlessOrg._key, pendingEnrollmentCount: 1 }, 'No owner found for org with pending CVD enrollments'],
     ])
   })
 
