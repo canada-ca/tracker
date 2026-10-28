@@ -56,7 +56,8 @@ const withDataSources = (contextValue) => {
     contextValue?.dataSources?.tags || new TagsDataSource({ query, userKey, i18n, language, transaction, collections })
 
   const auditLogs =
-    contextValue?.dataSources?.auditLogs || new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections })
+    contextValue?.dataSources?.auditLogs ||
+    new AuditLogsDataSource({ query, userKey, cleanseInput, i18n, transaction, collections })
 
   return {
     ...contextValue,
@@ -81,17 +82,13 @@ const graphql = ({ contextValue, ...args }) => {
   })
 }
 
-
 describe('updating a domain cvdEnrollment', () => {
   let query, drop, truncate, schema, collections, transaction, publish, user, org, domain
 
   const storedCvdEnrollment = {
     status: 'enrolled',
     description: 'Stored asset description',
-    maxSeverity: 'high',
-    confidentialityRequirement: 'high',
-    integrityRequirement: 'low',
-    availabilityRequirement: 'none',
+    reference: 'ref',
   }
 
   const i18n = setupI18n({
@@ -221,7 +218,11 @@ describe('updating a domain cvdEnrollment', () => {
     },
   })
 
-  const runMutation = ({ fields, domainId = toGlobalId('domain', domain._key), orgId = toGlobalId('organization', org._key) }) =>
+  const runMutation = ({
+    fields,
+    domainId = toGlobalId('domain', domain._key),
+    orgId = toGlobalId('organization', org._key),
+  }) =>
     graphql({
       schema,
       source: `
@@ -257,8 +258,7 @@ describe('updating a domain cvdEnrollment', () => {
   }
 
   const affiliate = (permission) => collections.affiliations.save({ _to: user._id, _from: org._id, permission })
-  const claim = () =>
-    collections.claims.save({ _to: domain._id, _from: org._id, tags: [], assetState: 'monitor-only' })
+  const claim = () => collections.claims.save({ _to: domain._id, _from: org._id, tags: [], assetState: 'monitor-only' })
   const own = () => collections.ownership.save({ _to: domain._id, _from: org._id })
 
   const permissionDenied = {
@@ -293,10 +293,7 @@ describe('updating a domain cvdEnrollment', () => {
         fields: `
           status: DENY
           description: "Owned asset"
-          maxSeverity: CRITICAL
-          confidentialityRequirement: LOW
-          integrityRequirement: HIGH
-          availabilityRequirement: LOW
+          reference: "ref"
         `,
       })
 
@@ -304,10 +301,7 @@ describe('updating a domain cvdEnrollment', () => {
       expect(await loadStoredCvdEnrollment()).toEqual({
         status: 'deny',
         description: 'Owned asset',
-        maxSeverity: 'critical',
-        confidentialityRequirement: 'low',
-        integrityRequirement: 'high',
-        availabilityRequirement: 'low',
+        reference: 'ref',
       })
     })
 
