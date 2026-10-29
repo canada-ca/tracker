@@ -31,7 +31,7 @@ spec:
           emptyDir: {}
       initContainers:
         - name: sync-init
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-291fa19-1792427083 #{"$imagepolicy": "flux-system:uptime-sync"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-cda17a9-1792762798 #{"$imagepolicy": "flux-system:uptime-sync"}
           command: ["python", "/app/sync-gatus-config.py"]
           env:
             - name: ARANGO_URL
@@ -114,10 +114,10 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 256Mi
+              memory: 2Gi
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 1Gi
           securityContext:
             runAsGroup: 1000
             runAsUser: 1000

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: domain-dispatcher
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher:master-4916da2-1792069191 # {"$imagepolicy": "flux-system:domain-dispatcher"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher:master-141a164-1793211753 # {"$imagepolicy": "flux-system:domain-dispatcher"}
           env:
             - name: DB_PASS
               valueFrom:

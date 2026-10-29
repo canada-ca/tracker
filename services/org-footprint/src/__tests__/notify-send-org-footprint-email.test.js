@@ -1,21 +1,28 @@
-jest.mock('../logger')
-
+const { NotifyClient } = require('notifications-node-client')
 const logger = require('../logger')
 const { sendOrgFootprintEmail } = require('../notify')
-const { NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
+const { NOTIFICATION_API_KEY, NOTIFICATION_API_URL, NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
+
+const notifyResult = ({ value }) =>
+  value.then(
+    ({ status }) => status,
+    ({ response }) => response.data,
+  )
 
 describe('given the sendOrgFootprintEmail function', () => {
+  let notifyClient
   beforeEach(async () => {
-    jest.clearAllMocks()
+    notifyClient = new NotifyClient(NOTIFICATION_API_URL, NOTIFICATION_API_KEY)
+    jest.spyOn(notifyClient, 'sendEmail')
+    jest.spyOn(logger, 'error')
+  })
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
   describe('email successfully sent', () => {
     it('returns nothing', async () => {
-      const sendEmail = jest.fn()
-      const notifyClient = {
-        sendEmail,
-      }
       const user = {
-        userName: 'test@email.ca',
+        userName: 'tracker+user@tbs-sct.gc.ca',
         displayName: 'Test Account',
       }
 
@@ -74,17 +81,13 @@ describe('given the sendOrgFootprintEmail function', () => {
           remove_domains_list: 'domain1',
         },
       })
+      expect(await notifyResult(notifyClient.sendEmail.mock.results[0])).toEqual(201)
     })
   })
   describe('an error occurs while sending email', () => {
     it('throws an error message', async () => {
-      const sendEmail = jest.fn().mockRejectedValue(new Error('Notification error occurred.'))
-      const notifyClient = {
-        sendEmail,
-      }
-
       const user = {
-        userName: 'test@email.ca',
+        userName: 'not-an-email-address',
         displayName: 'Test Account',
       }
 
@@ -98,13 +101,9 @@ describe('given the sendOrgFootprintEmail function', () => {
         },
       })
 
-      expect(logger.error).toHaveBeenCalledWith(
-        {
-          err: new Error('Notification error occurred.'),
-          userKey: user._key,
-        },
-        'Error occurred when sending org footprint changes via email',
-      )
+      expect(logger.error.mock.calls).toEqual([
+        [{ err: expect.any(Error), userKey: user._key }, 'Error occurred when sending org footprint changes via email'],
+      ])
     })
   })
 })

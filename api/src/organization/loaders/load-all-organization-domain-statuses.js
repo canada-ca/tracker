@@ -92,6 +92,11 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.cveDetected ${comparison} true
           `
+          } else if (filterValue === 'powered-by-php') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.poweredByPHP ${comparison} true
+          `
           } else if (filterValue === 'archived') {
             archivedFilter = aql`FILTER d.archived ${comparison} true`
           }
@@ -155,7 +160,8 @@ export const loadAllOrganizationDomainStatuses =
               "wildcardSibling": d.wildcardSibling,
               "wildcardEntry": d.wildcardEntry,
               "hasEntrustCertificate": d.hasEntrustCertificate,
-              "top25Vulnerabilities": vulnerabilities
+              "poweredByPHP": d.poweredByPHP,
+              "top25Vulnerabilities": vulnerabilities,
             }
           `
       ).all()

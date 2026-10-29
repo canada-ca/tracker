@@ -5,6 +5,7 @@ import {
   Box,
   Code,
   Divider,
+  Button,
   Flex,
   Heading,
   ListItem,
@@ -143,6 +144,7 @@ export default function DomainsPage() {
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
+    { value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -250,6 +252,7 @@ export default function DomainsPage() {
             webScanPending,
             userHasPermission,
             cvdEnrollment,
+            poweredByPHP,
           },
           index,
         ) => (
@@ -268,6 +271,7 @@ export default function DomainsPage() {
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
+              poweredByPHP={poweredByPHP}
               mb="3"
             />
           </ErrorBoundary>
@@ -341,6 +345,17 @@ export default function DomainsPage() {
           searchTip={domainSearchTip}
           totalRecords={totalCount}
         />
+
+        <Button
+          variant="primary"
+          onClick={() => {
+            setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+            resetToFirstPage()
+          }}
+          mb="2"
+        >
+          <Trans>Filter By PHP</Trans>
+        </Button>
 
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg">

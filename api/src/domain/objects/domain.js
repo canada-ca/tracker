@@ -406,6 +406,11 @@ export const domainType = new GraphQLObjectType({
         return await domain.organizationHasOwnership({ orgId: org._id, domainId })
       },
     },
+    poweredByPHP: {
+      type: GraphQLBoolean,
+      description: 'Domain returns a response header that includes PHP.',
+      resolve: ({ poweredByPHP }) => poweredByPHP,
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

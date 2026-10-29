@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: super-admin
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin:master-62de65f-1791910040 # {"$imagepolicy": "flux-system:super-admin"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin:master-141a164-1793211760 # {"$imagepolicy": "flux-system:super-admin"}
           env:
             - name: DB_PASS
               valueFrom:

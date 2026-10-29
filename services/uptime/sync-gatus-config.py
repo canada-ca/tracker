@@ -86,9 +86,7 @@ def main():
     log.info(f"Connecting to ArangoDB...")
     try:
         client = ArangoClient(hosts=ARANGO_URL)
-        db = client.db(
-            ARANGO_DATABASE, username=ARANGO_USERNAME, password=ARANGO_PASSWORD
-        )
+        db = client.db(ARANGO_DATABASE, username=ARANGO_USERNAME, password=ARANGO_PASSWORD)
         db.version()  # validate connection
     except Exception as e:
         log.error(f"ArangoDB connection failed: {e}")
@@ -97,7 +95,7 @@ def main():
     log.info("Querying high availability services...")
     try:
         cursor = db.aql.execute(
-            "FOR d IN domains FILTER d.highAvailability == true RETURN d"
+            "FOR d IN domains FILTER d.highAvailability == true OR d.poweredByPHP == true RETURN d.domain"
         )
         docs = list(cursor)
     except Exception as e:
@@ -106,7 +104,7 @@ def main():
 
     log.info(f"Query returned {len(docs)} document(s)")
 
-    endpoints = [build_endpoint(doc.get("domain")) for doc in docs]
+    endpoints = [build_endpoint(doc) for doc in docs]
     config = build_config(endpoints)
 
     config_dir = os.path.dirname(GATUS_CONFIG_PATH)
