@@ -1,4 +1,4 @@
-certifi==2024.7.4
+certifi==2026.10.18
 charset-normalizer==3.3.2
 emoji==2.10.1
 idna==3.15
