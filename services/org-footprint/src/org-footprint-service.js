@@ -5,7 +5,6 @@ const {
   getBilingualOrgNames,
   getPendingOrgUserCount,
   getOrgUsers,
-  getOrgOwner,
 } = require('./database')
 const { sendOrgFootprintEmail, sendPendingOrgUsersEmail } = require('./notify')
 const logger = require('./logger')

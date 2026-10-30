@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
-import { EnrollmentStatusEnums, SeverityEnum, CvdRequirementEnums } from '../../../enums'
+import { EnrollmentStatusEnums } from '../../../enums'
 import { cvdEnrollment } from '../cvd-enrollment'
 
 describe('cvdEnrollment GraphQLObjectType', () => {
