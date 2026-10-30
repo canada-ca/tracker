@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM python:3.14.10-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONWARNINGS ignore
