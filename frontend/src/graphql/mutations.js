@@ -345,10 +345,7 @@ export const UPDATE_CVD_ENROLLMENT = gql`
     $orgId: ID!
     $status: EnrollmentStatusEnums
     $description: String
-    $maxSeverity: SeverityEnum
-    $confidentialityRequirement: CvdRequirementEnums
-    $integrityRequirement: CvdRequirementEnums
-    $availabilityRequirement: CvdRequirementEnums
+    $reference: String
   ) {
     updateCvdEnrollment(
       input: {
@@ -356,10 +353,7 @@ export const UPDATE_CVD_ENROLLMENT = gql`
         orgId: $orgId
         status: $status
         description: $description
-        maxSeverity: $maxSeverity
-        confidentialityRequirement: $confidentialityRequirement
-        integrityRequirement: $integrityRequirement
-        availabilityRequirement: $availabilityRequirement
+        reference: $reference
       }
     ) {
       result {
@@ -368,10 +362,7 @@ export const UPDATE_CVD_ENROLLMENT = gql`
           cvdEnrollment {
             status
             description
-            maxSeverity
-            confidentialityRequirement
-            integrityRequirement
-            availabilityRequirement
+            reference
           }
         }
         ... on DomainError {

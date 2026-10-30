@@ -362,6 +362,10 @@ msgstr "Ajouter un domaine"
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
+#: src/admin/CvdEnrollmentForm.js:147
+msgid "Add reference identifier or tag of the asset"
+msgstr "Identificateur de référence ou étiquette de l'actif"
+
 #: src/admin/DomainTagsList.js:141
 msgid "Add Tag"
 msgstr "Ajouter un tag"
@@ -579,7 +583,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/AdminDomainModal.js:65
 #: src/admin/AdminDomainModal.js:111
 #: src/admin/AdminDomains.js:131
-#: src/admin/CvdEnrollmentModal.js:58
+#: src/admin/CvdEnrollmentModal.js:51
 #: src/admin/DomainUpdateList.js:57
 #: src/admin/DomainUpdateList.js:104
 #: src/admin/TagForm.js:28
@@ -732,8 +736,8 @@ msgid "Authenticate"
 msgstr "Authentifier"
 
 #: src/admin/CvdEnrollmentForm.js:222
-msgid "Availability Requirement"
-msgstr "Exigence de disponibilité"
+#~ msgid "Availability Requirement"
+#~ msgstr "Exigence de disponibilité"
 
 #: src/auth/ForgotPasswordPage.js:88
 #: src/createOrganization/CreateOrganizationPage.js:125
@@ -1030,8 +1034,8 @@ msgid "Confidence Level"
 msgstr "Niveau de confiance"
 
 #: src/admin/CvdEnrollmentForm.js:166
-msgid "Confidentiality Requirement"
-msgstr "Exigence de confidentialité"
+#~ msgid "Confidentiality Requirement"
+#~ msgstr "Exigence de confidentialité"
 
 #: src/summaries/TierThreeSummaries.js:18
 msgid "Configuration requirements for email services completely met"
@@ -1180,7 +1184,6 @@ msgstr "Créer une organisation"
 #~ msgid "Create your free account to unlock visibility into your organization's digital footprint. Upon signing up, you'll gain access to a dynamic inventory of web infrastructure under your management."
 #~ msgstr "Créez votre compte gratuit pour bénéficier d'une visibilité sur l'empreinte numérique de votre organisation. En vous inscrivant, vous aurez accès à un inventaire dynamique de l'infrastructure web dont vous avez la charge."
 
-#: src/admin/CvdEnrollmentForm.js:158
 #: src/guidance/AdditionalFindings.js:34
 #: src/guidance/IgnoredCves.js:9
 msgid "Critical"
@@ -1239,7 +1242,7 @@ msgstr "Rejet de la demande de DCV"
 msgid "CVD Enrolled"
 msgstr "DCV inscrit"
 
-#: src/admin/CvdEnrollmentModal.js:71
+#: src/admin/CvdEnrollmentModal.js:64
 msgid "CVD enrollment for {domain} successfully updated."
 msgstr "L'inscription au DCV pour {domain} a été mise à jour avec succès."
 
@@ -1247,7 +1250,7 @@ msgstr "L'inscription au DCV pour {domain} a été mise à jour avec succès."
 msgid "CVD Enrollment Status"
 msgstr "Statut d'inscription au DCV"
 
-#: src/admin/CvdEnrollmentModal.js:70
+#: src/admin/CvdEnrollmentModal.js:63
 msgid "CVD enrollment updated"
 msgstr "Mise à jour de l'inscription au programme DCV"
 
@@ -1705,7 +1708,7 @@ msgstr "Edit"
 msgid "Edit CVD enrollment"
 msgstr "Modifier l'inscription au DCV"
 
-#: src/admin/CvdEnrollmentModal.js:118
+#: src/admin/CvdEnrollmentModal.js:111
 msgid "Edit CVD Enrollment: {domain}"
 msgstr "Modifier l'inscription au DCV: {domain}"
 
@@ -2323,10 +2326,6 @@ msgstr "ici."
 msgid "Hide password"
 msgstr "Cacher le mot de passe"
 
-#: src/admin/CvdEnrollmentForm.js:155
-#: src/admin/CvdEnrollmentForm.js:186
-#: src/admin/CvdEnrollmentForm.js:214
-#: src/admin/CvdEnrollmentForm.js:242
 #: src/guidance/AdditionalFindings.js:34
 #: src/guidance/IgnoredCves.js:9
 msgid "High"
@@ -2666,7 +2665,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/AdminDomainModal.js:95
 #: src/admin/AdminDomainModal.js:141
 #: src/admin/AdminDomains.js:161
-#: src/admin/CvdEnrollmentModal.js:88
+#: src/admin/CvdEnrollmentModal.js:81
 #: src/admin/DomainUpdateList.js:89
 #: src/admin/DomainUpdateList.js:136
 #: src/admin/SuperAdminUserList.js:107
@@ -2717,7 +2716,7 @@ msgstr "Incorrect unignoreCve.result typename."
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
-#: src/admin/CvdEnrollmentModal.js:89
+#: src/admin/CvdEnrollmentModal.js:82
 msgid "Incorrect updateCvdEnrollment.result typename."
 msgstr "Nom de type incorrect pour `updateCvdEnrollment.result`."
 
@@ -2815,8 +2814,8 @@ msgstr "Changement du statut d'utilisateur interne"
 #~ msgstr "Changement de statut d'initié"
 
 #: src/admin/CvdEnrollmentForm.js:194
-msgid "Integrity Requirement"
-msgstr "Exigence d'intégrité"
+#~ msgid "Integrity Requirement"
+#~ msgstr "Exigence d'intégrité"
 
 #: src/termsConditions/TermsConditionsPage.js:132
 msgid "Intellectual Property, Copyright and Trademarks"
@@ -3032,10 +3031,6 @@ msgstr "Connectez-vous à votre compte"
 msgid "Lookups:"
 msgstr "Les recherches :"
 
-#: src/admin/CvdEnrollmentForm.js:149
-#: src/admin/CvdEnrollmentForm.js:183
-#: src/admin/CvdEnrollmentForm.js:211
-#: src/admin/CvdEnrollmentForm.js:239
 #: src/guidance/AdditionalFindings.js:34
 #: src/guidance/IgnoredCves.js:9
 msgid "Low"
@@ -3081,15 +3076,14 @@ msgid "Mark this domain as high availability. It will be monitored by the uptime
 msgstr "Marquez ce domaine comme haute disponibilité. Il sera surveillé par le tableau de bord de disponibilité."
 
 #: src/admin/CvdEnrollmentForm.js:135
-msgid "Max Severity"
-msgstr "Gravité maximale"
+#~ msgid "Max Severity"
+#~ msgstr "Gravité maximale"
 
 #: src/components/MonthSelect.js:27
 #: src/utilities/months.js:8
 msgid "May"
 msgstr "Mai"
 
-#: src/admin/CvdEnrollmentForm.js:152
 #: src/guidance/AdditionalFindings.js:34
 #: src/guidance/IgnoredCves.js:9
 msgid "Medium"
@@ -3485,9 +3479,6 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 msgid "Non-compliant"
 msgstr "Non conforme"
 
-#: src/admin/CvdEnrollmentForm.js:180
-#: src/admin/CvdEnrollmentForm.js:208
-#: src/admin/CvdEnrollmentForm.js:236
 #: src/admin/OrganizationInformation.js:403
 #: src/guidance/EmailGuidance.js:274
 #: src/guidance/IgnoredCves.js:23
@@ -4067,6 +4058,10 @@ msgstr "Activité récente"
 msgid "Record:"
 msgstr "Record :"
 
+#: src/admin/CvdEnrollmentForm.js:134
+msgid "Reference"
+msgstr "Référence"
+
 #: src/app/ReadGuidancePage.js:513
 msgid "References:"
 msgstr "Références :"
@@ -4246,7 +4241,7 @@ msgstr "Effectuer la rotation des clés DKIM annuellement."
 msgid "SAN List:"
 msgstr "Liste des SAN :"
 
-#: src/admin/CvdEnrollmentModal.js:128
+#: src/admin/CvdEnrollmentModal.js:121
 #: src/user/EditableUserTFAMethod.js:177
 msgid "Save"
 msgstr "Sauvez"
@@ -4413,12 +4408,12 @@ msgstr "Sélectionnez votre langue préférée"
 #: src/admin/CvdEnrollmentForm.js:177
 #: src/admin/CvdEnrollmentForm.js:205
 #: src/admin/CvdEnrollmentForm.js:233
-msgid "Select requirement"
-msgstr "Sélectionner une exigence"
+#~ msgid "Select requirement"
+#~ msgstr "Sélectionner une exigence"
 
 #: src/admin/CvdEnrollmentForm.js:146
-msgid "Select severity"
-msgstr "Sélectionner la gravité"
+#~ msgid "Select severity"
+#~ msgstr "Sélectionner la gravité"
 
 #: src/userOnboarding/config/tourSteps.js:178
 msgid "Select the data period to view."
@@ -5619,7 +5614,7 @@ msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 msgid "Unable to stop ignoring CVE."
 msgstr "Impossible de cesser d'ignorer le CVE."
 
-#: src/admin/CvdEnrollmentModal.js:79
+#: src/admin/CvdEnrollmentModal.js:72
 msgid "Unable to update CVD enrollment."
 msgstr "Impossible de mettre à jour l'inscription DCV"
 

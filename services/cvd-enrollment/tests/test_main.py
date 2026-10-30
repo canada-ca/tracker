@@ -3,16 +3,30 @@ from unittest.mock import MagicMock, patch
 
 from hackerone import HackerOneAPIError
 from main import (
+    TAG_PAGE_LIMIT,
     get_asset_identifiers,
     get_domain_names,
     fetch_domains,
+    fetch_domain_owner_org_external_id,
     fetch_h1_assets,
     create_assets,
+    get_gc_orgid_tags,
     rescope_assets,
     archive_unenrolled_assets,
     main,
 )
-from tests.conftest import make_h1_asset, make_domain, make_mock_db
+from tests.conftest import make_asset_tag, make_h1_asset, make_domain, make_mock_db
+
+
+def make_h1_asset_tag(tag_id: str, name: str = None, category: str = "GC Org ID") -> dict:
+    """Build a minimal HackerOne asset-tag dict with its category relationship."""
+    return {
+        "id": tag_id,
+        "attributes": {"name": name or tag_id},
+        "relationships": {
+            "asset_tag_category": {"data": {"attributes": {"name": category}}}
+        },
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -121,16 +135,48 @@ class TestFetchH1Assets:
 
 
 # ---------------------------------------------------------------------------
+# fetch_domain_owner_org_external_id
+# ---------------------------------------------------------------------------
+
+class TestFetchDomainOwnerOrgExternalId:
+    def _db_with_cursor(self, cursor):
+        db = MagicMock()
+        db.aql.execute.return_value = cursor
+        return db
+
+    def test_returns_external_id_of_inbound_owner(self):
+        cursor = MagicMock()
+        cursor.count.return_value = 1
+        cursor.next.return_value = "ORG-42"
+        db = self._db_with_cursor(cursor)
+        assert fetch_domain_owner_org_external_id(db, "domains/a.com") == "ORG-42"
+        bind_vars = db.aql.execute.call_args[1]["bind_vars"]
+        assert bind_vars == {"domain_id": "domains/a.com"}
+
+    def test_returns_none_when_no_owner(self):
+        cursor = MagicMock()
+        cursor.count.return_value = 0
+        db = self._db_with_cursor(cursor)
+        assert fetch_domain_owner_org_external_id(db, "domains/a.com") is None
+        cursor.next.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
 # create_assets
 # ---------------------------------------------------------------------------
 
 class TestCreateAssets:
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_creates_asset_and_scope_for_each_domain(self, mock_create, mock_add):
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_creates_asset_and_scope_for_each_domain(self, mock_fetch_owner, mock_create, mock_add):
         mock_create.return_value = {"data": {"id": "asset-1"}}
         mock_add.return_value = {"data": {}}
-        ok, fail = create_assets([make_domain("a.com", "enrolled"), make_domain("b.com", "enrolled")])
+        tags = [make_asset_tag("ORG-1", 42)]
+        db = MagicMock()
+        ok, fail = create_assets(
+            [make_domain("a.com", "enrolled"), make_domain("b.com", "enrolled")], tags, db
+        )
         assert ok == 2
         assert fail == 0
         assert mock_create.call_count == 2
@@ -138,47 +184,74 @@ class TestCreateAssets:
 
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_counts_failure_and_continues(self, mock_create, mock_add):
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_counts_failure_and_continues(self, mock_fetch_owner, mock_create, mock_add):
         mock_create.side_effect = [HackerOneAPIError("fail"), {"data": {"id": "asset-1"}}]
         mock_add.return_value = {"data": {}}
-        ok, fail = create_assets([make_domain("fail.com", "enrolled"), make_domain("ok.com", "enrolled")])
+        tags = [make_asset_tag("ORG-1", 42)]
+        db = MagicMock()
+        ok, fail = create_assets(
+            [make_domain("fail.com", "enrolled"), make_domain("ok.com", "enrolled")], tags, db
+        )
         assert ok == 1
         assert fail == 1
 
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_failure_on_add_scope_counted_as_failure(self, mock_create, mock_add):
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_failure_on_add_scope_counted_as_failure(self, mock_fetch_owner, mock_create, mock_add):
         mock_create.return_value = {"data": {"id": "asset-1"}}
         mock_add.side_effect = HackerOneAPIError("scope fail")
-        ok, fail = create_assets([make_domain("a.com", "enrolled")])
+        tags = [make_asset_tag("ORG-1", 42)]
+        db = MagicMock()
+        ok, fail = create_assets([make_domain("a.com", "enrolled")], tags, db)
         assert ok == 0
         assert fail == 1
 
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_empty_list_returns_zero_counts(self, mock_create, mock_add):
-        ok, fail = create_assets([])
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_empty_list_returns_zero_counts(self, mock_fetch_owner, mock_create, mock_add):
+        db = MagicMock()
+        ok, fail = create_assets([], [], db)
         assert ok == 0
         assert fail == 0
         mock_create.assert_not_called()
+        mock_fetch_owner.assert_not_called()
 
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_passes_asset_id_and_enrollment_status_to_add_scope(self, mock_create, mock_add):
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_passes_asset_id_and_enrollment_status_to_add_scope(self, mock_fetch_owner, mock_create, mock_add):
         mock_create.return_value = {"data": {"id": "asset-42"}}
         mock_add.return_value = {"data": {}}
-        create_assets([make_domain("a.com", "deny")])
+        tags = [make_asset_tag("ORG-1", 42)]
+        create_assets([make_domain("a.com", "deny")], tags, MagicMock())
         mock_add.assert_called_once_with(asset_id="asset-42", enrollment_status="deny")
 
     @patch("main.add_scope")
     @patch("main.create_asset")
-    def test_passes_full_cvd_options_to_create_asset(self, mock_create, mock_add):
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_passes_full_cvd_options_to_create_asset(self, mock_fetch_owner, mock_create, mock_add):
         mock_create.return_value = {"data": {"id": "asset-1"}}
         mock_add.return_value = {"data": {}}
         options = {"status": "enrolled", "description": "test desc", "maxSeverity": "HIGH"}
-        domain = {"domain": "a.com", "cvdEnrollment": options}
-        create_assets([domain])
-        mock_create.assert_called_once_with(domain="a.com", options=options)
+        domain = {"_id": "domains/a.com", "domain": "a.com", "cvdEnrollment": options}
+        tags = [make_asset_tag("ORG-1", 42)]
+        create_assets([domain], tags, MagicMock())
+        mock_create.assert_called_once_with(domain="a.com", options=options, asset_tag_id=42)
+
+    @patch("main.add_scope")
+    @patch("main.create_asset")
+    @patch("main.fetch_domain_owner_org_external_id", return_value="ORG-1")
+    def test_selects_tag_matching_owner_org_id(self, mock_fetch_owner, mock_create, mock_add):
+        mock_create.return_value = {"data": {"id": "asset-1"}}
+        mock_add.return_value = {"data": {}}
+        tags = [make_asset_tag("OTHER-ORG", 7), make_asset_tag("ORG-1", 99)]
+        create_assets([make_domain("a.com", "enrolled")], tags, MagicMock())
+        mock_create.assert_called_once_with(
+            domain="a.com", options={"status": "enrolled"}, asset_tag_id=99
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -268,6 +341,36 @@ class TestArchiveUnenrolledAssets:
 
 
 # ---------------------------------------------------------------------------
+# get_gc_orgid_tags
+# ---------------------------------------------------------------------------
+
+class TestGetGcOrgidTags:
+    @patch("main.get_asset_tags")
+    def test_collects_only_gc_org_id_tags(self, mock_get_tags):
+        mock_get_tags.side_effect = [
+            {"data": [make_h1_asset_tag("111"), make_h1_asset_tag("222", category="Other")]},
+            {"data": []},
+        ]
+        assert get_gc_orgid_tags() == [{"name": "111", "id": "111"}]
+
+    @patch("main.get_asset_tags")
+    def test_stops_when_page_is_empty(self, mock_get_tags):
+        mock_get_tags.side_effect = [
+            {"data": [make_h1_asset_tag("111")]},
+            {"data": []},
+        ]
+        get_gc_orgid_tags()
+        assert mock_get_tags.call_count == 2
+
+    @patch("main.get_asset_tags")
+    def test_stops_at_tag_page_limit(self, mock_get_tags):
+        mock_get_tags.return_value = {"data": [make_h1_asset_tag("111")]}
+        result = get_gc_orgid_tags()
+        assert mock_get_tags.call_count == TAG_PAGE_LIMIT
+        assert len(result) == TAG_PAGE_LIMIT - 1
+
+
+# ---------------------------------------------------------------------------
 # main — orchestration logic
 # ---------------------------------------------------------------------------
 
@@ -275,23 +378,25 @@ class TestMain:
     """Tests for main() focus on which operations are triggered for each sync scenario."""
 
     def _run(self, domains, in_scope=None, out_of_scope=None):
-        """Helper: run main() with mocked H1 assets and return the four operation mocks."""
+        """Helper: run main() with mocked H1 assets and return the operation mocks."""
         in_scope = in_scope or []
         out_of_scope = out_of_scope or []
+        self.db = make_mock_db(domains)
 
         with (
             patch("main.fetch_h1_assets", return_value=(in_scope, out_of_scope)),
+            patch("main.get_gc_orgid_tags", return_value=[]),
             patch("main.create_assets", return_value=(len(domains), 0)) as mock_create,
             patch("main.rescope_assets", return_value=(1, 0)) as mock_rescope,
             patch("main.archive_unenrolled_assets") as mock_archive,
         ):
-            main(make_mock_db(domains))
+            main(self.db)
             return mock_create, mock_rescope, mock_archive
 
     def test_creates_new_enrolled_asset_not_in_h1(self):
         domain = make_domain("new.com", "enrolled")
         mock_create, _, _ = self._run([domain])
-        mock_create.assert_called_once_with([domain])
+        mock_create.assert_called_once_with(domains=[domain], asset_tags=[], db=self.db)
 
     def test_does_not_create_asset_already_in_scope_in_h1(self):
         mock_create, _, _ = self._run(
@@ -320,7 +425,7 @@ class TestMain:
     def test_creates_new_denied_asset_not_in_h1(self):
         domain = make_domain("denied.com", "deny")
         mock_create, _, _ = self._run([domain])
-        mock_create.assert_called_once_with([domain])
+        mock_create.assert_called_once_with(domains=[domain], asset_tags=[], db=self.db)
 
     def test_does_not_create_denied_asset_already_out_of_scope_in_h1(self):
         mock_create, _, _ = self._run(
@@ -379,11 +484,13 @@ class TestMain:
     def test_proceeds_with_empty_out_of_scope_on_degraded_run(self):
         """Degraded run (out-of-scope unavailable) still creates new enrolled assets."""
         domain = make_domain("new.com", "enrolled")
+        db = make_mock_db([domain])
         with (
             patch("main.fetch_h1_assets", return_value=([], [])),
+            patch("main.get_gc_orgid_tags", return_value=[]),
             patch("main.create_assets", return_value=(1, 0)) as mock_create,
             patch("main.rescope_assets", return_value=(0, 0)),
             patch("main.archive_unenrolled_assets"),
         ):
-            main(make_mock_db([domain]))
-            mock_create.assert_called_once_with([domain])
+            main(db)
+            mock_create.assert_called_once_with(domains=[domain], asset_tags=[], db=db)

@@ -5,7 +5,7 @@ This service manages the enrollment of domains into the CVD (Coordinated Vulnera
 ## Overview
 
 - **Synchronizes enrolled domains from Tracker with HackerOne assets**
-- **Creates new assets in HackerOne for newly enrolled domains**
+- **Creates new assets in HackerOne for newly enrolled or denied domains**
 - **Archives assets in HackerOne that are no longer enrolled**
 
 ## Files
@@ -15,10 +15,11 @@ This service manages the enrollment of domains into the CVD (Coordinated Vulnera
 
 ## How It Works
 
-1. **Fetches enrolled domains** from the Tracker database using ArangoDB.
+1. **Fetches enrolled domains nightly** from the Tracker database using ArangoDB (schedule available in [`cvd-enrollment-cronjob.yaml`](k8s/apps/bases/api/cvd-enrollment-cronjob.yaml)).
 2. **Retrieves current assets** from HackerOne via API.
-3. **Creates new assets** in HackerOne for domains enrolled in CVD but not present in HackerOne.
-4. **Archives assets** in HackerOne that are no longer enrolled in CVD.
+3. **Creates new assets** in HackerOne for domains enrolled in CVD but not present in HackerOne. Includes scope, asset tags, asset description (optional), and external ID (optional).
+4. **Rescopes existing assets** in HackerOne for domains going between enrolled, deny, and not enrolled (archived if previously in scope).
+5. **Archives assets** in HackerOne that are no longer enrolled in CVD.
 
 ## Environment Variables
 

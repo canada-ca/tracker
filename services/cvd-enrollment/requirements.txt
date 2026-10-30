@@ -3,3 +3,4 @@ python-dotenv==1.2.2
 requests==2.33.0
 requests-toolbelt==1.0.0
 pytest==9.0.3
+notifications-python-client==10.0.1
