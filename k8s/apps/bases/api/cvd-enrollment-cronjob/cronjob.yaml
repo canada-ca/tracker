@@ -57,6 +57,26 @@ spec:
                     secretKeyRef:
                       name: api
                       key: H1_ORG_ID
+                - name: SERVICE_ACCOUNT_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: SERVICE_ACCOUNT_EMAIL
+                - name: CVD_ENROLLMENT_NOTIFICATION_TEMPLATE_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: CVD_ENROLLMENT_NOTIFICATION_TEMPLATE_ID
+                - name: NOTIFICATION_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_API_KEY
+                - name: NOTIFICATION_API_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_API_URL
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
