@@ -15,6 +15,7 @@ from hackerone import (
     get_scope,
     update_scope,
 )
+from notify import send_enrollment_notification
 
 load_dotenv()
 
@@ -46,6 +47,7 @@ DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
+SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")
 # value used to prevent asset tag pagination loop from going infinite
 TAG_PAGE_LIMIT = 10
 
@@ -295,6 +297,12 @@ def main(db: StandardDatabase):
             archive_unenrolled_assets(archive_list)
         except HackerOneAPIError as e:
             logger.error(f"Error(s) while archiving CVD assets: {e}")
+
+    all_enrolled_domains = [d["domain"] for d in enrolled_domains + rescoped_to_enrolled]
+    if len(all_enrolled_domains) > 0:
+        send_enrollment_notification(
+            email=SERVICE_ACCOUNT_EMAIL, enrolled_domains=all_enrolled_domains
+        )
 
 
 if __name__ == "__main__":
