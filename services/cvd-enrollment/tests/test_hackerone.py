@@ -1,335 +1,432 @@
+"""Tests for the hackerone API client, run against the in-process FakeH1Server."""
+
+import base64
+import socket
+
 import pytest
-from unittest.mock import MagicMock, patch
 
-import requests
-
+import hackerone
 from hackerone import (
     HackerOneAPIError,
-    handle_res,
+    add_scope,
+    archive_assets,
+    create_asset,
     get_all_assets,
     get_asset,
-    create_asset,
-    archive_assets,
-    get_scope,
     get_asset_tags,
-    add_scope,
+    get_scope,
     update_scope,
     _request,
 )
 
-
-def _ok_response(body: dict) -> MagicMock:
-    res = MagicMock()
-    res.ok = True
-    res.json.return_value = body
-    return res
+OK_LIST = {"data": []}
+OK_OBJECT = {"data": {}}
 
 
-def _err_response(errors: list) -> MagicMock:
-    res = MagicMock()
-    res.ok = False
-    res.json.return_value = {"errors": errors}
-    return res
+def only_request(server):
+    """Return the single request the fake received, failing if it saw any other count."""
+    assert len(server.received) == 1
+    return server.received[0]
 
 
-# ---------------------------------------------------------------------------
-# handle_res
-# ---------------------------------------------------------------------------
-
-class TestHandleRes:
-    def test_returns_json_on_ok(self):
-        assert handle_res(_ok_response({"data": []})) == {"data": []}
-
-    def test_raises_hackerone_api_error_on_non_ok(self):
-        with pytest.raises(HackerOneAPIError):
-            handle_res(_err_response([{"title": "Not found"}]))
-
-    def test_error_list_preserved_in_exception(self):
-        errors = [{"title": "Unauthorized"}]
-        with pytest.raises(HackerOneAPIError) as exc_info:
-            handle_res(_err_response(errors))
-        assert exc_info.value.args[0] == errors
+def closed_port_url() -> str:
+    """Return a localhost URL whose port nothing listens on."""
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+    return f"http://127.0.0.1:{port}/v1/test"
 
 
 # ---------------------------------------------------------------------------
-# _request — network error translation
+# Error handling: HTTP status codes, malformed bodies, connection failures
 # ---------------------------------------------------------------------------
 
-class TestRequest:
-    @patch("hackerone._session")
-    def test_translates_connection_error_to_api_error(self, mock_session):
-        mock_session.request.side_effect = requests.exceptions.ConnectionError("timeout")
-        with pytest.raises(HackerOneAPIError):
-            _request("GET", "https://api.hackerone.com/v1/test")
+ERROR_STATUSES = [
+    pytest.param(400, id="bad_request"),
+    pytest.param(401, id="unauthorized"),
+    pytest.param(403, id="forbidden"),
+    pytest.param(404, id="not_found"),
+    pytest.param(422, id="unprocessable"),
+    pytest.param(500, id="server_error"),
+    pytest.param(503, id="service_unavailable"),
+]
 
-    @patch("hackerone._session")
-    def test_translates_timeout_to_api_error(self, mock_session):
-        mock_session.request.side_effect = requests.exceptions.Timeout()
-        with pytest.raises(HackerOneAPIError):
-            _request("GET", "https://api.hackerone.com/v1/test")
+CLIENT_CALLS = [
+    pytest.param("GET", "/assets", lambda: get_all_assets(), id="get_all_assets"),
+    pytest.param("GET", "/assets", lambda: get_asset("a.ca"), id="get_asset"),
+    pytest.param("POST", "/assets", lambda: create_asset("a.ca", {}, 1), id="create_asset"),
+    pytest.param("POST", "/archive", lambda: archive_assets({"data": []}), id="archive_assets"),
+    pytest.param("GET", "/scopes", lambda: get_scope("x"), id="get_scope"),
+    pytest.param("POST", "/scopes", lambda: add_scope("x", "enrolled"), id="add_scope"),
+    pytest.param("PUT", "/scopes/s1", lambda: update_scope("x", "s1", "deny"), id="update_scope"),
+    pytest.param("GET", "/asset_tags", lambda: get_asset_tags(), id="get_asset_tags"),
+]
 
-    @patch("hackerone._session")
-    def test_returns_response_on_success(self, mock_session):
-        mock_response = MagicMock()
-        mock_session.request.return_value = mock_response
-        result = _request("GET", "https://api.hackerone.com/v1/test")
-        assert result is mock_response
+
+@pytest.mark.parametrize("status", ERROR_STATUSES)
+@pytest.mark.parametrize("method, target, call", CLIENT_CALLS)
+def test_error_status_raises_api_error_with_error_list(h1_server, method, target, call, status):
+    errors = [{"title": f"failure {status}"}]
+    h1_server.respond(method, target, status, {"errors": errors})
+    with pytest.raises(HackerOneAPIError) as exc_info:
+        call()
+    assert exc_info.value.args[0] == errors
+
+
+def test_error_response_without_errors_key_raises_empty_error_list(h1_server):
+    h1_server.respond("GET", "/assets", 500, {"message": "boom"})
+    with pytest.raises(HackerOneAPIError) as exc_info:
+        get_all_assets()
+    assert exc_info.value.args[0] == []
+
+
+@pytest.mark.parametrize(
+    "status, raw",
+    [
+        pytest.param(200, b"{not json", id="ok_status_malformed_json"),
+        pytest.param(200, b"", id="ok_status_empty_body"),
+        pytest.param(500, b"<html>Bad Gateway</html>", id="error_status_html_body"),
+    ],
+)
+def test_non_json_body_raises_decode_error(h1_server, status, raw):
+    # handle_res calls res.json() unguarded, so a ValueError (requests'
+    # JSONDecodeError) escapes instead of HackerOneAPIError.
+    h1_server.respond_raw("GET", "/assets", status, raw)
+    with pytest.raises(ValueError):
+        get_all_assets()
+
+
+def test_request_translates_connection_failure_to_api_error():
+    with pytest.raises(HackerOneAPIError):
+        _request("GET", closed_port_url())
+
+
+def test_api_function_translates_connection_failure_to_api_error(monkeypatch):
+    monkeypatch.setattr(hackerone, "ORG_ASSETS_URL", closed_port_url())
+    with pytest.raises(HackerOneAPIError):
+        get_all_assets()
+
+
+def test_request_returns_raw_response_on_success(h1_server):
+    h1_server.respond("GET", "/v1/test", 200, {"hello": "world"})
+    res = _request("GET", f"{h1_server.url}/v1/test")
+    assert res.ok
+    assert res.json() == {"hello": "world"}
+
+
+def test_request_returns_error_response_without_raising_on_http_error(h1_server):
+    h1_server.respond("GET", "/v1/test", 404, {"errors": []})
+    res = _request("GET", f"{h1_server.url}/v1/test")
+    assert res.status_code == 404
+
+
+def test_handle_res_returns_decoded_json_on_ok(h1_server):
+    h1_server.respond("GET", "/assets", 200, {"data": [{"id": "1"}]})
+    assert get_all_assets() == {"data": [{"id": "1"}]}
+
+
+# ---------------------------------------------------------------------------
+# Request headers and authentication
+# ---------------------------------------------------------------------------
+
+def test_requests_send_basic_auth_from_module_credentials(h1_server):
+    h1_server.respond("GET", "/assets", 200, OK_LIST)
+    get_all_assets()
+    expected = "Basic " + base64.b64encode(b"user:token").decode()
+    assert only_request(h1_server).authorization == expected
+
+
+def test_requests_send_json_accept_header(h1_server):
+    h1_server.respond("GET", "/assets", 200, OK_LIST)
+    get_all_assets()
+    assert only_request(h1_server).headers["Accept"] == "application/json"
+
+
+def test_requests_with_body_send_json_content_type(h1_server):
+    h1_server.respond("POST", "/archive", 200, OK_OBJECT)
+    archive_assets({"data": []})
+    assert only_request(h1_server).headers["Content-Type"] == "application/json"
 
 
 # ---------------------------------------------------------------------------
 # get_all_assets
 # ---------------------------------------------------------------------------
 
-class TestGetAllAssets:
-    @patch("hackerone._request")
-    def test_always_includes_domain_type_filter(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_all_assets()
-        url = mock_req.call_args[0][1]
-        assert "filter[asset_types][]=domain" in url
+@pytest.mark.parametrize(
+    "kwargs, expected_query",
+    [
+        pytest.param({}, {"filter[asset_types][]": ["domain"], "filter[coverage]": ["all"]}, id="defaults"),
+        pytest.param(
+            {"scope": "in_scope"},
+            {"filter[asset_types][]": ["domain"], "filter[coverage]": ["in_scope"]},
+            id="valid_scope",
+        ),
+        pytest.param(
+            {"scope": "untested", "archived": True},
+            {
+                "filter[asset_types][]": ["domain"],
+                "filter[archived]": ["true"],
+                "filter[coverage]": ["untested"],
+            },
+            id="scope_and_archived",
+        ),
+        pytest.param(
+            {"scope": "invalid_scope"},
+            {"filter[asset_types][]": ["domain"]},
+            id="unknown_scope_ignored",
+        ),
+        pytest.param(
+            {"scope": ""},
+            {"filter[asset_types][]": ["domain"]},
+            id="empty_scope_ignored",
+        ),
+        pytest.param(
+            {"archived": True},
+            {
+                "filter[asset_types][]": ["domain"],
+                "filter[archived]": ["true"],
+                "filter[coverage]": ["all"],
+            },
+            id="archived_only",
+        ),
+    ],
+)
+def test_get_all_assets_sends_expected_filters(h1_server, kwargs, expected_query):
+    h1_server.respond("GET", "/assets", 200, OK_LIST)
+    get_all_assets(**kwargs)
+    req = only_request(h1_server)
+    assert req.method == "GET"
+    assert req.path == "/v1/organizations/org/assets"
+    assert req.query == expected_query
+    assert req.body is None
 
-    @patch("hackerone._request")
-    def test_includes_scope_filter_when_valid(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_all_assets(scope="in_scope")
-        url = mock_req.call_args[0][1]
-        assert "filter[coverage]=in_scope" in url
 
-    @patch("hackerone._request")
-    def test_ignores_unknown_scope(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_all_assets(scope="invalid_scope")
-        url = mock_req.call_args[0][1]
-        assert "filter[coverage]" not in url
+def test_get_all_assets_omits_archived_filter_by_default(h1_server):
+    h1_server.respond("GET", "/assets", 200, OK_LIST)
+    get_all_assets()
+    assert "filter[archived]" not in only_request(h1_server).query
 
-    @patch("hackerone._request")
-    def test_includes_archived_filter(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_all_assets(archived=True)
-        url = mock_req.call_args[0][1]
-        assert "filter[archived]=true" in url
 
-    @patch("hackerone._request")
-    def test_omits_archived_filter_by_default(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_all_assets()
-        url = mock_req.call_args[0][1]
-        assert "filter[archived]" not in url
+def test_get_all_assets_returns_response_body(h1_server):
+    body = {"data": [{"id": "a1"}, {"id": "a2"}]}
+    h1_server.respond("GET", "/assets", 200, body)
+    assert get_all_assets() == body
 
-    @patch("hackerone._request")
-    def test_uses_get_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_all_assets()
-        assert mock_req.call_args[0][0] == "GET"
+
+# ---------------------------------------------------------------------------
+# get_asset
+# ---------------------------------------------------------------------------
+
+def test_get_asset_filters_by_identifier_and_domain_type(h1_server):
+    h1_server.respond("GET", "/assets", 200, {"data": [{"id": "a1"}]})
+    result = get_asset("example.ca")
+    req = only_request(h1_server)
+    assert req.method == "GET"
+    assert req.query == {"filter[identifier]": ["example.ca"], "filter[asset_types][]": ["domain"]}
+    assert result == {"data": [{"id": "a1"}]}
 
 
 # ---------------------------------------------------------------------------
 # create_asset
 # ---------------------------------------------------------------------------
 
-class TestCreateAsset:
-    @patch("hackerone._request")
-    def test_uses_post_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={}, asset_tag_id=7)
-        assert mock_req.call_args[0][0] == "POST"
-
-    @patch("hackerone._request")
-    def test_sets_identifier_and_asset_type(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={}, asset_tag_id=7)
-        payload = mock_req.call_args[1]["json"]
-        attrs = payload["data"]["attributes"]
-        assert attrs["identifier"] == "example.com"
-        assert attrs["asset_type"] == "domain"
-
-    @patch("hackerone._request")
-    def test_sets_max_severity_to_critical(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={}, asset_tag_id=7)
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["max_severity"] == "critical"
-
-    @patch("hackerone._request")
-    def test_spreads_options_into_attributes(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        create_asset(
-            domain="example.com",
-            options={"description": "test", "maxSeverity": "HIGH"},
-            asset_tag_id=7,
-        )
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["description"] == "test"
-        assert attrs["maxSeverity"] == "HIGH"
-
-    @patch("hackerone._request")
-    def test_includes_asset_tag_relationship(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        create_asset(domain="example.com", options={}, asset_tag_id=7)
-        payload = mock_req.call_args[1]["json"]
-        assert payload["data"]["relationships"]["asset_tags"]["data"] == [{"id": 7}]
-
-    @patch("hackerone._request")
-    def test_omits_none_option_values(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        create_asset(
-            domain="example.com",
-            options={"description": None, "maxSeverity": "HIGH"},
-            asset_tag_id=7,
-        )
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert "description" not in attrs
-        assert attrs["maxSeverity"] == "HIGH"
+def _create_asset_body(h1_server, options, asset_tag_id=7) -> dict:
+    """Call create_asset against the fake and return the JSON body it received."""
+    h1_server.respond("POST", "/assets", 201, OK_OBJECT)
+    create_asset(domain="example.com", options=options, asset_tag_id=asset_tag_id)
+    req = only_request(h1_server)
+    assert req.method == "POST"
+    assert req.path == "/v1/organizations/org/assets"
+    return req.body
 
 
-# ---------------------------------------------------------------------------
-# add_scope
-# ---------------------------------------------------------------------------
+def test_create_asset_sends_full_payload_for_empty_options(h1_server):
+    assert _create_asset_body(h1_server, {}) == {
+        "data": {
+            "type": "asset",
+            "attributes": {
+                "asset_type": "domain",
+                "identifier": "example.com",
+                "max_severity": "critical",
+            },
+            "relationships": {"asset_tags": {"data": [{"id": 7}]}},
+        }
+    }
 
-class TestAddScope:
-    @patch("hackerone._request")
-    def test_eligible_for_submission_true_when_enrolled(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_id="asset-123", enrollment_status="enrolled")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["eligible_for_submission"] is True
 
-    @patch("hackerone._request")
-    def test_eligible_for_submission_false_when_denied(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_id="asset-123", enrollment_status="deny")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["eligible_for_submission"] is False
+@pytest.mark.parametrize(
+    "options, expected_extra, absent",
+    [
+        pytest.param(
+            {"description": "test", "maxSeverity": "HIGH"},
+            {"description": "test", "maxSeverity": "HIGH"},
+            [],
+            id="options_spread_into_attributes",
+        ),
+        pytest.param(
+            {"description": None, "maxSeverity": "HIGH"},
+            {"maxSeverity": "HIGH"},
+            ["description"],
+            id="none_values_omitted",
+        ),
+        pytest.param({"description": None}, {}, ["description"], id="all_none_omitted"),
+        pytest.param(
+            {"max_severity": "low"},
+            {"max_severity": "low"},
+            [],
+            id="option_overrides_default_max_severity",
+        ),
+        pytest.param(
+            {"description": ""},
+            {"description": ""},
+            [],
+            id="empty_string_is_kept",
+        ),
+    ],
+)
+def test_create_asset_option_handling(h1_server, options, expected_extra, absent):
+    attrs = _create_asset_body(h1_server, options)["data"]["attributes"]
+    for key, value in expected_extra.items():
+        assert attrs[key] == value
+    for key in absent:
+        assert key not in attrs
 
-    @patch("hackerone._request")
-    def test_eligible_for_bounty_always_false(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_id="asset-123", enrollment_status="enrolled")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["eligible_for_bounty"] is False
 
-    @patch("hackerone._request")
-    def test_asset_id_in_url(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_id="asset-123", enrollment_status="enrolled")
-        url = mock_req.call_args[0][1]
-        assert "asset-123" in url
+def test_create_asset_uses_given_asset_tag_id(h1_server):
+    body = _create_asset_body(h1_server, {}, asset_tag_id=42)
+    assert body["data"]["relationships"]["asset_tags"]["data"] == [{"id": 42}]
 
-    @patch("hackerone._request")
-    def test_includes_program_relationship(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_id="asset-123", enrollment_status="enrolled")
-        relationships = mock_req.call_args[1]["json"]["data"]["relationships"]
-        assert relationships["programs"]["data"][0]["type"] == "program"
 
-    @patch("hackerone._request")
-    def test_uses_post_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        add_scope(asset_id="asset-123", enrollment_status="enrolled")
-        assert mock_req.call_args[0][0] == "POST"
+def test_create_asset_returns_response_body(h1_server):
+    h1_server.respond("POST", "/assets", 201, {"data": {"id": "new"}})
+    assert create_asset("example.com", {}, 7) == {"data": {"id": "new"}}
+
+
+def test_create_asset_is_not_retried_on_server_error(h1_server):
+    h1_server.respond("POST", "/assets", 500, {"errors": [{"title": "x"}]})
+    with pytest.raises(HackerOneAPIError):
+        create_asset("example.com", {}, 7)
+    assert len(h1_server.calls("POST", "/assets")) == 1
 
 
 # ---------------------------------------------------------------------------
-# update_scope
+# add_scope / update_scope
 # ---------------------------------------------------------------------------
 
-class TestUpdateScope:
-    @patch("hackerone._request")
-    def test_uses_put_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_id="asset-123", scope_id="s-1", enrollment_status="enrolled")
-        assert mock_req.call_args[0][0] == "PUT"
+ENROLLMENT_ELIGIBILITY = [
+    pytest.param("enrolled", True, id="enrolled_is_eligible"),
+    pytest.param("deny", False, id="deny_is_not_eligible"),
+    pytest.param("pending", False, id="other_status_is_not_eligible"),
+    pytest.param("", False, id="empty_status_is_not_eligible"),
+]
 
-    @patch("hackerone._request")
-    def test_asset_id_and_scope_id_in_url(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_id="asset-123", scope_id="scope-abc", enrollment_status="deny")
-        url = mock_req.call_args[0][1]
-        assert "asset-123" in url
-        assert "scope-abc" in url
 
-    @patch("hackerone._request")
-    def test_eligible_for_submission_true_when_enrolled(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_id="asset-123", scope_id="s-1", enrollment_status="enrolled")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["eligible_for_submission"] is True
+@pytest.mark.parametrize("status, eligible", ENROLLMENT_ELIGIBILITY)
+def test_add_scope_attributes_follow_enrollment_status(h1_server, status, eligible):
+    h1_server.respond("POST", "/scopes", 201, OK_OBJECT)
+    add_scope(asset_id="asset-123", enrollment_status=status)
+    req = only_request(h1_server)
+    assert req.method == "POST"
+    assert req.path == "/v1/organizations/org/assets/asset-123/scopes"
+    assert req.body["data"]["type"] == "structured-scope"
+    assert req.body["data"]["attributes"] == {
+        "eligible_for_bounty": False,
+        "eligible_for_submission": eligible,
+    }
 
-    @patch("hackerone._request")
-    def test_eligible_for_submission_false_when_denied(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        update_scope(asset_id="asset-123", scope_id="s-1", enrollment_status="deny")
-        attrs = mock_req.call_args[1]["json"]["data"]["attributes"]
-        assert attrs["eligible_for_submission"] is False
+
+def test_add_scope_links_configured_program(h1_server):
+    h1_server.respond("POST", "/scopes", 201, OK_OBJECT)
+    add_scope(asset_id="asset-123", enrollment_status="enrolled")
+    programs = only_request(h1_server).body["data"]["relationships"]["programs"]["data"]
+    assert programs == [{"id": "prog", "type": "program"}]
+
+
+def test_add_scope_returns_response_body(h1_server):
+    h1_server.respond("POST", "/scopes", 201, {"data": {"id": "s9"}})
+    assert add_scope("asset-123", "enrolled") == {"data": {"id": "s9"}}
+
+
+@pytest.mark.parametrize("status, eligible", ENROLLMENT_ELIGIBILITY)
+def test_update_scope_attributes_follow_enrollment_status(h1_server, status, eligible):
+    h1_server.respond("PUT", "/scopes/scope-abc", 200, OK_OBJECT)
+    update_scope(asset_id="asset-123", scope_id="scope-abc", enrollment_status=status)
+    req = only_request(h1_server)
+    assert req.method == "PUT"
+    assert req.path == "/v1/organizations/org/assets/asset-123/scopes/scope-abc"
+    assert req.body == {
+        "data": {
+            "type": "structured-scope",
+            "attributes": {
+                "eligible_for_bounty": False,
+                "eligible_for_submission": eligible,
+            },
+        }
+    }
+
+
+def test_update_scope_returns_response_body(h1_server):
+    h1_server.respond("PUT", "/scopes/s1", 200, {"data": {"id": "s1"}})
+    assert update_scope("asset-123", "s1", "deny") == {"data": {"id": "s1"}}
 
 
 # ---------------------------------------------------------------------------
 # get_scope
 # ---------------------------------------------------------------------------
 
-class TestGetScope:
-    @patch("hackerone._request")
-    def test_asset_id_in_url(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_scope("asset-123")
-        url = mock_req.call_args[0][1]
-        assert "asset-123" in url
-
-    @patch("hackerone._request")
-    def test_uses_get_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_scope("asset-123")
-        assert mock_req.call_args[0][0] == "GET"
+def test_get_scope_requests_asset_scopes_and_returns_body(h1_server):
+    body = {"data": [{"id": "s1"}]}
+    h1_server.respond("GET", "/scopes", 200, body)
+    assert get_scope("asset-123") == body
+    req = only_request(h1_server)
+    assert req.method == "GET"
+    assert req.path == "/v1/organizations/org/assets/asset-123/scopes"
+    assert req.body is None
 
 
 # ---------------------------------------------------------------------------
 # archive_assets
 # ---------------------------------------------------------------------------
 
-class TestArchiveAssets:
-    @patch("hackerone._request")
-    def test_uses_post_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        archive_assets(data={"data": []})
-        assert mock_req.call_args[0][0] == "POST"
-
-    @patch("hackerone._request")
-    def test_url_contains_archive_path(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        archive_assets(data={"data": []})
-        url = mock_req.call_args[0][1]
-        assert "archive" in url
-
-    @patch("hackerone._request")
-    def test_passes_data_as_json_body(self, mock_req):
-        mock_req.return_value = _ok_response({"data": {}})
-        payload = {"data": [{"id": "asset-1"}]}
-        archive_assets(data=payload)
-        assert mock_req.call_args[1]["json"] == payload
+@pytest.mark.parametrize(
+    "payload",
+    [
+        pytest.param({"data": [{"id": "asset-1"}]}, id="single_asset"),
+        pytest.param({"data": [{"id": "asset-1"}, {"id": "asset-2"}]}, id="multiple_assets"),
+        pytest.param({"data": []}, id="empty_list"),
+    ],
+)
+def test_archive_assets_posts_payload_unchanged(h1_server, payload):
+    h1_server.respond("POST", "/archive", 200, OK_OBJECT)
+    archive_assets(data=payload)
+    req = only_request(h1_server)
+    assert req.method == "POST"
+    assert req.path == "/v1/organizations/org/assets/archive"
+    assert req.body == payload
 
 
 # ---------------------------------------------------------------------------
 # get_asset_tags
 # ---------------------------------------------------------------------------
 
-class TestGetAssetTags:
-    @patch("hackerone._request")
-    def test_uses_get_method(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_asset_tags()
-        assert mock_req.call_args[0][0] == "GET"
+@pytest.mark.parametrize(
+    "kwargs, page_number, page_size",
+    [
+        pytest.param({}, "1", "100", id="defaults"),
+        pytest.param({"page_number": 3, "page_size": 50}, "3", "50", id="explicit_pagination"),
+        pytest.param({"page_number": 1, "page_size": 1}, "1", "1", id="minimum_page"),
+    ],
+)
+def test_get_asset_tags_sends_pagination_params(h1_server, kwargs, page_number, page_size):
+    h1_server.respond("GET", "/asset_tags", 200, OK_LIST)
+    get_asset_tags(**kwargs)
+    req = only_request(h1_server)
+    assert req.method == "GET"
+    assert req.path == "/v1/organizations/org/asset_tags"
+    assert req.query == {"page[size]": [page_size], "page[number]": [page_number]}
 
-    @patch("hackerone._request")
-    def test_url_contains_asset_tags_path(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_asset_tags()
-        url = mock_req.call_args[0][1]
-        assert "asset_tags" in url
 
-    @patch("hackerone._request")
-    def test_includes_pagination_params(self, mock_req):
-        mock_req.return_value = _ok_response({"data": []})
-        get_asset_tags(page_number=3, page_size=50)
-        url = mock_req.call_args[0][1]
-        assert "page[size]=50" in url
-        assert "page[number]=3" in url
+def test_get_asset_tags_returns_response_body(h1_server):
+    body = {"data": [{"id": 1, "attributes": {"name": "cvd"}}]}
+    h1_server.respond("GET", "/asset_tags", 200, body)
+    assert get_asset_tags() == body
