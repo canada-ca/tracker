@@ -35,6 +35,32 @@ Run the service:
 python main.py
 ```
 
+## Tests
+
+Unit tests run by default:
+
+```bash
+python -m pytest tests/ -v
+```
+
+The integration tests in `tests/test_db.py` need a real ArangoDB. Start one with Docker:
+
+```bash
+docker run -d --name cvd-test-arangodb -p 8529:8529 -e ARANGO_ROOT_PASSWORD=test arangodb/arangodb:3.12.1
+```
+
+Then set the connection variables and select the `integration` marker:
+
+```bash
+export TEST_ARANGO_URL=http://localhost:8529
+export TEST_ARANGO_USER=root
+export TEST_ARANGO_PASS=test
+python -m pytest tests/ -v -m integration
+```
+
+The tests create and drop a throwaway database. Remove the container when finished with `docker rm -f cvd-test-arangodb`.
+Cloud Build runs the same tests against an `arangodb/arangodb:3.12.1` container.
+
 ## Logging
 
 - DEBUG/INFO logs to stdout
