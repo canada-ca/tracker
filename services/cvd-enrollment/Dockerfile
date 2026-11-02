@@ -30,7 +30,7 @@ WORKDIR /cvd-enrollment
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY hackerone.py main.py ./
+COPY *.py ./
 
 RUN adduser -D enrollment
 USER enrollment

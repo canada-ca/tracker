@@ -1,317 +1,113 @@
+"""CVD enrollment service entrypoint: sync enrolled/denied domains into HackerOne."""
+
 import logging
-import os
 import sys
 
 from arango import ArangoClient
 from arango.database import StandardDatabase
 from dotenv import load_dotenv
-from hackerone import (
-    HackerOneAPIError,
-    add_scope,
-    archive_assets,
-    create_asset,
-    get_all_assets,
-    get_asset_tags,
-    get_scope,
-    update_scope,
-)
+
+from config import Config, ConfigError
+from db import fetch_domain_owners, fetch_domains
+from hackerone import HackerOneAPIError, get_all_assets
+from logging_setup import configure_logging
 from notify import send_enrollment_notification
-
-load_dotenv()
-
-LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
-
-logger_level = logging._nameToLevel.get(LOGGER_LEVEL, None)
-if not isinstance(logger_level, int):
-    print(f"Invalid logger level: {LOGGER_LEVEL}")
-    sys.exit(1)
-
-# Split logging to stdout and stderr
-# DEBUG and INFO to stdout
-# WARNING and above to stderr
-h1 = logging.StreamHandler(sys.stdout)
-h1.setLevel(logging.DEBUG)
-h1.addFilter(lambda record: record.levelno <= logging.INFO)
-h2 = logging.StreamHandler(sys.stderr)
-h2.setLevel(logging.WARNING)
-
-logging.basicConfig(
-    level=logger_level,
-    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
-    handlers=[h1, h2],
+from sync import (
+    archive,
+    asset_id_by_identifier,
+    compute_changes,
+    create_assets,
+    rescope_assets,
 )
+from tags import get_gc_orgid_tags
+
 logger = logging.getLogger(__name__)
-
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv("DB_NAME")
-DB_URL = os.getenv("DB_URL")
-
-SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")
-# value used to prevent asset tag pagination loop from going infinite
-TAG_PAGE_LIMIT = 10
-
-
-def get_asset_identifiers(assets: list[dict]):
-    return [a.get("attributes", {}).get("identifier", None) for a in assets]
-
-
-def get_domain_names(domains: list[dict]):
-    return [d.get("domain", None) for d in domains]
-
-
-def fetch_domain_owner_org_external_id(db: StandardDatabase, domain_id: str):
-    cursor = db.aql.execute(
-        """
-        FOR v, e IN 1..1 INBOUND @domain_id ownership
-            LIMIT 1
-            RETURN v.externalId
-        """,
-        bind_vars={"domain_id": domain_id},
-    )
-    if cursor.count() == 0:
-        return None
-    return cursor.next()
-
-
-def fetch_domains(db: StandardDatabase) -> tuple[list[dict], list[dict], list[dict]]:
-    cursor = db.aql.execute(
-        """
-        FOR d IN domains
-            FILTER d.archived != true
-            FILTER d.rcode != "NXDOMAIN"
-            RETURN d
-        """
-    )
-    all_domains = list(cursor)
-
-    enrolled = [
-        d
-        for d in all_domains
-        if isinstance(d.get("cvdEnrollment"), dict)
-        and d.get("cvdEnrollment", {}).get("status") == "enrolled"
-    ]
-    denied = [
-        d
-        for d in all_domains
-        if isinstance(d.get("cvdEnrollment"), dict)
-        and d.get("cvdEnrollment", {}).get("status") == "deny"
-    ]
-    return all_domains, enrolled, denied
 
 
 def fetch_h1_assets() -> tuple[list[dict], list[dict]]:
-    # Raises HackerOneAPIError on failure — caller should abort if in_scope is unavailable.
-    in_scope = get_all_assets(scope="in_scope").get("data", [])
+    """Return (in_scope, out_of_scope) assets.
 
-    # A degraded run without out-of-scope data is preferable to aborting entirely.
-    # Rescope detection (deny → enrolled) will be skipped for this run.
+    Raises HackerOneAPIError if in-scope assets are unavailable. A failed
+    out-of-scope fetch degrades to an empty list, skipping deny -> enrolled detection.
+    """
+    in_scope = get_all_assets(scope="in_scope").get("data", [])
     try:
         out_of_scope = get_all_assets(scope="out_of_scope").get("data", [])
     except HackerOneAPIError as e:
-        logger.warning(
-            f"Could not fetch out-of-scope assets, rescope detection will be skipped: {e}"
-        )
+        logger.warning(f"Could not fetch out-of-scope assets, rescope detection will be skipped: {e}")
         out_of_scope = []
-
     return in_scope, out_of_scope
 
 
-def create_assets(
-    domains: list[dict], asset_tags: list[dict], db: StandardDatabase
-) -> tuple[int, int]:
-    successes, failures = 0, 0
-    for a in domains:
-        domain = a["domain"]
-        enrollment_options = a.get("cvdEnrollment", {})
-
-        # get asset tag
-        gc_org_id = fetch_domain_owner_org_external_id(db=db, domain_id=a["_id"])
-        asset_tag_id = int(next(tag["id"] for tag in asset_tags if tag["name"] == gc_org_id))
-
-        try:
-            res = create_asset(domain=domain, options=enrollment_options, asset_tag_id=asset_tag_id)
-            logger.info(res)
-            asset_id = res.get("data", {}).get("id")
-            res = add_scope(
-                asset_id=asset_id,
-                enrollment_status=enrollment_options.get("status"),
-            )
-            logger.info(res)
-            successes += 1
-        except HackerOneAPIError as e:
-            logger.error(f"Failed to create asset {domain}: {e}")
-            failures += 1
-    return successes, failures
-
-
-def rescope_assets(
-    domain_names: list[str], enrollment_status: str, asset_id_map: dict[str, str]
-) -> tuple[int, int]:
-    successes, failures = 0, 0
-    for domain in domain_names:
-        asset_id = asset_id_map.get(domain)
-        if not asset_id:
-            logger.error(f"No asset ID found for {domain}, skipping rescope.")
-            failures += 1
-            continue
-        try:
-            scope_data = get_scope(asset_id).get("data", [])
-            if not scope_data:
-                logger.error(f"No existing scope entry found for {domain}, skipping rescope.")
-                failures += 1
-                continue
-            scope_id = scope_data[0].get("id", "")
-            res = update_scope(
-                asset_id=asset_id,
-                scope_id=scope_id,
-                enrollment_status=enrollment_status,
-            )
-            logger.info(res)
-            successes += 1
-        except HackerOneAPIError as e:
-            logger.error(f"Failed to update scope for {domain}: {e}")
-            failures += 1
-    return successes, failures
-
-
-def archive_unenrolled_assets(assets: list[dict]):
-    res = archive_assets(data={"data": assets})
-    logger.info(res)
-
-
-def tag_is_gc_org_id(asset_tag):
-    return (
-        asset_tag["relationships"]["asset_tag_category"]["data"]["attributes"]["name"]
-        == "GC Org ID"
-    )
-
-
-def get_gc_orgid_tags():
-    current_page = 1
-    gc_org_id_tags = []
-
-    while True:
-        res = get_asset_tags(page_number=current_page, page_size=100)
-        if len(res.get("data", [])) == 0 or current_page == TAG_PAGE_LIMIT:
-            break
-        gc_org_id_tags += [tag for tag in res["data"] if tag_is_gc_org_id(tag)]
-        current_page += 1
-
-    return [{"name": tag["attributes"]["name"], "id": tag["id"]} for tag in gc_org_id_tags]
-
-
-def main(db: StandardDatabase):
+def _create_new_assets(db: StandardDatabase, domains: list[dict], label: str) -> None:
+    if not domains:
+        return
+    logger.info(f"Creating {len(domains)} new {label} assets.")
     try:
-        all_domains, enrolled_domains, denied_domains = fetch_domains(db)
+        tags = get_gc_orgid_tags()
+    except HackerOneAPIError as e:
+        logger.error(f"Could not fetch asset tags, {label} creations will fail: {e}")
+        tags = []
+    owners = fetch_domain_owners(db, [d["_id"] for d in domains])
+    _, failures = create_assets(domains, tags, owners)
+    if failures:
+        logger.warning(f"{failures}/{len(domains)} {label} asset creations failed.")
+
+
+def _rescope(names: tuple[str, ...], status: str, asset_id_map: dict[str, str]) -> None:
+    if not names:
+        return
+    logger.info(f"Rescoping {len(names)} assets to {status}.")
+    _, failures = rescope_assets(names, status, asset_id_map)
+    if failures:
+        logger.warning(f"{failures}/{len(names)} rescopes to {status} failed.")
+
+
+def main(db: StandardDatabase, config: Config) -> None:
+    """Run one sync pass: fetch, compute changes, apply them, notify."""
+    try:
+        all_domains, enrolled, denied = fetch_domains(db)
     except Exception as e:
         logger.error(f"Error(s) while fetching domains from DB: {e}")
         return
-
-    logger.info(f"Found {len(enrolled_domains)} enrolled domains.")
+    logger.info(f"Found {len(enrolled)} enrolled domains.")
 
     try:
-        cvd_assets, cvd_assets_out_of_scope = fetch_h1_assets()
+        in_scope, out_of_scope = fetch_h1_assets()
     except HackerOneAPIError as e:
         logger.error(f"Error(s) while fetching H1 assets: {e}")
         return
 
-    # pre-compute sets for O(1) lookups
-    cvd_identifiers = set(get_asset_identifiers(cvd_assets))
-    out_of_scope_identifiers = set(get_asset_identifiers(cvd_assets_out_of_scope))
-    asset_id_map = {
-        a.get("attributes", {}).get("identifier"): a["id"]
-        for a in cvd_assets + cvd_assets_out_of_scope
-        if a.get("attributes", {"identifier": ""})["identifier"]
-    }
-    all_domain_names = set(get_domain_names(all_domains))
-    enrolled_domain_names = set(get_domain_names(enrolled_domains))
-    denied_domain_names = set(get_domain_names(denied_domains))
-    org_id_asset_tags = get_gc_orgid_tags()
+    changes = compute_changes(all_domains, enrolled, denied, in_scope, out_of_scope)
+    asset_id_map = asset_id_by_identifier(in_scope + out_of_scope)
 
-    # enrolled domains not yet in H1
-    new_assets = [
-        d
-        for d in enrolled_domains
-        if d.get("domain") not in cvd_identifiers
-        and d.get("domain") not in out_of_scope_identifiers
-    ]
-    if new_assets:
-        logger.info(f"Creating {len(new_assets)} new enrolled assets.")
-        _, fail = create_assets(domains=new_assets, asset_tags=org_id_asset_tags, db=db)
-        if fail:
-            logger.warning(f"{fail}/{len(new_assets)} enrolled asset creations failed.")
+    _create_new_assets(db, list(changes.new_enrolled), "enrolled")
+    _rescope(changes.rescope_to_enrolled, "enrolled", asset_id_map)
+    _create_new_assets(db, list(changes.new_denied), "out-of-scope")
+    _rescope(changes.rescope_to_denied, "deny", asset_id_map)
 
-    # TODO handle re-adding archived assets: The hackerone API currently does not support this function. Revisit once possible
+    if changes.to_archive:
+        logger.info(f"Archiving {len(changes.to_archive)} assets from CVD program.")
+        archive(changes.to_archive)
 
-    # deny → enrolled: already exist in H1 as out-of-scope
-    rescoped_to_enrolled = [
-        d["domain"] for d in enrolled_domains if d["domain"] in out_of_scope_identifiers
-    ]
-    if rescoped_to_enrolled:
-        logger.info(f"Rescoping {len(rescoped_to_enrolled)} assets to enrolled.")
-        _, fail = rescope_assets(rescoped_to_enrolled, "enrolled", asset_id_map)
-        if fail:
-            logger.warning(f"{fail}/{len(rescoped_to_enrolled)} rescopes to enrolled failed.")
-
-    # denied domains not yet in H1
-    new_unscoped_assets = [
-        d
-        for d in denied_domains
-        if d.get("domain") not in cvd_identifiers
-        and d.get("domain") not in out_of_scope_identifiers
-    ]
-    if new_unscoped_assets:
-        logger.info(f"Creating {len(new_unscoped_assets)} new out-of-scope assets.")
-        _, fail = create_assets(domains=new_unscoped_assets, asset_tags=org_id_asset_tags, db=db)
-        if fail:
-            logger.warning(
-                f"{fail}/{len(new_unscoped_assets)} out-of-scope asset creations failed."
-            )
-
-    # enrolled → deny: currently in-scope in H1
-    rescoped_to_denied = [
-        identifier
-        for a in cvd_assets
-        if (identifier := a.get("attributes", {}).get("identifier"))
-        and identifier in denied_domain_names
-    ]
-    if rescoped_to_denied:
-        logger.info(f"Rescoping {len(rescoped_to_denied)} assets to out-of-scope.")
-        _, fail = rescope_assets(rescoped_to_denied, "deny", asset_id_map)
-        if fail:
-            logger.warning(f"{fail}/{len(rescoped_to_denied)} rescopes to out-of-scope failed.")
-
-    # archive in-scope H1 assets that are no longer enrolled or denied
-    archive_list = [
-        a
-        for a in cvd_assets
-        if (identifier := a.get("attributes", {}).get("identifier"))
-        and identifier not in enrolled_domain_names
-        and identifier not in denied_domain_names
-        and identifier in all_domain_names
-    ]
-    if archive_list:
-        logger.info(f"Archiving {len(archive_list)} assets from CVD program.")
-        try:
-            archive_unenrolled_assets(archive_list)
-        except HackerOneAPIError as e:
-            logger.error(f"Error(s) while archiving CVD assets: {e}")
-
-    # send email to service account of all newly enrolled domains and assets rescoped to be enrolled
-    new_enrollment_domains = get_domain_names(new_assets) + rescoped_to_enrolled
-    if len(new_enrollment_domains) > 0:
+    announced = changes.newly_enrolled_names
+    if announced:
         send_enrollment_notification(
-            email=SERVICE_ACCOUNT_EMAIL, enrolled_domains=new_enrollment_domains
+            email=config.service_account_email, enrolled_domains=announced
         )
 
 
 if __name__ == "__main__":
+    load_dotenv()
+    try:
+        config = Config.from_env()
+    except ConfigError as e:
+        print(e, file=sys.stderr)
+        sys.exit(1)
+    configure_logging(config.log_level)
+
     logger.info("CVD Enrollment service started")
-
-    client = ArangoClient(hosts=DB_URL)
-    db = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
-
-    main(db=db)
-
+    client = ArangoClient(hosts=config.db_url)
+    database = client.db(config.db_name, username=config.db_user, password=config.db_pass)
+    main(db=database, config=config)
     logger.info("CVD Enrollment service shutting down...")
