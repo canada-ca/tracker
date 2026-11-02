@@ -23,7 +23,7 @@ class Changes:
 
     new_enrolled / new_denied: domain documents not yet in H1.
     rescope_to_enrolled / rescope_to_denied: identifiers of existing assets to rescope.
-    to_archive: in-scope H1 assets whose domain is neither enrolled nor denied.
+    to_archive: in-scope H1 assets whose domain is in the DB but neither enrolled nor denied.
     """
 
     new_enrolled: tuple[dict, ...]

@@ -9,7 +9,9 @@ from requests import Response
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+# Production HackerOne API; used when H1_BASE_URL is not set.
 DEFAULT_BASE_URL = "https://api.hackerone.com/v1"
+# Headers sent with every request.
 HEADERS = {
     "Accept": "application/json",
     "Content-Type": "application/json",
@@ -48,7 +50,11 @@ class HackerOneAPIError(Exception):
 
 
 class EnrollmentOptions(TypedDict):
-    """Optional per-domain asset attributes taken from a domain's cvdEnrollment document."""
+    """Optional per-domain asset attributes taken from a domain's cvdEnrollment document.
+
+    `create_asset` copies every key whose value is not None into the asset attributes.
+    """
+
     description: str | None
     max_severity: str | None
     confidentiality_requirement: str | None
@@ -69,6 +75,7 @@ _session.mount("https://", HTTPAdapter(max_retries=_retry))
 
 
 def _request(settings: HackerOneSettings, method: str, url: str, **kwargs) -> Response:
+    """Send an authenticated request; raise HackerOneAPIError when the connection fails."""
     try:
         return _session.request(
             method, url, auth=(settings.username, settings.token), headers=HEADERS, **kwargs
@@ -78,7 +85,11 @@ def _request(settings: HackerOneSettings, method: str, url: str, **kwargs) -> Re
 
 
 def handle_res(res: Response) -> dict:
-    """Return the decoded JSON body of `res`; raise HackerOneAPIError with its error list on a non-2xx status."""
+    """Return the decoded JSON body of `res`.
+
+    Raises HackerOneAPIError, carrying the response's `errors` list, on a non-2xx status.
+    A body that is not valid JSON raises ValueError instead.
+    """
     if not res.ok:
         errors = res.json().get("errors", [])
         raise HackerOneAPIError(errors)
@@ -86,10 +97,15 @@ def handle_res(res: Response) -> dict:
 
 
 def get_all_assets(settings: HackerOneSettings, scope: str = "all", archived: bool = False) -> dict:
-    """List organization domain assets, filtered by coverage `scope` and optionally archived state."""
+    """List organization domain assets.
+
+    `scope` filters by coverage and must be one of "all", "new", "in_scope",
+    "out_of_scope" or "untested"; any other value adds no coverage filter.
+    `archived=True` adds the archived filter.
+    """
     scope_enums = ["all", "new", "in_scope", "out_of_scope", "untested"]
-    # TODO add filters to make the most correct list possible
-    filters = "filter[asset_types][]=domain"  # &filter[state][]=confirmed,unconfirmed"
+    # Only domain assets are listed. No filter on asset state is applied.
+    filters = "filter[asset_types][]=domain"
     if archived:
         filters += "&filter[archived]=true"
     if scope in scope_enums:

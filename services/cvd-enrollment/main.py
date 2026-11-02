@@ -28,7 +28,8 @@ def fetch_h1_assets(settings: HackerOneSettings) -> tuple[list[dict], list[dict]
     """Return (in_scope, out_of_scope) assets.
 
     Raises HackerOneAPIError if in-scope assets are unavailable. A failed
-    out-of-scope fetch degrades to an empty list, skipping deny -> enrolled detection.
+    out-of-scope fetch degrades to an empty list. Deny to enrolled rescoping is then
+    skipped, and domains whose assets are out of scope count as not yet in HackerOne.
     """
     in_scope = get_all_assets(settings, scope="in_scope").get("data", [])
     try:
