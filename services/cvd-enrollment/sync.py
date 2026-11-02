@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from hackerone import (
     HackerOneAPIError,
     add_scope,
+    HackerOneSettings,
     archive_assets,
     create_asset,
     get_scope,
@@ -93,7 +94,10 @@ def _attempt(failure_message: str, action: Callable[[], dict]) -> bool:
 
 
 def create_assets(
-    domains: list[dict], asset_tags: list[dict], owners: dict[str, str]
+    settings: HackerOneSettings,
+    domains: list[dict],
+    asset_tags: list[dict],
+    owners: dict[str, str],
 ) -> tuple[int, int]:
     """Create H1 assets with scope for `domains`; return (successes, failures).
 
@@ -118,9 +122,10 @@ def create_assets(
         options = domain_doc.get("cvdEnrollment", {})
 
         def create_with_scope(domain=domain, options=options, tag_id=tag_id) -> dict:
-            created = create_asset(domain=domain, options=options, asset_tag_id=int(tag_id))
+            created = create_asset(settings, domain=domain, options=options, asset_tag_id=int(tag_id))
             logger.info(created)
             return add_scope(
+                settings,
                 asset_id=created.get("data", {}).get("id"),
                 enrollment_status=options.get("status"),
             )
@@ -133,6 +138,7 @@ def create_assets(
 
 
 def rescope_assets(
+    settings: HackerOneSettings,
     domain_names: list[str] | tuple[str, ...],
     enrollment_status: str,
     asset_id_map: dict[str, str],
@@ -145,10 +151,11 @@ def rescope_assets(
             asset_id = asset_id_map.get(domain)
             if not asset_id:
                 raise HackerOneAPIError(f"No asset ID found for {domain}")
-            scope_data = get_scope(asset_id).get("data", [])
+            scope_data = get_scope(settings, asset_id).get("data", [])
             if not scope_data:
                 raise HackerOneAPIError(f"No existing scope entry found for {domain}")
             return update_scope(
+                settings,
                 asset_id=asset_id,
                 scope_id=scope_data[0].get("id", ""),
                 enrollment_status=enrollment_status,
@@ -161,8 +168,8 @@ def rescope_assets(
     return successes, failures
 
 
-def archive(assets: list[dict] | tuple[dict, ...]) -> bool:
+def archive(settings: HackerOneSettings, assets: list[dict] | tuple[dict, ...]) -> bool:
     """Archive `assets` in H1; return True on success."""
     return _attempt(
-        "Error(s) while archiving CVD assets", lambda: archive_assets(data={"data": list(assets)})
+        "Error(s) while archiving CVD assets", lambda: archive_assets(settings, data={"data": list(assets)})
     )

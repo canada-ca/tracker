@@ -25,7 +25,13 @@ This service manages the enrollment of domains into the CVD (Coordinated Vulnera
 
 - `LOGGER_LEVEL`: Logging verbosity (default: INFO)
 - `DB_USER`, `DB_PASS`, `DB_NAME`, `DB_URL`: ArangoDB credentials
-- `API_USERNAME`, `API_TOKEN`, `ORG_ID`: HackerOne API credentials
+- `API_USERNAME`, `API_TOKEN`, `ORG_ID`, `PROGRAM_ID`: HackerOne API credentials and ids
+- `H1_BASE_URL`: HackerOne API base URL (default: `https://api.hackerone.com/v1`)
+- `NOTIFICATION_API_KEY`, `NOTIFICATION_API_URL`, `CVD_ENROLLMENT_NOTIFICATION_TEMPLATE_ID`: GC Notify settings
+- `SERVICE_ACCOUNT_EMAIL`: recipient of enrollment notifications
+
+All variables are read once into `Config` (`config.py`) in `main.py`; modules take their settings as arguments.
+A `.env` file is loaded only when running `main.py` directly.
 
 ## Usage
 
@@ -43,7 +49,7 @@ Unit tests run by default:
 python -m pytest tests/ -v
 ```
 
-The integration tests in `tests/test_db.py` need a real ArangoDB. Start one with Docker:
+The integration tests in `tests/test_db.py` and `tests/test_main_integration.py` need a real ArangoDB. Start one with Docker:
 
 ```bash
 docker run -d --name cvd-test-arangodb -p 8529:8529 -e ARANGO_ROOT_PASSWORD=test arangodb/arangodb:3.12.1
@@ -58,7 +64,7 @@ export TEST_ARANGO_PASS=test
 python -m pytest tests/ -v -m integration
 ```
 
-The tests create and drop a throwaway database. Remove the container when finished with `docker rm -f cvd-test-arangodb`.
+The tests create and drop a throwaway database. HackerOne and GC Notify are replaced by in-process fake servers, so no other variables are needed. Remove the container when finished with `docker rm -f cvd-test-arangodb`.
 Cloud Build runs the same tests against an `arangodb/arangodb:3.12.1` container.
 
 ## Logging

@@ -1,36 +1,54 @@
+"""HackerOne API client. Every call takes the HackerOneSettings it should use."""
+
 import logging
-import os
+from dataclasses import dataclass
 from typing import TypedDict
 
 import requests
-from dotenv import load_dotenv
 from requests import Response
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-load_dotenv()
-
-BASE_URL = "https://api.hackerone.com/v1"
+DEFAULT_BASE_URL = "https://api.hackerone.com/v1"
 HEADERS = {
     "Accept": "application/json",
     "Content-Type": "application/json",
 }
 
-API_USERNAME = os.getenv("API_USERNAME")
-API_TOKEN = os.getenv("API_TOKEN")
-ORG_ID = os.getenv("ORG_ID")
-PROGRAM_ID = os.getenv("PROGRAM_ID")
-
-ORG_ASSETS_URL = f"{BASE_URL}/organizations/{ORG_ID}/assets"
-
 logger = logging.getLogger(__name__)
 
 
+@dataclass(frozen=True)
+class HackerOneSettings:
+    """Connection and program identifiers for one HackerOne organization.
+
+    Credentials and ids may be None when unset in the environment; requests
+    made with them are then rejected by HackerOne.
+    """
+
+    org_id: str | None
+    program_id: str | None
+    username: str | None
+    token: str | None
+    base_url: str = DEFAULT_BASE_URL
+
+    @property
+    def assets_url(self) -> str:
+        """URL of the organization's asset collection."""
+        return f"{self.base_url}/organizations/{self.org_id}/assets"
+
+    @property
+    def asset_tags_url(self) -> str:
+        """URL of the organization's asset tag collection."""
+        return f"{self.base_url}/organizations/{self.org_id}/asset_tags"
+
+
 class HackerOneAPIError(Exception):
-    pass
+    """Raised when HackerOne is unreachable or answers with an error status."""
 
 
 class EnrollmentOptions(TypedDict):
+    """Optional per-domain asset attributes taken from a domain's cvdEnrollment document."""
     description: str | None
     max_severity: str | None
     confidentiality_requirement: str | None
@@ -50,23 +68,25 @@ _session = requests.Session()
 _session.mount("https://", HTTPAdapter(max_retries=_retry))
 
 
-def _request(method: str, url: str, **kwargs) -> Response:
+def _request(settings: HackerOneSettings, method: str, url: str, **kwargs) -> Response:
     try:
         return _session.request(
-            method, url, auth=(API_USERNAME, API_TOKEN), headers=HEADERS, **kwargs
+            method, url, auth=(settings.username, settings.token), headers=HEADERS, **kwargs
         )
     except requests.exceptions.RequestException as e:
         raise HackerOneAPIError(str(e)) from e
 
 
 def handle_res(res: Response) -> dict:
+    """Return the decoded JSON body of `res`; raise HackerOneAPIError with its error list on a non-2xx status."""
     if not res.ok:
         errors = res.json().get("errors", [])
         raise HackerOneAPIError(errors)
     return res.json()
 
 
-def get_all_assets(scope: str = "all", archived: bool = False) -> dict:
+def get_all_assets(settings: HackerOneSettings, scope: str = "all", archived: bool = False) -> dict:
+    """List organization domain assets, filtered by coverage `scope` and optionally archived state."""
     scope_enums = ["all", "new", "in_scope", "out_of_scope", "untested"]
     # TODO add filters to make the most correct list possible
     filters = "filter[asset_types][]=domain"  # &filter[state][]=confirmed,unconfirmed"
@@ -75,19 +95,22 @@ def get_all_assets(scope: str = "all", archived: bool = False) -> dict:
     if scope in scope_enums:
         filters += f"&filter[coverage]={scope}"
 
-    return handle_res(_request("GET", f"{ORG_ASSETS_URL}?{filters}"))
+    return handle_res(_request(settings, "GET", f"{settings.assets_url}?{filters}"))
 
 
-def get_asset(domain: str) -> dict:
+def get_asset(settings: HackerOneSettings, domain: str) -> dict:
+    """Look up the domain asset whose identifier is `domain`."""
     return handle_res(
         _request(
+            settings,
             "GET",
-            f"{ORG_ASSETS_URL}?filter[identifier]={domain}&filter[asset_types][]=domain",
+            f"{settings.assets_url}?filter[identifier]={domain}&filter[asset_types][]=domain",
         )
     )
 
 
-def create_asset(domain: str, options: EnrollmentOptions, asset_tag_id: int) -> dict:
+def create_asset(settings: HackerOneSettings, domain: str, options: EnrollmentOptions, asset_tag_id: int) -> dict:
+    """Create a domain asset tagged with `asset_tag_id`; None-valued options are omitted."""
     data = {
         "data": {
             "type": "asset",
@@ -100,23 +123,27 @@ def create_asset(domain: str, options: EnrollmentOptions, asset_tag_id: int) -> 
             "relationships": {"asset_tags": {"data": [{"id": asset_tag_id}]}},
         }
     }
-    return handle_res(_request("POST", ORG_ASSETS_URL, json=data))
+    return handle_res(_request(settings, "POST", settings.assets_url, json=data))
 
 
-def archive_assets(data: dict) -> dict:
-    return handle_res(_request("POST", f"{ORG_ASSETS_URL}/archive", json=data))
+def archive_assets(settings: HackerOneSettings, data: dict) -> dict:
+    """Archive the assets listed in `data` (a {"data": [...]} payload)."""
+    return handle_res(_request(settings, "POST", f"{settings.assets_url}/archive", json=data))
 
 
-def get_scope(asset_id: str) -> dict:
+def get_scope(settings: HackerOneSettings, asset_id: str) -> dict:
+    """List the scope entries of asset `asset_id`."""
     return handle_res(
         _request(
+            settings,
             "GET",
-            f"{ORG_ASSETS_URL}/{asset_id}/scopes",
+            f"{settings.assets_url}/{asset_id}/scopes",
         )
     )
 
 
-def add_scope(asset_id: str, enrollment_status: str) -> dict:
+def add_scope(settings: HackerOneSettings, asset_id: str, enrollment_status: str) -> dict:
+    """Add the configured program's scope to `asset_id`; eligible for submission only when enrolled."""
     data = {
         "data": {
             "type": "structured-scope",
@@ -124,19 +151,21 @@ def add_scope(asset_id: str, enrollment_status: str) -> dict:
                 "eligible_for_bounty": False,
                 "eligible_for_submission": enrollment_status == "enrolled",
             },
-            "relationships": {"programs": {"data": [{"id": PROGRAM_ID, "type": "program"}]}},
+            "relationships": {"programs": {"data": [{"id": settings.program_id, "type": "program"}]}},
         }
     }
     return handle_res(
         _request(
+            settings,
             "POST",
-            f"{ORG_ASSETS_URL}/{asset_id}/scopes",
+            f"{settings.assets_url}/{asset_id}/scopes",
             json=data,
         )
     )
 
 
-def update_scope(asset_id: str, scope_id: str, enrollment_status: str) -> dict:
+def update_scope(settings: HackerOneSettings, asset_id: str, scope_id: str, enrollment_status: str) -> dict:
+    """Set scope `scope_id` of `asset_id` eligible for submission only when `enrollment_status` is "enrolled"."""
     data = {
         "data": {
             "type": "structured-scope",
@@ -148,17 +177,20 @@ def update_scope(asset_id: str, scope_id: str, enrollment_status: str) -> dict:
     }
     return handle_res(
         _request(
+            settings,
             "PUT",
-            f"{ORG_ASSETS_URL}/{asset_id}/scopes/{scope_id}",
+            f"{settings.assets_url}/{asset_id}/scopes/{scope_id}",
             json=data,
         )
     )
 
 
-def get_asset_tags(page_number: int = 1, page_size: int = 100) -> dict:
+def get_asset_tags(settings: HackerOneSettings, page_number: int = 1, page_size: int = 100) -> dict:
+    """Fetch one page of the organization's asset tags."""
     return handle_res(
         _request(
+            settings,
             "GET",
-            f"{BASE_URL}/organizations/{ORG_ID}/asset_tags?page[size]={page_size}&&page[number]={page_number}",
+            f"{settings.asset_tags_url}?page[size]={page_size}&&page[number]={page_number}",
         )
     )
