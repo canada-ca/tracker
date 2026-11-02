@@ -298,10 +298,11 @@ def main(db: StandardDatabase):
         except HackerOneAPIError as e:
             logger.error(f"Error(s) while archiving CVD assets: {e}")
 
-    all_enrolled_domains = [d["domain"] for d in enrolled_domains + rescoped_to_enrolled]
-    if len(all_enrolled_domains) > 0:
+    # send email to service account of all newly enrolled domains and assets rescoped to be enrolled
+    new_enrollment_domains = get_domain_names(new_assets) + rescoped_to_enrolled
+    if len(new_enrollment_domains) > 0:
         send_enrollment_notification(
-            email=SERVICE_ACCOUNT_EMAIL, enrolled_domains=all_enrolled_domains
+            email=SERVICE_ACCOUNT_EMAIL, enrolled_domains=new_enrollment_domains
         )
 
 
