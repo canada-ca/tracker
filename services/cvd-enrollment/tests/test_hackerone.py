@@ -5,9 +5,9 @@ import socket
 
 import pytest
 
-import hackerone
 from hackerone import (
     HackerOneAPIError,
+    HackerOneSettings,
     add_scope,
     archive_assets,
     create_asset,
@@ -29,12 +29,14 @@ def only_request(server):
     return server.received[0]
 
 
-def closed_port_url() -> str:
-    """Return a localhost URL whose port nothing listens on."""
+def closed_port_settings() -> HackerOneSettings:
+    """Return settings whose base URL points at a localhost port nothing listens on."""
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
         port = s.getsockname()[1]
-    return f"http://127.0.0.1:{port}/v1/test"
+    return HackerOneSettings(
+        org_id="org", program_id="prog", username="user", token="token", base_url=f"http://127.0.0.1:{port}/v1"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -52,14 +54,14 @@ ERROR_STATUSES = [
 ]
 
 CLIENT_CALLS = [
-    pytest.param("GET", "/assets", lambda: get_all_assets(), id="get_all_assets"),
-    pytest.param("GET", "/assets", lambda: get_asset("a.ca"), id="get_asset"),
-    pytest.param("POST", "/assets", lambda: create_asset("a.ca", {}, 1), id="create_asset"),
-    pytest.param("POST", "/archive", lambda: archive_assets({"data": []}), id="archive_assets"),
-    pytest.param("GET", "/scopes", lambda: get_scope("x"), id="get_scope"),
-    pytest.param("POST", "/scopes", lambda: add_scope("x", "enrolled"), id="add_scope"),
-    pytest.param("PUT", "/scopes/s1", lambda: update_scope("x", "s1", "deny"), id="update_scope"),
-    pytest.param("GET", "/asset_tags", lambda: get_asset_tags(), id="get_asset_tags"),
+    pytest.param("GET", "/assets", lambda s: get_all_assets(s), id="get_all_assets"),
+    pytest.param("GET", "/assets", lambda s: get_asset(s, "a.ca"), id="get_asset"),
+    pytest.param("POST", "/assets", lambda s: create_asset(s, "a.ca", {}, 1), id="create_asset"),
+    pytest.param("POST", "/archive", lambda s: archive_assets(s, {"data": []}), id="archive_assets"),
+    pytest.param("GET", "/scopes", lambda s: get_scope(s, "x"), id="get_scope"),
+    pytest.param("POST", "/scopes", lambda s: add_scope(s, "x", "enrolled"), id="add_scope"),
+    pytest.param("PUT", "/scopes/s1", lambda s: update_scope(s, "x", "s1", "deny"), id="update_scope"),
+    pytest.param("GET", "/asset_tags", lambda s: get_asset_tags(s), id="get_asset_tags"),
 ]
 
 
@@ -69,14 +71,14 @@ def test_error_status_raises_api_error_with_error_list(h1_server, method, target
     errors = [{"title": f"failure {status}"}]
     h1_server.respond(method, target, status, {"errors": errors})
     with pytest.raises(HackerOneAPIError) as exc_info:
-        call()
+        call(h1_server.settings)
     assert exc_info.value.args[0] == errors
 
 
 def test_error_response_without_errors_key_raises_empty_error_list(h1_server):
     h1_server.respond("GET", "/assets", 500, {"message": "boom"})
     with pytest.raises(HackerOneAPIError) as exc_info:
-        get_all_assets()
+        get_all_assets(h1_server.settings)
     assert exc_info.value.args[0] == []
 
 
@@ -93,58 +95,58 @@ def test_non_json_body_raises_decode_error(h1_server, status, raw):
     # JSONDecodeError) escapes instead of HackerOneAPIError.
     h1_server.respond_raw("GET", "/assets", status, raw)
     with pytest.raises(ValueError):
-        get_all_assets()
+        get_all_assets(h1_server.settings)
 
 
 def test_request_translates_connection_failure_to_api_error():
+    settings = closed_port_settings()
     with pytest.raises(HackerOneAPIError):
-        _request("GET", closed_port_url())
+        _request(settings, "GET", f"{settings.base_url}/test")
 
 
-def test_api_function_translates_connection_failure_to_api_error(monkeypatch):
-    monkeypatch.setattr(hackerone, "ORG_ASSETS_URL", closed_port_url())
+def test_api_function_translates_connection_failure_to_api_error():
     with pytest.raises(HackerOneAPIError):
-        get_all_assets()
+        get_all_assets(closed_port_settings())
 
 
 def test_request_returns_raw_response_on_success(h1_server):
     h1_server.respond("GET", "/v1/test", 200, {"hello": "world"})
-    res = _request("GET", f"{h1_server.url}/v1/test")
+    res = _request(h1_server.settings, "GET", f"{h1_server.url}/v1/test")
     assert res.ok
     assert res.json() == {"hello": "world"}
 
 
 def test_request_returns_error_response_without_raising_on_http_error(h1_server):
     h1_server.respond("GET", "/v1/test", 404, {"errors": []})
-    res = _request("GET", f"{h1_server.url}/v1/test")
+    res = _request(h1_server.settings, "GET", f"{h1_server.url}/v1/test")
     assert res.status_code == 404
 
 
 def test_handle_res_returns_decoded_json_on_ok(h1_server):
     h1_server.respond("GET", "/assets", 200, {"data": [{"id": "1"}]})
-    assert get_all_assets() == {"data": [{"id": "1"}]}
+    assert get_all_assets(h1_server.settings) == {"data": [{"id": "1"}]}
 
 
 # ---------------------------------------------------------------------------
 # Request headers and authentication
 # ---------------------------------------------------------------------------
 
-def test_requests_send_basic_auth_from_module_credentials(h1_server):
+def test_requests_send_basic_auth_from_settings_credentials(h1_server):
     h1_server.respond("GET", "/assets", 200, OK_LIST)
-    get_all_assets()
+    get_all_assets(h1_server.settings)
     expected = "Basic " + base64.b64encode(b"user:token").decode()
     assert only_request(h1_server).authorization == expected
 
 
 def test_requests_send_json_accept_header(h1_server):
     h1_server.respond("GET", "/assets", 200, OK_LIST)
-    get_all_assets()
+    get_all_assets(h1_server.settings)
     assert only_request(h1_server).headers["Accept"] == "application/json"
 
 
 def test_requests_with_body_send_json_content_type(h1_server):
     h1_server.respond("POST", "/archive", 200, OK_OBJECT)
-    archive_assets({"data": []})
+    archive_assets(h1_server.settings, {"data": []})
     assert only_request(h1_server).headers["Content-Type"] == "application/json"
 
 
@@ -193,7 +195,7 @@ def test_requests_with_body_send_json_content_type(h1_server):
 )
 def test_get_all_assets_sends_expected_filters(h1_server, kwargs, expected_query):
     h1_server.respond("GET", "/assets", 200, OK_LIST)
-    get_all_assets(**kwargs)
+    get_all_assets(h1_server.settings, **kwargs)
     req = only_request(h1_server)
     assert req.method == "GET"
     assert req.path == "/v1/organizations/org/assets"
@@ -203,14 +205,14 @@ def test_get_all_assets_sends_expected_filters(h1_server, kwargs, expected_query
 
 def test_get_all_assets_omits_archived_filter_by_default(h1_server):
     h1_server.respond("GET", "/assets", 200, OK_LIST)
-    get_all_assets()
+    get_all_assets(h1_server.settings)
     assert "filter[archived]" not in only_request(h1_server).query
 
 
 def test_get_all_assets_returns_response_body(h1_server):
     body = {"data": [{"id": "a1"}, {"id": "a2"}]}
     h1_server.respond("GET", "/assets", 200, body)
-    assert get_all_assets() == body
+    assert get_all_assets(h1_server.settings) == body
 
 
 # ---------------------------------------------------------------------------
@@ -219,7 +221,7 @@ def test_get_all_assets_returns_response_body(h1_server):
 
 def test_get_asset_filters_by_identifier_and_domain_type(h1_server):
     h1_server.respond("GET", "/assets", 200, {"data": [{"id": "a1"}]})
-    result = get_asset("example.ca")
+    result = get_asset(h1_server.settings, "example.ca")
     req = only_request(h1_server)
     assert req.method == "GET"
     assert req.query == {"filter[identifier]": ["example.ca"], "filter[asset_types][]": ["domain"]}
@@ -233,7 +235,7 @@ def test_get_asset_filters_by_identifier_and_domain_type(h1_server):
 def _create_asset_body(h1_server, options, asset_tag_id=7) -> dict:
     """Call create_asset against the fake and return the JSON body it received."""
     h1_server.respond("POST", "/assets", 201, OK_OBJECT)
-    create_asset(domain="example.com", options=options, asset_tag_id=asset_tag_id)
+    create_asset(h1_server.settings, domain="example.com", options=options, asset_tag_id=asset_tag_id)
     req = only_request(h1_server)
     assert req.method == "POST"
     assert req.path == "/v1/organizations/org/assets"
@@ -299,13 +301,13 @@ def test_create_asset_uses_given_asset_tag_id(h1_server):
 
 def test_create_asset_returns_response_body(h1_server):
     h1_server.respond("POST", "/assets", 201, {"data": {"id": "new"}})
-    assert create_asset("example.com", {}, 7) == {"data": {"id": "new"}}
+    assert create_asset(h1_server.settings, "example.com", {}, 7) == {"data": {"id": "new"}}
 
 
 def test_create_asset_is_not_retried_on_server_error(h1_server):
     h1_server.respond("POST", "/assets", 500, {"errors": [{"title": "x"}]})
     with pytest.raises(HackerOneAPIError):
-        create_asset("example.com", {}, 7)
+        create_asset(h1_server.settings, "example.com", {}, 7)
     assert len(h1_server.calls("POST", "/assets")) == 1
 
 
@@ -324,7 +326,7 @@ ENROLLMENT_ELIGIBILITY = [
 @pytest.mark.parametrize("status, eligible", ENROLLMENT_ELIGIBILITY)
 def test_add_scope_attributes_follow_enrollment_status(h1_server, status, eligible):
     h1_server.respond("POST", "/scopes", 201, OK_OBJECT)
-    add_scope(asset_id="asset-123", enrollment_status=status)
+    add_scope(h1_server.settings, asset_id="asset-123", enrollment_status=status)
     req = only_request(h1_server)
     assert req.method == "POST"
     assert req.path == "/v1/organizations/org/assets/asset-123/scopes"
@@ -337,20 +339,20 @@ def test_add_scope_attributes_follow_enrollment_status(h1_server, status, eligib
 
 def test_add_scope_links_configured_program(h1_server):
     h1_server.respond("POST", "/scopes", 201, OK_OBJECT)
-    add_scope(asset_id="asset-123", enrollment_status="enrolled")
+    add_scope(h1_server.settings, asset_id="asset-123", enrollment_status="enrolled")
     programs = only_request(h1_server).body["data"]["relationships"]["programs"]["data"]
     assert programs == [{"id": "prog", "type": "program"}]
 
 
 def test_add_scope_returns_response_body(h1_server):
     h1_server.respond("POST", "/scopes", 201, {"data": {"id": "s9"}})
-    assert add_scope("asset-123", "enrolled") == {"data": {"id": "s9"}}
+    assert add_scope(h1_server.settings, "asset-123", "enrolled") == {"data": {"id": "s9"}}
 
 
 @pytest.mark.parametrize("status, eligible", ENROLLMENT_ELIGIBILITY)
 def test_update_scope_attributes_follow_enrollment_status(h1_server, status, eligible):
     h1_server.respond("PUT", "/scopes/scope-abc", 200, OK_OBJECT)
-    update_scope(asset_id="asset-123", scope_id="scope-abc", enrollment_status=status)
+    update_scope(h1_server.settings, asset_id="asset-123", scope_id="scope-abc", enrollment_status=status)
     req = only_request(h1_server)
     assert req.method == "PUT"
     assert req.path == "/v1/organizations/org/assets/asset-123/scopes/scope-abc"
@@ -367,7 +369,7 @@ def test_update_scope_attributes_follow_enrollment_status(h1_server, status, eli
 
 def test_update_scope_returns_response_body(h1_server):
     h1_server.respond("PUT", "/scopes/s1", 200, {"data": {"id": "s1"}})
-    assert update_scope("asset-123", "s1", "deny") == {"data": {"id": "s1"}}
+    assert update_scope(h1_server.settings, "asset-123", "s1", "deny") == {"data": {"id": "s1"}}
 
 
 # ---------------------------------------------------------------------------
@@ -377,7 +379,7 @@ def test_update_scope_returns_response_body(h1_server):
 def test_get_scope_requests_asset_scopes_and_returns_body(h1_server):
     body = {"data": [{"id": "s1"}]}
     h1_server.respond("GET", "/scopes", 200, body)
-    assert get_scope("asset-123") == body
+    assert get_scope(h1_server.settings, "asset-123") == body
     req = only_request(h1_server)
     assert req.method == "GET"
     assert req.path == "/v1/organizations/org/assets/asset-123/scopes"
@@ -398,7 +400,7 @@ def test_get_scope_requests_asset_scopes_and_returns_body(h1_server):
 )
 def test_archive_assets_posts_payload_unchanged(h1_server, payload):
     h1_server.respond("POST", "/archive", 200, OK_OBJECT)
-    archive_assets(data=payload)
+    archive_assets(h1_server.settings, data=payload)
     req = only_request(h1_server)
     assert req.method == "POST"
     assert req.path == "/v1/organizations/org/assets/archive"
@@ -419,7 +421,7 @@ def test_archive_assets_posts_payload_unchanged(h1_server, payload):
 )
 def test_get_asset_tags_sends_pagination_params(h1_server, kwargs, page_number, page_size):
     h1_server.respond("GET", "/asset_tags", 200, OK_LIST)
-    get_asset_tags(**kwargs)
+    get_asset_tags(h1_server.settings, **kwargs)
     req = only_request(h1_server)
     assert req.method == "GET"
     assert req.path == "/v1/organizations/org/asset_tags"
@@ -429,4 +431,4 @@ def test_get_asset_tags_sends_pagination_params(h1_server, kwargs, page_number, 
 def test_get_asset_tags_returns_response_body(h1_server):
     body = {"data": [{"id": 1, "attributes": {"name": "cvd"}}]}
     h1_server.respond("GET", "/asset_tags", 200, body)
-    assert get_asset_tags() == body
+    assert get_asset_tags(h1_server.settings) == body

@@ -41,3 +41,34 @@ def test_reads_db_and_notification_settings():
 def test_config_is_frozen():
     with pytest.raises(AttributeError):
         Config.from_env({}).log_level = 1
+
+
+def test_reads_hackerone_settings_with_given_base_url():
+    settings = Config.from_env(
+        {
+            "API_USERNAME": "u",
+            "API_TOKEN": "t",
+            "ORG_ID": "o",
+            "PROGRAM_ID": "p",
+            "H1_BASE_URL": "http://h1.test/v1",
+        }
+    ).hackerone
+    assert (settings.username, settings.token, settings.org_id, settings.program_id) == ("u", "t", "o", "p")
+    assert settings.assets_url == "http://h1.test/v1/organizations/o/assets"
+    assert settings.asset_tags_url == "http://h1.test/v1/organizations/o/asset_tags"
+
+
+@pytest.mark.parametrize("environ", [{}, {"H1_BASE_URL": ""}], ids=["unset", "empty"])
+def test_hackerone_base_url_defaults_to_production_api(environ):
+    assert Config.from_env(environ).hackerone.base_url == "https://api.hackerone.com/v1"
+
+
+def test_reads_notify_settings():
+    settings = Config.from_env(
+        {
+            "NOTIFICATION_API_KEY": "key",
+            "NOTIFICATION_API_URL": "http://notify.test",
+            "CVD_ENROLLMENT_NOTIFICATION_TEMPLATE_ID": "tpl",
+        }
+    ).notify
+    assert (settings.api_key, settings.base_url, settings.template_id) == ("key", "http://notify.test", "tpl")

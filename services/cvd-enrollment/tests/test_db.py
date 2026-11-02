@@ -4,33 +4,11 @@ Set TEST_ARANGO_URL, TEST_ARANGO_USER and TEST_ARANGO_PASS, then run `pytest -m 
 Creates and drops a throwaway database.
 """
 
-import os
-import uuid
-
 import pytest
-from arango import ArangoClient
 
 from db import fetch_domain_owners, fetch_domains
 
 pytestmark = pytest.mark.integration
-
-
-@pytest.fixture
-def arango_db():
-    url = os.getenv("TEST_ARANGO_URL")
-    if not url:
-        pytest.skip("TEST_ARANGO_URL not set")
-    client = ArangoClient(hosts=url)
-    user, password = os.getenv("TEST_ARANGO_USER", "root"), os.getenv("TEST_ARANGO_PASS", "")
-    sys_db = client.db("_system", username=user, password=password)
-    name = f"cvd_test_{uuid.uuid4().hex[:8]}"
-    sys_db.create_database(name)
-    db = client.db(name, username=user, password=password)
-    db.create_collection("domains")
-    db.create_collection("organizations")
-    db.create_collection("ownership", edge=True)
-    yield db
-    sys_db.delete_database(name)
 
 
 def test_fetch_domains_splits_by_status_and_excludes_archived_and_nxdomain(arango_db):
