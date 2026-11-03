@@ -11,7 +11,6 @@ from arango import ArangoClient
 
 from config import Config
 from hackerone import HackerOneSettings
-from notify import NotifySettings
 
 
 def make_h1_asset(identifier: str | None, asset_id: str | None = None) -> dict:
@@ -139,57 +138,15 @@ class FakeH1Server(FakeHttpServer):
         )
 
 
-# Well-formed GC Notify key: <name>-<36 char service id>-<36 char secret>.
-FAKE_NOTIFY_API_KEY = (
-    "fake-key-00000000-0000-0000-0000-000000000001-00000000-0000-0000-0000-000000000002"
-)
-NOTIFY_TEMPLATE_ID = "template-1"
-NOTIFY_EMAIL_PATH = "/v2/notifications/email"
-
-
-class FakeNotifyServer(FakeHttpServer):
-    """FakeHttpServer standing in for GC Notify; accepts email sends by default."""
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.respond("POST", NOTIFY_EMAIL_PATH, 201, {"id": "notification-1"})
-
-    @property
-    def settings(self) -> NotifySettings:
-        """Settings that point the notify module at this server."""
-        return NotifySettings(
-            api_key=FAKE_NOTIFY_API_KEY, base_url=self.url, template_id=NOTIFY_TEMPLATE_ID
-        )
-
-    def sent_emails(self) -> list[dict | None]:
-        """Return request bodies of every email send received."""
-        return self.calls("POST", NOTIFY_EMAIL_PATH)
-
-
-def make_config(
-    h1_server: FakeH1Server, notify_server: FakeNotifyServer, service_account_email: str = "ops@example.ca"
-) -> Config:
-    """Build a Config whose HackerOne and GC Notify settings point at the fakes."""
-    return replace(
-        Config.from_env({"SERVICE_ACCOUNT_EMAIL": service_account_email}),
-        hackerone=h1_server.settings,
-        notify=notify_server.settings,
-    )
+def make_config(h1_server: FakeH1Server) -> Config:
+    """Build a Config whose HackerOne settings point at the fake."""
+    return replace(Config.from_env({}), hackerone=h1_server.settings)
 
 
 @pytest.fixture
 def h1_server():
     """A running FakeH1Server."""
     server = FakeH1Server()
-    server.start()
-    yield server
-    server.stop()
-
-
-@pytest.fixture
-def notify_server():
-    """A running FakeNotifyServer."""
-    server = FakeNotifyServer()
     server.start()
     yield server
     server.stop()

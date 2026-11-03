@@ -5,13 +5,11 @@ import sys
 
 from arango import ArangoClient
 from arango.database import StandardDatabase
-from dotenv import load_dotenv
-
 from config import Config, ConfigError
 from db import fetch_domain_owners, fetch_domains
+from dotenv import load_dotenv
 from hackerone import HackerOneAPIError, HackerOneSettings, get_all_assets
 from logging_setup import configure_logging
-from notify import send_enrollment_notification
 from sync import (
     archive,
     asset_id_by_identifier,
@@ -35,7 +33,9 @@ def fetch_h1_assets(settings: HackerOneSettings) -> tuple[list[dict], list[dict]
     try:
         out_of_scope = get_all_assets(settings, scope="out_of_scope").get("data", [])
     except HackerOneAPIError as e:
-        logger.warning(f"Could not fetch out-of-scope assets, rescope detection will be skipped: {e}")
+        logger.warning(
+            f"Could not fetch out-of-scope assets, rescope detection will be skipped: {e}"
+        )
         out_of_scope = []
     return in_scope, out_of_scope
 
@@ -68,20 +68,21 @@ def _rescope(
         logger.warning(f"{failures}/{len(names)} rescopes to {status} failed.")
 
 
-def main(db: StandardDatabase, config: Config) -> None:
-    """Run one sync pass: fetch, compute changes, apply them, notify."""
+
+def main(db: StandardDatabase, config: Config) -> int:
+    """Run one sync pass: fetch, compute changes, apply them."""
     try:
         all_domains, enrolled, denied = fetch_domains(db)
     except Exception as e:
         logger.error(f"Error(s) while fetching domains from DB: {e}")
-        return
+        return 1
     logger.info(f"Found {len(enrolled)} enrolled domains.")
 
     try:
         in_scope, out_of_scope = fetch_h1_assets(config.hackerone)
     except HackerOneAPIError as e:
         logger.error(f"Error(s) while fetching H1 assets: {e}")
-        return
+        return 1
 
     changes = compute_changes(all_domains, enrolled, denied, in_scope, out_of_scope)
     asset_id_map = asset_id_by_identifier(in_scope + out_of_scope)
@@ -95,11 +96,7 @@ def main(db: StandardDatabase, config: Config) -> None:
         logger.info(f"Archiving {len(changes.to_archive)} assets from CVD program.")
         archive(config.hackerone, changes.to_archive)
 
-    announced = changes.newly_enrolled_names
-    if announced:
-        send_enrollment_notification(
-            config.notify, email=config.service_account_email, enrolled_domains=announced
-        )
+    return 0
 
 
 if __name__ == "__main__":
@@ -114,5 +111,7 @@ if __name__ == "__main__":
     logger.info("CVD Enrollment service started")
     client = ArangoClient(hosts=config.db_url)
     database = client.db(config.db_name, username=config.db_user, password=config.db_pass)
-    main(db=database, config=config)
+    return_code = main(db=database, config=config)
+    if return_code != 0:
+        sys.exit(return_code)
     logger.info("CVD Enrollment service shutting down...")

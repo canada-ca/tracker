@@ -32,11 +32,6 @@ class Changes:
     rescope_to_denied: tuple[str, ...]
     to_archive: tuple[dict, ...]
 
-    @property
-    def newly_enrolled_names(self) -> list[str]:
-        """Domain names to announce: newly created enrolled plus rescoped to enrolled."""
-        return [d["domain"] for d in self.new_enrolled] + list(self.rescope_to_enrolled)
-
 
 def asset_identifier(asset: dict) -> str | None:
     """Return the asset's identifier, or None when missing or empty."""

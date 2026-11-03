@@ -1,4 +1,4 @@
-"""Integration tests: main() against real ArangoDB plus fake HackerOne and GC Notify servers.
+"""Integration tests: main() against real ArangoDB plus a fake HackerOne server.
 
 Set TEST_ARANGO_URL, TEST_ARANGO_USER and TEST_ARANGO_PASS, then run `pytest -m integration`.
 """
@@ -30,9 +30,7 @@ def owned_db(arango_db):
     return arango_db
 
 
-def test_main_syncs_every_change_kind_and_notifies(owned_db, h1_server, notify_server):
-    # Regression: the notification list mixed new-asset dicts with rescoped
-    # domain names (str) and indexed the str as a dict, crashing main.
+def test_main_syncs_every_change_kind(owned_db, h1_server):
     seed_domain(owned_db, "new", "enrolled", owner_key="org-a")
     seed_domain(owned_db, "blocked", "deny", owner_key="org-a")
     seed_domain(owned_db, "back", "enrolled")
@@ -49,7 +47,7 @@ def test_main_syncs_every_change_kind_and_notifies(owned_db, h1_server, notify_s
     h1_server.respond("POST", "/assets/archive", 200, {"data": {}})
     make_tag_page(h1_server, tag_id="7", name="org-a")
 
-    main_module.main(owned_db, make_config(h1_server, notify_server))
+    main_module.main(owned_db, make_config(h1_server))
 
     created_assets = [
         r.body for r in h1_server.received if r.method == "POST" and r.path == "/v1/organizations/org/assets"
@@ -63,48 +61,38 @@ def test_main_syncs_every_change_kind_and_notifies(owned_db, h1_server, notify_s
     }
     assert eligibility == {"s-back": True, "s-out": False}
     assert h1_server.calls("POST", "/assets/archive") == [{"data": [old_asset]}]
-    assert notify_server.sent_emails() == [
-        {
-            "email_address": "ops@example.ca",
-            "template_id": "template-1",
-            "personalisation": {"domains": "new.ca, back.ca", "count": 2},
-        }
-    ]
 
 
-def test_main_aborts_when_db_query_fails(arango_db, h1_server, notify_server, caplog):
+def test_main_aborts_when_db_query_fails(arango_db, h1_server, caplog):
     arango_db.delete_collection("domains")
-    main_module.main(arango_db, make_config(h1_server, notify_server))
+    main_module.main(arango_db, make_config(h1_server))
     assert "Error(s) while fetching domains from DB" in caplog.text
     assert h1_server.received == []
-    assert notify_server.received == []
 
 
-def test_main_aborts_when_in_scope_fetch_fails(owned_db, h1_server, notify_server, caplog):
+def test_main_aborts_when_in_scope_fetch_fails(owned_db, h1_server, caplog):
     seed_domain(owned_db, "a", "enrolled", owner_key="org-a")
     h1_server.respond("GET", "coverage]=in_scope", 500, {"errors": [{"title": "x"}]})
-    main_module.main(owned_db, make_config(h1_server, notify_server))
+    main_module.main(owned_db, make_config(h1_server))
     assert "Error(s) while fetching H1 assets" in caplog.text
     assert h1_server.calls("POST", "/assets") == []
-    assert notify_server.received == []
 
 
-def test_main_archives_and_skips_notification_when_nothing_enrolled(owned_db, h1_server, notify_server):
+def test_main_archives_when_nothing_enrolled(owned_db, h1_server):
     seed_domain(owned_db, "old")
     h1_server.respond("GET", "coverage]=in_scope", 200, {"data": [make_h1_asset("old.ca")]})
     h1_server.respond("GET", "coverage]=out_of_scope", 200, {"data": []})
     h1_server.respond("POST", "/assets/archive", 200, {"data": {}})
-    main_module.main(owned_db, make_config(h1_server, notify_server))
+    main_module.main(owned_db, make_config(h1_server))
     assert len(h1_server.calls("POST", "/archive")) == 1
-    assert notify_server.received == []
 
 
-def test_main_warns_and_skips_creation_when_domain_has_no_owner(owned_db, h1_server, notify_server, caplog):
+def test_main_warns_and_skips_creation_when_domain_has_no_owner(owned_db, h1_server, caplog):
     caplog.set_level(logging.WARNING)
     seed_domain(owned_db, "new", "enrolled")
     h1_server.respond("GET", "coverage]=in_scope", 200, {"data": []})
     h1_server.respond("GET", "coverage]=out_of_scope", 200, {"data": []})
     make_tag_page(h1_server, tag_id="7", name="org-a")
-    main_module.main(owned_db, make_config(h1_server, notify_server))
+    main_module.main(owned_db, make_config(h1_server))
     assert "1/1 enrolled asset creations failed" in caplog.text
     assert h1_server.calls("POST", "/assets") == []

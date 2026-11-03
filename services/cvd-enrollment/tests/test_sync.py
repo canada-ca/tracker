@@ -90,19 +90,6 @@ def test_domains_without_name_are_ignored():
     assert changes == NO_CHANGES
 
 
-def test_newly_enrolled_names_mixes_new_and_rescoped_without_error():
-    # Regression: main once indexed rescoped-to-enrolled entries (plain str)
-    # as dicts when building the notification list, raising TypeError.
-    changes = compute_changes(
-        [make_domain("new.ca"), make_domain("back.ca")],
-        [make_domain("new.ca", "enrolled"), make_domain("back.ca", "enrolled")],
-        [],
-        [],
-        [make_h1_asset("back.ca")],
-    )
-    assert changes.newly_enrolled_names == ["new.ca", "back.ca"]
-
-
 def test_asset_id_by_identifier_skips_missing_identifiers():
     assets = [make_h1_asset("a.ca", "1"), make_h1_asset(None, "2"), {"id": "3"}]
     assert asset_id_by_identifier(assets) == {"a.ca": "1"}

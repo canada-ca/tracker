@@ -1,6 +1,6 @@
 # CVD Enrollment Service
 
-This service keeps HackerOne assets in line with the CVD (Coordinated Vulnerability Disclosure) enrollment status of domains stored in ArangoDB. Each run is a single sync pass: it reads domains from ArangoDB, reads assets from HackerOne, and creates, rescopes, or archives assets to remove the differences. It then emails a list of newly enrolled domains through GC Notify.
+This service keeps HackerOne assets in line with the CVD (Coordinated Vulnerability Disclosure) enrollment status of domains stored in ArangoDB. Each run is a single sync pass: it reads domains from ArangoDB, reads assets from HackerOne, and creates, rescopes, or archives assets to remove the differences.
 
 ## How a sync pass works
 
@@ -12,7 +12,6 @@ This service keeps HackerOne assets in line with the CVD (Coordinated Vulnerabil
    3. Create new denied assets.
    4. Rescope in-scope assets that are now denied.
    5. Archive the assets that are no longer enrolled or denied.
-4. Email the new and rescoped enrolled domains to `SERVICE_ACCOUNT_EMAIL`. No email is sent when the list is empty.
 
 If domains cannot be read from ArangoDB, or the in-scope assets cannot be read from HackerOne, the run logs an error and stops without changes.
 
@@ -20,9 +19,9 @@ If domains cannot be read from ArangoDB, or the in-scope assets cannot be read f
 
 | Situation in ArangoDB and HackerOne | Action |
 | --- | --- |
-| Domain is `enrolled` and has no HackerOne asset | Create the asset with scope eligible for submission. The asset gets the GC Org ID tag that matches the domain owner's `externalId`. The domain is included in the notification. |
+| Domain is `enrolled` and has no HackerOne asset | Create the asset with scope eligible for submission. The asset gets the GC Org ID tag that matches the domain owner's `externalId`. |
 | Domain is `deny` and has no HackerOne asset | Create the asset with scope not eligible for submission. |
-| Domain is `enrolled` and its asset is out of scope (deny to enrolled) | Update the existing scope to eligible for submission. The domain is included in the notification. |
+| Domain is `enrolled` and its asset is out of scope (deny to enrolled) | Update the existing scope to eligible for submission. |
 | Domain is `deny` and its asset is in scope (enrolled to deny) | Update the existing scope to not eligible for submission. |
 | Asset is in scope, its domain exists in ArangoDB, and the domain is neither `enrolled` nor `deny` | Archive the asset. |
 | Asset is in scope and its domain is not in ArangoDB (or is archived or `NXDOMAIN`) | No action. |
@@ -36,13 +35,12 @@ A new asset is created in two calls: the asset first, then its scope. A domain w
 | File | Purpose |
 | --- | --- |
 | `main.py` | Entrypoint. Under `__main__` it loads `.env`, builds `Config`, configures logging, connects to ArangoDB, and runs `main()` once. |
-| `config.py` | Frozen `Config` with nested `HackerOneSettings` and `NotifySettings`, built by `Config.from_env()`. Raises `ConfigError` for an invalid `LOGGER_LEVEL`. |
+| `config.py` | Frozen `Config` with nested `HackerOneSettings`, built by `Config.from_env()`. Raises `ConfigError` for an invalid `LOGGER_LEVEL`. |
 | `logging_setup.py` | Sends DEBUG and INFO logs to stdout, and WARNING and above to stderr. |
 | `db.py` | ArangoDB queries: `fetch_domains` and `fetch_domain_owners` (one batched query). |
 | `tags.py` | Fetches HackerOne asset tags in the "GC Org ID" category, up to 10 pages of 100. |
 | `sync.py` | `compute_changes` and `Changes` (pure diff), plus the functions that apply changes: `create_assets`, `rescope_assets`, `archive`. |
 | `hackerone.py` | HackerOne API client. Every function takes a `HackerOneSettings` argument. |
-| `notify.py` | `NotifySettings` and `send_enrollment_notification`. The GC Notify client is built for each call. |
 | `tests/` | Unit tests and integration tests. |
 | `Dockerfile`, `cloudbuild.yaml` | Container build and CI. |
 
@@ -62,10 +60,6 @@ A new asset is created in two calls: the asset first, then its scope. A domain w
 | `ORG_ID` | HackerOne organization ID | none |
 | `PROGRAM_ID` | HackerOne program ID linked to each asset scope | none |
 | `H1_BASE_URL` | HackerOne API base URL. An empty value uses the default. | `https://api.hackerone.com/v1` |
-| `NOTIFICATION_API_KEY` | GC Notify API key | none |
-| `NOTIFICATION_API_URL` | GC Notify base URL | none |
-| `CVD_ENROLLMENT_NOTIFICATION_TEMPLATE_ID` | GC Notify email template ID | none |
-| `SERVICE_ACCOUNT_EMAIL` | Recipient of the enrollment notification | none |
 
 `.env.example` lists these variables without values.
 
@@ -81,7 +75,7 @@ python main.py
 
 ## Tests
 
-Tests use no mocks. They run against in-process fake HackerOne and GC Notify HTTP servers (see `tests/conftest.py`).
+Tests use no mocks. They run against in-process a fake HackerOne HTTP server (see `tests/conftest.py`).
 
 Run the unit tests. `pytest.ini` deselects tests marked `integration` by default:
 

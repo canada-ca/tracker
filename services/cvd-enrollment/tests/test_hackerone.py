@@ -249,7 +249,9 @@ def test_create_asset_sends_full_payload_for_empty_options(h1_server):
             "attributes": {
                 "asset_type": "domain",
                 "identifier": "example.com",
-                "max_severity": "critical",
+                "max_severity": "high",
+                "description": None,
+                "reference": None,
             },
             "relationships": {"asset_tags": {"data": [{"id": 7}]}},
         }
@@ -257,41 +259,45 @@ def test_create_asset_sends_full_payload_for_empty_options(h1_server):
 
 
 @pytest.mark.parametrize(
-    "options, expected_extra, absent",
+    "options, expected_description, expected_reference",
     [
         pytest.param(
-            {"description": "test", "maxSeverity": "HIGH"},
-            {"description": "test", "maxSeverity": "HIGH"},
-            [],
-            id="options_spread_into_attributes",
+            {"description": "test", "reference": "ref-1"},
+            "test",
+            "ref-1",
+            id="description_and_reference_copied_into_attributes",
         ),
         pytest.param(
-            {"description": None, "maxSeverity": "HIGH"},
-            {"maxSeverity": "HIGH"},
-            ["description"],
-            id="none_values_omitted",
+            {"description": None, "reference": "ref-1"},
+            None,
+            "ref-1",
+            id="none_description_sent_as_null",
         ),
-        pytest.param({"description": None}, {}, ["description"], id="all_none_omitted"),
         pytest.param(
-            {"max_severity": "low"},
-            {"max_severity": "low"},
-            [],
-            id="option_overrides_default_max_severity",
+            {"description": None},
+            None,
+            None,
+            id="all_none_sent_as_null",
         ),
         pytest.param(
             {"description": ""},
-            {"description": ""},
-            [],
+            "",
+            None,
             id="empty_string_is_kept",
         ),
     ],
 )
-def test_create_asset_option_handling(h1_server, options, expected_extra, absent):
+def test_create_asset_option_handling(
+    h1_server, options, expected_description, expected_reference
+):
     attrs = _create_asset_body(h1_server, options)["data"]["attributes"]
-    for key, value in expected_extra.items():
-        assert attrs[key] == value
-    for key in absent:
-        assert key not in attrs
+    assert attrs["description"] == expected_description
+    assert attrs["reference"] == expected_reference
+
+
+def test_create_asset_ignores_options_that_cannot_override_max_severity(h1_server):
+    attrs = _create_asset_body(h1_server, {"max_severity": "low"})["data"]["attributes"]
+    assert attrs["max_severity"] == "high"
 
 
 def test_create_asset_uses_given_asset_tag_id(h1_server):

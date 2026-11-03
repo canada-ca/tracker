@@ -56,10 +56,7 @@ class EnrollmentOptions(TypedDict):
     """
 
     description: str | None
-    max_severity: str | None
-    confidentiality_requirement: str | None
-    integrity_requirement: str | None
-    availability_requirement: str | None
+    reference: str | None
 
 
 # Retry on transient errors for idempotent methods only.
@@ -125,7 +122,9 @@ def get_asset(settings: HackerOneSettings, domain: str) -> dict:
     )
 
 
-def create_asset(settings: HackerOneSettings, domain: str, options: EnrollmentOptions, asset_tag_id: int) -> dict:
+def create_asset(
+    settings: HackerOneSettings, domain: str, options: EnrollmentOptions, asset_tag_id: int
+) -> dict:
     """Create a domain asset tagged with `asset_tag_id`; None-valued options are omitted."""
     data = {
         "data": {
@@ -133,8 +132,9 @@ def create_asset(settings: HackerOneSettings, domain: str, options: EnrollmentOp
             "attributes": {
                 "asset_type": "domain",
                 "identifier": domain,
-                "max_severity": "critical",
-                **{k: v for k, v in options.items() if v is not None},
+                "max_severity": "high",
+                "description": options.get("description", None),
+                "reference": options.get("reference", None),
             },
             "relationships": {"asset_tags": {"data": [{"id": asset_tag_id}]}},
         }
@@ -167,7 +167,9 @@ def add_scope(settings: HackerOneSettings, asset_id: str, enrollment_status: str
                 "eligible_for_bounty": False,
                 "eligible_for_submission": enrollment_status == "enrolled",
             },
-            "relationships": {"programs": {"data": [{"id": settings.program_id, "type": "program"}]}},
+            "relationships": {
+                "programs": {"data": [{"id": settings.program_id, "type": "program"}]}
+            },
         }
     }
     return handle_res(
@@ -180,7 +182,9 @@ def add_scope(settings: HackerOneSettings, asset_id: str, enrollment_status: str
     )
 
 
-def update_scope(settings: HackerOneSettings, asset_id: str, scope_id: str, enrollment_status: str) -> dict:
+def update_scope(
+    settings: HackerOneSettings, asset_id: str, scope_id: str, enrollment_status: str
+) -> dict:
     """Set scope `scope_id` of `asset_id` eligible for submission only when `enrollment_status` is "enrolled"."""
     data = {
         "data": {
@@ -207,6 +211,6 @@ def get_asset_tags(settings: HackerOneSettings, page_number: int = 1, page_size:
         _request(
             settings,
             "GET",
-            f"{settings.asset_tags_url}?page[size]={page_size}&&page[number]={page_number}",
+            f"{settings.asset_tags_url}?page[size]={page_size}&page[number]={page_number}",
         )
     )
