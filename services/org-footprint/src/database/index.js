@@ -4,7 +4,6 @@ const { getNewAuditLogs } = require('./get-new-audit-logs')
 const { getBilingualOrgNames } = require('./get-bilingual-org-names')
 const { getPendingOrgUserCount } = require('./get-pending-org-user-count')
 const { getOrgUsers } = require('./get-org-users')
-const { getOrgOwner } = require('./get-org-owner')
 
 module.exports = {
   getOrgAdmins,
@@ -13,5 +12,4 @@ module.exports = {
   getBilingualOrgNames,
   getPendingOrgUserCount,
   getOrgUsers,
-  getOrgOwner,
 }

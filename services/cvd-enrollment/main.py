@@ -51,7 +51,13 @@ def _create_new_assets(
     except HackerOneAPIError as e:
         logger.error(f"Could not fetch asset tags, {label} creations will fail: {e}")
         tags = []
-    owners = fetch_domain_owners(db, [d["_id"] for d in domains])
+
+    try:
+        owners = fetch_domain_owners(db, [d["_id"] for d in domains])
+    except Exception as e:
+        logger.error(f"Could not fetch domains owners, {label} creations will fail: {e}")
+        owners = {}
+
     _, failures = create_assets(settings, domains, tags, owners)
     if failures:
         logger.warning(f"{failures}/{len(domains)} {label} asset creations failed.")
@@ -66,7 +72,6 @@ def _rescope(
     _, failures = rescope_assets(settings, names, status, asset_id_map)
     if failures:
         logger.warning(f"{failures}/{len(names)} rescopes to {status} failed.")
-
 
 
 def main(db: StandardDatabase, config: Config) -> int:

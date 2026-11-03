@@ -125,7 +125,7 @@ def get_asset(settings: HackerOneSettings, domain: str) -> dict:
 def create_asset(
     settings: HackerOneSettings, domain: str, options: EnrollmentOptions, asset_tag_id: int
 ) -> dict:
-    """Create a domain asset tagged with `asset_tag_id`; None-valued options are omitted."""
+    """Create a domain asset tagged with `asset_tag_id`"""
     data = {
         "data": {
             "type": "asset",

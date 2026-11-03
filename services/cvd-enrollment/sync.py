@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 from hackerone import (
     HackerOneAPIError,
-    add_scope,
     HackerOneSettings,
+    add_scope,
     archive_assets,
     create_asset,
     get_scope,
@@ -63,9 +63,7 @@ def compute_changes(
             d for d in enrolled if d.get("domain") and d["domain"] not in known_to_h1
         ),
         new_denied=tuple(d for d in denied if d.get("domain") and d["domain"] not in known_to_h1),
-        rescope_to_enrolled=tuple(
-            d["domain"] for d in enrolled if d.get("domain") in out_of_scope
-        ),
+        rescope_to_enrolled=tuple(d["domain"] for d in enrolled if d.get("domain") in out_of_scope),
         rescope_to_denied=tuple(i for i in sorted(in_scope) if i in denied_names),
         to_archive=tuple(
             a
@@ -110,14 +108,18 @@ def create_assets(
             continue
         tag_id = tag_id_by_name.get(owner)
         if tag_id is None:
-            logger.error(f"No asset tag found for org {owner} (domain {domain}), skipping creation.")
+            logger.error(
+                f"No asset tag found for org {owner} (domain {domain}), skipping creation."
+            )
             failures += 1
             continue
 
         options = domain_doc.get("cvdEnrollment", {})
 
         def create_with_scope(domain=domain, options=options, tag_id=tag_id) -> dict:
-            created = create_asset(settings, domain=domain, options=options, asset_tag_id=int(tag_id))
+            created = create_asset(
+                settings, domain=domain, options=options, asset_tag_id=int(tag_id)
+            )
             logger.info(created)
             return add_scope(
                 settings,
@@ -166,5 +168,6 @@ def rescope_assets(
 def archive(settings: HackerOneSettings, assets: list[dict] | tuple[dict, ...]) -> bool:
     """Archive `assets` in H1; return True on success."""
     return _attempt(
-        "Error(s) while archiving CVD assets", lambda: archive_assets(settings, data={"data": list(assets)})
+        "Error(s) while archiving CVD assets",
+        lambda: archive_assets(settings, data={"data": list(assets)}),
     )

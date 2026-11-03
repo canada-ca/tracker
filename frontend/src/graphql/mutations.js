@@ -214,10 +214,7 @@ export const CREATE_DOMAIN = gql`
           cvdEnrollment {
             status
             description
-            maxSeverity
-            confidentialityRequirement
-            integrityRequirement
-            availabilityRequirement
+            reference
           }
         }
         ... on DomainError {
