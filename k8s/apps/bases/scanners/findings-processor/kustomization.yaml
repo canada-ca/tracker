@@ -3,4 +3,3 @@ kind: Kustomization
 namespace: scanners
 resources:
   - deployment.yaml
-  - network-policy.yaml

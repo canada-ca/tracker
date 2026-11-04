@@ -56,11 +56,5 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
             runAsNonRoot: true
-          volumeMounts:
-            - name: tmp
-              mountPath: /tmp
           imagePullPolicy: Always
-      volumes:
-        - name: tmp
-          emptyDir: {}
 status: {}
