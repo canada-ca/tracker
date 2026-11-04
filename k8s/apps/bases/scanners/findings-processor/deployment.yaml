@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: findings-processor
+  labels:
+    app: findings-processor
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: findings-processor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: findings-processor
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: findings-processor
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/findings-processor:master-0000000-0 # {"$imagepolicy": "flux-system:findings-processor"}
+          env:
+            - name: LOG_LEVEL
+              value: info
+            - name: LOG_PRETTY
+              value: "false"
+            - name: NATS_URL
+              value: nats://nats.pubsub:4222
+            - name: NATS_STREAM
+              value: SCANS
+            - name: NATS_SUBJECT
+              value: scans.findings.*
+            - name: NATS_CONSUMER_DURABLE
+              value: findings-processor
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            runAsGroup: 101
+            runAsUser: 100
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          imagePullPolicy: Always
+      volumes:
+        - name: tmp
+          emptyDir: {}
+status: {}
