@@ -158,6 +158,12 @@ spec:
               app: detect-decay
         - namespaceSelector:
             matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: findings-processor
+        - namespaceSelector:
+            matchLabels:
               kubernetes.io/metadata.name: uptime
           podSelector:
             matchLabels:
