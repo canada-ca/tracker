@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: subdomain-takeover
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/subdomain-takeover
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: subdomain-takeover
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: subdomain-takeover
+  policy:
+    numerical:
+      order: asc

@@ -30,3 +30,5 @@ resources:
   - cvd-enrollment-image-repo-policy.yaml
   - uptime-sync-image-repo-policy.yaml
   - gatus-image-repo-policy.yaml
+  - subdomain-takeover-image-repo-policy.yaml
+  - findings-processor-image-repo-policy.yaml
