@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: subdomain-takeover
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/subdomain-takeover:master-0000000-0 # {"$imagepolicy": "flux-system:subdomain-takeover"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/subdomain-takeover:master-efa257a-1792085694 # {"$imagepolicy": "flux-system:subdomain-takeover"}
           env:
             - name: LOG_LEVEL
               value: info
