@@ -321,10 +321,7 @@ export const UPDATE_DOMAIN = gql`
           cvdEnrollment {
             status
             description
-            maxSeverity
-            confidentialityRequirement
-            integrityRequirement
-            availabilityRequirement
+            reference
           }
         }
         ... on DomainError {
