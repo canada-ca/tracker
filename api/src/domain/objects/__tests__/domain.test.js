@@ -123,10 +123,7 @@ describe('given the domain object', () => {
         const cvdEnrollmentValue = {
           status: 'ENROLLED',
           description: 'Test asset',
-          maxSeverity: 'HIGH',
-          confidentialityRequirement: 'HIGH',
-          integrityRequirement: 'LOW',
-          availabilityRequirement: 'LOW',
+          reference: 'ref',
         }
 
         await expect(

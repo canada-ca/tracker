@@ -128,120 +128,24 @@ export function CvdEnrollmentForm({ handleChange, values, ...rest }) {
               placeholder={t`Add details about the enrollment (optional)`}
             />
           </FormControl>
-
           <FormControl mb="2">
-            <FormLabel htmlFor="cvdEnrollment.maxSeverity" fontWeight="bold">
+            <FormLabel htmlFor="cvdEnrollment.reference" fontWeight="bold">
               <Flex align="center">
-                <Trans>Max Severity</Trans>
+                <Trans>Reference</Trans>
               </Flex>
             </FormLabel>
-            <Select
-              name="cvdEnrollment.maxSeverity"
-              id="cvdEnrollment.maxSeverity"
-              borderColor="black"
+            <Input
+              type="text"
+              name="cvdEnrollment.reference"
+              id="cvdEnrollment.reference"
+              value={values.cvdEnrollment.reference || ''}
               onChange={handleChange}
-              value={values.cvdEnrollment.maxSeverity || ''}
-            >
-              <option value="" hidden={!!values.cvdEnrollment.maxSeverity}>
-                <Trans>Select severity</Trans>
-              </option>
-              <option value="LOW">
-                <Trans>Low</Trans>
-              </option>
-              <option value="MEDIUM">
-                <Trans>Medium</Trans>
-              </option>
-              <option value="HIGH">
-                <Trans>High</Trans>
-              </option>
-              <option value="CRITICAL">
-                <Trans>Critical</Trans>
-              </option>
-            </Select>
-          </FormControl>
-
-          <FormControl mb="2">
-            <FormLabel htmlFor="cvdEnrollment.confidentialityRequirement" fontWeight="bold">
-              <Flex align="center">
-                <Trans>Confidentiality Requirement</Trans>
-              </Flex>
-            </FormLabel>
-            <Select
-              name="cvdEnrollment.confidentialityRequirement"
-              id="cvdEnrollment.confidentialityRequirement"
               borderColor="black"
-              onChange={handleChange}
-              value={values.cvdEnrollment.confidentialityRequirement || ''}
-            >
-              <option value="" hidden={!!values.cvdEnrollment.confidentialityRequirement}>
-                <Trans>Select requirement</Trans>
-              </option>
-              <option value="NONE">
-                <Trans>None</Trans>
-              </option>
-              <option value="LOW">
-                <Trans>Low</Trans>
-              </option>
-              <option value="HIGH">
-                <Trans>High</Trans>
-              </option>
-            </Select>
-          </FormControl>
-
-          <FormControl mb="2">
-            <FormLabel htmlFor="cvdEnrollment.integrityRequirement" fontWeight="bold">
-              <Flex align="center">
-                <Trans>Integrity Requirement</Trans>
-              </Flex>
-            </FormLabel>
-            <Select
-              name="cvdEnrollment.integrityRequirement"
-              id="cvdEnrollment.integrityRequirement"
-              borderColor="black"
-              onChange={handleChange}
-              value={values.cvdEnrollment.integrityRequirement || ''}
-            >
-              <option value="" hidden={!!values.cvdEnrollment.integrityRequirement}>
-                <Trans>Select requirement</Trans>
-              </option>
-              <option value="NONE">
-                <Trans>None</Trans>
-              </option>
-              <option value="LOW">
-                <Trans>Low</Trans>
-              </option>
-              <option value="HIGH">
-                <Trans>High</Trans>
-              </option>
-            </Select>
-          </FormControl>
-
-          <FormControl mb="2">
-            <FormLabel htmlFor="cvdEnrollment.availabilityRequirement" fontWeight="bold">
-              <Flex align="center">
-                <Trans>Availability Requirement</Trans>
-              </Flex>
-            </FormLabel>
-            <Select
-              name="cvdEnrollment.availabilityRequirement"
-              id="cvdEnrollment.availabilityRequirement"
-              borderColor="black"
-              onChange={handleChange}
-              value={values.cvdEnrollment.availabilityRequirement || ''}
-            >
-              <option value="" hidden={!!values.cvdEnrollment.availabilityRequirement}>
-                <Trans>Select requirement</Trans>
-              </option>
-              <option value="NONE">
-                <Trans>None</Trans>
-              </option>
-              <option value="LOW">
-                <Trans>Low</Trans>
-              </option>
-              <option value="HIGH">
-                <Trans>High</Trans>
-              </option>
-            </Select>
+              borderRadius={4}
+              padding={2}
+              width="100%"
+              placeholder={t`Add reference identifier or tag of the asset`}
+            />
           </FormControl>
         </>
       )}

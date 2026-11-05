@@ -57,6 +57,11 @@ spec:
                     secretKeyRef:
                       name: api
                       key: H1_ORG_ID
+                - name: PROGRAM_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: H1_PROGRAM_ID
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
@@ -68,4 +73,4 @@ spec:
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
           restartPolicy: Never
-      backoffLimit: 4
+      backoffLimit: 1

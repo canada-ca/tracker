@@ -53,24 +53,24 @@ describe('given the DomainDataSource', () => {
         await collections.ownership.save({ _from: org._id, _to: domain._id })
         const domainDataSource = new DomainDataSource({ query })
 
-        await expect(domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id })).resolves.toEqual(
-          true,
-        )
+        await expect(
+          domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id }),
+        ).resolves.toEqual(true)
       })
       it('returns false when the ownership edge belongs to a different org', async () => {
         await collections.ownership.save({ _from: otherOrg._id, _to: domain._id })
         const domainDataSource = new DomainDataSource({ query })
 
-        await expect(domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id })).resolves.toEqual(
-          false,
-        )
+        await expect(
+          domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id }),
+        ).resolves.toEqual(false)
       })
       it('returns false when no ownership edge exists', async () => {
         const domainDataSource = new DomainDataSource({ query })
 
-        await expect(domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id })).resolves.toEqual(
-          false,
-        )
+        await expect(
+          domainDataSource.organizationHasOwnership({ orgId: org._id, domainId: domain._id }),
+        ).resolves.toEqual(false)
       })
     })
 
@@ -126,7 +126,7 @@ describe('given the DomainDataSource', () => {
         cvdEnrollment: {
           status: 'enrolled',
           description: 'Stored asset description',
-          maxSeverity: 'high',
+          reference: 'ref',
         },
       })
     })
@@ -142,14 +142,13 @@ describe('given the DomainDataSource', () => {
 
       const updatedDomain = await domainDataSource.updateCvdEnrollment({
         domain,
-        cvdEnrollment: { description: 'New description', integrityRequirement: 'low' },
+        cvdEnrollment: { description: 'New description' },
       })
 
       expect(updatedDomain.cvdEnrollment).toEqual({
         status: 'enrolled',
         description: 'New description',
-        maxSeverity: 'high',
-        integrityRequirement: 'low',
+        reference: 'ref',
       })
     })
   })

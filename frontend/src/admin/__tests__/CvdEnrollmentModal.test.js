@@ -17,10 +17,7 @@ const orgId = 'testid='
 const existingEnrollment = {
   status: 'ENROLLED',
   description: 'Owned asset',
-  maxSeverity: 'HIGH',
-  confidentialityRequirement: 'LOW',
-  integrityRequirement: 'LOW',
-  availabilityRequirement: 'NONE',
+  reference: 'ref',
 }
 
 const updateCvdEnrollmentMock = (variables, result) => ({
@@ -111,7 +108,6 @@ describe('<CvdEnrollmentModal />', () => {
 
     await waitFor(() => expect(statusSelect()).toHaveValue('NOT_ENROLLED'))
     expect(screen.queryByRole('textbox', { name: /Description/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('combobox', { name: /Max Severity/i })).not.toBeInTheDocument()
   })
 
   it('shows an error toast when the API returns a DomainError', async () => {

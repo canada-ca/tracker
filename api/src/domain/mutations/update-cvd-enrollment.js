@@ -52,7 +52,7 @@ export const updateCvdEnrollment = new mutationWithClientMutationId({
     for (const key of Object.keys(cvdEnrollmentFields)) {
       const value = args[key]
       if (value === undefined || value === null) continue
-      cvdEnrollment[key] = key === 'description' ? cleanseInput(value) : value
+      cvdEnrollment[key] = ['description', 'reference'].includes(key) ? cleanseInput(value) : value
     }
 
     if (Object.keys(cvdEnrollment).length === 0) {

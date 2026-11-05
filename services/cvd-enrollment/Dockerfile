@@ -30,7 +30,7 @@ WORKDIR /cvd-enrollment
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY hackerone.py main.py ./
+COPY *.py ./
 
 RUN adduser -D enrollment
 USER enrollment
@@ -41,7 +41,8 @@ CMD ["python3", "main.py"]
 
 FROM production AS test
 
-# Copy test files (which were excluded from production)
+# Add the tests directory and the rest of the build context. The production
+# stage copies only the top-level *.py files.
 COPY . .
 USER enrollment
 
