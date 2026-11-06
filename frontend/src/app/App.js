@@ -203,7 +203,7 @@ export function App({ initialLoading, isLoginRequired }) {
         </Box>
       </NotificationBanner>
 
-      <NotificationBanner status="error" bannerId="php-tag-filter">
+      <NotificationBanner status="error" bannerId="php-al26-026" hideable>
         <Box>
           <AlertTitle>
             <Trans>View/Manage Your PHP Services</Trans>
