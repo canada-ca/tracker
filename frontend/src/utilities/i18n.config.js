@@ -9,6 +9,17 @@ export const locales = {
   fr: 'Français',
 }
 
+const LOCALE_STORAGE_KEY = 'locale'
+
+export function getStoredLocale() {
+  try {
+    const stored = window.localStorage.getItem(LOCALE_STORAGE_KEY)
+    return ['en', 'fr'].includes(stored) ? stored : null
+  } catch (e) {
+    return null
+  }
+}
+
 export async function activate(locale) {
   let catalog
   try {
@@ -22,6 +33,13 @@ export async function activate(locale) {
 
   i18n.load(locale, catalog.messages)
   i18n.activate(locale)
+
+  try {
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale)
+  } catch (e) {
+    // storage unavailable (e.g. private mode) — app still works,
+    // the choice just won't survive to the next tab.
+  }
 }
 
 let defaultLanguage
