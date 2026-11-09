@@ -69,7 +69,7 @@ def php_signs_without_a_version(hop):
         signs.append("PHPSESSID cookie")
     if "laravel_session" in cookies:
         signs.append("Laravel session cookie")
-    if "api.w.org" in link or "wp-json" in link:
+    if 'rel="https://api.w.org/"' in link:
         signs.append("WordPress REST API Link header")
     if "wordpress" in headers.get("x-redirect-by", "").lower():
         signs.append("X-Redirect-By: WordPress")
