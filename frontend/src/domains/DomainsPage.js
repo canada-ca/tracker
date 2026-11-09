@@ -153,7 +153,7 @@ export default function DomainsPage() {
           { value: 'PHP_UNKNOWN_VERSION', text: t`PHP: unknown version` },
           { value: 'PHP_NOT_AFFECTED', text: t`PHP: not affected` },
         ]
-      : []),
+      : [{ value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` }]),
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -261,6 +261,7 @@ export default function DomainsPage() {
             webScanPending,
             userHasPermission,
             cvdEnrollment,
+            poweredByPHP,
             phpResult,
           },
           index,
@@ -280,6 +281,7 @@ export default function DomainsPage() {
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
+              poweredByPHP={poweredByPHP}
               phpResult={phpResult}
               isSuperAdmin={isSuperAdmin}
               mb="3"
@@ -356,7 +358,7 @@ export default function DomainsPage() {
           totalRecords={totalCount}
         />
 
-        {isSuperAdmin && (
+        {isSuperAdmin ? (
           <Button
             variant="primary"
             onClick={() => {
@@ -366,6 +368,17 @@ export default function DomainsPage() {
             mb="2"
           >
             <Trans>Filter By PHP: vulnerable</Trans>
+          </Button>
+        ) : (
+          <Button
+            variant="primary"
+            onClick={() => {
+              setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+              resetToFirstPage()
+            }}
+            mb="2"
+          >
+            <Trans>Filter By PHP</Trans>
           </Button>
         )}
 

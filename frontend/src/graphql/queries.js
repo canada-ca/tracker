@@ -865,6 +865,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             cvdEnrollment {
               status
             }
+            poweredByPHP
             phpResult {
               status
               version
@@ -944,6 +945,7 @@ export const PAGINATED_DOMAINS = gql`
           cvdEnrollment {
             status
           }
+          poweredByPHP
           phpResult {
             status
             version

@@ -39,6 +39,7 @@ function DomainCard({
   webScanPending,
   userHasPermission,
   cvdEnrollment,
+  poweredByPHP,
   phpResult,
   isSuperAdmin,
   ...rest
@@ -197,6 +198,13 @@ function DomainCard({
                   </TagLabel>
                 </Tag>
               )}
+              {!isSuperAdmin && userHasPermission && poweredByPHP && (
+                <Tag my="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    PHP
+                  </TagLabel>
+                </Tag>
+              )}
               {isSuperAdmin && phpResult?.status === 'VULNERABLE' && (
                 <Tag my="1" mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                   <Tooltip label={phpVulnerableText} fontSize="md" placement="top">
@@ -328,6 +336,7 @@ DomainCard.propTypes = {
   userHasPermission: bool,
   assetState: string,
   cvdEnrollment: object,
+  poweredByPHP: bool,
   phpResult: object,
   isSuperAdmin: bool,
 }

@@ -137,7 +137,7 @@ export function OrganizationDomains({
           { value: 'PHP_UNKNOWN_VERSION', text: t`PHP: unknown version` },
           { value: 'PHP_NOT_AFFECTED', text: t`PHP: not affected` },
         ]
-      : []),
+      : [{ value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` }]),
   ]
 
   const assetStateOptions = [
@@ -198,6 +198,7 @@ export function OrganizationDomains({
             webScanPending,
             userHasPermission,
             cvdEnrollment,
+            poweredByPHP,
             phpResult,
           },
           index,
@@ -219,6 +220,7 @@ export function OrganizationDomains({
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
+              poweredByPHP={poweredByPHP}
               phpResult={phpResult}
               isSuperAdmin={isSuperAdmin}
               mb="3"
@@ -323,7 +325,7 @@ export function OrganizationDomains({
 
       {orgSlug !== 'my-tracker' && (
         <Box>
-          {isSuperAdmin && (
+          {isSuperAdmin ? (
             <Button
               variant="primary"
               onClick={() => {
@@ -333,6 +335,17 @@ export function OrganizationDomains({
               mb="2"
             >
               <Trans>Filter By PHP: vulnerable</Trans>
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+                resetToFirstPage()
+              }}
+              mb="2"
+            >
+              <Trans>Filter By PHP</Trans>
             </Button>
           )}
           <Flex align="center" mb="2">
