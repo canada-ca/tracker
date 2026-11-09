@@ -17,6 +17,7 @@ import { webOrder } from '../../web-scan/inputs/web-order'
 import { additionalFinding } from '../../additional-findings/objects/additional-finding'
 import { tagType } from '../../tags/objects'
 import { cvdEnrollment } from '../../additional-findings/objects'
+import { phpResultType } from './php-result'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -410,6 +411,17 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Domain returns a response header that includes PHP.',
       resolve: ({ poweredByPHP }) => poweredByPHP,
+    },
+    phpResult: {
+      type: phpResultType,
+      description:
+        "PHP seen in the domain's own responses in the latest web scan, checked against the open PHP advisories.",
+      resolve: async ({ _id, phpResult }, __, { auth: { userRequired }, dataSources: { auth: authDS } }) => {
+        await userRequired()
+        const permitted = await authDS.domainPermissionByDomainId.load(_id)
+        if (!permitted) return null
+        return phpResult
+      },
     },
   }),
   interfaces: [nodeInterface],

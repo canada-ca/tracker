@@ -115,6 +115,13 @@ describe('given getAllOrganizationDomainStatuses', () => {
       hasEntrustCertificate: false,
       cveDetected: false,
       poweredByPHP: false,
+      phpResult: {
+        status: 'vulnerable',
+        version: 'PHP/8.1.2-1ubuntu2.19',
+        advisories: ['AL26-026'],
+        cves: ['CVE-2026-109618', 'CVE-2026-109619'],
+        evidence: ['X-Powered-By: PHP/8.1.2-1ubuntu2.19'],
+      },
     })
     domainTwo = await collections.domains.save({
       domain: 'domain.two',
@@ -277,9 +284,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,top25Vulnerabilities
-"domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass",Assess,"NOERROR","false","false","false","false","false",""
-"domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail",Deploy,"NOERROR","false","false","false","false","false",""`,
+            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,top25Vulnerabilities,phpStatus,phpVersion
+"domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass",Assess,"NOERROR","false","false","false","false","false","","vulnerable","PHP/8.1.2-1ubuntu2.19"
+"domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail",Deploy,"NOERROR","false","false","false","false","false","","null","null"`,
           },
         }
 
@@ -399,9 +406,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,top25Vulnerabilities
-"domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass",Assess,"NOERROR","false","false","false","false","false",""
-"domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail",Deploy,"NOERROR","false","false","false","false","false",""`,
+            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,top25Vulnerabilities,phpStatus,phpVersion
+"domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass",Assess,"NOERROR","false","false","false","false","false","","vulnerable","PHP/8.1.2-1ubuntu2.19"
+"domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail",Deploy,"NOERROR","false","false","false","false","false","","null","null"`,
           },
         }
         expect(response).toEqual(expectedResponse)

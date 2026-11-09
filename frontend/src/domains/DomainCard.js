@@ -40,7 +40,8 @@ function DomainCard({
   webScanPending,
   userHasPermission,
   cvdEnrollment,
-  poweredByPHP,
+  phpResult,
+  isSuperAdmin,
   ...rest
 }) {
   const location = useLocation()
@@ -108,6 +109,14 @@ function DomainCard({
     my: { base: 2, md: 0 },
     bg: 'gray.100',
   }
+
+  const phpVersion = phpResult?.version
+  const phpEvidence = phpResult?.evidence?.join('; ')
+  const phpAdvisories = phpResult?.advisories?.join(', ')
+  const phpCves = phpResult?.cves?.join(', ')
+  const phpVulnerableText = t`Shows ${phpVersion}, affected by ${phpAdvisories} (${phpCves}).`
+  const phpUnknownVersionText = t`PHP is in use (${phpEvidence}), but its version is not shown in full, so it cannot be checked against the advisories Tracker tracks.`
+  const phpNotAffectedText = t`Shows ${phpVersion}, which is not affected by the advisories Tracker tracks.`
 
   const assetStateLabels = {
     APPROVED: t`Approved`,
@@ -188,11 +197,31 @@ function DomainCard({
                   </TagLabel>
                 </Tag>
               )}
-              {userHasPermission && poweredByPHP && (
-                <Tag my="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                    PHP
-                  </TagLabel>
+              {isSuperAdmin && phpResult?.status === 'VULNERABLE' && (
+                <Tag my="1" mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <Tooltip label={phpVulnerableText} fontSize="md" placement="top">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>PHP: vulnerable</Trans>
+                    </TagLabel>
+                  </Tooltip>
+                </Tag>
+              )}
+              {isSuperAdmin && phpResult?.status === 'UNKNOWN_VERSION' && (
+                <Tag my="1" mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <Tooltip label={phpUnknownVersionText} fontSize="md" placement="top">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>PHP: unknown version</Trans>
+                    </TagLabel>
+                  </Tooltip>
+                </Tag>
+              )}
+              {isSuperAdmin && phpResult?.status === 'NOT_AFFECTED' && (
+                <Tag my="1" mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <Tooltip label={phpNotAffectedText} fontSize="md" placement="top">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>PHP: not affected</Trans>
+                    </TagLabel>
+                  </Tooltip>
                 </Tag>
               )}
             </Flex>
@@ -299,7 +328,8 @@ DomainCard.propTypes = {
   userHasPermission: bool,
   assetState: string,
   cvdEnrollment: object,
-  poweredByPHP: bool,
+  phpResult: object,
+  isSuperAdmin: bool,
 }
 
 const memoizedDomainCard = memo(DomainCard, (prevProps, nextProps) => {

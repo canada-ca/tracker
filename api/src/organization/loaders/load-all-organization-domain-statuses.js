@@ -97,6 +97,21 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.poweredByPHP ${comparison} true
           `
+          } else if (filterValue === 'php-vulnerable') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.phpResult.status ${comparison} "vulnerable"
+          `
+          } else if (filterValue === 'php-unknown-version') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.phpResult.status ${comparison} "unknown_version"
+          `
+          } else if (filterValue === 'php-not-affected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.phpResult.status ${comparison} "not_affected"
+          `
           } else if (filterValue === 'archived') {
             archivedFilter = aql`FILTER d.archived ${comparison} true`
           }
@@ -162,6 +177,8 @@ export const loadAllOrganizationDomainStatuses =
               "hasEntrustCertificate": d.hasEntrustCertificate,
               "poweredByPHP": d.poweredByPHP,
               "top25Vulnerabilities": vulnerabilities,
+              "phpStatus": d.phpResult.status,
+              "phpVersion": d.phpResult.version,
             }
           `
       ).all()

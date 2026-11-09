@@ -868,7 +868,13 @@ export const PAGINATED_ORG_DOMAINS = gql`
             cvdEnrollment {
               status
             }
-            poweredByPHP
+            phpResult {
+              status
+              version
+              advisories
+              cves
+              evidence
+            }
           }
         }
       }
@@ -941,7 +947,13 @@ export const PAGINATED_DOMAINS = gql`
           cvdEnrollment {
             status
           }
-          poweredByPHP
+          phpResult {
+            status
+            version
+            advisories
+            cves
+            evidence
+          }
           __typename
         }
         __typename

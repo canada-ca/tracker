@@ -442,6 +442,21 @@ export class DomainDataSource {
                 ${domainFilters}
                 FILTER v.poweredByPHP ${comparison} true
               `
+          } else if (filterValue === 'php-vulnerable') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.phpResult.status ${comparison} "vulnerable"
+              `
+          } else if (filterValue === 'php-unknown-version') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.phpResult.status ${comparison} "unknown_version"
+              `
+          } else if (filterValue === 'php-not-affected') {
+            domainFilters = aql`
+                ${domainFilters}
+                FILTER v.phpResult.status ${comparison} "not_affected"
+              `
           } else {
             domainFilters = aql`
                 ${domainFilters}
