@@ -236,6 +236,7 @@ def process_msg(msg):
                     domain_name=domain["domain"],
                 )
             except Exception as e:
+                domain["phpResult"] = None
                 logger.error(
                     f"Error while detecting PHP for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
