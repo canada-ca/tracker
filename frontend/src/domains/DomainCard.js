@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
-import { t } from '@lingui/core/macro'
-import { Trans } from '@lingui/react/macro'
+import { Trans, useLingui } from '@lingui/react/macro'
 import {
   Badge,
   Box,
@@ -44,6 +43,7 @@ function DomainCard({
   isSuperAdmin,
   ...rest
 }) {
+  const { t } = useLingui()
   const location = useLocation()
   const toast = useToast()
   const { isLoggedIn, isEmailValidated } = useUserVar()
