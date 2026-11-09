@@ -302,10 +302,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             cvdEnrollment {
               status
               description
-              maxSeverity
-              confidentialityRequirement
-              integrityRequirement
-              availabilityRequirement
+              reference
             }
             organizations(first: 1) {
               totalCount

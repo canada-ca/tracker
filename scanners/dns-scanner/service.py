@@ -139,6 +139,14 @@ def run_scan(msg):
     return formatted_scan_data
 
 
+def has_subdomain_takeover_evidence(scan_data: dict) -> bool:
+    results = scan_data.get("results", {})
+    has_cname = bool(results.get("cname_record"))
+    has_ns = bool((results.get("ns_delegations") or {}).get("ns_hosts"))
+
+    return has_cname or has_ns
+
+
 async def run():
     loop = asyncio.get_running_loop()
 
@@ -233,17 +241,18 @@ async def run():
                 )
                 return
 
-            try:
-                await js.publish(
-                    stream="SCANS",
-                    subject="scans.subdomain_takeover_requests",
-                    payload=payload,
-                    headers=original_headers,
-                )
-            except Exception as e:
-                logger.error(
-                    f"Failed to publish subdomain takeover request for domain_key={scan_data.get('domain_key')}: {e}"
-                )
+            if has_subdomain_takeover_evidence(scan_data):
+                try:
+                    await js.publish(
+                        stream="SCANS",
+                        subject="scans.subdomain_takeover_requests",
+                        payload=payload,
+                        headers=original_headers,
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Failed to publish subdomain takeover request for domain_key={scan_data.get('domain_key')}: {e}"
+                    )
 
             try:
                 logger.debug(f"Acknowledging message: {original_msg}")
