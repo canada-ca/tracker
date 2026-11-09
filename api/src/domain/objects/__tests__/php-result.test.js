@@ -89,11 +89,11 @@ describe('given the phpResult object', () => {
 
     beforeEach(async () => {
       userWithAccess = await collections.users.save({
-        userName: 'with.access@istio.actually.exists',
+        userName: 'with.access@email.gc.ca',
         emailValidated: true,
       })
       userWithoutAccess = await collections.users.save({
-        userName: 'without.access@istio.actually.exists',
+        userName: 'without.access@email.gc.ca',
         emailValidated: true,
       })
       const org = await collections.organizations.save({
