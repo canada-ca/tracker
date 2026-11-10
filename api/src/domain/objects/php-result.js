@@ -9,7 +9,7 @@ export const phpResultType = new GraphQLObjectType({
   fields: () => ({
     status: {
       type: PhpStatusEnum,
-      description: 'Whether the PHP version shown is affected by an open advisory; null when no PHP was seen.',
+      description: 'Whether the PHP version shown is affected by an open advisory.',
       resolve: ({ status }) => status,
     },
     version: {

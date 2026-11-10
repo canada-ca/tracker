@@ -415,7 +415,7 @@ export const domainType = new GraphQLObjectType({
     phpResult: {
       type: phpResultType,
       description:
-        "PHP seen in the domain's own responses in the latest web scan, checked against the open PHP advisories.",
+        "PHP seen in the domain's own responses in the latest web scan, checked against the open PHP advisories. Null when no PHP was seen.",
       resolve: async ({ _id, phpResult }, __, { auth: { userRequired }, dataSources: { auth: authDS } }) => {
         await userRequired()
         const permitted = await authDS.domainPermissionByDomainId.load(_id)
