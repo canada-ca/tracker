@@ -5,9 +5,10 @@ const {
   getBilingualOrgNames,
   getPendingOrgUserCount,
   getOrgUsers,
+  getNewDomainUpdateLogs,
 } = require('./database')
-const { sendOrgFootprintEmail, sendPendingOrgUsersEmail } = require('./notify')
-const logger = require('./logger')
+const { buildNewEnrollmentEmailPayload } = require('./new-cvd-enrollments')
+const { sendOrgFootprintEmail, sendPendingOrgUsersEmail, sendNewCVDEnrollmentsEmail } = require('./notify')
 
 const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
   const orgKeys = await getAllOrgKeys({ query })
@@ -38,6 +39,24 @@ const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
         await sendPendingOrgUsersEmail({ notifyClient, logger, user: admin, orgNames })
       }
     }
+  }
+
+  try {
+    const newDomainUpdateLogs = await getNewDomainUpdateLogs({ query })
+    const payload = buildNewEnrollmentEmailPayload(newDomainUpdateLogs)
+    if (!payload) {
+      logger.info('No new CVD enrollments, skipping email')
+      return
+    }
+
+    await sendNewCVDEnrollmentsEmail({
+      client: notifyClient,
+      templateId: config.notify.templates.cvdEnrollment,
+      email: config.serviceAccount,
+      payload,
+    })
+  } catch (err) {
+    logger.error({ err }, `Failed to send new CVD enrollments.`)
   }
 }
 
