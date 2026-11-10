@@ -1,10 +1,10 @@
-async function sendNewCVDEnrollmentsEmail({ client, templateId, payload, email }) {
+async function sendNewCVDEnrollmentsEmail({ logger, client, templateId, payload, email }) {
   try {
     await client.sendEmail(templateId, email, {
       personalisation: { ...payload },
     })
   } catch (err) {
-    throw new Error('Failed to send new CVD enrollments email', { cause: err })
+    logger.error({ err }, 'Failed to send new CVD enrollments email')
   }
 }
 

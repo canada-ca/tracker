@@ -48,16 +48,17 @@ const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
       logger.info('No new CVD enrollments, skipping email')
       return
     }
-
-    await sendNewCVDEnrollmentsEmail({
-      client: notifyClient,
-      templateId: config.notify.templates.cvdEnrollment,
-      email: config.serviceAccount,
-      payload,
-    })
   } catch (err) {
-    logger.error({ err }, `Failed to send new CVD enrollments.`)
+    logger.error({ err }, `Failed to fetch new CVD enrollments.`)
   }
+
+  await sendNewCVDEnrollmentsEmail({
+    logger,
+    client: notifyClient,
+    templateId: config.notify.templates.cvdEnrollment,
+    email: config.serviceAccount,
+    payload,
+  })
 }
 
 module.exports = {
