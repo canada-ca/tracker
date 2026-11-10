@@ -15,6 +15,10 @@ def scan(*hops):
     return {"connection_results": {"httpChainResult": {"connections": list(hops)}, "httpsChainResult": None}}
 
 
+def https_scan(*hops):
+    return {"connection_results": {"httpChainResult": None, "httpsChainResult": {"connections": list(hops)}}}
+
+
 @pytest.mark.parametrize(
     "x_powered_by, status",
     [
@@ -80,7 +84,9 @@ def test_no_php_seen(hops):
 def test_worst_ip_in_the_run_decides():
     scans = [
         scan(hop({"Set_Cookie": "PHPSESSID=abc; path=/"})),
-        scan(hop({"Server": "Apache/2.4.52 (Ubuntu)", "X_Powered_By": "PHP/8.1.2-1ubuntu2.19"})),
+        https_scan(
+            hop({"Server": "Apache/2.4.52 (Ubuntu)", "X_Powered_By": "PHP/8.1.2-1ubuntu2.19"}, uri=f"https://{DOMAIN}")
+        ),
         scan(hop({"X_Powered_By": "PHP/8.4.27"})),
         {"connection_results": None},
     ]
