@@ -13,3 +13,4 @@ schema.faker.graphql
 .eslintrc
 .prettierrc
 .dockerignore
+**/*.env
