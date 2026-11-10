@@ -1,5 +1,16 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
+    id: build-test-image
+    dir: scanners/web-processor
+    args: ["build", "--target=test", "-t", "test-image", "."]
+
+  - name: "test-image"
+    id: test-results
+    dir: /web-processor
+    entrypoint: python3
+    args: ["-m", "pytest", "-v"]
+
+  - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
     entrypoint: "bash"
     dir: scanners/web-processor

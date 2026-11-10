@@ -128,7 +128,7 @@ def php_result_for_run(completed_web_scans, domain_name):
     ip_results = [ip_result(scan["connection_results"], domain_name) for scan in completed_web_scans]
     ip_results = [result for result in ip_results if result]
     if not ip_results:
-        return {"status": None, "version": None, "advisories": [], "cves": [], "evidence": []}
+        return None
     deciding = min(ip_results, key=lambda result: worst_first(result["status"], result["version"]))
     vulnerable = deciding["status"] == VULNERABLE
     return {

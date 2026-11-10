@@ -5,6 +5,7 @@ importlib_metadata==8.7.0
 nats-py==2.8.0
 packaging==25.0
 PyJWT==2.15.0
+pytest==9.0.3
 python-arango==8.2.3
 python-dotenv==1.2.2
 requests==2.33.0

@@ -18,7 +18,6 @@ def scan(*hops):
 @pytest.mark.parametrize(
     "x_powered_by, status",
     [
-        ("ASP.NET", None),
         ("PHP", "unknown_version"),
         ("PHP/8.3", "unknown_version"),
         ("PHP/5.3.29", "not_affected"),
@@ -52,23 +51,30 @@ def test_status_of_the_version_shown(x_powered_by, status):
         ([hop({"X_Pingback": "https://a.gc.ca/xmlrpc.php"})], ["X-Pingback header (WordPress)"]),
         ([hop({"X_Generator": "Drupal 10", "X_Drupal_Cache": "HIT"})], ["X-Generator: Drupal 10", "X-Drupal header"]),
         ([hop({}, uri=f"{URL}/index.php")], [f".php URL answered 200: {URL}/index.php"]),
-        ([hop({}, uri=f"{URL}/index.php", status_code=301)], []),
-        ([hop({}, uri=f"{URL}/index.php", status_code=404)], []),
-        ([hop({}, uri=f"{URL}/index.php", error="CONNECTION_ERROR")], []),
-        ([hop({"Server": "Apache mod_suphp/0.7.1"})], []),
-        ([hop({"Location": "https://a.gc.ca/PHP/8.1.2"})], []),
         ([hop({"x_powered_by": "PHP/8.4.27"}, uri="http://A.GC.CA/")], ["X-Powered-By: PHP/8.4.27"]),
-        (
-            [
-                hop({"Location": "https://cms.example.com/login.php"}, status_code=302),
-                hop({"X_Powered_By": "PHP/7.4.33"}, uri="https://cms.example.com/login.php"),
-            ],
-            [],
-        ),
     ],
 )
 def test_php_evidence(hops, evidence):
     assert php_result_for_run([scan(*hops)], DOMAIN)["evidence"] == evidence
+
+
+@pytest.mark.parametrize(
+    "hops",
+    [
+        [hop({"X_Powered_By": "ASP.NET"})],
+        [hop({}, uri=f"{URL}/index.php", status_code=301)],
+        [hop({}, uri=f"{URL}/index.php", status_code=404)],
+        [hop({}, uri=f"{URL}/index.php", error="CONNECTION_ERROR")],
+        [hop({"Server": "Apache mod_suphp/0.7.1"})],
+        [hop({"Location": "https://a.gc.ca/PHP/8.1.2"})],
+        [
+            hop({"Location": "https://cms.example.com/login.php"}, status_code=302),
+            hop({"X_Powered_By": "PHP/7.4.33"}, uri="https://cms.example.com/login.php"),
+        ],
+    ],
+)
+def test_no_php_seen(hops):
+    assert php_result_for_run([scan(*hops)], DOMAIN) is None
 
 
 def test_worst_ip_in_the_run_decides():
