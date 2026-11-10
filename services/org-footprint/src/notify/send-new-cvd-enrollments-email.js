@@ -1,6 +1,6 @@
 async function sendNewCVDEnrollmentsEmail({ client, templateId, payload, email }) {
   try {
-    await client.sendMail(templateId, email, {
+    await client.sendEmail(templateId, email, {
       personalisation: { ...payload },
     })
   } catch (err) {

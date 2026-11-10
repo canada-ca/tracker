@@ -27,8 +27,8 @@ function buildNewEnrollmentEmailPayload(logs) {
     '| --- | --- | --- | --- | --- |',
   ]
 
-  const table = [...HEADER, ...logs.map(toRow)].join('\n')
-  return { enrollments_table: table, enrollments_count: logs.length }
+  const table = [...HEADER, ...newlyEnrolledDomainLogs.map(toRow)].join('\n')
+  return { enrollments_table: table, enrollments_count: newlyEnrolledDomainLogs.length }
 }
 
 module.exports = {
