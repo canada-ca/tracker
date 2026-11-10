@@ -1,10 +1,4 @@
-const logger = require('../logger')
-
-const { NOTIFICATION_PENDING_USERS } = process.env
-
-const sendPendingOrgUsersEmail = async ({ notifyClient, user, orgNames }) => {
-  const templateId = NOTIFICATION_PENDING_USERS
-
+const sendPendingOrgUsersEmail = async ({ notifyClient, templateId, logger, user, orgNames }) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {

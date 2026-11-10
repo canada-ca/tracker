@@ -9,18 +9,16 @@ const {
 const { sendOrgFootprintEmail, sendPendingOrgUsersEmail } = require('./notify')
 const logger = require('./logger')
 
-const { SERVICE_ACCOUNT_EMAIL, REDIRECT_TO_SERVICE_ACCOUNT_EMAIL } = process.env
-
-const orgFootprintService = async ({ query, notifyClient }) => {
+const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
   const orgKeys = await getAllOrgKeys({ query })
   for (const orgKey of orgKeys) {
     const orgNames = await getBilingualOrgNames({ query, orgKey })
     const auditLogs = await getNewAuditLogs({ query, orgKey })
     if (auditLogs.length > 0) {
       const orgUsers = await getOrgUsers({ query, orgKey })
-      if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL?.toLowerCase() === 'true') {
+      if (config.redirect) {
         orgUsers.push({
-          userName: SERVICE_ACCOUNT_EMAIL,
+          userName: config.serviceAccount,
           displayName: 'Service Account',
           _key: 'service-account',
         })
@@ -28,7 +26,7 @@ const orgFootprintService = async ({ query, notifyClient }) => {
 
       logger.info({ orgKey, auditLogCount: auditLogs.length }, 'Sending recent activity email to admins of org')
       for (const user of orgUsers) {
-        await sendOrgFootprintEmail({ notifyClient, user, auditLogs, orgNames })
+        await sendOrgFootprintEmail({ notifyClient, user, logger, auditLogs, orgNames })
       }
     }
 
@@ -37,7 +35,7 @@ const orgFootprintService = async ({ query, notifyClient }) => {
       const orgAdmins = await getOrgAdmins({ query, orgKey })
       logger.info({ orgKey, pendingUserCount }, 'Sending pending users email to admins of org')
       for (const admin of orgAdmins) {
-        await sendPendingOrgUsersEmail({ notifyClient, user: admin, orgNames })
+        await sendPendingOrgUsersEmail({ notifyClient, logger, user: admin, orgNames })
       }
     }
   }

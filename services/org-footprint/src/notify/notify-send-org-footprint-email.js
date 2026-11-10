@@ -1,10 +1,4 @@
-const logger = require('../logger')
-
-const { NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
-
-const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }) => {
-  const templateId = NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
-
+const sendOrgFootprintEmail = async ({ notifyClient, templateId, logger, user, auditLogs, orgNames }) => {
   // Get stats for user changes
   const usersAdded = auditLogs.filter((log) => log.action === 'add' && log.target.resourceType === 'user')
   const usersUpdated = auditLogs.filter((log) => log.action === 'update' && log.target.resourceType === 'user')
