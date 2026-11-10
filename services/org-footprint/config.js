@@ -17,6 +17,8 @@ function buildConfig() {
   return {
     nodeEnv: NODE_ENV,
     logLevel: LOG_LEVEL || 'info',
+    serviceAccount: SERVICE_ACCOUNT_EMAIL,
+    redirect: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL === 'true',
     db: {
       rootPassword: DB_PASS,
       url: DB_URL,
@@ -25,8 +27,6 @@ function buildConfig() {
     notify: {
       apiKey: NOTIFICATION_API_KEY,
       apiUrl: NOTIFICATION_API_URL,
-      serviceAccount: SERVICE_ACCOUNT_EMAIL,
-      redirect: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL === 'true',
       templates: {
         pendingUsers: NOTIFICATION_PENDING_USERS,
         orgFootprint: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL,
