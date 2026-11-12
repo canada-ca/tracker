@@ -8,14 +8,14 @@ const getOrgAdmins = async ({ query, orgKey }) => {
             RETURN v
     `
   } catch (err) {
-    throw new Error(`Database error occurred while trying to find org admins: ${err}`)
+    throw new Error('Database error occurred while trying to find org admins', { cause: err })
   }
 
   let orgAdmins
   try {
     orgAdmins = await cursor.all()
   } catch (err) {
-    throw new Error(`Cursor error occurred while trying to find org admins: ${err}`)
+    throw new Error('Cursor error occurred while trying to find org admins', { cause: err })
   }
 
   return orgAdmins
