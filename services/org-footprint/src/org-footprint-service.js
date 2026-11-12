@@ -7,11 +7,17 @@ const {
   getOrgUsers,
   getNewDomainUpdateLogs,
 } = require('./database')
-const { buildOrgFootprintPayload, addServiceAccountToRecipients, buildNewEnrollmentEmailPayload } = require('./core')
+const {
+  buildOrgFootprintPayload,
+  addServiceAccountToRecipients,
+  buildNewEnrollmentEmailPayload,
+  buildPendingUsersPayload,
+} = require('./core')
 
 const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
   const args = { config, logger, query, notifyClient }
   const orgKeys = await getAllOrgKeys({ query })
+  let failures = 0
 
   for (const orgKey of orgKeys) {
     let orgNames
@@ -19,29 +25,36 @@ const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
       orgNames = await getBilingualOrgNames({ query, orgKey })
     } catch (err) {
       logger.error({ orgKey, err }, 'Failed to fetch org names, skipping org...')
+      failures += 1
       continue
     }
 
     const orgArgs = { orgKey, orgNames, ...args }
 
     try {
-      await processOrgFootprints(orgArgs)
+      failures += await processOrgFootprints(orgArgs)
     } catch (err) {
       logger.error({ err, orgKey }, 'Failed to process org footprint notification.')
+      failures += 1
     }
 
     try {
-      await processPendingUsers(orgArgs)
+      failures += await processPendingUsers(orgArgs)
     } catch (err) {
       logger.error({ err, orgKey }, 'Failed to process pending users notifications.')
+      failures += 1
     }
   }
 
   try {
-    await processNewCVDEnrollments(args)
+    failures += await processNewCVDEnrollments(args)
   } catch (err) {
     logger.error({ err }, 'Failed to process new CVD enrollments notifications.')
+    failures += 1
   }
+
+  if (failures > 0) logger.warn({ failures }, 'Run completed with failures')
+  return failures
 }
 
 async function processOrgFootprints({ config, query, logger, orgKey, orgNames, notifyClient }) {
@@ -50,15 +63,16 @@ async function processOrgFootprints({ config, query, logger, orgKey, orgNames, n
   const payload = buildOrgFootprintPayload({ logs, orgNames })
   if (!payload) {
     logger.info('No new asset change logs, skipping org footprint email')
-    return
+    return 0
   }
 
   let users = await getOrgUsers({ query, orgKey })
   users = addServiceAccountToRecipients({ users, redirect, serviceAccount })
 
   logger.info({ orgKey }, 'Sending recent activity email to admins of org')
+  let failedSends = 0
   for (const user of users) {
-    await sendNotification({
+    const sent = await sendNotification({
       notifyClient,
       templateId: config.notify.templates.orgFootprint,
       user,
@@ -66,21 +80,24 @@ async function processOrgFootprints({ config, query, logger, orgKey, orgNames, n
       payload: { display_name: user.displayName, ...payload },
       errorMessage: 'Error occurred when sending org footprint changes via email',
     })
+    if (!sent) failedSends += 1
   }
+  return failedSends
 }
 
 async function processPendingUsers({ config, query, logger, orgKey, notifyClient, orgNames }) {
   const pendingUserCount = await getPendingOrgUserCount({ query, orgKey })
   if (pendingUserCount === 0) {
     logger.info({ orgKey }, 'No pending user invite requests in org.')
-    return
+    return 0
   }
 
   logger.info({ orgKey, pendingUserCount }, 'Sending pending users email to admins of org')
   const orgAdmins = await getOrgAdmins({ query, orgKey })
+  let failedSends = 0
   for (const user of orgAdmins) {
-    const payload = buildPendingUsersPayload({ config, user, orgNames })
-    await sendNotification({
+    const payload = buildPendingUsersPayload({ user, orgNames, adminLink: config.notify.adminLink })
+    const sent = await sendNotification({
       notifyClient,
       templateId: config.notify.templates.pendingUsers,
       logger,
@@ -88,16 +105,9 @@ async function processPendingUsers({ config, query, logger, orgKey, notifyClient
       payload,
       errorMessage: 'Error occurred when sending pending users alert via email',
     })
+    if (!sent) failedSends += 1
   }
-}
-
-function buildPendingUsersPayload({ config, user, orgNames }) {
-  return {
-    display_name: user.displayName,
-    organization_name_en: orgNames.en,
-    organization_name_fr: orgNames.fr,
-    admin_link: config.notify.adminLink,
-  }
+  return failedSends
 }
 
 async function processNewCVDEnrollments({ query, logger, notifyClient, config }) {
@@ -105,9 +115,9 @@ async function processNewCVDEnrollments({ query, logger, notifyClient, config })
   const payload = buildNewEnrollmentEmailPayload(newDomainUpdateLogs)
   if (!payload) {
     logger.info('No new CVD enrollments, skipping email')
-    return
+    return 0
   }
-  await sendNotification({
+  const sent = await sendNotification({
     logger,
     notifyClient,
     templateId: config.notify.templates.cvdEnrollment,
@@ -115,6 +125,7 @@ async function processNewCVDEnrollments({ query, logger, notifyClient, config })
     payload,
     errorMessage: 'Failed to send new CVD enrollments email',
   })
+  return sent ? 0 : 1
 }
 
 const sendNotification = async ({
@@ -129,8 +140,10 @@ const sendNotification = async ({
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: payload,
     })
+    return true
   } catch (err) {
     logger.error({ err, userKey: user._key }, errorMessage)
+    return false
   }
 }
 

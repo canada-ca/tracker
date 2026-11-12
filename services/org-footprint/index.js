@@ -30,7 +30,8 @@ const notifyClient = new NotifyClient(config.notify.apiUrl, config.notify.apiKey
     options: databaseOptions({ rootPass: config.db.rootPassword }),
   })
 
-  await orgFootprintService({ config, logger, query, notifyClient })
+  const failures = await orgFootprintService({ config, logger, query, notifyClient })
+  if (failures > 0) process.exitCode = 1
 })().catch((err) => {
   logger.error({ err }, 'org-footprint run failed')
   process.exitCode = 1
