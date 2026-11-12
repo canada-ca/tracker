@@ -1,4 +1,4 @@
-const { buildNewEnrollmentEmailPayload } = require('../new-cvd-enrollments')
+const { buildNewEnrollmentEmailPayload } = require('../core/new-cvd-enrollments')
 
 const enrollmentLog = ({
   domain = 'example.gc.ca',

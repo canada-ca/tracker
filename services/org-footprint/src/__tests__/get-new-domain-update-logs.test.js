@@ -7,6 +7,7 @@ const { databaseOptions } = require('../../database-options')
 const { getNewDomainUpdateLogs } = require('../database')
 
 const HOUR = 1000 * 60 * 60
+const DAY = 24 * HOUR
 
 const buildLog = ({ ageInHours, action = 'update', resourceType = 'domain' }) => ({
   timestamp: new Date(Date.now() - ageInHours * HOUR).toISOString(),
@@ -60,7 +61,7 @@ describe('given the getNewDomainUpdateLogs function', () => {
     it.each(cases)('$name', async ({ log, isReturned }) => {
       const saved = await collections.auditLogs.save(log)
 
-      const logs = await getNewDomainUpdateLogs({ query })
+      const logs = await getNewDomainUpdateLogs({ query, window: DAY })
 
       expect(logs).toEqual(isReturned ? [{ ...log, _id: saved._id, _key: saved._key, _rev: saved._rev }] : [])
     })
@@ -81,9 +82,9 @@ describe('given the getNewDomainUpdateLogs function', () => {
     ]
 
     it.each(failures)('throws with the original error as cause when $name', async ({ buildQuery, cause }) => {
-      const failure = getNewDomainUpdateLogs({ query: buildQuery(cause) })
+      const failure = getNewDomainUpdateLogs({ query: buildQuery(cause), window: DAY })
 
-      await expect(failure).rejects.toThrow('Error occured while trying to find new CVD enrollments')
+      await expect(failure).rejects.toThrow('Error occured while trying to find new domain update logs')
       await expect(failure).rejects.toHaveProperty('cause', cause)
     })
   })

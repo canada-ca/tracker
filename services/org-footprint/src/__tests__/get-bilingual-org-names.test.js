@@ -57,34 +57,26 @@ describe('given the getBilingualOrgNames function', () => {
     })
   })
   describe('given an unsuccessful query', () => {
-    describe('when the query fails', () => {
-      it('throws an error', async () => {
-        const mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-        try {
-          await getBilingualOrgNames({ query: mockQuery })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Database error occurred while trying to find org names: Error: Database error occurred.'),
-          )
-        }
-      })
-    })
-    describe('when the cursor fails', () => {
-      it('throws an error', async () => {
-        const cursor = {
-          next() {
-            throw new Error('Cursor error occurred.')
-          },
-        }
-        const mockQuery = jest.fn().mockReturnValue(cursor)
-        try {
-          await getBilingualOrgNames({ query: mockQuery })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Cursor error occurred while trying to find org names: Error: Cursor error occurred.'),
-          )
-        }
-      })
+    const failures = [
+      {
+        name: 'the query fails',
+        buildQuery: (cause) => jest.fn().mockRejectedValue(cause),
+        cause: new Error('Database error occurred.'),
+        message: 'Database error occurred while trying to find org names',
+      },
+      {
+        name: 'the cursor fails',
+        buildQuery: (cause) => jest.fn().mockResolvedValue({ next: () => Promise.reject(cause) }),
+        cause: new Error('Cursor error occurred.'),
+        message: 'Cursor error occurred while trying to find org names',
+      },
+    ]
+
+    it.each(failures)('throws with the original error as cause when $name', async ({ buildQuery, cause, message }) => {
+      const failure = getBilingualOrgNames({ query: buildQuery(cause) })
+
+      await expect(failure).rejects.toThrow(message)
+      await expect(failure).rejects.toHaveProperty('cause', cause)
     })
   })
 })
