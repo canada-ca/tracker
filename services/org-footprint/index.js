@@ -1,7 +1,7 @@
 const { ensure } = require('arango-tools')
 const { NotifyClient } = require('notifications-node-client')
 const { databaseOptions } = require('./database-options')
-const { buildConfig } = require('./config')
+const { buildConfig, ConfigError } = require('./config')
 const { createLogger } = require('./logger')
 const { orgFootprintService } = require('./src')
 
@@ -10,7 +10,15 @@ require('dotenv-safe').config({
   example: '.env.example',
 })
 
-const config = buildConfig()
+let config
+try {
+  config = buildConfig()
+} catch (err) {
+  if (!(err instanceof ConfigError)) throw err
+  console.error(err.message)
+  process.exit(1)
+}
+
 const logger = createLogger({ level: config.logLevel, env: config.nodeEnv })
 const notifyClient = new NotifyClient(config.notify.apiUrl, config.notify.apiKey)
 
@@ -23,4 +31,7 @@ const notifyClient = new NotifyClient(config.notify.apiUrl, config.notify.apiKey
   })
 
   await orgFootprintService({ config, logger, query, notifyClient })
-})()
+})().catch((err) => {
+  logger.error({ err }, 'org-footprint run failed')
+  process.exitCode = 1
+})
