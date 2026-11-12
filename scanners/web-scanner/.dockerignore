@@ -1,0 +1,5 @@
+**/*.env
+*.yaml
+.venv
+crlite_db
+Dockerfile
