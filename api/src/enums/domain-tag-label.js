@@ -44,6 +44,19 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'powered-by-php',
       description: 'Label for tagging domains that return a response header including PHP.',
     },
+    PHP_VULNERABLE: {
+      value: 'php-vulnerable',
+      description: 'Label for tagging domains that show a PHP version affected by an open advisory.',
+    },
+    PHP_UNKNOWN_VERSION: {
+      value: 'php-unknown-version',
+      description:
+        'Label for tagging domains that use PHP without showing a version complete enough to check against the open advisories.',
+    },
+    PHP_NOT_AFFECTED: {
+      value: 'php-not-affected',
+      description: 'Label for tagging domains that show a PHP version not affected by any open advisory.',
+    },
   },
   description: 'An enum used to assign and test user-generated domain tags',
 })

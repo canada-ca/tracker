@@ -47,6 +47,7 @@ logger = logging.getLogger(__name__)
 
 
 from web_processor.web_processor import process_results
+from web_processor.php_detection import php_result_for_run
 
 
 NAME = os.getenv("NAME", "web_processor")
@@ -229,6 +230,16 @@ def process_msg(msg):
             )
             domain["webScanPending"] = scan_pending
             domain["hasEntrustCertificate"] = has_entrust_certificate
+            try:
+                domain["phpResult"] = php_result_for_run(
+                    completed_web_scans=all_web_scans,
+                    domain_name=domain["domain"],
+                )
+            except Exception as e:
+                domain["phpResult"] = None
+                logger.error(
+                    f"Error while detecting PHP for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                )
             domain["negativeTags"]["web"] = list(web_negative_findings)
 
             del domain["_rev"]

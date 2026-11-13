@@ -123,8 +123,8 @@ msgstr "`{argSet}` sur la connexion `VerifiedDomain` ne peut être inférieur à
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro."
 
-#: src/organization/objects/organization.js:256
-#: src/organization/queries/get-all-organization-domain-statuses.js:69
+#: src/organization/objects/organization.js:259
+#: src/organization/queries/get-all-organization-domain-statuses.js:72
 msgid "Assess"
 msgstr "Évaluez"
 
@@ -138,11 +138,11 @@ msgstr "Évaluez"
 msgid "Authentication error. Please sign in."
 msgstr "Erreur d'authentification. Veuillez vous connecter."
 
-#: src/domain/objects/domain.js:229
+#: src/domain/objects/domain.js:230
 msgid "Cannot query additional findings without permission."
 msgstr "Il n'est pas possible de demander des résultats supplémentaires sans autorisation."
 
-#: src/organization/objects/organization.js:374
+#: src/organization/objects/organization.js:373
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus."
 
@@ -151,15 +151,15 @@ msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autor
 msgid "Cannot query audit logs on organization without admin permission or higher."
 msgstr "Impossible d'interroger les journaux d'audit sur l'organisation sans l'autorisation d'administrateur ou plus."
 
-#: src/domain/objects/domain.js:164
+#: src/domain/objects/domain.js:165
 msgid "Cannot query dns scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse DNS sans autorisation."
 
-#: src/domain/objects/domain.js:65
+#: src/domain/objects/domain.js:66
 msgid "Cannot query domain selectors without permission."
 msgstr "Impossible d'interroger les sélecteurs de domaine sans autorisation."
 
-#: src/domain/objects/domain.js:206
+#: src/domain/objects/domain.js:207
 msgid "Cannot query web scan results without permission."
 msgstr "Impossible d'interroger les résultats de l'analyse web sans autorisation."
 
@@ -171,17 +171,17 @@ msgstr "CVE est déjà ignoré pour ce domaine."
 msgid "CVE is not ignored for this domain."
 msgstr "Le CVE n'est pas ignoré dans ce domaine."
 
-#: src/organization/objects/organization.js:258
-#: src/organization/queries/get-all-organization-domain-statuses.js:71
+#: src/organization/objects/organization.js:261
+#: src/organization/queries/get-all-organization-domain-statuses.js:74
 msgid "Deploy"
 msgstr "msgstr Déployer"
 
-#: src/user/mutations/sign-up.js:111
+#: src/user/mutations/sign-up.js:101
 msgid "Email already in use."
 msgstr "Courriel déjà utilisé."
 
-#: src/organization/objects/organization.js:260
-#: src/organization/queries/get-all-organization-domain-statuses.js:73
+#: src/organization/objects/organization.js:263
+#: src/organization/queries/get-all-organization-domain-statuses.js:76
 msgid "Enforce"
 msgstr "Appliquer"
 
@@ -217,8 +217,8 @@ msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessay
 msgid "Invalid token, please sign in."
 msgstr "Jeton invalide, veuillez vous connecter."
 
-#: src/organization/objects/organization.js:262
-#: src/organization/queries/get-all-organization-domain-statuses.js:75
+#: src/organization/objects/organization.js:265
+#: src/organization/queries/get-all-organization-domain-statuses.js:78
 msgid "Maintain"
 msgstr "Maintenir"
 
@@ -354,7 +354,7 @@ msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` co
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedOrganization` n'est pas supporté."
 
 #: src/user/mutations/reset-password.js:100
-#: src/user/mutations/sign-up.js:89
+#: src/user/mutations/sign-up.js:79
 msgid "Password does not meet requirements."
 msgstr "Le mot de passe ne répond pas aux exigences."
 
@@ -366,7 +366,7 @@ msgstr "Le mot de passe a été réinitialisé avec succès."
 msgid "Password was successfully updated."
 msgstr "Le mot de passe a été mis à jour avec succès."
 
-#: src/user/mutations/sign-up.js:99
+#: src/user/mutations/sign-up.js:89
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
@@ -877,7 +877,7 @@ msgstr "Impossible de rejeter le message. Veuillez réessayer."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Impossible d'envoyer un scan unique. Veuillez réessayer."
 
-#: src/organization/objects/organization.js:281
+#: src/organization/objects/organization.js:284
 msgid "Unable to export organization. Please try again."
 msgstr "Impossible d'exporter l'organisation. Veuillez réessayer."
 
@@ -986,10 +986,10 @@ msgstr "Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez rées
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer."
 
-#: src/domain/data-source.js:816
-#: src/domain/data-source.js:838
-#: src/domain/data-source.js:852
-#: src/domain/data-source.js:862
+#: src/domain/data-source.js:836
+#: src/domain/data-source.js:858
+#: src/domain/data-source.js:872
+#: src/domain/data-source.js:882
 #: src/domain/mutations/ignore-cve.js:61
 msgid "Unable to ignore CVE. Please try again."
 msgstr "Impossible d'ignorer le CVE. Veuillez réessayer."
@@ -1174,8 +1174,8 @@ msgstr "Impossible de charger le(s) journal(s). Veuillez réessayer."
 #~ msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 
 #: src/additional-findings/loaders/load-top-25-reports.js:29
-#: src/organization/loaders/load-all-organization-domain-statuses.js:164
-#: src/organization/loaders/load-organization-domain-statuses.js:172
+#: src/organization/loaders/load-all-organization-domain-statuses.js:187
+#: src/organization/loaders/load-organization-domain-statuses.js:195
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Impossible de charger les statuts des domaines d'organisation. Veuillez réessayer."
 
@@ -1354,15 +1354,15 @@ msgstr "Impossible de supprimer le domaine. Le domaine ne fait pas partie de l'o
 
 #: src/domain/data-source.js:164
 #: src/domain/data-source.js:186
-#: src/domain/data-source.js:645
 #: src/domain/data-source.js:665
-#: src/domain/data-source.js:691
-#: src/domain/data-source.js:709
-#: src/domain/data-source.js:726
-#: src/domain/data-source.js:742
-#: src/domain/data-source.js:759
-#: src/domain/data-source.js:783
-#: src/domain/data-source.js:794
+#: src/domain/data-source.js:685
+#: src/domain/data-source.js:711
+#: src/domain/data-source.js:729
+#: src/domain/data-source.js:746
+#: src/domain/data-source.js:762
+#: src/domain/data-source.js:779
+#: src/domain/data-source.js:803
+#: src/domain/data-source.js:814
 #: src/domain/mutations/remove-domain.js:119
 #: src/domain/mutations/remove-domain.js:140
 #: src/domain/mutations/remove-domain.js:151
@@ -1466,8 +1466,8 @@ msgstr "Impossible de demander une invitation. Veuillez réessayer."
 msgid "Unable to reset password. Please try again."
 msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 
-#: src/domain/objects/domain.js:274
-#: src/domain/objects/domain.js:311
+#: src/domain/objects/domain.js:275
+#: src/domain/objects/domain.js:312
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
@@ -1529,22 +1529,22 @@ msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
-#: src/user/mutations/sign-up.js:197
-#: src/user/mutations/sign-up.js:208
+#: src/user/mutations/sign-up.js:187
+#: src/user/mutations/sign-up.js:198
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation."
 
-#: src/user/mutations/sign-up.js:168
-#: src/user/mutations/sign-up.js:177
-#: src/user/mutations/sign-up.js:229
-#: src/user/mutations/sign-up.js:238
+#: src/user/mutations/sign-up.js:158
+#: src/user/mutations/sign-up.js:167
+#: src/user/mutations/sign-up.js:219
+#: src/user/mutations/sign-up.js:228
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
-#: src/domain/data-source.js:887
-#: src/domain/data-source.js:909
-#: src/domain/data-source.js:923
-#: src/domain/data-source.js:933
+#: src/domain/data-source.js:907
+#: src/domain/data-source.js:929
+#: src/domain/data-source.js:943
+#: src/domain/data-source.js:953
 #: src/domain/mutations/unignore-cve.js:61
 msgid "Unable to stop ignoring CVE. Please try again."
 msgstr "Impossible d'arrêter d'ignorer le CVE. Veuillez réessayer."
@@ -1579,8 +1579,8 @@ msgstr "Impossible de s'authentifier par deux facteurs. Veuillez réessayer."
 msgid "Unable to unfavourite domain, domain is not favourited."
 msgstr "Impossible de désactiver le domaine, le domaine n'est pas favorisé."
 
-#: src/domain/data-source.js:516
-#: src/domain/data-source.js:524
+#: src/domain/data-source.js:536
+#: src/domain/data-source.js:544
 msgid "Unable to unfavourite domain. Please try again."
 msgstr "Impossible de défavoriser le domaine. Veuillez réessayer."
 
@@ -1592,7 +1592,7 @@ msgstr "Impossible de défavoriser un domaine inconnu."
 msgid "Unable to update CVD enrollment. Please try again."
 msgstr "Impossible de mettre à jour l'inscription au DCV. Veuillez réessayer."
 
-#: src/domain/data-source.js:566
+#: src/domain/data-source.js:586
 msgid "Unable to update domain edge. Please try again."
 msgstr "Impossible de mettre à jour le bord du domaine. Veuillez réessayer."
 
@@ -1609,10 +1609,10 @@ msgstr "Impossible de mettre à jour un domaine qui n'appartient pas à l'organi
 #: src/domain/data-source.js:234
 #: src/domain/data-source.js:254
 #: src/domain/data-source.js:285
-#: src/domain/data-source.js:547
-#: src/domain/data-source.js:576
-#: src/domain/data-source.js:602
-#: src/domain/data-source.js:610
+#: src/domain/data-source.js:567
+#: src/domain/data-source.js:596
+#: src/domain/data-source.js:622
+#: src/domain/data-source.js:630
 #: src/domain/mutations/update-cvd-enrollment.js:117
 #: src/domain/mutations/update-domain.js:140
 #: src/domain/mutations/update-domain.js:189
@@ -1624,9 +1624,9 @@ msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 msgid "Unable to update domains in unknown organization."
 msgstr "Impossible de mettre à jour les domaines dans une organisation inconnue."
 
-#: src/domain/data-source.js:476
-#: src/domain/data-source.js:484
-#: src/domain/data-source.js:488
+#: src/domain/data-source.js:496
+#: src/domain/data-source.js:504
+#: src/domain/data-source.js:508
 msgid "Unable to update domains. Please try again."
 msgstr "Impossible de mettre à jour les domaines. Veuillez réessayer."
 
@@ -1745,8 +1745,8 @@ msgid "User could not be queried."
 msgstr "L'utilisateur n'a pas pu être interrogé."
 
 #: src/user/mutations/sign-up.js:79
-msgid "User is trying to register for a non-production environment."
-msgstr "L'utilisateur essaie de s'enregistrer dans un environnement de non-production."
+#~ msgid "User is trying to register for a non-production environment."
+#~ msgstr "L'utilisateur essaie de s'enregistrer dans un environnement de non-production."
 
 #: src/affiliation/mutations/update-user-role.js:219
 msgid "User role was updated successfully."

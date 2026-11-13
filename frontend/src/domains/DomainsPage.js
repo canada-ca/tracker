@@ -29,9 +29,10 @@ import {
   GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
   PAGINATED_DOMAINS as FORWARD,
   GET_TOP_25_REPORT,
+  IS_USER_SUPER_ADMIN,
 } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
@@ -54,6 +55,8 @@ export default function DomainsPage() {
     name: 'domain-filters',
     defaultValue: [],
   })
+  const { data: superAdminData } = useQuery(IS_USER_SUPER_ADMIN)
+  const isSuperAdmin = Boolean(superAdminData?.isUserSuperAdmin)
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -144,7 +147,13 @@ export default function DomainsPage() {
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
-    { value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` },
+    ...(isSuperAdmin
+      ? [
+          { value: 'PHP_VULNERABLE', text: t`PHP: vulnerable` },
+          { value: 'PHP_UNKNOWN_VERSION', text: t`PHP: unknown version` },
+          { value: 'PHP_NOT_AFFECTED', text: t`PHP: not affected` },
+        ]
+      : [{ value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` }]),
   ]
 
   const StatusExportButton = withSuperAdmin(() => {
@@ -253,6 +262,7 @@ export default function DomainsPage() {
             userHasPermission,
             cvdEnrollment,
             poweredByPHP,
+            phpResult,
           },
           index,
         ) => (
@@ -272,6 +282,8 @@ export default function DomainsPage() {
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
               poweredByPHP={poweredByPHP}
+              phpResult={phpResult}
+              isSuperAdmin={isSuperAdmin}
               mb="3"
             />
           </ErrorBoundary>
@@ -346,16 +358,29 @@ export default function DomainsPage() {
           totalRecords={totalCount}
         />
 
-        <Button
-          variant="primary"
-          onClick={() => {
-            setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
-            resetToFirstPage()
-          }}
-          mb="2"
-        >
-          <Trans>Filter By PHP</Trans>
-        </Button>
+        {isSuperAdmin ? (
+          <Button
+            variant="primary"
+            onClick={() => {
+              setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'PHP_VULNERABLE' }])
+              resetToFirstPage()
+            }}
+            mb="2"
+          >
+            <Trans>Filter By PHP: vulnerable</Trans>
+          </Button>
+        ) : (
+          <Button
+            variant="primary"
+            onClick={() => {
+              setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+              resetToFirstPage()
+            }}
+            mb="2"
+          >
+            <Trans>Filter By PHP</Trans>
+          </Button>
+        )}
 
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg">

@@ -92,6 +92,9 @@ describe('buildDomainFilters – tags filter (mapped fields)', () => {
     ['has-entrust-certificate', 'v.hasEntrustCertificate', true],
     ['cve-detected', 'v.cveDetected', true],
     ['cvd-enrolled', 'v.cvdEnrollment.status', 'enrolled'],
+    ['php-vulnerable', 'v.phpResult.status', 'vulnerable'],
+    ['php-unknown-version', 'v.phpResult.status', 'unknown_version'],
+    ['php-not-affected', 'v.phpResult.status', 'not_affected'],
   ]
 
   test.each(TAG_CASES)('tag value "%s" filters on field %s', (filterValue, aqlField) => {

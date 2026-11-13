@@ -56,6 +56,8 @@ export const getAllOrganizationDomainStatuses = {
       'hasEntrustCertificate',
       'poweredByPHP',
       'top25Vulnerabilities',
+      'phpStatus',
+      'phpVersion',
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
