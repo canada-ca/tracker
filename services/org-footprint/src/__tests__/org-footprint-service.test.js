@@ -196,7 +196,7 @@ describe('orgFootprintService', () => {
         recipient: 'service@test.ca',
         personalisation: { enrollments_count: 2 },
       })
-      expect(sent[0].personalisation.enrollments_table).toContain('cvd.gc.ca')
+      expect(sent[0].personalisation.enrollments_list).toContain('# cvd.gc.ca')
     })
 
     it('sends no email when there are no domain update logs', async () => {
