@@ -122,7 +122,7 @@ def run_pqc_scan(domain: str, ip_address: str) -> dict:
                     hostname=domain,
                     ip_address=ip_address,
                 ),
-                scan_commands={ScanCommand.PQ_KEY_EXCHANGE},
+                scan_commands={ScanCommand.SUPPORTED_GROUPS},
                 network_configuration=ServerNetworkConfiguration(
                     tls_server_name_indication=domain, network_timeout=CONNECT_TIMEOUT
                 ),
@@ -150,17 +150,17 @@ def run_pqc_scan(domain: str, ip_address: str) -> dict:
         result["error"] = f"sslyze returned no scan result ({scan_results.scan_status})"
         return result
 
-    attempt = scan_results.scan_result.pq_key_exchange
+    attempt = scan_results.scan_result.supported_groups
     result["status"] = attempt.status
     result["error_reason"] = attempt.error_reason
     if attempt.error_trace:
         result["error"] = "".join(attempt.error_trace.format()).strip()
 
     if attempt.result:
-        # supported_pq_groups is None only when the server has no TLS 1.3, so nothing was tested
-        result["supported_pq_groups"] = attempt.result.supported_pq_groups
-        result["supports_pq_key_exchange"] = attempt.result.supports_pq_key_exchange
-        result["tls_1_3_supported"] = attempt.result.supported_pq_groups is not None
+        # supported_post_quantum_groups is None only when the server has no TLS 1.3, so nothing was tested
+        result["supported_pq_groups"] = attempt.result.supported_post_quantum_groups
+        result["supports_pq_key_exchange"] = attempt.result.supports_post_quantum_key_exchange
+        result["tls_1_3_supported"] = attempt.result.supported_post_quantum_groups is not None
 
     return result
 
@@ -201,5 +201,6 @@ if __name__ == "__main__":
     scan_data["build_refs"] = get_version_commit_refs()
 
     # stdout carries the result, stderr carries the logging
-    json.dump(scan_data, sys.stdout)
+    json.dump(scan_data, sys.stdout, indent=4)
+    print("") # newline after json output for readability
     sys.exit(exit_code)
