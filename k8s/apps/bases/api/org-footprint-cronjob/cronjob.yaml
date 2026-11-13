@@ -5,7 +5,7 @@ metadata:
   namespace: api
 spec:
   timeZone: America/Toronto
-  schedule: "00 9 * * *"
+  schedule: '00 9 * * *'
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: org-footprint
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-afe76e8-1793898323 # {"$imagepolicy": "flux-system:org-footprint"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-8b37645-1794506640 # {"$imagepolicy": "flux-system:org-footprint"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -68,6 +68,11 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_PENDING_USERS
+                - name: NOTIFICATION_NEW_CVD_ENROLLMENTS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_NEW_CVD_ENROLLMENTS
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000

@@ -11,5 +11,5 @@ schema.faker.graphql
 .eslintrc
 .prettierrc
 coverage
-**/*/.env
+**/*.env
 .git

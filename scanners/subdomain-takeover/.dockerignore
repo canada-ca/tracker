@@ -1,0 +1,5 @@
+**/*.env
+*.yaml
+Dockerfile
+Makefile
+README.md
