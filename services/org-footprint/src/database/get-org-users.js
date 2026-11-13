@@ -1,3 +1,9 @@
+/**
+ * Lists organization members who opted in to org footprint emails.
+ * @param {{query: Function, orgKey: string}} params - Tagged-template query function and organization key.
+ * @returns {Promise<Array<object>>} User documents.
+ * @throws {Error} If the query or cursor read fails. The original error is set as `cause`.
+ */
 const getOrgUsers = async ({ query, orgKey }) => {
   let cursor
   const orgId = `organizations/${orgKey}`

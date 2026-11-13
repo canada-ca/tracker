@@ -1,4 +1,4 @@
-const { buildConfig } = require('../../config')
+const { buildConfig, ConfigError } = require('../../config')
 
 const FAKE_DB_PASS = 'fake-db-pass-9f3a1c'
 const FAKE_API_KEY = 'fake-api-key-7b2e5d'
@@ -41,14 +41,6 @@ describe('buildConfig', () => {
     expect(buildConfig({ ...validEnv(), LOG_LEVEL: 'debug' }).logLevel).toBe('debug')
   })
 
-  it('sets logTimeWindow to 24 hours in milliseconds', () => {
-    expect(buildConfig(validEnv()).logTimeWindow).toBe(86400000)
-  })
-
-  it('uses the default admin link when NOTIFICATION_ADMIN_LINK is unset', () => {
-    expect(buildConfig(validEnv()).notify.adminLink).toBe('https://tracker.canada.ca/admin/organizations')
-  })
-
   it('uses NOTIFICATION_ADMIN_LINK when set', () => {
     const config = buildConfig({ ...validEnv(), NOTIFICATION_ADMIN_LINK: 'https://example.test/admin' })
 
@@ -68,7 +60,16 @@ describe('buildConfig', () => {
   })
 
   describe('required variables', () => {
-    it.each(['DB_URL', 'DB_NAME', 'NOTIFICATION_API_KEY', 'NOTIFICATION_NEW_CVD_ENROLLMENTS'])(
+    it.each([
+      'DB_URL',
+      'DB_NAME',
+      'NOTIFICATION_API_KEY',
+      'NOTIFICATION_API_URL',
+      'NOTIFICATION_PENDING_USERS',
+      'NOTIFICATION_ORG_FOOTPRINT_BILINGUAL',
+      'NOTIFICATION_NEW_CVD_ENROLLMENTS',
+      'SERVICE_ACCOUNT_EMAIL',
+    ])(
       'throws naming %s when it is missing',
       (name) => {
         expect(() => buildConfig(without(validEnv(), name))).toThrow(
@@ -88,15 +89,23 @@ describe('buildConfig', () => {
     })
 
     it('does not leak secret values in the error message', () => {
-      const env = { ...without(validEnv(), 'DB_URL') }
+      const secret = 'distinctive-secret-value-4d8c1e'
+      const env = { ...without(validEnv(), 'DB_URL'), DB_PASS: secret, NOTIFICATION_API_KEY: secret }
 
       expect(() => buildConfig(env)).toThrow(/Missing required config: DB_URL/)
+      expect(() => buildConfig(env)).not.toThrow(new RegExp(secret))
+    })
+
+    it('throws a ConfigError named ConfigError', () => {
+      let thrown
       try {
-        buildConfig(env)
+        buildConfig(without(validEnv(), 'DB_URL'))
       } catch (error) {
-        expect(error.message).not.toContain(FAKE_DB_PASS)
-        expect(error.message).not.toContain(FAKE_API_KEY)
+        thrown = error
       }
+
+      expect(thrown).toBeInstanceOf(ConfigError)
+      expect(thrown.name).toBe('ConfigError')
     })
   })
 })

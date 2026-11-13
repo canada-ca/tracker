@@ -1,11 +1,21 @@
-class ConfigError extends Error {}
+/** Error thrown by buildConfig when required configuration is missing or empty. */
+class ConfigError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'ConfigError'
+  }
+}
 
 const REQUIRED = {
   DB_URL: (c) => c.db.url,
+  DB_PASS: (c) => c.db.rootPassword,
   DB_NAME: (c) => c.db.name,
   NOTIFICATION_API_KEY: (c) => c.notify.apiKey,
+  NOTIFICATION_API_URL: (c) => c.notify.apiUrl,
+  NOTIFICATION_PENDING_USERS: (c) => c.notify.templates.pendingUsers,
+  NOTIFICATION_ORG_FOOTPRINT_BILINGUAL: (c) => c.notify.templates.orgFootprint,
   NOTIFICATION_NEW_CVD_ENROLLMENTS: (c) => c.notify.templates.cvdEnrollment,
-  // ...one entry per required value
+  SERVICE_ACCOUNT_EMAIL: (c) => c.serviceAccount,
 }
 
 function assertValid(config) {
@@ -13,6 +23,15 @@ function assertValid(config) {
   if (missing.length > 0) throw new ConfigError(`Missing required config: ${missing.join(', ')}`)
 }
 
+/**
+ * Builds the nested service config from environment variables.
+ * @param {Object<string, string|undefined>} [env=process.env] - Environment variables to read.
+ * @returns {{nodeEnv: string, logLevel: string, serviceAccount: string, redirect: boolean, logTimeWindow: number,
+ *   db: {rootPassword: string, url: string, name: string},
+ *   notify: {apiKey: string, apiUrl: string, adminLink: string,
+ *     templates: {pendingUsers: string, orgFootprint: string, cvdEnrollment: string}}}} The parsed config.
+ * @throws {ConfigError} If any required value is missing or empty. The message lists variable names only, never values.
+ */
 function buildConfig(env = process.env) {
   const {
     DB_PASS,

@@ -14,6 +14,14 @@ const {
   buildPendingUsersPayload,
 } = require('./core')
 
+/**
+ * Sends org footprint, pending user, and new CVD enrollment emails for every organization.
+ * A failure for one organization or one email is logged and counted, and the run continues.
+ * @param {{config: object, logger: object, query: Function, notifyClient: object}} params - Config from buildConfig,
+ *   a pino-style logger, a tagged-template query function, and a Notify client with `sendEmail`.
+ * @returns {Promise<number>} The number of failed organizations or emails. Zero means full success.
+ * @throws {Error} If the list of organization keys cannot be fetched.
+ */
 const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
   const args = { config, logger, query, notifyClient }
   const orgKeys = await getAllOrgKeys({ query })
@@ -128,6 +136,14 @@ async function processNewCVDEnrollments({ query, logger, notifyClient, config })
   return sent ? 0 : 1
 }
 
+/**
+ * Sends one templated email through the Notify client.
+ * Errors are logged and not thrown.
+ * @param {{notifyClient: object, templateId: string, logger: object, user: {userName: string, _key: string},
+ *   payload: object, errorMessage?: string}} params - Client, template, recipient, personalisation values,
+ *   and the message to log on failure.
+ * @returns {Promise<boolean>} True when the email was sent, false when sending failed.
+ */
 const sendNotification = async ({
   notifyClient,
   templateId,

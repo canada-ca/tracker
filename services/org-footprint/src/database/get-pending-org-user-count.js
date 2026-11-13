@@ -1,3 +1,9 @@
+/**
+ * Counts users with a pending invite in one organization.
+ * @param {{query: Function, orgKey: string}} params - Tagged-template query function and organization key.
+ * @returns {Promise<number>} Number of pending users.
+ * @throws {Error} If the query or cursor read fails. The original error is set as `cause`.
+ */
 const getPendingOrgUserCount = async ({ query, orgKey }) => {
   let cursor
   const orgId = `organizations/${orgKey}`

@@ -84,7 +84,7 @@ describe('given the getNewDomainUpdateLogs function', () => {
     it.each(failures)('throws with the original error as cause when $name', async ({ buildQuery, cause }) => {
       const failure = getNewDomainUpdateLogs({ query: buildQuery(cause), window: DAY })
 
-      await expect(failure).rejects.toThrow('Error occured while trying to find new domain update logs')
+      await expect(failure).rejects.toThrow('Error occurred while trying to find new domain update logs')
       await expect(failure).rejects.toHaveProperty('cause', cause)
     })
   })

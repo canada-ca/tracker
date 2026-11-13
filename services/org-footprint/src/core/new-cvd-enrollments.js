@@ -1,5 +1,10 @@
+const hasEnrollmentUpdate = (log) =>
+  Boolean(log.target?.organization) &&
+  Array.isArray(log.target.updatedProperties) &&
+  log.target.updatedProperties.some((prop) => prop.name === 'cvdEnrollment')
+
 function getNewlyEnrolledDomains(logs) {
-  return logs.filter((log) => log.target.updatedProperties.some((prop) => prop.name === 'cvdEnrollment'))
+  return logs.filter(hasEnrollmentUpdate)
 }
 
 const escapeCell = (value) => String(value ?? '').replaceAll('|', '\\|')
@@ -16,6 +21,13 @@ function toRow(log) {
   return `| ${cells.map(escapeCell).join(' | ')} |`
 }
 
+/**
+ * Builds the email payload for domains that enrolled in CVD.
+ * Logs without a `target.organization` or a `target.updatedProperties` array are skipped.
+ * @param {Array<object>} logs - Domain update audit logs.
+ * @returns {{enrollments_table: string, enrollments_count: number}|null} A markdown table and row count,
+ *   or null when no log contains a `cvdEnrollment` update.
+ */
 function buildNewEnrollmentEmailPayload(logs) {
   const newlyEnrolledDomainLogs = getNewlyEnrolledDomains(logs)
   if (newlyEnrolledDomainLogs.length === 0) {

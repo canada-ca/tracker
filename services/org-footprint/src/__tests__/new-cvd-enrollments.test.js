@@ -41,6 +41,26 @@ describe('buildNewEnrollmentEmailPayload', () => {
     expect(buildNewEnrollmentEmailPayload(logs)).toBeNull()
   })
 
+  it.each([
+    ['no updatedProperties array', (log) => ({ ...log, target: { ...log.target, updatedProperties: undefined } })],
+    ['a non-array updatedProperties', (log) => ({ ...log, target: { ...log.target, updatedProperties: {} } })],
+    ['no organization', (log) => ({ ...log, target: { ...log.target, organization: undefined } })],
+    ['no target', (log) => ({ ...log, target: undefined })],
+  ])('skips a malformed log with %s and keeps well-formed logs', (_name, malform) => {
+    const payload = buildNewEnrollmentEmailPayload([malform(enrollmentLog({ domain: 'bad.gc.ca' })), enrollmentLog()])
+
+    expect(payload).toEqual({
+      enrollments_table: `${HEADER}\n| example.gc.ca | Test Org | 2026-01-01T00:00:00.000Z | user@example.gc.ca | enrolled |`,
+      enrollments_count: 1,
+    })
+  })
+
+  it('returns null when every log is malformed', () => {
+    const malformed = { ...enrollmentLog(), target: { resource: 'x.gc.ca' } }
+
+    expect(buildNewEnrollmentEmailPayload([malformed])).toBeNull()
+  })
+
   it('builds a table and count for a single enrollment log', () => {
     expect(buildNewEnrollmentEmailPayload([enrollmentLog()])).toEqual({
       enrollments_table: `${HEADER}\n| example.gc.ca | Test Org | 2026-01-01T00:00:00.000Z | user@example.gc.ca | enrolled |`,

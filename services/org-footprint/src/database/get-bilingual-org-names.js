@@ -1,3 +1,9 @@
+/**
+ * Gets the English and French names of one organization.
+ * @param {{query: Function, orgKey: string}} params - Tagged-template query function and organization key.
+ * @returns {Promise<{en: string, fr: string}|undefined>} The names, or undefined when the org does not exist.
+ * @throws {Error} If the query or cursor read fails. The original error is set as `cause`.
+ */
 const getBilingualOrgNames = async ({ query, orgKey }) => {
   let cursor
   try {

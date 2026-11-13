@@ -1,3 +1,10 @@
+/**
+ * Builds the org footprint email payload from an organization's audit logs.
+ * Logs with action `scan` or `export` are ignored.
+ * @param {{logs: Array<object>, orgNames: {en: string, fr: string}}} params - Audit logs and bilingual org names.
+ * @returns {object|null} Org names, user and domain change counts, and comma-separated domain lists,
+ *   or null when no asset change logs remain.
+ */
 function buildOrgFootprintPayload({ logs, orgNames }) {
   const assetChangeLogs = filterAssetChangeLogs(logs)
   if (assetChangeLogs.length === 0) return null
@@ -39,6 +46,12 @@ const select = (logs, action, resourceType) =>
 
 const joinResources = (logs) => logs.map((log) => log.target.resource).join(', ')
 
+/**
+ * Appends the service account to the recipient list when redirecting is enabled.
+ * @param {{users: Array<object>, redirect: boolean, serviceAccount: string}} params - Current recipients,
+ *   the redirect flag, and the service account email.
+ * @returns {Array<object>} The original array when redirect is false, otherwise a new array with the service account added.
+ */
 function addServiceAccountToRecipients({ users, redirect, serviceAccount }) {
   if (!redirect) {
     return users
