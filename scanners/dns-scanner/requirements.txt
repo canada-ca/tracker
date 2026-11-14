@@ -4,7 +4,7 @@ charset-normalizer==2.1.1
 checkdmarc==5.7.7
 cryptography==50.0.0
 dkimpy==1.0.5
-dnspython==2.9.0
+dnspython==2.9.2
 expiringdict==1.2.2
 filelock==4.2.1
 idna==3.15
