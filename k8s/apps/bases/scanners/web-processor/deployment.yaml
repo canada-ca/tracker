@@ -15,6 +15,11 @@ spec:
     metadata:
       labels:
         app: web-processor
+      annotations:
+        sidecar.istio.io/proxyCPU: "10m"
+        sidecar.istio.io/proxyCPULimit: "2000m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1024Mi"
     spec:
       securityContext:
         fsGroup: 1000

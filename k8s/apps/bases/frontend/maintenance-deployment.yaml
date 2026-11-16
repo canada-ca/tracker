@@ -18,6 +18,11 @@ spec:
     metadata:
       labels:
         app: tracker-frontend-maintenance
+      annotations:
+        sidecar.istio.io/proxyCPU: "10m"
+        sidecar.istio.io/proxyCPULimit: "2000m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1024Mi"
     spec:
       containers:
         - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend-maintenance:master-a1a1a1b-1692191661 # {"$imagepolicy": "flux-system:frontend-maintenance"}
