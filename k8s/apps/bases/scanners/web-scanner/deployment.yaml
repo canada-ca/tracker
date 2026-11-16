@@ -16,6 +16,10 @@ spec:
         app: web-scanner
       annotations:
         traffic.sidecar.istio.io/includeOutboundIPRanges: 10.0.0.0/8,192.168.0.0/16
+        sidecar.istio.io/proxyCPU: "10m"
+        sidecar.istio.io/proxyCPULimit: "2000m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1024Mi"
     spec:
       terminationGracePeriodSeconds: 90
       securityContext:
