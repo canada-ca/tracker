@@ -1,7 +1,7 @@
 import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor, within } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
@@ -9,7 +9,7 @@ import { makeVar } from '@apollo/client'
 import DomainsPage from '../DomainsPage'
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
-import { PAGINATED_DOMAINS } from '../../graphql/queries'
+import { IS_USER_SUPER_ADMIN, PAGINATED_DOMAINS } from '../../graphql/queries'
 import { TourProvider } from '../../userOnboarding/contexts/TourContext'
 
 describe('<DomainsPage />', () => {
@@ -440,6 +440,82 @@ describe('<DomainsPage />', () => {
           })
         })
       })
+    })
+  })
+
+  describe('PHP quick filter', () => {
+    const superAdminMock = (isUserSuperAdmin) => ({
+      request: { query: IS_USER_SUPER_ADMIN },
+      result: { data: { isUserSuperAdmin } },
+    })
+    const unfilteredMock = mocks[1]
+    const vulnerablePhpMock = {
+      request: {
+        query: PAGINATED_DOMAINS,
+        variables: {
+          ...unfilteredMock.request.variables,
+          filters: [{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'PHP_VULNERABLE' }],
+        },
+      },
+      result: {
+        data: {
+          findMyDomains: {
+            ...unfilteredMock.result.data.findMyDomains,
+            edges: [
+              {
+                ...unfilteredMock.result.data.findMyDomains.edges[0],
+                node: {
+                  ...unfilteredMock.result.data.findMyDomains.edges[0].node,
+                  id: 'cGhwLmdjLmNh',
+                  domain: 'php.gc.ca',
+                  phpResult: {
+                    status: 'VULNERABLE',
+                    version: 'PHP/8.1.2-1ubuntu2.19',
+                    advisories: ['AL26-026'],
+                    cves: ['CVE-2026-109618', 'CVE-2026-109619'],
+                    evidence: ['X-Powered-By: PHP/8.1.2-1ubuntu2.19'],
+                    __typename: 'PhpResult',
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    }
+
+    function renderPage(pageMocks) {
+      return render(
+        <MockedProvider mocks={pageMocks} cache={createCache()}>
+          <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <TourProvider>
+                    <DomainsPage />
+                  </TourProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+    }
+
+    it('is not shown to users who are not super admins', async () => {
+      const { queryByText } = renderPage([...mocks, superAdminMock(false), superAdminMock(false)])
+
+      await waitFor(() => expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument())
+      expect(queryByText('Filter By PHP: vulnerable')).not.toBeInTheDocument()
+    })
+
+    it("filters a super admin's list to PHP: vulnerable", async () => {
+      const { findByText } = renderPage([...mocks, vulnerablePhpMock, superAdminMock(true), superAdminMock(true)])
+
+      fireEvent.click(await findByText('Filter By PHP: vulnerable'))
+
+      const card = (await findByText('php.gc.ca')).closest('li')
+      expect(within(card).getByText('PHP: vulnerable')).toBeInTheDocument()
     })
   })
 })

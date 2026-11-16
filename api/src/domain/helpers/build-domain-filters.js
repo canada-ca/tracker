@@ -27,6 +27,9 @@ const TAG_FIELD_MAP = {
   'cvd-enrolled': { field: 'v.cvdEnrollment.status', value: 'enrolled' },
   'cvd-deny': { field: 'v.cvdEnrollment.status', value: 'deny' },
   'powered-by-php': { field: 'v.poweredByPHP', value: true },
+  'php-vulnerable': { field: 'v.phpResult.status', value: 'vulnerable' },
+  'php-unknown-version': { field: 'v.phpResult.status', value: 'unknown_version' },
+  'php-not-affected': { field: 'v.phpResult.status', value: 'not_affected' },
 }
 
 function buildComparison(comparison) {
@@ -89,6 +92,8 @@ function buildTagFilter(accumulated, comparison, filterValue) {
       return aql`${accumulated} FILTER v.cveDetected ${comparison} ${mapped.value}`
     case 'v.poweredByPHP':
       return aql`${accumulated} FILTER v.poweredByPHP ${comparison} ${mapped.value}`
+    case 'v.phpResult.status':
+      return aql`${accumulated} FILTER v.phpResult.status ${comparison} ${mapped.value}`
     case 'v.cvdEnrollment.status':
       return aql`${accumulated} FILTER v.cvdEnrollment.status ${comparison} ${mapped.value}`
     default:

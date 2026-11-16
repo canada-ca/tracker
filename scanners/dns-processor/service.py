@@ -350,6 +350,7 @@ def process_msg(msg):
             if not scan_results.get("resolve_ips", None) or all_ips_private:
                 domain.update({"webScanPending": False})
                 domain.update({"blocked": False})
+                domain.update({"phpResult": None})
                 domain["status"].update(
                     {
                         "https": "info",

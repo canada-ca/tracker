@@ -95,6 +95,21 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.poweredByPHP ${comparison} true
           `
+          } else if (filterValue === 'php-vulnerable') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.phpResult.status ${comparison} "vulnerable"
+          `
+          } else if (filterValue === 'php-unknown-version') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.phpResult.status ${comparison} "unknown_version"
+          `
+          } else if (filterValue === 'php-not-affected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.phpResult.status ${comparison} "not_affected"
+          `
           } else if (filterValue === 'cvd-enrolled') {
             domainFilters = aql`
             ${domainFilters}
@@ -170,6 +185,8 @@ export const loadOrganizationDomainStatuses =
               top25Vulnerabilities: vulnerabilities,
               cvdEnrollmentStatus: v.cvdEnrollment.status,
               poweredByPHP: v.poweredByPHP,
+              phpStatus: v.phpResult.status,
+              phpVersion: v.phpResult.version,
             }
           `
       ).all()

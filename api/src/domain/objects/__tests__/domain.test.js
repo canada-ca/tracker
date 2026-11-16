@@ -9,6 +9,7 @@ import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries'
 import { webConnection } from '../../../web-scan'
 import { domainType } from '../../index'
+import { phpResultType } from '../php-result'
 import { Domain, Selectors, Slug } from '../../../scalars'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -103,6 +104,12 @@ describe('given the domain object', () => {
       const orgSlugArg = domainType.getFields().orgHasOwnership.args.find(({ name }) => name === 'orgSlug')
 
       expect(orgSlugArg.type).toMatchObject(new GraphQLNonNull(Slug))
+    })
+    it('has a phpResult field', () => {
+      const demoType = domainType.getFields()
+
+      expect(demoType).toHaveProperty('phpResult')
+      expect(demoType.phpResult.type).toMatchObject(phpResultType)
     })
   })
   describe('testing the field resolvers', () => {

@@ -238,6 +238,8 @@ export const organizationType = new GraphQLObjectType({
           'top25Vulnerabilities',
           'cvdEnrollmentStatus',
           'poweredByPHP',
+          'phpStatus',
+          'phpVersion',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domainDoc) => {

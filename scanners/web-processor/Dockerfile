@@ -22,7 +22,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 
 
-FROM python:3.14.2-alpine
+FROM python:3.14.2-alpine AS production
 
 # Copy local code to the container image.
 ENV PYTHONWARNINGS ignore
@@ -40,3 +40,18 @@ RUN adduser -D scanner
 USER scanner
 
 CMD ["python3", "service.py"]
+
+#===============================================================================================
+#===============================================================================================
+
+
+FROM production AS test
+
+COPY tests ./tests
+USER scanner
+
+#===============================================================================================
+#===============================================================================================
+
+
+FROM production AS final

@@ -17,9 +17,10 @@ import {
   PAGINATED_ORG_DOMAINS as FORWARD,
   GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
   MY_TRACKER_DOMAINS,
+  IS_USER_SUPER_ADMIN,
 } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
@@ -98,6 +99,9 @@ export function OrganizationDomains({
     },
   )
 
+  const { data: superAdminData } = useQuery(IS_USER_SUPER_ADMIN)
+  const isSuperAdmin = Boolean(superAdminData?.isUserSuperAdmin)
+
   const { isOpen, onToggle } = useDisclosure()
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -127,7 +131,13 @@ export function OrganizationDomains({
     { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
     { value: 'CVD_DENY', text: t`CVD Denied` },
-    { value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` },
+    ...(isSuperAdmin
+      ? [
+          { value: 'PHP_VULNERABLE', text: t`PHP: vulnerable` },
+          { value: 'PHP_UNKNOWN_VERSION', text: t`PHP: unknown version` },
+          { value: 'PHP_NOT_AFFECTED', text: t`PHP: not affected` },
+        ]
+      : [{ value: 'POWERED_BY_PHP', text: t`Powered-By: PHP` }]),
   ]
 
   const assetStateOptions = [
@@ -189,6 +199,7 @@ export function OrganizationDomains({
             userHasPermission,
             cvdEnrollment,
             poweredByPHP,
+            phpResult,
           },
           index,
         ) => (
@@ -210,6 +221,8 @@ export function OrganizationDomains({
               userHasPermission={userHasPermission}
               cvdEnrollment={cvdEnrollment}
               poweredByPHP={poweredByPHP}
+              phpResult={phpResult}
+              isSuperAdmin={isSuperAdmin}
               mb="3"
             />
           </ErrorBoundary>
@@ -312,16 +325,29 @@ export function OrganizationDomains({
 
       {orgSlug !== 'my-tracker' && (
         <Box>
-          <Button
-            variant="primary"
-            onClick={() => {
-              setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
-              resetToFirstPage()
-            }}
-            mb="2"
-          >
-            <Trans>Filter By PHP</Trans>
-          </Button>
+          {isSuperAdmin ? (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'PHP_VULNERABLE' }])
+                resetToFirstPage()
+              }}
+              mb="2"
+            >
+              <Trans>Filter By PHP: vulnerable</Trans>
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setFilters([{ filterCategory: 'TAGS', comparison: 'EQUAL', filterValue: 'POWERED_BY_PHP' }])
+                resetToFirstPage()
+              }}
+              mb="2"
+            >
+              <Trans>Filter By PHP</Trans>
+            </Button>
+          )}
           <Flex align="center" mb="2">
             <Text mr="2" fontWeight="bold" fontSize="lg">
               <Trans>Filters:</Trans>
