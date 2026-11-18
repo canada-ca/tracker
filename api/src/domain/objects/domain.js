@@ -14,7 +14,8 @@ import { organizationConnection } from '../../organization/objects'
 import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
-import { additionalFinding } from '../../additional-findings/objects/additional-finding'
+import { additionalFindingConnection } from '../../additional-findings/objects/additional-finding-connection'
+import { additionalFindingOrder } from '../../additional-findings/inputs'
 import { tagType } from '../../tags/objects'
 import { cvdEnrollment } from '../../additional-findings/objects'
 import { phpResultType } from './php-result'
@@ -214,11 +215,22 @@ export const domainType = new GraphQLObjectType({
       },
     },
     additionalFindings: {
-      type: additionalFinding,
-      description: 'Additional findings imported from an external ASM tool.',
+      type: additionalFindingConnection.connectionType,
+      description: 'Additional findings produced by the findings processor for this domain.',
+      args: {
+        orderBy: {
+          type: additionalFindingOrder,
+          description: 'Ordering options for additional finding connections.',
+        },
+        limit: {
+          type: GraphQLInt,
+          description: 'Number of additional findings to retrieve.',
+        },
+        ...connectionArgs,
+      },
       resolve: async (
         { _id },
-        _,
+        args,
         { userKey, auth: { userRequired }, dataSources: { auth: authDS, additionalFindings } },
       ) => {
         await userRequired()
@@ -230,8 +242,9 @@ export const domainType = new GraphQLObjectType({
           throw new Error(t`Cannot query additional findings without permission.`)
         }
 
-        return await additionalFindings.getByDomainId({
+        return await additionalFindings.getConnectionsByDomainId({
           domainId: _id,
+          ...args,
         })
       },
     },
