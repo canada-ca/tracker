@@ -1,12 +1,14 @@
+import argparse
+import csv
 import logging
 import os
 import shutil
 import sys
 import tempfile
-from dotenv import load_dotenv
 
 import yaml
 from arango import ArangoClient
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -30,6 +32,9 @@ NOTIFICATION_UPTIME_ALERT_ID = os.getenv("NOTIFICATION_UPTIME_ALERT_ID")
 
 GATUS_CONFIG_PATH = os.getenv("GATUS_CONFIG_PATH", "/config/config.yaml")
 
+CSV_REQUIRED_HEADERS = ("Task Name", "Task URL EN", "Institution")
+CSV_DEFAULT_GROUP = "Unknown"
+
 
 def build_alerting():
     return {
@@ -51,10 +56,13 @@ def build_alerting():
     }
 
 
-def build_endpoint(domain):
+def build_endpoint(name, url, group=None):
+    """Build a Gatus endpoint. The "group" key is included only when group is set."""
+    group_entry = {"group": group} if group else {}
     return {
-        "name": domain,
-        "url": f"https://{domain}",
+        "name": name,
+        "url": url,
+        **group_entry,
         "interval": "5m",
         "conditions": [
             "[STATUS] == any(200, 429)",  # prevents rate limiting from triggering alerts
@@ -82,8 +90,52 @@ def build_config(endpoints):
     }
 
 
-def main():
-    log.info(f"Connecting to ArangoDB...")
+def parse_csv_rows(rows):
+    """Turn CSV row dicts into endpoint dicts.
+
+    Rows with an empty name or URL are skipped with a warning. An empty
+    Institution becomes the group "Unknown". Gatus keys endpoints by
+    group and name, so a later row repeating a (group, name) pair is skipped.
+    """
+    endpoints = []
+    seen = set()
+    for line_number, row in enumerate(rows, start=2):  # line 1 is the header
+        name = (row.get("Task Name") or "").strip()
+        url = (row.get("Task URL EN") or "").strip()
+        group = (row.get("Institution") or "").strip() or CSV_DEFAULT_GROUP
+
+        if not name or not url:
+            log.warning(f"CSV line {line_number}: skipping row with empty name or URL")
+            continue
+        if (group, name) in seen:
+            log.warning(
+                f"CSV line {line_number}: skipping duplicate endpoint '{name}' in group '{group}'"
+            )
+            continue
+
+        seen.add((group, name))
+        endpoints.append(build_endpoint(name, url, group))
+    return endpoints
+
+
+def read_csv_endpoints(path):
+    """Read a CSV file and return its endpoints. Exit with status 1 on any read or header error."""
+    try:
+        with open(path, encoding="utf-8-sig", newline="") as csv_file:
+            reader = csv.DictReader(csv_file)
+            missing = [h for h in CSV_REQUIRED_HEADERS if h not in (reader.fieldnames or [])]
+            if missing:
+                log.error(f"CSV is missing required column(s): {', '.join(missing)}")
+                sys.exit(1)
+            return parse_csv_rows(reader)
+    except (OSError, UnicodeDecodeError, csv.Error) as e:
+        log.error(f"CSV read failed: {e}")
+        sys.exit(1)
+
+
+def read_arango_endpoints():
+    """Query ArangoDB for high availability domains and return their endpoints."""
+    log.info("Connecting to ArangoDB...")
     try:
         client = ArangoClient(hosts=ARANGO_URL)
         db = client.db(ARANGO_DATABASE, username=ARANGO_USERNAME, password=ARANGO_PASSWORD)
@@ -95,7 +147,7 @@ def main():
     log.info("Querying high availability services...")
     try:
         cursor = db.aql.execute(
-            "FOR d IN domains FILTER d.highAvailability == true OR d.poweredByPHP == true RETURN d.domain"
+            "FOR d IN domains FILTER d.highAvailability == true RETURN d.domain"
         )
         docs = list(cursor)
     except Exception as e:
@@ -104,7 +156,19 @@ def main():
 
     log.info(f"Query returned {len(docs)} document(s)")
 
-    endpoints = [build_endpoint(doc) for doc in docs]
+    return [build_endpoint(name=doc, url=f"https://{doc}") for doc in docs]
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate the Gatus config file.")
+    parser.add_argument(
+        "--csv",
+        metavar="PATH",
+        help="read endpoints from a CSV file instead of ArangoDB",
+    )
+    args = parser.parse_args()
+
+    endpoints = read_csv_endpoints(args.csv) if args.csv else read_arango_endpoints()
     config = build_config(endpoints)
 
     config_dir = os.path.dirname(GATUS_CONFIG_PATH)
