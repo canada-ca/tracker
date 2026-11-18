@@ -55,7 +55,6 @@ export const getAllOrganizationDomainStatuses = {
       'wildcardEntry',
       'hasEntrustCertificate',
       'poweredByPHP',
-      'top25Vulnerabilities',
       'phpStatus',
       'phpVersion',
     ]
@@ -63,7 +62,7 @@ export const getAllOrganizationDomainStatuses = {
     domainStatuses.forEach((domainStatus) => {
       const csvLine = headers
         .map((header) => {
-          if (['orgNames', 'orgAcronyms', 'orgExternalIDs', 'ipAddresses', 'top25Vulnerabilities'].includes(header)) {
+          if (['orgNames', 'orgAcronyms', 'orgExternalIDs', 'ipAddresses'].includes(header)) {
             return `"${domainStatus[header]?.join('|') || []}"`
           }
           if (header === 'phase') {
