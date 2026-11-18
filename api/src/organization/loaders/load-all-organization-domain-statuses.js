@@ -87,11 +87,6 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.hasEntrustCertificate ${comparison} true
           `
-          } else if (filterValue === 'cve-detected') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER d.cveDetected ${comparison} true
-          `
           } else if (filterValue === 'powered-by-php') {
             domainFilters = aql`
             ${domainFilters}
@@ -137,18 +132,6 @@ export const loadAllOrganizationDomainStatuses =
               FILTER latestDnsScan.resolveIps
               RETURN latestDnsScan.resolveIps
             )
-            LET vulnerabilities = (
-              FOR finding IN additionalFindings
-                FILTER finding.domain == d._id
-                LIMIT 1
-                RETURN UNIQUE(
-                  FOR wc IN finding.webComponents
-                    FILTER LENGTH(wc.WebComponentCves) > 0
-                    FOR vuln IN wc.WebComponentCves
-                      FILTER vuln.Cve NOT IN (d.ignoredCves || [])
-                      RETURN vuln.Cve
-                )
-            )[0]
             LET verifiedOrgs = (
               FOR v,e IN 1..1 INBOUND d._id claims
                 FILTER v.verified == true
@@ -176,7 +159,6 @@ export const loadAllOrganizationDomainStatuses =
               "wildcardEntry": d.wildcardEntry,
               "hasEntrustCertificate": d.hasEntrustCertificate,
               "poweredByPHP": d.poweredByPHP,
-              "top25Vulnerabilities": vulnerabilities,
               "phpStatus": d.phpResult.status,
               "phpVersion": d.phpResult.version,
             }

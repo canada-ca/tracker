@@ -113,7 +113,6 @@ describe('given getAllOrganizationDomainStatuses', () => {
       wildcardSibling: false,
       wildcardEntry: false,
       hasEntrustCertificate: false,
-      cveDetected: false,
       poweredByPHP: false,
       phpResult: {
         status: 'vulnerable',
@@ -142,7 +141,6 @@ describe('given getAllOrganizationDomainStatuses', () => {
       wildcardSibling: false,
       wildcardEntry: false,
       hasEntrustCertificate: false,
-      cveDetected: false,
       poweredByPHP: false,
     })
 
@@ -284,7 +282,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,top25Vulnerabilities,phpStatus,phpVersion
+            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,phpStatus,phpVersion
 "domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass",Assess,"NOERROR","false","false","false","false","false","","vulnerable","PHP/8.1.2-1ubuntu2.19"
 "domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail",Deploy,"NOERROR","false","false","false","false","false","","null","null"`,
           },
@@ -406,7 +404,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,top25Vulnerabilities,phpStatus,phpVersion
+            getAllOrganizationDomainStatuses: `domain,orgNames,orgAcronyms,orgExternalIDs,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,phase,rcode,blocked,wildcardSibling,wildcardEntry,hasEntrustCertificate,poweredByPHP,phpStatus,phpVersion
 "domain.one","Org One","OO","ORG123","","fail","pass","pass","pass","pass","pass","pass","pass","pass",Assess,"NOERROR","false","false","false","false","false","","vulnerable","PHP/8.1.2-1ubuntu2.19"
 "domain.two","Org One","OO","ORG123","","pass","fail","pass","fail","pass","fail","pass","pass","fail",Deploy,"NOERROR","false","false","false","false","false","","null","null"`,
           },
