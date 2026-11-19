@@ -1378,3 +1378,39 @@ export const DOMAIN_TAGS = gql`
     }
   }
 `
+
+export const DOMAIN_ADDITIONAL_FINDINGS = gql`
+  query DomainAdditionalFindings(
+    $domain: DomainScalar!
+    $first: Int
+    $after: String
+    $orderBy: AdditionalFindingOrder
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      additionalFindings(first: $first, after: $after, orderBy: $orderBy) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            source
+            findingType
+            confidence
+            reasonCode
+            firstSeen
+            lastSeen
+            evidence
+            attributes
+          }
+        }
+      }
+    }
+  }
+`

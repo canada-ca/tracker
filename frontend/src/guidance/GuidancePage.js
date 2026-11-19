@@ -43,12 +43,13 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { UserIcon } from '../theme/Icons'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DmarcPhaseStepper } from './DmarcPhaseStepper'
+import { AdditionalFindingsList } from './AdditionalFindingsList'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { domainSlug: domain, activeTab } = useParams()
   const toast = useToast()
-  const tabNames = ['web-guidance', 'email-guidance']
+  const tabNames = ['web-guidance', 'email-guidance', 'additional-findings']
   const defaultActiveTab = tabNames[0]
 
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
@@ -225,103 +226,112 @@ function GuidancePage() {
     return <ErrorFallbackMessage error={error} />
   }
 
-  let guidanceResults
-  if (rcode && rcode !== 'NOERROR') {
-    guidanceResults = (
-      <Box fontSize="lg">
-        <Flex>
-          <Text mr="1">
-            <Trans>A DNS request for this service has resulted in the following error code:</Trans>
-          </Text>
-          <Text fontWeight="bold">{rcode}</Text>
-        </Flex>
-        <Text>
+  const hasRcodeError = rcode && rcode !== 'NOERROR'
+
+  const rcodeError = (
+    <Box fontSize="lg">
+      <Flex>
+        <Text mr="1">
+          <Trans>A DNS request for this service has resulted in the following error code:</Trans>
+        </Text>
+        <Text fontWeight="bold">{rcode}</Text>
+      </Flex>
+      <Text>
+        <Trans>
+          If you believe this could be the result of an issue with the scan, rescan the service using the refresh
+          button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed
+          from all affiliated organizations.
+        </Trans>
+      </Text>
+    </Box>
+  )
+
+  const { results: webResults, timestamp: webTimestamp } = webScan?.edges[0]?.node || {}
+  const { node: dnsResults } = dnsScan?.edges[0] || {}
+
+  const hasNoIpAddresses = webResults && webResults.length === 0
+
+  const hasNoDnsScans = !dnsScan || !dnsScan.edges || dnsScan.edges.length === 0
+
+  const noScanData = (
+    <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
+      <Text>
+        <Trans>
+          No scan data is currently available for this service. You may request a scan using the refresh button, or wait
+          up to 24 hours for data to refresh.
+        </Trans>
+      </Text>
+    </Flex>
+  )
+
+  const noIpAddressData = (
+    <>
+      {webTimestamp && (
+        <Text fontSize="lg" mb="4">
           <Trans>
-            If you believe this could be the result of an issue with the scan, rescan the service using the refresh
-            button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be
-            removed from all affiliated organizations.
+            <b>Last Scanned:</b> {formatTimestamp(webTimestamp)}
           </Trans>
         </Text>
-      </Box>
-    )
-  } else {
-    const { results: webResults, timestamp: webTimestamp } = webScan?.edges[0]?.node || {}
-    const { node: dnsResults } = dnsScan?.edges[0] || {}
-
-    const hasNoIpAddresses = webResults && webResults.length === 0
-
-    const hasNoDnsScans = !dnsScan || !dnsScan.edges || dnsScan.edges.length === 0
-
-    const noScanData = (
+      )}
       <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
         <Text>
           <Trans>
-            No scan data is currently available for this service. You may request a scan using the refresh button, or
-            wait up to 24 hours for data to refresh.
+            No IP addresses were available to scan for this service. Please check your DNS configuration or contact us
+            for assistance.
           </Trans>
         </Text>
       </Flex>
-    )
+    </>
+  )
 
-    const noIpAddressData = (
-      <>
-        {webTimestamp && (
-          <Text fontSize="lg" mb="4">
-            <Trans>
-              <b>Last Scanned:</b> {formatTimestamp(webTimestamp)}
-            </Trans>
-          </Text>
-        )}
-        <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
-          <Text>
-            <Trans>
-              No IP addresses were available to scan for this service. Please check your DNS configuration or contact us
-              for assistance.
-            </Trans>
-          </Text>
-        </Flex>
-      </>
-    )
-
-    guidanceResults = (
-      <Tabs
-        isFitted
-        variant="enclosed-colored"
-        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
-        onChange={(i) => changeActiveTab(i)}
-        isLazy
-      >
-        <TabList mb="4">
-          <Tab borderTopWidth="0.25">
-            <Trans>Web Guidance</Trans>
-          </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Email Guidance</Trans>
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            {!webResults ? (
-              noScanData
-            ) : hasNoIpAddresses ? (
-              noIpAddressData
-            ) : (
-              <WebGuidance webResults={webResults} status={status} timestamp={webTimestamp} />
-            )}
-          </TabPanel>
-          <TabPanel>
-            {hasNoDnsScans ? (
-              noScanData
-            ) : (
-              <EmailGuidance dnsResults={dnsResults} status={status}>
-                <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
-              </EmailGuidance>
-            )}
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    )
-  }
+  const guidanceResults = (
+    <Tabs
+      isFitted
+      variant="enclosed-colored"
+      defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+      onChange={(i) => changeActiveTab(i)}
+      isLazy
+    >
+      <TabList mb="4">
+        <Tab borderTopWidth="0.25">
+          <Trans>Web Guidance</Trans>
+        </Tab>
+        <Tab borderTopWidth="0.25">
+          <Trans>Email Guidance</Trans>
+        </Tab>
+        <Tab borderTopWidth="0.25">
+          <Trans>Additional Findings</Trans>
+        </Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          {hasRcodeError ? (
+            rcodeError
+          ) : !webResults ? (
+            noScanData
+          ) : hasNoIpAddresses ? (
+            noIpAddressData
+          ) : (
+            <WebGuidance webResults={webResults} status={status} timestamp={webTimestamp} />
+          )}
+        </TabPanel>
+        <TabPanel>
+          {hasRcodeError ? (
+            rcodeError
+          ) : hasNoDnsScans ? (
+            noScanData
+          ) : (
+            <EmailGuidance dnsResults={dnsResults} status={status}>
+              <DmarcPhaseStepper dmarcPhase={dmarcPhase} />
+            </EmailGuidance>
+          )}
+        </TabPanel>
+        <TabPanel>
+          <AdditionalFindingsList domain={domain} />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+  )
 
   return (
     <Flex flexDirection="column" width="100%">
