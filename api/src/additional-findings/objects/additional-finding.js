@@ -1,42 +1,8 @@
 import { GraphQLObjectType, GraphQLInt, GraphQLString } from 'graphql'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLDateTime, GraphQLJSONObject } from 'graphql-scalars'
 import { globalIdField } from 'graphql-relay'
 
 import { nodeInterface } from '../../node'
-
-export const additionalFindingEvidence = new GraphQLObjectType({
-  name: 'AdditionalFindingEvidence',
-  description: 'Evidence supporting an additional finding.',
-  fields: () => ({
-    target: {
-      type: GraphQLString,
-      description: 'The target the finding was observed on.',
-      resolve: ({ target }) => target,
-    },
-    recordType: {
-      type: GraphQLString,
-      description: 'The type of DNS record the finding was observed in.',
-      resolve: ({ recordType }) => recordType,
-    },
-  }),
-})
-
-export const additionalFindingAttributes = new GraphQLObjectType({
-  name: 'AdditionalFindingAttributes',
-  description: 'Additional attributes describing a finding.',
-  fields: () => ({
-    provider: {
-      type: GraphQLString,
-      description: 'The provider associated with the finding.',
-      resolve: ({ provider }) => provider,
-    },
-    lameType: {
-      type: GraphQLString,
-      description: 'The type of lame delegation detected.',
-      resolve: ({ lameType }) => lameType,
-    },
-  }),
-})
 
 export const additionalFinding = new GraphQLObjectType({
   name: 'AdditionalFinding',
@@ -88,14 +54,14 @@ export const additionalFinding = new GraphQLObjectType({
       resolve: ({ occurrenceCount }) => occurrenceCount,
     },
     evidence: {
-      type: additionalFindingEvidence,
-      description: 'Evidence supporting the finding.',
-      resolve: ({ evidence }) => evidence,
+      type: GraphQLJSONObject,
+      description: 'Scanner-specific evidence supporting the finding, as a JSON object.',
+      resolve: ({ evidence }) => evidence ?? {},
     },
     attributes: {
-      type: additionalFindingAttributes,
-      description: 'Additional attributes describing the finding.',
-      resolve: ({ attributes }) => attributes,
+      type: GraphQLJSONObject,
+      description: 'Scanner-specific attributes describing the finding, as a JSON object.',
+      resolve: ({ attributes }) => attributes ?? {},
     },
   }),
   interfaces: [nodeInterface],
