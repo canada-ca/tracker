@@ -29,10 +29,13 @@ spec:
       volumes:
         - name: gatus-config
           emptyDir: {}
+        - name: uptime-endpoints
+          configMap:
+            name: uptime-endpoints
       initContainers:
         - name: sync-init
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-cda17a9-1792762798 #{"$imagepolicy": "flux-system:uptime-sync"}
-          command: ["python", "/app/sync-gatus-config.py"]
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/uptime-sync:master-fdf7645-1795010331 #{"$imagepolicy": "flux-system:uptime-sync"}
+          command: ["python", "/app/sync-gatus-config.py", "--csv", "/data/endpoints.csv"]
           env:
             - name: ARANGO_URL
               valueFrom:
@@ -79,6 +82,9 @@ spec:
           volumeMounts:
             - name: gatus-config
               mountPath: /config
+            - name: uptime-endpoints
+              mountPath: /data
+              readOnly: true
           securityContext:
             runAsGroup: 1000
             runAsUser: 1000
