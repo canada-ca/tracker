@@ -13,8 +13,6 @@ const CONFIDENCE_RANK = aql`(
 const sortValueExpressions = {
   lastSeen: aql`finding.lastSeen`,
   firstSeen: aql`finding.firstSeen`,
-  occurrenceCount: aql`finding.occurrenceCount`,
-  subject: aql`finding.subject`,
   confidence: CONFIDENCE_RANK,
 }
 
