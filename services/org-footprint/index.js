@@ -1,33 +1,38 @@
+const { ensure } = require('arango-tools')
+const { NotifyClient } = require('notifications-node-client')
+const { databaseOptions } = require('./database-options')
+const { buildConfig, ConfigError } = require('./config')
+const { createLogger } = require('./logger')
+const { orgFootprintService } = require('./src')
+
 require('dotenv-safe').config({
   allowEmptyValues: true,
   example: '.env.example',
 })
 
-const {
-  DB_PASS: rootPass,
-  DB_URL: url,
-  DB_NAME: databaseName,
-  NOTIFICATION_API_KEY,
-  NOTIFICATION_API_URL,
-} = process.env
+let config
+try {
+  config = buildConfig()
+} catch (err) {
+  if (!(err instanceof ConfigError)) throw err
+  console.error(err.message)
+  process.exit(1)
+}
 
-const { ensure } = require('arango-tools')
-const { NotifyClient } = require('notifications-node-client')
-const { databaseOptions } = require('./database-options')
-
-const { orgFootprintService } = require('./src')
-
-const notifyClient = new NotifyClient(NOTIFICATION_API_URL, NOTIFICATION_API_KEY)
+const logger = createLogger({ level: config.logLevel, env: config.nodeEnv })
+const notifyClient = new NotifyClient(config.notify.apiUrl, config.notify.apiKey)
 
 ;(async () => {
   // Generate Database information
   const { query } = await ensure({
     type: 'database',
-    name: databaseName,
-    url,
-    rootPassword: rootPass,
-    options: databaseOptions({ rootPass }),
+    ...config.db,
+    options: databaseOptions({ rootPass: config.db.rootPassword }),
   })
 
-  await orgFootprintService({ query, notifyClient })
-})()
+  const failures = await orgFootprintService({ config, logger, query, notifyClient })
+  if (failures > 0) process.exitCode = 1
+})().catch((err) => {
+  logger.error({ err }, 'org-footprint run failed')
+  process.exitCode = 1
+})

@@ -5,7 +5,7 @@ metadata:
   namespace: api
 spec:
   timeZone: America/Toronto
-  schedule: "00 9 * * *"
+  schedule: '00 9 * * *'
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
@@ -68,6 +68,11 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_PENDING_USERS
+                - name: NOTIFICATION_NEW_CVD_ENROLLMENTS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_NEW_CVD_ENROLLMENTS
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000

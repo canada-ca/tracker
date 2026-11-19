@@ -4,6 +4,7 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.js'],
   coveragePathIgnorePatterns: [
     'node_modules',
+    '<rootDir>/src/index.js',
     'test-config',
     'jestGlobalMocks.js',
     '.module.js',
