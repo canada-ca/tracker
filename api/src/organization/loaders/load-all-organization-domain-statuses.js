@@ -87,11 +87,6 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.hasEntrustCertificate ${comparison} true
           `
-          } else if (filterValue === 'cve-detected') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER d.cveDetected ${comparison} true
-          `
           } else if (filterValue === 'powered-by-php') {
             domainFilters = aql`
             ${domainFilters}

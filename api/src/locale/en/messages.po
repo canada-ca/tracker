@@ -123,8 +123,8 @@ msgstr "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 
-#: src/organization/objects/organization.js:259
-#: src/organization/queries/get-all-organization-domain-statuses.js:72
+#: src/organization/objects/organization.js:258
+#: src/organization/queries/get-all-organization-domain-statuses.js:71
 msgid "Assess"
 msgstr "Assess"
 
@@ -138,11 +138,11 @@ msgstr "Assess"
 msgid "Authentication error. Please sign in."
 msgstr "Authentication error. Please sign in."
 
-#: src/domain/objects/domain.js:230
+#: src/domain/objects/domain.js:242
 msgid "Cannot query additional findings without permission."
 msgstr "Cannot query additional findings without permission."
 
-#: src/organization/objects/organization.js:373
+#: src/organization/objects/organization.js:372
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
@@ -151,15 +151,15 @@ msgstr "Cannot query affiliations on organization without admin permission or hi
 msgid "Cannot query audit logs on organization without admin permission or higher."
 msgstr "Cannot query audit logs on organization without admin permission or higher."
 
-#: src/domain/objects/domain.js:165
+#: src/domain/objects/domain.js:166
 msgid "Cannot query dns scan results without permission."
 msgstr "Cannot query dns scan results without permission."
 
-#: src/domain/objects/domain.js:66
+#: src/domain/objects/domain.js:67
 msgid "Cannot query domain selectors without permission."
 msgstr "Cannot query domain selectors without permission."
 
-#: src/domain/objects/domain.js:207
+#: src/domain/objects/domain.js:208
 msgid "Cannot query web scan results without permission."
 msgstr "Cannot query web scan results without permission."
 
@@ -171,8 +171,8 @@ msgstr "CVE is already ignored for this domain."
 msgid "CVE is not ignored for this domain."
 msgstr "CVE is not ignored for this domain."
 
-#: src/organization/objects/organization.js:261
-#: src/organization/queries/get-all-organization-domain-statuses.js:74
+#: src/organization/objects/organization.js:260
+#: src/organization/queries/get-all-organization-domain-statuses.js:73
 msgid "Deploy"
 msgstr "Deploy"
 
@@ -180,8 +180,8 @@ msgstr "Deploy"
 msgid "Email already in use."
 msgstr "Email already in use."
 
-#: src/organization/objects/organization.js:263
-#: src/organization/queries/get-all-organization-domain-statuses.js:76
+#: src/organization/objects/organization.js:262
+#: src/organization/queries/get-all-organization-domain-statuses.js:75
 msgid "Enforce"
 msgstr "Enforce"
 
@@ -217,8 +217,8 @@ msgstr "Incorrect username or password. Please try again."
 msgid "Invalid token, please sign in."
 msgstr "Invalid token, please sign in."
 
-#: src/organization/objects/organization.js:265
-#: src/organization/queries/get-all-organization-domain-statuses.js:78
+#: src/organization/objects/organization.js:264
+#: src/organization/queries/get-all-organization-domain-statuses.js:77
 msgid "Maintain"
 msgstr "Maintain"
 
@@ -265,6 +265,10 @@ msgstr "Organization name already in use. Please try again with a different name
 #: src/auth/checks/check-domain-ownership.js:74
 msgid "Ownership check error. Unable to request domain information."
 msgstr "Ownership check error. Unable to request domain information."
+
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:52
+msgid "Passing both `first` and `last` to paginate the `AdditionalFinding` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `AdditionalFinding` connection is not supported."
 
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:89
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:170
@@ -877,7 +881,7 @@ msgstr "Unable to dismiss message. Please try again."
 #~ msgid "Unable to dispatch one time scan. Please try again."
 #~ msgstr "Unable to dispatch one time scan. Please try again."
 
-#: src/organization/objects/organization.js:284
+#: src/organization/objects/organization.js:283
 msgid "Unable to export organization. Please try again."
 msgstr "Unable to export organization. Please try again."
 
@@ -986,10 +990,10 @@ msgstr "Unable to find user affiliation(s). Please try again."
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Unable to find verified organization(s). Please try again."
 
-#: src/domain/data-source.js:836
-#: src/domain/data-source.js:858
-#: src/domain/data-source.js:872
-#: src/domain/data-source.js:882
+#: src/domain/data-source.js:831
+#: src/domain/data-source.js:853
+#: src/domain/data-source.js:867
+#: src/domain/data-source.js:877
 #: src/domain/mutations/ignore-cve.js:61
 msgid "Unable to ignore CVE. Please try again."
 msgstr "Unable to ignore CVE. Please try again."
@@ -1024,8 +1028,9 @@ msgstr "Unable to invite yourself to an org."
 msgid "Unable to leave undefined organization."
 msgstr "Unable to leave undefined organization."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:24
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:34
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:96
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:153
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:163
 msgid "Unable to load additional findings. Please try again."
 msgstr "Unable to load additional findings. Please try again."
 
@@ -1173,9 +1178,8 @@ msgstr "Unable to load log(s). Please try again."
 #~ msgid "Unable to load mail summary. Please try again."
 #~ msgstr "Unable to load mail summary. Please try again."
 
-#: src/additional-findings/loaders/load-top-25-reports.js:29
-#: src/organization/loaders/load-all-organization-domain-statuses.js:187
-#: src/organization/loaders/load-organization-domain-statuses.js:195
+#: src/organization/loaders/load-all-organization-domain-statuses.js:169
+#: src/organization/loaders/load-organization-domain-statuses.js:177
 msgid "Unable to load organization domain statuses. Please try again."
 msgstr "Unable to load organization domain statuses. Please try again."
 
@@ -1354,15 +1358,15 @@ msgstr "Unable to remove domain. Domain is not part of organization."
 
 #: src/domain/data-source.js:164
 #: src/domain/data-source.js:186
-#: src/domain/data-source.js:665
-#: src/domain/data-source.js:685
-#: src/domain/data-source.js:711
-#: src/domain/data-source.js:729
-#: src/domain/data-source.js:746
-#: src/domain/data-source.js:762
-#: src/domain/data-source.js:779
-#: src/domain/data-source.js:803
-#: src/domain/data-source.js:814
+#: src/domain/data-source.js:660
+#: src/domain/data-source.js:680
+#: src/domain/data-source.js:706
+#: src/domain/data-source.js:724
+#: src/domain/data-source.js:741
+#: src/domain/data-source.js:757
+#: src/domain/data-source.js:774
+#: src/domain/data-source.js:798
+#: src/domain/data-source.js:809
 #: src/domain/mutations/remove-domain.js:119
 #: src/domain/mutations/remove-domain.js:140
 #: src/domain/mutations/remove-domain.js:151
@@ -1466,8 +1470,8 @@ msgstr "Unable to request invite. Please try again."
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
-#: src/domain/objects/domain.js:275
-#: src/domain/objects/domain.js:312
+#: src/domain/objects/domain.js:288
+#: src/domain/objects/domain.js:325
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Unable to retrieve DMARC report information for: {domain}"
 
@@ -1541,10 +1545,10 @@ msgstr "Unable to sign up, please contact org admin for a new invite."
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
-#: src/domain/data-source.js:907
-#: src/domain/data-source.js:929
-#: src/domain/data-source.js:943
-#: src/domain/data-source.js:953
+#: src/domain/data-source.js:902
+#: src/domain/data-source.js:924
+#: src/domain/data-source.js:938
+#: src/domain/data-source.js:948
 #: src/domain/mutations/unignore-cve.js:61
 msgid "Unable to stop ignoring CVE. Please try again."
 msgstr "Unable to stop ignoring CVE. Please try again."
@@ -1579,8 +1583,8 @@ msgstr "Unable to two factor authenticate. Please try again."
 msgid "Unable to unfavourite domain, domain is not favourited."
 msgstr "Unable to unfavourite domain, domain is not favourited."
 
-#: src/domain/data-source.js:536
-#: src/domain/data-source.js:544
+#: src/domain/data-source.js:531
+#: src/domain/data-source.js:539
 msgid "Unable to unfavourite domain. Please try again."
 msgstr "Unable to unfavourite domain. Please try again."
 
@@ -1598,7 +1602,7 @@ msgstr "Unable to unfavourite unknown domain."
 msgid "Unable to update CVD enrollment. Please try again."
 msgstr "Unable to update CVD enrollment. Please try again."
 
-#: src/domain/data-source.js:586
+#: src/domain/data-source.js:581
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
@@ -1615,10 +1619,10 @@ msgstr "Unable to update domain that does not belong to the given organization."
 #: src/domain/data-source.js:234
 #: src/domain/data-source.js:254
 #: src/domain/data-source.js:285
-#: src/domain/data-source.js:567
-#: src/domain/data-source.js:596
-#: src/domain/data-source.js:622
-#: src/domain/data-source.js:630
+#: src/domain/data-source.js:562
+#: src/domain/data-source.js:591
+#: src/domain/data-source.js:617
+#: src/domain/data-source.js:625
 #: src/domain/mutations/update-cvd-enrollment.js:117
 #: src/domain/mutations/update-domain.js:140
 #: src/domain/mutations/update-domain.js:189
@@ -1630,9 +1634,9 @@ msgstr "Unable to update domain. Please try again."
 msgid "Unable to update domains in unknown organization."
 msgstr "Unable to update domains in unknown organization."
 
-#: src/domain/data-source.js:496
-#: src/domain/data-source.js:504
-#: src/domain/data-source.js:508
+#: src/domain/data-source.js:491
+#: src/domain/data-source.js:499
+#: src/domain/data-source.js:503
 msgid "Unable to update domains. Please try again."
 msgstr "Unable to update domains. Please try again."
 
@@ -1771,7 +1775,7 @@ msgstr "Verification error. Please activate multi-factor authentication to acces
 msgid "Verification error. Please verify your account via email to access content."
 msgstr "Verification error. Please verify your account via email to access content."
 
-#: src/additional-findings/loaders/load-additional-findings-by-domain-id.js:8
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:45
 msgid "You must provide a `domainId` to retrieve a domain's additional findings."
 msgstr "You must provide a `domainId` to retrieve a domain's additional findings."
 
@@ -1861,6 +1865,14 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Ver
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:73
+msgid "You must provide a `first`, `last` or `limit` value in the range of 1-100 to properly paginate the `AdditionalFinding` connection."
+msgstr "You must provide a `first`, `last` or `limit` value in the range of 1-100 to properly paginate the `AdditionalFinding` connection."
+
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:62
+msgid "You must provide a `first`, `last` or `limit` value to properly paginate the `AdditionalFinding` connection."
+msgstr "You must provide a `first`, `last` or `limit` value to properly paginate the `AdditionalFinding` connection."
+
 #: src/dns-scan/loaders/load-dns-connections-by-domain-id.js:16
 msgid "You must provide a `limit` value in the range of 1-100 to properly paginate the `DNS` connection."
 msgstr "You must provide a `limit` value in the range of 1-100 to properly paginate the `DNS` connection."
@@ -1920,6 +1932,10 @@ msgstr "You must provide at most one pagination method (`before`, `after`, `offs
 #: src/web-scan/loaders/load-web-connections-by-domain-id.js:30
 msgid "You must provide at most one pagination method (`before`, `after`, `offset`) value to properly paginate the `web` connection."
 msgstr "You must provide at most one pagination method (`before`, `after`, `offset`) value to properly paginate the `web` connection."
+
+#: src/additional-findings/loaders/load-additional-findings-connections-by-domain-id.js:82
+msgid "You must provide at most one pagination method (`before`, `after`) value to properly paginate the `AdditionalFinding` connection."
+msgstr "You must provide at most one pagination method (`before`, `after`) value to properly paginate the `AdditionalFinding` connection."
 
 #: src/summaries/loaders/load-chart-summaries-by-period.js:13
 #~ msgid "You must provide both `startDate` and `endDate` values to access the `ChartSummaries` connection."

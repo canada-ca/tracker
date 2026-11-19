@@ -128,7 +128,6 @@ export function OrganizationDomains({
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `ARCHIVED`, text: t`Archived` },
-    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     { value: 'CVD_ENROLLED', text: t`CVD Enrolled` },
     { value: 'CVD_DENY', text: t`CVD Denied` },
     ...(isSuperAdmin
@@ -283,7 +282,6 @@ export function OrganizationDomains({
         />
         <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
-        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
         <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
         <InfoBox
           title={t`Dependency`}

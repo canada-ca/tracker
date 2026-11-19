@@ -28,7 +28,6 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import {
   GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
   PAGINATED_DOMAINS as FORWARD,
-  GET_TOP_25_REPORT,
   IS_USER_SUPER_ADMIN,
 } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
@@ -75,21 +74,6 @@ export default function DomainsPage() {
       },
     },
   )
-
-  const [getTop25Report, { loading: top25ReportLoading }] = useLazyQuery(GET_TOP_25_REPORT, {
-    variables: { filters },
-    fetchPolicy: 'no-cache',
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`An error occurred when you attempted to download all domain statuses.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -146,7 +130,6 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `WILDCARD_ENTRY`, text: t`Wildcard Entry` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `CVE_DETECTED`, text: t`SPIN Top 25` },
     ...(isSuperAdmin
       ? [
           { value: 'PHP_VULNERABLE', text: t`PHP: vulnerable` },
@@ -189,37 +172,6 @@ export default function DomainsPage() {
           isLoading={allOrgDomainStatusesLoading}
           mr="2"
         />
-        <ExportButton
-          fileName={`Tracker_top_25_report_${new Date().toLocaleDateString('en-CA')}`}
-          dataFunction={async () => {
-            toast({
-              title: t`Getting top 25 report`,
-              description: t`Request successfully sent to get top 25 report.`,
-              status: 'info',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-            const result = await getTop25Report()
-            if (result.data?.getTop25Reports === undefined) {
-              toast({
-                title: t`No data found`,
-                description: t`No data found when retrieving top 25 report.`,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
-
-              throw t`No data found`
-            }
-
-            return result.data?.getTop25Reports
-          }}
-          isLoading={top25ReportLoading}
-        >
-          <Trans>Export SPIN Top 25</Trans>
-        </ExportButton>
       </Flex>
     )
   })
@@ -333,7 +285,6 @@ export default function DomainsPage() {
         />
         <InfoBox title={t`WILDCARD ENTRY`} info={t`Tag used to show domains resolve to a wildcard entry.`} />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
-        <InfoBox title={t`SPIN Top 25`} info={t`SPIN Top 25 vulnerability detected in additional findings.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>

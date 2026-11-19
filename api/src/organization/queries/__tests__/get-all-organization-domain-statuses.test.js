@@ -113,7 +113,6 @@ describe('given getAllOrganizationDomainStatuses', () => {
       wildcardSibling: false,
       wildcardEntry: false,
       hasEntrustCertificate: false,
-      cveDetected: false,
       poweredByPHP: false,
       phpResult: {
         status: 'vulnerable',
@@ -142,7 +141,6 @@ describe('given getAllOrganizationDomainStatuses', () => {
       wildcardSibling: false,
       wildcardEntry: false,
       hasEntrustCertificate: false,
-      cveDetected: false,
       poweredByPHP: false,
     })
 
