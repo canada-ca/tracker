@@ -5,7 +5,7 @@ metadata:
   namespace: scanners
 spec:
   timeZone: America/Toronto
-  schedule: "0 7 * * *"
+  schedule: "0 9 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
