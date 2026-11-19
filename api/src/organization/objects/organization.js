@@ -235,7 +235,6 @@ export const organizationType = new GraphQLObjectType({
           'wildcardSibling',
           'wildcardEntry',
           'hasEntrustCertificate',
-          'top25Vulnerabilities',
           'cvdEnrollmentStatus',
           'poweredByPHP',
           'phpStatus',
@@ -245,7 +244,7 @@ export const organizationType = new GraphQLObjectType({
         domains.forEach((domainDoc) => {
           const csvLine = headers
             .map((header) => {
-              if (['ipAddresses', 'tags', 'top25Vulnerabilities'].includes(header)) {
+              if (['ipAddresses', 'tags'].includes(header)) {
                 return `"${domainDoc[header]?.join('|') || []}"`
               } else if (
                 ['https', 'hsts', 'certificates', 'protocols', 'ciphers', 'curves', 'spf', 'dkim', 'dmarc'].includes(
