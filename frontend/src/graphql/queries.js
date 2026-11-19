@@ -1401,6 +1401,7 @@ export const DOMAIN_ADDITIONAL_FINDINGS = gql`
           node {
             id
             source
+            subject
             findingType
             confidence
             reasonCode

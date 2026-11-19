@@ -2,7 +2,7 @@ import React from 'react'
 import { Badge, Box, Flex, Heading, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react/macro'
 import { explainFinding } from './findingExplainers'
-import { node, number, object, string } from 'prop-types'
+import { node, object, string } from 'prop-types'
 
 const confidenceColours = { suspected: 'yellow', probable: 'orange', confirmed: 'red' }
 
@@ -41,8 +41,8 @@ export function FindingCard({
   }
 
   const findingTypeLabels = {
-    'subdomain-takeover-cname': t`Subdomain takeover (CNAME)`,
-    'subdomain-takeover-ns': t`Subdomain takeover (NS)`,
+    'subdomain-takeover-cname': t`Dangling CNAME`,
+    'subdomain-takeover-ns': t`Lame Delegation (Sitting Duck)`,
   }
 
   return (
@@ -59,15 +59,17 @@ export function FindingCard({
         <Heading as="h3" size="md" mr="auto" wordBreak="break-all">
           {findingTypeLabels[findingType] || findingType}
         </Heading>
-        <Badge colorScheme={confidenceColours[confidence] || 'gray'} fontSize="sm">
-          {confidenceLabels[confidence] || confidence}
-        </Badge>
+        <Flex wrap="wrap" gap="2">
+          <Badge variant="outline" colorScheme="gray" fontSize="sm">
+            {source}
+          </Badge>
+          <Badge colorScheme={confidenceColours[confidence] || 'gray'} fontSize="sm">
+            {confidenceLabels[confidence] || confidence}
+          </Badge>
+        </Flex>
       </Flex>
       <Box mb="3">{explainFinding({ subject, source, evidence, attributes })}</Box>
       <Wrap spacing="6">
-        <WrapItem>
-          <Fact label={t`Source`}>{source}</Fact>
-        </WrapItem>
         <WrapItem>
           <Fact label={t`Reason code`}>
             <Text as="span" fontFamily="mono" fontSize="sm" color="gray.600">
