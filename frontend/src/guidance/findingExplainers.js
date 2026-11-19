@@ -98,3 +98,35 @@ export const findingExplainers = {
 }
 
 export const explainFinding = (finding) => (findingExplainers[finding.source] || genericExplainer)(finding)
+
+/** One-line remediation sentences keyed by `findingType`. Each takes a finding and returns a React node. */
+export const findingRemediations = {
+  'subdomain-takeover-cname': (finding) => {
+    const subject = finding.subject
+    const provider = finding.attributes?.provider
+    return provider ? (
+      <Trans>
+        Remove the dangling CNAME record for {subject}, or reclaim the resource at {provider} it points to.
+      </Trans>
+    ) : (
+      <Trans>Remove the dangling CNAME record for {subject}, or reclaim the resource it points to.</Trans>
+    )
+  },
+  'subdomain-takeover-ns': (finding) => {
+    const subject = finding.subject
+    const provider = finding.attributes?.provider
+    return provider ? (
+      <Trans>
+        Fix the nameserver delegation for {subject} by restoring authoritative DNS at {provider} or removing the NS
+        records.
+      </Trans>
+    ) : (
+      <Trans>
+        Fix the nameserver delegation for {subject} by restoring authoritative DNS or removing the NS records.
+      </Trans>
+    )
+  },
+}
+
+/** Returns the remediation node for a finding, or null when its type has none. */
+export const remediateFinding = (finding) => findingRemediations[finding.findingType]?.(finding) ?? null

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Badge, Box, Flex, Heading, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react/macro'
-import { explainFinding } from './findingExplainers'
+import { explainFinding, remediateFinding } from './findingExplainers'
 import { node, object, string } from 'prop-types'
 
 const confidenceColours = { suspected: 'yellow', probable: 'orange', confirmed: 'red' }
@@ -45,6 +45,8 @@ export function FindingCard({
     'subdomain-takeover-ns': t`Lame Delegation (Sitting Duck)`,
   }
 
+  const remediation = remediateFinding({ subject, findingType, evidence, attributes })
+
   return (
     <Box
       p="4"
@@ -84,6 +86,14 @@ export function FindingCard({
           <Fact label={t`Last seen`}>{formatTimestamp(lastSeen)}</Fact>
         </WrapItem>
       </Wrap>
+      {remediation && (
+        <Box mt="3">
+          <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="gray.600">
+            {t`Recommended action`}
+          </Text>
+          <Text>{remediation}</Text>
+        </Box>
+      )}
     </Box>
   )
 }
