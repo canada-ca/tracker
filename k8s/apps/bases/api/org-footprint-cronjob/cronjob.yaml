@@ -10,6 +10,7 @@ spec:
   startingDeadlineSeconds: 180
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
         metadata:
           labels:
@@ -83,4 +84,4 @@ spec:
                     - ALL
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
-          restartPolicy: OnFailure
+          restartPolicy: Never
