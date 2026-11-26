@@ -85,6 +85,25 @@ describe('<FindingCard />', () => {
       expect(screen.getByText(formatTimestamp(baseFinding.lastSeen))).toBeInTheDocument()
     })
 
+    it.each([
+      { case: 'null', value: null },
+      { case: 'undefined', value: undefined },
+      { case: 'an empty string', value: '' },
+      { case: 'an unparseable date', value: 'not-a-date' },
+    ])('shows "Not available" for first and last seen when the timestamp is $case', ({ value }) => {
+      renderCard({ firstSeen: value, lastSeen: value })
+
+      expect(screen.getAllByText('Not available')).toHaveLength(2)
+      expect(screen.queryByText(/1970|Invalid Date/)).not.toBeInTheDocument()
+    })
+
+    it('shows the placeholder only for the missing timestamp', () => {
+      renderCard({ lastSeen: null })
+
+      expect(screen.getByText(formatTimestamp(baseFinding.firstSeen))).toBeInTheDocument()
+      expect(screen.getAllByText('Not available')).toHaveLength(1)
+    })
+
     it('explains the finding from its evidence', () => {
       renderCard()
 

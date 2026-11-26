@@ -6,7 +6,12 @@ import { node, object, string } from 'prop-types'
 
 const confidenceColours = { suspected: 'yellow', probable: 'orange', confirmed: 'red' }
 
-const formatTimestamp = (ts) => new Date(ts).toLocaleString('en-CA', { timeZoneName: 'short' })
+const formatTimestamp = ({ timestamp, locale, placeholder }) => {
+  if (!timestamp) return placeholder
+  const date = new Date(timestamp)
+  if (Number.isNaN(date.getTime())) return placeholder
+  return date.toLocaleString(`${locale}-CA`, { timeZoneName: 'short' })
+}
 
 function Fact({ label, children }) {
   return (
@@ -32,7 +37,8 @@ export function FindingCard({
   evidence,
   attributes,
 }) {
-  const { t } = useLingui()
+  const { t, i18n } = useLingui()
+  const timestampPlaceholder = t`Not available`
 
   const confidenceLabels = {
     suspected: t`Suspected`,
@@ -80,10 +86,14 @@ export function FindingCard({
           </Fact>
         </WrapItem>
         <WrapItem>
-          <Fact label={t`First seen`}>{formatTimestamp(firstSeen)}</Fact>
+          <Fact label={t`First seen`}>
+            {formatTimestamp({ timestamp: firstSeen, locale: i18n.locale, placeholder: timestampPlaceholder })}
+          </Fact>
         </WrapItem>
         <WrapItem>
-          <Fact label={t`Last seen`}>{formatTimestamp(lastSeen)}</Fact>
+          <Fact label={t`Last seen`}>
+            {formatTimestamp({ timestamp: lastSeen, locale: i18n.locale, placeholder: timestampPlaceholder })}
+          </Fact>
         </WrapItem>
       </Wrap>
       {remediation && (
