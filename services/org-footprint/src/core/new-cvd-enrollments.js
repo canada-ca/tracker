@@ -25,6 +25,31 @@ const escapeMarkdownValue = (value) =>
     .trim()
     .replace(/^[#*+>-]/, '\\$&')
 
+const TIMESTAMP_FORMAT = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'UTC',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+  timeZoneName: 'short',
+})
+
+/**
+ * Formats an ISO timestamp for people, for example `2026-11-12, 00:00 UTC`.
+ * The time zone is always UTC, so the result does not depend on the server.
+ * A missing or unparseable timestamp is returned unchanged, never as "Invalid Date".
+ * @param {*} timestamp - ISO 8601 timestamp from an audit log.
+ * @returns {*} The readable timestamp, or the original value when it is not a valid date.
+ */
+const formatTimestamp = (timestamp) => {
+  if (typeof timestamp !== 'string') return timestamp
+  const date = new Date(timestamp)
+  if (Number.isNaN(date.getTime())) return timestamp
+  return TIMESTAMP_FORMAT.format(date)
+}
+
 function toBlock(log) {
   const prop = log.target.updatedProperties.find((p) => p.name === 'cvdEnrollment')
   return [
@@ -32,7 +57,7 @@ function toBlock(log) {
     `* Organization: ${escapeMarkdownValue(log.target.organization.name)}`,
     `* Status: ${escapeMarkdownValue(prop.newValue)}`,
     `* Initiated by: ${escapeMarkdownValue(log.initiatedBy.userName)}`,
-    `* Time: ${escapeMarkdownValue(log.timestamp)}`,
+    `* Time: ${escapeMarkdownValue(formatTimestamp(log.timestamp))}`,
   ].join('\n')
 }
 

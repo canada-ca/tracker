@@ -35,9 +35,8 @@ const block = ({
   org = 'Test Org',
   status = 'enrolled',
   user = 'user@example.gc.ca',
-  time = '2026-01-01T00:00:00.000Z',
-} = {}) =>
-  `# ${domain}\n* Organization: ${org}\n* Status: ${status}\n* Initiated by: ${user}\n* Time: ${time}`
+  time = '2026-01-01, 00:00 UTC',
+} = {}) => `# ${domain}\n* Organization: ${org}\n* Status: ${status}\n* Initiated by: ${user}\n* Time: ${time}`
 
 const SEPARATOR = '\n\n---\n\n'
 
@@ -114,6 +113,29 @@ describe('buildNewEnrollmentEmailPayload', () => {
     const payload = buildNewEnrollmentEmailPayload([log])
 
     expect(payload.enrollments_list).toContain(`\n* Organization: ${expected}\n`)
+  })
+
+  it.each([
+    ['a normal ISO timestamp', '2026-11-12T00:00:00.000Z', '2026-11-12, 00:00 UTC'],
+    ['an afternoon time on a 24-hour clock', '2026-11-12T15:45:30.000Z', '2026-11-12, 15:45 UTC'],
+    ['the last minute of a UTC day', '2026-11-12T23:59:59.999Z', '2026-11-12, 23:59 UTC'],
+    ['previous day in Toronto, shown in UTC', '2026-01-01T02:00:00.000Z', '2026-01-01, 02:00 UTC'],
+    ['an offset timestamp converted to UTC', '2026-11-12T00:00:00.000-05:00', '2026-11-12, 05:00 UTC'],
+    ['a missing timestamp', undefined, ''],
+    ['a null timestamp', null, ''],
+    ['an empty timestamp', '', ''],
+    ['an unparseable timestamp', 'not-a-date', 'not-a-date'],
+  ])('formats the time for %s', (_name, timestamp, expected) => {
+    const payload = buildNewEnrollmentEmailPayload([enrollmentLog({ timestamp })])
+
+    expect(payload.enrollments_list).toContain(`\n* Time: ${expected}`)
+    expect(payload.enrollments_list).not.toContain('Invalid Date')
+  })
+
+  it('keeps markdown escaping on an unparseable timestamp', () => {
+    const payload = buildNewEnrollmentEmailPayload([enrollmentLog({ timestamp: '#bad\nvalue' })])
+
+    expect(payload.enrollments_list).toContain('\n* Time: \\#bad value')
   })
 
   it('applies the same escape to the domain heading', () => {
