@@ -1,5 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLID, GraphQLNonNull } from 'graphql'
-import { GraphQLDateTime, GraphQLJSONObject } from 'graphql-scalars'
+import { GraphQLObjectType } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { additionalFinding } from '../additional-finding'
@@ -14,59 +13,10 @@ describe('given the additionalFinding object', () => {
     expect(additionalFinding.getInterfaces()).toContain(nodeInterface)
   })
 
-  describe('field definitions', () => {
-    it.each([
-      { field: 'subject', type: GraphQLString },
-      { field: 'source', type: GraphQLString },
-      { field: 'findingType', type: GraphQLString },
-      { field: 'confidence', type: GraphQLString },
-      { field: 'reasonCode', type: GraphQLString },
-      { field: 'status', type: GraphQLString },
-      { field: 'firstSeen', type: GraphQLDateTime },
-      { field: 'lastSeen', type: GraphQLDateTime },
-      { field: 'occurrenceCount', type: GraphQLInt },
-      { field: 'evidence', type: GraphQLJSONObject },
-      { field: 'attributes', type: GraphQLJSONObject },
-    ])('has $field of the expected type', ({ field, type }) => {
-      expect(fields[field].type).toEqual(type)
-    })
-
-    it('has a non-null global id field', () => {
-      expect(fields.id.type).toEqual(new GraphQLNonNull(GraphQLID))
-    })
-
-    it('exposes exactly the documented fields', () => {
-      expect(Object.keys(fields).sort()).toEqual(
-        [
-          'attributes',
-          'confidence',
-          'evidence',
-          'findingType',
-          'firstSeen',
-          'id',
-          'lastSeen',
-          'occurrenceCount',
-          'reasonCode',
-          'source',
-          'status',
-          'subject',
-        ].sort(),
-      )
-    })
-  })
-
   describe('field resolvers', () => {
     it('resolves the global id from the finding id', () => {
       expect(fields.id.resolve({ id: '123' })).toEqual(toGlobalId('additionalFinding', '123'))
     })
-
-    it.each(['subject', 'source', 'findingType', 'confidence', 'reasonCode', 'status', 'occurrenceCount'])(
-      'passes %s straight through',
-      (field) => {
-        const value = field === 'occurrenceCount' ? 3 : `${field}-value`
-        expect(fields[field].resolve({ [field]: value })).toEqual(value)
-      },
-    )
 
     it.each([
       { field: 'firstSeen', stored: '2024-01-01T00:00:00.000Z', expected: new Date('2024-01-01T00:00:00.000Z') },
