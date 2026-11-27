@@ -10,12 +10,12 @@ const {
 const {
   buildOrgFootprintPayload,
   addServiceAccountToRecipients,
-  buildNewEnrollmentEmailPayload,
+  buildCvdEnrollmentChangesPayload,
   buildPendingUsersPayload,
 } = require('./core')
 
 /**
- * Sends org footprint, pending user, and new CVD enrollment emails for every organization.
+ * Sends org footprint, pending user, and CVD enrollment change emails for every organization.
  * A failure for one organization or one email is logged and counted, and the run continues.
  * @param {{config: object, logger: object, query: Function, notifyClient: object}} params - Config from buildConfig,
  *   a pino-style logger, a tagged-template query function, and a Notify client with `sendEmail`.
@@ -55,9 +55,9 @@ const orgFootprintService = async ({ config, logger, query, notifyClient }) => {
   }
 
   try {
-    failures += await processNewCVDEnrollments(args)
+    failures += await processCvdEnrollmentChanges(args)
   } catch (err) {
-    logger.error({ err }, 'Failed to process new CVD enrollments notifications.')
+    logger.error({ err }, 'Failed to process CVD enrollment changes notifications.')
     failures += 1
   }
 
@@ -118,11 +118,11 @@ async function processPendingUsers({ config, query, logger, orgKey, notifyClient
   return failedSends
 }
 
-async function processNewCVDEnrollments({ query, logger, notifyClient, config }) {
+async function processCvdEnrollmentChanges({ query, logger, notifyClient, config }) {
   const newDomainUpdateLogs = await getNewDomainUpdateLogs({ query, window: config.logTimeWindow })
-  const payload = buildNewEnrollmentEmailPayload(newDomainUpdateLogs)
+  const payload = buildCvdEnrollmentChangesPayload(newDomainUpdateLogs)
   if (!payload) {
-    logger.info('No new CVD enrollments, skipping email')
+    logger.info('No CVD enrollment changes, skipping email')
     return 0
   }
   const sent = await sendNotification({
@@ -131,7 +131,7 @@ async function processNewCVDEnrollments({ query, logger, notifyClient, config })
     templateId: config.notify.templates.cvdEnrollment,
     user: { userName: config.serviceAccount, _key: 'service-account' },
     payload,
-    errorMessage: 'Failed to send new CVD enrollments email',
+    errorMessage: 'Failed to send CVD enrollment changes email',
   })
   return sent ? 0 : 1
 }

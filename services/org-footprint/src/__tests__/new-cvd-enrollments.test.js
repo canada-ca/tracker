@@ -1,4 +1,4 @@
-const { buildNewEnrollmentEmailPayload } = require('../core/new-cvd-enrollments')
+const { buildCvdEnrollmentChangesPayload } = require('../core/new-cvd-enrollments')
 
 const enrollmentLog = ({
   domain = 'example.gc.ca',
@@ -40,12 +40,12 @@ const block = ({
 
 const SEPARATOR = '\n\n---\n\n'
 
-describe('buildNewEnrollmentEmailPayload', () => {
+describe('buildCvdEnrollmentChangesPayload', () => {
   it.each([
     ['empty logs', []],
     ['logs without a cvdEnrollment property', [unrelatedLog(), unrelatedLog()]],
   ])('returns null for %s', (_name, logs) => {
-    expect(buildNewEnrollmentEmailPayload(logs)).toBeNull()
+    expect(buildCvdEnrollmentChangesPayload(logs)).toBeNull()
   })
 
   it.each([
@@ -53,7 +53,7 @@ describe('buildNewEnrollmentEmailPayload', () => {
     ['a non-array updatedProperties', (log) => ({ ...log, target: { ...log.target, updatedProperties: {} } })],
     ['no organization', (log) => ({ ...log, target: { ...log.target, organization: undefined } })],
   ])('skips a malformed log with %s and keeps well-formed logs', (_name, malform) => {
-    const payload = buildNewEnrollmentEmailPayload([malform(enrollmentLog({ domain: 'bad.gc.ca' })), enrollmentLog()])
+    const payload = buildCvdEnrollmentChangesPayload([malform(enrollmentLog({ domain: 'bad.gc.ca' })), enrollmentLog()])
 
     expect(payload).toEqual({ enrollments_list: block(), enrollments_count: 1 })
   })
@@ -61,18 +61,18 @@ describe('buildNewEnrollmentEmailPayload', () => {
   it('returns null when every log is malformed', () => {
     const malformed = { ...enrollmentLog(), target: { resource: 'x.gc.ca' } }
 
-    expect(buildNewEnrollmentEmailPayload([malformed])).toBeNull()
+    expect(buildCvdEnrollmentChangesPayload([malformed])).toBeNull()
   })
 
   it('builds a block and count for a single enrollment log', () => {
-    expect(buildNewEnrollmentEmailPayload([enrollmentLog()])).toEqual({
+    expect(buildCvdEnrollmentChangesPayload([enrollmentLog()])).toEqual({
       enrollments_list: block(),
       enrollments_count: 1,
     })
   })
 
   it('joins blocks with a blank-line rule and no trailing rule', () => {
-    const payload = buildNewEnrollmentEmailPayload([
+    const payload = buildCvdEnrollmentChangesPayload([
       enrollmentLog({ domain: 'a.gc.ca' }),
       enrollmentLog({ domain: 'b.gc.ca', newValue: 'pending' }),
     ])
@@ -84,13 +84,13 @@ describe('buildNewEnrollmentEmailPayload', () => {
   })
 
   it('includes only enrollment logs when mixed with unrelated logs', () => {
-    const payload = buildNewEnrollmentEmailPayload([unrelatedLog(), enrollmentLog(), unrelatedLog()])
+    const payload = buildCvdEnrollmentChangesPayload([unrelatedLog(), enrollmentLog(), unrelatedLog()])
 
     expect(payload).toEqual({ enrollments_list: block(), enrollments_count: 1 })
   })
 
   it('shows the new value when a domain is un-enrolled', () => {
-    const payload = buildNewEnrollmentEmailPayload([enrollmentLog({ newValue: 'not-enrolled' })])
+    const payload = buildCvdEnrollmentChangesPayload([enrollmentLog({ newValue: 'not-enrolled' })])
 
     expect(payload.enrollments_list).toContain('* Status: not-enrolled')
   })
@@ -110,7 +110,7 @@ describe('buildNewEnrollmentEmailPayload', () => {
   ])('escapes the organization name: %s', (_name, orgName, expected) => {
     const log = enrollmentLog()
     log.target.organization.name = orgName
-    const payload = buildNewEnrollmentEmailPayload([log])
+    const payload = buildCvdEnrollmentChangesPayload([log])
 
     expect(payload.enrollments_list).toContain(`\n* Organization: ${expected}\n`)
   })
@@ -126,20 +126,20 @@ describe('buildNewEnrollmentEmailPayload', () => {
     ['an empty timestamp', '', ''],
     ['an unparseable timestamp', 'not-a-date', 'not-a-date'],
   ])('formats the time for %s', (_name, timestamp, expected) => {
-    const payload = buildNewEnrollmentEmailPayload([enrollmentLog({ timestamp })])
+    const payload = buildCvdEnrollmentChangesPayload([enrollmentLog({ timestamp })])
 
     expect(payload.enrollments_list).toContain(`\n* Time: ${expected}`)
     expect(payload.enrollments_list).not.toContain('Invalid Date')
   })
 
   it('keeps markdown escaping on an unparseable timestamp', () => {
-    const payload = buildNewEnrollmentEmailPayload([enrollmentLog({ timestamp: '#bad\nvalue' })])
+    const payload = buildCvdEnrollmentChangesPayload([enrollmentLog({ timestamp: '#bad\nvalue' })])
 
     expect(payload.enrollments_list).toContain('\n* Time: \\#bad value')
   })
 
   it('applies the same escape to the domain heading', () => {
-    const payload = buildNewEnrollmentEmailPayload([enrollmentLog({ domain: '#a.gc.ca' })])
+    const payload = buildCvdEnrollmentChangesPayload([enrollmentLog({ domain: '#a.gc.ca' })])
 
     expect(payload.enrollments_list.startsWith('# \\#a.gc.ca\n')).toBe(true)
   })

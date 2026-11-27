@@ -1,10 +1,10 @@
-const hasEnrollmentUpdate = (log) =>
+const hasCvdEnrollmentChange = (log) =>
   Boolean(log.target?.organization) &&
   Array.isArray(log.target.updatedProperties) &&
   log.target.updatedProperties.some((prop) => prop.name === 'cvdEnrollment')
 
-function getNewlyEnrolledDomains(logs) {
-  return logs.filter(hasEnrollmentUpdate)
+function getCvdEnrollmentChangeLogs(logs) {
+  return logs.filter(hasCvdEnrollmentChange)
 }
 
 const HEADING_PREFIX = '# '
@@ -62,7 +62,9 @@ function toBlock(log) {
 }
 
 /**
- * Builds the email payload for domains that enrolled in CVD.
+ * Builds the email payload for changes to domain CVD enrollment status.
+ * Every log with a `cvdEnrollment` update becomes one block, including un-enrollments
+ * and repeated changes to the same domain.
  * Logs without a `target.organization` or a `target.updatedProperties` array are skipped.
  * Each log becomes a heading with a bullet list (organization, status, initiator, time).
  * Blocks are separated by a blank line, a `---` rule and a blank line, with no trailing rule.
@@ -70,16 +72,16 @@ function toBlock(log) {
  * @returns {{enrollments_list: string, enrollments_count: number}|null} Notify markdown and the
  *   block count, or null when no log contains a `cvdEnrollment` update.
  */
-function buildNewEnrollmentEmailPayload(logs) {
-  const newlyEnrolledDomainLogs = getNewlyEnrolledDomains(logs)
-  if (newlyEnrolledDomainLogs.length === 0) {
+function buildCvdEnrollmentChangesPayload(logs) {
+  const changeLogs = getCvdEnrollmentChangeLogs(logs)
+  if (changeLogs.length === 0) {
     return null
   }
 
-  const list = newlyEnrolledDomainLogs.map(toBlock).join(BLOCK_SEPARATOR)
-  return { enrollments_list: list, enrollments_count: newlyEnrolledDomainLogs.length }
+  const list = changeLogs.map(toBlock).join(BLOCK_SEPARATOR)
+  return { enrollments_list: list, enrollments_count: changeLogs.length }
 }
 
 module.exports = {
-  buildNewEnrollmentEmailPayload,
+  buildCvdEnrollmentChangesPayload,
 }
