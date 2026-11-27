@@ -74,6 +74,8 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_NEW_CVD_ENROLLMENTS
+                - name: NOTIFICATION_ADMIN_LINK
+                  value: https://tracker.canada.ca/admin/organizations
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
