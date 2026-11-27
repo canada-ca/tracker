@@ -202,12 +202,6 @@ export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   }
 `
 
-export const GET_TOP_25_REPORT = gql`
-  query GetTop25Reports {
-    getTop25Reports
-  }
-`
-
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client
@@ -642,47 +636,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
   }
   ${Status.fragments.requiredFields}
   ${Guidance.fragments.requiredFields}
-`
-
-export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
-  query GuidanceAdditionalFindings($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      id
-      ignoredCves
-      additionalFindings {
-        timestamp
-        headers
-        locations {
-          city
-          region
-          firstSeen
-          lastSeen
-        }
-        ports {
-          port
-          lastPortState
-          portStateFirstSeen
-          portStateLastSeen
-        }
-        webComponents {
-          webComponentCategory
-          webComponentName
-          webComponentVersion
-          webComponentFirstSeen
-          webComponentLastSeen
-          webComponentCves {
-            cve
-          }
-        }
-        vulnerabilities {
-          cve
-          cvss3Score
-          severity
-          confidenceLevel
-        }
-      }
-    }
-  }
 `
 
 export const ORG_DETAILS_PAGE = gql`
@@ -1421,6 +1374,43 @@ export const DOMAIN_TAGS = gql`
         id
         name
         acronym
+      }
+    }
+  }
+`
+
+export const DOMAIN_ADDITIONAL_FINDINGS = gql`
+  query DomainAdditionalFindings(
+    $domain: DomainScalar!
+    $first: Int
+    $after: String
+    $orderBy: AdditionalFindingOrder
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      additionalFindings(first: $first, after: $after, orderBy: $orderBy) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            source
+            subject
+            findingType
+            confidence
+            reasonCode
+            firstSeen
+            lastSeen
+            evidence
+            attributes
+          }
+        }
       }
     }
   }

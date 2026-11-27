@@ -34,6 +34,7 @@ export function createCache() {
       },
       Domain: {
         fields: {
+          additionalFindings: relayStylePagination(['orderBy']),
           status: {
             merge(existing, incoming, { mergeObjects }) {
               return mergeObjects(existing, incoming)

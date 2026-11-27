@@ -432,11 +432,6 @@ export class DomainDataSource {
                 ${domainFilters}
                 FILTER v.hasEntrustCertificate ${comparison} true
               `
-          } else if (filterValue === 'cve-detected') {
-            domainFilters = aql`
-                ${domainFilters}
-                FILTER v.cveDetected ${comparison} true
-              `
           } else if (filterValue === 'powered-by-php') {
             domainFilters = aql`
                 ${domainFilters}

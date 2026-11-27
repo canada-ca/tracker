@@ -23,7 +23,6 @@ const TAG_FIELD_MAP = {
   'wildcard-entry': { field: 'v.wildcardEntry', value: true },
   'scan-pending': { field: 'v.webScanPending', value: true },
   'has-entrust-certificate': { field: 'v.hasEntrustCertificate', value: true },
-  'cve-detected': { field: 'v.cveDetected', value: true },
   'cvd-enrolled': { field: 'v.cvdEnrollment.status', value: 'enrolled' },
   'cvd-deny': { field: 'v.cvdEnrollment.status', value: 'deny' },
   'powered-by-php': { field: 'v.poweredByPHP', value: true },
@@ -88,8 +87,6 @@ function buildTagFilter(accumulated, comparison, filterValue) {
       return aql`${accumulated} FILTER v.webScanPending ${comparison} ${mapped.value}`
     case 'v.hasEntrustCertificate':
       return aql`${accumulated} FILTER v.hasEntrustCertificate ${comparison} ${mapped.value}`
-    case 'v.cveDetected':
-      return aql`${accumulated} FILTER v.cveDetected ${comparison} ${mapped.value}`
     case 'v.poweredByPHP':
       return aql`${accumulated} FILTER v.poweredByPHP ${comparison} ${mapped.value}`
     case 'v.phpResult.status':

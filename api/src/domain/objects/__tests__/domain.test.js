@@ -230,6 +230,72 @@ describe('given the domain object', () => {
       })
     })
 
+    describe('testing the additionalFindings resolver', () => {
+      const parent = { _id: 'domains/1' }
+      const connection = { edges: [], totalCount: 0, pageInfo: {} }
+      const buildContext = ({ userRequired = jest.fn(), permitted, getConnectionsByDomainId }) => ({
+        userKey: '1',
+        auth: { userRequired },
+        dataSources: {
+          auth: { domainPermissionByDomainId: { load: jest.fn().mockResolvedValue(permitted) } },
+          additionalFindings: { getConnectionsByDomainId },
+        },
+      })
+
+      it('requires an authenticated user', async () => {
+        const userRequired = jest.fn()
+
+        await domainType.getFields().additionalFindings.resolve(
+          parent,
+          { first: 5 },
+          buildContext({
+            userRequired,
+            permitted: true,
+            getConnectionsByDomainId: jest.fn().mockResolvedValue(connection),
+          }),
+        )
+
+        expect(userRequired).toHaveBeenCalledTimes(1)
+      })
+      it('passes the domain id and the connection args to the data source when permitted', async () => {
+        const getConnectionsByDomainId = jest.fn().mockResolvedValue(connection)
+        const args = { orderBy: { field: 'confidence', direction: 'ASC' }, first: 5, after: 'cursor' }
+
+        await expect(
+          domainType
+            .getFields()
+            .additionalFindings.resolve(parent, args, buildContext({ permitted: true, getConnectionsByDomainId })),
+        ).resolves.toEqual(connection)
+        expect(getConnectionsByDomainId).toHaveBeenCalledWith({ domainId: 'domains/1', ...args })
+      })
+      it('throws and does not query findings when the user lacks permission', async () => {
+        const getConnectionsByDomainId = jest.fn()
+
+        await expect(
+          domainType
+            .getFields()
+            .additionalFindings.resolve(
+              parent,
+              { first: 5 },
+              buildContext({ permitted: false, getConnectionsByDomainId }),
+            ),
+        ).rejects.toEqual(new Error('Cannot query additional findings without permission.'))
+        expect(getConnectionsByDomainId).not.toHaveBeenCalled()
+      })
+      it('propagates the error and skips the permission check when the user is not authenticated', async () => {
+        const authError = new Error('Authentication error. Please sign in.')
+        const context = buildContext({
+          userRequired: jest.fn().mockRejectedValue(authError),
+          permitted: true,
+          getConnectionsByDomainId: jest.fn(),
+        })
+
+        await expect(
+          domainType.getFields().additionalFindings.resolve(parent, { first: 5 }, context),
+        ).rejects.toEqual(authError)
+        expect(context.dataSources.auth.domainPermissionByDomainId.load).not.toHaveBeenCalled()
+      })
+    })
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
