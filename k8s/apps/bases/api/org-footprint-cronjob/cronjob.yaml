@@ -5,11 +5,12 @@ metadata:
   namespace: api
 spec:
   timeZone: America/Toronto
-  schedule: "00 9 * * *"
+  schedule: '00 9 * * *'
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
         metadata:
           labels:
@@ -68,6 +69,13 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_PENDING_USERS
+                - name: NOTIFICATION_NEW_CVD_ENROLLMENTS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_NEW_CVD_ENROLLMENTS
+                - name: NOTIFICATION_ADMIN_LINK
+                  value: https://tracker.canada.ca/admin/organizations
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
@@ -78,4 +86,4 @@ spec:
                     - ALL
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
-          restartPolicy: OnFailure
+          restartPolicy: Never

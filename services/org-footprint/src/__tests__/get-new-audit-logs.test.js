@@ -6,6 +6,8 @@ const { databaseOptions } = require('../../database-options')
 
 const { getNewAuditLogs } = require('../database')
 
+const DAY = 1000 * 60 * 60 * 24
+
 describe('given the getNewAuditLogs function', () => {
   let query, drop, truncate, collections
 
@@ -70,7 +72,7 @@ describe('given the getNewAuditLogs function', () => {
       })
     })
     it('returns the org admins', async () => {
-      const auditLogs = await getNewAuditLogs({ query, orgKey: '123' })
+      const auditLogs = await getNewAuditLogs({ query, orgKey: '123', window: DAY })
       const expectedAuditLogs = [
         {
           ...log,
@@ -115,34 +117,24 @@ describe('given the getNewAuditLogs function', () => {
     })
   })
   describe('given an unsuccessful query', () => {
-    describe('when the query fails', () => {
-      it('throws an error', async () => {
-        const mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-        try {
-          await getNewAuditLogs({ query: mockQuery })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Database error occurred while trying to find audit logs: Error: Database error occurred.'),
-          )
-        }
-      })
-    })
-    describe('when the cursor fails', () => {
-      it('throws an error', async () => {
-        const cursor = {
-          all() {
-            throw new Error('Cursor error occurred.')
-          },
-        }
-        const mockQuery = jest.fn().mockReturnValue(cursor)
-        try {
-          await getNewAuditLogs({ query: mockQuery })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Cursor error occurred while trying to find audit logs: Error: Cursor error occurred.'),
-          )
-        }
-      })
+    const failures = [
+      {
+        name: 'the query fails',
+        buildQuery: (cause) => jest.fn().mockRejectedValue(cause),
+        cause: new Error('Database error occurred.'),
+      },
+      {
+        name: 'the cursor fails',
+        buildQuery: (cause) => jest.fn().mockResolvedValue({ all: () => Promise.reject(cause) }),
+        cause: new Error('Cursor error occurred.'),
+      },
+    ]
+
+    it.each(failures)('throws with the original error as cause when $name', async ({ buildQuery, cause }) => {
+      const failure = getNewAuditLogs({ query: buildQuery(cause), orgKey: '123', window: DAY })
+
+      await expect(failure).rejects.toThrow('Database error occurred while trying to find audit logs')
+      await expect(failure).rejects.toHaveProperty('cause', cause)
     })
   })
 })

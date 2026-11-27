@@ -12,7 +12,7 @@ COPY --exclude=**/__tests__ \
      --exclude=**/__mocks__ \
      --exclude=**/testUtilities.js \
      src ./src
-COPY index.js database-options.js .env.example ./
+COPY index.js config.js logger.js database-options.js .env.example ./
 
 USER node
 CMD ["npm", "start"]
